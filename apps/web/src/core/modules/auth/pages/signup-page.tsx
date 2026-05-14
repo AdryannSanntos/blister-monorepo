@@ -10,10 +10,8 @@ import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "src/core/shared/components/ui/card";
 import {
   Form,
@@ -24,6 +22,8 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import { PasswordInput } from "src/core/shared/components/ui/password-input";
+import { PasswordStrength } from "src/core/shared/components/ui/password-strength";
 import { buildEmailVerificationCallbackURL } from "src/core/modules/auth/utils/verify-email-state";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
@@ -32,7 +32,12 @@ const signupSchema = z
   .object({
     name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
     email: z.string().email("Email inválido"),
-    password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+    password: z
+      .string()
+      .min(8, "Senha deve ter pelo menos 8 caracteres")
+      .regex(/[A-Z]/, "Inclua pelo menos uma letra maiúscula")
+      .regex(/[0-9]/, "Inclua pelo menos um número")
+      .regex(/[^A-Za-z0-9]/, "Inclua pelo menos um caractere especial"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -53,13 +58,10 @@ export function SignupPage() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     mode: "onBlur",
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
+
+  const passwordValue = form.watch("password");
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
@@ -77,9 +79,7 @@ export function SignupPage() {
       }
 
       toast.success("Conta criada com sucesso!");
-      router.push(
-        `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
-      );
+      router.push(`/auth/verify-email?email=${encodeURIComponent(values.email)}`);
     } catch {
       toast.error("Erro inesperado. Tente novamente.");
     } finally {
@@ -88,15 +88,20 @@ export function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Criar conta</CardTitle>
-          <CardDescription>
-            Preencha os dados abaixo para criar sua conta
-          </CardDescription>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[var(--bg-canvas)] px-4 py-8">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-primary text-primary-foreground text-lg font-semibold">
+          C
+        </div>
+        <h1 className="mt-2 text-[15px] font-medium text-[var(--fg-primary)]">Company OS</h1>
+      </div>
+
+      <Card className="w-full max-w-[400px]">
+        <CardHeader className="pb-4">
+          <h2 className="text-[18px] font-medium text-[var(--fg-primary)]">Criar sua conta</h2>
+          <p className="text-[13px] text-[var(--fg-tertiary)]">Preencha os dados para começar</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -104,9 +109,9 @@ export function SignupPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel>Nome completo</FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu nome completo" {...field} />
+                      <Input placeholder="Seu nome" autoComplete="name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -119,11 +124,7 @@ export function SignupPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="seu@email.com"
-                        {...field}
-                      />
+                      <Input type="email" placeholder="seu@email.com" autoComplete="email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,13 +137,10 @@ export function SignupPage() {
                   <FormItem>
                     <FormLabel>Senha</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Mínimo 8 caracteres"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Crie uma senha forte" autoComplete="new-password" {...field} />
                     </FormControl>
                     <FormMessage />
+                    <PasswordStrength password={passwordValue} />
                   </FormItem>
                 )}
               />
@@ -153,11 +151,7 @@ export function SignupPage() {
                   <FormItem>
                     <FormLabel>Confirmar senha</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Repita sua senha"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Repita a senha" autoComplete="new-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,13 +163,10 @@ export function SignupPage() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-sm text-[var(--fg-tertiary)]">
+        <CardFooter className="justify-center border-t border-[var(--line-subtle)] py-4">
+          <p className="text-[13px] text-[var(--fg-tertiary)]">
             Já tem uma conta?{" "}
-            <Link
-              href="/auth/login"
-              className="text-[var(--fg-primary)] underline-offset-4 hover:underline"
-            >
+            <Link href="/auth/login" className="text-[var(--fg-primary)] underline-offset-4 hover:underline">
               Entrar
             </Link>
           </p>

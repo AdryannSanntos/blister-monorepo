@@ -10,10 +10,8 @@ import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "src/core/shared/components/ui/card";
 import {
   Form,
@@ -23,13 +21,19 @@ import {
   FormLabel,
   FormMessage,
 } from "src/core/shared/components/ui/form";
-import { Input } from "src/core/shared/components/ui/input";
+import { PasswordInput } from "src/core/shared/components/ui/password-input";
+import { PasswordStrength } from "src/core/shared/components/ui/password-strength";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
 
 const resetPasswordSchema = z
   .object({
-    newPassword: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+    newPassword: z
+      .string()
+      .min(8, "Senha deve ter pelo menos 8 caracteres")
+      .regex(/[A-Z]/, "Inclua pelo menos uma letra maiúscula")
+      .regex(/[0-9]/, "Inclua pelo menos um número")
+      .regex(/[^A-Za-z0-9]/, "Inclua pelo menos um caractere especial"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -48,11 +52,10 @@ export function ResetPasswordPage() {
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     mode: "onBlur",
-    defaultValues: {
-      newPassword: "",
-      confirmPassword: "",
-    },
+    defaultValues: { newPassword: "", confirmPassword: "" },
   });
+
+  const passwordValue = form.watch("newPassword");
 
   async function onSubmit(values: ResetPasswordFormValues) {
     if (!token) {
@@ -62,15 +65,10 @@ export function ResetPasswordPage() {
 
     setIsLoading(true);
     try {
-      const { error } = await authClient.resetPassword({
-        newPassword: values.newPassword,
-        token,
-      });
+      const { error } = await authClient.resetPassword({ newPassword: values.newPassword, token });
 
       if (error) {
-        toast.error(
-          error.message ?? "Erro ao redefinir senha. Tente novamente.",
-        );
+        toast.error(error.message ?? "Erro ao redefinir senha. Tente novamente.");
         return;
       }
 
@@ -83,95 +81,86 @@ export function ResetPasswordPage() {
     }
   }
 
-  if (!token) {
-    return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Link inválido</CardTitle>
-            <CardDescription>
-              Este link de redefinição é inválido ou expirou
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-[var(--fg-secondary)]">
-              Por favor, solicite um novo link de recuperação de senha.
-            </p>
-          </CardContent>
-          <CardFooter className="justify-center">
-            <Link
-              href="/auth/forgot-password"
-              className="text-sm text-[var(--fg-primary)] underline-offset-4 hover:underline"
-            >
-              Solicitar novo link
-            </Link>
-          </CardFooter>
-        </Card>
+  const sharedLayout = (children: React.ReactNode) => (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[var(--bg-canvas)] px-4">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-primary text-primary-foreground text-lg font-semibold">
+          C
+        </div>
+        <h1 className="mt-2 text-[15px] font-medium text-[var(--fg-primary)]">Company OS</h1>
       </div>
+      <Card className="w-full max-w-[400px]">{children}</Card>
+    </div>
+  );
+
+  if (!token) {
+    return sharedLayout(
+      <>
+        <CardHeader className="pb-4">
+          <h2 className="text-[18px] font-medium text-[var(--fg-primary)]">Link inválido</h2>
+          <p className="text-[13px] text-[var(--fg-tertiary)]">Este link de redefinição é inválido ou expirou</p>
+        </CardHeader>
+        <CardContent className="pb-4">
+          <p className="text-[13px] text-[var(--fg-secondary)]">
+            Por favor, solicite um novo link de recuperação de senha.
+          </p>
+        </CardContent>
+        <CardFooter className="justify-center border-t border-[var(--line-subtle)] py-4">
+          <Link href="/auth/forgot-password" className="text-[13px] text-[var(--fg-primary)] underline-offset-4 hover:underline">
+            Solicitar novo link
+          </Link>
+        </CardFooter>
+      </>,
     );
   }
 
-  return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Nova senha</CardTitle>
-          <CardDescription>
-            Defina uma nova senha para sua conta
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nova senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Mínimo 8 caracteres"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar nova senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Repita a nova senha"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Salvando..." : "Salvar nova senha"}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="justify-center">
-          <Link
-            href="/auth/login"
-            className="text-sm text-[var(--fg-tertiary)] underline-offset-4 hover:underline"
-          >
-            Voltar para login
-          </Link>
-        </CardFooter>
-      </Card>
-    </div>
+  return sharedLayout(
+    <>
+      <CardHeader className="pb-4">
+        <h2 className="text-[18px] font-medium text-[var(--fg-primary)]">Criar nova senha</h2>
+        <p className="text-[13px] text-[var(--fg-tertiary)]">Defina uma nova senha para sua conta</p>
+      </CardHeader>
+      <CardContent className="pb-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nova senha</FormLabel>
+                  <FormControl>
+                    <PasswordInput placeholder="Crie uma senha forte" autoComplete="new-password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <PasswordStrength password={passwordValue} />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar nova senha</FormLabel>
+                  <FormControl>
+                    <PasswordInput placeholder="Repita a nova senha" autoComplete="new-password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Salvando..." : "Salvar nova senha"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+      <CardFooter className="justify-center border-t border-[var(--line-subtle)] py-4">
+        <Link href="/auth/login" className="text-[13px] text-[var(--fg-tertiary)] underline-offset-4 hover:underline">
+          Voltar para login
+        </Link>
+      </CardFooter>
+    </>,
   );
 }

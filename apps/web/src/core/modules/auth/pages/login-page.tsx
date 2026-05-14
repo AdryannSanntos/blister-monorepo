@@ -10,10 +10,8 @@ import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "src/core/shared/components/ui/card";
 import {
   Form,
@@ -24,6 +22,7 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import { PasswordInput } from "src/core/shared/components/ui/password-input";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
 
@@ -35,10 +34,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 function getSafeRedirectPath(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return null;
-  }
-
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return null;
   return value;
 }
 
@@ -50,10 +46,7 @@ export function LoginPage() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   async function onSubmit(values: LoginFormValues) {
@@ -70,12 +63,8 @@ export function LoginPage() {
           error.message?.toLowerCase().includes("email not verified") ||
           error.message?.toLowerCase().includes("email não verificado")
         ) {
-          toast.error(
-            "Seu email ainda não foi verificado. Verifique sua caixa de entrada.",
-          );
-          router.push(
-            `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
-          );
+          toast.error("Seu email ainda não foi verificado. Verifique sua caixa de entrada.");
+          router.push(`/auth/verify-email?email=${encodeURIComponent(values.email)}`);
           return;
         }
         toast.error(error.message ?? "Email ou senha incorretos.");
@@ -96,13 +85,20 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Entrar</CardTitle>
-          <CardDescription>Acesse sua conta para continuar</CardDescription>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[var(--bg-canvas)] px-4">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-primary text-primary-foreground text-lg font-semibold">
+          C
+        </div>
+        <h1 className="mt-2 text-[15px] font-medium text-[var(--fg-primary)]">Company OS</h1>
+      </div>
+
+      <Card className="w-full max-w-[400px]">
+        <CardHeader className="pb-4">
+          <h2 className="text-[18px] font-medium text-[var(--fg-primary)]">Entrar na sua conta</h2>
+          <p className="text-[13px] text-[var(--fg-tertiary)]">Informe seu email e senha para continuar</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -112,11 +108,7 @@ export function LoginPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="seu@email.com"
-                        {...field}
-                      />
+                      <Input type="email" placeholder="seu@email.com" autoComplete="email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,17 +123,13 @@ export function LoginPage() {
                       <FormLabel>Senha</FormLabel>
                       <Link
                         href="/auth/forgot-password"
-                        className="text-xs text-[var(--fg-tertiary)] underline-offset-4 hover:underline"
+                        className="text-[12px] text-[var(--fg-tertiary)] underline-offset-4 hover:text-[var(--fg-secondary)] hover:underline"
                       >
                         Esqueceu a senha?
                       </Link>
                     </div>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Sua senha"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Sua senha" autoComplete="current-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -153,13 +141,10 @@ export function LoginPage() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-sm text-[var(--fg-tertiary)]">
+        <CardFooter className="justify-center border-t border-[var(--line-subtle)] py-4">
+          <p className="text-[13px] text-[var(--fg-tertiary)]">
             Não tem uma conta?{" "}
-            <Link
-              href="/auth/signup"
-              className="text-[var(--fg-primary)] underline-offset-4 hover:underline"
-            >
+            <Link href="/auth/signup" className="text-[var(--fg-primary)] underline-offset-4 hover:underline">
               Criar conta
             </Link>
           </p>
