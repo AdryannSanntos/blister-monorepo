@@ -3,6 +3,7 @@
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { CreateInviteDialog } from "src/core/modules/organization/components/create-invite-dialog";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import {
   useCancelInvitation,
@@ -45,9 +46,20 @@ function formatDate(value: string) {
 export function InviteListPage() {
   const { data: session } = authClient.useSession();
   const { activeOrgId } = useActiveOrganization();
+  const { cannot, isLoading: abilityLoading } = useAbility();
   const { data: invitations, isLoading } = useInvitations(activeOrgId);
   const cancelMutation = useCancelInvitation(activeOrgId);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  if (!abilityLoading && cannot("read", "Member")) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[13px] text-[var(--fg-tertiary)]">
+          Você não tem permissão para acessar esta página.
+        </p>
+      </div>
+    );
+  }
 
   if (!activeOrgId || !session?.user) return null;
 

@@ -57,6 +57,7 @@ import {
   AppSidebar,
   type SidebarGroupDef,
 } from "src/core/shared/components/ui/app-sidebar";
+import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { authClient } from "src/core/shared/utils/auth-client";
 
 type DashboardShellProps = {
@@ -125,28 +126,88 @@ export function DashboardShell({ children }: DashboardShellProps) {
     {
       label: "Inteligência",
       items: [
-        { label: "Company Brain", icon: Brain, href: "/onboarding" },
-        { label: "Skills", icon: Shield, onSelect: () => showComingSoon("Skills") },
-        { label: "Templates", icon: LayoutTemplate, onSelect: () => showComingSoon("Templates") },
-        { label: "Biblioteca de contexto", icon: BookOpen, onSelect: () => showComingSoon("Biblioteca de contexto") },
+        {
+          label: "Company Brain",
+          icon: Brain,
+          href: "/onboarding",
+          permission: "company.update" as const,
+        },
+        {
+          label: "Skills",
+          icon: Shield,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Skills"),
+        },
+        {
+          label: "Templates",
+          icon: LayoutTemplate,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Templates"),
+        },
+        {
+          label: "Biblioteca de contexto",
+          icon: BookOpen,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Biblioteca de contexto"),
+        },
       ],
     },
     {
       label: "Conteúdo e Páginas",
       items: [
-        { label: "Content Studio", icon: Sparkles, onSelect: () => showComingSoon("Content Studio") },
-        { label: "Visuals", icon: FileImage, onSelect: () => showComingSoon("Visuals") },
-        { label: "Pages", icon: FileText, onSelect: () => showComingSoon("Pages") },
-        { label: "Campanhas", icon: Megaphone, onSelect: () => showComingSoon("Campanhas") },
+        {
+          label: "Content Studio",
+          icon: Sparkles,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Content Studio"),
+        },
+        {
+          label: "Visuals",
+          icon: FileImage,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Visuals"),
+        },
+        {
+          label: "Pages",
+          icon: FileText,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Pages"),
+        },
+        {
+          label: "Campanhas",
+          icon: Megaphone,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Campanhas"),
+        },
       ],
     },
     {
       label: "Automações",
       items: [
-        { label: "Automações", icon: Zap, onSelect: () => showComingSoon("Automações") },
-        { label: "Execuções", icon: Workflow, onSelect: () => showComingSoon("Execuções") },
-        { label: "Agenda", icon: CalendarDays, onSelect: () => showComingSoon("Agenda") },
-        { label: "Alertas e relatórios", icon: Bell, onSelect: () => showComingSoon("Alertas e relatórios") },
+        {
+          label: "Automações",
+          icon: Zap,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Automações"),
+        },
+        {
+          label: "Execuções",
+          icon: Workflow,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Execuções"),
+        },
+        {
+          label: "Agenda",
+          icon: CalendarDays,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Agenda"),
+        },
+        {
+          label: "Alertas e relatórios",
+          icon: Bell,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Alertas e relatórios"),
+        },
       ],
     },
     {
@@ -156,6 +217,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           label: "Equipe",
           icon: Users,
           href: "/dashboard/workspace/team",
+          permission: "member.read" as const,
           match: (p) =>
             p.startsWith("/dashboard/workspace/team") ||
             p.startsWith("/dashboard/invites"),
@@ -164,14 +226,26 @@ export function DashboardShell({ children }: DashboardShellProps) {
           label: "Permissões",
           icon: Shield,
           href: "/dashboard/workspace/permissions",
+          permission: "role.read" as const,
           match: (p) => p.startsWith("/dashboard/workspace/permissions"),
         },
-        { label: "Integrações", icon: PlugZap, onSelect: () => showComingSoon("Integrações") },
-        { label: "Arquivos e assets", icon: FolderOpen, onSelect: () => showComingSoon("Arquivos e assets") },
+        {
+          label: "Integrações",
+          icon: PlugZap,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Integrações"),
+        },
+        {
+          label: "Arquivos e assets",
+          icon: FolderOpen,
+          permission: "company.update" as const,
+          onSelect: () => showComingSoon("Arquivos e assets"),
+        },
         {
           label: "Configurações",
           icon: Settings,
           href: "/dashboard/workspace/settings",
+          permission: "company.update" as const,
           match: (p) => p.startsWith("/dashboard/workspace/settings"),
         },
       ],
@@ -323,18 +397,22 @@ export function DashboardShell({ children }: DashboardShellProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="md" asChild>
-              <Link href="/dashboard/invites">
-                <Users />
-                Equipe
-              </Link>
-            </Button>
-            <Button size="md" asChild>
-              <Link href="/onboarding">
-                <Brain />
-                Company Brain
-              </Link>
-            </Button>
+            <PermissionGate permission="member.read">
+              <Button variant="ghost" size="md" asChild>
+                <Link href="/dashboard/invites">
+                  <Users />
+                  Equipe
+                </Link>
+              </Button>
+            </PermissionGate>
+            <PermissionGate permission="company.update">
+              <Button size="md" asChild>
+                <Link href="/onboarding">
+                  <Brain />
+                  Company Brain
+                </Link>
+              </Button>
+            </PermissionGate>
           </div>
         </header>
 

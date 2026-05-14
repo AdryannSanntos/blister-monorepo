@@ -1,5 +1,7 @@
 "use client";
 
+import type { AppPermissionKey } from "@company-os/authz";
+import { permissionMap } from "@company-os/authz";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -53,6 +55,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "src/core/shared/components/ui/tooltip";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { cn } from "src/core/shared/utils";
 
 type Item = {
@@ -64,6 +67,7 @@ type Item = {
   href?: string;
   onSelect?: () => void;
   match?: (pathname: string) => boolean;
+  permission?: AppPermissionKey;
 };
 
 type Group = {
@@ -158,6 +162,7 @@ function AppSidebar({
   userTrigger,
 }: AppSidebarProps) {
   const pathname = usePathname();
+  const { can: canDo, isLoading: abilityLoading } = useAbility();
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const open = openProp ?? internalOpen;
   const setOpen = React.useCallback(
@@ -169,10 +174,50 @@ function AppSidebar({
   );
   const collapsed = !open;
 
-  const labeledGroups = groups.filter((g) => g.label);
+  function canShowItem(item: Item): boolean {
+    if (!item.permission || abilityLoading) return true;
+    const mapping = permissionMap[item.permission];
+    if (!mapping) return true;
+    return canDo(mapping[0], mapping[1]);
+  }
+
+  const filteredGroups = groups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter(canShowItem),
+    }))
+    .filter((g) => !g.label || g.items.length > 0);
+
+  const labeledGroups = filteredGroups.filter((g) => g.label);
+
+  function isItemActive(item: Item, path: string): boolean {
+    if (item.match) return item.match(path);
+    if (item.href) return path === item.href;
+    return false;
+  }
+
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
-    () => Object.fromEntries(labeledGroups.map((g) => [g.label!, false])),
+    () =>
+      Object.fromEntries(
+        labeledGroups.map((g) => [
+          g.label!,
+          g.items.some((item) => isItemActive(item, pathname)),
+        ]),
+      ),
   );
+
+  React.useEffect(() => {
+    setOpenGroups((prev) => {
+      const next = { ...prev };
+      for (const group of groups) {
+        if (!group.label) continue;
+        if (group.items.some((item) => isItemActive(item, pathname))) {
+          next[group.label] = true;
+        }
+      }
+      return next;
+    });
+  }, [pathname, groups]);
 
   function toggleGroup(label: string) {
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -270,7 +315,7 @@ function AppSidebar({
         </SidebarHeader>
 
         <SidebarContent className="gap-1 px-2 py-2">
-          {groups.map((group, groupIndex) => {
+          {filteredGroups.map((group, groupIndex) => {
             const isLabeledGroup = Boolean(group.label);
             const isGroupOpen = group.label ? (openGroups[group.label] ?? false) : true;
 
