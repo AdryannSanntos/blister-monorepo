@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateOrganizationDto, UpdateOrganizationDto } from './dto';
 import { RoleService } from './role.service';
@@ -87,5 +87,46 @@ export class OrganizationService {
       where: { id },
       data: dto,
     });
+  }
+
+  async deleteOrganization(id: string) {
+    await this.findById(id);
+    await this.prisma.organization.delete({ where: { id } });
+  }
+
+  async transferOwnership(orgId: string, fromUserId: string, toUserId: string) {
+    const [fromMembership, toMembership] = await Promise.all([
+      this.prisma.membership.findUnique({
+        where: { userId_organizationId: { userId: fromUserId, organizationId: orgId } },
+        include: { roles: { include: { role: true } } },
+      }),
+      this.prisma.membership.findUnique({
+        where: { userId_organizationId: { userId: toUserId, organizationId: orgId } },
+        include: { roles: { include: { role: true } } },
+      }),
+    ]);
+
+    if (!fromMembership) throw new NotFoundException('Current user is not a member');
+    if (!toMembership) throw new NotFoundException('Target user is not a member of this organization');
+
+    const ownerRole = await this.roleService.findSystemRole(orgId, 'owner');
+    if (!ownerRole) throw new NotFoundException('Owner role not found');
+
+    const toAlreadyOwner = toMembership.roles.some((mr) => mr.role.name === 'owner');
+
+    await this.prisma.$transaction(async (tx) => {
+      if (!toAlreadyOwner) {
+        await tx.membershipRole.create({
+          data: { membershipId: toMembership.id, roleId: ownerRole.id },
+        });
+      }
+
+      const fromOwnerAssignment = fromMembership.roles.find((mr) => mr.role.name === 'owner');
+      if (fromOwnerAssignment) {
+        await tx.membershipRole.delete({ where: { id: fromOwnerAssignment.id } });
+      }
+    });
+
+    return { success: true };
   }
 }

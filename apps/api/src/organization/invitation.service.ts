@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { EMAIL_PORT, type EmailPort } from '../email';
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateInvitationDto } from './dto';
@@ -42,6 +42,15 @@ export class InvitationService {
       await this.roleService.findById(dto.roleId);
     }
 
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { name: true },
+    });
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + INVITATION_EXPIRY_DAYS);
 
@@ -56,11 +65,25 @@ export class InvitationService {
       include: { organization: true },
     });
 
-    await this.email.send({
-      to: dto.email,
-      subject: `You've been invited to ${invitation.organization.name}`,
-      html: `<p>You have been invited to join <strong>${invitation.organization.name}</strong>.</p><p>This invitation expires on ${expiresAt.toLocaleDateString()}.</p>`,
-    });
+    const appUrl = process.env.APP_URL ?? 'http://localhost:3000';
+    const acceptUrl = `${appUrl}/invite/accept?invitationId=${invitation.id}&orgId=${organizationId}`;
+    const isDev = process.env.NODE_ENV === 'development';
+
+    try {
+      await this.email.send({
+        to: isDev ? 'cttadryansantoss@gmail.com' : dto.email,
+        subject: `You've been invited to ${organization.name}`,
+        html: `
+          <p>You have been invited to join <strong>${organization.name}</strong>.</p>
+          <p>This invitation expires on ${expiresAt.toLocaleDateString()}.</p>
+          <p><a href="${acceptUrl}" style="display:inline-block;padding:10px 20px;background:#000;color:#fff;text-decoration:none;border-radius:6px;">Accept invitation</a></p>
+          <p style="color:#888;font-size:12px;">Or copy this link: ${acceptUrl}</p>
+        `,
+      });
+    } catch {
+      await this.prisma.invitation.delete({ where: { id: invitation.id } });
+      throw new InternalServerErrorException('Failed to send invitation email');
+    }
 
     return invitation;
   }

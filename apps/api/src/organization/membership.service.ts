@@ -3,7 +3,7 @@ import {
   type PermissionOverride,
   defineAbilityForPermissions,
 } from '@company-os/authz';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -110,6 +110,36 @@ export class MembershipService {
     await this.prisma.membershipPermissionOverride.delete({
       where: { id: override.id },
     });
+  }
+
+  async removeMember(organizationId: string, membershipId: string) {
+    const membership = await this.prisma.membership.findUnique({
+      where: { id: membershipId },
+      include: {
+        roles: { include: { role: true } },
+      },
+    });
+
+    if (!membership || membership.organizationId !== organizationId) {
+      throw new NotFoundException('Membership not found');
+    }
+
+    const isOwner = membership.roles.some((mr) => mr.role.name === 'owner');
+
+    if (isOwner) {
+      const ownerCount = await this.prisma.membership.count({
+        where: {
+          organizationId,
+          roles: { some: { role: { name: 'owner' } } },
+        },
+      });
+
+      if (ownerCount <= 1) {
+        throw new ForbiddenException('Cannot remove the last owner of an organization');
+      }
+    }
+
+    await this.prisma.membership.delete({ where: { id: membershipId } });
   }
 
   async getEffectiveAbility(organizationId: string, userId: string) {
