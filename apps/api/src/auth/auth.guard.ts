@@ -20,14 +20,7 @@ export class AuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest<Request>();
-
-    const token = this.extractToken(request);
-
-    if (!token) {
-      throw new UnauthorizedException('Authentication required');
-    }
-
-    const user = await this.sessionService.validateToken(token);
+    const user = await this.sessionService.getSession(request.headers);
 
     if (!user) {
       throw new UnauthorizedException('Invalid or expired session');
@@ -36,19 +29,5 @@ export class AuthGuard implements CanActivate {
     (request as unknown as Record<string, unknown>)['currentUser'] = user;
 
     return true;
-  }
-
-  private extractToken(request: Request): string | null {
-    const cookieToken = (request.cookies as Record<string, string> | undefined)?.[
-      'better-auth.session_token'
-    ];
-    if (cookieToken) return cookieToken;
-
-    const authHeader = request.headers.authorization;
-    if (authHeader?.startsWith('Bearer ')) {
-      return authHeader.slice(7);
-    }
-
-    return null;
   }
 }

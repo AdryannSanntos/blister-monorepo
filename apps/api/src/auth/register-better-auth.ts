@@ -6,6 +6,14 @@ import type { PrismaService } from '../prisma/prisma.service';
 const logger = new Logger('BetterAuth');
 const authBasePath = '/api/auth';
 
+// Exported so SessionService can call auth.api.getSession without re-creating the instance
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _authInstance: any = null;
+
+export function getAuthInstance() {
+  return _authInstance;
+}
+
 export async function registerBetterAuth(
   app: INestApplication,
   prisma: PrismaService,
@@ -66,6 +74,8 @@ export async function registerBetterAuth(
         }
       : {}),
   });
+
+  _authInstance = auth;
 
   const handler = toNodeHandler(auth);
   const httpAdapter = app.getHttpAdapter().getInstance();

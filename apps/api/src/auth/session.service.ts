@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import type { IncomingHttpHeaders } from 'node:http';
+import { getAuthInstance } from './register-better-auth';
 
 export interface CurrentUser {
   id: string;
@@ -9,23 +10,33 @@ export interface CurrentUser {
 
 @Injectable()
 export class SessionService {
-  constructor(private readonly prisma: PrismaService) {}
+  async getSession(rawHeaders: IncomingHttpHeaders): Promise<CurrentUser | null> {
+    const auth = getAuthInstance();
+    if (!auth) return null;
 
-  async validateToken(token: string): Promise<CurrentUser | null> {
-    if (!token) return null;
+    // Convert Node.js IncomingHttpHeaders to fetch Headers so better-auth
+    // can validate the session using its own logic (handles signing, prefixes, etc.)
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(rawHeaders)) {
+      if (value === undefined) continue;
+      if (Array.isArray(value)) {
+        for (const v of value) headers.append(key, v);
+      } else {
+        headers.set(key, value);
+      }
+    }
 
-    const session = await this.prisma.session.findUnique({
-      where: { token },
-      include: { user: { select: { id: true, name: true, email: true } } },
-    });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const result = await auth.api.getSession({ headers }) as {
+      user?: { id: string; name: string; email: string };
+    } | null;
 
-    if (!session) return null;
-    if (session.expiresAt <= new Date()) return null;
+    if (!result?.user) return null;
 
     return {
-      id: session.user.id,
-      name: session.user.name,
-      email: session.user.email,
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
     };
   }
 }
