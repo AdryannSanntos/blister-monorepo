@@ -2,11 +2,18 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AppPermissionKey } from "@company-os/authz";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { Edit2, Plus, Shield, Trash2, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import {
   type OrgRole,
@@ -28,12 +35,6 @@ import {
 } from "src/core/shared/components/ui/alert-dialog";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "src/core/shared/components/ui/card";
 import { Checkbox } from "src/core/shared/components/ui/checkbox";
 import {
   Dialog,
@@ -52,6 +53,14 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "src/core/shared/components/ui/table";
 import { cn } from "src/core/shared/utils";
 
 const PERMISSION_GROUPS: {
@@ -149,7 +158,6 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
     },
   });
 
-  // Reset form when role changes (switching from create to edit)
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
       form.reset({ name: "", permissions: [] });
@@ -295,14 +303,168 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
   );
 }
 
+type RolesTableProps = {
+  roles: OrgRole[];
+  onEdit: (role: OrgRole) => void;
+  onDelete: (role: OrgRole) => void;
+  deleteIsPending: boolean;
+};
+
+function RolesTable({ roles, onEdit, onDelete, deleteIsPending }: RolesTableProps) {
+  const columns: ColumnDef<OrgRole>[] = [
+    {
+      id: "name",
+      header: "Cargo",
+      cell: ({ row }) => {
+        const role = row.original;
+        return (
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--bg-raised)]">
+              <Shield className="size-3.5 text-[var(--fg-tertiary)]" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[13px] font-medium text-[var(--fg-primary)]">
+                {role.name}
+              </span>
+              {role.isSystem && (
+                <Badge variant="secondary" className="text-[11px]">
+                  Sistema
+                </Badge>
+              )}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: "permissions",
+      header: "Permissões",
+      cell: ({ row }) => {
+        const perms = row.original.permissions;
+        if (perms.length === 0) {
+          return <span className="text-[12px] text-[var(--fg-tertiary)]">—</span>;
+        }
+        const visible = perms.slice(0, 4);
+        const overflow = perms.length - visible.length;
+        return (
+          <div className="flex flex-wrap gap-1">
+            {visible.map((perm) => (
+              <Badge key={perm} variant="secondary" className="text-[11px]">
+                {permissionLabel(perm as AppPermissionKey)}
+              </Badge>
+            ))}
+            {overflow > 0 && (
+              <Badge variant="secondary" className="text-[11px]">
+                +{overflow}
+              </Badge>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: ({ row }) => {
+        const role = row.original;
+        if (role.isSystem) return null;
+        return (
+          <div className="flex items-center justify-end gap-1">
+            <PermissionGate permission="role.update">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Editar cargo"
+                onClick={() => onEdit(role)}
+              >
+                <Edit2 className="size-4" />
+              </Button>
+            </PermissionGate>
+            <PermissionGate permission="role.delete">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Deletar cargo"
+                className="text-[var(--danger)] hover:text-[var(--danger)]"
+                onClick={() => onDelete(role)}
+                disabled={deleteIsPending}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </PermissionGate>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: roles,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-[var(--fg-tertiary)]"
+              >
+                Nenhum cargo criado ainda.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 export function PermissionsPage() {
   const { activeOrgId } = useActiveOrganization();
+  const { cannot, isLoading: abilityLoading } = useAbility();
   const { data: roles = [], isLoading } = useOrganizationRoles(activeOrgId);
   const deleteRole = useDeleteRole(activeOrgId);
-
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<OrgRole | null>(null);
   const [roleToDelete, setRoleToDelete] = useState<OrgRole | null>(null);
+
+  if (!abilityLoading && cannot("read", "Role")) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[13px] text-[var(--fg-tertiary)]">
+          Você não tem permissão para acessar esta página.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -328,87 +490,14 @@ export function PermissionsPage() {
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {roles.map((role) => (
-            <Card
-              key={role.id}
-              className="border-[var(--line-default)] bg-[var(--bg-base)]"
-            >
-              <CardHeader className="flex flex-row items-center gap-3 space-y-0 p-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--bg-raised)]">
-                  <Shield className="size-4 text-[var(--fg-tertiary)]" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-[14px] font-medium text-[var(--fg-primary)]">
-                      {role.name}
-                    </CardTitle>
-                    {role.isSystem && (
-                      <Badge variant="secondary">Sistema</Badge>
-                    )}
-                  </div>
-                  <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
-                    {role.permissions.length} permiss
-                    {role.permissions.length === 1 ? "ão" : "ões"}
-                  </p>
-                </div>
-
-                {!role.isSystem && (
-                  <div className="flex items-center gap-1">
-                    <PermissionGate permission="role.update">
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label="Editar cargo"
-                        onClick={() => setEditingRole(role)}
-                      >
-                        <Edit2 className="size-4" />
-                      </Button>
-                    </PermissionGate>
-                    <PermissionGate permission="role.delete">
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label="Deletar cargo"
-                        className="text-[var(--danger)] hover:text-[var(--danger)]"
-                        onClick={() => setRoleToDelete(role)}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </PermissionGate>
-                  </div>
-                )}
-              </CardHeader>
-
-              {role.permissions.length > 0 && (
-                <CardContent className="px-4 pb-4 pt-0">
-                  <div className="flex flex-wrap gap-1.5">
-                    {role.permissions.map((perm) => (
-                      <Badge
-                        key={perm}
-                        variant="secondary"
-                        className="text-[11px]"
-                      >
-                        {permissionLabel(perm as AppPermissionKey)}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              )}
-            </Card>
-          ))}
-
-          {roles.length === 0 && (
-            <div className="flex h-40 items-center justify-center rounded-[var(--r-lg)] border border-dashed border-[var(--line-default)]">
-              <p className="text-[13px] text-[var(--fg-tertiary)]">
-                Nenhum cargo criado ainda.
-              </p>
-            </div>
-          )}
-        </div>
+        <RolesTable
+          roles={roles}
+          onEdit={(role) => setEditingRole(role)}
+          onDelete={(role) => setRoleToDelete(role)}
+          deleteIsPending={deleteRole.isPending}
+        />
       )}
 
-      {/* Create Dialog */}
       {activeOrgId && (
         <RoleDialog
           open={createDialogOpen}
@@ -417,7 +506,6 @@ export function PermissionsPage() {
         />
       )}
 
-      {/* Edit Dialog */}
       {activeOrgId && editingRole && (
         <RoleDialog
           open={Boolean(editingRole)}
@@ -427,7 +515,6 @@ export function PermissionsPage() {
         />
       )}
 
-      {/* Delete Alert */}
       <AlertDialog
         open={Boolean(roleToDelete)}
         onOpenChange={(open) => !open && setRoleToDelete(null)}
