@@ -68,6 +68,18 @@ Organização ativa, convites, memberships, roles e permissões pertencem ao dom
 Não é possível remover o último owner de uma organização.
 Um membro pode ter múltiplas roles simultâneas.
 
+### 8. Dados em tabela por padrão
+
+Qualquer coleção de entidades de dados (membros, roles, convites, permissões, logs, execuções, etc.) **deve ser renderizada em tabela** usando TanStack Table + shadcn `<Table>`.
+
+Exceções aceitas (devem ser justificadas):
+- Pickers de navegação (selecionar workspace, onboarding step)
+- Controles de formulário (radio groups, select dropdowns)
+- Showcases visuais ou design system demos
+- Cards com hierarquia visual intrínseca que uma tabela não capturaria
+
+Se a dúvida existir, use tabela.
+
 ---
 
 ## Skills disponíveis
