@@ -69,7 +69,7 @@ async function fetchApiJson<T>(pathname: string) {
 
 async function getSession(request: NextRequest) {
   const response = await fetch(
-    new URL(`${AUTH_API_PREFIX}/get-session`, request.url),
+    `${API_BASE_URL}${AUTH_API_PREFIX}/get-session`,
     {
       method: "GET",
       headers: {
