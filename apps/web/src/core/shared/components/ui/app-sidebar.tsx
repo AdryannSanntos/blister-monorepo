@@ -5,13 +5,12 @@ import { usePathname } from "next/navigation";
 import {
   Bell,
   Brain,
-  CheckCheck,
+  ChevronRight,
   ChevronsUpDown,
   FileText,
   FolderOpen,
   Home,
   Image,
-  Inbox,
   KeyRound,
   LayoutTemplate,
   Library,
@@ -30,6 +29,11 @@ import {
 import * as React from "react";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import { Button } from "src/core/shared/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "src/core/shared/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
@@ -69,12 +73,8 @@ type Group = {
 
 const defaultGroups: Group[] = [
   {
-    label: "Operação",
     items: [
       { label: "Dashboard", icon: Home, href: "/dashboard" },
-      { label: "Caixa de entrada", icon: Inbox },
-      { label: "Aprovações", icon: CheckCheck },
-      { label: "Outputs", icon: FileText },
     ],
   },
   {
@@ -168,6 +168,16 @@ function AppSidebar({
     [onOpenChange, openProp],
   );
   const collapsed = !open;
+
+  const labeledGroups = groups.filter((g) => g.label);
+  const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
+    () => Object.fromEntries(labeledGroups.map((g) => [g.label!, false])),
+  );
+
+  function toggleGroup(label: string) {
+    setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
+  }
+
   const workspaceNode =
     typeof workspaceTrigger === "function"
       ? workspaceTrigger(collapsed)
@@ -259,95 +269,115 @@ function AppSidebar({
           )}
         </SidebarHeader>
 
-        <SidebarContent className="gap-2 px-2 py-2">
-          {groups.map((group, groupIndex) => (
-            <SidebarGroup
-              key={group.label ?? `group-${groupIndex}`}
-              className="gap-1 p-0"
-            >
-              {!collapsed && group.label ? (
-                <SidebarGroupLabel className="px-2.5 pt-2 text-[10.5px] font-medium tracking-[0.14em] text-[var(--fg-quaternary)] uppercase">
-                  {group.label}
-                </SidebarGroupLabel>
-              ) : null}
-              <SidebarGroupContent>
-                <SidebarMenu className="gap-0.5">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = item.match
-                      ? item.match(pathname)
-                      : item.href
-                        ? pathname === item.href
-                        : item.active;
-                    const content = (
-                      <>
-                        <span className="relative inline-flex">
-                          <Icon className="size-4 shrink-0" />
-                          {item.dot ? (
-                            <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
-                          ) : null}
-                        </span>
-                        {!collapsed ? (
-                          <span className="flex-1 truncate text-left">
-                            {item.label}
-                          </span>
-                        ) : null}
-                      </>
-                    );
-                    const button = (
-                      <SidebarMenuButton
-                        asChild={Boolean(item.href)}
-                        isActive={isActive}
-                        onClick={item.onSelect}
-                        className={cn(
-                          "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
-                          "hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]",
-                          "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
-                          collapsed && "justify-center px-0",
-                        )}
+        <SidebarContent className="gap-1 px-2 py-2">
+          {groups.map((group, groupIndex) => {
+            const isLabeledGroup = Boolean(group.label);
+            const isGroupOpen = group.label ? (openGroups[group.label] ?? false) : true;
+
+            return (
+              <Collapsible
+                key={group.label ?? `group-${groupIndex}`}
+                open={collapsed || !isLabeledGroup || isGroupOpen}
+                onOpenChange={group.label ? () => toggleGroup(group.label!) : undefined}
+              >
+                <SidebarGroup className="gap-0 p-0">
+                  {!collapsed && isLabeledGroup ? (
+                    <CollapsibleTrigger asChild>
+                      <SidebarGroupLabel
+                        className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]"
                       >
-                        {item.href ? <Link href={item.href}>{content}</Link> : content}
-                      </SidebarMenuButton>
-                    );
-                    return (
-                      <SidebarMenuItem key={item.label} className="relative">
-                        {isActive ? (
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
-                          />
-                        ) : null}
-                        {collapsed ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>{button}</TooltipTrigger>
-                            <TooltipContent side="right">
-                              {item.label}
-                            </TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          button
-                        )}
-                        {!collapsed && item.badge ? (
-                          <SidebarMenuBadge
-                            className={cn(
-                              "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
-                              item.badge.tone === "accent"
-                                ? "bg-[var(--accent-soft)] text-[var(--accent)]"
-                                : item.badge.tone === "warning"
-                                  ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
-                                  : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
-                            )}
-                          >
-                            {item.badge.value}
-                          </SidebarMenuBadge>
-                        ) : null}
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ))}
+                        {group.label}
+                        <ChevronRight
+                          className={cn(
+                            "size-3 shrink-0 transition-transform duration-[var(--dur-base)]",
+                            isGroupOpen && "rotate-90",
+                          )}
+                        />
+                      </SidebarGroupLabel>
+                    </CollapsibleTrigger>
+                  ) : null}
+                  <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+                    <SidebarGroupContent>
+                      <SidebarMenu className={cn("gap-0.5", isLabeledGroup && !collapsed && "ml-2 border-l border-[var(--line-subtle)] pl-2")}>
+                        {group.items.map((item) => {
+                          const Icon = item.icon;
+                          const isActive = item.match
+                            ? item.match(pathname)
+                            : item.href
+                              ? pathname === item.href
+                              : item.active;
+                          const content = (
+                            <>
+                              <span className="relative inline-flex">
+                                <Icon className="size-4 shrink-0" />
+                                {item.dot ? (
+                                  <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
+                                ) : null}
+                              </span>
+                              {!collapsed ? (
+                                <span className="flex-1 truncate text-left">
+                                  {item.label}
+                                </span>
+                              ) : null}
+                            </>
+                          );
+                          const button = (
+                            <SidebarMenuButton
+                              asChild={Boolean(item.href)}
+                              isActive={isActive}
+                              onClick={item.onSelect}
+                              className={cn(
+                                "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
+                                "hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]",
+                                "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
+                                collapsed && "justify-center px-0",
+                              )}
+                            >
+                              {item.href ? <Link href={item.href}>{content}</Link> : content}
+                            </SidebarMenuButton>
+                          );
+                          return (
+                            <SidebarMenuItem key={item.label} className="relative">
+                              {isActive ? (
+                                <span
+                                  aria-hidden
+                                  className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
+                                />
+                              ) : null}
+                              {collapsed ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>{button}</TooltipTrigger>
+                                  <TooltipContent side="right">
+                                    {item.label}
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : (
+                                button
+                              )}
+                              {!collapsed && item.badge ? (
+                                <SidebarMenuBadge
+                                  className={cn(
+                                    "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
+                                    item.badge.tone === "accent"
+                                      ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                                      : item.badge.tone === "warning"
+                                        ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
+                                        : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
+                                  )}
+                                >
+                                  {item.badge.value}
+                                </SidebarMenuBadge>
+                              ) : null}
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </CollapsibleContent>
+                </SidebarGroup>
+              </Collapsible>
+            );
+          })}
         </SidebarContent>
 
         <SidebarFooter className="border-t border-[var(--line-subtle)] p-2">

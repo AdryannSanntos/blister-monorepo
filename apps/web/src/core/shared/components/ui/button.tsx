@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[var(--shadow-glow)] hover:bg-[var(--accent-hover)] focus-visible:ring-[3px] focus-visible:ring-ring/50",
+          "bg-primary text-primary-foreground shadow-[0_0_0_1px_var(--accent-soft-hi)_inset,0_1px_0_0_oklch(1_0_0_/_0.1)_inset,0_4px_16px_color-mix(in_oklch,var(--accent)_16%,transparent)] hover:bg-[var(--accent-hover)] focus-visible:ring-[3px] focus-visible:ring-ring/50",
         flat: "bg-primary text-primary-foreground hover:bg-[var(--accent-hover)] focus-visible:ring-[3px] focus-visible:ring-ring/50",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-[3px] focus-visible:ring-destructive/30",

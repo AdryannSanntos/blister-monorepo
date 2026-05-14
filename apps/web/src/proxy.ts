@@ -10,10 +10,11 @@ const INVITE_ACCEPT_PATH = "/invite/accept";
 const APP_PREFIX = "/app";
 const AUTH_API_PREFIX = "/api/auth";
 const ACTIVE_ORG_COOKIE = "company-os-active-org";
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001").replace(
-  /\/$/,
-  "",
-);
+const API_BASE_URL = (
+  process.env.INTERNAL_API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:3001"
+).replace(/\/$/, "");
 
 type SessionPayload = {
   session?: unknown;

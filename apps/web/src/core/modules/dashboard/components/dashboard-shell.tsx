@@ -4,16 +4,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
-  BellRing,
+  Bell,
   BookOpen,
   Brain,
   CalendarDays,
-  CheckCheck,
   ChevronsUpDown,
   FileImage,
   FileText,
   FolderOpen,
-  Inbox,
   KeyRound,
   LayoutDashboard,
   LayoutTemplate,
@@ -66,10 +64,7 @@ type DashboardShellProps = {
 };
 
 function getHeaderTitle(pathname: string) {
-  if (pathname.startsWith("/dashboard/invites")) {
-    return "Equipe";
-  }
-
+  if (pathname.startsWith("/dashboard/invites")) return "Equipe";
   return "Dashboard";
 }
 
@@ -79,12 +74,10 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const { theme, setTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const {
-    sessionUser,
     displayName,
     activeOrganization,
     activeRole,
     organizations,
-    onboardingPublished,
     setActiveOrgId,
     clearActiveOrg,
     isLoading,
@@ -96,22 +89,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   async function handleSignOut() {
     const { error } = await authClient.signOut();
-
     if (error) {
       toast.error(error.message ?? "Erro ao sair da conta.");
       return;
     }
-
     clearActiveOrg();
     router.push("/auth/login");
     router.refresh();
   }
 
   function handleSelectWorkspace(organizationId: string) {
-    if (organizationId === activeOrganization?.id) {
-      return;
-    }
-
+    if (organizationId === activeOrganization?.id) return;
     setActiveOrgId(organizationId);
     router.push("/app");
   }
@@ -122,104 +110,40 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   const sidebarGroups: SidebarGroupDef[] = [
     {
-      label: "Operação",
       items: [
         {
           label: "Dashboard",
           icon: LayoutDashboard,
           href: "/dashboard",
-          match: (currentPathname) => currentPathname === "/dashboard",
-        },
-        {
-          label: "Caixa de entrada",
-          icon: Inbox,
-          onSelect: () => showComingSoon("Caixa de entrada"),
-        },
-        {
-          label: "Aprovações",
-          icon: CheckCheck,
-          onSelect: () => showComingSoon("Aprovações"),
-        },
-        {
-          label: "Outputs",
-          icon: FileText,
-          onSelect: () => showComingSoon("Outputs"),
+          match: (p) => p === "/dashboard",
         },
       ],
     },
     {
       label: "Inteligência",
       items: [
-        {
-          label: "Company Brain",
-          icon: Brain,
-          href: "/onboarding",
-        },
-        {
-          label: "Skills",
-          icon: Shield,
-          onSelect: () => showComingSoon("Skills"),
-        },
-        {
-          label: "Templates",
-          icon: LayoutTemplate,
-          onSelect: () => showComingSoon("Templates"),
-        },
-        {
-          label: "Biblioteca de contexto",
-          icon: BookOpen,
-          onSelect: () => showComingSoon("Biblioteca de contexto"),
-        },
+        { label: "Company Brain", icon: Brain, href: "/onboarding" },
+        { label: "Skills", icon: Shield, onSelect: () => showComingSoon("Skills") },
+        { label: "Templates", icon: LayoutTemplate, onSelect: () => showComingSoon("Templates") },
+        { label: "Biblioteca de contexto", icon: BookOpen, onSelect: () => showComingSoon("Biblioteca de contexto") },
       ],
     },
     {
       label: "Conteúdo e Páginas",
       items: [
-        {
-          label: "Content Studio",
-          icon: Sparkles,
-          onSelect: () => showComingSoon("Content Studio"),
-        },
-        {
-          label: "Visuals",
-          icon: FileImage,
-          onSelect: () => showComingSoon("Visuals"),
-        },
-        {
-          label: "Pages",
-          icon: FileText,
-          onSelect: () => showComingSoon("Pages"),
-        },
-        {
-          label: "Campanhas",
-          icon: Megaphone,
-          onSelect: () => showComingSoon("Campanhas"),
-        },
+        { label: "Content Studio", icon: Sparkles, onSelect: () => showComingSoon("Content Studio") },
+        { label: "Visuals", icon: FileImage, onSelect: () => showComingSoon("Visuals") },
+        { label: "Pages", icon: FileText, onSelect: () => showComingSoon("Pages") },
+        { label: "Campanhas", icon: Megaphone, onSelect: () => showComingSoon("Campanhas") },
       ],
     },
     {
       label: "Automações",
       items: [
-        {
-          label: "Automações",
-          icon: Zap,
-          onSelect: () => showComingSoon("Automações"),
-        },
-        {
-          label: "Execuções",
-          icon: Workflow,
-          onSelect: () => showComingSoon("Execuções"),
-        },
-        {
-          label: "Agenda",
-          icon: CalendarDays,
-          onSelect: () => showComingSoon("Agenda"),
-        },
-        {
-          label: "Alertas e relatórios",
-          icon: BellRing,
-          onSelect: () => showComingSoon("Alertas e relatórios"),
-        },
+        { label: "Automações", icon: Zap, onSelect: () => showComingSoon("Automações") },
+        { label: "Execuções", icon: Workflow, onSelect: () => showComingSoon("Execuções") },
+        { label: "Agenda", icon: CalendarDays, onSelect: () => showComingSoon("Agenda") },
+        { label: "Alertas e relatórios", icon: Bell, onSelect: () => showComingSoon("Alertas e relatórios") },
       ],
     },
     {
@@ -229,29 +153,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
           label: "Equipe",
           icon: Users,
           href: "/dashboard/invites",
-          match: (currentPathname) =>
-            currentPathname.startsWith("/dashboard/invites"),
+          match: (p) => p.startsWith("/dashboard/invites"),
         },
-        {
-          label: "Permissões",
-          icon: KeyRound,
-          onSelect: () => showComingSoon("Permissões"),
-        },
-        {
-          label: "Integrações",
-          icon: PlugZap,
-          onSelect: () => showComingSoon("Integrações"),
-        },
-        {
-          label: "Arquivos e assets",
-          icon: FolderOpen,
-          onSelect: () => showComingSoon("Arquivos e assets"),
-        },
-        {
-          label: "Configurações",
-          icon: Settings,
-          onSelect: () => showComingSoon("Configurações"),
-        },
+        { label: "Permissões", icon: KeyRound, onSelect: () => showComingSoon("Permissões") },
+        { label: "Integrações", icon: PlugZap, onSelect: () => showComingSoon("Integrações") },
+        { label: "Arquivos e assets", icon: FolderOpen, onSelect: () => showComingSoon("Arquivos e assets") },
+        { label: "Configurações", icon: Settings, onSelect: () => showComingSoon("Configurações") },
       ],
     },
   ];
@@ -280,7 +187,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         }}
         user={{
           name: displayName,
-          email: sessionUser?.email ?? "Sem email",
+          email: "",
           role: activeRole ?? "member",
           initials: userInitials,
         }}
@@ -289,14 +196,18 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={collapsed ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]" : "flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"}
+                className={
+                  collapsed
+                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
+                    : "flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
+                }
               >
                 <Avatar shape="square" className={collapsed ? "size-8" : "size-10"}>
                   <AvatarFallback className={collapsed ? "text-[12px]" : "text-[13px]"}>
                     {workspaceInitials}
                   </AvatarFallback>
                 </Avatar>
-                {collapsed ? null : (
+                {!collapsed && (
                   <>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
@@ -314,18 +225,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <DropdownMenuContent align="start" className="w-72">
               <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {organizations.map((organization) => (
-                <DropdownMenuItem
-                  key={organization.id}
-                  onClick={() => handleSelectWorkspace(organization.id)}
-                >
+              {organizations.map((org) => (
+                <DropdownMenuItem key={org.id} onClick={() => handleSelectWorkspace(org.id)}>
                   <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="truncate text-[13px] font-medium">
-                      {organization.name}
-                    </span>
-                    <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                      {organization.slug}
-                    </span>
+                    <span className="truncate text-[13px] font-medium">{org.name}</span>
+                    <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">{org.slug}</span>
                   </span>
                 </DropdownMenuItem>
               ))}
@@ -337,21 +241,20 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={collapsed ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]" : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left"}
+                className={
+                  collapsed
+                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
+                    : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left"
+                }
               >
                 <Avatar className={collapsed ? "size-8" : "size-9"}>
-                  <AvatarFallback className="text-[11px]">
-                    {userInitials}
-                  </AvatarFallback>
+                  <AvatarFallback className="text-[11px]">{userInitials}</AvatarFallback>
                 </Avatar>
-                {collapsed ? null : (
+                {!collapsed && (
                   <>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
                         {displayName}
-                      </p>
-                      <p className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                        {(activeRole ?? "member").toLowerCase()} · {sessionUser?.email ?? "Sem email"}
                       </p>
                     </div>
                     <ChevronsUpDown className="size-3.5 shrink-0 text-[var(--fg-quaternary)]" />
@@ -359,19 +262,8 @@ export function DashboardShell({ children }: DashboardShellProps) {
                 )}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="end" className="w-64">
-              <DropdownMenuLabel>
-                <div className="flex flex-col gap-1">
-                  <span>{displayName}</span>
-                  <span className="text-[11.5px] font-normal text-[var(--fg-tertiary)]">
-                    {sessionUser?.email ?? "Sem email"}
-                  </span>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
+            <DropdownMenuContent side="top" align="end" className="w-56">
+              <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                 {theme === "dark" ? <Sun /> : <Moon />}
                 Alternar tema
               </DropdownMenuItem>
@@ -385,45 +277,39 @@ export function DashboardShell({ children }: DashboardShellProps) {
       />
 
       <div className="min-w-0 flex-1 overflow-y-auto">
-        <header className="sticky top-0 z-20 flex min-h-20 items-center justify-between gap-4 border-b border-[var(--line-subtle)] bg-[color-mix(in_oklch,var(--bg-canvas)_92%,transparent)] px-8 py-5 backdrop-blur">
+        <header className="sticky top-0 z-20 flex h-20 shrink-0 items-center justify-between gap-4 border-b border-[var(--line-subtle)] bg-[color-mix(in_oklch,var(--bg-canvas)_92%,transparent)] px-8 backdrop-blur">
           <div className="flex min-w-0 items-center gap-3">
             <Button
               variant="ghost"
-              size="md"
-              className="size-9 p-0"
+              size="icon"
               aria-label={sidebarOpen ? "Recolher sidebar" : "Expandir sidebar"}
               onClick={() => setSidebarOpen((open) => !open)}
             >
               {sidebarOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
             </Button>
-            <div className="min-w-0">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/dashboard">
-                      {activeOrganization.name}
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>{headerTitle}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-              <p className="mt-1 truncate text-[12.5px] text-[var(--fg-tertiary)]">
-                {activeOrganization.slug} · {onboardingPublished ? "Company Brain publicado" : "Company Brain em configuração"}
-              </p>
-            </div>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/dashboard">
+                    {activeOrganization.name}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{headerTitle}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" size="md" asChild>
               <Link href="/dashboard/invites">
                 <Users />
                 Equipe
               </Link>
             </Button>
-            <Button asChild>
+            <Button size="md" asChild>
               <Link href="/onboarding">
                 <Brain />
                 Company Brain
