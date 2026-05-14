@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -34,8 +34,17 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+function getSafeRedirectPath(value: string | null) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return null;
+  }
+
+  return value;
+}
+
 export function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
@@ -73,7 +82,12 @@ export function LoginPage() {
         return;
       }
 
-      router.push("/");
+      const redirectPath =
+        getSafeRedirectPath(searchParams.get("redirect")) ??
+        getSafeRedirectPath(searchParams.get("next")) ??
+        "/app";
+
+      router.push(redirectPath);
     } catch {
       toast.error("Erro inesperado. Tente novamente.");
     } finally {

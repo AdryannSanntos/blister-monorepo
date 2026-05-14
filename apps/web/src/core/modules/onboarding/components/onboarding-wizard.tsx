@@ -68,7 +68,7 @@ const TOTAL_STEPS = STEP_KEYS.length;
 export function OnboardingWizard() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
-  const { activeOrgId } = useActiveOrganization();
+  const { activeOrgId, isLoaded: isActiveOrgLoaded } = useActiveOrganization();
   const { data: draft, isLoading } = useOnboardingDraft(activeOrgId);
   const saveMutation = useSaveOnboardingDraft(activeOrgId);
   const publishMutation = usePublishOnboarding(activeOrgId);
@@ -82,6 +82,12 @@ export function OnboardingWizard() {
   });
 
   useEffect(() => {
+    if (isActiveOrgLoaded && !activeOrgId) {
+      router.replace("/app");
+    }
+  }, [activeOrgId, isActiveOrgLoaded, router]);
+
+  useEffect(() => {
     if (draft && !initialized) {
       setCurrentStep(draft.currentStep);
       form.reset(
@@ -90,6 +96,12 @@ export function OnboardingWizard() {
       setInitialized(true);
     }
   }, [draft, form, initialized]);
+
+  useEffect(() => {
+    if (draft?.publishedAt) {
+      router.replace("/dashboard");
+    }
+  }, [draft?.publishedAt, router]);
 
   async function save(step: number) {
     try {
@@ -150,7 +162,7 @@ export function OnboardingWizard() {
     }
   }
 
-  if (isLoading || !initialized) {
+  if (isLoading || !initialized || !isActiveOrgLoaded || !activeOrgId) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />

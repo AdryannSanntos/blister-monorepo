@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
@@ -57,6 +58,7 @@ function generateSlug(name: string): string {
 export function CreateWorkspacePage() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
+  const { setActiveOrgId } = useActiveOrganization();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<CreateWorkspaceFormValues>({
@@ -83,14 +85,17 @@ export function CreateWorkspacePage() {
 
     setIsLoading(true);
     try {
-      await apiClient.post("/organizations", {
+      const { data } = await apiClient.post<{
+        organization: { id: string };
+      }>("/organizations", {
         userId: session.user.id,
         name: values.name,
         slug: values.slug,
       });
 
+      setActiveOrgId(data.organization.id);
       toast.success("Workspace criado com sucesso!");
-      router.push("/dashboard");
+      router.push("/app");
     } catch (err: unknown) {
       const error = err as {
         response?: { data?: { message?: string } };

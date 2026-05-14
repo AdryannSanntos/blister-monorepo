@@ -24,7 +24,8 @@ COPY packages packages
 
 RUN pnpm --filter @company-os/authz build \
   && pnpm --filter @company-os/types build \
-  && pnpm --filter @company-os/api prisma:generate
+  && pnpm --filter @company-os/api prisma:generate \
+  && pnpm --filter @company-os/api build
 
 FROM base AS runner
 
@@ -35,4 +36,4 @@ COPY --from=build /app /app
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "pnpm --filter @company-os/api exec prisma db push && node -r tsconfig-paths/register -r ts-node/register apps/api/src/main.ts"]
+CMD ["sh", "-c", "pnpm --filter @company-os/api exec prisma db push && node apps/api/dist/main.js"]

@@ -8,6 +8,9 @@
   },
   "scripts": {
     "dev": "turbo dev",
+    "dev:all": "turbo dev",
+    "dev:web": "pnpm --dir apps/web dev",
+    "dev:api": "pnpm --dir apps/api dev",
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",

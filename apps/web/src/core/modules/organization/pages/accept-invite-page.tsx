@@ -26,6 +26,9 @@ export function AcceptInvitePage() {
   const { setActiveOrgId } = useActiveOrganization();
   const acceptMutation = useAcceptInvitation();
   const [accepted, setAccepted] = useState(false);
+  const loginHref = `/auth/login?redirect=${encodeURIComponent(
+    `/invite/accept?invitationId=${invitationId}&orgId=${orgId}`,
+  )}`;
 
   if (!invitationId || !orgId) {
     return (
@@ -62,7 +65,7 @@ export function AcceptInvitePage() {
           </CardHeader>
           <CardFooter className="justify-center">
             <Link
-              href={`/auth/login?redirect=/invite/accept?invitationId=${invitationId}&orgId=${orgId}`}
+              href={loginHref}
               className="text-sm text-[var(--fg-primary)] underline-offset-4 hover:underline"
             >
               Fazer login
@@ -88,7 +91,7 @@ export function AcceptInvitePage() {
       toast.success("Convite aceito! Redirecionando...");
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/app");
       }, 1500);
     } catch {
       // error handled in hook

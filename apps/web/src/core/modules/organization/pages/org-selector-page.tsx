@@ -41,7 +41,7 @@ export function OrgSelectorPage() {
 
   function handleSelectOrg(orgId: string) {
     setActiveOrgId(orgId);
-    router.push("/dashboard");
+    router.push("/app");
   }
 
   return (
