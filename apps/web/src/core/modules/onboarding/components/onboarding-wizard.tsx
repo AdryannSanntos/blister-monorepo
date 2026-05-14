@@ -65,6 +65,33 @@ const STEP_LABELS = [
 
 const TOTAL_STEPS = STEP_KEYS.length;
 
+function getErrorMessage(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => getErrorMessage(item))
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+
+    if (typeof record.message === "string") {
+      return record.message;
+    }
+
+    if (Array.isArray(record.message)) {
+      return getErrorMessage(record.message);
+    }
+  }
+
+  return "";
+}
+
 export function OnboardingWizard() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
@@ -148,12 +175,13 @@ export function OnboardingWizard() {
       toast.success("Company Brain publicado com sucesso!");
       router.push("/dashboard");
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      const message = error?.response?.data?.message ?? "";
+      const error = err as { response?: { data?: { message?: unknown } } };
+      const message = getErrorMessage(error?.response?.data?.message);
+      const normalizedMessage = message.toLowerCase();
 
-      if (message.toLowerCase().includes("owner")) {
+      if (normalizedMessage.includes("owner")) {
         toast.error("Apenas o owner pode publicar o onboarding.");
-      } else if (message.toLowerCase().includes("already")) {
+      } else if (normalizedMessage.includes("already")) {
         toast.error("O onboarding já foi publicado.");
         router.push("/dashboard");
       } else {

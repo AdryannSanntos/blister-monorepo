@@ -44,6 +44,33 @@ const createWorkspaceSchema = z.object({
 
 type CreateWorkspaceFormValues = z.infer<typeof createWorkspaceSchema>;
 
+function getErrorMessage(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => getErrorMessage(item))
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+
+    if (typeof record.message === "string") {
+      return record.message;
+    }
+
+    if (Array.isArray(record.message)) {
+      return getErrorMessage(record.message);
+    }
+  }
+
+  return "";
+}
+
 function generateSlug(name: string): string {
   return name
     .toLowerCase()
@@ -98,17 +125,20 @@ export function CreateWorkspacePage() {
       router.push("/app");
     } catch (err: unknown) {
       const error = err as {
-        response?: { data?: { message?: string } };
-        message?: string;
+        response?: { data?: { message?: unknown } };
+        message?: unknown;
       };
-      const message = error?.response?.data?.message ?? error?.message ?? "";
+      const message = getErrorMessage(
+        error?.response?.data?.message ?? error?.message,
+      );
+      const normalizedMessage = message.toLowerCase();
 
       if (
-        message.toLowerCase().includes("slug") &&
-        (message.toLowerCase().includes("taken") ||
-          message.toLowerCase().includes("already") ||
-          message.toLowerCase().includes("existe") ||
-          message.toLowerCase().includes("conflict"))
+        normalizedMessage.includes("slug") &&
+        (normalizedMessage.includes("taken") ||
+          normalizedMessage.includes("already") ||
+          normalizedMessage.includes("existe") ||
+          normalizedMessage.includes("conflict"))
       ) {
         toast.error("Este slug já está em uso. Escolha outro.");
         form.setError("slug", { message: "Este slug já está em uso." });
