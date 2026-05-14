@@ -9,6 +9,7 @@ Esta pasta concentra a documentacao viva do monorepo e substitui referencias gen
 - `plans/`: planos de implementacao aprovados para epicos e fundacoes do produto
 - `decisions/`: decisoes arquiteturais e padroes obrigatorios da stack
 - `design-system/`: tokens, componentes, padroes visuais e mapa da rota `/design-system`
+- `examples/`: referencias de codigo e exemplos removidos da interface principal, preservados para consulta
 - `setup/`: setup local, scripts e proximos passos da fundacao
 - `skills/`: skills operacionais para IA trabalhar no projeto com contexto e padroes corretos
 
@@ -29,3 +30,5 @@ Esta pasta concentra a documentacao viva do monorepo e substitui referencias gen
 Quando houver divergencia entre uma expectativa de produto e o codigo atual, a documentacao deve deixar isso explicito. Este repositorio ainda esta na fase de fundacao tecnica e nao contem os modulos finais de negocio descritos no PRD.
 
 O mesmo vale para o design system: a referencia final deve refletir primeiro o codigo real do `apps/web` e a rota `/design-system`.
+
+No frontend, a prioridade deve ser sempre encapsular comportamento em hooks antes de espalhar logica em paginas ou componentes. Requisicoes de dados devem usar `TanStack Query` como regra padrao do projeto.

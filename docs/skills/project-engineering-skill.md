@@ -62,7 +62,9 @@ Ser a skill base para qualquer IA que for trabalhar neste monorepo.
 ### HTTP e dados
 
 - `axios` e o cliente HTTP padrao
+- requisicoes de frontend nao devem nascer direto em paginas ou componentes; a prioridade e criar ou reutilizar hooks de dominio
 - estado de servidor no frontend pertence ao `TanStack Query`
+- toda requisicao de leitura ou mutacao no frontend deve priorizar `TanStack Query` antes de qualquer abordagem manual
 - estado compartilhavel por URL pertence ao `nuqs`
 - estado local de cliente que nao cabe em cache nem URL pode usar `zustand`
 

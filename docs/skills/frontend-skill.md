@@ -36,7 +36,9 @@ Guiar a IA ao implementar, refatorar ou revisar codigo em `apps/web`.
 
 ### Dados e estado
 
+- priorizar hooks de dominio para encapsular acesso a dados, derivacoes e regras de interface compartilhadas
 - dados de servidor devem usar `@tanstack/react-query`
+- componentes e paginas nao devem disparar requisicoes HTTP diretamente quando um hook puder representar esse contrato
 - filtros e estado compartilhavel devem usar `nuqs`
 - estado local temporario pode usar `zustand`, mas apenas quando `useState` nao resolver
 
@@ -95,6 +97,7 @@ Guiar a IA ao implementar, refatorar ou revisar codigo em `apps/web`.
 - chamadas de auth devem partir do `authClient` existente
 - organizacao ativa nao deve ser assumida como parte da sessao do `better-auth`; ela deve vir das APIs do dominio da aplicacao
 - chamadas HTTP devem manter consistencia com o uso de `axios`
+- requisicoes de leitura e mutacao devem priorizar hooks com `TanStack Query`, mesmo quando o consumo inicial acontecer em uma unica tela
 
 ## Checklist de Entrega
 

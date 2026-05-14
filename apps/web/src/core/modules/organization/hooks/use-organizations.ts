@@ -9,6 +9,10 @@ export type Organization = {
   userId: string;
   createdAt: string;
   updatedAt: string;
+  roles: Array<{
+    id: string;
+    name: string;
+  }>;
 };
 
 export function useUserOrganizations(userId: string | undefined) {

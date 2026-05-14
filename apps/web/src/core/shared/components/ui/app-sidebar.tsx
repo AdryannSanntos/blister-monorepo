@@ -1,19 +1,29 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Bell,
   Brain,
   CheckCheck,
   ChevronsUpDown,
   FileText,
+  FolderOpen,
   Home,
+  Image,
+  Inbox,
+  KeyRound,
   LayoutTemplate,
+  Library,
+  Megaphone,
   type LucideIcon,
   PanelLeftClose,
   PanelLeftOpen,
+  PlugZap,
   Settings,
   Shield,
-  Volume2,
+  Sparkles,
+  Users,
   Workflow,
   Zap,
 } from "lucide-react";
@@ -49,6 +59,7 @@ type Item = {
   active?: boolean;
   href?: string;
   onSelect?: () => void;
+  match?: (pathname: string) => boolean;
 };
 
 type Group = {
@@ -58,39 +69,49 @@ type Group = {
 
 const defaultGroups: Group[] = [
   {
+    label: "Operação",
     items: [
-      { label: "Overview", icon: Home, active: true },
-      {
-        label: "Company brain",
-        icon: Brain,
-        badge: { value: "42", tone: "accent" },
-      },
+      { label: "Dashboard", icon: Home, href: "/dashboard" },
+      { label: "Caixa de entrada", icon: Inbox },
+      { label: "Aprovações", icon: CheckCheck },
+      { label: "Outputs", icon: FileText },
+    ],
+  },
+  {
+    label: "Inteligência",
+    items: [
+      { label: "Company Brain", icon: Brain, href: "/onboarding" },
       { label: "Skills", icon: Shield },
-      { label: "Automations", icon: Zap, dot: true },
-      { label: "Workflows", icon: Workflow },
+      { label: "Templates", icon: LayoutTemplate },
+      { label: "Biblioteca de contexto", icon: Library },
     ],
   },
   {
-    label: "Studio",
+    label: "Conteúdo e Páginas",
     items: [
-      { label: "Landing pages", icon: FileText },
-      {
-        label: "Social",
-        icon: Volume2,
-        badge: { value: "12 drafts", tone: "neutral" },
-      },
-      { label: "Reports", icon: LayoutTemplate },
+      { label: "Content Studio", icon: Sparkles },
+      { label: "Visuals", icon: Image },
+      { label: "Pages", icon: FileText },
+      { label: "Campanhas", icon: Megaphone },
     ],
   },
   {
-    label: "Queue",
+    label: "Automações",
     items: [
-      {
-        label: "Approvals",
-        icon: CheckCheck,
-        badge: { value: "7", tone: "warning" },
-      },
-      { label: "Activity", icon: Bell },
+      { label: "Automações", icon: Zap },
+      { label: "Execuções", icon: Workflow },
+      { label: "Agenda", icon: Bell },
+      { label: "Alertas e relatórios", icon: Bell },
+    ],
+  },
+  {
+    label: "Workspace",
+    items: [
+      { label: "Equipe", icon: Users },
+      { label: "Permissões", icon: KeyRound },
+      { label: "Integrações", icon: PlugZap },
+      { label: "Arquivos e assets", icon: FolderOpen },
+      { label: "Configurações", icon: Settings },
     ],
   },
 ];
@@ -136,6 +157,7 @@ function AppSidebar({
   workspaceTrigger,
   userTrigger,
 }: AppSidebarProps) {
+  const pathname = usePathname();
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const open = openProp ?? internalOpen;
   const setOpen = React.useCallback(
@@ -252,17 +274,13 @@ function AppSidebar({
                 <SidebarMenu className="gap-0.5">
                   {group.items.map((item) => {
                     const Icon = item.icon;
-                    const button = (
-                      <SidebarMenuButton
-                        isActive={item.active}
-                        onClick={item.onSelect}
-                        className={cn(
-                          "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
-                          "hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]",
-                          "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
-                          collapsed && "justify-center px-0",
-                        )}
-                      >
+                    const isActive = item.match
+                      ? item.match(pathname)
+                      : item.href
+                        ? pathname === item.href
+                        : item.active;
+                    const content = (
+                      <>
                         <span className="relative inline-flex">
                           <Icon className="size-4 shrink-0" />
                           {item.dot ? (
@@ -274,11 +292,26 @@ function AppSidebar({
                             {item.label}
                           </span>
                         ) : null}
+                      </>
+                    );
+                    const button = (
+                      <SidebarMenuButton
+                        asChild={Boolean(item.href)}
+                        isActive={isActive}
+                        onClick={item.onSelect}
+                        className={cn(
+                          "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
+                          "hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]",
+                          "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
+                          collapsed && "justify-center px-0",
+                        )}
+                      >
+                        {item.href ? <Link href={item.href}>{content}</Link> : content}
                       </SidebarMenuButton>
                     );
                     return (
                       <SidebarMenuItem key={item.label} className="relative">
-                        {item.active ? (
+                        {isActive ? (
                           <span
                             aria-hidden
                             className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
