@@ -6,7 +6,8 @@ O monorepo agora possui:
 
 - `apps/api/Dockerfile`
 - `apps/web/Dockerfile`
-- `docker-compose.yml` com `postgres`, `api` e `web`
+- `docker-compose.yml` com `postgres`, `api` e `web`, sem publicar `ports` no host
+- `docker-compose.local.yml` com os `ports` para desenvolvimento local
 
 Isso permite dois caminhos de deploy no EasyPanel:
 
@@ -37,7 +38,7 @@ Resumo da documentacao atual do EasyPanel:
 Na raiz do monorepo:
 
 ```bash
-docker compose up --build
+docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
 ```
 
 O esperado e subir:
@@ -55,6 +56,12 @@ O esperado e subir:
 ### 3. Usar o compose do projeto
 
 No serviço Compose, usar o `docker-compose.yml` da raiz do projeto.
+
+Importante:
+
+- no EasyPanel, use apenas o `docker-compose.yml`
+- o `docker-compose.yml` principal não publica `ports`, evitando os avisos e conflitos do painel
+- o arquivo `docker-compose.local.yml` existe só para desenvolvimento local
 
 ### 4. Definir variáveis de ambiente
 
@@ -125,7 +132,7 @@ Esse fluxo também funciona bem, mas exige configurar e acompanhar 3 serviços e
 
 ## Checklist Final
 
-1. `docker compose up --build` funciona localmente.
+1. `docker compose -f docker-compose.yml -f docker-compose.local.yml up --build` funciona localmente.
 2. GitHub conectado ao EasyPanel.
 3. Projeto criado no painel.
 4. Compose Service ou App Services configurados.

@@ -23,6 +23,16 @@ Na raiz:
 - `pnpm typecheck`
 - `pnpm format`
 
+## Subir o stack com Docker Compose
+
+Para desenvolvimento local com `postgres`, `api` e `web` juntos:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+```
+
+O arquivo `docker-compose.yml` principal foi deixado sem `ports` publicados para ser compatível com EasyPanel. Os binds de porta locais ficam em `docker-compose.local.yml`.
+
 ## Subir as Aplicacoes Separadamente
 
 Frontend:

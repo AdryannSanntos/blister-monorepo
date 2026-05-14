@@ -5,8 +5,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-company_os}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-company_os}
       POSTGRES_USER: ${POSTGRES_USER:-company_os}
-    ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+    expose:
+      - '5432'
     volumes:
       - company-os-postgres-data:/var/lib/postgresql/data
 
@@ -26,8 +26,8 @@ services:
       RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-Company OS <noreply@example.com>}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-    ports:
-      - '${API_PORT:-3001}:3001'
+    expose:
+      - '3001'
 
   web:
     build:
@@ -40,8 +40,8 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
       PORT: 3000
-    ports:
-      - '${WEB_PORT:-3000}:3000'
+    expose:
+      - '3000'
 
 volumes:
   company-os-postgres-data:

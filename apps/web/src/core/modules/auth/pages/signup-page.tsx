@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import { buildEmailVerificationCallbackURL } from "src/core/modules/auth/utils/verify-email-state";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
 
@@ -46,8 +47,8 @@ export function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const loginCallbackURL =
     typeof window !== "undefined"
-      ? new URL("/auth/login", window.location.origin).toString()
-      : "http://localhost:3000/auth/login";
+      ? buildEmailVerificationCallbackURL(window.location.origin)
+      : "http://localhost:3000/auth/verify-email?status=success";
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
