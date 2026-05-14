@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -49,10 +49,12 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
   const [isLoading, setIsLoading] = useState(false);
   const loginCallbackURL =
     typeof window !== "undefined"
-      ? buildEmailVerificationCallbackURL(window.location.origin)
+      ? buildEmailVerificationCallbackURL(window.location.origin, redirectPath)
       : "http://localhost:3000/auth/verify-email?status=success";
 
   const form = useForm<SignupFormValues>({
@@ -79,7 +81,10 @@ export function SignupPage() {
       }
 
       toast.success("Conta criada com sucesso!");
-      router.push(`/auth/verify-email?email=${encodeURIComponent(values.email)}`);
+      const verifyUrl = new URL("/auth/verify-email", window.location.origin);
+      verifyUrl.searchParams.set("email", values.email);
+      if (redirectPath) verifyUrl.searchParams.set("redirect", redirectPath);
+      router.push(verifyUrl.pathname + verifyUrl.search);
     } catch {
       toast.error("Erro inesperado. Tente novamente.");
     } finally {

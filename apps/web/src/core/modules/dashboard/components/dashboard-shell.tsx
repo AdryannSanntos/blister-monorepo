@@ -12,7 +12,6 @@ import {
   FileImage,
   FileText,
   FolderOpen,
-  KeyRound,
   LayoutDashboard,
   LayoutTemplate,
   LogOut,
@@ -20,6 +19,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  Plus,
   PlugZap,
   Settings,
   Shield,
@@ -65,6 +65,9 @@ type DashboardShellProps = {
 
 function getHeaderTitle(pathname: string) {
   if (pathname.startsWith("/dashboard/invites")) return "Equipe";
+  if (pathname.startsWith("/dashboard/workspace/team")) return "Equipe";
+  if (pathname.startsWith("/dashboard/workspace/permissions")) return "Permissões";
+  if (pathname.startsWith("/dashboard/workspace/settings")) return "Configurações";
   return "Dashboard";
 }
 
@@ -152,13 +155,25 @@ export function DashboardShell({ children }: DashboardShellProps) {
         {
           label: "Equipe",
           icon: Users,
-          href: "/dashboard/invites",
-          match: (p) => p.startsWith("/dashboard/invites"),
+          href: "/dashboard/workspace/team",
+          match: (p) =>
+            p.startsWith("/dashboard/workspace/team") ||
+            p.startsWith("/dashboard/invites"),
         },
-        { label: "Permissões", icon: KeyRound, onSelect: () => showComingSoon("Permissões") },
+        {
+          label: "Permissões",
+          icon: Shield,
+          href: "/dashboard/workspace/permissions",
+          match: (p) => p.startsWith("/dashboard/workspace/permissions"),
+        },
         { label: "Integrações", icon: PlugZap, onSelect: () => showComingSoon("Integrações") },
         { label: "Arquivos e assets", icon: FolderOpen, onSelect: () => showComingSoon("Arquivos e assets") },
-        { label: "Configurações", icon: Settings, onSelect: () => showComingSoon("Configurações") },
+        {
+          label: "Configurações",
+          icon: Settings,
+          href: "/dashboard/workspace/settings",
+          match: (p) => p.startsWith("/dashboard/workspace/settings"),
+        },
       ],
     },
   ];
@@ -233,6 +248,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
                   </span>
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => router.push("/workspace/create")}>
+                <Plus className="size-3.5 text-[var(--fg-tertiary)]" />
+                <span className="text-[13px]">Criar novo workspace</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}

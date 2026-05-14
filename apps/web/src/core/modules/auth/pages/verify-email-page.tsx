@@ -24,8 +24,12 @@ export function VerifyEmailPage() {
   const [isResending, setIsResending] = useState(false);
   const verificationCallbackURL =
     typeof window !== "undefined"
-      ? buildEmailVerificationCallbackURL(window.location.origin)
+      ? buildEmailVerificationCallbackURL(window.location.origin, state.redirect)
       : "http://localhost:3000/auth/verify-email?status=success";
+
+  const loginHref = state.redirect
+    ? `/auth/login?redirect=${encodeURIComponent(state.redirect)}`
+    : "/auth/login";
 
   async function handleResend() {
     if (!state.email) {
@@ -77,7 +81,7 @@ export function VerifyEmailPage() {
         </CardHeader>
         <CardContent className="pb-4">
           <Button asChild className="w-full">
-            <Link href="/auth/login">Ir para login</Link>
+            <Link href={loginHref}>Ir para login</Link>
           </Button>
         </CardContent>
       </>,
@@ -96,7 +100,7 @@ export function VerifyEmailPage() {
         </CardHeader>
         <CardContent className="pb-4">
           <Button asChild className="w-full">
-            <Link href="/auth/login">Ir para login</Link>
+            <Link href={loginHref}>Ir para login</Link>
           </Button>
         </CardContent>
       </>,
@@ -130,7 +134,7 @@ export function VerifyEmailPage() {
         </Button>
       </CardContent>
       <CardFooter className="justify-center border-t border-[var(--line-subtle)] py-4">
-        <Link href="/auth/login" className="text-[13px] text-[var(--fg-tertiary)] underline-offset-4 hover:underline">
+        <Link href={loginHref} className="text-[13px] text-[var(--fg-tertiary)] underline-offset-4 hover:underline">
           Voltar para login
         </Link>
       </CardFooter>

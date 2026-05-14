@@ -6,28 +6,37 @@ export type VerifyEmailViewState =
       title: string;
       description: string;
       email: string;
+      redirect: string | null;
     }
   | {
       kind: "success";
       title: string;
       description: string;
       email: string;
+      redirect: string | null;
     }
   | {
       kind: "error";
       title: string;
       description: string;
       email: string;
+      redirect: string | null;
     };
 
-export function buildEmailVerificationCallbackURL(origin: string): string {
-  return new URL(VERIFY_EMAIL_SUCCESS_PATH, origin).toString();
+export function buildEmailVerificationCallbackURL(
+  origin: string,
+  redirectPath?: string | null,
+): string {
+  const base = new URL(VERIFY_EMAIL_SUCCESS_PATH, origin);
+  if (redirectPath) base.searchParams.set("redirect", redirectPath);
+  return base.toString();
 }
 
 export function getVerifyEmailViewState(
   searchParams: URLSearchParams,
 ): VerifyEmailViewState {
   const email = searchParams.get("email") ?? "";
+  const redirect = searchParams.get("redirect");
   const error = searchParams.get("error");
   const status = searchParams.get("status");
 
@@ -38,6 +47,7 @@ export function getVerifyEmailViewState(
       description:
         "Esse link não é mais válido. Solicite um novo email de verificação para continuar.",
       email,
+      redirect,
     };
   }
 
@@ -47,6 +57,7 @@ export function getVerifyEmailViewState(
       title: "Email verificado com sucesso",
       description: "Sua conta foi ativada. Agora você já pode entrar.",
       email,
+      redirect,
     };
   }
 
@@ -55,5 +66,6 @@ export function getVerifyEmailViewState(
     title: "Verifique seu email",
     description: "Acesse o link enviado para confirmar sua conta",
     email,
+    redirect,
   };
 }

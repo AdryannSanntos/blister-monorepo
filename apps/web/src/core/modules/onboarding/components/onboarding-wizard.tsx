@@ -20,6 +20,7 @@ import {
   useSaveOnboardingDraft,
 } from "src/core/modules/onboarding/hooks/use-onboarding";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
 import { Button } from "src/core/shared/components/ui/button";
 import { Form } from "src/core/shared/components/ui/form";
 import { authClient } from "src/core/shared/utils/auth-client";
@@ -87,6 +88,7 @@ export function OnboardingWizard() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const { activeOrgId, isLoaded: isActiveOrgLoaded } = useActiveOrganization();
+  const { data: organizations, isLoading: isOrgsLoading } = useUserOrganizations(session?.user?.id);
   const { data: draft, isLoading } = useOnboardingDraft(activeOrgId);
   const saveMutation = useSaveOnboardingDraft(activeOrgId);
   const publishMutation = usePublishOnboarding(activeOrgId);
@@ -100,9 +102,19 @@ export function OnboardingWizard() {
     defaultValues: defaultOnboardingFormValues,
   });
 
+  const activeOrg = organizations?.find((org) => org.id === activeOrgId);
+  const isOwner = activeOrg?.roles?.some((r) => r.name === "owner") ?? false;
+
   useEffect(() => {
     if (isActiveOrgLoaded && !activeOrgId) router.replace("/app");
   }, [activeOrgId, isActiveOrgLoaded, router]);
+
+  // Redireciona membros não-donos direto para o dashboard
+  useEffect(() => {
+    if (!isOrgsLoading && organizations && activeOrgId && !isOwner) {
+      router.replace("/dashboard");
+    }
+  }, [isOrgsLoading, organizations, activeOrgId, isOwner, router]);
 
   useEffect(() => {
     if (draft && !initialized) {
@@ -116,7 +128,7 @@ export function OnboardingWizard() {
     if (draft?.publishedAt) router.replace("/dashboard");
   }, [draft?.publishedAt, router]);
 
-  async function save(step: number) {
+async function save(step: number) {
     try {
       await saveMutation.mutateAsync({
         currentStep: step,
@@ -165,7 +177,7 @@ export function OnboardingWizard() {
     }
   }
 
-  if (isLoading || !initialized || !isActiveOrgLoaded || !activeOrgId) {
+  if (isLoading || isOrgsLoading || !initialized || !isActiveOrgLoaded || !activeOrgId) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />

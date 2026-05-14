@@ -54,9 +54,13 @@ export function CreateInviteDialog({
   });
 
   async function onSubmit(values: InviteFormValues) {
-    await createMutation.mutateAsync({ inviterId, email: values.email });
-    form.reset();
-    onOpenChange(false);
+    try {
+      await createMutation.mutateAsync({ inviterId, email: values.email });
+      form.reset();
+      onOpenChange(false);
+    } catch {
+      // erro tratado no onError do hook
+    }
   }
 
   function handleOpenChange(nextOpen: boolean) {

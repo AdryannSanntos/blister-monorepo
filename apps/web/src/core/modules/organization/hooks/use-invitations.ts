@@ -48,10 +48,11 @@ export function useCreateInvitation(orgId: string | null) {
     },
     onError: (err: unknown) => {
       const error = err as {
-        response?: { data?: { message?: string } };
+        response?: { data?: { message?: string | string[] } };
         message?: string;
       };
-      const message = error?.response?.data?.message ?? error?.message ?? "";
+      const raw = error?.response?.data?.message ?? error?.message ?? "";
+      const message = Array.isArray(raw) ? raw.join(" ") : String(raw);
 
       if (
         message.toLowerCase().includes("already") ||
@@ -100,10 +101,11 @@ export function useAcceptInvitation() {
     },
     onError: (err: unknown) => {
       const error = err as {
-        response?: { data?: { message?: string } };
+        response?: { data?: { message?: string | string[] } };
         message?: string;
       };
-      const message = error?.response?.data?.message ?? error?.message ?? "";
+      const raw = error?.response?.data?.message ?? error?.message ?? "";
+      const message = Array.isArray(raw) ? raw.join(" ") : String(raw);
 
       if (
         message.toLowerCase().includes("expired") ||
