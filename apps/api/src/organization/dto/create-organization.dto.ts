@@ -1,6 +1,12 @@
 import { createCompanySchema } from '@company-os/types';
-import type { z } from 'zod';
+import { z } from 'zod';
 
-export const createOrganizationSchema = createCompanySchema;
+export const createOrganizationSchema = z.strictObject({
+  userId: z.string().min(1, 'userId is required'),
+  ...createCompanySchema.shape,
+});
 
-export type CreateOrganizationDto = z.infer<typeof createOrganizationSchema>;
+export const createOrganizationPayloadSchema = createCompanySchema;
+
+export type CreateOrganizationRequestDto = z.infer<typeof createOrganizationSchema>;
+export type CreateOrganizationDto = z.infer<typeof createOrganizationPayloadSchema>;

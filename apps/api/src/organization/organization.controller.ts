@@ -7,13 +7,15 @@ export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Post()
-  async create(@Body() body: { userId: string; name: string; slug: string }) {
+  async create(@Body() body: unknown) {
     const parsed = createOrganizationSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
 
-    return this.organizationService.createWorkspace(body.userId, parsed.data);
+    const { userId, ...organization } = parsed.data;
+
+    return this.organizationService.createWorkspace(userId, organization);
   }
 
   @Get('user/:userId')
