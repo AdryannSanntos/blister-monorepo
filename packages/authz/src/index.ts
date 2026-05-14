@@ -22,9 +22,11 @@ export type AppAbility = MongoAbility<[AppAction, AppSubject]>;
 export type AppPermissionKey =
   | 'company.read'
   | 'company.update'
+  | 'company.delete'
   | 'member.read'
   | 'member.invite'
   | 'member.update'
+  | 'member.remove'
   | 'role.read'
   | 'role.create'
   | 'role.update'
@@ -41,9 +43,11 @@ export type AppPermissionKey =
 export const allPermissionKeys: AppPermissionKey[] = [
   'company.read',
   'company.update',
+  'company.delete',
   'member.read',
   'member.invite',
   'member.update',
+  'member.remove',
   'role.read',
   'role.create',
   'role.update',
@@ -77,9 +81,11 @@ export type DefaultSystemRole = (typeof defaultSystemRoles)[number];
 const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = {
   'company.read': ['read', 'Company'],
   'company.update': ['update', 'Company'],
+  'company.delete': ['delete', 'Company'],
   'member.read': ['read', 'Member'],
   'member.invite': ['create', 'Member'],
   'member.update': ['update', 'Member'],
+  'member.remove': ['delete', 'Member'],
   'role.read': ['read', 'Role'],
   'role.create': ['create', 'Role'],
   'role.update': ['update', 'Role'],
@@ -108,9 +114,11 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
     case 'admin':
       return [
         'company.read',
+        'company.update',
         'member.read',
         'member.invite',
         'member.update',
+        'member.remove',
         'role.read',
         'permission.read',
         'brain.read',

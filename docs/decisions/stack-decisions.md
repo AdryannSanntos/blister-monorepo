@@ -49,11 +49,19 @@
 - organizacao ativa nao deve depender do `better-auth`
 - o catalogo de permissoes fica em codigo dentro de `packages/authz`
 - toda empresa nasce com as roles `owner`, `admin` e `member`
-- a empresa pode criar roles adicionais
+- a empresa pode criar roles adicionais com permissoes a la carte
 - um membro pode ter multiplas roles na mesma empresa
 - overrides por usuario devem suportar `allow` e `deny`
 - tipos e schemas reutilizados entre apps devem sair de `packages/types`
 - componentes ou utilitarios compartilhados entre apps nao devem ser duplicados sem necessidade clara
+
+## Regra de Permissao Universal
+
+**Toda acao do produto deve ter verificacao de permissao** — sem excecao.
+
+- **Backend:** todo endpoint de mutacao ou dado sensivel deve ter um `@RequirePermission(key)` guard NestJS que resolve a ability CASL do membro na organizacao ativa antes de processar o request
+- **Frontend:** toda UI com acao de escrita, exclusao ou dado restrito deve checar `can(action, subject)` antes de renderizar o controle ou executar a mutacao
+- Nenhuma feature nasce sem permissoes implementadas — guards e checks de UI sao parte da definicao de pronto de cada task
 
 ## Observacoes Importantes do Estado Atual
 
