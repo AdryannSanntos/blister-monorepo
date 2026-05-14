@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-company_os}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-company_os}
+      POSTGRES_USER: ${POSTGRES_USER:-company_os}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - company-os-postgres-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-company_os}:${POSTGRES_PASSWORD:-company_os}@postgres:5432/${POSTGRES_DB:-company_os}?schema=public
+      PORT: 3001
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-change-me-before-production}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3001}
+      RESEND_API_KEY: ${RESEND_API_KEY:-change-me}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-Company OS <noreply@example.com>}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    ports:
+      - '${API_PORT:-3001}:3001'
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      PORT: 3000
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+
+volumes:
+  company-os-postgres-data:

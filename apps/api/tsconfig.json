@@ -1,0 +1,14 @@
+{
+  "extends": "../../packages/configs/tsconfig.nest.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noEmit": false,
+    "removeComments": true,
+    "rootDir": ".",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "verbatimModuleSyntax": false
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

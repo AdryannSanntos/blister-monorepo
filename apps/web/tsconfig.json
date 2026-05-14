@@ -1,0 +1,23 @@
+{
+  "extends": "../../packages/configs/tsconfig.next.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "src/*": ["./src/*"],
+      "@company-os/authz": ["../../packages/authz/src/index.ts"],
+      "@company-os/types": ["../../packages/types/src/index.ts"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}

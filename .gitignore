@@ -1,0 +1,15 @@
+node_modules/
+.turbo/
+
+.env
+.env.local
+
+apps/*/node_modules/
+apps/*/.next/
+apps/*/dist/
+apps/*/coverage/
+
+packages/*/node_modules/
+packages/*/dist/
+
+coverage/

@@ -1,0 +1,10 @@
+{
+  "name": "@company-os/configs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "biome check .",
+    "typecheck": "tsc -p ../authz/tsconfig.json --noEmit"
+  }
+}
