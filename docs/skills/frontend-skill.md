@@ -2,108 +2,203 @@
 
 ## Objetivo
 
-Guiar a IA ao implementar, refatorar ou revisar codigo em `apps/web`.
+Guiar a implementação, refatoração ou revisão de código em `apps/web`.
 
 ## Ler Antes
 
 - `docs/skills/project-engineering-skill.md`
 - `docs/decisions/stack-decisions.md`
+- `docs/design-system/usage-rules.md`
 
-## Escopo
+## Estrutura Obrigatória
 
-- paginas App Router
-- componentes React
-- estados de interface
-- formularios
-- tabelas
-- graficos
-- integracao com auth client
+```
+apps/web/src/
+  app/                         rotas App Router (page.tsx, layout.tsx)
+  core/
+    modules/                   domínios do produto
+      <modulo>/
+        pages/                 componentes de página ("use client")
+        components/            componentes do módulo
+        hooks/                 hooks de domínio com React Query
+    shared/
+      components/
+        ui/                    componentes shadcn (importar via src/core/shared/components/ui/...)
+        permission-gate.tsx    PermissionGate
+      utils/
+        api-client.ts          instância axios
+        auth-client.ts         better-auth client
+        query-client.ts        QueryClient singleton
+```
 
-## Estrutura Obrigatoria do Frontend
+## Regra de Permissão Universal
 
-- rotas em `apps/web/src/app`
-- componentes e paginas de dominio em `apps/web/src/core/modules`
-- compartilhados em `apps/web/src/core/shared`
+Toda ação de escrita, exclusão ou dado restrito deve estar dentro de `<PermissionGate>`:
 
-## Regras de Implementacao
+```tsx
+<PermissionGate permission="member.invite">
+  <Button onClick={() => setDialogOpen(true)}>Convidar membro</Button>
+</PermissionGate>
 
-### Next.js e React
+<PermissionGate permission="company.update">
+  <Button type="submit">Salvar configurações</Button>
+</PermissionGate>
+```
 
-- respeitar App Router
-- usar component client apenas quando necessario
-- preservar composicao simples e clara
-- evitar abstrair cedo demais
+Verificação programática via `useAbility()`:
+```tsx
+const { can, cannot, isLoading } = useAbility();
+if (cannot('read', 'CompanyBrain')) return null;
+{can('create', 'Member') && <InviteButton />}
+```
 
-### Dados e estado
+## Hooks de Domínio (obrigatório)
 
-- priorizar hooks de dominio para encapsular acesso a dados, derivacoes e regras de interface compartilhadas
-- dados de servidor devem usar `@tanstack/react-query`
-- componentes e paginas nao devem disparar requisicoes HTTP diretamente quando um hook puder representar esse contrato
-- filtros e estado compartilhavel devem usar `nuqs`
-- estado local temporario pode usar `zustand`, mas apenas quando `useState` nao resolver
+Toda chamada HTTP vive em hook de domínio com React Query — nunca fetch direto em página/componente.
 
-### Formularios
+```tsx
+// hooks/use-members.ts
+export function useOrganizationMembers(orgId: string | undefined) {
+  return useQuery({
+    queryKey: ['members', orgId],
+    queryFn: async () => {
+      const { data } = await apiClient.get<OrganizationMember[]>(
+        `/organizations/${orgId}/members`,
+      );
+      return data;
+    },
+    enabled: Boolean(orgId),
+  });
+}
 
-- formularios devem usar `react-hook-form`
-- validacao deve usar `Zod` via resolver quando houver entrada relevante
-- evitar validacao manual dispersa
+export function useRemoveMember(orgId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (membershipId: string) =>
+      apiClient.delete(`/organizations/${orgId}/members/${membershipId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['members', orgId] });
+      toast.success('Membro removido.');
+    },
+  });
+}
+```
 
-### Estilo e UI
+## Organização Ativa
 
-- usar `Tailwind CSS v4` como primeira opção, tokens em `apps/web/src/app/globals.css`
-- usar `class-variance-authority` (cva) em componentes com variantes reais
-- usar `clsx` e `tailwind-merge` via `cn()` para compor classes sem conflitos
-- `shadcn/ui` está instalado em `apps/web` (style `new-york`, base `radix`, alias `@/core/shared/...`)
-- usar os componentes oficiais em `apps/web/src/core/shared/components/ui`
-- reutilizar `shadcn` antes de criar markup customizado
-- consumir tokens (`var(--bg-*)`, `var(--fg-*)`, `var(--accent)`, `var(--r-*)`, `var(--shadow-*)`, `var(--dur-*)`, `var(--ease-*)`) ao invés de cor raw
-- manter a referência viva do sistema em `apps/web/src/core/modules/design-system`
-- theme via `next-themes` `attribute="class"`, defaultTheme dark; light via `.light`
-- ícones: `lucide-react` apenas
+```tsx
+const { activeOrgId } = useActiveOrganization();
+// Sempre usar activeOrgId como contexto
+// NUNCA assumir org a partir da sessão better-auth
+```
 
-### Dashboard e composição visual
+## Formulários (react-hook-form + Zod)
 
-- sidebars de dashboard devem ter altura exata da viewport, adaptar conteudo ao estado fechado e deixar o toggle no header da tela
-- busca principal deve ficar no header e centralizada em desktop; nao duplicar search na sidebar
-- headers de dashboard devem ser sticky durante scroll
-- buttons devem usar tamanho `md` por padrao; icon buttons e controles vizinhos devem manter a mesma altura visual
-- controles acionáveis dentro de cards, como buttons e triggers de select/dropdown, devem preferir `ghost`; `outline` fica para contextos fora de cards
-- tres ou mais acoes lado a lado devem ser avaliadas como `DropdownMenu`
-- cards nao devem usar glow; cards compostos usam divider entre header e content
-- o container raiz de `Card` nao deve receber padding estrutural; esse respiro pertence a `CardHeader`, `CardContent` e `CardFooter`
-- cards com buttons no footer devem usar divider no proprio footer, altura compacta, padding consistente entre cards equivalentes e sem acumular gap estrutural do card com padding do footer
-- header de card com divider centraliza verticalmente, nao horizontalmente por padrao
-- KPI cards simples agrupam label + numero e deixam delta/hint/footer separado, sem forcar top/main/footer
-- KPI cards tambem seguem a regra estrutural do `Card`: sem padding na raiz, com espacamento apenas nos slots internos usados
-- cards com chart devem ter superficie interna mais escura que o card, com radius e borda discreta
-- modais devem separar header, content e footer
-- `Display` pode envolver o titulo principal completo da tela, incluindo nome de usuario em saudacoes, mas deve ser raro
-- evitar `font-semibold` amplo; preferir `font-medium` para pontos de enfase real
-- avatares devem usar `AvatarImage` quando houver imagem e `AvatarFallback` com iniciais, borda e fundo sutil quando nao houver
+```tsx
+const schema = z.object({ name: z.string().min(2).max(120) });
+type FormValues = z.infer<typeof schema>;
 
-### Formulários
+const form = useForm<FormValues>({
+  resolver: zodResolver(schema),
+  mode: 'onBlur',
+  defaultValues: { name: '' },
+});
 
-- formulários devem usar `Form` (`react-hook-form` + `zod`) de `core/shared/components/ui/form`
-- nunca usar `DsField` para form com schema — `DsField` é primitivo de showcase
-- validar com `zodResolver` e `mode: 'onBlur'`
+return (
+  <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Nome</FormLabel>
+            <FormControl><Input {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <PermissionGate permission="company.update">
+        <Button type="submit">Salvar</Button>
+      </PermissionGate>
+    </form>
+  </Form>
+);
+```
 
-### Tabelas e gráficos
+**Nunca usar `DsField` em formulários reais** — é primitivo de showcase da rota `/design-system`.
 
-- tabelas operacionais: `DataTable` (TanStack Table)
-- gráficos: `Chart` (recharts) com `ChartConfig` consumindo `--chart-1..8`
+## Tabelas Operacionais
 
-### API e auth
+```tsx
+const columns: ColumnDef<Member>[] = [
+  {
+    id: 'actions',
+    cell: ({ row }) => (
+      <PermissionGate permission="member.remove">
+        <DropdownMenu>...</DropdownMenu>
+      </PermissionGate>
+    ),
+  },
+];
+const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
+```
 
-- chamadas de auth devem partir do `authClient` existente
-- organizacao ativa nao deve ser assumida como parte da sessao do `better-auth`; ela deve vir das APIs do dominio da aplicacao
-- chamadas HTTP devem manter consistencia com o uso de `axios`
-- requisicoes de leitura e mutacao devem priorizar hooks com `TanStack Query`, mesmo quando o consumo inicial acontecer em uma unica tela
+Envolver em `rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]`.
+
+## Escolha de Estado
+
+| Caso | Ferramenta |
+|------|-----------|
+| Dados de servidor (leitura) | `useQuery` (React Query) |
+| Mutações de servidor | `useMutation` (React Query) |
+| Filtros/paginação compartilháveis por URL | `nuqs` |
+| Estado local temporário de UI | `useState` |
+| Estado global de cliente sem servidor | `zustand` (só se useState não resolver) |
+
+**TanStack Query não pode ser substituído por useState para dados de servidor.**
+
+## Tokens de Design System (obrigatório)
+
+```tsx
+// Correto — tokens semânticos
+className="text-[var(--fg-primary)] bg-[var(--bg-base)] border-[var(--line-default)]"
+
+// Errado — cor raw
+className="text-gray-900 bg-white border-gray-200"
+```
+
+Tokens principais: `--bg-canvas/base/raised/overlay/sunken/hover/active` · `--fg-primary/secondary/tertiary/quaternary` · `--accent` · `--success/warning/danger` · `--line-subtle/default/strong` · `--r-*` · `--dur-*`
+
+## Regras de Componentes
+
+- Importar de `src/core/shared/components/ui/`
+- `Button` sem `size` → `md`; dashboards sempre `md`
+- Controles dentro de card → `variant="ghost"`; fora → `variant="outline"` permitido
+- Raiz do `Card` sem padding — espaço em `CardHeader`, `CardContent`, `CardFooter`
+- Três ou mais ações lado a lado → `DropdownMenu`
+- Modais: `DialogHeader` + conteúdo + `DialogFooter` separados
+- Sem `dark:` utility — tokens são dark-default
+- Ícones: `lucide-react` apenas, tamanho padrão 16
+
+## Integração Auth
+
+```tsx
+// Sessão do usuário
+const { data: session } = authClient.useSession();
+const userId = session?.user?.id;
+// NÃO usar session para org/roles — usar hooks de domínio
+```
 
 ## Checklist de Entrega
 
-- a mudanca respeita `core/modules` e `core/shared`
-- a escolha de estado esta correta entre React Query, `nuqs`, `zustand` e estado local
-- a validacao esta em `Zod` quando aplicavel
-- nao foi introduzida biblioteca concorrente de UI, formulario ou dados
-- os tokens do design system foram respeitados quando a tarefa for visual
-- os padroes de dashboard, cards, sidebar, charts, buttons, modais e avatares seguem `docs/design-system/usage-rules.md`
+- [ ] Toda ação sensível dentro de `<PermissionGate permission="...">`
+- [ ] Nenhuma chamada HTTP direta em page/component — hook de domínio com React Query
+- [ ] `activeOrgId` de `useActiveOrganization()`, não de sessão better-auth
+- [ ] Formulários com `Form` (RHF + Zod), `mode: 'onBlur'`
+- [ ] Estado correto: React Query para servidor, nuqs para URL, useState para local
+- [ ] Tokens de design system usados — sem cor raw
+- [ ] Estrutura `core/modules` e `core/shared` respeitada
+- [ ] Nenhuma biblioteca concorrente de UI, formulário ou dados introduzida
+- [ ] Ícones de `lucide-react` apenas
+- [ ] Sem `dark:` utility

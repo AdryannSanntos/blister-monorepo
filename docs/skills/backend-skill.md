@@ -2,67 +2,145 @@
 
 ## Objetivo
 
-Guiar a IA ao implementar, refatorar ou revisar codigo em `apps/api`.
+Guiar a implementação, refatoração ou revisão de código em `apps/api`.
 
 ## Ler Antes
 
 - `docs/skills/project-engineering-skill.md`
 - `docs/decisions/stack-decisions.md`
 
-## Escopo
+## Estrutura de Módulo NestJS
 
-- modulos NestJS
-- servicos
-- bootstrap HTTP
-- auth
-- Prisma
-- autorizacao
-- futuras integracoes de realtime e storage
+```
+apps/api/src/<dominio>/
+  <dominio>.module.ts        importa guards, services, controllers
+  <dominio>.controller.ts    HTTP, @UseGuards, @RequirePermission
+  <dominio>.service.ts       lógica de negócio, Prisma
+  <dominio>.service.spec.ts  testes
+  dto/                       schemas Zod + tipos inferidos
+  guards/                    guards específicos do módulo
+```
 
-## Regras de Implementacao
+## Padrão de Controller
 
-### NestJS
+```typescript
+@Controller('organizations')
+export class OrganizationController {
+  // Endpoint público
+  @Post('health')
+  @Public()
+  health() { return 'ok'; }
 
-- todo fluxo HTTP deve passar pela aplicacao Nest
-- organizar codigo por modulos, providers e servicos claros
-- evitar logica espalhada em arquivos de bootstrap sem necessidade
+  // Autenticado sem permissão específica
+  @Post()
+  async create(@Body() body: unknown, @Req() req: Request) {
+    const parsed = createSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    // userId SEMPRE de req.currentUser — nunca do body
+    const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
+    return this.service.create(currentUser.id, parsed.data);
+  }
 
-### Prisma
+  // Com permissão CASL
+  @Patch(':id')
+  @RequirePermission('company.update')
+  async update(@Param('id') id: string, @Body() body: unknown) {
+    const parsed = updateSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.service.update(id, parsed.data);
+  }
+}
+```
 
-- toda persistencia deve usar `Prisma`
-- alteracoes de dominio persistido devem começar pelo schema Prisma
-- nao editar o client gerado manualmente
+## Cadeia de Guards (automática via AppModule)
 
-### Better Auth
+```
+AuthGuard global → valida cookie/Bearer → req.currentUser
+PermissionGuard global → ativado apenas quando @RequirePermission existe
+  → lê orgId de req.params.orgId ?? req.params.id
+  → membershipService.getEffectiveAbility(orgId, currentUser.id)
+  → ability.can(action, subject)
+  → req.orgContext = { ability }
+```
 
-- autenticacao continua centralizada no `better-auth`
-- `better-auth` deve ficar restrito a auth, verificacao de email, reset de senha e sessao
-- organizacoes, membership, convites, roles e organizacao ativa devem viver no dominio proprio da aplicacao
-- nao criar solucao paralela para sessao, mas criar o dominio proprio de organizacoes conforme a arquitetura aprovada
+## Padrão de DTO com Zod
 
-### CASL e authz
+```typescript
+export const updateOrganizationSchema = z.object({
+  name: z.string().min(2).max(120).optional(),
+  slug: z.string().min(3).max(64).regex(/^[a-z0-9-]+$/).optional(),
+  logo: z.string().url().optional().or(z.literal('')),
+});
+export type UpdateOrganizationDto = z.infer<typeof updateOrganizationSchema>;
+```
 
-- novas permissoes devem ser declaradas em `packages/authz`
-- backend e frontend devem continuar compartilhando o mesmo catalogo
-- a ability final deve considerar empresa ativa, multiplas roles por membro e overrides `allow`/`deny`
+## Padrão de Service com Prisma
 
-### Integracoes
+```typescript
+@Injectable()
+export class OrganizationService {
+  constructor(private readonly prisma: PrismaService) {}
 
-- realtime deve usar `socket.io`
-- storage compativel com S3 deve usar `@aws-sdk/client-s3`
-- nao adicionar libs paralelas para esses mesmos problemas
+  async findById(id: string) {
+    const org = await this.prisma.organization.findUnique({ where: { id } });
+    if (!org) throw new NotFoundException('Organization not found');
+    return org;
+  }
 
-## Atencoes de Dominio
+  async update(id: string, data: UpdateOrganizationDto) {
+    return this.prisma.organization.update({ where: { id }, data });
+  }
+}
+```
 
-- o schema atual cobre principalmente entidades de auth e organizacao
-- Company Brain, Skill e Output ainda nao estao persistidos
-- a modelagem de authz por empresa ainda precisa evoluir para suportar roles custom, multiplas roles por membro e overrides por usuario
-- ao iniciar esses modulos, explicitar a fronteira entre auth foundation e dominio do produto
+## Regras de Negócio Críticas (MembershipService)
+
+- `removeMember`: não pode remover o último owner → `ForbiddenException`
+- `removeRole`: não pode remover o último role de um membro → `ConflictException`
+- `addRole`: checa duplicidade → `ConflictException`
+- `setOverride`: upsert de override allow/deny por membro
+- `getEffectiveAbility`: agrega permissões de todas as roles + aplica overrides
+
+## Invariantes de Segurança
+
+- `userId` **nunca** vem do body — sempre de `req.currentUser.id`
+- `orgId` vem de `req.params` — nunca do body
+- Endpoints sem `@Public()` são protegidos automaticamente pelo `AuthGuard`
+- Roles de sistema (`owner`, `admin`, `member`) são imutáveis
+- `onboarding.publish` não é assignable — só owner recebe automaticamente
+- `better-auth` trata apenas auth/sessão
+
+## Adicionando Nova Permissão
+
+1. `packages/authz/src/index.ts` → declarar em `AppPermissionKey`, `allPermissionKeys`, `permissionMap`, `getDefaultRolePermissions`
+2. Rodar seed de roles padrão
+3. `@RequirePermission('nova.chave')` no controller
+4. `<PermissionGate permission="nova.chave">` no frontend
+
+## Mapeamento de Erros
+
+| Situação | Exceção |
+|----------|---------|
+| Recurso não encontrado | `NotFoundException` |
+| Ação proibida | `ForbiddenException` |
+| Dados inválidos | `BadRequestException` |
+| Conflito de unicidade/estado | `ConflictException` |
+
+## Regras de Prisma
+
+- Único cliente de banco — sem SQL raw avulso, sem outro ORM
+- Alterações de domínio começam pelo `schema.prisma`
+- Nunca editar `apps/api/src/generated/prisma` manualmente
+- Migrations via `pnpm prisma migrate dev`
 
 ## Checklist de Entrega
 
-- a implementacao respeita o ciclo do NestJS
-- a persistencia esta centralizada no Prisma
-- auth continua no `better-auth`
-- permissoes continuam no pacote compartilhado
-- a mudanca nao assume modulos de dominio que ainda nao existem sem antes modela-los corretamente
+- [ ] Endpoint de mutação tem `@RequirePermission` com chave válida de `AppPermissionKey`
+- [ ] Endpoints públicos têm `@Public()` explícito
+- [ ] `userId` vem de `req.currentUser.id`, nunca do body
+- [ ] DTO validado com Zod antes de passar ao service
+- [ ] Erros mapeados para exceções HTTP corretas
+- [ ] Nova permissão declarada em `packages/authz` antes de usar no guard
+- [ ] Nenhum acesso a banco fora do PrismaService
+- [ ] `better-auth` não assumiu responsabilidades de org/membership/roles
+- [ ] Testes de service cobrem caminho feliz + erros críticos (último owner, duplicidade, etc.)

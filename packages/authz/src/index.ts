@@ -78,7 +78,7 @@ export const defaultSystemRoles = ['owner', 'admin', 'member'] as const;
 
 export type DefaultSystemRole = (typeof defaultSystemRoles)[number];
 
-const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = {
+export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = {
   'company.read': ['read', 'Company'],
   'company.update': ['update', 'Company'],
   'company.delete': ['delete', 'Company'],

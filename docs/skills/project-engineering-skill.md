@@ -2,98 +2,110 @@
 
 ## Objetivo
 
-Ser a skill base para qualquer IA que for trabalhar neste monorepo.
+Skill base para qualquer tarefa neste monorepo. Estabelece as regras fundamentais que se aplicam a toda implementação, refatoração ou análise técnica.
 
 ## Quando Usar
 
-- qualquer tarefa de codigo
-- qualquer refactor
-- qualquer analise tecnica
-- qualquer nova feature
+- Qualquer tarefa de código
+- Qualquer refactor
+- Qualquer análise técnica
+- Qualquer nova feature
 
-## Entendimento Obrigatorio do Projeto
+## Entendimento do Projeto
 
-- este repositorio ainda esta na fase de fundacao tecnica do AI Company OS
-- o produto final descrito no PRD ainda nao esta implementado
-- a base atual sustenta auth, organizacoes, authz, tipos compartilhados e estrutura de apps
+- **AI Company OS** — plataforma SaaS multiempresa de automação inteligente
+- **Fase atual:** fundação técnica implementada (auth, organizações, authz); Company Brain, Skills e Outputs ainda não persistidos
+- O produto opera em ciclo: Company Brain → Skills → Outputs → Aprovações → Conteúdo → Automações
 
 ## Estrutura do Monorepo
 
-- `apps/web`: frontend em `Next.js 16` e `React 19`
-- `apps/api`: backend em `NestJS 11`
-- `packages/authz`: permissoes e papeis compartilhados
-- `packages/types`: schemas e tipos compartilhados com `Zod`
-- `packages/configs`: configuracoes compartilhadas
+```
+apps/web     Next.js 16, React 19 — frontend principal
+apps/api     NestJS 11 — API REST, auth, Prisma, CASL
+packages/authz   catálogo de permissões, roles e mapa CASL
+packages/types   schemas e tipos Zod compartilhados
+packages/configs presets TypeScript
+```
 
-## Regras Gerais de Execucao
+## Regra de Permissão Universal (inviolável)
 
-- nao introduzir uma nova biblioteca se a stack atual ja resolve o problema
-- manter mudancas pequenas e aderentes a estrutura existente
-- nao duplicar contratos compartilhados que ja pertencem a `packages/authz` ou `packages/types`
-- documentar divergencias entre PRD e implementacao real em vez de esconder essas lacunas
+**Toda ação do produto deve ter verificação de permissão — sem exceção.**
 
-## Regras Obrigatorias de Tooling
+- **Backend:** todo endpoint de mutação ou dado sensível deve ter `@RequirePermission(key)` com chave válida de `AppPermissionKey`
+- **Frontend:** toda UI com ação de escrita, exclusão ou dado restrito deve ter `<PermissionGate permission="key">` ou verificação via `useAbility()`
+- Nenhuma feature nasce sem guards e checks de UI — são parte da definição de pronto de cada task
 
-- `pnpm` e o package manager oficial
-- `Turborepo` coordena os fluxos do workspace
-- `Biome` e o formatter e linter oficial
-- `TypeScript` deve permanecer estrito
+## Regras Invioláveis
 
-## Regras Obrigatorias de Bibliotecas
+- `userId` vem **sempre** de `req.currentUser.id` — nunca do body
+- `orgId` vem de `req.params` — nunca do body
+- Novos endpoints sem `@Public()` são bloqueados pelo `AuthGuard` automaticamente
+- Nova permissão nasce em `packages/authz` antes de ser usada em qualquer lugar
+- `Prisma` é o único cliente de banco — nunca editar `src/generated/prisma` manualmente
+- `better-auth` trata apenas auth/sessão — org/membership/roles são domínio próprio
+- Roles de sistema (`owner`, `admin`, `member`) são imutáveis
 
-### Validacao e contratos
+## Regras de Tooling
 
-- usar `Zod` para validacao de borda
-- quando houver schema, inferir tipos a partir dele
+- `pnpm` — package manager oficial
+- `Turborepo` — coordena dev/build/lint/typecheck
+- `Biome` — formatter e linter oficial
+- `TypeScript strict: true` — sem afrouxar
 
-### Auth e autorizacao
+## Stack por domínio
 
-- `better-auth` e a fonte de verdade apenas para autenticacao, verificacao de email, reset de senha e sessao
-- `CASL` e a fonte de verdade para autorizacao
-- organizacoes, memberships, convites, roles, permissões e organizacao ativa pertencem ao dominio da aplicacao
-- novas permissoes devem nascer em `packages/authz`
-- emails transacionais devem usar `Resend`
+### Frontend
+- `Next.js 16` App Router · `React 19`
+- `Tailwind CSS v4` com tokens em `globals.css`
+- `shadcn/ui` em `apps/web/src/core/shared/components/ui/`
+- `react-hook-form` + `Zod` — formulários
+- `@tanstack/react-query` — estado de servidor
+- `@tanstack/react-table` — tabelas operacionais
+- `Recharts` — gráficos
+- `nuqs` — estado de URL
+- `zustand` — estado local (último recurso)
+- `axios` — cliente HTTP
+- `lucide-react` — ícones
 
-### Banco
+### Backend
+- `NestJS 11` — HTTP, módulos, DI
+- `Prisma` — banco (único permitido)
+- `better-auth` — auth e sessão apenas
+- `CASL` via `packages/authz` — autorização
+- `Zod` — validação de DTOs
+- `Resend` — emails transacionais
 
-- `Prisma` e o unico cliente de banco permitido
-- nunca editar manualmente `apps/api/src/generated/prisma`
+### Autorização
+- Catálogo em `packages/authz/src/index.ts`
+- Compartilhado entre frontend e backend
+- Motor: `@casl/ability`
 
-### HTTP e dados
+## Estrutura Frontend (core/modules vs core/shared)
 
-- `axios` e o cliente HTTP padrao
-- requisicoes de frontend nao devem nascer direto em paginas ou componentes; a prioridade e criar ou reutilizar hooks de dominio
-- estado de servidor no frontend pertence ao `TanStack Query`
-- toda requisicao de leitura ou mutacao no frontend deve priorizar `TanStack Query` antes de qualquer abordagem manual
-- estado compartilhavel por URL pertence ao `nuqs`
-- estado local de cliente que nao cabe em cache nem URL pode usar `zustand`
+```
+core/modules/<dominio>/
+  pages/        componentes de página
+  components/   componentes do módulo
+  hooks/        hooks de domínio com React Query
 
-### UI
+core/shared/
+  components/ui/    componentes shadcn
+  components/       componentes genéricos (PermissionGate, etc.)
+  utils/            api-client, auth-client, query-client
+```
 
-- `Tailwind CSS v4` é a camada de estilo, com `@theme inline` em `apps/web/src/app/globals.css`
-- `clsx`, `tailwind-merge` (via `cn()`) e `class-variance-authority` são a stack de composição de classes
-- `lucide-react` é a biblioteca padrão de ícones
-- `shadcn/ui` está instalado e é a base oficial de componentes no frontend (style `new-york`, base `radix`)
-- os componentes oficiais de UI vivem em `apps/web/src/core/shared/components/ui`
-- os tokens globais vivem em `apps/web/src/app/globals.css` e o design system tem rota viva em `/design-system`
-- formulários: `Form` (RHF + Zod) · tabelas: `DataTable` (TanStack) · charts: `Chart` (recharts)
-- theming: `next-themes` `attribute="class"`, light via `.light`
-- padroes visuais obrigatorios de dashboard, cards, sidebars, charts, buttons, modais e avatares vivem em `docs/design-system/usage-rules.md` e devem ser aplicados antes de criar novo markup
+## Fluxo de Pensamento Recomendado
 
-### Realtime e storage
+1. Identificar se a tarefa é web, api, pacote compartilhado ou revisão
+2. Carregar skill específica da área (backend, frontend, authz, design)
+3. Aplicar a biblioteca oficial do problema
+4. Implementar a menor mudança correta
+5. Verificar regra de permissão universal
+6. Validar coerência com PRD, stack, design system e estrutura atual
 
-- `socket.io` e `socket.io-client` sao a stack oficial de realtime
-- `@aws-sdk/client-s3` e a camada oficial para storage compativel com S3
+## O Que Ainda Não É Padrão Implementado
 
-## O Que Ainda Nao E Padrao Implementado
-
-- `Trigger.dev` ou `Inngest` ainda nao foram adotados
-- nao assumir essas ferramentas como disponiveis sem adiciona-las ao projeto
-
-## Fluxo Recomendado de Pensamento
-
-1. identificar se a tarefa e web, api, shared package ou review
-2. carregar o contexto real do projeto envolvido
-3. aplicar a biblioteca oficial do problema
-4. implementar a menor mudanca correta
-5. validar coerencia com PRD, stack, design system e estrutura atual
+- `Trigger.dev` ou `Inngest` — não adotados, não assumir disponíveis
+- `socket.io` — aprovado para realtime, ainda não implementado
+- `@aws-sdk/client-s3` — aprovado para storage, ainda não implementado
+- Company Brain, Skill e Output — não persistidos ainda
