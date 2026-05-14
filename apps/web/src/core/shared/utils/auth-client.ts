@@ -21,4 +21,11 @@ export const authClient = Object.assign(baseClient, {
   sendVerificationEmail: (opts: { email: string; callbackURL?: string }) =>
     proxyClient.sendVerificationEmail(opts),
   signOut: (opts?: unknown) => proxyClient.signOut(opts),
+  updateUser: (opts: { name?: string; image?: string }) =>
+    proxyClient.updateUser(opts),
+  changePassword: (opts: {
+    currentPassword: string;
+    newPassword: string;
+    revokeOtherSessions?: boolean;
+  }) => proxyClient.changePassword(opts),
 });

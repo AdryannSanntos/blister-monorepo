@@ -25,6 +25,7 @@ import {
   Shield,
   Sparkles,
   Sun,
+  User,
   Users,
   Workflow,
   Zap,
@@ -68,7 +69,8 @@ function getHeaderTitle(pathname: string) {
   if (pathname.startsWith("/dashboard/invites")) return "Equipe";
   if (pathname.startsWith("/dashboard/workspace/team")) return "Equipe";
   if (pathname.startsWith("/dashboard/workspace/permissions")) return "Permissões";
-  if (pathname.startsWith("/dashboard/workspace/settings")) return "Configurações";
+  if (pathname.startsWith("/dashboard/workspace/settings")) return "Configurações do workspace";
+  if (pathname.startsWith("/dashboard/account/settings")) return "Configurações da conta";
   return "Dashboard";
 }
 
@@ -357,6 +359,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align="end" className="w-56">
+              <DropdownMenuItem onClick={() => router.push("/dashboard/account/settings")}>
+                <User />
+                Configurações da conta
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                 {theme === "dark" ? <Sun /> : <Moon />}
                 Alternar tema
