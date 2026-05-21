@@ -48,3 +48,10 @@ Todo empty state deve explicar:
 - o que ainda não existe
 - por que importa
 - qual é a próxima ação
+
+Para listas e tabelas vazias, o padrão oficial é o mesmo visual do Brain não configurado:
+
+- usar `EmptyState` para áreas livres e `TableEmptyState` dentro de `TableBody`
+- container com `border-dashed`, `rounded-[var(--r-xl)]`, `bg-[var(--bg-base)]` e ícone em círculo com `bg-[var(--bg-raised)]`
+- título curto, descrição orientada a valor e CTA primário quando a ação seguinte existir
+- não usar mais `TableCell` com texto solto como `Nenhum item encontrado.`

@@ -67,9 +67,51 @@ Um membro pode ter múltiplas roles simultâneas.
 
 ### 8. Dados em tabela por padrão
 
-Coleções de entidades de dados (membros, roles, convites, permissões, execuções, créditos, logs, integrações, assets, agentes) devem ser renderizadas em tabela usando TanStack Table + shadcn `<Table>`.
+Coleções de entidades de dados (membros, roles, convites, permissões, execuções, créditos, logs, integrações, assets, agentes) devem ser renderizadas em tabela usando o componente `<DataTable>` de `src/core/shared/components/ui/data-table.tsx`.
 
 Exceções aceitas: pickers, controles de formulário, onboarding, showcases visuais e cards com hierarquia visual intrínseca.
+
+**Toda tabela operacional deve nascer com os controles abaixo — não são opcionais:**
+
+- **Sort:** ativar `enableSorting: true` (ou omitir — padrão é `true`) na `ColumnDef` de toda coluna com ordenação útil. Omitir apenas em colunas visuais, `actions` e `select`.
+- **Configuração de colunas:** automático quando a coluna não tem `enableHiding: false`; o icon button `Columns3` aparece na toolbar direita sem configuração adicional.
+- **Seleção:** passar `bulkActions` ou `exportOptions` em `<DataTable>` habilita automaticamente `enableRowSelection`, coluna de checkbox e select-all no header — os checkboxes ficam verticalmente alinhados (coluna `w-px` centrada).
+- **Filtros:** passar a prop `filters` com `DataTableFilter[]`; cada filtro define `id`, `label` e `options` com predicados específicos do fluxo. O icon button `SlidersHorizontal` aparece na toolbar esquerda automaticamente.
+- **Floating footer de seleção:** aparece automaticamente quando há linhas selecionadas e `footerActions` (bulk actions + export). É sticky na área de conteúdo (`sticky bottom-4`), não na viewport. Ações padrão: exportar CSV e exportar PDF (via `exportOptions`). Ações extras via `bulkActions` — sempre incluir excluir quando a permissão existir.
+
+### 9. Animações são parte da experiência — nunca omitir
+
+Todo componente interativo deve ter suas animações padrão funcionando: modals, selects, dropdowns, drawers, toasts, accordions, etc.
+
+**Stack de animação:**
+- Tailwind CSS v4 usa o pacote `tw-animate-css` (importado via `@import "tw-animate-css"` em `globals.css` — é CSS puro, não plugin JS)
+- Utilities necessárias: `animate-in`, `animate-out`, `fade-in-*`, `fade-out-*`, `zoom-in-*`, `zoom-out-*`, `slide-in-from-*`, `slide-out-to-*`
+- Animações de accordion/collapsible: definidas como `@keyframes` em `globals.css` e expostas como `--animate-*` CSS vars
+
+Ao instalar ou recriar componentes shadcn/ui, verificar que `tw-animate-css` está presente e o `@plugin` está declarado. Sem o plugin, todas as animações de entrada/saída de overlays ficam silenciosamente desabilitadas.
+
+### 10. Convenção de rotas: workspace vs. dashboard
+
+```
+/workspace/*  →  fora de qualquer empresa  (selecionar/criar workspace)
+/dashboard/*  →  dentro de uma empresa     (requer org ativa)
+/onboarding/* →  dentro de uma empresa     (requer org ativa)
+/auth/*       →  autenticação              (redireciona se já tem sessão)
+```
+
+O proxy (`apps/web/src/proxy.ts`) aplica essas regras automaticamente via cookies:
+- `better-auth.session_token` — presença indica sessão ativa
+- `company-os-active-org` — presença indica empresa selecionada
+- Ao entrar em `/workspace/*`, o proxy limpa a empresa ativa para garantir contexto fora de qualquer company
+
+Regras de redirect:
+- `/dashboard/*` ou `/onboarding/*` sem sessão → `/auth/login?next=<path>`
+- `/dashboard/*` ou `/onboarding/*` com sessão mas sem org → `/workspace/select`
+- `/workspace/*` sem sessão → `/auth/login?next=<path>`
+- `/workspace/*` com sessão → navegação fora de company, sem `activeOrgId` persistido
+- `/auth/*` com sessão → `/app` (que resolve org e redireciona)
+
+Nunca usar `DashboardShell` em rotas `/workspace/*`, nem `WorkspaceShell` em rotas `/dashboard/*`.
 
 ---
 

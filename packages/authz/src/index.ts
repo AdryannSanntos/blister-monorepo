@@ -10,10 +10,13 @@ export const subjects = [
   'Permission',
   'Onboarding',
   'CompanyBrain',
-  'Skill',
-  'Output',
   'Asset',
   'ContextAsset',
+  'ContextSource',
+  'DesignSystem',
+  'DesignAsset',
+  'Skill',
+  'Output',
   'Integration',
 ] as const;
 
@@ -43,6 +46,14 @@ export type AppPermissionKey =
   | 'asset.update'
   | 'asset.archive'
   | 'asset.context.review'
+  | 'context.read'
+  | 'context.create'
+  | 'context.update'
+  | 'context.delete'
+  | 'context.review'
+  | 'context.publish'
+  | 'design-system.read'
+  | 'design-system.update'
   | 'skill.read'
   | 'skill.execute'
   | 'integration.read'
@@ -70,6 +81,14 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'asset.update',
   'asset.archive',
   'asset.context.review',
+  'context.read',
+  'context.create',
+  'context.update',
+  'context.delete',
+  'context.review',
+  'context.publish',
+  'design-system.read',
+  'design-system.update',
   'skill.read',
   'skill.execute',
   'integration.read',
@@ -116,6 +135,14 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'asset.update': ['update', 'Asset'],
   'asset.archive': ['delete', 'Asset'],
   'asset.context.review': ['update', 'ContextAsset'],
+  'context.read': ['read', 'ContextSource'],
+  'context.create': ['create', 'ContextSource'],
+  'context.update': ['update', 'ContextSource'],
+  'context.delete': ['delete', 'ContextSource'],
+  'context.review': ['update', 'ContextSource'],
+  'context.publish': ['create', 'ContextSource'],
+  'design-system.read': ['read', 'DesignSystem'],
+  'design-system.update': ['update', 'DesignSystem'],
   'skill.read': ['read', 'Skill'],
   'skill.execute': ['create', 'Skill'],
   'integration.read': ['read', 'Integration'],
@@ -151,6 +178,14 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
         'asset.update',
         'asset.archive',
         'asset.context.review',
+        'context.read',
+        'context.create',
+        'context.update',
+        'context.delete',
+        'context.review',
+        'context.publish',
+        'design-system.read',
+        'design-system.update',
         'skill.read',
         'skill.execute',
         'integration.read',
@@ -158,7 +193,7 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
         'output.review',
       ];
     case 'member':
-      return ['company.read', 'brain.read', 'skill.read', 'skill.execute', 'output.read'];
+      return ['company.read', 'brain.read', 'context.read', 'skill.read', 'skill.execute', 'output.read'];
   }
 }
 

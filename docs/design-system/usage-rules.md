@@ -7,6 +7,7 @@
 - Uma tela deve ter uma ação principal clara.
 - Toda ação assíncrona precisa de loading/feedback.
 - Todo estado vazio precisa ser tratado.
+- Estados vazios de listagem e tabela devem usar o mesmo padrão visual do Brain não configurado.
 - Processos de IA precisam ter sinal visual claro.
 - Não expor ranking, confiança ou metadados internos da IA.
 

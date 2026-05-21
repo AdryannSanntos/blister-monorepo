@@ -20,7 +20,7 @@ apps/web/src/core/shared/components/ui/  shadcn/ui oficial
 - Organização ativa vem de `useActiveOrganization()`.
 - Toda ação sensível usa `PermissionGate` ou `useAbility()`.
 - Formulários reais usam `react-hook-form`, Zod e `mode: 'onBlur'`.
-- Coleções de dados usam TanStack Table + shadcn `<Table>` por padrão.
+- Coleções de dados usam `<DataTable>` de `core/shared/components/ui/data-table.tsx` (wrapper TanStack Table).
 - A UI usa tokens semânticos, não cores raw.
 - Reutilizar componentes existentes antes de criar novos.
 
@@ -95,6 +95,18 @@ export function useOrganizationMembers(orgId: string | null) {
 - Três ou mais ações lado a lado viram `DropdownMenu`.
 - Empty states são obrigatórios.
 
+## Tabelas operacionais
+
+Toda coleção de entidades usa `<DataTable>` de `core/shared/components/ui/data-table.tsx`. Os controles abaixo são obrigatórios:
+
+| Controle | Como ativar |
+|----------|-------------|
+| Sort | Omitir `enableSorting` na `ColumnDef` (default `true`). Desativar só em `select`, `actions` e visuais sem critério. |
+| Config de colunas | Omitir `enableHiding` na `ColumnDef` + definir `meta.label`. O botão `Columns3` aparece automaticamente. |
+| Select / select-all | Passar `bulkActions` ou `exportOptions`. Coluna checkbox é injetada automaticamente; checkboxes ficam verticalmente alinhados. |
+| Filtros | Passar `filters: DataTableFilter[]` com predicados específicos do fluxo. Botão `SlidersHorizontal` aparece automaticamente. |
+| Floating footer | Aparece automaticamente ao selecionar linhas. `exportOptions` adiciona CSV/PDF; `bulkActions` adiciona ações do domínio. |
+
 ## Checklist
 
 - [ ] Sem fetch direto em page/component
@@ -104,3 +116,4 @@ export function useOrganizationMembers(orgId: string | null) {
 - [ ] Form com RHF + Zod
 - [ ] Tokens de design usados
 - [ ] UI e texto alinhados com Workana AI
+- [ ] Tabelas com sort, config de colunas, select, filtros e floating footer

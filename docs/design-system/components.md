@@ -41,6 +41,7 @@ Todos os componentes base vivem em `apps/web/src/core/shared/components/ui` e de
 
 - `Table`
 - `DataTable`
+- `EmptyState`
 - `Badge`
 - `Avatar`
 - `Progress`
@@ -81,6 +82,7 @@ Devem nascer em `core/modules/<dominio>/components` quando forem específicos:
 - Badge: `default`, `secondary`, `outline`, `success`, `warning`, `info`, `destructive`
 - Card: default shadcn com composição por slots; variantes visuais devem usar tokens no caller
 - Table: padrão para dados operacionais; `DataTable` quando houver sort/paginação
+- EmptyState: padrão oficial para estados vazios de páginas, listas e tabelas; usar `TableEmptyState` dentro de tabelas
 
 ## Regras
 
