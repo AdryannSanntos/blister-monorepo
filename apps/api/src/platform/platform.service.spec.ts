@@ -1,5 +1,6 @@
-import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { PlatformService } from './platform.service';
 
@@ -7,7 +8,7 @@ const makeMockPrisma = () => ({
   platformRoleAssignment: {
     findMany: jest.fn(),
     findUnique: jest.fn(),
-    findFirst: jest.fn(),
+    count: jest.fn(),
     create: jest.fn(),
     delete: jest.fn(),
   },
@@ -19,9 +20,16 @@ const makeMockPrisma = () => ({
   auditLog: {
     create: jest.fn(),
   },
+  $transaction: jest.fn(),
 });
 
 type MockPrisma = ReturnType<typeof makeMockPrisma>;
+
+const runTransaction = (prisma: MockPrisma) => {
+  prisma.$transaction.mockImplementation(async (callback: (tx: MockPrisma) => unknown) =>
+    callback(prisma),
+  );
+};
 
 describe('PlatformService', () => {
   let service: PlatformService;
@@ -72,50 +80,49 @@ describe('PlatformService', () => {
         assignedBy: 'actor-1',
         assignedAt: new Date(),
       };
-      prisma.platformRoleAssignment.findUnique.mockResolvedValue(null);
+      runTransaction(prisma);
       prisma.platformRoleAssignment.create.mockResolvedValue(assignment);
       prisma.auditLog.create.mockResolvedValue({});
 
-      const result = await service.assignPlatformRole('actor-1', {
-        userId: 'u-1',
-        role: 'platform_admin',
-      });
+      const result = await service.assignPlatformRole('actor-1', 'u-1', { role: 'platform_admin' });
 
-      expect(prisma.platformRoleAssignment.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            userId: 'u-1',
-            role: 'platform_admin',
-            assignedBy: 'actor-1',
-          }),
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          actorUserId: 'actor-1',
+          targetUserId: 'u-1',
+          action: 'assign_platform_role',
+          resourceType: 'PlatformRoleAssignment',
+          resourceId: 'a-1',
+          metadata: { role: 'platform_admin' },
         }),
-      );
-      expect(prisma.auditLog.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            actorUserId: 'actor-1',
-            action: 'assign_platform_role',
-          }),
-        }),
-      );
+      });
       expect(result).toEqual(assignment);
     });
 
     it('rejects unsupported platform role', async () => {
       await expect(
-        service.assignPlatformRole('actor-1', {
-          userId: 'u-1',
+        service.assignPlatformRole('actor-1', 'u-1', {
           role: 'invalid_role' as never,
         }),
       ).rejects.toThrow(BadRequestException);
 
-      expect(prisma.platformRoleAssignment.create).not.toHaveBeenCalled();
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('throws ConflictException on duplicate assignment (P2002)', async () => {
+      const p2002 = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: '5.0.0',
+      });
+      prisma.$transaction.mockRejectedValue(p2002);
+
+      await expect(
+        service.assignPlatformRole('actor-1', 'u-1', { role: 'platform_admin' }),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('does not depend on organization membership', async () => {
-      // This test verifies that platform role assignment has no membership query.
-      // The mock prisma only has platformRoleAssignment, supportSession, and auditLog defined.
-      // If the service tried to access any membership/organization table it would throw.
       const assignment = {
         id: 'a-1',
         userId: 'u-999',
@@ -123,19 +130,15 @@ describe('PlatformService', () => {
         assignedBy: 'actor-1',
         assignedAt: new Date(),
       };
-      prisma.platformRoleAssignment.findUnique.mockResolvedValue(null);
+      runTransaction(prisma);
       prisma.platformRoleAssignment.create.mockResolvedValue(assignment);
       prisma.auditLog.create.mockResolvedValue({});
 
-      // Should succeed without any membership/organization table access
-      const result = await service.assignPlatformRole('actor-1', {
-        userId: 'u-999',
-        role: 'platform_admin',
-      });
+      const result = await service.assignPlatformRole('actor-1', 'u-999', { role: 'platform_admin' });
 
       expect(result).toEqual(assignment);
-      // Only platformRoleAssignment tables were accessed
-      expect(prisma.platformRoleAssignment.create).toHaveBeenCalledTimes(1);
+      // No membership/organization tables were accessed — only $transaction
+      expect(prisma.$transaction).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -152,6 +155,7 @@ describe('PlatformService', () => {
         assignedBy: 'actor-0',
         assignedAt: new Date(),
       };
+      runTransaction(prisma);
       prisma.platformRoleAssignment.findUnique.mockResolvedValue(assignment);
       prisma.platformRoleAssignment.delete.mockResolvedValue(assignment);
       prisma.auditLog.create.mockResolvedValue({});
@@ -159,6 +163,16 @@ describe('PlatformService', () => {
       await service.removePlatformRole('actor-1', 'a-1');
 
       expect(prisma.platformRoleAssignment.delete).toHaveBeenCalledWith({ where: { id: 'a-1' } });
+      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          actorUserId: 'actor-1',
+          targetUserId: 'u-1',
+          action: 'remove_platform_role',
+          resourceType: 'PlatformRoleAssignment',
+          resourceId: 'a-1',
+          metadata: { role: 'platform_admin' },
+        }),
+      });
     });
 
     it('throws NotFoundException when assignment does not exist', async () => {
@@ -186,6 +200,7 @@ describe('PlatformService', () => {
         startedAt: new Date(),
         endedAt: null,
       };
+      runTransaction(prisma);
       prisma.supportSession.create.mockResolvedValue(session);
       prisma.auditLog.create.mockResolvedValue({});
 
@@ -205,13 +220,16 @@ describe('PlatformService', () => {
         }),
       );
       expect(prisma.auditLog.create).toHaveBeenCalledWith(
-        expect.objectContaining({
+        {
           data: expect.objectContaining({
             actorUserId: 'actor-1',
             targetOrganizationId: 'org-1',
             action: 'start_support_session',
+            resourceType: 'SupportSession',
+            resourceId: 'sess-1',
+            metadata: { reason: 'Helping client with issue' },
           }),
-        }),
+        },
       );
       expect(result).toEqual(session);
     });
@@ -240,6 +258,7 @@ describe('PlatformService', () => {
         organizationId: 'org-1',
         status: 'active',
       };
+      runTransaction(prisma);
       prisma.supportSession.findUnique.mockResolvedValue(session);
       prisma.supportSession.update.mockResolvedValue({ ...session, status: 'ended', endedAt: new Date() });
       prisma.auditLog.create.mockResolvedValue({});
@@ -252,6 +271,15 @@ describe('PlatformService', () => {
           data: expect.objectContaining({ status: 'ended' }),
         }),
       );
+      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          actorUserId: 'actor-1',
+          targetOrganizationId: 'org-1',
+          action: 'end_support_session',
+          resourceType: 'SupportSession',
+          resourceId: 'sess-1',
+        }),
+      });
     });
 
     it('throws NotFoundException when session does not exist', async () => {

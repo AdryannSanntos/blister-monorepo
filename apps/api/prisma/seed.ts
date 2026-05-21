@@ -71,6 +71,53 @@ const SEED_ONBOARDING_DATA = {
   },
 } as const;
 
+const AI_PROVIDERS = [
+  {
+    slug: 'openrouter',
+    name: 'OpenRouter',
+    description: 'Unified gateway for multiple AI providers and models.',
+    status: 'active',
+    iconMetadata: { iconKey: 'openrouter' },
+    capabilityMetadata: { text: true, vision: true, image: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'openrouter' },
+  },
+  {
+    slug: 'openai',
+    name: 'OpenAI',
+    description: 'Native OpenAI provider catalog entry pending runtime credentials.',
+    status: 'draft',
+    iconMetadata: { iconKey: 'openai' },
+    capabilityMetadata: { text: true, vision: true, image: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'openai' },
+  },
+  {
+    slug: 'anthropic',
+    name: 'Anthropic',
+    description: 'Native Anthropic provider catalog entry pending runtime credentials.',
+    status: 'draft',
+    iconMetadata: { iconKey: 'anthropic' },
+    capabilityMetadata: { text: true, vision: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'anthropic' },
+  },
+  {
+    slug: 'gemini',
+    name: 'Gemini',
+    description: 'Native Gemini provider catalog entry pending runtime credentials.',
+    status: 'draft',
+    iconMetadata: { iconKey: 'gemini' },
+    capabilityMetadata: { text: true, vision: true, image: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'gemini' },
+  },
+] as const;
+
 async function main() {
   console.log('Iniciando seed...');
 
@@ -159,6 +206,25 @@ async function main() {
   });
 
   console.log('  Membership: owner');
+
+  for (const provider of AI_PROVIDERS) {
+    await prisma.aIProvider.upsert({
+      where: { slug: provider.slug },
+      update: {
+        name: provider.name,
+        description: provider.description,
+        status: provider.status,
+        iconMetadata: provider.iconMetadata,
+        capabilityMetadata: provider.capabilityMetadata,
+        pricingMetadata: provider.pricingMetadata,
+        limitsMetadata: provider.limitsMetadata,
+        schemaMetadata: provider.schemaMetadata,
+      },
+      create: provider,
+    });
+  }
+
+  console.log(`  AI Providers: ${AI_PROVIDERS.map((provider) => provider.slug).join(', ')}`);
 
   await prisma.onboardingDraft.upsert({
     where: { organizationId: org.id },

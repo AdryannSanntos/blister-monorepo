@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": ".",
     "paths": {
       "@company-os/authz": ["../../packages/authz/dist/index.d.ts"],
       "@company-os/types": ["../../packages/types/dist/index.d.ts"]

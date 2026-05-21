@@ -392,12 +392,151 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AIProviderScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  iconMetadata: 'iconMetadata',
+  capabilityMetadata: 'capabilityMetadata',
+  pricingMetadata: 'pricingMetadata',
+  limitsMetadata: 'limitsMetadata',
+  schemaMetadata: 'schemaMetadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AIModelScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  externalModelId: 'externalModelId',
+  status: 'status',
+  capabilityMetadata: 'capabilityMetadata',
+  pricingMetadata: 'pricingMetadata',
+  limitsMetadata: 'limitsMetadata',
+  schemaMetadata: 'schemaMetadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AICredentialScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  organizationId: 'organizationId',
+  label: 'label',
+  value: 'value',
+  schemaMetadata: 'schemaMetadata',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AIProviderPolicyScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  organizationId: 'organizationId',
+  allowedModelIds: 'allowedModelIds',
+  metadata: 'metadata',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentTemplateScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  status: 'status',
+  allowedBlocks: 'allowedBlocks',
+  defaultFlow: 'defaultFlow',
+  defaultInputSchema: 'defaultInputSchema',
+  defaultOutputSchema: 'defaultOutputSchema',
+  executionProfile: 'executionProfile',
+  modelPolicy: 'modelPolicy',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CompanyAgentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  templateId: 'templateId',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  activeVersionId: 'activeVersionId',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentVersionScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  versionNumber: 'versionNumber',
+  status: 'status',
+  flowDefinition: 'flowDefinition',
+  inputSchema: 'inputSchema',
+  outputSchema: 'outputSchema',
+  notes: 'notes',
+  createdByUserId: 'createdByUserId',
+  publishedByUserId: 'publishedByUserId',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentRunScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  agentId: 'agentId',
+  agentVersionId: 'agentVersionId',
+  status: 'status',
+  inputPayload: 'inputPayload',
+  outputPayload: 'outputPayload',
+  errorMessage: 'errorMessage',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentRunStepScalarFieldEnum = {
+  id: 'id',
+  runId: 'runId',
+  blockKey: 'blockKey',
+  blockType: 'blockType',
+  status: 'status',
+  inputPayload: 'inputPayload',
+  outputPayload: 'outputPayload',
+  errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -441,7 +580,16 @@ exports.Prisma.ModelName = {
   DesignAsset: 'DesignAsset',
   PlatformRoleAssignment: 'PlatformRoleAssignment',
   SupportSession: 'SupportSession',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  AIProvider: 'AIProvider',
+  AIModel: 'AIModel',
+  AICredential: 'AICredential',
+  AIProviderPolicy: 'AIProviderPolicy',
+  AgentTemplate: 'AgentTemplate',
+  CompanyAgent: 'CompanyAgent',
+  AgentVersion: 'AgentVersion',
+  AgentRun: 'AgentRun',
+  AgentRunStep: 'AgentRunStep'
 };
 
 /**

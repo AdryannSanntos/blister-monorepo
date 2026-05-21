@@ -35,12 +35,17 @@ export class PlatformController {
   }
 
   /**
-   * POST /platform/admins
+   * POST /platform/admins/:userId
    * Assign a platform role to a user (platform_owner only)
+   * userId comes from route param, never from request body.
    */
-  @Post('admins')
+  @Post('admins/:userId')
   @RequirePlatformRole('platform_owner')
-  async assignRole(@Body() body: unknown, @Req() req: Request) {
+  async assignRole(
+    @Param('userId') targetUserId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
     const parsed = assignPlatformRoleSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
@@ -48,7 +53,7 @@ export class PlatformController {
 
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
 
-    return this.platformService.assignPlatformRole(currentUser.id, parsed.data);
+    return this.platformService.assignPlatformRole(currentUser.id, targetUserId, parsed.data);
   }
 
   /**

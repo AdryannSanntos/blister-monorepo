@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   PLATFORM_ROLES,
@@ -21,33 +23,46 @@ export class PlatformService {
     });
   }
 
-  async assignPlatformRole(actorUserId: string, input: AssignPlatformRoleDto) {
+  async assignPlatformRole(
+    actorUserId: string,
+    targetUserId: string,
+    input: AssignPlatformRoleDto,
+  ) {
     if (!(PLATFORM_ROLES as readonly string[]).includes(input.role)) {
       throw new BadRequestException(
         `Invalid platform role. Must be one of: ${PLATFORM_ROLES.join(', ')}`,
       );
     }
 
-    const assignment = await this.prisma.platformRoleAssignment.create({
-      data: {
-        userId: input.userId,
-        role: input.role,
-        assignedBy: actorUserId,
-      },
-    });
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const assignment = await tx.platformRoleAssignment.create({
+          data: {
+            userId: targetUserId,
+            role: input.role,
+            assignedBy: actorUserId,
+          },
+        });
 
-    await this.prisma.auditLog.create({
-      data: {
-        actorUserId,
-        targetUserId: input.userId,
-        action: 'assign_platform_role',
-        resourceType: 'PlatformRoleAssignment',
-        resourceId: assignment.id,
-        metadata: { role: input.role },
-      },
-    });
+        await tx.auditLog.create({
+          data: {
+            actorUserId,
+            targetUserId,
+            action: 'assign_platform_role',
+            resourceType: 'PlatformRoleAssignment',
+            resourceId: assignment.id,
+            metadata: { role: input.role },
+          },
+        });
 
-    return assignment;
+        return assignment;
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new ConflictException('Platform role already assigned');
+      }
+      throw err;
+    }
   }
 
   async removePlatformRole(actorUserId: string, assignmentId: string) {
@@ -59,17 +74,28 @@ export class PlatformService {
       throw new NotFoundException('Platform role assignment not found');
     }
 
-    await this.prisma.platformRoleAssignment.delete({ where: { id: assignmentId } });
+    // Protect the last platform_owner from being removed
+    if (assignment.role === 'platform_owner') {
+      const ownerCount = await this.prisma.platformRoleAssignment.count({
+        where: { role: 'platform_owner' },
+      });
+      if (ownerCount <= 1) {
+        throw new BadRequestException('Cannot remove the last platform_owner');
+      }
+    }
 
-    await this.prisma.auditLog.create({
-      data: {
-        actorUserId,
-        targetUserId: assignment.userId,
-        action: 'remove_platform_role',
-        resourceType: 'PlatformRoleAssignment',
-        resourceId: assignmentId,
-        metadata: { role: assignment.role },
-      },
+    await this.prisma.$transaction(async (tx) => {
+      await tx.platformRoleAssignment.delete({ where: { id: assignmentId } });
+      await tx.auditLog.create({
+        data: {
+          actorUserId,
+          targetUserId: assignment.userId,
+          action: 'remove_platform_role',
+          resourceType: 'PlatformRoleAssignment',
+          resourceId: assignmentId,
+          metadata: { role: assignment.role },
+        },
+      });
     });
   }
 
@@ -78,27 +104,29 @@ export class PlatformService {
       throw new BadRequestException('reason must be at least 8 characters');
     }
 
-    const session = await this.prisma.supportSession.create({
-      data: {
-        actorUserId,
-        organizationId: input.organizationId,
-        reason: input.reason,
-        status: 'active',
-      },
-    });
+    return this.prisma.$transaction(async (tx) => {
+      const session = await tx.supportSession.create({
+        data: {
+          actorUserId,
+          organizationId: input.organizationId,
+          reason: input.reason,
+          status: 'active',
+        },
+      });
 
-    await this.prisma.auditLog.create({
-      data: {
-        actorUserId,
-        targetOrganizationId: input.organizationId,
-        action: 'start_support_session',
-        resourceType: 'SupportSession',
-        resourceId: session.id,
-        metadata: { reason: input.reason },
-      },
-    });
+      await tx.auditLog.create({
+        data: {
+          actorUserId,
+          targetOrganizationId: input.organizationId,
+          action: 'start_support_session',
+          resourceType: 'SupportSession',
+          resourceId: session.id,
+          metadata: { reason: input.reason },
+        },
+      });
 
-    return session;
+      return session;
+    });
   }
 
   async endSupportSession(actorUserId: string, sessionId: string) {
@@ -118,23 +146,25 @@ export class PlatformService {
       throw new BadRequestException(`Session is already ${session.status}`);
     }
 
-    const updated = await this.prisma.supportSession.update({
-      where: { id: sessionId },
-      data: { status: 'ended', endedAt: new Date() },
-    });
+    return this.prisma.$transaction(async (tx) => {
+      const updated = await tx.supportSession.update({
+        where: { id: sessionId },
+        data: { status: 'ended', endedAt: new Date() },
+      });
 
-    await this.prisma.auditLog.create({
-      data: {
-        actorUserId,
-        targetOrganizationId: session.organizationId,
-        action: 'end_support_session',
-        resourceType: 'SupportSession',
-        resourceId: sessionId,
-        metadata: {},
-      },
-    });
+      await tx.auditLog.create({
+        data: {
+          actorUserId,
+          targetOrganizationId: session.organizationId,
+          action: 'end_support_session',
+          resourceType: 'SupportSession',
+          resourceId: sessionId,
+          metadata: {},
+        },
+      });
 
-    return updated;
+      return updated;
+    });
   }
 
   async getUserPlatformRoles(userId: string) {

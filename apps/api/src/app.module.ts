@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { AgentsModule } from './agents/agents.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AICatalogModule } from './ai-catalog/ai-catalog.module';
+import { AIRuntimeModule } from './ai-runtime/ai-runtime.module';
 import { AuditModule } from './audit/audit.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
@@ -29,6 +32,9 @@ import { PrismaModule } from './prisma/prisma.module';
     DesignSystemModule,
     PlatformModule,
     AuditModule,
+    AICatalogModule,
+    AIRuntimeModule,
+    AgentsModule,
   ],
   controllers: [AppController],
   providers: [

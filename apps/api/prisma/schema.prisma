@@ -413,3 +413,195 @@ model AuditLog {
   @@index([action])
   @@index([createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// AI catalog domain
+// ---------------------------------------------------------------------------
+
+model AIProvider {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  name               String
+  description        String?
+  status             String   @default("draft")
+  iconMetadata       Json     @default("{}")
+  capabilityMetadata Json     @default("{}")
+  pricingMetadata    Json     @default("{}")
+  limitsMetadata     Json     @default("{}")
+  schemaMetadata     Json     @default("{}")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  models      AIModel[]
+  credentials AICredential[]
+  policies    AIProviderPolicy[]
+
+  @@index([status])
+}
+
+model AIModel {
+  id                 String   @id @default(cuid())
+  providerId         String
+  slug               String
+  name               String
+  description        String?
+  externalModelId    String
+  status             String   @default("draft")
+  capabilityMetadata Json     @default("{}")
+  pricingMetadata    Json     @default("{}")
+  limitsMetadata     Json     @default("{}")
+  schemaMetadata     Json     @default("{}")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  provider AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, slug])
+  @@unique([providerId, externalModelId])
+  @@index([providerId, status])
+}
+
+model AICredential {
+  id              String   @id @default(cuid())
+  providerId      String
+  organizationId  String?
+  label           String
+  value           String
+  schemaMetadata  Json     @default("{}")
+  createdByUserId String
+  updatedByUserId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  provider AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId])
+  @@index([organizationId])
+}
+
+model AIProviderPolicy {
+  id              String   @id @default(cuid())
+  providerId      String
+  organizationId  String
+  allowedModelIds String[] @default([])
+  metadata        Json     @default("{}")
+  createdByUserId String
+  updatedByUserId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  provider AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, providerId])
+  @@index([organizationId])
+}
+
+// ---------------------------------------------------------------------------
+// Agents core domain
+// ---------------------------------------------------------------------------
+
+model AgentTemplate {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  name                String
+  description         String?
+  category            String
+  status              String   @default("draft")
+  allowedBlocks       String[] @default([])
+  defaultFlow         Json     @default("{}")
+  defaultInputSchema  Json     @default("{}")
+  defaultOutputSchema Json     @default("{}")
+  executionProfile    Json     @default("{}")
+  modelPolicy         Json     @default("{}")
+  createdByUserId     String?
+  updatedByUserId     String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  agents CompanyAgent[]
+
+  @@index([status, updatedAt])
+}
+
+model CompanyAgent {
+  id              String   @id @default(cuid())
+  organizationId  String
+  templateId      String?
+  slug            String
+  name            String
+  description     String?
+  status          String   @default("draft")
+  activeVersionId String?
+  createdByUserId String
+  updatedByUserId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  template AgentTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  versions AgentVersion[]
+  runs     AgentRun[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId, status, updatedAt])
+}
+
+model AgentVersion {
+  id                String   @id @default(cuid())
+  agentId           String
+  versionNumber     Int
+  status            String   @default("draft")
+  flowDefinition    Json     @default("{}")
+  inputSchema       Json     @default("{}")
+  outputSchema      Json     @default("{}")
+  notes             String?
+  createdByUserId   String
+  publishedByUserId String?
+  publishedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  companyAgent CompanyAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  runs         AgentRun[]
+
+  @@unique([agentId, versionNumber])
+  @@index([agentId, status, updatedAt])
+}
+
+model AgentRun {
+  id              String    @id @default(cuid())
+  organizationId  String
+  agentId         String
+  agentVersionId  String
+  status          String    @default("queued")
+  inputPayload    Json      @default("{}")
+  outputPayload   Json?
+  errorMessage    String?
+  createdByUserId String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  agent        CompanyAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentVersion AgentVersion @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
+  steps        AgentRunStep[]
+
+  @@index([organizationId, status, createdAt])
+  @@index([agentId, createdAt])
+}
+
+model AgentRunStep {
+  id            String    @id @default(cuid())
+  runId         String
+  blockKey      String
+  blockType     String
+  status        String
+  inputPayload  Json      @default("{}")
+  outputPayload Json?
+  errorMessage  String?
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  run AgentRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, createdAt])
+}

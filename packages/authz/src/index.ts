@@ -10,7 +10,10 @@ export const subjects = [
   'Permission',
   'Onboarding',
   'CompanyBrain',
+  'Agent',
+  'AgentRun',
   'Asset',
+  'CreditLedger',
   'ContextAsset',
   'ContextSource',
   'DesignSystem',
@@ -41,11 +44,21 @@ export type AppPermissionKey =
   | 'onboarding.publish'
   | 'brain.read'
   | 'brain.update'
+  | 'agent.read'
+  | 'agent.create'
+  | 'agent.update'
+  | 'agent.delete'
+  | 'agent.publish'
+  | 'agent.execute'
+  | 'agent.run.read'
+  | 'agent.run.review'
   | 'asset.read'
   | 'asset.create'
   | 'asset.update'
   | 'asset.archive'
   | 'asset.context.review'
+  | 'credit.read'
+  | 'credit.manage'
   | 'context.read'
   | 'context.create'
   | 'context.update'
@@ -76,11 +89,21 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'onboarding.publish',
   'brain.read',
   'brain.update',
+  'agent.read',
+  'agent.create',
+  'agent.update',
+  'agent.delete',
+  'agent.publish',
+  'agent.execute',
+  'agent.run.read',
+  'agent.run.review',
   'asset.read',
   'asset.create',
   'asset.update',
   'asset.archive',
   'asset.context.review',
+  'credit.read',
+  'credit.manage',
   'context.read',
   'context.create',
   'context.update',
@@ -130,11 +153,21 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'onboarding.publish': ['update', 'Onboarding'],
   'brain.read': ['read', 'CompanyBrain'],
   'brain.update': ['update', 'CompanyBrain'],
+  'agent.read': ['read', 'Agent'],
+  'agent.create': ['create', 'Agent'],
+  'agent.update': ['update', 'Agent'],
+  'agent.delete': ['delete', 'Agent'],
+  'agent.publish': ['update', 'Agent'],
+  'agent.execute': ['create', 'AgentRun'],
+  'agent.run.read': ['read', 'AgentRun'],
+  'agent.run.review': ['update', 'AgentRun'],
   'asset.read': ['read', 'Asset'],
   'asset.create': ['create', 'Asset'],
   'asset.update': ['update', 'Asset'],
   'asset.archive': ['delete', 'Asset'],
   'asset.context.review': ['update', 'ContextAsset'],
+  'credit.read': ['read', 'CreditLedger'],
+  'credit.manage': ['manage', 'CreditLedger'],
   'context.read': ['read', 'ContextSource'],
   'context.create': ['create', 'ContextSource'],
   'context.update': ['update', 'ContextSource'],
@@ -173,6 +206,9 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
         'permission.read',
         'brain.read',
         'brain.update',
+        'agent.read',
+        'agent.execute',
+        'agent.run.read',
         'asset.read',
         'asset.create',
         'asset.update',
@@ -193,7 +229,17 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
         'output.review',
       ];
     case 'member':
-      return ['company.read', 'brain.read', 'context.read', 'skill.read', 'skill.execute', 'output.read'];
+      return [
+        'company.read',
+        'brain.read',
+        'agent.read',
+        'agent.execute',
+        'agent.run.read',
+        'context.read',
+        'skill.read',
+        'skill.execute',
+        'output.read',
+      ];
   }
 }
 
