@@ -19,7 +19,8 @@
     "format:check": "biome check .",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f postgres"
+    "db:logs": "docker compose logs -f postgres",
+    "db:seed": "pnpm --dir apps/api db:seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

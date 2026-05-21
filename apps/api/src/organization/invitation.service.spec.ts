@@ -6,6 +6,9 @@ import { InvitationService } from './invitation.service';
 import { RoleService } from './role.service';
 
 const makeMockPrisma = () => ({
+  organization: {
+    findUnique: jest.fn(),
+  },
   membership: {
     findFirst: jest.fn(),
     findUnique: jest.fn(),
@@ -16,6 +19,7 @@ const makeMockPrisma = () => ({
     findUnique: jest.fn(),
     findMany: jest.fn(),
     create: jest.fn(),
+    delete: jest.fn(),
     update: jest.fn(),
   },
   $transaction: jest.fn(),
@@ -60,6 +64,7 @@ describe('InvitationService', () => {
     }).compile();
 
     service = module.get<InvitationService>(InvitationService);
+    prisma.organization.findUnique.mockResolvedValue({ name: 'Acme' });
   });
 
   afterEach(() => {
@@ -140,6 +145,7 @@ describe('InvitationService', () => {
 
       prisma.membership.findFirst.mockResolvedValue(null);
       prisma.invitation.findFirst.mockResolvedValue(null);
+      prisma.organization.findUnique.mockResolvedValue({ name: 'Acme Corp' });
       prisma.invitation.create.mockResolvedValue(invitation);
       email.send.mockResolvedValue({ id: 'email-1' });
 

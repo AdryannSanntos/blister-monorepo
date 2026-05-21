@@ -1,4 +1,9 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateOrganizationDto, UpdateOrganizationDto } from './dto';
 import { RoleService } from './role.service';
@@ -107,7 +112,8 @@ export class OrganizationService {
     ]);
 
     if (!fromMembership) throw new NotFoundException('Current user is not a member');
-    if (!toMembership) throw new NotFoundException('Target user is not a member of this organization');
+    if (!toMembership)
+      throw new NotFoundException('Target user is not a member of this organization');
 
     const ownerRole = await this.roleService.findSystemRole(orgId, 'owner');
     if (!ownerRole) throw new NotFoundException('Owner role not found');

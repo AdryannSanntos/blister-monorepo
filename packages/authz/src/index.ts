@@ -12,6 +12,9 @@ export const subjects = [
   'CompanyBrain',
   'Skill',
   'Output',
+  'Asset',
+  'ContextAsset',
+  'Integration',
 ] as const;
 
 export type AppAction = (typeof actions)[number];
@@ -35,8 +38,14 @@ export type AppPermissionKey =
   | 'onboarding.publish'
   | 'brain.read'
   | 'brain.update'
+  | 'asset.read'
+  | 'asset.create'
+  | 'asset.update'
+  | 'asset.archive'
+  | 'asset.context.review'
   | 'skill.read'
   | 'skill.execute'
+  | 'integration.read'
   | 'output.read'
   | 'output.review';
 
@@ -56,8 +65,14 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'onboarding.publish',
   'brain.read',
   'brain.update',
+  'asset.read',
+  'asset.create',
+  'asset.update',
+  'asset.archive',
+  'asset.context.review',
   'skill.read',
   'skill.execute',
+  'integration.read',
   'output.read',
   'output.review',
 ];
@@ -71,7 +86,9 @@ export function isAppPermissionKey(value: string): value is AppPermissionKey {
 }
 
 export function isAssignablePermissionKey(value: string): value is AppPermissionKey {
-  return (assignablePermissionKeys as readonly AppPermissionKey[]).includes(value as AppPermissionKey);
+  return (assignablePermissionKeys as readonly AppPermissionKey[]).includes(
+    value as AppPermissionKey,
+  );
 }
 
 export const defaultSystemRoles = ['owner', 'admin', 'member'] as const;
@@ -94,8 +111,14 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'onboarding.publish': ['update', 'Onboarding'],
   'brain.read': ['read', 'CompanyBrain'],
   'brain.update': ['update', 'CompanyBrain'],
+  'asset.read': ['read', 'Asset'],
+  'asset.create': ['create', 'Asset'],
+  'asset.update': ['update', 'Asset'],
+  'asset.archive': ['delete', 'Asset'],
+  'asset.context.review': ['update', 'ContextAsset'],
   'skill.read': ['read', 'Skill'],
   'skill.execute': ['create', 'Skill'],
+  'integration.read': ['read', 'Integration'],
   'output.read': ['read', 'Output'],
   'output.review': ['update', 'Output'],
 };
@@ -123,8 +146,14 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
         'permission.read',
         'brain.read',
         'brain.update',
+        'asset.read',
+        'asset.create',
+        'asset.update',
+        'asset.archive',
+        'asset.context.review',
         'skill.read',
         'skill.execute',
+        'integration.read',
         'output.read',
         'output.review',
       ];
@@ -136,13 +165,18 @@ export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissio
 export function defineAbilityForPermissions(
   permissionKeys: AppPermissionKey[],
   overrides: PermissionOverride[] = [],
+  isOwner = false,
 ): AppAbility {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  for (const key of permissionKeys) {
-    const mapping = permissionMap[key];
-    if (mapping) {
-      can(mapping[0], mapping[1]);
+  if (isOwner) {
+    can('manage', 'all');
+  } else {
+    for (const key of permissionKeys) {
+      const mapping = permissionMap[key];
+      if (mapping) {
+        can(mapping[0], mapping[1]);
+      }
     }
   }
 

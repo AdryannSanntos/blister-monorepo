@@ -5,12 +5,12 @@ import type { PrismaService } from '../prisma/prisma.service';
 
 const logger = new Logger('BetterAuth');
 const authBasePath = '/api/auth';
+type AuthInstance = ReturnType<typeof import('better-auth').betterAuth>;
 
 // Exported so SessionService can call auth.api.getSession without re-creating the instance
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _authInstance: any = null;
+let _authInstance: AuthInstance | null = null;
 
-export function getAuthInstance() {
+export function getAuthInstance(): AuthInstance | null {
   return _authInstance;
 }
 
@@ -40,8 +40,11 @@ export async function registerBetterAuth(
     ),
   ];
 
-  const auth = betterAuth({
-    appName: 'Company OS API',
+  type BA = typeof import('better-auth');
+  type BetterAuthOptions = Parameters<BA['betterAuth']>[0];
+
+  const options: BetterAuthOptions = {
+    appName: 'Workana AI API',
     baseURL,
     basePath: authBasePath,
     secret:
@@ -54,13 +57,13 @@ export async function registerBetterAuth(
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
-      sendResetPasswordToken: async ({ user, url }: { user: { email: string }; url: string }) => {
-        logger.log(`Password reset for ${user.email}: ${url}`);
+      sendResetPassword: async (data: { user: { email: string }; url: string }) => {
+        logger.log(`Password reset for ${data.user.email}: ${data.url}`);
       },
     },
     emailVerification: {
-      sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
-        logger.log(`Verification email for ${user.email}: ${url}`);
+      sendVerificationEmail: async (data: { user: { email: string }; url: string }) => {
+        logger.log(`Verification email for ${data.user.email}: ${data.url}`);
       },
     },
     ...(googleClientId && googleClientSecret
@@ -73,7 +76,9 @@ export async function registerBetterAuth(
           },
         }
       : {}),
-  });
+  };
+
+  const auth = betterAuth(options);
 
   _authInstance = auth;
 

@@ -1,5 +1,5 @@
-import { InviteListPage } from "src/core/modules/organization/pages/invite-list-page";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <InviteListPage />;
+  redirect("/dashboard/workspace/team");
 }

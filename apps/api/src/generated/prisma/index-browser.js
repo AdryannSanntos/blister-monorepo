@@ -195,6 +195,7 @@ exports.Prisma.MembershipScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   organizationId: 'organizationId',
+  active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -232,6 +233,33 @@ exports.Prisma.OnboardingDraftScalarFieldEnum = {
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AssetScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  description: 'description',
+  sourceKind: 'sourceKind',
+  sourceUrl: 'sourceUrl',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  visibleType: 'visibleType',
+  visibleCategory: 'visibleCategory',
+  tags: 'tags',
+  contextRole: 'contextRole',
+  operationalRole: 'operationalRole',
+  contextStatus: 'contextStatus',
+  operationalStatus: 'operationalStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AssetRelationScalarFieldEnum = {
+  id: 'id',
+  assetId: 'assetId',
+  kind: 'kind',
+  value: 'value'
 };
 
 exports.Prisma.SortOrder = {
@@ -272,7 +300,9 @@ exports.Prisma.ModelName = {
   MembershipRole: 'MembershipRole',
   MembershipPermissionOverride: 'MembershipPermissionOverride',
   Invitation: 'Invitation',
-  OnboardingDraft: 'OnboardingDraft'
+  OnboardingDraft: 'OnboardingDraft',
+  Asset: 'Asset',
+  AssetRelation: 'AssetRelation'
 };
 
 /**

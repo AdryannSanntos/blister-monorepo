@@ -1,4 +1,4 @@
-# Skill de Design System — AI Company OS
+# Skill de Design System — Workana AI
 
 Aplique as regras abaixo ao implementar ou revisar qualquer UI neste projeto.
 
@@ -96,6 +96,46 @@ Aplique as regras abaixo ao implementar ou revisar qualquer UI neste projeto.
   </form>
 </Form>
 ```
+
+### Padrão de estilização de campos de formulário
+
+Todos os campos (Input, Textarea, Select, InputGroup) seguem este contrato visual:
+
+| Propriedade | Token / valor |
+|---|---|
+| height md | `--field-h-md` 34px — sm 28px · lg 44px |
+| radius | `--r-md` 8px — sm usa `--r-sm` 6px |
+| border padrão | `--line-strong` 1px solid |
+| background padrão | `--bg-sunken` |
+| text / size | `--fg-primary` · 13.5px · Geist 400 |
+| placeholder | `--fg-quaternary` — mesma fonte, sem itálico |
+| label | 12px / 500 · `--fg-secondary` · 4px gap abaixo |
+| helper / erro | 11.5px / 400 · 6px gap abaixo do campo |
+| padding-x | `--space-6` 12px — sm 10px · lg 14px |
+| ícone interno | 14px · stroke-1.5 · `--fg-tertiary` |
+
+#### Estados obrigatórios
+
+```
+01 · IDLE       border --line-strong · bg --bg-sunken · placeholder visível
+02 · HOVER      border blend 60% para --fg-quaternary · 140ms ease-out
+03 · FOCUS      border --accent · bg --bg-base · ring 3px --accent-soft · caret --accent
+04 · FILLED     border --line-strong · valor em --fg-primary
+05 · READ-ONLY  bg --bg-sunken/50 · border --line-subtle · cursor-default
+06 · DISABLED   opacity-50 · cursor-not-allowed · helper explicando por quê
+07 · LOADING    skeleton 60×16px no affix direito · campo permanece editável
+08 · ERROR      border --danger · ring 3px --danger-soft · helper substituído por erro
+09 · FOCUS+ERR  mantém --danger · anel --danger-soft (sem duplo ring)
+10 · SUCCESS    checkmark trailing fades in 1.6s · border volta ao neutro
+```
+
+Regras:
+- `aria-invalid` ativa automaticamente o estado de erro via classes CSS — nunca adicionar borda de erro manualmente
+- Read-only (`readOnly`): hover e focus-ring de acento NÃO são suprimidos, pois o campo é selecionável
+- Loading: o campo continua editável enquanto o skeleton aparece no affix
+- Success é transiente — não pintar o campo de verde, apenas checkmark no affix com fade-out
+- Nunca placeholder em itálico ou com peso diferente
+- Campos numéricos: `tabular-nums` via `font-variant-numeric`
 
 ---
 

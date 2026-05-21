@@ -1,13 +1,15 @@
 "use client";
 
-import { useInvitations } from "src/core/modules/organization/hooks/use-invitations";
-import { useOrganizationMembers } from "src/core/modules/organization/hooks/use-members";
-import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
-import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
+import * as React from "react";
 import {
   useOnboardingDraft,
   useOnboardingStatus,
 } from "src/core/modules/onboarding/hooks/use-onboarding";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
+import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { useInvitations } from "src/core/modules/organization/hooks/use-invitations";
+import { useOrganizationMembers } from "src/core/modules/organization/hooks/use-members";
+import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
 import { authClient } from "src/core/shared/utils/auth-client";
 
 type SessionUser = {
@@ -39,21 +41,42 @@ export function getInitials(value: string) {
 }
 
 export function useDashboardData() {
-  const { data: session, isPending: isSessionPending } = authClient.useSession();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const sessionUser = (session?.user as SessionUser | undefined) ?? null;
   const { activeOrgId, setActiveOrgId, clearActiveOrg, isLoaded } =
     useActiveOrganization();
   const organizationsQuery = useUserOrganizations(sessionUser?.id);
   const organizations = organizationsQuery.data ?? [];
-  const fallbackOrganization = organizations.length === 1 ? organizations[0] : null;
+  const fallbackOrganization =
+    organizations.length === 1 ? organizations[0] : null;
   const activeOrganization =
     organizations.find((organization) => organization.id === activeOrgId) ??
     fallbackOrganization;
+  const resolvedOrgId = activeOrganization?.id ?? null;
 
-  const membersQuery = useOrganizationMembers(activeOrganization?.id ?? null);
-  const invitationsQuery = useInvitations(activeOrganization?.id ?? null);
-  const onboardingStatusQuery = useOnboardingStatus(activeOrganization?.id ?? null);
-  const onboardingDraftQuery = useOnboardingDraft(activeOrganization?.id ?? null);
+  // Persist resolved org so child pages reading useActiveOrganization() get the right ID
+  React.useEffect(() => {
+    if (resolvedOrgId && resolvedOrgId !== activeOrgId) {
+      setActiveOrgId(resolvedOrgId);
+    }
+  }, [resolvedOrgId, activeOrgId, setActiveOrgId]);
+
+  const { can, isLoading: isAbilityLoading } = useAbility();
+  const canReadMembers = can("read", "Member");
+
+  const membersQuery = useOrganizationMembers(activeOrganization?.id ?? null, {
+    enabled: !isAbilityLoading && canReadMembers,
+  });
+  const invitationsQuery = useInvitations(activeOrganization?.id ?? null, {
+    enabled: !isAbilityLoading && canReadMembers,
+  });
+  const onboardingStatusQuery = useOnboardingStatus(
+    activeOrganization?.id ?? null,
+  );
+  const onboardingDraftQuery = useOnboardingDraft(
+    activeOrganization?.id ?? null,
+  );
 
   const members = membersQuery.data ?? [];
   const invitations = invitationsQuery.data ?? [];
@@ -68,6 +91,7 @@ export function useDashboardData() {
     isSessionPending ||
     !isLoaded ||
     organizationsQuery.isLoading ||
+    (Boolean(activeOrganization) && isAbilityLoading) ||
     (Boolean(activeOrganization) &&
       (membersQuery.isLoading ||
         invitationsQuery.isLoading ||
@@ -83,6 +107,7 @@ export function useDashboardData() {
     organizations,
     members,
     invitations,
+    canReadMembers,
     pendingInvitations,
     onboardingDraft: onboardingDraftQuery.data ?? null,
     onboardingPublished,

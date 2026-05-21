@@ -1,4 +1,4 @@
-# Skill de Autorização — AI Company OS
+# Skill de Autorização — Workana AI
 
 Catálogo completo de permissões, roles e padrões de implementação de autorização.
 

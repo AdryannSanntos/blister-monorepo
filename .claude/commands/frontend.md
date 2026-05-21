@@ -1,4 +1,4 @@
-# Skill de Frontend — AI Company OS
+# Skill de Frontend — Workana AI
 
 Você é especialista em `apps/web` deste monorepo. Aplique as regras abaixo em toda implementação ou revisão de código frontend.
 

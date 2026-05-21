@@ -36,7 +36,7 @@ export function AcceptInvitePage() {
         <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-primary text-primary-foreground text-lg font-semibold">
           C
         </div>
-        <h1 className="mt-2 text-[15px] font-medium text-[var(--fg-primary)]">Company OS</h1>
+        <h1 className="mt-2 text-[15px] font-medium text-[var(--fg-primary)]">Workana AI</h1>
       </div>
       <Card className="w-full max-w-[420px]">{children}</Card>
     </div>
@@ -125,7 +125,7 @@ export function AcceptInvitePage() {
         </div>
         <h2 className="text-[18px] font-medium text-[var(--fg-primary)]">Aceitar convite</h2>
         <p className="text-[13px] text-[var(--fg-tertiary)]">
-          Você foi convidado para entrar em um workspace do Company OS.
+          Você foi convidado para entrar em um workspace do Workana AI.
         </p>
       </CardHeader>
       <CardContent className="pb-4">

@@ -9,10 +9,10 @@ import {
 export function WelcomeStep() {
   return (
     <CardHeader className="text-center">
-      <CardTitle className="text-2xl">Bem-vindo ao Company OS</CardTitle>
+      <CardTitle className="text-2xl">Bem-vindo ao Workana AI</CardTitle>
       <CardDescription className="mx-auto max-w-md text-base">
         Vamos configurar o contexto da sua empresa em poucos passos. Essas
-        informações alimentam o Company Brain — a inteligência que conhece seu
+        informações alimentam o Brain — a inteligência que conhece seu
         negócio.
       </CardDescription>
     </CardHeader>

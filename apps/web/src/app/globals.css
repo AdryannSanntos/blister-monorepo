@@ -24,11 +24,19 @@
   --accent-active: oklch(0.52 0.23 265);
   --accent-soft: oklch(0.58 0.24 265 / 0.14);
   --accent-soft-hi: oklch(0.58 0.24 265 / 0.34);
+  --premium: #f6bb1b;
+  --premium-soft: rgb(246 187 27 / 16%);
+  --ai-live: #93e72a;
+  --ai-live-soft: rgb(147 231 42 / 16%);
 
   --success: oklch(0.78 0.16 155);
+  --success-soft: oklch(0.78 0.16 155 / 0.14);
   --warning: oklch(0.82 0.16 78);
+  --warning-soft: oklch(0.82 0.16 78 / 0.14);
   --danger: oklch(0.7 0.2 22);
+  --danger-soft: oklch(0.7 0.2 22 / 0.14);
   --info: oklch(0.78 0.13 235);
+  --info-soft: oklch(0.78 0.13 235 / 0.14);
 
   --chart-1: oklch(0.78 0.16 130);
   --chart-2: oklch(0.76 0.13 235);
@@ -46,31 +54,36 @@
   --scrim: oklch(0.05 0 0 / 0.62);
   --scrim-strong: oklch(0.05 0 0 / 0.78);
 
+  --field-h-sm: 28px;
+  --field-h-md: 34px;
+  --field-h-lg: 44px;
+
   --r-xs: 4px;
   --r-sm: 6px;
   --r-md: 8px;
   --r-lg: 12px;
   --r-xl: 16px;
-  --r-2xl: 22px;
+  --r-2xl: 20px;
   --r-full: 999px;
 
   --shadow-xs:
     0 1px 0 0 oklch(1 0 0 / 0.03) inset, 0 1px 1px oklch(0 0 0 / 0.3);
   --shadow-sm:
-    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 1px 2px oklch(0 0 0 / 0.32), 0 2px
-    6px oklch(0 0 0 / 0.18);
+    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 1px 2px oklch(0 0 0 / 0.32),
+    0 2px 6px oklch(0 0 0 / 0.18);
   --shadow-md:
-    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 4px 12px oklch(0 0 0 / 0.38), 0 2px
-    4px oklch(0 0 0 / 0.22);
+    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 4px 12px oklch(0 0 0 / 0.38),
+    0 2px 4px oklch(0 0 0 / 0.22);
   --shadow-lg:
-    0 1px 0 0 oklch(1 0 0 / 0.05) inset, 0 12px 32px oklch(0 0 0 / 0.5), 0 4px
-    10px oklch(0 0 0 / 0.3);
+    0 1px 0 0 oklch(1 0 0 / 0.05) inset, 0 12px 32px oklch(0 0 0 / 0.5),
+    0 4px 10px oklch(0 0 0 / 0.3);
   --shadow-xl:
-    0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 28px 64px oklch(0 0 0 / 0.55), 0 10px
-    24px oklch(0 0 0 / 0.36);
+    0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 28px 64px oklch(0 0 0 / 0.55),
+    0 10px 24px oklch(0 0 0 / 0.36);
   --shadow-glow:
-    0 0 0 1px var(--accent-soft-hi), 0 4px 16px
-    color-mix(in oklch, var(--accent) 16%, transparent);
+    0 0 0 1px var(--accent-soft-hi), 0 10px 28px rgb(94 145 255 / 18%);
+  --shadow-glow-live:
+    0 0 0 1px var(--ai-live-soft), 0 10px 28px rgb(147 231 42 / 14%);
 
   --space-0: 0;
   --space-px: 1px;
@@ -155,17 +168,17 @@
   --shadow-xs:
     0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 1px 1px oklch(0 0 0 / 0.08);
   --shadow-sm:
-    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 1px 2px oklch(0 0 0 / 0.08), 0 2px 6px
-    oklch(0 0 0 / 0.05);
+    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 1px 2px oklch(0 0 0 / 0.08),
+    0 2px 6px oklch(0 0 0 / 0.05);
   --shadow-md:
-    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 4px 12px oklch(0 0 0 / 0.1), 0 2px 4px
-    oklch(0 0 0 / 0.06);
+    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 4px 12px oklch(0 0 0 / 0.1),
+    0 2px 4px oklch(0 0 0 / 0.06);
   --shadow-lg:
-    0 1px 0 0 oklch(1 0 0 / 0.9) inset, 0 12px 32px oklch(0 0 0 / 0.12), 0 4px
-    10px oklch(0 0 0 / 0.08);
+    0 1px 0 0 oklch(1 0 0 / 0.9) inset, 0 12px 32px oklch(0 0 0 / 0.12),
+    0 4px 10px oklch(0 0 0 / 0.08);
   --shadow-xl:
-    0 1px 0 0 oklch(1 0 0 / 0.95) inset, 0 28px 64px oklch(0 0 0 / 0.16), 0 10px
-    24px oklch(0 0 0 / 0.1);
+    0 1px 0 0 oklch(1 0 0 / 0.95) inset, 0 28px 64px oklch(0 0 0 / 0.16),
+    0 10px 24px oklch(0 0 0 / 0.1);
 }
 
 @theme inline {
@@ -244,9 +257,9 @@ body {
   background:
     linear-gradient(var(--bg-canvas), var(--bg-canvas)),
     linear-gradient(45deg, var(--line-subtle) 1px, transparent 1px) 0 0 / 14px
-    14px,
+      14px,
     linear-gradient(-45deg, var(--line-subtle) 1px, transparent 1px) 0 0 / 14px
-    14px;
+      14px;
   border: 1px solid var(--line-subtle);
 }
 
@@ -339,4 +352,65 @@ body {
   --animate-accordion-up: accordion-up 200ms var(--ease-out);
   --animate-collapsible-down: collapsible-down 180ms var(--ease-out);
   --animate-collapsible-up: collapsible-up 150ms var(--ease-out);
+}
+
+/* Auth split layout — painel visual */
+.auth-visual-panel {
+  background: #0b1120;
+}
+
+.auth-mesh-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 40%, #1e3a7a 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 80% 20%, #0f2252 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 55% 75%, #2a4fa0 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, #122045 0%, transparent 50%),
+    #0b1120;
+}
+
+.auth-orb-1 {
+  background: radial-gradient(circle, #5e91ff 0%, #3366ff 50%, transparent 70%);
+}
+
+.auth-orb-2 {
+  background: radial-gradient(circle, #93b7ff 0%, #5e91ff 50%, transparent 70%);
+}
+
+.auth-orb-3 {
+  background: radial-gradient(circle, #3366ff 0%, #1a3f8f 50%, transparent 70%);
+}
+
+/* Form field focus — !important needed: border-color is overridden by equal-specificity hover utilities */
+input[data-slot="input"]:focus,
+textarea[data-slot="textarea"]:focus {
+  border-color: var(--accent) !important;
+  background-color: var(--bg-base);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+}
+
+button[data-slot="select-trigger"]:focus {
+  border-color: var(--accent) !important;
+  background-color: var(--bg-base);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+}
+
+input[data-slot="input"][aria-invalid="true"]:focus,
+textarea[data-slot="textarea"][aria-invalid="true"]:focus,
+button[data-slot="select-trigger"][aria-invalid="true"]:focus {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+div[data-slot="input-group"]:focus-within {
+  border-color: var(--accent) !important;
+  background-color: var(--bg-base);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+div[data-slot="input-group"][aria-invalid="true"]:focus-within,
+div[data-slot="input-group"]:has([aria-invalid="true"]:focus) {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-soft);
 }

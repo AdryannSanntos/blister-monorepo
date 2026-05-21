@@ -1,74 +1,61 @@
-# Decisoes de Stack
+# Decisões de Stack — Workana AI
 
 ## Estrutura do Monorepo
 
-- `apps/web`: frontend principal com `Next.js 16` e App Router
-- `apps/api`: API principal com `NestJS 11`, auth, Prisma e futuras integracoes de realtime e storage
-- `packages/authz`: catalogo compartilhado de acoes, subjects, permissoes e papeis padrao
-- `packages/types`: schemas e tipos compartilhados com `Zod`
-- `packages/configs`: presets compartilhados de TypeScript
+- `apps/web`: frontend principal com `Next.js 16`, `React 19` e App Router
+- `apps/api`: API principal com `NestJS 11`, auth, Prisma, CASL e futuras integrações realtime/storage
+- `packages/authz`: catálogo compartilhado de ações, subjects, permissões e roles padrão
+- `packages/types`: schemas e tipos Zod compartilhados
+- `packages/configs`: presets TypeScript compartilhados
 
-## Decisoes de Ferramentas de Base
+## Ferramentas de Base
 
-- `pnpm` e o package manager oficial do workspace
-- `Turborepo` coordena `dev`, `build`, `lint` e `typecheck`
-- `Biome` substitui combinacoes paralelas de formatter e linter
-- `TypeScript` com `strict: true` e o padrao do monorepo
+- `pnpm` é o package manager oficial
+- `Turborepo` coordena `dev`, `build`, `lint`, `test` e `typecheck`
+- `Biome` é formatter/linter oficial
+- `TypeScript strict` é obrigatório
+- `Prisma` gera cliente em `apps/api/src/generated/prisma`, que nunca deve ser editado manualmente
 
-## Decisoes de Frontend
+## Frontend
 
-- `Next.js 16` e a shell web oficial
-- `React 19` e a base de interface
-- `Tailwind CSS 4` e a camada de estilizacao atual
-- `shadcn` com base `radix` e a fundacao oficial dos componentes de UI
-- `react-hook-form` com `Zod` e a stack padrao para formularios
-- `@tanstack/react-query` e dono do estado de servidor
-- `@tanstack/react-table` deve ser usado apenas em tabelas de alta densidade
-- `Recharts` e a biblioteca padrao para graficos
-- `clsx`, `tailwind-merge` e `tailwind-variants` formam a stack de composicao de classes
-- `nuqs` e a opcao padrao para estado compartilhavel na URL
-- `zustand` e permitido apenas para estado local de cliente que nao pertence ao cache do servidor nem a URL
-- `axios` e o cliente HTTP padrao para chamadas imperativas
-- os componentes oficiais do frontend vivem em `apps/web/src/core/shared/components/ui`
-- os tokens globais do frontend vivem em `apps/web/src/app/globals.css`
+- `Next.js 16` e `React 19` são a base da aplicação web
+- `Tailwind CSS 4` usa tokens em `apps/web/src/app/globals.css`
+- `shadcn/ui` em `apps/web/src/core/shared/components/ui` é a fundação dos componentes
+- `react-hook-form` + `Zod` é o padrão de formulários
+- `@tanstack/react-query` é dono do estado de servidor
+- `@tanstack/react-table` é padrão para coleções de dados
+- `Recharts` é a biblioteca padrão de gráficos
+- `nuqs` é usado para estado compartilhável por URL
+- `zustand` só é permitido para estado local de cliente que não pertence ao cache do servidor nem à URL
+- `axios` é o cliente HTTP padrão
+- `lucide-react` é a biblioteca de ícones
+- `next-themes` usa light default com dark disponível
 
-## Decisoes de Backend
+## Backend
 
-- `NestJS` controla HTTP, composicao de modulos, bootstrap da aplicacao e futuras gateways
-- `Prisma` e o unico cliente de banco permitido no repositorio
-- `better-auth` e a fonte de verdade apenas de autenticacao, verificacao de email, reset de senha e sessao
-- `Resend` e o servico padrao para emails transacionais do produto
-- organizacao ativa, convites, memberships, roles e permissoes pertencem ao dominio da aplicacao
-- `CASL` e o motor de autorizacao compartilhado
-- `socket.io` sera o transporte padrao para realtime entre web e api
-- `@aws-sdk/client-s3` e a camada aprovada para storage compativel com S3
+- `NestJS` controla HTTP, módulos e DI
+- `Prisma` é o único cliente de banco permitido
+- `better-auth` cuida apenas de login, signup, verificação de email, reset de senha e sessão
+- Organizações, memberships, convites, roles, permissões, créditos e brain pertencem ao domínio da aplicação
+- `CASL` é o motor de autorização via `packages/authz`
+- `Zod` valida DTOs antes do service
+- `Resend` é o serviço padrão para emails transacionais
+- `socket.io` está aprovado para realtime futuro
+- `@aws-sdk/client-s3` está aprovado para storage compatível com S3
 
-## Decisoes de Dominio e Governanca
+## Domínio e Governança
 
-- autenticacao e autorizacao nao devem ser misturadas
-- organizacao ativa nao deve depender do `better-auth`
-- o catalogo de permissoes fica em codigo dentro de `packages/authz`
-- toda empresa nasce com as roles `owner`, `admin` e `member`
-- a empresa pode criar roles adicionais com permissoes a la carte
-- um membro pode ter multiplas roles na mesma empresa
-- overrides por usuario devem suportar `allow` e `deny`
-- tipos e schemas reutilizados entre apps devem sair de `packages/types`
-- componentes ou utilitarios compartilhados entre apps nao devem ser duplicados sem necessidade clara
+- O produto se chama **Workana AI**
+- O foco é B2B operacional para empresas que coordenam freelancers e times remotos
+- O usuário pode participar de várias companies/workspaces
+- A organização ativa é domínio próprio, não sessão do better-auth
+- Toda empresa nasce com roles `owner`, `admin` e `member`
+- Roles de sistema são imutáveis
+- Um membro pode ter múltiplas roles e overrides individuais `allow`/`deny`
+- Toda ação de produto tem permissão explícita no backend e frontend
 
-## Regra de Permissao Universal
+## Estado Atual
 
-**Toda acao do produto deve ter verificacao de permissao** — sem excecao.
+Implementado: auth, organizações, memberships, roles/permissões, convites, onboarding draft, dashboard shell, assets e tela base de integrações.
 
-- **Backend:** todo endpoint de mutacao ou dado sensivel deve ter um `@RequirePermission(key)` guard NestJS que resolve a ability CASL do membro na organizacao ativa antes de processar o request
-- **Frontend:** toda UI com acao de escrita, exclusao ou dado restrito deve checar `can(action, subject)` antes de renderizar o controle ou executar a mutacao
-- Nenhuma feature nasce sem permissoes implementadas — guards e checks de UI sao parte da definicao de pronto de cada task
-
-## Observacoes Importantes do Estado Atual
-
-- `better-auth` esta montado em `apps/api/src/auth/register-better-auth.ts`
-- a implementacao atual ainda usa o plugin de organizacao do `better-auth`, mas a decisao aprovada e migrar para um dominio proprio de organizacoes
-- o schema atual do Prisma precisa evoluir para suportar roles por empresa, `MembershipRole`, `RolePermission`, overrides por usuario e persistencia da organizacao ativa
-- o frontend ja registra um `QueryClientProvider` global
-- o frontend segue a separacao `core/shared` e `core/modules`
-- o frontend agora usa `shadcn` como base de UI e expoe referencia viva em `/design-system`
-- o PRD menciona automacao com `Trigger.dev` ou `Inngest`, mas nenhuma das duas ferramentas foi adicionada ainda
+Ainda pendente como domínio real: Brain persistido/versionado, créditos, agentes default, histórico de execuções, automações, analytics e integrações reais.

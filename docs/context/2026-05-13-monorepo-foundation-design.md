@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Consolidar a base tecnica do AI Company OS para suportar um produto multiempresa com IA, autenticacao, autorizacao e modulos de negocio evolutivos.
+Consolidar a base tecnica do Workana AI para suportar um produto multiempresa com IA, autenticacao, autorizacao e modulos de negocio evolutivos.
 
 ## Escopo Real Desta Fase
 
@@ -18,7 +18,7 @@ Esta fase cobre apenas a fundacao tecnica do produto:
 
 Esta fase ainda nao entrega:
 
-- Company Brain funcional
+- Brain funcional
 - catalogo de skills funcional
 - geracao de conteudo por IA
 - aprovacoes de outputs

@@ -1,10 +1,10 @@
-# Skills de IA do Projeto
+# Habilidades de IA do Projeto
 
 Esta pasta e reservada para skills operacionais que uma IA deve seguir ao trabalhar neste monorepo.
 
 Cada skill traduz o contexto do projeto em instrucoes praticas para execucao consistente.
 
-## Skills Disponiveis
+## Habilidades Disponiveis
 
 - `project-engineering-skill.md`: skill base com regras do monorepo, stack e bibliotecas
 - `frontend-skill.md`: skill para implementacoes e refactors no `apps/web`

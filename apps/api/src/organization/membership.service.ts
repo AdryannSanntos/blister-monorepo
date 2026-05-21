@@ -3,7 +3,12 @@ import {
   type PermissionOverride,
   defineAbilityForPermissions,
 } from '@company-os/authz';
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -79,6 +84,67 @@ export class MembershipService {
 
     await this.prisma.membershipRole.delete({
       where: { id: assignment.id },
+    });
+  }
+
+  async updateRoles(membershipId: string, roleIds: string[]) {
+    const membership = await this.prisma.membership.findUnique({
+      where: { id: membershipId },
+      include: { roles: true },
+    });
+
+    if (!membership) {
+      throw new NotFoundException('Membership not found');
+    }
+
+    if (roleIds.length === 0) {
+      throw new ConflictException('Member must have at least one role');
+    }
+
+    await this.prisma.membershipRole.deleteMany({ where: { membershipId } });
+    await this.prisma.membershipRole.createMany({
+      data: roleIds.map((roleId) => ({ membershipId, roleId })),
+    });
+
+    return this.prisma.membership.findUnique({
+      where: { id: membershipId },
+      include: { roles: { include: { role: true } } },
+    });
+  }
+
+  async deactivateMember(organizationId: string, membershipId: string) {
+    const membership = await this.prisma.membership.findUnique({
+      where: { id: membershipId },
+      include: { roles: { include: { role: true } } },
+    });
+
+    if (!membership || membership.organizationId !== organizationId) {
+      throw new NotFoundException('Membership not found');
+    }
+
+    const isOwner = membership.roles.some((mr) => mr.role.name === 'owner');
+    if (isOwner) {
+      throw new ForbiddenException('Cannot deactivate an owner');
+    }
+
+    return this.prisma.membership.update({
+      where: { id: membershipId },
+      data: { active: false },
+    });
+  }
+
+  async activateMember(organizationId: string, membershipId: string) {
+    const membership = await this.prisma.membership.findUnique({
+      where: { id: membershipId },
+    });
+
+    if (!membership || membership.organizationId !== organizationId) {
+      throw new NotFoundException('Membership not found');
+    }
+
+    return this.prisma.membership.update({
+      where: { id: membershipId },
+      data: { active: true },
     });
   }
 
@@ -161,6 +227,8 @@ export class MembershipService {
       effect: o.effect as 'allow' | 'deny',
     }));
 
-    return defineAbilityForPermissions([...rolePermissions], overrides);
+    const isOwner = membership.roles.some((mr) => mr.role.name === 'owner');
+
+    return defineAbilityForPermissions([...rolePermissions], overrides, isOwner);
   }
 }

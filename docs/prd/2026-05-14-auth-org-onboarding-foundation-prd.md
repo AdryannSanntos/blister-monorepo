@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-Definir o produto e a arquitetura da primeira experiencia real de entrada do AI Company OS, cobrindo autenticacao, workspace multiempresa, convites, autorizacao por empresa e onboarding inicial com publicacao do primeiro Company Brain.
+Definir o produto e a arquitetura da primeira experiencia real de entrada do Workana AI, cobrindo autenticacao, workspace multiempresa, convites, autorizacao por empresa e onboarding inicial com publicacao do primeiro Brain.
 
 ## 2. Contexto
 
@@ -15,7 +15,7 @@ O repositorio atual ja possui fundacao tecnica de `web`, `api`, `Prisma`, `bette
 
 ## 3. Problema
 
-Sem essa separacao, o produto fica preso a um modelo de organizacao e permissao que nao representa a necessidade real do AI Company OS:
+Sem essa separacao, o produto fica preso a um modelo de organizacao e permissao que nao representa a necessidade real do Workana AI:
 
 - cada empresa precisa de `roles` proprias
 - um membro pode acumular multiplas funcoes
@@ -38,14 +38,14 @@ Entram neste PRD:
 - permissões por role
 - overrides `allow` e `deny` por usuario
 - onboarding inicial da empresa
-- publicacao da primeira versao do Company Brain
+- publicacao da primeira versao do Brain
 
 Nao entram neste PRD:
 
 - login social no primeiro recorte
 - teams avancados
 - automacoes
-- Company Brain editavel completo apos o onboarding
+- Brain editavel completo apos o onboarding
 - catalogo de skills funcional
 
 ## 5. Regras de Produto Fechadas
@@ -84,7 +84,7 @@ Nao entram neste PRD:
 
 - onboarding inicial e obrigatorio para o primeiro `owner`
 - so `owner` publica a primeira versao do contexto
-- o onboarding termina com a publicacao inicial do Company Brain
+- o onboarding termina com a publicacao inicial do Brain
 
 ## 6. Fluxo Principal do Usuario
 
@@ -93,7 +93,7 @@ Nao entram neste PRD:
 3. se nao tiver empresa, cria workspace
 4. se tiver convite aberto, conclui entrada via convite
 5. se tiver mais de uma empresa, escolhe a ativa
-6. se a empresa ativa ainda nao tiver Company Brain publicado, vai para onboarding
+6. se a empresa ativa ainda nao tiver Brain publicado, vai para onboarding
 7. `owner` publica o contexto inicial
 8. usuario entra no dashboard
 

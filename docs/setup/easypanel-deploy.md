@@ -82,7 +82,7 @@ BETTER_AUTH_URL=https://api.seudominio.com
 NEXT_PUBLIC_API_URL=https://api.seudominio.com
 
 RESEND_API_KEY=<sua-chave>
-RESEND_FROM_EMAIL=Company OS <noreply@seudominio.com>
+RESEND_FROM_EMAIL=Workana AI <noreply@seudominio.com>
 
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=

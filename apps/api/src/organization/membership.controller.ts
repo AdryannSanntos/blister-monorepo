@@ -7,7 +7,9 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { membershipOverrideSchema } from './dto';
@@ -36,6 +38,28 @@ export class MembershipController {
     await this.membershipService.removeRole(membershipId, roleId);
   }
 
+  @Put(':membershipId/roles')
+  @RequirePermission('member.update')
+  async updateRoles(@Param('membershipId') membershipId: string, @Body() body: unknown) {
+    const roleIds = (body as { roleIds?: unknown }).roleIds;
+    if (!Array.isArray(roleIds) || roleIds.some((id) => typeof id !== 'string')) {
+      throw new BadRequestException('roleIds must be an array of strings');
+    }
+    return this.membershipService.updateRoles(membershipId, roleIds);
+  }
+
+  @Patch(':membershipId/deactivate')
+  @RequirePermission('member.update')
+  async deactivate(@Param('orgId') orgId: string, @Param('membershipId') membershipId: string) {
+    return this.membershipService.deactivateMember(orgId, membershipId);
+  }
+
+  @Patch(':membershipId/activate')
+  @RequirePermission('member.update')
+  async activate(@Param('orgId') orgId: string, @Param('membershipId') membershipId: string) {
+    return this.membershipService.activateMember(orgId, membershipId);
+  }
+
   @Post(':membershipId/overrides')
   @RequirePermission('member.update')
   async setOverride(@Param('membershipId') membershipId: string, @Body() body: unknown) {
@@ -57,10 +81,7 @@ export class MembershipController {
   @Delete(':membershipId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermission('member.remove')
-  async removeMember(
-    @Param('orgId') orgId: string,
-    @Param('membershipId') membershipId: string,
-  ) {
+  async removeMember(@Param('orgId') orgId: string, @Param('membershipId') membershipId: string) {
     await this.membershipService.removeMember(orgId, membershipId);
   }
 }

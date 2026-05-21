@@ -22,8 +22,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "AIBusiness OS",
-  description: "AI-native operating system for company workflows.",
+  title: "Workana AI",
+  description: "Workspace inteligente para empresas coordenarem freelancers, contexto e agentes de IA.",
 };
 
 export default function RootLayout({

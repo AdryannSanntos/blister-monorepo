@@ -39,7 +39,7 @@ function Slider({
       <SliderPrimitive.Track
         data-slot="slider-track"
         className={cn(
-          "relative grow overflow-hidden rounded-full bg-[var(--bg-sunken)] data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+          "relative grow overflow-hidden rounded-full bg-[var(--bg-active)] data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1",
         )}
       >
         <SliderPrimitive.Range
@@ -49,11 +49,11 @@ function Slider({
           )}
         />
       </SliderPrimitive.Track>
-      {Array.from({ length: _values.length }, (_, index) => (
+      {_values.map((value) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
-          key={index}
-          className="block size-4 shrink-0 rounded-full border border-[var(--accent)] bg-[var(--bg-raised)] shadow-[var(--shadow-sm)] ring-[var(--ring-focus)] transition-[box-shadow,transform] duration-[var(--dur-fast)] hover:scale-110 hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+          key={value}
+          className="block size-4 shrink-0 rounded-full border border-[var(--accent)] bg-[var(--bg-raised)] shadow-[var(--shadow-sm)] ring-[var(--accent-soft)] transition-[box-shadow,transform] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:scale-105 hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </SliderPrimitive.Root>

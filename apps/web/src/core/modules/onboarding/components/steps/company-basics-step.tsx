@@ -42,7 +42,7 @@ export function CompanyBasicsStep({ form }: Props) {
       <div>
         <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Dados básicos da empresa</h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Essas informações contextualizam todo o conteúdo gerado pelo Company OS.
+          Essas informações contextualizam todo o trabalho coordenado pelo Workana AI.
         </p>
       </div>
       <div className="space-y-4">

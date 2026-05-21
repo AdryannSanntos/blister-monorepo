@@ -53,7 +53,7 @@ export function ReviewPublishStep({ data }: Props) {
       <CardHeader className="px-0 text-center">
         <CardTitle>Revisão final</CardTitle>
         <CardDescription>
-          Confira as informações antes de publicar o Company Brain.
+          Confira as informações antes de publicar o Brain da empresa.
         </CardDescription>
       </CardHeader>
 

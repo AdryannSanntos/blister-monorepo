@@ -1,4 +1,4 @@
-import type { AppPermissionKey } from '@company-os/authz';
+import type { AppAbility, AppPermissionKey } from '@company-os/authz';
 import { permissionMap } from '@company-os/authz';
 import {
   type CanActivate,
@@ -30,7 +30,7 @@ export class PermissionGuard implements CanActivate {
     if (!requiredPermission) return true;
 
     const request = context.switchToHttp().getRequest<Request>();
-    const currentUser = (request as unknown as Record<string, unknown>)['currentUser'] as
+    const currentUser = (request as unknown as Record<string, unknown>).currentUser as
       | CurrentUser
       | undefined;
 
@@ -41,13 +41,13 @@ export class PermissionGuard implements CanActivate {
     const params = request.params as Record<string, string>;
     // Try 'orgId' first (nested routes like /organizations/:orgId/members),
     // then fall back to 'id' (top-level routes like /organizations/:id)
-    const orgId = params['orgId'] ?? params['id'];
+    const orgId = params.orgId ?? params.id;
 
     if (!orgId) {
       throw new ForbiddenException('Organization context is required');
     }
 
-    let ability;
+    let ability: AppAbility;
     try {
       ability = await this.membershipService.getEffectiveAbility(orgId, currentUser.id);
     } catch (err) {
@@ -67,7 +67,7 @@ export class PermissionGuard implements CanActivate {
       throw new ForbiddenException('You do not have permission to perform this action');
     }
 
-    (request as unknown as Record<string, unknown>)['orgContext'] = { ability };
+    (request as unknown as Record<string, unknown>).orgContext = { ability };
 
     return true;
   }

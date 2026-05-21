@@ -1,40 +1,50 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   type AppAbility,
   type AppAction,
   type AppPermissionKey,
   type AppSubject,
-  type PermissionOverride,
   defineAbilityForPermissions,
+  type PermissionOverride,
 } from "@company-os/authz";
+import { useQuery } from "@tanstack/react-query";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { apiClient } from "src/core/shared/utils/api-client";
+import { authClient } from "src/core/shared/utils/auth-client";
 
 type AbilityResponse = {
   permissions: AppPermissionKey[];
   overrides: PermissionOverride[];
+  isOwner?: boolean;
 };
 
 export function useAbility() {
   const { activeOrgId } = useActiveOrganization();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
+  const sessionUserId = session?.user?.id;
 
   const { data, isLoading } = useQuery<AbilityResponse>({
-    queryKey: ["ability", activeOrgId],
+    queryKey: ["ability", sessionUserId, activeOrgId],
     queryFn: async () => {
       const { data } = await apiClient.get<AbilityResponse>(
         `/organizations/${activeOrgId}/me/ability`,
       );
       return data;
     },
-    enabled: Boolean(activeOrgId),
-    staleTime: 5 * 60 * 1000,
+    enabled: Boolean(activeOrgId && sessionUserId) && !isSessionPending,
+    // Permissions are security-sensitive; always refetch on new mounts/focus.
+    staleTime: 0,
     select: (raw) => raw,
   });
 
   const ability: AppAbility | null = data
-    ? defineAbilityForPermissions(data.permissions, data.overrides)
+    ? defineAbilityForPermissions(
+        data.permissions,
+        data.overrides,
+        data.isOwner ?? false,
+      )
     : null;
 
   function can(action: AppAction, subject: AppSubject): boolean {
@@ -47,5 +57,5 @@ export function useAbility() {
     return ability.cannot(action, subject);
   }
 
-  return { can, cannot, ability, isLoading };
+  return { can, cannot, ability, isLoading: isSessionPending || isLoading };
 }

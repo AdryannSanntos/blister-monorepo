@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useOnboardingStatus } from "src/core/modules/onboarding/hooks/use-onboarding";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
 import { authClient } from "src/core/shared/utils/auth-client";
@@ -22,16 +21,6 @@ export function AppEntryPage() {
   const fallbackOrgId =
     organizations?.length === 1 ? organizations[0].id : null;
   const selectedOrgId = validActiveOrgId ?? fallbackOrgId;
-  const selectedOrg = organizations?.find((org) => org.id === selectedOrgId);
-  // Só computa quando organizations já carregou — evita false-negative antes dos dados chegarem
-  const isOrgOwner = !isOrganizationsLoading && organizations != null
-    ? (selectedOrg?.roles?.some((r: { name: string }) => r.name === "owner") ?? false)
-    : null; // null = ainda carregando, não decidir ainda
-  const {
-    data: onboardingStatus,
-    isLoading: isOnboardingLoading,
-    isError: isOnboardingError,
-  } = useOnboardingStatus(selectedOrgId);
 
   useEffect(() => {
     if (!isLoaded || !activeOrgId || !organizations) {
@@ -75,34 +64,11 @@ export function AppEntryPage() {
       return;
     }
 
-    // null = ainda calculando ownership, aguarda
-    if (isOrgOwner === null) {
-      return;
-    }
-
-    if (!isOrgOwner) {
-      router.replace("/dashboard");
-      return;
-    }
-
-    if (isOnboardingLoading) {
-      return;
-    }
-
-    if (isOnboardingError || onboardingStatus?.published) {
-      router.replace("/dashboard");
-      return;
-    }
-
-    router.replace("/onboarding");
+    router.replace("/dashboard");
   }, [
     isLoaded,
-    isOnboardingError,
-    isOnboardingLoading,
-    isOrgOwner,
     isOrganizationsLoading,
     isSessionPending,
-    onboardingStatus?.published,
     organizations,
     router,
     selectedOrgId,

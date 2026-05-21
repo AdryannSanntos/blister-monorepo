@@ -3,10 +3,24 @@ import { toast } from "sonner";
 
 import { apiClient } from "src/core/shared/utils/api-client";
 
+function invalidateOrganizationAccess(
+  queryClient: ReturnType<typeof useQueryClient>,
+  orgId: string | null,
+) {
+  return Promise.all([
+    queryClient.invalidateQueries({
+      queryKey: ["organization-members", orgId],
+    }),
+    queryClient.invalidateQueries({ queryKey: ["organizations"] }),
+    queryClient.invalidateQueries({ queryKey: ["ability"] }),
+  ]);
+}
+
 export type OrganizationMember = {
   id: string;
   userId: string;
   organizationId: string;
+  active: boolean;
   joinedAt?: string;
   createdAt?: string;
   user: {
@@ -25,7 +39,14 @@ export type OrganizationMember = {
   }>;
 };
 
-export function useOrganizationMembers(orgId: string | null) {
+type MembersQueryOptions = {
+  enabled?: boolean;
+};
+
+export function useOrganizationMembers(
+  orgId: string | null,
+  options?: MembersQueryOptions,
+) {
   return useQuery<OrganizationMember[]>({
     queryKey: ["organization-members", orgId],
     queryFn: async () => {
@@ -34,7 +55,7 @@ export function useOrganizationMembers(orgId: string | null) {
       );
       return data;
     },
-    enabled: Boolean(orgId),
+    enabled: (options?.enabled ?? true) && Boolean(orgId),
   });
 }
 
@@ -43,14 +64,10 @@ export function useRemoveMember(orgId: string | null) {
 
   return useMutation({
     mutationFn: async (membershipId: string) => {
-      await apiClient.delete(
-        `/organizations/${orgId}/members/${membershipId}`,
-      );
+      await apiClient.delete(`/organizations/${orgId}/members/${membershipId}`);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["organization-members", orgId],
-      });
+    onSuccess: async () => {
+      await invalidateOrganizationAccess(queryClient, orgId);
       toast.success("Membro removido com sucesso.");
     },
     onError: () => {
@@ -75,14 +92,50 @@ export function useUpdateMemberRoles(orgId: string | null) {
         { roleIds },
       );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["organization-members", orgId],
-      });
+    onSuccess: async () => {
+      await invalidateOrganizationAccess(queryClient, orgId);
       toast.success("Cargos atualizados com sucesso.");
     },
     onError: () => {
       toast.error("Erro ao atualizar cargos. Tente novamente.");
+    },
+  });
+}
+
+export function useDeactivateMember(orgId: string | null) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (membershipId: string) => {
+      await apiClient.patch(
+        `/organizations/${orgId}/members/${membershipId}/deactivate`,
+      );
+    },
+    onSuccess: async () => {
+      await invalidateOrganizationAccess(queryClient, orgId);
+      toast.success("Membro desativado.");
+    },
+    onError: () => {
+      toast.error("Erro ao desativar membro. Tente novamente.");
+    },
+  });
+}
+
+export function useActivateMember(orgId: string | null) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (membershipId: string) => {
+      await apiClient.patch(
+        `/organizations/${orgId}/members/${membershipId}/activate`,
+      );
+    },
+    onSuccess: async () => {
+      await invalidateOrganizationAccess(queryClient, orgId);
+      toast.success("Membro reativado.");
+    },
+    onError: () => {
+      toast.error("Erro ao reativar membro. Tente novamente.");
     },
   });
 }

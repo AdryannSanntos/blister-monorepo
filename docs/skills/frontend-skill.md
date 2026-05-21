@@ -1,204 +1,106 @@
-# Frontend Skill
+# Frontend Skill — Workana AI
 
 ## Objetivo
 
-Guiar a implementação, refatoração ou revisão de código em `apps/web`.
-
-## Ler Antes
-
-- `docs/skills/project-engineering-skill.md`
-- `docs/decisions/stack-decisions.md`
-- `docs/design-system/usage-rules.md`
+Guiar implementação, refatoração ou revisão em `apps/web`.
 
 ## Estrutura Obrigatória
 
 ```
-apps/web/src/
-  app/                         rotas App Router (page.tsx, layout.tsx)
-  core/
-    modules/                   domínios do produto
-      <modulo>/
-        pages/                 componentes de página ("use client")
-        components/            componentes do módulo
-        hooks/                 hooks de domínio com React Query
-    shared/
-      components/
-        ui/                    componentes shadcn (importar via src/core/shared/components/ui/...)
-        permission-gate.tsx    PermissionGate
-      utils/
-        api-client.ts          instância axios
-        auth-client.ts         better-auth client
-        query-client.ts        QueryClient singleton
+apps/web/src/app/                 rotas App Router
+apps/web/src/core/modules/        domínios do produto
+apps/web/src/core/shared/         componentes, hooks e utils compartilhados
+apps/web/src/core/shared/components/ui/  shadcn/ui oficial
 ```
 
-## Regra de Permissão Universal
+## Regras Críticas
 
-Toda ação de escrita, exclusão ou dado restrito deve estar dentro de `<PermissionGate>`:
+- Toda chamada HTTP deve viver em hook de domínio com TanStack Query.
+- Não usar `useState` para estado de servidor.
+- Organização ativa vem de `useActiveOrganization()`.
+- Toda ação sensível usa `PermissionGate` ou `useAbility()`.
+- Formulários reais usam `react-hook-form`, Zod e `mode: 'onBlur'`.
+- Coleções de dados usam TanStack Table + shadcn `<Table>` por padrão.
+- A UI usa tokens semânticos, não cores raw.
+- Reutilizar componentes existentes antes de criar novos.
+
+## Linguagem de Produto
+
+Use: Workana AI, Workspace, Company, Brain, Agentes, Créditos, Integrações, Assets, Execuções.
+
+Evite: naming antigo, chatbot genérico e termos internos como rótulos visíveis quando Agentes/Execuções forem mais claros.
+
+## Regras de Componentes de Formulário
+
+Todo campo de formulário segue esta estrutura obrigatória com `FormItem`:
+
+```tsx
+<FormItem>
+  <FormLabel required>Campo obrigatório</FormLabel>   {/* required → exibe * vermelho */}
+  <FormControl>
+    <Input {...field} />
+  </FormControl>
+  <FormDescription>Texto auxiliar opcional</FormDescription>
+  <FormMessage />
+</FormItem>
+```
+
+### Comportamento padronizado
+
+| Elemento | Estilo |
+|----------|--------|
+| `FormLabel` | `text-xs`, `var(--fg-tertiary)`, vira `text-destructive` com erro |
+| `FormLabel required` | Exibe `*` vermelho após o texto |
+| Componente (foco) | `border-primary` + `ring-primary/25` |
+| Componente (erro) | `border-destructive` (sem ring) |
+| Componente (erro + foco) | `border-destructive` + `ring-destructive/30` |
+| `FormMessage` | `text-xs text-destructive`, `mt-0.5` (colada ao input) |
+| `FormDescription` | `text-xs var(--fg-tertiary)`, `mt-1` |
+
+### Componentes cobertos
+
+`Input`, `Textarea`, `Select` (via `aria-invalid`) e `PasswordInput` (via `InputGroup has-` selector).
+
+Regra: **nunca customizar os estilos de estado via className diretamente** — as classes de erro e foco vivem nos componentes base e são ativadas pelo `FormControl` através do `aria-invalid`.
+
+## Exemplo de Permissão
 
 ```tsx
 <PermissionGate permission="member.invite">
-  <Button onClick={() => setDialogOpen(true)}>Convidar membro</Button>
-</PermissionGate>
-
-<PermissionGate permission="company.update">
-  <Button type="submit">Salvar configurações</Button>
+  <Button>Convidar membro</Button>
 </PermissionGate>
 ```
 
-Verificação programática via `useAbility()`:
-```tsx
-const { can, cannot, isLoading } = useAbility();
-if (cannot('read', 'CompanyBrain')) return null;
-{can('create', 'Member') && <InviteButton />}
-```
-
-## Hooks de Domínio (obrigatório)
-
-Toda chamada HTTP vive em hook de domínio com React Query — nunca fetch direto em página/componente.
+## Exemplo de Hook
 
 ```tsx
-// hooks/use-members.ts
-export function useOrganizationMembers(orgId: string | undefined) {
+export function useOrganizationMembers(orgId: string | null) {
   return useQuery({
     queryKey: ['members', orgId],
     queryFn: async () => {
-      const { data } = await apiClient.get<OrganizationMember[]>(
-        `/organizations/${orgId}/members`,
-      );
+      const { data } = await apiClient.get(`/organizations/${orgId}/members`);
       return data;
     },
     enabled: Boolean(orgId),
   });
 }
-
-export function useRemoveMember(orgId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (membershipId: string) =>
-      apiClient.delete(`/organizations/${orgId}/members/${membershipId}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['members', orgId] });
-      toast.success('Membro removido.');
-    },
-  });
-}
 ```
 
-## Organização Ativa
+## Design System
 
-```tsx
-const { activeOrgId } = useActiveOrganization();
-// Sempre usar activeOrgId como contexto
-// NUNCA assumir org a partir da sessão better-auth
-```
+- Light theme é default; dark precisa continuar funcional.
+- Fundo off-white frio, azul principal, dourado para premium, lime para IA ativa.
+- Nunca usar `dark:` utility; tokens resolvem os temas.
+- Cards sem padding na raiz.
+- Três ou mais ações lado a lado viram `DropdownMenu`.
+- Empty states são obrigatórios.
 
-## Formulários (react-hook-form + Zod)
+## Checklist
 
-```tsx
-const schema = z.object({ name: z.string().min(2).max(120) });
-type FormValues = z.infer<typeof schema>;
-
-const form = useForm<FormValues>({
-  resolver: zodResolver(schema),
-  mode: 'onBlur',
-  defaultValues: { name: '' },
-});
-
-return (
-  <Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FormField
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nome</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <PermissionGate permission="company.update">
-        <Button type="submit">Salvar</Button>
-      </PermissionGate>
-    </form>
-  </Form>
-);
-```
-
-**Nunca usar `DsField` em formulários reais** — é primitivo de showcase da rota `/design-system`.
-
-## Tabelas Operacionais
-
-```tsx
-const columns: ColumnDef<Member>[] = [
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <PermissionGate permission="member.remove">
-        <DropdownMenu>...</DropdownMenu>
-      </PermissionGate>
-    ),
-  },
-];
-const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
-```
-
-Envolver em `rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]`.
-
-## Escolha de Estado
-
-| Caso | Ferramenta |
-|------|-----------|
-| Dados de servidor (leitura) | `useQuery` (React Query) |
-| Mutações de servidor | `useMutation` (React Query) |
-| Filtros/paginação compartilháveis por URL | `nuqs` |
-| Estado local temporário de UI | `useState` |
-| Estado global de cliente sem servidor | `zustand` (só se useState não resolver) |
-
-**TanStack Query não pode ser substituído por useState para dados de servidor.**
-
-## Tokens de Design System (obrigatório)
-
-```tsx
-// Correto — tokens semânticos
-className="text-[var(--fg-primary)] bg-[var(--bg-base)] border-[var(--line-default)]"
-
-// Errado — cor raw
-className="text-gray-900 bg-white border-gray-200"
-```
-
-Tokens principais: `--bg-canvas/base/raised/overlay/sunken/hover/active` · `--fg-primary/secondary/tertiary/quaternary` · `--accent` · `--success/warning/danger` · `--line-subtle/default/strong` · `--r-*` · `--dur-*`
-
-## Regras de Componentes
-
-- Importar de `src/core/shared/components/ui/`
-- `Button` sem `size` → `md`; dashboards sempre `md`
-- Controles dentro de card → `variant="ghost"`; fora → `variant="outline"` permitido
-- Raiz do `Card` sem padding — espaço em `CardHeader`, `CardContent`, `CardFooter`
-- Três ou mais ações lado a lado → `DropdownMenu`
-- Modais: `DialogHeader` + conteúdo + `DialogFooter` separados
-- Sem `dark:` utility — tokens são dark-default
-- Ícones: `lucide-react` apenas, tamanho padrão 16
-
-## Integração Auth
-
-```tsx
-// Sessão do usuário
-const { data: session } = authClient.useSession();
-const userId = session?.user?.id;
-// NÃO usar session para org/roles — usar hooks de domínio
-```
-
-## Checklist de Entrega
-
-- [ ] Toda ação sensível dentro de `<PermissionGate permission="...">`
-- [ ] Nenhuma chamada HTTP direta em page/component — hook de domínio com React Query
-- [ ] `activeOrgId` de `useActiveOrganization()`, não de sessão better-auth
-- [ ] Formulários com `Form` (RHF + Zod), `mode: 'onBlur'`
-- [ ] Estado correto: React Query para servidor, nuqs para URL, useState para local
-- [ ] Tokens de design system usados — sem cor raw
-- [ ] Estrutura `core/modules` e `core/shared` respeitada
-- [ ] Nenhuma biblioteca concorrente de UI, formulário ou dados introduzida
-- [ ] Ícones de `lucide-react` apenas
-- [ ] Sem `dark:` utility
+- [ ] Sem fetch direto em page/component
+- [ ] Server state em React Query
+- [ ] `activeOrgId` via domínio próprio
+- [ ] Ações sensíveis protegidas por permissão
+- [ ] Form com RHF + Zod
+- [ ] Tokens de design usados
+- [ ] UI e texto alinhados com Workana AI

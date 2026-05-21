@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertTriangle } from "lucide-react";
 import type { Label as LabelPrimitive } from "radix-ui";
 import { Slot } from "radix-ui";
 import * as React from "react";
@@ -79,7 +80,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     <FormItemContext.Provider value={{ id }}>
       <div
         data-slot="form-item"
-        className={cn("grid gap-2", className)}
+        className={cn("relative flex flex-col gap-[4px] pb-2", className)}
         {...props}
       />
     </FormItemContext.Provider>
@@ -88,18 +89,26 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 
 function FormLabel({
   className,
+  required,
+  children,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+}: React.ComponentProps<typeof LabelPrimitive.Root> & { required?: boolean }) {
   const { error, formItemId } = useFormField();
 
   return (
     <Label
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={cn(
+        "text-[12px] font-medium leading-[1.3] text-[var(--fg-secondary)] data-[error=true]:text-[var(--danger)]",
+        className,
+      )}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children}
+      {required && <span className="ml-0.5 text-[var(--accent)]">*</span>}
+    </Label>
   );
 }
 
@@ -129,7 +138,10 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn(
+        "mt-0.5 text-[11.5px] leading-[1.45] text-[var(--fg-tertiary)]",
+        className,
+      )}
       {...props}
     />
   );
@@ -147,9 +159,13 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-sm text-destructive", className)}
+      className={cn(
+        "absolute bottom-[-10px] left-0 inline-flex items-center gap-1 text-[11.5px] leading-none text-[var(--danger)]",
+        className,
+      )}
       {...props}
     >
+      <AlertTriangle className="mt-[1px] size-3 shrink-0" />
       {body}
     </p>
   );

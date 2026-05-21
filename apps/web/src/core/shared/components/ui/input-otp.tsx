@@ -51,7 +51,7 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        "relative flex h-9 w-9 items-center justify-center border-y border-r border-input bg-transparent text-sm shadow-xs transition-[color,box-shadow] outline-none dark:bg-input/30 first:rounded-l-md first:border-l last:rounded-r-md aria-invalid:border-destructive data-[active=true]:z-10 data-[active=true]:border-ring data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20",
+        "relative flex h-[34px] w-[34px] items-center justify-center border-y border-r border-[var(--line-strong)] bg-[var(--bg-sunken)] text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] first:rounded-l-[var(--r-md)] first:border-l last:rounded-r-[var(--r-md)] aria-invalid:border-[var(--danger)] data-[active=true]:z-10 data-[active=true]:border-[var(--accent)] data-[active=true]:bg-[var(--bg-base)] data-[active=true]:ring-[3px] data-[active=true]:ring-[var(--accent-soft)] data-[active=true]:aria-invalid:border-[var(--danger)] data-[active=true]:aria-invalid:ring-[color-mix(in_oklch,var(--danger)_24%,transparent)]",
         className,
       )}
       {...props}
@@ -59,7 +59,7 @@ function InputOTPSlot({
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
+          <div className="h-4 w-px animate-caret-blink bg-[var(--accent)] duration-1000" />
         </div>
       )}
     </div>
@@ -68,7 +68,7 @@ function InputOTPSlot({
 
 function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="input-otp-separator" role="separator" {...props}>
+    <div data-slot="input-otp-separator" aria-hidden="true" {...props}>
       <MinusIcon />
     </div>
   );

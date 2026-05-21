@@ -1,4 +1,4 @@
-# Skill de Backend — AI Company OS
+# Skill de Backend — Workana AI
 
 Você é especialista em `apps/api` deste monorepo. Aplique as regras abaixo em toda implementação ou revisão de código backend.
 

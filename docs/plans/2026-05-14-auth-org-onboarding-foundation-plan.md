@@ -2,7 +2,7 @@
 
 > **Para agentes de implementacao:** usar uma execucao orientada por tarefas pequenas, validando docs e arquitetura a cada etapa. Este plano descreve a migracao de `better-auth` para auth-only e a construcao do dominio proprio de organizacoes, autorizacao e onboarding.
 
-**Goal:** entregar a base completa de entrada no produto com `login`, `cadastro`, `esqueci a senha`, `convites`, `organizacao ativa`, `roles/permissoes` por empresa e `onboarding` com publicacao inicial do Company Brain.
+**Goal:** entregar a base completa de entrada no produto com `login`, `cadastro`, `esqueci a senha`, `convites`, `organizacao ativa`, `roles/permissoes` por empresa e `onboarding` com publicacao inicial do Brain.
 
 **Architecture:** `better-auth` cuida apenas de identidade e sessao. `Prisma` modela organizacoes, memberships, convites, roles, permissoes, overrides e onboarding. `CASL` monta a ability final por empresa ativa. `Resend` envia os emails transacionais de auth e convite.
 
@@ -95,7 +95,7 @@
 
 ### Epico 5: Onboarding Inicial e Publicacao do Contexto
 
-**Objetivo:** capturar o contexto da empresa e publicar a primeira versao oficial do Company Brain.
+**Objetivo:** capturar o contexto da empresa e publicar a primeira versao oficial do Brain.
 
 **Entregas:**
 
@@ -131,7 +131,7 @@
 - o usuario com varias empresas consegue definir empresa ativa
 - um membro pode ter multiplas roles por empresa
 - overrides `allow` e `deny` afetam a ability final
-- somente `owner` publica o Company Brain inicial
+- somente `owner` publica o Brain inicial
 - o sistema redireciona corretamente para auth, workspace, convite, seletor de empresa, onboarding ou dashboard
 
 ## Documentacao Obrigatoria na Execucao

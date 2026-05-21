@@ -85,6 +85,7 @@ model Organization {
   roles           Role[]
   invitations     Invitation[]
   onboardingDraft OnboardingDraft?
+  assets          Asset[]
 }
 
 model Role {
@@ -116,11 +117,12 @@ model Membership {
   id             String   @id @default(cuid())
   userId         String
   organizationId String
+  active         Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  user         User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization Organization                  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   roles        MembershipRole[]
   overrides    MembershipPermissionOverride[]
 
@@ -178,4 +180,44 @@ model OnboardingDraft {
   updatedAt      DateTime  @updatedAt
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Assets domain
+// ---------------------------------------------------------------------------
+
+model Asset {
+  id                String   @id @default(cuid())
+  organizationId    String
+  title             String
+  description       String?
+  sourceKind        String
+  sourceUrl         String?
+  fileName          String?
+  mimeType          String?
+  visibleType       String?
+  visibleCategory   String?
+  tags              String[]
+  contextRole       Boolean  @default(false)
+  operationalRole   Boolean  @default(true)
+  contextStatus     String?
+  operationalStatus String?  @default("active")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  relations    AssetRelation[]
+
+  @@index([organizationId])
+}
+
+model AssetRelation {
+  id      String @id @default(cuid())
+  assetId String
+  kind    String
+  value   String
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, kind, value])
 }

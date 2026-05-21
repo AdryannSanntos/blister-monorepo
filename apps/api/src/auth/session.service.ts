@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import type { IncomingHttpHeaders } from 'node:http';
+import { Injectable } from '@nestjs/common';
 import { getAuthInstance } from './register-better-auth';
 
 export interface CurrentUser {
@@ -27,7 +27,7 @@ export class SessionService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const result = await auth.api.getSession({ headers }) as {
+    const result = (await auth.api.getSession({ headers })) as {
       user?: { id: string; name: string; email: string };
     } | null;
 

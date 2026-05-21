@@ -28,17 +28,13 @@ export class InvitationController {
 
   @Post()
   @RequirePermission('member.invite')
-  async create(
-    @Param('orgId') orgId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
+  async create(@Param('orgId') orgId: string, @Body() body: unknown, @Req() req: Request) {
     const parsed = createInvitationSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
 
-    const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
 
     return this.invitationService.create(orgId, currentUser.id, parsed.data);
   }

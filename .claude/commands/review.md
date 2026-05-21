@@ -1,4 +1,4 @@
-# Skill de Code Review — AI Company OS
+# Skill de Code Review — Workana AI
 
 Faça a revisão do código usando os critérios abaixo. Findings primeiro, resumo depois.
 

@@ -1,118 +1,77 @@
-# Tokens do Design System
+# Tokens — Workana AI
 
-## Local Oficial
+## Cores
 
-- `apps/web/src/app/globals.css`
+### Neutral
 
-## Cor
+- `neutral-50`: `#f7f9fc`
+- `neutral-100`: `#eff3f9`
+- `neutral-200`: `#e3e9f2`
+- `neutral-300`: `#d2dae7`
+- `neutral-400`: `#a8b4c6`
+- `neutral-500`: `#7f8ba1`
+- `neutral-600`: `#606c82`
+- `neutral-700`: `#465064`
+- `neutral-800`: `#2f3747`
+- `neutral-900`: `#1d2432`
+- `neutral-950`: `#151b27`
 
-### Surfaces
+### Primary
 
-- `--bg-canvas`
-- `--bg-base`
-- `--bg-raised`
-- `--bg-overlay`
-- `--bg-sunken`
-- `--bg-hover`
-- `--bg-active`
+- `primary-50`: `#eef4ff`
+- `primary-100`: `#dce8ff`
+- `primary-200`: `#bfd5ff`
+- `primary-300`: `#93b7ff`
+- `primary-400`: `#5e91ff`
+- `primary-500`: `#3366ff`
+- `primary-600`: `#214fe0`
+- `primary-700`: `#1d3fb8`
+- `primary-800`: `#1d3693`
+- `primary-900`: `#1d3276`
+- `primary-950`: `#16224e`
 
-### Foreground
+### Produto
 
-- `--fg-primary`
-- `--fg-secondary`
-- `--fg-tertiary`
-- `--fg-quaternary`
-- `--fg-on-accent`
+- Gold premium: `#f6bb1b`
+- Lime IA ativa: `#93e72a`
+- Success: `#45c986`
+- Warning: `#f89a1b`
+- Danger: `#f63d63`
+- Info: `#48b8ff`
 
-### Accent e semanticos
+## Tokens Semânticos
 
-- `--accent`
-- `--accent-hover`
-- `--accent-active`
-- `--accent-soft`
-- `--accent-soft-hi`
-- `--success`
-- `--warning`
-- `--danger`
-- `--info`
-
-### Charts
-
-- `--chart-1` ate `--chart-8`
-
-## Borders e overlays
-
-- `--line-subtle`
-- `--line-default`
-- `--line-strong`
-- `--ring-focus`
-- `--scrim`
-- `--scrim-strong`
-
-## Radius
-
-- `--r-xs`
-- `--r-sm`
-- `--r-md`
-- `--r-lg`
-- `--r-xl`
-- `--r-2xl`
-- `--r-full`
-
-## Shadows
-
-- `--shadow-xs`
-- `--shadow-sm`
-- `--shadow-md`
-- `--shadow-lg`
-- `--shadow-xl`
-- `--shadow-glow`
-
-## Spacing
-
-- `--space-0`
-- `--space-px`
-- `--space-1`
-- `--space-2`
-- `--space-3`
-- `--space-4`
-- `--space-5`
-- `--space-6`
-- `--space-8`
-- `--space-12`
-- `--space-16`
-- `--space-20`
-- `--space-24`
-- `--space-32`
-- `--space-40`
-- `--space-48`
-- `--space-64`
+- `--bg-canvas`: fundo principal
+- `--bg-base`: cards e sidebar
+- `--bg-raised`: cards principais
+- `--bg-overlay`: popovers, dialogs, drawers
+- `--bg-sunken`: inputs, código e superfícies internas
+- `--fg-primary`: texto principal
+- `--fg-secondary`: texto secundário
+- `--fg-tertiary`: helper text
+- `--fg-quaternary`: labels e metadados
+- `--accent`: azul principal
+- `--premium`: dourado premium
+- `--ai-live`: lime de IA ativa
 
 ## Tipografia
 
-- `--font-geist-sans`
-- `--font-geist-mono`
-- `--font-instrument-serif`
+- Display: Instrument Serif, uso raro e editorial
+- UI: Geist Sans
+- Mono: Geist Mono
+- Números: `tabular-nums`
+
+## Radius
+
+- Inputs e botões: `--r-md` / 8px
+- Cards: `--r-lg` / 12px
+- Dialogs e drawers: `--r-xl` ou `--r-2xl`
+- Pills e badges: `--r-full`
 
 ## Motion
 
-- `--ease-out`
-- `--ease-in-out`
-- `--ease-spring`
-- `--dur-instant`
-- `--dur-fast`
-- `--dur-base`
-- `--dur-slow`
-- `--dur-slower`
-
-## Classes utilitarias oficiais
-
-- `.tabular-nums`
-- `.ds-grid-stage`
-- `.ds-ai-pulse`
-- `.ds-check-pop`
-- `.ds-shimmer`
-
-## Regra obrigatoria
-
-Novos componentes e telas nao devem introduzir cores hardcoded se o token equivalente ja existir.
+- `--dur-instant`: 80ms
+- `--dur-fast`: 140ms
+- `--dur-base`: 200ms
+- `--dur-slow`: 320ms
+- `--dur-slower`: 520ms

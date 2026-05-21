@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { EMAIL_PORT, type EmailPort } from '../email';
 import { PrismaService } from '../prisma/prisma.service';
 import type { CreateInvitationDto } from './dto';

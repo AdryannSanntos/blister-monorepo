@@ -8,7 +8,13 @@
       "coverage",
       ".turbo",
       "apps/api/src/generated",
-      "**/generated/**"
+      "**/generated/**",
+      "src/*.js",
+      "src/*.d.ts",
+      "src/*.js.map",
+      "packages/*/src/*.js",
+      "packages/*/src/*.d.ts",
+      "packages/*/src/*.js.map"
     ]
   },
   "formatter": {

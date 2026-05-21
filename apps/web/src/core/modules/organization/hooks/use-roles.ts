@@ -1,8 +1,18 @@
+import type { AppPermissionKey } from "@company-os/authz";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
-import { type AppPermissionKey } from "@company-os/authz";
 import { apiClient } from "src/core/shared/utils/api-client";
+
+function invalidateRoleAccess(
+  queryClient: ReturnType<typeof useQueryClient>,
+  orgId: string | null,
+) {
+  return Promise.all([
+    queryClient.invalidateQueries({ queryKey: ["organization-roles", orgId] }),
+    queryClient.invalidateQueries({ queryKey: ["organizations"] }),
+    queryClient.invalidateQueries({ queryKey: ["ability"] }),
+  ]);
+}
 
 export type OrgRole = {
   id: string;
@@ -40,10 +50,8 @@ export function useCreateRole(orgId: string | null) {
       );
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["organization-roles", orgId],
-      });
+    onSuccess: async () => {
+      await invalidateRoleAccess(queryClient, orgId);
       toast.success("Cargo criado com sucesso.");
     },
     onError: () => {
@@ -70,10 +78,8 @@ export function useUpdateRole(orgId: string | null) {
       );
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["organization-roles", orgId],
-      });
+    onSuccess: async () => {
+      await invalidateRoleAccess(queryClient, orgId);
       toast.success("Cargo atualizado com sucesso.");
     },
     onError: () => {
@@ -89,10 +95,8 @@ export function useDeleteRole(orgId: string | null) {
     mutationFn: async (roleId: string) => {
       await apiClient.delete(`/organizations/${orgId}/roles/${roleId}`);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["organization-roles", orgId],
-      });
+    onSuccess: async () => {
+      await invalidateRoleAccess(queryClient, orgId);
       toast.success("Cargo excluído com sucesso.");
     },
     onError: () => {

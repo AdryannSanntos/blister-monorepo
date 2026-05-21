@@ -83,6 +83,58 @@ describe('RoleService', () => {
         expect(call[0].data.isSystem).toBe(true);
       }
     });
+
+    it('assigns asset and integration permissions only to owner and admin by default', async () => {
+      prisma.role.create.mockResolvedValue({
+        id: 'x',
+        name: 'owner',
+        isSystem: true,
+        permissions: [],
+      });
+
+      await service.seedDefaultRoles('org-1');
+
+      const ownerPermissions = prisma.role.create.mock.calls[0][0].data.permissions.create.map(
+        (permission: { key: string }) => permission.key,
+      );
+      const adminPermissions = prisma.role.create.mock.calls[1][0].data.permissions.create.map(
+        (permission: { key: string }) => permission.key,
+      );
+      const memberPermissions = prisma.role.create.mock.calls[2][0].data.permissions.create.map(
+        (permission: { key: string }) => permission.key,
+      );
+
+      expect(ownerPermissions).toEqual(
+        expect.arrayContaining([
+          'asset.read',
+          'asset.create',
+          'asset.update',
+          'asset.archive',
+          'asset.context.review',
+          'integration.read',
+        ]),
+      );
+      expect(adminPermissions).toEqual(
+        expect.arrayContaining([
+          'asset.read',
+          'asset.create',
+          'asset.update',
+          'asset.archive',
+          'asset.context.review',
+          'integration.read',
+        ]),
+      );
+      expect(memberPermissions).toEqual(
+        expect.not.arrayContaining([
+          'asset.read',
+          'asset.create',
+          'asset.update',
+          'asset.archive',
+          'asset.context.review',
+          'integration.read',
+        ]),
+      );
+    });
   });
 
   describe('findById', () => {

@@ -2,7 +2,7 @@
 
 ## Objetivo Deste Documento
 
-Registrar o que ja foi consolidado na fundacao do AI Company OS e o que ainda falta para o repositorio sustentar o MVP de negocio descrito no PRD.
+Registrar o que ja foi consolidado na fundacao do Workana AI e o que ainda falta para o repositorio sustentar o MVP de negocio descrito no PRD.
 
 ## O Que Ja Existe
 
@@ -39,10 +39,10 @@ Registrar o que ja foi consolidado na fundacao do AI Company OS e o que ainda fa
 ### Dominio do produto
 
 - tabelas de `CompanyBrain`, `Skill`, `Output`, `Template` e similares
-- servicos de negocio para Company Brain
+- servicos de negocio para Brain
 - fluxo real de execucao de skills
 - aprovacao de outputs
-- Content Studio
+- templates e execucao operacional
 - geracao visual HTML
 - landing pages
 - automacoes
@@ -57,7 +57,7 @@ Registrar o que ja foi consolidado na fundacao do AI Company OS e o que ainda fa
 
 1. fechar setup local e ambiente
 2. modelar entidades de dominio do produto no Prisma
-3. implementar Company Brain e outputs
+3. implementar Brain e execucoes
 4. implementar skills e execucao
 5. adicionar aprovacao e historico
 6. evoluir para conteudo visual, paginas e automacoes

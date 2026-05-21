@@ -2,13 +2,12 @@
 
 import type { AppPermissionKey } from "@company-os/authz";
 import { permissionMap } from "@company-os/authz";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   Bell,
   Brain,
   ChevronRight,
   ChevronsUpDown,
+  Coins,
   FileText,
   FolderOpen,
   Home,
@@ -16,8 +15,8 @@ import {
   KeyRound,
   LayoutTemplate,
   Library,
-  Megaphone,
   type LucideIcon,
+  Megaphone,
   PanelLeftClose,
   PanelLeftOpen,
   PlugZap,
@@ -28,7 +27,10 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import * as React from "react";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -55,7 +57,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "src/core/shared/components/ui/tooltip";
-import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { cn } from "src/core/shared/utils";
 
 type Item = {
@@ -77,35 +78,33 @@ type Group = {
 
 const defaultGroups: Group[] = [
   {
+    items: [{ label: "Dashboard", icon: Home, href: "/dashboard" }],
+  },
+  {
+    label: "Inteligência operacional",
     items: [
-      { label: "Dashboard", icon: Home, href: "/dashboard" },
+      { label: "Brain", icon: Brain, href: "/onboarding" },
+      { label: "Agentes", icon: Shield },
+      { label: "Créditos", icon: Coins },
+      { label: "Fontes do brain", icon: Library },
     ],
   },
   {
-    label: "Inteligência",
+    label: "Execução",
     items: [
-      { label: "Company Brain", icon: Brain, href: "/onboarding" },
-      { label: "Skills", icon: Shield },
-      { label: "Templates", icon: LayoutTemplate },
-      { label: "Biblioteca de contexto", icon: Library },
-    ],
-  },
-  {
-    label: "Conteúdo e Páginas",
-    items: [
-      { label: "Content Studio", icon: Sparkles },
-      { label: "Visuals", icon: Image },
-      { label: "Pages", icon: FileText },
-      { label: "Campanhas", icon: Megaphone },
+      { label: "Histórico de execuções", icon: Sparkles },
+      { label: "Templates de briefing", icon: Image },
+      { label: "Demandas", icon: FileText },
+      { label: "Relatórios", icon: Megaphone },
     ],
   },
   {
     label: "Automações",
     items: [
-      { label: "Automações", icon: Zap },
+      { label: "Workflows", icon: Zap },
       { label: "Execuções", icon: Workflow },
-      { label: "Agenda", icon: Bell },
-      { label: "Alertas e relatórios", icon: Bell },
+      { label: "Agenda operacional", icon: Bell },
+      { label: "Alertas", icon: Bell },
     ],
   },
   {
@@ -114,7 +113,7 @@ const defaultGroups: Group[] = [
       { label: "Equipe", icon: Users },
       { label: "Permissões", icon: KeyRound },
       { label: "Integrações", icon: PlugZap },
-      { label: "Arquivos e assets", icon: FolderOpen },
+      { label: "Brain assets", icon: FolderOpen },
       { label: "Configurações", icon: Settings },
     ],
   },
@@ -175,9 +174,10 @@ function AppSidebar({
   const collapsed = !open;
 
   function canShowItem(item: Item): boolean {
-    if (!item.permission || abilityLoading) return true;
+    if (!item.permission) return true;
+    if (abilityLoading) return false;
     const mapping = permissionMap[item.permission];
-    if (!mapping) return true;
+    if (!mapping) return false;
     return canDo(mapping[0], mapping[1]);
   }
 
@@ -190,19 +190,28 @@ function AppSidebar({
 
   const labeledGroups = filteredGroups.filter((g) => g.label);
 
-  function isItemActive(item: Item, path: string): boolean {
-    if (item.match) return item.match(path);
-    if (item.href) return path === item.href;
-    return false;
-  }
+  const isItemActive = React.useCallback(
+    (item: Item, path: string): boolean => {
+      if (item.match) return item.match(path);
+      if (item.href) return path === item.href;
+      return false;
+    },
+    [],
+  );
 
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
     () =>
       Object.fromEntries(
-        labeledGroups.map((g) => [
-          g.label!,
-          g.items.some((item) => isItemActive(item, pathname)),
-        ]),
+        labeledGroups.flatMap((group) => {
+          if (!group.label) return [];
+
+          return [
+            [
+              group.label,
+              group.items.some((item) => isItemActive(item, pathname)),
+            ],
+          ];
+        }),
       ),
   );
 
@@ -217,7 +226,7 @@ function AppSidebar({
       }
       return next;
     });
-  }, [pathname, groups]);
+  }, [groups, isItemActive, pathname]);
 
   function toggleGroup(label: string) {
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -316,22 +325,21 @@ function AppSidebar({
 
         <SidebarContent className="gap-1 px-2 py-2">
           {filteredGroups.map((group, groupIndex) => {
-            const isLabeledGroup = Boolean(group.label);
-            const isGroupOpen = group.label ? (openGroups[group.label] ?? false) : true;
+            const label = group.label;
+            const isLabeledGroup = Boolean(label);
+            const isGroupOpen = label ? (openGroups[label] ?? false) : true;
 
             return (
               <Collapsible
-                key={group.label ?? `group-${groupIndex}`}
+                key={label ?? `group-${groupIndex}`}
                 open={collapsed || !isLabeledGroup || isGroupOpen}
-                onOpenChange={group.label ? () => toggleGroup(group.label!) : undefined}
+                onOpenChange={label ? () => toggleGroup(label) : undefined}
               >
                 <SidebarGroup className="gap-0 p-0">
                   {!collapsed && isLabeledGroup ? (
                     <CollapsibleTrigger asChild>
-                      <SidebarGroupLabel
-                        className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]"
-                      >
-                        {group.label}
+                      <SidebarGroupLabel className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]">
+                        {label}
                         <ChevronRight
                           className={cn(
                             "size-3 shrink-0 transition-transform duration-[var(--dur-base)]",
@@ -343,7 +351,14 @@ function AppSidebar({
                   ) : null}
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <SidebarGroupContent>
-                      <SidebarMenu className={cn("gap-0.5", isLabeledGroup && !collapsed && "ml-2 border-l border-[var(--line-subtle)] pl-2")}>
+                      <SidebarMenu
+                        className={cn(
+                          "gap-0.5",
+                          isLabeledGroup &&
+                            !collapsed &&
+                            "ml-2 border-l border-[var(--line-subtle)] pl-2",
+                        )}
+                      >
                         {group.items.map((item) => {
                           const Icon = item.icon;
                           const isActive = item.match
@@ -378,11 +393,18 @@ function AppSidebar({
                                 collapsed && "justify-center px-0",
                               )}
                             >
-                              {item.href ? <Link href={item.href}>{content}</Link> : content}
+                              {item.href ? (
+                                <Link href={item.href}>{content}</Link>
+                              ) : (
+                                content
+                              )}
                             </SidebarMenuButton>
                           );
                           return (
-                            <SidebarMenuItem key={item.label} className="relative">
+                            <SidebarMenuItem
+                              key={item.label}
+                              className="relative"
+                            >
                               {isActive ? (
                                 <span
                                   aria-hidden
@@ -391,7 +413,9 @@ function AppSidebar({
                               ) : null}
                               {collapsed ? (
                                 <Tooltip>
-                                  <TooltipTrigger asChild>{button}</TooltipTrigger>
+                                  <TooltipTrigger asChild>
+                                    {button}
+                                  </TooltipTrigger>
                                   <TooltipContent side="right">
                                     {item.label}
                                   </TooltipContent>

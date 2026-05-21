@@ -1,111 +1,77 @@
-# Project Engineering Skill
+# Project Engineering Skill — Workana AI
 
 ## Objetivo
 
-Skill base para qualquer tarefa neste monorepo. Estabelece as regras fundamentais que se aplicam a toda implementação, refatoração ou análise técnica.
-
-## Quando Usar
-
-- Qualquer tarefa de código
-- Qualquer refactor
-- Qualquer análise técnica
-- Qualquer nova feature
+Skill base para qualquer tarefa neste monorepo. Estabelece regras de produto, arquitetura, permissões e implementação.
 
 ## Entendimento do Projeto
 
-- **AI Company OS** — plataforma SaaS multiempresa de automação inteligente
-- **Fase atual:** fundação técnica implementada (auth, organizações, authz); Company Brain, Skills e Outputs ainda não persistidos
-- O produto opera em ciclo: Company Brain → Skills → Outputs → Aprovações → Conteúdo → Automações
+- **Workana AI** é uma camada de inteligência para empresas que coordenam freelancers, fornecedores e times remotos.
+- O produto organiza Workspace, Company, Brain, Agentes, Créditos, Equipe, Permissões, Assets e Integrações.
+- Estado atual: fundação técnica implementada; Brain persistido, créditos, agentes e histórico real ainda pendentes.
 
-## Estrutura do Monorepo
+## Estrutura
 
 ```
-apps/web     Next.js 16, React 19 — frontend principal
-apps/api     NestJS 11 — API REST, auth, Prisma, CASL
-packages/authz   catálogo de permissões, roles e mapa CASL
-packages/types   schemas e tipos Zod compartilhados
-packages/configs presets TypeScript
+apps/web          Next.js 16 + React 19
+apps/api          NestJS 11 + Prisma + CASL
+packages/authz    permissões, roles e ability CASL
+packages/types    schemas/tipos Zod compartilhados
+packages/configs  presets TypeScript
 ```
-
-## Regra de Permissão Universal (inviolável)
-
-**Toda ação do produto deve ter verificação de permissão — sem exceção.**
-
-- **Backend:** todo endpoint de mutação ou dado sensível deve ter `@RequirePermission(key)` com chave válida de `AppPermissionKey`
-- **Frontend:** toda UI com ação de escrita, exclusão ou dado restrito deve ter `<PermissionGate permission="key">` ou verificação via `useAbility()`
-- Nenhuma feature nasce sem guards e checks de UI — são parte da definição de pronto de cada task
 
 ## Regras Invioláveis
 
-- `userId` vem **sempre** de `req.currentUser.id` — nunca do body
-- `orgId` vem de `req.params` — nunca do body
-- Novos endpoints sem `@Public()` são bloqueados pelo `AuthGuard` automaticamente
-- Nova permissão nasce em `packages/authz` antes de ser usada em qualquer lugar
-- `Prisma` é o único cliente de banco — nunca editar `src/generated/prisma` manualmente
-- `better-auth` trata apenas auth/sessão — org/membership/roles são domínio próprio
-- Roles de sistema (`owner`, `admin`, `member`) são imutáveis
+- Toda mutação ou leitura sensível no backend precisa de `@RequirePermission(key)`.
+- Toda ação de escrita/exclusão ou dado restrito no frontend precisa de `PermissionGate` ou `useAbility()`.
+- `userId` vem sempre de `req.currentUser.id`, nunca do body.
+- `orgId` vem de `req.params`, nunca do body.
+- Endpoints públicos precisam de `@Public()` explícito.
+- Nova permissão nasce em `packages/authz` antes de ser usada.
+- Prisma é o único cliente de banco.
+- `better-auth` trata apenas auth/sessão.
+- Roles de sistema `owner`, `admin`, `member` são imutáveis.
 
-## Regras de Tooling
+## Produto e Linguagem
 
-- `pnpm` — package manager oficial
-- `Turborepo` — coordena dev/build/lint/typecheck
-- `Biome` — formatter e linter oficial
-- `TypeScript strict: true` — sem afrouxar
+- Usar **Workana AI** como marca.
+- Usar Brain, Agentes, Créditos, Workspace, Company e Integrações como termos de UI.
+- Evitar linguagem genérica de chatbot.
+- Nunca expor ranking, confiança, metadados ocultos ou contexto derivado da IA sem decisão explícita.
+- Toda feature deve considerar como os dados serão usados por usuários e por agentes de IA.
 
-## Stack por domínio
+## Stack
 
 ### Frontend
-- `Next.js 16` App Router · `React 19`
-- `Tailwind CSS v4` com tokens em `globals.css`
-- `shadcn/ui` em `apps/web/src/core/shared/components/ui/`
-- `react-hook-form` + `Zod` — formulários
-- `@tanstack/react-query` — estado de servidor
-- `@tanstack/react-table` — tabelas operacionais
-- `Recharts` — gráficos
-- `nuqs` — estado de URL
-- `zustand` — estado local (último recurso)
-- `axios` — cliente HTTP
-- `lucide-react` — ícones
+- Next.js 16, React 19, App Router
+- Tailwind CSS v4 com tokens em `globals.css`
+- shadcn/ui em `core/shared/components/ui`
+- react-hook-form + Zod
+- TanStack Query e TanStack Table
+- Recharts, nuqs, zustand, axios, lucide-react
 
 ### Backend
-- `NestJS 11` — HTTP, módulos, DI
-- `Prisma` — banco (único permitido)
-- `better-auth` — auth e sessão apenas
-- `CASL` via `packages/authz` — autorização
-- `Zod` — validação de DTOs
-- `Resend` — emails transacionais
+- NestJS 11
+- Prisma + PostgreSQL
+- better-auth para auth/sessão
+- CASL via `packages/authz`
+- Zod para DTOs
+- Resend para emails transacionais
 
-### Autorização
-- Catálogo em `packages/authz/src/index.ts`
-- Compartilhado entre frontend e backend
-- Motor: `@casl/ability`
+## Fluxo Recomendado
 
-## Estrutura Frontend (core/modules vs core/shared)
+1. Identificar domínio: web, api, authz, types, docs ou design system.
+2. Ler `CLAUDE.md` e a skill específica da área.
+3. Fazer a menor mudança correta.
+4. Verificar autorização backend/frontend.
+5. Validar coerência com `docs/prd/workana-ai-master.md`.
+6. Rodar `pnpm typecheck` e testes aplicáveis.
 
-```
-core/modules/<dominio>/
-  pages/        componentes de página
-  components/   componentes do módulo
-  hooks/        hooks de domínio com React Query
+## Ainda Não Implementado Como Domínio Real
 
-core/shared/
-  components/ui/    componentes shadcn
-  components/       componentes genéricos (PermissionGate, etc.)
-  utils/            api-client, auth-client, query-client
-```
-
-## Fluxo de Pensamento Recomendado
-
-1. Identificar se a tarefa é web, api, pacote compartilhado ou revisão
-2. Carregar skill específica da área (backend, frontend, authz, design)
-3. Aplicar a biblioteca oficial do problema
-4. Implementar a menor mudança correta
-5. Verificar regra de permissão universal
-6. Validar coerência com PRD, stack, design system e estrutura atual
-
-## O Que Ainda Não É Padrão Implementado
-
-- `Trigger.dev` ou `Inngest` — não adotados, não assumir disponíveis
-- `socket.io` — aprovado para realtime, ainda não implementado
-- `@aws-sdk/client-s3` — aprovado para storage, ainda não implementado
-- Company Brain, Skill e Output — não persistidos ainda
+- Brain persistido/versionado
+- Créditos por empresa
+- Agentes default
+- Histórico de execuções
+- Integrações reais
+- Automações e analytics

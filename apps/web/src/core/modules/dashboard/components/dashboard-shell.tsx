@@ -1,14 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import {
   Bell,
   BookOpen,
   Brain,
   CalendarDays,
   ChevronsUpDown,
+  Coins,
   FileImage,
   FileText,
   FolderOpen,
@@ -19,8 +17,8 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
-  Plus,
   PlugZap,
+  Plus,
   Settings,
   Shield,
   Sparkles,
@@ -29,14 +27,16 @@ import {
   Users,
   Workflow,
   Zap,
-} from "lucide-react";
-import { type ReactNode, useState } from "react";
-import { toast } from "sonner";
-import {
-  getInitials,
-  useDashboardData,
-} from "src/core/modules/dashboard/hooks/use-dashboard-data";
-import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { type ReactNode, useState } from 'react';
+import { toast } from 'sonner';
+import { getInitials, useDashboardData } from 'src/core/modules/dashboard/hooks/use-dashboard-data';
+import { PermissionGate } from 'src/core/shared/components/permission-gate';
+import { AppSidebar, type SidebarGroupDef } from 'src/core/shared/components/ui/app-sidebar';
+import { Avatar, AvatarFallback } from 'src/core/shared/components/ui/avatar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -44,8 +44,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "src/core/shared/components/ui/breadcrumb";
-import { Button } from "src/core/shared/components/ui/button";
+} from 'src/core/shared/components/ui/breadcrumb';
+import { Button } from 'src/core/shared/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,25 +53,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "src/core/shared/components/ui/dropdown-menu";
-import {
-  AppSidebar,
-  type SidebarGroupDef,
-} from "src/core/shared/components/ui/app-sidebar";
-import { PermissionGate } from "src/core/shared/components/permission-gate";
-import { authClient } from "src/core/shared/utils/auth-client";
+} from 'src/core/shared/components/ui/dropdown-menu';
+import { authClient } from 'src/core/shared/utils/auth-client';
+import { queryClient } from 'src/core/shared/utils/query-client';
 
 type DashboardShellProps = {
   children: ReactNode;
 };
 
 function getHeaderTitle(pathname: string) {
-  if (pathname.startsWith("/dashboard/invites")) return "Equipe";
-  if (pathname.startsWith("/dashboard/workspace/team")) return "Equipe";
-  if (pathname.startsWith("/dashboard/workspace/permissions")) return "Permissões";
-  if (pathname.startsWith("/dashboard/workspace/settings")) return "Configurações do workspace";
-  if (pathname.startsWith("/dashboard/account/settings")) return "Configurações da conta";
-  return "Dashboard";
+  if (pathname.startsWith('/dashboard/workspace/team')) return 'Equipe';
+  if (pathname.startsWith('/dashboard/workspace/permissions')) return 'Permissões';
+  if (pathname.startsWith('/dashboard/workspace/settings')) return 'Configurações do workspace';
+  if (pathname.startsWith('/dashboard/workspace/assets')) return 'Brain e assets';
+  if (pathname.startsWith('/dashboard/workspace/integrations')) return 'Integrações';
+  if (pathname.startsWith('/dashboard/account/settings')) return 'Configurações da conta';
+  return 'Dashboard';
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
@@ -90,24 +87,25 @@ export function DashboardShell({ children }: DashboardShellProps) {
   } = useDashboardData();
 
   const userInitials = getInitials(displayName);
-  const workspaceInitials = getInitials(activeOrganization?.name ?? "Workspace");
+  const workspaceInitials = getInitials(activeOrganization?.name ?? 'Workspace');
   const headerTitle = getHeaderTitle(pathname);
 
   async function handleSignOut() {
     const { error } = await authClient.signOut();
     if (error) {
-      toast.error(error.message ?? "Erro ao sair da conta.");
+      toast.error(error.message ?? 'Erro ao sair da conta.');
       return;
     }
+    queryClient.clear();
     clearActiveOrg();
-    router.push("/auth/login");
+    router.push('/auth/login');
     router.refresh();
   }
 
   function handleSelectWorkspace(organizationId: string) {
     if (organizationId === activeOrganization?.id) return;
     setActiveOrgId(organizationId);
-    router.push("/app");
+    router.push('/app');
   }
 
   function showComingSoon(label: string) {
@@ -118,137 +116,137 @@ export function DashboardShell({ children }: DashboardShellProps) {
     {
       items: [
         {
-          label: "Dashboard",
+          label: 'Dashboard',
           icon: LayoutDashboard,
-          href: "/dashboard",
-          match: (p) => p === "/dashboard",
+          href: '/dashboard',
+          match: (p) => p === '/dashboard',
         },
       ],
     },
     {
-      label: "Inteligência",
+      label: 'Inteligência operacional',
       items: [
         {
-          label: "Company Brain",
+          label: 'Brain',
           icon: Brain,
-          href: "/onboarding",
-          permission: "company.update" as const,
+          href: '/onboarding',
+          permission: 'company.update' as const,
         },
         {
-          label: "Skills",
+          label: 'Agentes',
           icon: Shield,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Skills"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Agentes'),
         },
         {
-          label: "Templates",
-          icon: LayoutTemplate,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Templates"),
+          label: 'Créditos',
+          icon: Coins,
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Créditos'),
         },
         {
-          label: "Biblioteca de contexto",
+          label: 'Fontes do brain',
           icon: BookOpen,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Biblioteca de contexto"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Fontes do brain'),
         },
       ],
     },
     {
-      label: "Conteúdo e Páginas",
+      label: 'Execução',
       items: [
         {
-          label: "Content Studio",
+          label: 'Histórico de execuções',
           icon: Sparkles,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Content Studio"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Histórico de execuções'),
         },
         {
-          label: "Visuals",
+          label: 'Templates de briefing',
           icon: FileImage,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Visuals"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Templates de briefing'),
         },
         {
-          label: "Pages",
+          label: 'Demandas',
           icon: FileText,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Pages"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Demandas'),
         },
         {
-          label: "Campanhas",
+          label: 'Relatórios',
           icon: Megaphone,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Campanhas"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Relatórios'),
         },
       ],
     },
     {
-      label: "Automações",
+      label: 'Automações',
       items: [
         {
-          label: "Automações",
+          label: 'Workflows',
           icon: Zap,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Automações"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Workflows'),
         },
         {
-          label: "Execuções",
+          label: 'Execuções',
           icon: Workflow,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Execuções"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Execuções'),
         },
         {
-          label: "Agenda",
+          label: 'Agenda operacional',
           icon: CalendarDays,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Agenda"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Agenda'),
         },
         {
-          label: "Alertas e relatórios",
+          label: 'Alertas',
           icon: Bell,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Alertas e relatórios"),
+          permission: 'company.update' as const,
+          onSelect: () => showComingSoon('Alertas e relatórios'),
         },
       ],
     },
     {
-      label: "Workspace",
+      label: 'Workspace',
       items: [
         {
-          label: "Equipe",
+          label: 'Equipe',
           icon: Users,
-          href: "/dashboard/workspace/team",
-          permission: "member.read" as const,
-          match: (p) =>
-            p.startsWith("/dashboard/workspace/team") ||
-            p.startsWith("/dashboard/invites"),
+          href: '/dashboard/workspace/team',
+          permission: 'member.read' as const,
+          match: (p) => p.startsWith('/dashboard/workspace/team'),
         },
         {
-          label: "Permissões",
+          label: 'Permissões',
           icon: Shield,
-          href: "/dashboard/workspace/permissions",
-          permission: "role.read" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/permissions"),
+          href: '/dashboard/workspace/permissions',
+          permission: 'role.read' as const,
+          match: (p) => p.startsWith('/dashboard/workspace/permissions'),
         },
         {
-          label: "Integrações",
+          label: 'Integrações',
           icon: PlugZap,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Integrações"),
+          href: '/dashboard/workspace/integrations',
+          permission: 'integration.read' as const,
+          match: (p) => p.startsWith('/dashboard/workspace/integrations'),
         },
         {
-          label: "Arquivos e assets",
+          label: 'Brain assets',
           icon: FolderOpen,
-          permission: "company.update" as const,
-          onSelect: () => showComingSoon("Arquivos e assets"),
+          href: '/dashboard/workspace/assets',
+          permission: 'asset.read' as const,
+          match: (p) => p.startsWith('/dashboard/workspace/assets'),
         },
         {
-          label: "Configurações",
+          label: 'Configurações',
           icon: Settings,
-          href: "/dashboard/workspace/settings",
-          permission: "company.update" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/settings"),
+          href: '/dashboard/workspace/settings',
+          permission: 'company.update' as const,
+          match: (p) => p.startsWith('/dashboard/workspace/settings'),
         },
       ],
     },
@@ -273,13 +271,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
         groups={sidebarGroups}
         workspace={{
           name: activeOrganization.name,
-          meta: `${activeOrganization.slug} · ${organizations.length} workspace${organizations.length > 1 ? "s" : ""}`,
+          meta: `${activeOrganization.slug} · ${organizations.length} workspace${organizations.length > 1 ? 's' : ''}`,
           initials: workspaceInitials,
         }}
         user={{
           name: displayName,
-          email: "",
-          role: activeRole ?? "member",
+          email: '',
+          role: activeRole ?? 'member',
           initials: userInitials,
         }}
         workspaceTrigger={(collapsed) => (
@@ -289,12 +287,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
                 type="button"
                 className={
                   collapsed
-                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-                    : "flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
+                    ? 'flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]'
+                    : 'flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left'
                 }
               >
-                <Avatar shape="square" className={collapsed ? "size-8" : "size-10"}>
-                  <AvatarFallback className={collapsed ? "text-[12px]" : "text-[13px]"}>
+                <Avatar shape="square" className={collapsed ? 'size-8' : 'size-10'}>
+                  <AvatarFallback className={collapsed ? 'text-[12px]' : 'text-[13px]'}>
                     {workspaceInitials}
                   </AvatarFallback>
                 </Avatar>
@@ -320,12 +318,14 @@ export function DashboardShell({ children }: DashboardShellProps) {
                 <DropdownMenuItem key={org.id} onClick={() => handleSelectWorkspace(org.id)}>
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span className="truncate text-[13px] font-medium">{org.name}</span>
-                    <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">{org.slug}</span>
+                    <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
+                      {org.slug}
+                    </span>
                   </span>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push("/workspace/create")}>
+              <DropdownMenuItem onClick={() => router.push('/workspace/create')}>
                 <Plus className="size-3.5 text-[var(--fg-tertiary)]" />
                 <span className="text-[13px]">Criar novo workspace</span>
               </DropdownMenuItem>
@@ -339,11 +339,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
                 type="button"
                 className={
                   collapsed
-                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-                    : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left"
+                    ? 'flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]'
+                    : 'flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left'
                 }
               >
-                <Avatar className={collapsed ? "size-8" : "size-9"}>
+                <Avatar className={collapsed ? 'size-8' : 'size-9'}>
                   <AvatarFallback className="text-[11px]">{userInitials}</AvatarFallback>
                 </Avatar>
                 {!collapsed && (
@@ -359,13 +359,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align="end" className="w-56">
-              <DropdownMenuItem onClick={() => router.push("/dashboard/account/settings")}>
+              <DropdownMenuItem onClick={() => router.push('/dashboard/account/settings')}>
                 <User />
                 Configurações da conta
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                {theme === "dark" ? <Sun /> : <Moon />}
+              <DropdownMenuItem onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+                {theme === 'dark' ? <Sun /> : <Moon />}
                 Alternar tema
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleSignOut}>
@@ -383,7 +383,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <Button
               variant="ghost"
               size="icon"
-              aria-label={sidebarOpen ? "Recolher sidebar" : "Expandir sidebar"}
+              aria-label={sidebarOpen ? 'Recolher sidebar' : 'Expandir sidebar'}
               onClick={() => setSidebarOpen((open) => !open)}
             >
               {sidebarOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
@@ -391,9 +391,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/dashboard">
-                    {activeOrganization.name}
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="/dashboard">{activeOrganization.name}</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
@@ -406,7 +404,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           <div className="flex items-center gap-2">
             <PermissionGate permission="member.read">
               <Button variant="ghost" size="md" asChild>
-                <Link href="/dashboard/invites">
+                <Link href="/dashboard/workspace/team">
                   <Users />
                   Equipe
                 </Link>
@@ -416,7 +414,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
               <Button size="md" asChild>
                 <Link href="/onboarding">
                   <Brain />
-                  Company Brain
+                   Brain
                 </Link>
               </Button>
             </PermissionGate>

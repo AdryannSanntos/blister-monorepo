@@ -287,8 +287,8 @@ const typographyScale = [
 
 const navItems = [
   { label: "Overview", icon: Home, badge: "42" },
-  { label: "Company brain", icon: Brain },
-  { label: "Skills", icon: Sparkles },
+  { label: "Brain", icon: Brain },
+  { label: "Agentes", icon: Sparkles },
   { label: "Workflows", icon: WandSparkles },
   { label: "Studio", icon: LayoutTemplate },
   { label: "Reports", icon: TableProperties },
@@ -478,7 +478,7 @@ export function DesignSystemPage() {
   const onboardingForm = useForm<OnboardingValues>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
-      workspaceName: "AIBusiness OS",
+      workspaceName: "Workana AI",
       voice:
         "Write like a precise operator. Keep sentences compact, skip filler, and always end with a clear next action.",
       tone: ["Confident", "Direct", "Technical"],
@@ -535,7 +535,7 @@ export function DesignSystemPage() {
               <span className="text-2xl font-semibold">A</span>
             </div>
             <div>
-              <p className="text-sm font-medium">AIBusiness OS</p>
+              <p className="text-sm font-medium">Workana AI</p>
               <p className="text-[12px] text-[var(--fg-tertiary)]">
                 Design System · v0.1
               </p>
@@ -1179,7 +1179,7 @@ export function DesignSystemPage() {
                   label="Workspace name"
                   helper="3–60 characters. Shown across the platform."
                 >
-                  <Input defaultValue="AIBusiness OS" />
+                  <Input defaultValue="Workana AI" />
                 </DsField>
                 <DsField
                   label="Search runs"
@@ -2208,7 +2208,7 @@ export function DesignSystemPage() {
                   meta: "Travel · Reward management",
                   badge: { label: "Active", variant: "success" as const },
                   stats: [
-                    ["Skills", "14"],
+                    ["Agentes", "14"],
                     ["Members", "28"],
                   ],
                 },
@@ -2221,7 +2221,7 @@ export function DesignSystemPage() {
                     variant: "warning" as const,
                   },
                   stats: [
-                    ["Skills", "7"],
+                    ["Agentes", "7"],
                     ["Members", "3"],
                   ],
                 },
@@ -2876,7 +2876,7 @@ export function DesignSystemPage() {
                   <CardHeader>
                     <CardTitle>Workspace overview</CardTitle>
                     <CardDescription>
-                      AIBusiness OS — Design System v0.1 · tokens · components ·
+                      Workana AI — Design System v0.1 · tokens · components ·
                       patterns
                     </CardDescription>
                   </CardHeader>

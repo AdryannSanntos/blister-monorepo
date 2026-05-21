@@ -1,7 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { Brain, Users } from "lucide-react";
+import Link from "next/link";
+import { useDashboardData } from "src/core/modules/dashboard/hooks/use-dashboard-data";
+import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
@@ -9,8 +11,6 @@ import {
   CardFooter,
 } from "src/core/shared/components/ui/card";
 import { Display } from "src/core/shared/components/ui/display";
-import { Badge } from "src/core/shared/components/ui/badge";
-import { useDashboardData } from "src/core/modules/dashboard/hooks/use-dashboard-data";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -37,6 +37,7 @@ export function DashboardPage() {
     activeOrganization,
     organizations,
     members,
+    canReadMembers,
     pendingInvitations,
     onboardingPublished,
     onboardingDraft,
@@ -87,58 +88,73 @@ export function DashboardPage() {
           </CardFooter>
         </Card>
 
-        <Card>
-          <CardContent className="px-5 py-5">
-            <p className="text-[11.5px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-              Membros
-            </p>
-            <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
-              {members.length}
-            </p>
-            <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
-              {organizations.length} workspace{organizations.length > 1 ? "s" : ""} no total
-            </p>
-          </CardContent>
-          <CardFooter className="border-t border-[var(--line-subtle)] px-5 py-3">
-            <Button variant="ghost" size="sm" className="-ml-2 h-7 text-[12px]" asChild>
-              <Link href="/dashboard/invites">
-                <Users className="size-3.5" />
-                Gerenciar equipe
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
+        {canReadMembers ? (
+          <>
+            <Card>
+              <CardContent className="px-5 py-5">
+                <p className="text-[11.5px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
+                  Membros
+                </p>
+                <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
+                  {members.length}
+                </p>
+                <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
+                  {organizations.length} workspace
+                  {organizations.length > 1 ? "s" : ""} no total
+                </p>
+              </CardContent>
+              <CardFooter className="border-t border-[var(--line-subtle)] px-5 py-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="-ml-2 h-7 text-[12px]"
+                  asChild
+                >
+                  <Link href="/dashboard/workspace/team">
+                    <Users className="size-3.5" />
+                    Gerenciar equipe
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardContent className="px-5 py-5">
+                <p className="text-[11.5px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
+                  Convites pendentes
+                </p>
+                <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
+                  {pendingInvitations.length}
+                </p>
+                <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
+                  {pendingInvitations.length === 0
+                    ? "Nenhum aguardando aceite"
+                    : "Aguardando aceite"}
+                </p>
+              </CardContent>
+              <CardFooter className="border-t border-[var(--line-subtle)] px-5 py-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="-ml-2 h-7 text-[12px]"
+                  asChild
+                >
+                  <Link href="/dashboard/workspace/team">Ver convites</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          </>
+        ) : null}
 
         <Card>
           <CardContent className="px-5 py-5">
             <p className="text-[11.5px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-              Convites pendentes
+              Brain
             </p>
             <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
-              {pendingInvitations.length}
-            </p>
-            <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
-              {pendingInvitations.length === 0
-                ? "Nenhum aguardando aceite"
-                : "Aguardando aceite"}
-            </p>
-          </CardContent>
-          <CardFooter className="border-t border-[var(--line-subtle)] px-5 py-3">
-            <Button variant="ghost" size="sm" className="-ml-2 h-7 text-[12px]" asChild>
-              <Link href="/dashboard/invites">
-                Ver convites
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardContent className="px-5 py-5">
-            <p className="text-[11.5px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-              Company Brain
-            </p>
-            <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
-              {onboardingPublished ? "100%" : `${Math.min(onboardingStep * 11, 99)}%`}
+              {onboardingPublished
+                ? "100%"
+                : `${Math.min(onboardingStep * 11, 99)}%`}
             </p>
             <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
               {onboardingPublished
@@ -153,7 +169,12 @@ export function DashboardPage() {
               <Badge variant={onboardingPublished ? "success" : "secondary"}>
                 {onboardingPublished ? "Publicado" : "Em progresso"}
               </Badge>
-              <Button variant="ghost" size="sm" className="-mr-2 h-7 text-[12px]" asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="-mr-2 h-7 text-[12px]"
+                asChild
+              >
                 <Link href="/onboarding">
                   <Brain className="size-3.5" />
                   Abrir

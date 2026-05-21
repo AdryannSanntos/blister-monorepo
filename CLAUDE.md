@@ -1,10 +1,10 @@
-# AI Company OS — Monorepo
+# Workana AI — Monorepo
 
 ## O que é este projeto
 
-AI Company OS é uma plataforma SaaS multiempresa que transforma o contexto e os processos de uma empresa em automações inteligentes. O produto opera em ciclo de geração supervisionada: captura o contexto da empresa (Company Brain), executa Skills de geração com IA, produz Outputs revisados e aprovados, e expande para conteúdo, páginas, automações e integrações.
+Workana AI é uma camada de inteligência para empresas que contratam, coordenam e escalam trabalho com freelancers, fornecedores e times remotos. O produto organiza contexto, briefings, demandas, agentes de IA, créditos, equipe, permissões e integrações dentro de um workspace por empresa.
 
-**Fase atual:** Fundação técnica. Auth, organizações, membership, roles e permissões estão implementados. Company Brain, Skills e Outputs ainda não foram persistidos.
+**Fase atual:** fundação técnica implementada. Auth, organizações, memberships, roles, permissões, convites, onboarding inicial, dashboard shell, assets e tela base de integrações existem. Brain persistido, agentes, créditos e histórico de execuções ainda precisam evoluir como domínios próprios.
 
 ---
 
@@ -24,8 +24,6 @@ packages/
 
 ## Regras invioláveis
 
-Estas regras se aplicam sem exceção a toda tarefa de código neste repositório.
-
 ### 1. Toda ação tem permissão
 
 **Backend:** todo endpoint de mutação ou dado sensível deve ter `@RequirePermission(key)`.
@@ -35,19 +33,18 @@ Não existe entrega de feature sem guards e checks de UI implementados.
 
 ### 2. userId nunca vem do body
 
-`userId` vem **sempre** de `req.currentUser.id` (injetado pelo `AuthGuard`).
+`userId` vem sempre de `req.currentUser.id`.
 `orgId` vem de `req.params` — nunca do body.
 
 ### 3. Novos endpoints com guard ou @Public explícito
 
 `AuthGuard` é global. Sem `@Public()`, todo endpoint requer autenticação automaticamente.
-Endpoints intencionalmente públicos devem ter `@Public()` explícito — nunca depender de ausência de guard.
+Endpoints intencionalmente públicos devem ter `@Public()` explícito.
 
 ### 4. Nova permissão: packages/authz primeiro
 
-Fluxo obrigatório:
-1. Declarar em `packages/authz/src/index.ts` (`AppPermissionKey` + `permissionMap` + `getDefaultRolePermissions`)
-2. Rodar seed de roles padrão
+1. Declarar em `packages/authz/src/index.ts` (`AppPermissionKey`, `allPermissionKeys`, `permissionMap`, roles padrão)
+2. Rodar seed de roles padrão quando aplicável
 3. Usar `@RequirePermission('nova.chave')` no controller
 4. Usar `<PermissionGate permission="nova.chave">` no frontend
 
@@ -58,8 +55,8 @@ Nunca editar `apps/api/src/generated/prisma` manualmente.
 
 ### 6. better-auth trata apenas auth e sessão
 
-`better-auth` cuida de: login, signup, verificação de email, reset de senha, sessão.
-Organização ativa, convites, memberships, roles e permissões pertencem ao domínio da aplicação.
+`better-auth` cuida de login, signup, verificação de email, reset de senha e sessão.
+Organização ativa, convites, memberships, roles, permissões, créditos e brain pertencem ao domínio da aplicação.
 `useActiveOrganization()` — nunca assumir org a partir da sessão better-auth.
 
 ### 7. Roles de sistema são imutáveis
@@ -70,91 +67,65 @@ Um membro pode ter múltiplas roles simultâneas.
 
 ### 8. Dados em tabela por padrão
 
-Qualquer coleção de entidades de dados (membros, roles, convites, permissões, logs, execuções, etc.) **deve ser renderizada em tabela** usando TanStack Table + shadcn `<Table>`.
+Coleções de entidades de dados (membros, roles, convites, permissões, execuções, créditos, logs, integrações, assets, agentes) devem ser renderizadas em tabela usando TanStack Table + shadcn `<Table>`.
 
-Exceções aceitas (devem ser justificadas):
-- Pickers de navegação (selecionar workspace, onboarding step)
-- Controles de formulário (radio groups, select dropdowns)
-- Showcases visuais ou design system demos
-- Cards com hierarquia visual intrínseca que uma tabela não capturaria
-
-Se a dúvida existir, use tabela.
+Exceções aceitas: pickers, controles de formulário, onboarding, showcases visuais e cards com hierarquia visual intrínseca.
 
 ---
 
-## Skills disponíveis
+## Produto e linguagem
 
-Use `/backend`, `/frontend`, `/authz`, `/review` ou `/design` durante a sessão para carregar o contexto completo de cada área. Equivalentes como skills invocáveis: `company-os-backend`, `company-os-frontend`, `company-os-authz`, `company-os-review`, `company-os-design`.
-
-| Slash Command | Skill | Quando usar |
-|---------------|-------|-------------|
-| `/backend` | company-os-backend | Trabalhar em apps/api — módulos NestJS, Prisma, guards, DTOs |
-| `/frontend` | company-os-frontend | Trabalhar em apps/web — páginas, hooks, formulários, tabelas |
-| `/authz` | company-os-authz | Implementar ou depurar permissões, roles e autorização |
-| `/review` | company-os-review | Revisar código antes de entregar ou mergear |
-| `/design` | company-os-design | Implementar ou revisar UI, tokens, componentes do design system |
+- Nome do produto: **Workana AI**
+- Foco: empresas que coordenam trabalho com freelancers, fornecedores e times remotos
+- Termos internos de UI: Workspace, Company, Brain, Agentes, Créditos, Integrações
+- Evitar linguagem genérica de chatbot; o produto é operacional, B2B e orientado a execução
+- A camada interna de IA nunca deve expor ranking, confiança, metadados ocultos ou contexto derivado sem decisão explícita
 
 ---
 
-## Stack resumida por domínio
+## Stack resumida
 
-### Tooling
-- `pnpm` — package manager
-- `Turborepo` — coordena dev/build/lint/typecheck
-- `Biome` — formatter e linter
-- `TypeScript strict` — padrão do monorepo
-
-### Frontend (apps/web)
+### Frontend
 - Next.js 16, React 19, App Router
 - Tailwind CSS v4 com tokens em `globals.css`
-- shadcn/ui (style new-york, base radix) em `core/shared/components/ui/`
-- react-hook-form + Zod (formulários)
-- @tanstack/react-query (estado de servidor)
-- @tanstack/react-table (tabelas operacionais)
-- Recharts + ChartContainer (gráficos)
-- nuqs (estado de URL/filtros)
-- zustand (estado local de cliente, último recurso)
-- axios (cliente HTTP)
-- lucide-react (ícones)
-- next-themes dark-default
+- shadcn/ui em `core/shared/components/ui/`
+- react-hook-form + Zod
+- TanStack Query e TanStack Table
+- Recharts, nuqs, zustand, axios, lucide-react
+- next-themes com light default e dark disponível
 
-### Backend (apps/api)
-- NestJS 11 (HTTP, módulos, DI)
-- Prisma (banco — único cliente permitido)
-- better-auth (auth e sessão apenas)
-- CASL via packages/authz (autorização)
-- Zod (validação de DTOs)
-- Resend (emails transacionais)
-- socket.io (realtime, futuro)
-- @aws-sdk/client-s3 (storage S3-compatible, futuro)
-
-### Autorização (packages/authz)
-- CASL @casl/ability
-- AppPermissionKey: 19 chaves declaradas
-- Roles padrão: owner (tudo), admin (sem delete/roles/onboarding.publish), member (read + skill)
-- PermissionOverride: allow/deny por membro individual
+### Backend
+- NestJS 11
+- Prisma + PostgreSQL
+- better-auth para auth/sessão
+- CASL via `packages/authz`
+- Zod para DTOs
+- Resend para emails transacionais
+- socket.io e S3-compatible previstos para evolução
 
 ---
 
 ## Catálogo de permissões atual
 
-`company.read/update/delete` · `member.read/invite/update/remove` · `role.read/create/update/delete` · `permission.read` · `onboarding.publish` · `brain.read/update` · `skill.read/execute` · `output.read/review`
+`company.read/update/delete` · `member.read/invite/update/remove` · `role.read/create/update/delete` · `permission.read` · `onboarding.publish` · `brain.read/update` · `asset.read/create/update/archive/context.review` · `skill.read/execute` · `integration.read` · `output.read/review`
 
 ---
 
-## Ordem de execução do produto (fases)
+## Ordem de execução do produto
 
-1. Auth (login/signup/email)
-2. Seleção/criação de organização ativa
-3. Onboarding de contexto da empresa
-4. Publicação do Company Brain inicial (só owner)
-5. Dashboard operacional
-6. Caixa de entrada
-7. Company Brain editável
-8. Skills → Execução → Outputs
-9. Aprovações e revisão
-10. Content Studio, visuais, páginas, campanhas
-11. Automações (após núcleo estável)
-12. Integrações externas
+1. Auth
+2. Criação/seleção de workspace
+3. Convites
+4. Onboarding curto da empresa
+5. Brain inicial
+6. Dashboard operacional
+7. Equipe, roles e permissões
+8. Assets e fontes do brain
+9. Créditos por empresa
+10. Agentes default
+11. Histórico de execuções
+12. Integrações
+13. Templates de briefing
+14. Automações e analytics
 
-**Estado atual:** Fases 1-2 implementadas. Fase 3 em progresso.
+**Estado atual:** Auth, workspace, convites, roles/permissões, onboarding draft, dashboard shell, assets e shell de integrações já existem. Brain persistido, créditos, agentes e histórico real ainda faltam.

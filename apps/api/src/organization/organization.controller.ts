@@ -16,9 +16,9 @@ import type { Request } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
-import { MembershipService } from './membership.service';
 import { updateOrganizationSchema } from './dto';
 import { createOrganizationPayloadSchema } from './dto/create-organization.dto';
+import { MembershipService } from './membership.service';
 import { OrganizationService } from './organization.service';
 
 @Controller('organizations')
@@ -35,7 +35,7 @@ export class OrganizationController {
       throw new BadRequestException(parsed.error.issues);
     }
 
-    const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
 
     return this.organizationService.createWorkspace(currentUser.id, parsed.data);
   }
@@ -83,7 +83,7 @@ export class OrganizationController {
       throw new BadRequestException('toUserId is required');
     }
 
-    const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
 
     return this.organizationService.transferOwnership(orgId, currentUser.id, parsed);
   }
@@ -91,7 +91,7 @@ export class OrganizationController {
   @Get(':orgId/me/ability')
   @UseGuards(AuthGuard)
   async getMyAbility(@Param('orgId') orgId: string, @Req() req: Request) {
-    const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
 
     const membership = await this.membershipService.findByOrgAndUser(orgId, currentUser.id);
 
@@ -111,9 +111,12 @@ export class OrganizationController {
       effect: o.effect,
     }));
 
+    const isOwner = membership.roles.some((mr) => mr.role.name === 'owner');
+
     return {
       permissions: [...permissions],
       overrides,
+      isOwner,
     };
   }
 }

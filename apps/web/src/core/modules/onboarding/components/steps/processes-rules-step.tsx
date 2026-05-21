@@ -20,7 +20,7 @@ export function ProcessesRulesStep({ form }: Props) {
       <div>
         <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Processos e regras internas</h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Estas informações garantem que o Company OS respeitará como sua empresa opera.
+          Estas informações garantem que o Workana AI respeitará como sua empresa opera.
         </p>
       </div>
       <div className="space-y-4">

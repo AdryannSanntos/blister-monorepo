@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { useOrganizationMembers } from "src/core/modules/organization/hooks/use-members";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
@@ -368,6 +369,7 @@ function DeleteWorkspaceDialog({
 export function SettingsPage() {
   const { activeOrgId } = useActiveOrganization();
   const { data: session } = authClient.useSession();
+  const { cannot, isLoading: abilityLoading } = useAbility();
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -381,6 +383,16 @@ export function SettingsPage() {
     },
     enabled: Boolean(activeOrgId),
   });
+
+  if (!abilityLoading && cannot("update", "Company")) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[13px] text-[var(--fg-tertiary)]">
+          Você não tem permissão para acessar esta página.
+        </p>
+      </div>
+    );
+  }
 
   if (isLoading || !org || !activeOrgId) {
     return (

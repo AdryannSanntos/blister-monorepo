@@ -60,7 +60,7 @@ const STEP_LABELS = [
 ];
 
 const STEP_DESCRIPTIONS = [
-  "Conheça o Company OS",
+  "Conheça o Workana AI",
   "Nome, segmento e site",
   "Missão, visão e proposta",
   "Produtos e precificação",
@@ -161,7 +161,7 @@ async function save(step: number) {
     try {
       await save(currentStep);
       await publishMutation.mutateAsync(session.user.id);
-      toast.success("Company Brain publicado com sucesso!");
+      toast.success("Brain publicado com sucesso!");
       router.push("/dashboard");
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: unknown } } };
@@ -198,12 +198,12 @@ async function save(step: number) {
           <div className="flex size-7 items-center justify-center rounded-[var(--r-sm)] bg-primary text-primary-foreground text-[12px] font-semibold">
             C
           </div>
-          <span className="text-[13px] font-medium text-[var(--fg-primary)]">Company OS</span>
+          <span className="text-[13px] font-medium text-[var(--fg-primary)]">Workana AI</span>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           <p className="mb-3 px-3 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)]">
-            Company Brain
+            Brain
           </p>
           <ul className="space-y-0.5">
             {STEP_KEYS.map((key, index) => {
@@ -282,7 +282,7 @@ async function save(step: number) {
             </Button>
             {isLastStep ? (
               <Button onClick={handlePublish} disabled={publishMutation.isPending}>
-                {publishMutation.isPending ? "Publicando..." : "Publicar Company Brain"}
+                {publishMutation.isPending ? "Publicando..." : "Publicar Brain"}
               </Button>
             ) : (
               <Button onClick={handleNext} disabled={saveMutation.isPending}>

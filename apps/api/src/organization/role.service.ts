@@ -34,12 +34,20 @@ export class RoleService {
     return roles;
   }
 
+  private mapRole<T extends { permissions: Array<{ key: string }> }>(role: T) {
+    return {
+      ...role,
+      permissions: role.permissions.map((p) => p.key as AppPermissionKey),
+    };
+  }
+
   async findByOrganization(organizationId: string) {
-    return this.prisma.role.findMany({
+    const roles = await this.prisma.role.findMany({
       where: { organizationId },
       include: { permissions: true },
       orderBy: { createdAt: 'asc' },
     });
+    return roles.map((r) => this.mapRole(r));
   }
 
   async findById(roleId: string) {
@@ -52,14 +60,15 @@ export class RoleService {
       throw new NotFoundException('Role not found');
     }
 
-    return role;
+    return this.mapRole(role);
   }
 
   async findSystemRole(organizationId: string, name: string) {
-    return this.prisma.role.findUnique({
+    const role = await this.prisma.role.findUnique({
       where: { organizationId_name: { organizationId, name } },
       include: { permissions: true },
     });
+    return role ? this.mapRole(role) : null;
   }
 
   async create(organizationId: string, dto: CreateRoleDto) {
@@ -71,7 +80,7 @@ export class RoleService {
       throw new ConflictException(`Role "${dto.name}" already exists in this organization`);
     }
 
-    return this.prisma.role.create({
+    const role = await this.prisma.role.create({
       data: {
         organizationId,
         name: dto.name,
@@ -82,6 +91,7 @@ export class RoleService {
       },
       include: { permissions: true },
     });
+    return this.mapRole(role);
   }
 
   async update(roleId: string, dto: CreateRoleDto) {
@@ -91,7 +101,7 @@ export class RoleService {
       throw new ConflictException('Cannot modify a system role');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const updated = await this.prisma.$transaction(async (tx) => {
       await tx.rolePermission.deleteMany({ where: { roleId } });
 
       return tx.role.update({
@@ -105,6 +115,7 @@ export class RoleService {
         include: { permissions: true },
       });
     });
+    return this.mapRole(updated);
   }
 
   async delete(roleId: string) {

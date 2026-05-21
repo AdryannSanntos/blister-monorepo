@@ -1,34 +1,34 @@
-# AI Company OS Docs
+# Workana AI Docs
 
-Esta pasta concentra a documentacao viva do monorepo e substitui referencias genericas por contexto real do produto, da stack e do estado atual da implementacao.
+Esta pasta concentra a documentação viva do Workana AI e substitui referências genéricas por contexto real do produto, da stack e do estado atual da implementação.
+
+## Fonte de Verdade
+
+1. `docs/prd/workana-ai-master.md` — documento mestre de produto, escopo, UX e identidade
+2. `CLAUDE.md` — regras operacionais obrigatórias do monorepo
+3. `docs/decisions/stack-decisions.md` — decisões técnicas aprovadas
+4. `docs/decisions/execution-order.md` — ordem de execução do produto
+5. `docs/design-system/README.md` — sistema visual e tokens oficiais
+6. `docs/skills/README.md` — skills operacionais para agentes
 
 ## Estrutura
 
-- `context/`: estado atual do projeto, limites tecnicos e responsabilidades por app/pacote
-- `prd/`: PRD alinhado ao produto e analises de aderencia entre visao e implementacao atual
-- `plans/`: planos de implementacao aprovados para epicos e fundacoes do produto
-- `decisions/`: decisoes arquiteturais e padroes obrigatorios da stack
-- `design-system/`: tokens, componentes, padroes visuais e mapa da rota `/design-system`
-- `examples/`: referencias de codigo e exemplos removidos da interface principal, preservados para consulta
-- `setup/`: setup local, scripts e proximos passos da fundacao
-- `skills/`: skills operacionais para IA trabalhar no projeto com contexto e padroes corretos
+- `context/`: estado atual do projeto e limites técnicos
+- `prd/`: visão de produto, documento mestre e análises de aderência
+- `plans/`: planos aprovados de implementação
+- `decisions/`: decisões arquiteturais e padrões obrigatórios da stack
+- `design-system/`: tokens, componentes, padrões visuais e mapa da rota `/design-system`
+- `examples/`: referências de código e exemplos preservados para consulta
+- `setup/`: setup local, deploy e observações operacionais
+- `skills/`: instruções para IA trabalhar no projeto com contexto correto
+- `superpowers/`: specs e planos históricos de execução; não são fonte de verdade atual quando divergirem dos arquivos acima
 
-## Leitura Recomendada
+## Produto
 
-1. `docs/prd/ai-company-os-prd.md`
-2. `docs/prd/prd-gap-analysis.md`
-3. `docs/prd/2026-05-14-auth-org-onboarding-foundation-prd.md`
-4. `docs/context/2026-05-13-monorepo-foundation-design.md`
-5. `docs/decisions/stack-decisions.md`
-6. `docs/plans/2026-05-14-auth-org-onboarding-foundation-plan.md`
-7. `docs/design-system/README.md`
-8. `docs/skills/README.md`
-9. `docs/setup/local-development.md`
+Workana AI é uma camada de inteligência para empresas que coordenam trabalho com freelancers, fornecedores e times remotos. O produto organiza contexto, briefings, demandas, agentes de IA, créditos, equipe, permissões e integrações dentro de um workspace por empresa.
+
+Termos oficiais de UI: Workspace, Company, Brain, Agentes, Créditos, Integrações.
 
 ## Regra Geral
 
-Quando houver divergencia entre uma expectativa de produto e o codigo atual, a documentacao deve deixar isso explicito. Este repositorio ainda esta na fase de fundacao tecnica e nao contem os modulos finais de negocio descritos no PRD.
-
-O mesmo vale para o design system: a referencia final deve refletir primeiro o codigo real do `apps/web` e a rota `/design-system`.
-
-No frontend, a prioridade deve ser sempre encapsular comportamento em hooks antes de espalhar logica em paginas ou componentes. Requisicoes de dados devem usar `TanStack Query` como regra padrao do projeto.
+Quando houver divergência entre documentação histórica e código atual, a fonte de verdade é: código implementado, `CLAUDE.md`, documento mestre e decisões atuais. Planos antigos devem ser lidos como registro histórico, não como contrato vigente.

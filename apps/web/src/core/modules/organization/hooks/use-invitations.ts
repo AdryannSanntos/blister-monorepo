@@ -14,7 +14,14 @@ export type Invitation = {
   createdAt: string;
 };
 
-export function useInvitations(orgId: string | null) {
+type InvitationsQueryOptions = {
+  enabled?: boolean;
+};
+
+export function useInvitations(
+  orgId: string | null,
+  options?: InvitationsQueryOptions,
+) {
   return useQuery<Invitation[]>({
     queryKey: ["invitations", orgId],
     queryFn: async () => {
@@ -23,7 +30,7 @@ export function useInvitations(orgId: string | null) {
       );
       return data;
     },
-    enabled: Boolean(orgId),
+    enabled: (options?.enabled ?? true) && Boolean(orgId),
   });
 }
 

@@ -5,14 +5,13 @@ export function HomePage() {
     <main className="min-h-screen bg-[var(--bg-canvas)] px-6 py-16 text-[var(--fg-primary)]">
       <div className="mx-auto flex max-w-4xl flex-col gap-6">
         <p className="text-sm uppercase tracking-[0.24em] text-[var(--fg-tertiary)]">
-          AI Company OS
+          Workana AI
         </p>
         <h1 className="text-4xl font-semibold tracking-tight">
-          Base do monorepo pronta para evoluir o produto.
+          Workspace inteligente para operar com freelancers e times remotos.
         </h1>
         <p className="max-w-2xl text-base text-[var(--fg-secondary)]">
-          O frontend segue a estrutura `core/shared` e `core/modules`, com a
-          stack preferencial do projeto preparada desde o bootstrap.
+          Centralize brain da empresa, agentes de IA, créditos, equipe e integrações em uma experiência operacional premium.
         </p>
         <div>
           <a

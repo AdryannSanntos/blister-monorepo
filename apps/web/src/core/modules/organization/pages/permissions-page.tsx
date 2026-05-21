@@ -1,28 +1,23 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { AppPermissionKey } from "@company-os/authz";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Edit2, Plus, Shield, Trash2, TriangleAlert } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { AppPermissionKey } from '@company-os/authz';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { Edit2, Plus, Shield, Trash2, TriangleAlert } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { useAbility } from "src/core/modules/organization/hooks/use-ability";
-import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { useAbility } from 'src/core/modules/organization/hooks/use-ability';
+import { useActiveOrganization } from 'src/core/modules/organization/hooks/use-active-organization';
 import {
   type OrgRole,
   useCreateRole,
   useDeleteRole,
   useOrganizationRoles,
   useUpdateRole,
-} from "src/core/modules/organization/hooks/use-roles";
-import { PermissionGate } from "src/core/shared/components/permission-gate";
+} from 'src/core/modules/organization/hooks/use-roles';
+import { PermissionGate } from 'src/core/shared/components/permission-gate';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,10 +27,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "src/core/shared/components/ui/alert-dialog";
-import { Badge } from "src/core/shared/components/ui/badge";
-import { Button } from "src/core/shared/components/ui/button";
-import { Checkbox } from "src/core/shared/components/ui/checkbox";
+} from 'src/core/shared/components/ui/alert-dialog';
+import { Badge } from 'src/core/shared/components/ui/badge';
+import { Button } from 'src/core/shared/components/ui/button';
+import { Checkbox } from 'src/core/shared/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -43,7 +38,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "src/core/shared/components/ui/dialog";
+} from 'src/core/shared/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -51,8 +46,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "src/core/shared/components/ui/form";
-import { Input } from "src/core/shared/components/ui/input";
+} from 'src/core/shared/components/ui/form';
+import { Input } from 'src/core/shared/components/ui/input';
 import {
   Table,
   TableBody,
@@ -60,8 +55,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "src/core/shared/components/ui/table";
-import { cn } from "src/core/shared/utils";
+} from 'src/core/shared/components/ui/table';
+import { cn } from 'src/core/shared/utils';
 
 const PERMISSION_GROUPS: {
   label: string;
@@ -69,69 +64,77 @@ const PERMISSION_GROUPS: {
   destructive?: AppPermissionKey[];
 }[] = [
   {
-    label: "Empresa",
-    permissions: ["company.read", "company.update", "company.delete"],
-    destructive: ["company.delete"],
+    label: 'Empresa',
+    permissions: ['company.read', 'company.update', 'company.delete'],
+    destructive: ['company.delete'],
   },
   {
-    label: "Membros",
+    label: 'Membros',
+    permissions: ['member.read', 'member.invite', 'member.update', 'member.remove'],
+  },
+  {
+    label: 'Cargos',
+    permissions: ['role.read', 'role.create', 'role.update', 'role.delete'],
+    destructive: ['role.delete'],
+  },
+  {
+    label: 'Brain',
+    permissions: ['brain.read', 'brain.update'],
+  },
+  {
+    label: 'Assets',
     permissions: [
-      "member.read",
-      "member.invite",
-      "member.update",
-      "member.remove",
+      'asset.read',
+      'asset.create',
+      'asset.update',
+      'asset.archive',
+      'asset.context.review',
     ],
+    destructive: ['asset.archive'],
   },
   {
-    label: "Cargos",
+    label: 'Agentes e execuções',
     permissions: [
-      "role.read",
-      "role.create",
-      "role.update",
-      "role.delete",
-    ],
-    destructive: ["role.delete"],
-  },
-  {
-    label: "Brain",
-    permissions: ["brain.read", "brain.update"],
-  },
-  {
-    label: "Skills & Outputs",
-    permissions: [
-      "skill.read",
-      "skill.execute",
-      "output.read",
-      "output.review",
+      'skill.read',
+      'skill.execute',
+      'output.read',
+      'output.review',
+      'integration.read',
     ],
   },
 ];
 
 function permissionLabel(key: AppPermissionKey): string {
   const labels: Record<string, string> = {
-    "company.read": "Visualizar empresa",
-    "company.update": "Editar empresa",
-    "company.delete": "Deletar empresa",
-    "member.read": "Visualizar membros",
-    "member.invite": "Convidar membros",
-    "member.update": "Editar membros",
-    "member.remove": "Remover membros",
-    "role.read": "Visualizar cargos",
-    "role.create": "Criar cargos",
-    "role.update": "Editar cargos",
-    "role.delete": "Deletar cargos",
-    "brain.read": "Visualizar brain",
-    "brain.update": "Editar brain",
-    "skill.read": "Visualizar skills",
-    "skill.execute": "Executar skills",
-    "output.read": "Visualizar outputs",
-    "output.review": "Revisar outputs",
+    'company.read': 'Visualizar empresa',
+    'company.update': 'Editar empresa',
+    'company.delete': 'Deletar empresa',
+    'member.read': 'Visualizar membros',
+    'member.invite': 'Convidar membros',
+    'member.update': 'Editar membros',
+    'member.remove': 'Remover membros',
+    'role.read': 'Visualizar cargos',
+    'role.create': 'Criar cargos',
+    'role.update': 'Editar cargos',
+    'role.delete': 'Deletar cargos',
+    'brain.read': 'Visualizar brain',
+    'brain.update': 'Editar brain',
+    'asset.read': 'Visualizar assets',
+    'asset.create': 'Criar assets',
+    'asset.update': 'Editar assets',
+    'asset.archive': 'Arquivar assets',
+    'asset.context.review': 'Revisar contexto de assets',
+    'skill.read': 'Visualizar skills',
+    'skill.execute': 'Executar skills',
+    'output.read': 'Visualizar outputs',
+    'output.review': 'Revisar outputs',
+    'integration.read': 'Visualizar integrações',
   };
   return labels[key] ?? key;
 }
 
 const roleFormSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   permissions: z.array(z.string()),
 });
 
@@ -151,16 +154,16 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
 
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
-    mode: "onBlur",
+    mode: 'onBlur',
     defaultValues: {
-      name: role?.name ?? "",
+      name: role?.name ?? '',
       permissions: role?.permissions ?? [],
     },
   });
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
-      form.reset({ name: "", permissions: [] });
+      form.reset({ name: '', permissions: [] });
     } else if (role) {
       form.reset({ name: role.name, permissions: role.permissions });
     }
@@ -191,11 +194,11 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Editar cargo" : "Criar cargo"}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Editar cargo' : 'Criar cargo'}</DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Atualize o nome e as permissões deste cargo."
-              : "Defina o nome e as permissões do novo cargo."}
+              ? 'Atualize o nome e as permissões deste cargo.'
+              : 'Defina o nome e as permissões do novo cargo.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -229,38 +232,27 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
                         </p>
                         <div className="space-y-2">
                           {group.permissions.map((perm) => {
-                            const isDestructive =
-                              group.destructive?.includes(perm);
+                            const isDestructive = group.destructive?.includes(perm);
                             return (
-                              <div
-                                key={perm}
-                                className="flex items-center gap-2"
-                              >
+                              <div key={perm} className="flex items-center gap-2">
                                 <Checkbox
                                   id={perm}
                                   checked={field.value.includes(perm)}
                                   onCheckedChange={(checked) => {
                                     if (checked) {
-                                      field.onChange([
-                                        ...field.value,
-                                        perm,
-                                      ]);
+                                      field.onChange([...field.value, perm]);
                                     } else {
-                                      field.onChange(
-                                        field.value.filter(
-                                          (p) => p !== perm,
-                                        ),
-                                      );
+                                      field.onChange(field.value.filter((p) => p !== perm));
                                     }
                                   }}
                                 />
                                 <label
                                   htmlFor={perm}
                                   className={cn(
-                                    "flex cursor-pointer items-center gap-1.5 text-[13px]",
+                                    'flex cursor-pointer items-center gap-1.5 text-[13px]',
                                     isDestructive
-                                      ? "text-[var(--danger)]"
-                                      : "text-[var(--fg-secondary)]",
+                                      ? 'text-[var(--danger)]'
+                                      : 'text-[var(--fg-secondary)]',
                                   )}
                                 >
                                   {permissionLabel(perm)}
@@ -281,19 +273,11 @@ function RoleDialog({ open, onOpenChange, orgId, role }: RoleDialogProps) {
             />
 
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                 Cancelar
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending
-                  ? "Salvando..."
-                  : isEdit
-                    ? "Salvar alterações"
-                    : "Criar cargo"}
+                {isPending ? 'Salvando...' : isEdit ? 'Salvar alterações' : 'Criar cargo'}
               </Button>
             </DialogFooter>
           </form>
@@ -313,8 +297,8 @@ type RolesTableProps = {
 function RolesTable({ roles, onEdit, onDelete, deleteIsPending }: RolesTableProps) {
   const columns: ColumnDef<OrgRole>[] = [
     {
-      id: "name",
-      header: "Cargo",
+      id: 'name',
+      header: 'Cargo',
       cell: ({ row }) => {
         const role = row.original;
         return (
@@ -323,9 +307,7 @@ function RolesTable({ roles, onEdit, onDelete, deleteIsPending }: RolesTableProp
               <Shield className="size-3.5 text-[var(--fg-tertiary)]" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-medium text-[var(--fg-primary)]">
-                {role.name}
-              </span>
+              <span className="text-[13px] font-medium text-[var(--fg-primary)]">{role.name}</span>
               {role.isSystem && (
                 <Badge variant="secondary" className="text-[11px]">
                   Sistema
@@ -337,8 +319,8 @@ function RolesTable({ roles, onEdit, onDelete, deleteIsPending }: RolesTableProp
       },
     },
     {
-      id: "permissions",
-      header: "Permissões",
+      id: 'permissions',
+      header: 'Permissões',
       cell: ({ row }) => {
         const perms = row.original.permissions;
         if (perms.length === 0) {
@@ -363,8 +345,8 @@ function RolesTable({ roles, onEdit, onDelete, deleteIsPending }: RolesTableProp
       },
     },
     {
-      id: "actions",
-      header: "",
+      id: 'actions',
+      header: '',
       cell: ({ row }) => {
         const role = row.original;
         if (role.isSystem) return null;
@@ -456,7 +438,7 @@ export function PermissionsPage() {
   const [editingRole, setEditingRole] = useState<OrgRole | null>(null);
   const [roleToDelete, setRoleToDelete] = useState<OrgRole | null>(null);
 
-  if (!abilityLoading && cannot("read", "Role")) {
+  if (!abilityLoading && cannot('read', 'Role')) {
     return (
       <div className="flex h-40 items-center justify-center">
         <p className="text-[13px] text-[var(--fg-tertiary)]">
@@ -470,9 +452,7 @@ export function PermissionsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--fg-primary)]">
-            Permissões
-          </h1>
+          <h1 className="text-2xl font-semibold text-[var(--fg-primary)]">Permissões</h1>
           <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
             Gerencie os cargos e permissões do workspace.
           </p>
@@ -523,9 +503,8 @@ export function PermissionsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir cargo</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir o cargo{" "}
-              <strong>{roleToDelete?.name}</strong>? Membros sem outros
-              cargos perderão acesso ao workspace.
+              Tem certeza que deseja excluir o cargo <strong>{roleToDelete?.name}</strong>? Membros
+              sem outros cargos perderão acesso ao workspace.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -539,7 +518,7 @@ export function PermissionsPage() {
               }}
               disabled={deleteRole.isPending}
             >
-              {deleteRole.isPending ? "Excluindo..." : "Excluir cargo"}
+              {deleteRole.isPending ? 'Excluindo...' : 'Excluir cargo'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

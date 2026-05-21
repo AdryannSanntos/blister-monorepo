@@ -8,22 +8,32 @@ import {
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { MoreHorizontal, UserPlus } from "lucide-react";
-import { useState } from "react";
-
-import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import {
-  type OrganizationMember,
-  useOrganizationMembers,
-  useRemoveMember,
-} from "src/core/modules/organization/hooks/use-members";
+  Check,
+  ChevronsUpDown,
+  MoreHorizontal,
+  UserCheck,
+  UserPlus,
+  UserX,
+} from "lucide-react";
+import { useState } from "react";
+import { CreateInviteDialog } from "src/core/modules/organization/components/create-invite-dialog";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
+import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import {
   type Invitation,
   useCancelInvitation,
   useInvitations,
 } from "src/core/modules/organization/hooks/use-invitations";
+import {
+  type OrganizationMember,
+  useActivateMember,
+  useDeactivateMember,
+  useOrganizationMembers,
+  useRemoveMember,
+  useUpdateMemberRoles,
+} from "src/core/modules/organization/hooks/use-members";
 import { useOrganizationRoles } from "src/core/modules/organization/hooks/use-roles";
-import { CreateInviteDialog } from "src/core/modules/organization/components/create-invite-dialog";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
 import {
   AlertDialog,
@@ -35,15 +45,40 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "src/core/shared/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "src/core/shared/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "src/core/shared/components/ui/avatar";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "src/core/shared/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "src/core/shared/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "src/core/shared/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -111,12 +146,41 @@ function invitationStatusVariant(
 type MembersTableProps = {
   members: OrganizationMember[];
   orgId: string;
+  roles: { id: string; name: string }[];
 };
 
-function MembersTable({ members, orgId }: MembersTableProps) {
+function MembersTable({ members, orgId, roles }: MembersTableProps) {
   const removeMember = useRemoveMember(orgId);
+  const updateRoles = useUpdateMemberRoles(orgId);
+  const deactivate = useDeactivateMember(orgId);
+  const activate = useActivateMember(orgId);
+
   const [memberToRemove, setMemberToRemove] =
     useState<OrganizationMember | null>(null);
+  const [memberToToggle, setMemberToToggle] =
+    useState<OrganizationMember | null>(null);
+  const [memberToEditRoles, setMemberToEditRoles] =
+    useState<OrganizationMember | null>(null);
+  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
+  const [rolesPopoverOpen, setRolesPopoverOpen] = useState(false);
+
+  function openEditRoles(member: OrganizationMember) {
+    setSelectedRoleIds(member.roles.map((r) => r.roleId));
+    setMemberToEditRoles(member);
+    setRolesPopoverOpen(false);
+  }
+
+  function toggleRole(roleId: string) {
+    setSelectedRoleIds((prev) =>
+      prev.includes(roleId)
+        ? prev.filter((id) => id !== roleId)
+        : [...prev, roleId],
+    );
+  }
+
+  function getRoleName(roleId: string): string {
+    return roles.find((role) => role.id === roleId)?.name ?? roleId;
+  }
 
   const columns: ColumnDef<OrganizationMember>[] = [
     {
@@ -128,8 +192,13 @@ function MembersTable({ members, orgId }: MembersTableProps) {
         return (
           <div className="flex items-center gap-3">
             <Avatar className="size-8">
-              <AvatarImage src={member.user.image ?? undefined} alt={member.user.name ?? member.user.email} />
-              <AvatarFallback className="text-[11px]">{initials}</AvatarFallback>
+              <AvatarImage
+                src={member.user.image ?? undefined}
+                alt={member.user.name ?? member.user.email}
+              />
+              <AvatarFallback className="text-[11px]">
+                {initials}
+              </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
               <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
@@ -147,20 +216,36 @@ function MembersTable({ members, orgId }: MembersTableProps) {
       id: "roles",
       header: "Cargos",
       cell: ({ row }) => {
-        const { roles } = row.original;
-        if (!roles || roles.length === 0) {
+        const { roles: memberRoles } = row.original;
+        if (!memberRoles || memberRoles.length === 0) {
           return (
             <span className="text-[12px] text-[var(--fg-tertiary)]">—</span>
           );
         }
         return (
           <div className="flex flex-wrap gap-1">
-            {roles.map((r) => (
+            {memberRoles.map((r) => (
               <Badge key={r.id} variant="secondary">
                 {r.role.name}
               </Badge>
             ))}
           </div>
+        );
+      },
+    },
+    {
+      id: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const { active } = row.original;
+        return active ? null : (
+          <Badge
+            variant="secondary"
+            className="gap-1 text-[var(--fg-tertiary)]"
+          >
+            <UserX className="size-3" />
+            Desativado
+          </Badge>
         );
       },
     },
@@ -179,7 +264,7 @@ function MembersTable({ members, orgId }: MembersTableProps) {
       cell: ({ row }) => {
         const member = row.original;
         return (
-          <PermissionGate permission="member.remove">
+          <PermissionGate permission="member.update">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon-sm" aria-label="Ações">
@@ -187,12 +272,31 @@ function MembersTable({ members, orgId }: MembersTableProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="text-[var(--danger)]"
-                  onClick={() => setMemberToRemove(member)}
-                >
-                  Remover membro
+                <DropdownMenuItem onClick={() => openEditRoles(member)}>
+                  Editar cargos
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setMemberToToggle(member)}>
+                  {member.active ? (
+                    <span className="flex items-center gap-2">
+                      <UserX className="size-3.5" />
+                      Desativar membro
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <UserCheck className="size-3.5" />
+                      Reativar membro
+                    </span>
+                  )}
+                </DropdownMenuItem>
+                <PermissionGate permission="member.remove">
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-[var(--danger)]"
+                    onClick={() => setMemberToRemove(member)}
+                  >
+                    Remover membro
+                  </DropdownMenuItem>
+                </PermissionGate>
               </DropdownMenuContent>
             </DropdownMenu>
           </PermissionGate>
@@ -230,7 +334,11 @@ function MembersTable({ members, orgId }: MembersTableProps) {
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  data-inactive={!row.original.active || undefined}
+                  className="data-[inactive]:opacity-60"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -255,6 +363,167 @@ function MembersTable({ members, orgId }: MembersTableProps) {
         </Table>
       </div>
 
+      {/* Dialog: editar cargos */}
+      <Dialog
+        open={Boolean(memberToEditRoles)}
+        onOpenChange={(open) => !open && setMemberToEditRoles(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar cargos</DialogTitle>
+            <DialogDescription>
+              Selecione os cargos de{" "}
+              <strong>
+                {memberToEditRoles?.user.name ?? memberToEditRoles?.user.email}
+              </strong>
+              .
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 py-2">
+            <div className="space-y-2">
+              <p className="text-[12px] font-medium text-[var(--fg-secondary)]">
+                Cargos atribuídos
+              </p>
+              <Popover
+                open={rolesPopoverOpen}
+                onOpenChange={setRolesPopoverOpen}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="h-auto min-h-11 w-full justify-between rounded-[var(--r-md)] border-[var(--line-default)] bg-[var(--bg-base)] px-3 py-2 text-left hover:bg-[var(--bg-hover)]"
+                  >
+                    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+                      {selectedRoleIds.length > 0 ? (
+                        selectedRoleIds.map((roleId) => (
+                          <Badge
+                            key={roleId}
+                            variant="secondary"
+                            className="max-w-full truncate"
+                          >
+                            {getRoleName(roleId)}
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-[13px] text-[var(--fg-tertiary)]">
+                          Selecionar cargos...
+                        </span>
+                      )}
+                    </div>
+                    <ChevronsUpDown className="size-4 shrink-0 text-[var(--fg-tertiary)]" />
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent
+                  align="start"
+                  className="w-[var(--radix-popover-trigger-width)] min-w-80 p-0"
+                >
+                  <Command className="bg-[var(--bg-overlay)]">
+                    <CommandInput placeholder="Buscar cargo..." />
+                    <CommandList>
+                      <CommandEmpty>Nenhum cargo encontrado.</CommandEmpty>
+                      {roles.map((role) => {
+                        const isSelected = selectedRoleIds.includes(role.id);
+
+                        return (
+                          <CommandItem
+                            key={role.id}
+                            value={`${role.name} ${role.id}`}
+                            onSelect={() => toggleRole(role.id)}
+                            className="gap-3"
+                          >
+                            <span className="flex size-4 items-center justify-center">
+                              {isSelected ? <Check className="size-4" /> : null}
+                            </span>
+                            <div className="flex min-w-0 flex-1 flex-col">
+                              <span className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
+                                {role.name}
+                              </span>
+                              <span className="text-[11.5px] text-[var(--fg-tertiary)]">
+                                {isSelected
+                                  ? "Selecionado"
+                                  : "Clique para adicionar"}
+                              </span>
+                            </div>
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <p className="text-[12px] text-[var(--fg-tertiary)]">
+              Escolha um ou mais cargos. Clique novamente em um cargo para
+              removê-lo.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setMemberToEditRoles(null)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              disabled={selectedRoleIds.length === 0 || updateRoles.isPending}
+              onClick={async () => {
+                if (!memberToEditRoles) return;
+                await updateRoles.mutateAsync({
+                  membershipId: memberToEditRoles.id,
+                  roleIds: selectedRoleIds,
+                });
+                setMemberToEditRoles(null);
+              }}
+            >
+              {updateRoles.isPending ? "Salvando..." : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Alert: desativar / reativar */}
+      <AlertDialog
+        open={Boolean(memberToToggle)}
+        onOpenChange={(open) => !open && setMemberToToggle(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {memberToToggle?.active ? "Desativar membro" : "Reativar membro"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {memberToToggle?.active
+                ? `Desativar ${memberToToggle?.user.name ?? memberToToggle?.user.email} impedirá o acesso ao workspace, mas o histórico será preservado.`
+                : `Reativar ${memberToToggle?.user.name ?? memberToToggle?.user.email} restaurará o acesso ao workspace.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (!memberToToggle) return;
+                if (memberToToggle.active) {
+                  await deactivate.mutateAsync(memberToToggle.id);
+                } else {
+                  await activate.mutateAsync(memberToToggle.id);
+                }
+                setMemberToToggle(null);
+              }}
+              disabled={deactivate.isPending || activate.isPending}
+            >
+              {deactivate.isPending || activate.isPending
+                ? "Salvando..."
+                : memberToToggle?.active
+                  ? "Desativar"
+                  : "Reativar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Alert: remover */}
       <AlertDialog
         open={Boolean(memberToRemove)}
         onOpenChange={(open) => !open && setMemberToRemove(null)}
@@ -371,12 +640,23 @@ function InvitesTable({ invitations, orgId, roles }: InvitesTableProps) {
 export function TeamPage() {
   const { data: session } = authClient.useSession();
   const { activeOrgId } = useActiveOrganization();
+  const { cannot, isLoading: abilityLoading } = useAbility();
   const { data: members = [], isLoading: membersLoading } =
     useOrganizationMembers(activeOrgId);
   const { data: invitations = [], isLoading: invitesLoading } =
     useInvitations(activeOrgId);
   const { data: roles = [] } = useOrganizationRoles(activeOrgId);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+
+  if (!abilityLoading && cannot("read", "Member")) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <p className="text-[13px] text-[var(--fg-tertiary)]">
+          Você não tem permissão para acessar esta página.
+        </p>
+      </div>
+    );
+  }
 
   const inviterId = session?.user?.id ?? "";
 
@@ -400,7 +680,7 @@ export function TeamPage() {
       </div>
 
       <Tabs defaultValue="members">
-        <TabsList>
+        <TabsList variant="underline">
           <TabsTrigger value="members">
             Membros{" "}
             {!membersLoading && members.length > 0 && (
@@ -425,7 +705,11 @@ export function TeamPage() {
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
             </div>
           ) : (
-            <MembersTable members={members} orgId={activeOrgId ?? ""} />
+            <MembersTable
+              members={members}
+              orgId={activeOrgId ?? ""}
+              roles={roles}
+            />
           )}
         </TabsContent>
 
