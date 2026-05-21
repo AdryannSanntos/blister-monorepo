@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuditModule } from './audit/audit.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { AssetsModule } from './assets/assets.module';
@@ -12,6 +13,7 @@ import { EmailModule } from './email';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { PermissionGuard } from './organization/guards/permission.guard';
 import { OrganizationModule } from './organization/organization.module';
+import { PlatformModule } from './platform/platform.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -25,6 +27,8 @@ import { PrismaModule } from './prisma/prisma.module';
     AssetsModule,
     ContextModule,
     DesignSystemModule,
+    PlatformModule,
+    AuditModule,
   ],
   controllers: [AppController],
   providers: [

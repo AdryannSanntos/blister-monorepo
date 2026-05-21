@@ -113,6 +113,21 @@ export type DesignColorToken = $Result.DefaultSelection<Prisma.$DesignColorToken
  * 
  */
 export type DesignAsset = $Result.DefaultSelection<Prisma.$DesignAssetPayload>
+/**
+ * Model PlatformRoleAssignment
+ * 
+ */
+export type PlatformRoleAssignment = $Result.DefaultSelection<Prisma.$PlatformRoleAssignmentPayload>
+/**
+ * Model SupportSession
+ * 
+ */
+export type SupportSession = $Result.DefaultSelection<Prisma.$SupportSessionPayload>
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -431,6 +446,36 @@ export class PrismaClient<
     * ```
     */
   get designAsset(): Prisma.DesignAssetDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.platformRoleAssignment`: Exposes CRUD operations for the **PlatformRoleAssignment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PlatformRoleAssignments
+    * const platformRoleAssignments = await prisma.platformRoleAssignment.findMany()
+    * ```
+    */
+  get platformRoleAssignment(): Prisma.PlatformRoleAssignmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.supportSession`: Exposes CRUD operations for the **SupportSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SupportSessions
+    * const supportSessions = await prisma.supportSession.findMany()
+    * ```
+    */
+  get supportSession(): Prisma.SupportSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AuditLogs
+    * const auditLogs = await prisma.auditLog.findMany()
+    * ```
+    */
+  get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -891,7 +936,10 @@ export namespace Prisma {
     DesignSystemProfile: 'DesignSystemProfile',
     DesignColorGroup: 'DesignColorGroup',
     DesignColorToken: 'DesignColorToken',
-    DesignAsset: 'DesignAsset'
+    DesignAsset: 'DesignAsset',
+    PlatformRoleAssignment: 'PlatformRoleAssignment',
+    SupportSession: 'SupportSession',
+    AuditLog: 'AuditLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -910,7 +958,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2394,6 +2442,228 @@ export namespace Prisma {
           }
         }
       }
+      PlatformRoleAssignment: {
+        payload: Prisma.$PlatformRoleAssignmentPayload<ExtArgs>
+        fields: Prisma.PlatformRoleAssignmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlatformRoleAssignmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlatformRoleAssignmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          findFirst: {
+            args: Prisma.PlatformRoleAssignmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlatformRoleAssignmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          findMany: {
+            args: Prisma.PlatformRoleAssignmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>[]
+          }
+          create: {
+            args: Prisma.PlatformRoleAssignmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          createMany: {
+            args: Prisma.PlatformRoleAssignmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlatformRoleAssignmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>[]
+          }
+          delete: {
+            args: Prisma.PlatformRoleAssignmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          update: {
+            args: Prisma.PlatformRoleAssignmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlatformRoleAssignmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlatformRoleAssignmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PlatformRoleAssignmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.PlatformRoleAssignmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlatformRoleAssignmentPayload>
+          }
+          aggregate: {
+            args: Prisma.PlatformRoleAssignmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlatformRoleAssignment>
+          }
+          groupBy: {
+            args: Prisma.PlatformRoleAssignmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlatformRoleAssignmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlatformRoleAssignmentCountArgs<ExtArgs>
+            result: $Utils.Optional<PlatformRoleAssignmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      SupportSession: {
+        payload: Prisma.$SupportSessionPayload<ExtArgs>
+        fields: Prisma.SupportSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SupportSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SupportSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.SupportSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SupportSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          findMany: {
+            args: Prisma.SupportSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>[]
+          }
+          create: {
+            args: Prisma.SupportSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          createMany: {
+            args: Prisma.SupportSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SupportSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.SupportSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          update: {
+            args: Prisma.SupportSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SupportSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SupportSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SupportSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.SupportSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.SupportSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSupportSession>
+          }
+          groupBy: {
+            args: Prisma.SupportSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SupportSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SupportSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<SupportSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      AuditLog: {
+        payload: Prisma.$AuditLogPayload<ExtArgs>
+        fields: Prisma.AuditLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AuditLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AuditLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          findFirst: {
+            args: Prisma.AuditLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AuditLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          findMany: {
+            args: Prisma.AuditLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+          }
+          create: {
+            args: Prisma.AuditLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          createMany: {
+            args: Prisma.AuditLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AuditLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+          }
+          delete: {
+            args: Prisma.AuditLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          update: {
+            args: Prisma.AuditLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.AuditLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AuditLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AuditLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.AuditLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AuditLogPayload>
+          }
+          aggregate: {
+            args: Prisma.AuditLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAuditLog>
+          }
+          groupBy: {
+            args: Prisma.AuditLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AuditLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AuditLogCountArgs<ExtArgs>
+            result: $Utils.Optional<AuditLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2510,6 +2780,9 @@ export namespace Prisma {
     designColorGroup?: DesignColorGroupOmit
     designColorToken?: DesignColorTokenOmit
     designAsset?: DesignAssetOmit
+    platformRoleAssignment?: PlatformRoleAssignmentOmit
+    supportSession?: SupportSessionOmit
+    auditLog?: AuditLogOmit
   }
 
   /* Types for Logging */
@@ -25782,6 +26055,3065 @@ export namespace Prisma {
 
 
   /**
+   * Model PlatformRoleAssignment
+   */
+
+  export type AggregatePlatformRoleAssignment = {
+    _count: PlatformRoleAssignmentCountAggregateOutputType | null
+    _min: PlatformRoleAssignmentMinAggregateOutputType | null
+    _max: PlatformRoleAssignmentMaxAggregateOutputType | null
+  }
+
+  export type PlatformRoleAssignmentMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    role: string | null
+    assignedBy: string | null
+    assignedAt: Date | null
+  }
+
+  export type PlatformRoleAssignmentMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    role: string | null
+    assignedBy: string | null
+    assignedAt: Date | null
+  }
+
+  export type PlatformRoleAssignmentCountAggregateOutputType = {
+    id: number
+    userId: number
+    role: number
+    assignedBy: number
+    assignedAt: number
+    _all: number
+  }
+
+
+  export type PlatformRoleAssignmentMinAggregateInputType = {
+    id?: true
+    userId?: true
+    role?: true
+    assignedBy?: true
+    assignedAt?: true
+  }
+
+  export type PlatformRoleAssignmentMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    role?: true
+    assignedBy?: true
+    assignedAt?: true
+  }
+
+  export type PlatformRoleAssignmentCountAggregateInputType = {
+    id?: true
+    userId?: true
+    role?: true
+    assignedBy?: true
+    assignedAt?: true
+    _all?: true
+  }
+
+  export type PlatformRoleAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlatformRoleAssignment to aggregate.
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlatformRoleAssignments to fetch.
+     */
+    orderBy?: PlatformRoleAssignmentOrderByWithRelationInput | PlatformRoleAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlatformRoleAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlatformRoleAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlatformRoleAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PlatformRoleAssignments
+    **/
+    _count?: true | PlatformRoleAssignmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlatformRoleAssignmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlatformRoleAssignmentMaxAggregateInputType
+  }
+
+  export type GetPlatformRoleAssignmentAggregateType<T extends PlatformRoleAssignmentAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlatformRoleAssignment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlatformRoleAssignment[P]>
+      : GetScalarType<T[P], AggregatePlatformRoleAssignment[P]>
+  }
+
+
+
+
+  export type PlatformRoleAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlatformRoleAssignmentWhereInput
+    orderBy?: PlatformRoleAssignmentOrderByWithAggregationInput | PlatformRoleAssignmentOrderByWithAggregationInput[]
+    by: PlatformRoleAssignmentScalarFieldEnum[] | PlatformRoleAssignmentScalarFieldEnum
+    having?: PlatformRoleAssignmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlatformRoleAssignmentCountAggregateInputType | true
+    _min?: PlatformRoleAssignmentMinAggregateInputType
+    _max?: PlatformRoleAssignmentMaxAggregateInputType
+  }
+
+  export type PlatformRoleAssignmentGroupByOutputType = {
+    id: string
+    userId: string
+    role: string
+    assignedBy: string
+    assignedAt: Date
+    _count: PlatformRoleAssignmentCountAggregateOutputType | null
+    _min: PlatformRoleAssignmentMinAggregateOutputType | null
+    _max: PlatformRoleAssignmentMaxAggregateOutputType | null
+  }
+
+  type GetPlatformRoleAssignmentGroupByPayload<T extends PlatformRoleAssignmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlatformRoleAssignmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlatformRoleAssignmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlatformRoleAssignmentGroupByOutputType[P]>
+            : GetScalarType<T[P], PlatformRoleAssignmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlatformRoleAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    role?: boolean
+    assignedBy?: boolean
+    assignedAt?: boolean
+  }, ExtArgs["result"]["platformRoleAssignment"]>
+
+  export type PlatformRoleAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    role?: boolean
+    assignedBy?: boolean
+    assignedAt?: boolean
+  }, ExtArgs["result"]["platformRoleAssignment"]>
+
+  export type PlatformRoleAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    role?: boolean
+    assignedBy?: boolean
+    assignedAt?: boolean
+  }, ExtArgs["result"]["platformRoleAssignment"]>
+
+  export type PlatformRoleAssignmentSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    role?: boolean
+    assignedBy?: boolean
+    assignedAt?: boolean
+  }
+
+  export type PlatformRoleAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "role" | "assignedBy" | "assignedAt", ExtArgs["result"]["platformRoleAssignment"]>
+
+  export type $PlatformRoleAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PlatformRoleAssignment"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      role: string
+      assignedBy: string
+      assignedAt: Date
+    }, ExtArgs["result"]["platformRoleAssignment"]>
+    composites: {}
+  }
+
+  type PlatformRoleAssignmentGetPayload<S extends boolean | null | undefined | PlatformRoleAssignmentDefaultArgs> = $Result.GetResult<Prisma.$PlatformRoleAssignmentPayload, S>
+
+  type PlatformRoleAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PlatformRoleAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PlatformRoleAssignmentCountAggregateInputType | true
+    }
+
+  export interface PlatformRoleAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PlatformRoleAssignment'], meta: { name: 'PlatformRoleAssignment' } }
+    /**
+     * Find zero or one PlatformRoleAssignment that matches the filter.
+     * @param {PlatformRoleAssignmentFindUniqueArgs} args - Arguments to find a PlatformRoleAssignment
+     * @example
+     * // Get one PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlatformRoleAssignmentFindUniqueArgs>(args: SelectSubset<T, PlatformRoleAssignmentFindUniqueArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PlatformRoleAssignment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PlatformRoleAssignmentFindUniqueOrThrowArgs} args - Arguments to find a PlatformRoleAssignment
+     * @example
+     * // Get one PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlatformRoleAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, PlatformRoleAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlatformRoleAssignment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentFindFirstArgs} args - Arguments to find a PlatformRoleAssignment
+     * @example
+     * // Get one PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlatformRoleAssignmentFindFirstArgs>(args?: SelectSubset<T, PlatformRoleAssignmentFindFirstArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PlatformRoleAssignment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentFindFirstOrThrowArgs} args - Arguments to find a PlatformRoleAssignment
+     * @example
+     * // Get one PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlatformRoleAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, PlatformRoleAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PlatformRoleAssignments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PlatformRoleAssignments
+     * const platformRoleAssignments = await prisma.platformRoleAssignment.findMany()
+     * 
+     * // Get first 10 PlatformRoleAssignments
+     * const platformRoleAssignments = await prisma.platformRoleAssignment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const platformRoleAssignmentWithIdOnly = await prisma.platformRoleAssignment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlatformRoleAssignmentFindManyArgs>(args?: SelectSubset<T, PlatformRoleAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PlatformRoleAssignment.
+     * @param {PlatformRoleAssignmentCreateArgs} args - Arguments to create a PlatformRoleAssignment.
+     * @example
+     * // Create one PlatformRoleAssignment
+     * const PlatformRoleAssignment = await prisma.platformRoleAssignment.create({
+     *   data: {
+     *     // ... data to create a PlatformRoleAssignment
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlatformRoleAssignmentCreateArgs>(args: SelectSubset<T, PlatformRoleAssignmentCreateArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PlatformRoleAssignments.
+     * @param {PlatformRoleAssignmentCreateManyArgs} args - Arguments to create many PlatformRoleAssignments.
+     * @example
+     * // Create many PlatformRoleAssignments
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlatformRoleAssignmentCreateManyArgs>(args?: SelectSubset<T, PlatformRoleAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PlatformRoleAssignments and returns the data saved in the database.
+     * @param {PlatformRoleAssignmentCreateManyAndReturnArgs} args - Arguments to create many PlatformRoleAssignments.
+     * @example
+     * // Create many PlatformRoleAssignments
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PlatformRoleAssignments and only return the `id`
+     * const platformRoleAssignmentWithIdOnly = await prisma.platformRoleAssignment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlatformRoleAssignmentCreateManyAndReturnArgs>(args?: SelectSubset<T, PlatformRoleAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PlatformRoleAssignment.
+     * @param {PlatformRoleAssignmentDeleteArgs} args - Arguments to delete one PlatformRoleAssignment.
+     * @example
+     * // Delete one PlatformRoleAssignment
+     * const PlatformRoleAssignment = await prisma.platformRoleAssignment.delete({
+     *   where: {
+     *     // ... filter to delete one PlatformRoleAssignment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlatformRoleAssignmentDeleteArgs>(args: SelectSubset<T, PlatformRoleAssignmentDeleteArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PlatformRoleAssignment.
+     * @param {PlatformRoleAssignmentUpdateArgs} args - Arguments to update one PlatformRoleAssignment.
+     * @example
+     * // Update one PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlatformRoleAssignmentUpdateArgs>(args: SelectSubset<T, PlatformRoleAssignmentUpdateArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PlatformRoleAssignments.
+     * @param {PlatformRoleAssignmentDeleteManyArgs} args - Arguments to filter PlatformRoleAssignments to delete.
+     * @example
+     * // Delete a few PlatformRoleAssignments
+     * const { count } = await prisma.platformRoleAssignment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlatformRoleAssignmentDeleteManyArgs>(args?: SelectSubset<T, PlatformRoleAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlatformRoleAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PlatformRoleAssignments
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlatformRoleAssignmentUpdateManyArgs>(args: SelectSubset<T, PlatformRoleAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PlatformRoleAssignments and returns the data updated in the database.
+     * @param {PlatformRoleAssignmentUpdateManyAndReturnArgs} args - Arguments to update many PlatformRoleAssignments.
+     * @example
+     * // Update many PlatformRoleAssignments
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PlatformRoleAssignments and only return the `id`
+     * const platformRoleAssignmentWithIdOnly = await prisma.platformRoleAssignment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PlatformRoleAssignmentUpdateManyAndReturnArgs>(args: SelectSubset<T, PlatformRoleAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PlatformRoleAssignment.
+     * @param {PlatformRoleAssignmentUpsertArgs} args - Arguments to update or create a PlatformRoleAssignment.
+     * @example
+     * // Update or create a PlatformRoleAssignment
+     * const platformRoleAssignment = await prisma.platformRoleAssignment.upsert({
+     *   create: {
+     *     // ... data to create a PlatformRoleAssignment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PlatformRoleAssignment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlatformRoleAssignmentUpsertArgs>(args: SelectSubset<T, PlatformRoleAssignmentUpsertArgs<ExtArgs>>): Prisma__PlatformRoleAssignmentClient<$Result.GetResult<Prisma.$PlatformRoleAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PlatformRoleAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentCountArgs} args - Arguments to filter PlatformRoleAssignments to count.
+     * @example
+     * // Count the number of PlatformRoleAssignments
+     * const count = await prisma.platformRoleAssignment.count({
+     *   where: {
+     *     // ... the filter for the PlatformRoleAssignments we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlatformRoleAssignmentCountArgs>(
+      args?: Subset<T, PlatformRoleAssignmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlatformRoleAssignmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PlatformRoleAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlatformRoleAssignmentAggregateArgs>(args: Subset<T, PlatformRoleAssignmentAggregateArgs>): Prisma.PrismaPromise<GetPlatformRoleAssignmentAggregateType<T>>
+
+    /**
+     * Group by PlatformRoleAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlatformRoleAssignmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlatformRoleAssignmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlatformRoleAssignmentGroupByArgs['orderBy'] }
+        : { orderBy?: PlatformRoleAssignmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlatformRoleAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlatformRoleAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PlatformRoleAssignment model
+   */
+  readonly fields: PlatformRoleAssignmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PlatformRoleAssignment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlatformRoleAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PlatformRoleAssignment model
+   */
+  interface PlatformRoleAssignmentFieldRefs {
+    readonly id: FieldRef<"PlatformRoleAssignment", 'String'>
+    readonly userId: FieldRef<"PlatformRoleAssignment", 'String'>
+    readonly role: FieldRef<"PlatformRoleAssignment", 'String'>
+    readonly assignedBy: FieldRef<"PlatformRoleAssignment", 'String'>
+    readonly assignedAt: FieldRef<"PlatformRoleAssignment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PlatformRoleAssignment findUnique
+   */
+  export type PlatformRoleAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter, which PlatformRoleAssignment to fetch.
+     */
+    where: PlatformRoleAssignmentWhereUniqueInput
+  }
+
+  /**
+   * PlatformRoleAssignment findUniqueOrThrow
+   */
+  export type PlatformRoleAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter, which PlatformRoleAssignment to fetch.
+     */
+    where: PlatformRoleAssignmentWhereUniqueInput
+  }
+
+  /**
+   * PlatformRoleAssignment findFirst
+   */
+  export type PlatformRoleAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter, which PlatformRoleAssignment to fetch.
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlatformRoleAssignments to fetch.
+     */
+    orderBy?: PlatformRoleAssignmentOrderByWithRelationInput | PlatformRoleAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlatformRoleAssignments.
+     */
+    cursor?: PlatformRoleAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlatformRoleAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlatformRoleAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlatformRoleAssignments.
+     */
+    distinct?: PlatformRoleAssignmentScalarFieldEnum | PlatformRoleAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * PlatformRoleAssignment findFirstOrThrow
+   */
+  export type PlatformRoleAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter, which PlatformRoleAssignment to fetch.
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlatformRoleAssignments to fetch.
+     */
+    orderBy?: PlatformRoleAssignmentOrderByWithRelationInput | PlatformRoleAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PlatformRoleAssignments.
+     */
+    cursor?: PlatformRoleAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlatformRoleAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlatformRoleAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PlatformRoleAssignments.
+     */
+    distinct?: PlatformRoleAssignmentScalarFieldEnum | PlatformRoleAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * PlatformRoleAssignment findMany
+   */
+  export type PlatformRoleAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter, which PlatformRoleAssignments to fetch.
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PlatformRoleAssignments to fetch.
+     */
+    orderBy?: PlatformRoleAssignmentOrderByWithRelationInput | PlatformRoleAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PlatformRoleAssignments.
+     */
+    cursor?: PlatformRoleAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PlatformRoleAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PlatformRoleAssignments.
+     */
+    skip?: number
+    distinct?: PlatformRoleAssignmentScalarFieldEnum | PlatformRoleAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * PlatformRoleAssignment create
+   */
+  export type PlatformRoleAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PlatformRoleAssignment.
+     */
+    data: XOR<PlatformRoleAssignmentCreateInput, PlatformRoleAssignmentUncheckedCreateInput>
+  }
+
+  /**
+   * PlatformRoleAssignment createMany
+   */
+  export type PlatformRoleAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PlatformRoleAssignments.
+     */
+    data: PlatformRoleAssignmentCreateManyInput | PlatformRoleAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PlatformRoleAssignment createManyAndReturn
+   */
+  export type PlatformRoleAssignmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many PlatformRoleAssignments.
+     */
+    data: PlatformRoleAssignmentCreateManyInput | PlatformRoleAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PlatformRoleAssignment update
+   */
+  export type PlatformRoleAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PlatformRoleAssignment.
+     */
+    data: XOR<PlatformRoleAssignmentUpdateInput, PlatformRoleAssignmentUncheckedUpdateInput>
+    /**
+     * Choose, which PlatformRoleAssignment to update.
+     */
+    where: PlatformRoleAssignmentWhereUniqueInput
+  }
+
+  /**
+   * PlatformRoleAssignment updateMany
+   */
+  export type PlatformRoleAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PlatformRoleAssignments.
+     */
+    data: XOR<PlatformRoleAssignmentUpdateManyMutationInput, PlatformRoleAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which PlatformRoleAssignments to update
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * Limit how many PlatformRoleAssignments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlatformRoleAssignment updateManyAndReturn
+   */
+  export type PlatformRoleAssignmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to update PlatformRoleAssignments.
+     */
+    data: XOR<PlatformRoleAssignmentUpdateManyMutationInput, PlatformRoleAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which PlatformRoleAssignments to update
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * Limit how many PlatformRoleAssignments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlatformRoleAssignment upsert
+   */
+  export type PlatformRoleAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PlatformRoleAssignment to update in case it exists.
+     */
+    where: PlatformRoleAssignmentWhereUniqueInput
+    /**
+     * In case the PlatformRoleAssignment found by the `where` argument doesn't exist, create a new PlatformRoleAssignment with this data.
+     */
+    create: XOR<PlatformRoleAssignmentCreateInput, PlatformRoleAssignmentUncheckedCreateInput>
+    /**
+     * In case the PlatformRoleAssignment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlatformRoleAssignmentUpdateInput, PlatformRoleAssignmentUncheckedUpdateInput>
+  }
+
+  /**
+   * PlatformRoleAssignment delete
+   */
+  export type PlatformRoleAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+    /**
+     * Filter which PlatformRoleAssignment to delete.
+     */
+    where: PlatformRoleAssignmentWhereUniqueInput
+  }
+
+  /**
+   * PlatformRoleAssignment deleteMany
+   */
+  export type PlatformRoleAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PlatformRoleAssignments to delete
+     */
+    where?: PlatformRoleAssignmentWhereInput
+    /**
+     * Limit how many PlatformRoleAssignments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PlatformRoleAssignment without action
+   */
+  export type PlatformRoleAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PlatformRoleAssignment
+     */
+    select?: PlatformRoleAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlatformRoleAssignment
+     */
+    omit?: PlatformRoleAssignmentOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SupportSession
+   */
+
+  export type AggregateSupportSession = {
+    _count: SupportSessionCountAggregateOutputType | null
+    _min: SupportSessionMinAggregateOutputType | null
+    _max: SupportSessionMaxAggregateOutputType | null
+  }
+
+  export type SupportSessionMinAggregateOutputType = {
+    id: string | null
+    actorUserId: string | null
+    organizationId: string | null
+    reason: string | null
+    status: string | null
+    startedAt: Date | null
+    endedAt: Date | null
+  }
+
+  export type SupportSessionMaxAggregateOutputType = {
+    id: string | null
+    actorUserId: string | null
+    organizationId: string | null
+    reason: string | null
+    status: string | null
+    startedAt: Date | null
+    endedAt: Date | null
+  }
+
+  export type SupportSessionCountAggregateOutputType = {
+    id: number
+    actorUserId: number
+    organizationId: number
+    reason: number
+    status: number
+    startedAt: number
+    endedAt: number
+    _all: number
+  }
+
+
+  export type SupportSessionMinAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    organizationId?: true
+    reason?: true
+    status?: true
+    startedAt?: true
+    endedAt?: true
+  }
+
+  export type SupportSessionMaxAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    organizationId?: true
+    reason?: true
+    status?: true
+    startedAt?: true
+    endedAt?: true
+  }
+
+  export type SupportSessionCountAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    organizationId?: true
+    reason?: true
+    status?: true
+    startedAt?: true
+    endedAt?: true
+    _all?: true
+  }
+
+  export type SupportSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportSession to aggregate.
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportSessions to fetch.
+     */
+    orderBy?: SupportSessionOrderByWithRelationInput | SupportSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SupportSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SupportSessions
+    **/
+    _count?: true | SupportSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SupportSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SupportSessionMaxAggregateInputType
+  }
+
+  export type GetSupportSessionAggregateType<T extends SupportSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSupportSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSupportSession[P]>
+      : GetScalarType<T[P], AggregateSupportSession[P]>
+  }
+
+
+
+
+  export type SupportSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupportSessionWhereInput
+    orderBy?: SupportSessionOrderByWithAggregationInput | SupportSessionOrderByWithAggregationInput[]
+    by: SupportSessionScalarFieldEnum[] | SupportSessionScalarFieldEnum
+    having?: SupportSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SupportSessionCountAggregateInputType | true
+    _min?: SupportSessionMinAggregateInputType
+    _max?: SupportSessionMaxAggregateInputType
+  }
+
+  export type SupportSessionGroupByOutputType = {
+    id: string
+    actorUserId: string
+    organizationId: string
+    reason: string
+    status: string
+    startedAt: Date
+    endedAt: Date | null
+    _count: SupportSessionCountAggregateOutputType | null
+    _min: SupportSessionMinAggregateOutputType | null
+    _max: SupportSessionMaxAggregateOutputType | null
+  }
+
+  type GetSupportSessionGroupByPayload<T extends SupportSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SupportSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SupportSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SupportSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], SupportSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SupportSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    organizationId?: boolean
+    reason?: boolean
+    status?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+  }, ExtArgs["result"]["supportSession"]>
+
+  export type SupportSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    organizationId?: boolean
+    reason?: boolean
+    status?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+  }, ExtArgs["result"]["supportSession"]>
+
+  export type SupportSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    organizationId?: boolean
+    reason?: boolean
+    status?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+  }, ExtArgs["result"]["supportSession"]>
+
+  export type SupportSessionSelectScalar = {
+    id?: boolean
+    actorUserId?: boolean
+    organizationId?: boolean
+    reason?: boolean
+    status?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+  }
+
+  export type SupportSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "actorUserId" | "organizationId" | "reason" | "status" | "startedAt" | "endedAt", ExtArgs["result"]["supportSession"]>
+
+  export type $SupportSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SupportSession"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      actorUserId: string
+      organizationId: string
+      reason: string
+      status: string
+      startedAt: Date
+      endedAt: Date | null
+    }, ExtArgs["result"]["supportSession"]>
+    composites: {}
+  }
+
+  type SupportSessionGetPayload<S extends boolean | null | undefined | SupportSessionDefaultArgs> = $Result.GetResult<Prisma.$SupportSessionPayload, S>
+
+  type SupportSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SupportSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SupportSessionCountAggregateInputType | true
+    }
+
+  export interface SupportSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SupportSession'], meta: { name: 'SupportSession' } }
+    /**
+     * Find zero or one SupportSession that matches the filter.
+     * @param {SupportSessionFindUniqueArgs} args - Arguments to find a SupportSession
+     * @example
+     * // Get one SupportSession
+     * const supportSession = await prisma.supportSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SupportSessionFindUniqueArgs>(args: SelectSubset<T, SupportSessionFindUniqueArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SupportSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SupportSessionFindUniqueOrThrowArgs} args - Arguments to find a SupportSession
+     * @example
+     * // Get one SupportSession
+     * const supportSession = await prisma.supportSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SupportSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, SupportSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SupportSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionFindFirstArgs} args - Arguments to find a SupportSession
+     * @example
+     * // Get one SupportSession
+     * const supportSession = await prisma.supportSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SupportSessionFindFirstArgs>(args?: SelectSubset<T, SupportSessionFindFirstArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SupportSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionFindFirstOrThrowArgs} args - Arguments to find a SupportSession
+     * @example
+     * // Get one SupportSession
+     * const supportSession = await prisma.supportSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SupportSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, SupportSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SupportSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SupportSessions
+     * const supportSessions = await prisma.supportSession.findMany()
+     * 
+     * // Get first 10 SupportSessions
+     * const supportSessions = await prisma.supportSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const supportSessionWithIdOnly = await prisma.supportSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SupportSessionFindManyArgs>(args?: SelectSubset<T, SupportSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SupportSession.
+     * @param {SupportSessionCreateArgs} args - Arguments to create a SupportSession.
+     * @example
+     * // Create one SupportSession
+     * const SupportSession = await prisma.supportSession.create({
+     *   data: {
+     *     // ... data to create a SupportSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends SupportSessionCreateArgs>(args: SelectSubset<T, SupportSessionCreateArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SupportSessions.
+     * @param {SupportSessionCreateManyArgs} args - Arguments to create many SupportSessions.
+     * @example
+     * // Create many SupportSessions
+     * const supportSession = await prisma.supportSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SupportSessionCreateManyArgs>(args?: SelectSubset<T, SupportSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SupportSessions and returns the data saved in the database.
+     * @param {SupportSessionCreateManyAndReturnArgs} args - Arguments to create many SupportSessions.
+     * @example
+     * // Create many SupportSessions
+     * const supportSession = await prisma.supportSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SupportSessions and only return the `id`
+     * const supportSessionWithIdOnly = await prisma.supportSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SupportSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, SupportSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SupportSession.
+     * @param {SupportSessionDeleteArgs} args - Arguments to delete one SupportSession.
+     * @example
+     * // Delete one SupportSession
+     * const SupportSession = await prisma.supportSession.delete({
+     *   where: {
+     *     // ... filter to delete one SupportSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SupportSessionDeleteArgs>(args: SelectSubset<T, SupportSessionDeleteArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SupportSession.
+     * @param {SupportSessionUpdateArgs} args - Arguments to update one SupportSession.
+     * @example
+     * // Update one SupportSession
+     * const supportSession = await prisma.supportSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SupportSessionUpdateArgs>(args: SelectSubset<T, SupportSessionUpdateArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SupportSessions.
+     * @param {SupportSessionDeleteManyArgs} args - Arguments to filter SupportSessions to delete.
+     * @example
+     * // Delete a few SupportSessions
+     * const { count } = await prisma.supportSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SupportSessionDeleteManyArgs>(args?: SelectSubset<T, SupportSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SupportSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SupportSessions
+     * const supportSession = await prisma.supportSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SupportSessionUpdateManyArgs>(args: SelectSubset<T, SupportSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SupportSessions and returns the data updated in the database.
+     * @param {SupportSessionUpdateManyAndReturnArgs} args - Arguments to update many SupportSessions.
+     * @example
+     * // Update many SupportSessions
+     * const supportSession = await prisma.supportSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SupportSessions and only return the `id`
+     * const supportSessionWithIdOnly = await prisma.supportSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SupportSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, SupportSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SupportSession.
+     * @param {SupportSessionUpsertArgs} args - Arguments to update or create a SupportSession.
+     * @example
+     * // Update or create a SupportSession
+     * const supportSession = await prisma.supportSession.upsert({
+     *   create: {
+     *     // ... data to create a SupportSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SupportSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SupportSessionUpsertArgs>(args: SelectSubset<T, SupportSessionUpsertArgs<ExtArgs>>): Prisma__SupportSessionClient<$Result.GetResult<Prisma.$SupportSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SupportSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionCountArgs} args - Arguments to filter SupportSessions to count.
+     * @example
+     * // Count the number of SupportSessions
+     * const count = await prisma.supportSession.count({
+     *   where: {
+     *     // ... the filter for the SupportSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SupportSessionCountArgs>(
+      args?: Subset<T, SupportSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SupportSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SupportSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SupportSessionAggregateArgs>(args: Subset<T, SupportSessionAggregateArgs>): Prisma.PrismaPromise<GetSupportSessionAggregateType<T>>
+
+    /**
+     * Group by SupportSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SupportSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SupportSessionGroupByArgs['orderBy'] }
+        : { orderBy?: SupportSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SupportSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSupportSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SupportSession model
+   */
+  readonly fields: SupportSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SupportSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SupportSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SupportSession model
+   */
+  interface SupportSessionFieldRefs {
+    readonly id: FieldRef<"SupportSession", 'String'>
+    readonly actorUserId: FieldRef<"SupportSession", 'String'>
+    readonly organizationId: FieldRef<"SupportSession", 'String'>
+    readonly reason: FieldRef<"SupportSession", 'String'>
+    readonly status: FieldRef<"SupportSession", 'String'>
+    readonly startedAt: FieldRef<"SupportSession", 'DateTime'>
+    readonly endedAt: FieldRef<"SupportSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SupportSession findUnique
+   */
+  export type SupportSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter, which SupportSession to fetch.
+     */
+    where: SupportSessionWhereUniqueInput
+  }
+
+  /**
+   * SupportSession findUniqueOrThrow
+   */
+  export type SupportSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter, which SupportSession to fetch.
+     */
+    where: SupportSessionWhereUniqueInput
+  }
+
+  /**
+   * SupportSession findFirst
+   */
+  export type SupportSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter, which SupportSession to fetch.
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportSessions to fetch.
+     */
+    orderBy?: SupportSessionOrderByWithRelationInput | SupportSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportSessions.
+     */
+    cursor?: SupportSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportSessions.
+     */
+    distinct?: SupportSessionScalarFieldEnum | SupportSessionScalarFieldEnum[]
+  }
+
+  /**
+   * SupportSession findFirstOrThrow
+   */
+  export type SupportSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter, which SupportSession to fetch.
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportSessions to fetch.
+     */
+    orderBy?: SupportSessionOrderByWithRelationInput | SupportSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportSessions.
+     */
+    cursor?: SupportSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportSessions.
+     */
+    distinct?: SupportSessionScalarFieldEnum | SupportSessionScalarFieldEnum[]
+  }
+
+  /**
+   * SupportSession findMany
+   */
+  export type SupportSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter, which SupportSessions to fetch.
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportSessions to fetch.
+     */
+    orderBy?: SupportSessionOrderByWithRelationInput | SupportSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SupportSessions.
+     */
+    cursor?: SupportSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportSessions.
+     */
+    skip?: number
+    distinct?: SupportSessionScalarFieldEnum | SupportSessionScalarFieldEnum[]
+  }
+
+  /**
+   * SupportSession create
+   */
+  export type SupportSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SupportSession.
+     */
+    data: XOR<SupportSessionCreateInput, SupportSessionUncheckedCreateInput>
+  }
+
+  /**
+   * SupportSession createMany
+   */
+  export type SupportSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SupportSessions.
+     */
+    data: SupportSessionCreateManyInput | SupportSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupportSession createManyAndReturn
+   */
+  export type SupportSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many SupportSessions.
+     */
+    data: SupportSessionCreateManyInput | SupportSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupportSession update
+   */
+  export type SupportSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SupportSession.
+     */
+    data: XOR<SupportSessionUpdateInput, SupportSessionUncheckedUpdateInput>
+    /**
+     * Choose, which SupportSession to update.
+     */
+    where: SupportSessionWhereUniqueInput
+  }
+
+  /**
+   * SupportSession updateMany
+   */
+  export type SupportSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SupportSessions.
+     */
+    data: XOR<SupportSessionUpdateManyMutationInput, SupportSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which SupportSessions to update
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * Limit how many SupportSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SupportSession updateManyAndReturn
+   */
+  export type SupportSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update SupportSessions.
+     */
+    data: XOR<SupportSessionUpdateManyMutationInput, SupportSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which SupportSessions to update
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * Limit how many SupportSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SupportSession upsert
+   */
+  export type SupportSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SupportSession to update in case it exists.
+     */
+    where: SupportSessionWhereUniqueInput
+    /**
+     * In case the SupportSession found by the `where` argument doesn't exist, create a new SupportSession with this data.
+     */
+    create: XOR<SupportSessionCreateInput, SupportSessionUncheckedCreateInput>
+    /**
+     * In case the SupportSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SupportSessionUpdateInput, SupportSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * SupportSession delete
+   */
+  export type SupportSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+    /**
+     * Filter which SupportSession to delete.
+     */
+    where: SupportSessionWhereUniqueInput
+  }
+
+  /**
+   * SupportSession deleteMany
+   */
+  export type SupportSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportSessions to delete
+     */
+    where?: SupportSessionWhereInput
+    /**
+     * Limit how many SupportSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SupportSession without action
+   */
+  export type SupportSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportSession
+     */
+    select?: SupportSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SupportSession
+     */
+    omit?: SupportSessionOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AuditLog
+   */
+
+  export type AggregateAuditLog = {
+    _count: AuditLogCountAggregateOutputType | null
+    _min: AuditLogMinAggregateOutputType | null
+    _max: AuditLogMaxAggregateOutputType | null
+  }
+
+  export type AuditLogMinAggregateOutputType = {
+    id: string | null
+    actorUserId: string | null
+    targetOrganizationId: string | null
+    targetUserId: string | null
+    action: string | null
+    resourceType: string | null
+    resourceId: string | null
+    createdAt: Date | null
+  }
+
+  export type AuditLogMaxAggregateOutputType = {
+    id: string | null
+    actorUserId: string | null
+    targetOrganizationId: string | null
+    targetUserId: string | null
+    action: string | null
+    resourceType: string | null
+    resourceId: string | null
+    createdAt: Date | null
+  }
+
+  export type AuditLogCountAggregateOutputType = {
+    id: number
+    actorUserId: number
+    targetOrganizationId: number
+    targetUserId: number
+    action: number
+    resourceType: number
+    resourceId: number
+    metadata: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AuditLogMinAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    targetOrganizationId?: true
+    targetUserId?: true
+    action?: true
+    resourceType?: true
+    resourceId?: true
+    createdAt?: true
+  }
+
+  export type AuditLogMaxAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    targetOrganizationId?: true
+    targetUserId?: true
+    action?: true
+    resourceType?: true
+    resourceId?: true
+    createdAt?: true
+  }
+
+  export type AuditLogCountAggregateInputType = {
+    id?: true
+    actorUserId?: true
+    targetOrganizationId?: true
+    targetUserId?: true
+    action?: true
+    resourceType?: true
+    resourceId?: true
+    metadata?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AuditLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuditLog to aggregate.
+     */
+    where?: AuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuditLogs to fetch.
+     */
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AuditLogs
+    **/
+    _count?: true | AuditLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AuditLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AuditLogMaxAggregateInputType
+  }
+
+  export type GetAuditLogAggregateType<T extends AuditLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateAuditLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAuditLog[P]>
+      : GetScalarType<T[P], AggregateAuditLog[P]>
+  }
+
+
+
+
+  export type AuditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AuditLogWhereInput
+    orderBy?: AuditLogOrderByWithAggregationInput | AuditLogOrderByWithAggregationInput[]
+    by: AuditLogScalarFieldEnum[] | AuditLogScalarFieldEnum
+    having?: AuditLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AuditLogCountAggregateInputType | true
+    _min?: AuditLogMinAggregateInputType
+    _max?: AuditLogMaxAggregateInputType
+  }
+
+  export type AuditLogGroupByOutputType = {
+    id: string
+    actorUserId: string
+    targetOrganizationId: string | null
+    targetUserId: string | null
+    action: string
+    resourceType: string
+    resourceId: string
+    metadata: JsonValue
+    createdAt: Date
+    _count: AuditLogCountAggregateOutputType | null
+    _min: AuditLogMinAggregateOutputType | null
+    _max: AuditLogMaxAggregateOutputType | null
+  }
+
+  type GetAuditLogGroupByPayload<T extends AuditLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AuditLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AuditLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AuditLogGroupByOutputType[P]>
+            : GetScalarType<T[P], AuditLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AuditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    targetOrganizationId?: boolean
+    targetUserId?: boolean
+    action?: boolean
+    resourceType?: boolean
+    resourceId?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["auditLog"]>
+
+  export type AuditLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    targetOrganizationId?: boolean
+    targetUserId?: boolean
+    action?: boolean
+    resourceType?: boolean
+    resourceId?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["auditLog"]>
+
+  export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actorUserId?: boolean
+    targetOrganizationId?: boolean
+    targetUserId?: boolean
+    action?: boolean
+    resourceType?: boolean
+    resourceId?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["auditLog"]>
+
+  export type AuditLogSelectScalar = {
+    id?: boolean
+    actorUserId?: boolean
+    targetOrganizationId?: boolean
+    targetUserId?: boolean
+    action?: boolean
+    resourceType?: boolean
+    resourceId?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }
+
+  export type AuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "actorUserId" | "targetOrganizationId" | "targetUserId" | "action" | "resourceType" | "resourceId" | "metadata" | "createdAt", ExtArgs["result"]["auditLog"]>
+
+  export type $AuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AuditLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      actorUserId: string
+      targetOrganizationId: string | null
+      targetUserId: string | null
+      action: string
+      resourceType: string
+      resourceId: string
+      metadata: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["auditLog"]>
+    composites: {}
+  }
+
+  type AuditLogGetPayload<S extends boolean | null | undefined | AuditLogDefaultArgs> = $Result.GetResult<Prisma.$AuditLogPayload, S>
+
+  type AuditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AuditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AuditLogCountAggregateInputType | true
+    }
+
+  export interface AuditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AuditLog'], meta: { name: 'AuditLog' } }
+    /**
+     * Find zero or one AuditLog that matches the filter.
+     * @param {AuditLogFindUniqueArgs} args - Arguments to find a AuditLog
+     * @example
+     * // Get one AuditLog
+     * const auditLog = await prisma.auditLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AuditLogFindUniqueArgs>(args: SelectSubset<T, AuditLogFindUniqueArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AuditLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AuditLogFindUniqueOrThrowArgs} args - Arguments to find a AuditLog
+     * @example
+     * // Get one AuditLog
+     * const auditLog = await prisma.auditLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AuditLogFindUniqueOrThrowArgs>(args: SelectSubset<T, AuditLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuditLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogFindFirstArgs} args - Arguments to find a AuditLog
+     * @example
+     * // Get one AuditLog
+     * const auditLog = await prisma.auditLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AuditLogFindFirstArgs>(args?: SelectSubset<T, AuditLogFindFirstArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AuditLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogFindFirstOrThrowArgs} args - Arguments to find a AuditLog
+     * @example
+     * // Get one AuditLog
+     * const auditLog = await prisma.auditLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AuditLogFindFirstOrThrowArgs>(args?: SelectSubset<T, AuditLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AuditLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AuditLogs
+     * const auditLogs = await prisma.auditLog.findMany()
+     * 
+     * // Get first 10 AuditLogs
+     * const auditLogs = await prisma.auditLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const auditLogWithIdOnly = await prisma.auditLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AuditLogFindManyArgs>(args?: SelectSubset<T, AuditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AuditLog.
+     * @param {AuditLogCreateArgs} args - Arguments to create a AuditLog.
+     * @example
+     * // Create one AuditLog
+     * const AuditLog = await prisma.auditLog.create({
+     *   data: {
+     *     // ... data to create a AuditLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends AuditLogCreateArgs>(args: SelectSubset<T, AuditLogCreateArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AuditLogs.
+     * @param {AuditLogCreateManyArgs} args - Arguments to create many AuditLogs.
+     * @example
+     * // Create many AuditLogs
+     * const auditLog = await prisma.auditLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AuditLogCreateManyArgs>(args?: SelectSubset<T, AuditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AuditLogs and returns the data saved in the database.
+     * @param {AuditLogCreateManyAndReturnArgs} args - Arguments to create many AuditLogs.
+     * @example
+     * // Create many AuditLogs
+     * const auditLog = await prisma.auditLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AuditLogs and only return the `id`
+     * const auditLogWithIdOnly = await prisma.auditLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AuditLogCreateManyAndReturnArgs>(args?: SelectSubset<T, AuditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AuditLog.
+     * @param {AuditLogDeleteArgs} args - Arguments to delete one AuditLog.
+     * @example
+     * // Delete one AuditLog
+     * const AuditLog = await prisma.auditLog.delete({
+     *   where: {
+     *     // ... filter to delete one AuditLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AuditLogDeleteArgs>(args: SelectSubset<T, AuditLogDeleteArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AuditLog.
+     * @param {AuditLogUpdateArgs} args - Arguments to update one AuditLog.
+     * @example
+     * // Update one AuditLog
+     * const auditLog = await prisma.auditLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AuditLogUpdateArgs>(args: SelectSubset<T, AuditLogUpdateArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AuditLogs.
+     * @param {AuditLogDeleteManyArgs} args - Arguments to filter AuditLogs to delete.
+     * @example
+     * // Delete a few AuditLogs
+     * const { count } = await prisma.auditLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AuditLogDeleteManyArgs>(args?: SelectSubset<T, AuditLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AuditLogs
+     * const auditLog = await prisma.auditLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AuditLogUpdateManyArgs>(args: SelectSubset<T, AuditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AuditLogs and returns the data updated in the database.
+     * @param {AuditLogUpdateManyAndReturnArgs} args - Arguments to update many AuditLogs.
+     * @example
+     * // Update many AuditLogs
+     * const auditLog = await prisma.auditLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AuditLogs and only return the `id`
+     * const auditLogWithIdOnly = await prisma.auditLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AuditLogUpdateManyAndReturnArgs>(args: SelectSubset<T, AuditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AuditLog.
+     * @param {AuditLogUpsertArgs} args - Arguments to update or create a AuditLog.
+     * @example
+     * // Update or create a AuditLog
+     * const auditLog = await prisma.auditLog.upsert({
+     *   create: {
+     *     // ... data to create a AuditLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AuditLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AuditLogUpsertArgs>(args: SelectSubset<T, AuditLogUpsertArgs<ExtArgs>>): Prisma__AuditLogClient<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogCountArgs} args - Arguments to filter AuditLogs to count.
+     * @example
+     * // Count the number of AuditLogs
+     * const count = await prisma.auditLog.count({
+     *   where: {
+     *     // ... the filter for the AuditLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends AuditLogCountArgs>(
+      args?: Subset<T, AuditLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AuditLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AuditLogAggregateArgs>(args: Subset<T, AuditLogAggregateArgs>): Prisma.PrismaPromise<GetAuditLogAggregateType<T>>
+
+    /**
+     * Group by AuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AuditLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AuditLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AuditLogGroupByArgs['orderBy'] }
+        : { orderBy?: AuditLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AuditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AuditLog model
+   */
+  readonly fields: AuditLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AuditLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AuditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AuditLog model
+   */
+  interface AuditLogFieldRefs {
+    readonly id: FieldRef<"AuditLog", 'String'>
+    readonly actorUserId: FieldRef<"AuditLog", 'String'>
+    readonly targetOrganizationId: FieldRef<"AuditLog", 'String'>
+    readonly targetUserId: FieldRef<"AuditLog", 'String'>
+    readonly action: FieldRef<"AuditLog", 'String'>
+    readonly resourceType: FieldRef<"AuditLog", 'String'>
+    readonly resourceId: FieldRef<"AuditLog", 'String'>
+    readonly metadata: FieldRef<"AuditLog", 'Json'>
+    readonly createdAt: FieldRef<"AuditLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AuditLog findUnique
+   */
+  export type AuditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which AuditLog to fetch.
+     */
+    where: AuditLogWhereUniqueInput
+  }
+
+  /**
+   * AuditLog findUniqueOrThrow
+   */
+  export type AuditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which AuditLog to fetch.
+     */
+    where: AuditLogWhereUniqueInput
+  }
+
+  /**
+   * AuditLog findFirst
+   */
+  export type AuditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which AuditLog to fetch.
+     */
+    where?: AuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuditLogs to fetch.
+     */
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuditLogs.
+     */
+    cursor?: AuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuditLogs.
+     */
+    distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * AuditLog findFirstOrThrow
+   */
+  export type AuditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which AuditLog to fetch.
+     */
+    where?: AuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuditLogs to fetch.
+     */
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AuditLogs.
+     */
+    cursor?: AuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuditLogs.
+     */
+    distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * AuditLog findMany
+   */
+  export type AuditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter, which AuditLogs to fetch.
+     */
+    where?: AuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AuditLogs to fetch.
+     */
+    orderBy?: AuditLogOrderByWithRelationInput | AuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AuditLogs.
+     */
+    cursor?: AuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AuditLogs.
+     */
+    skip?: number
+    distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * AuditLog create
+   */
+  export type AuditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AuditLog.
+     */
+    data: XOR<AuditLogCreateInput, AuditLogUncheckedCreateInput>
+  }
+
+  /**
+   * AuditLog createMany
+   */
+  export type AuditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AuditLogs.
+     */
+    data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuditLog createManyAndReturn
+   */
+  export type AuditLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many AuditLogs.
+     */
+    data: AuditLogCreateManyInput | AuditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AuditLog update
+   */
+  export type AuditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AuditLog.
+     */
+    data: XOR<AuditLogUpdateInput, AuditLogUncheckedUpdateInput>
+    /**
+     * Choose, which AuditLog to update.
+     */
+    where: AuditLogWhereUniqueInput
+  }
+
+  /**
+   * AuditLog updateMany
+   */
+  export type AuditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AuditLogs.
+     */
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AuditLogs to update
+     */
+    where?: AuditLogWhereInput
+    /**
+     * Limit how many AuditLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuditLog updateManyAndReturn
+   */
+  export type AuditLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * The data used to update AuditLogs.
+     */
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which AuditLogs to update
+     */
+    where?: AuditLogWhereInput
+    /**
+     * Limit how many AuditLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuditLog upsert
+   */
+  export type AuditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AuditLog to update in case it exists.
+     */
+    where: AuditLogWhereUniqueInput
+    /**
+     * In case the AuditLog found by the `where` argument doesn't exist, create a new AuditLog with this data.
+     */
+    create: XOR<AuditLogCreateInput, AuditLogUncheckedCreateInput>
+    /**
+     * In case the AuditLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AuditLogUpdateInput, AuditLogUncheckedUpdateInput>
+  }
+
+  /**
+   * AuditLog delete
+   */
+  export type AuditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+    /**
+     * Filter which AuditLog to delete.
+     */
+    where: AuditLogWhereUniqueInput
+  }
+
+  /**
+   * AuditLog deleteMany
+   */
+  export type AuditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AuditLogs to delete
+     */
+    where?: AuditLogWhereInput
+    /**
+     * Limit how many AuditLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AuditLog without action
+   */
+  export type AuditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AuditLog
+     */
+    select?: AuditLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AuditLog
+     */
+    omit?: AuditLogOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -26094,6 +29426,45 @@ export namespace Prisma {
   };
 
   export type DesignAssetScalarFieldEnum = (typeof DesignAssetScalarFieldEnum)[keyof typeof DesignAssetScalarFieldEnum]
+
+
+  export const PlatformRoleAssignmentScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    role: 'role',
+    assignedBy: 'assignedBy',
+    assignedAt: 'assignedAt'
+  };
+
+  export type PlatformRoleAssignmentScalarFieldEnum = (typeof PlatformRoleAssignmentScalarFieldEnum)[keyof typeof PlatformRoleAssignmentScalarFieldEnum]
+
+
+  export const SupportSessionScalarFieldEnum: {
+    id: 'id',
+    actorUserId: 'actorUserId',
+    organizationId: 'organizationId',
+    reason: 'reason',
+    status: 'status',
+    startedAt: 'startedAt',
+    endedAt: 'endedAt'
+  };
+
+  export type SupportSessionScalarFieldEnum = (typeof SupportSessionScalarFieldEnum)[keyof typeof SupportSessionScalarFieldEnum]
+
+
+  export const AuditLogScalarFieldEnum: {
+    id: 'id',
+    actorUserId: 'actorUserId',
+    targetOrganizationId: 'targetOrganizationId',
+    targetUserId: 'targetUserId',
+    action: 'action',
+    resourceType: 'resourceType',
+    resourceId: 'resourceId',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+  };
+
+  export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -27804,6 +31175,193 @@ export namespace Prisma {
     size?: IntWithAggregatesFilter<"DesignAsset"> | number
     createdAt?: DateTimeWithAggregatesFilter<"DesignAsset"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DesignAsset"> | Date | string
+  }
+
+  export type PlatformRoleAssignmentWhereInput = {
+    AND?: PlatformRoleAssignmentWhereInput | PlatformRoleAssignmentWhereInput[]
+    OR?: PlatformRoleAssignmentWhereInput[]
+    NOT?: PlatformRoleAssignmentWhereInput | PlatformRoleAssignmentWhereInput[]
+    id?: StringFilter<"PlatformRoleAssignment"> | string
+    userId?: StringFilter<"PlatformRoleAssignment"> | string
+    role?: StringFilter<"PlatformRoleAssignment"> | string
+    assignedBy?: StringFilter<"PlatformRoleAssignment"> | string
+    assignedAt?: DateTimeFilter<"PlatformRoleAssignment"> | Date | string
+  }
+
+  export type PlatformRoleAssignmentOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    assignedBy?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type PlatformRoleAssignmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_role?: PlatformRoleAssignmentUserIdRoleCompoundUniqueInput
+    AND?: PlatformRoleAssignmentWhereInput | PlatformRoleAssignmentWhereInput[]
+    OR?: PlatformRoleAssignmentWhereInput[]
+    NOT?: PlatformRoleAssignmentWhereInput | PlatformRoleAssignmentWhereInput[]
+    userId?: StringFilter<"PlatformRoleAssignment"> | string
+    role?: StringFilter<"PlatformRoleAssignment"> | string
+    assignedBy?: StringFilter<"PlatformRoleAssignment"> | string
+    assignedAt?: DateTimeFilter<"PlatformRoleAssignment"> | Date | string
+  }, "id" | "userId_role">
+
+  export type PlatformRoleAssignmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    assignedBy?: SortOrder
+    assignedAt?: SortOrder
+    _count?: PlatformRoleAssignmentCountOrderByAggregateInput
+    _max?: PlatformRoleAssignmentMaxOrderByAggregateInput
+    _min?: PlatformRoleAssignmentMinOrderByAggregateInput
+  }
+
+  export type PlatformRoleAssignmentScalarWhereWithAggregatesInput = {
+    AND?: PlatformRoleAssignmentScalarWhereWithAggregatesInput | PlatformRoleAssignmentScalarWhereWithAggregatesInput[]
+    OR?: PlatformRoleAssignmentScalarWhereWithAggregatesInput[]
+    NOT?: PlatformRoleAssignmentScalarWhereWithAggregatesInput | PlatformRoleAssignmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PlatformRoleAssignment"> | string
+    userId?: StringWithAggregatesFilter<"PlatformRoleAssignment"> | string
+    role?: StringWithAggregatesFilter<"PlatformRoleAssignment"> | string
+    assignedBy?: StringWithAggregatesFilter<"PlatformRoleAssignment"> | string
+    assignedAt?: DateTimeWithAggregatesFilter<"PlatformRoleAssignment"> | Date | string
+  }
+
+  export type SupportSessionWhereInput = {
+    AND?: SupportSessionWhereInput | SupportSessionWhereInput[]
+    OR?: SupportSessionWhereInput[]
+    NOT?: SupportSessionWhereInput | SupportSessionWhereInput[]
+    id?: StringFilter<"SupportSession"> | string
+    actorUserId?: StringFilter<"SupportSession"> | string
+    organizationId?: StringFilter<"SupportSession"> | string
+    reason?: StringFilter<"SupportSession"> | string
+    status?: StringFilter<"SupportSession"> | string
+    startedAt?: DateTimeFilter<"SupportSession"> | Date | string
+    endedAt?: DateTimeNullableFilter<"SupportSession"> | Date | string | null
+  }
+
+  export type SupportSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    organizationId?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+  }
+
+  export type SupportSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SupportSessionWhereInput | SupportSessionWhereInput[]
+    OR?: SupportSessionWhereInput[]
+    NOT?: SupportSessionWhereInput | SupportSessionWhereInput[]
+    actorUserId?: StringFilter<"SupportSession"> | string
+    organizationId?: StringFilter<"SupportSession"> | string
+    reason?: StringFilter<"SupportSession"> | string
+    status?: StringFilter<"SupportSession"> | string
+    startedAt?: DateTimeFilter<"SupportSession"> | Date | string
+    endedAt?: DateTimeNullableFilter<"SupportSession"> | Date | string | null
+  }, "id">
+
+  export type SupportSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    organizationId?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    _count?: SupportSessionCountOrderByAggregateInput
+    _max?: SupportSessionMaxOrderByAggregateInput
+    _min?: SupportSessionMinOrderByAggregateInput
+  }
+
+  export type SupportSessionScalarWhereWithAggregatesInput = {
+    AND?: SupportSessionScalarWhereWithAggregatesInput | SupportSessionScalarWhereWithAggregatesInput[]
+    OR?: SupportSessionScalarWhereWithAggregatesInput[]
+    NOT?: SupportSessionScalarWhereWithAggregatesInput | SupportSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SupportSession"> | string
+    actorUserId?: StringWithAggregatesFilter<"SupportSession"> | string
+    organizationId?: StringWithAggregatesFilter<"SupportSession"> | string
+    reason?: StringWithAggregatesFilter<"SupportSession"> | string
+    status?: StringWithAggregatesFilter<"SupportSession"> | string
+    startedAt?: DateTimeWithAggregatesFilter<"SupportSession"> | Date | string
+    endedAt?: DateTimeNullableWithAggregatesFilter<"SupportSession"> | Date | string | null
+  }
+
+  export type AuditLogWhereInput = {
+    AND?: AuditLogWhereInput | AuditLogWhereInput[]
+    OR?: AuditLogWhereInput[]
+    NOT?: AuditLogWhereInput | AuditLogWhereInput[]
+    id?: StringFilter<"AuditLog"> | string
+    actorUserId?: StringFilter<"AuditLog"> | string
+    targetOrganizationId?: StringNullableFilter<"AuditLog"> | string | null
+    targetUserId?: StringNullableFilter<"AuditLog"> | string | null
+    action?: StringFilter<"AuditLog"> | string
+    resourceType?: StringFilter<"AuditLog"> | string
+    resourceId?: StringFilter<"AuditLog"> | string
+    metadata?: JsonFilter<"AuditLog">
+    createdAt?: DateTimeFilter<"AuditLog"> | Date | string
+  }
+
+  export type AuditLogOrderByWithRelationInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    targetOrganizationId?: SortOrderInput | SortOrder
+    targetUserId?: SortOrderInput | SortOrder
+    action?: SortOrder
+    resourceType?: SortOrder
+    resourceId?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AuditLogWhereInput | AuditLogWhereInput[]
+    OR?: AuditLogWhereInput[]
+    NOT?: AuditLogWhereInput | AuditLogWhereInput[]
+    actorUserId?: StringFilter<"AuditLog"> | string
+    targetOrganizationId?: StringNullableFilter<"AuditLog"> | string | null
+    targetUserId?: StringNullableFilter<"AuditLog"> | string | null
+    action?: StringFilter<"AuditLog"> | string
+    resourceType?: StringFilter<"AuditLog"> | string
+    resourceId?: StringFilter<"AuditLog"> | string
+    metadata?: JsonFilter<"AuditLog">
+    createdAt?: DateTimeFilter<"AuditLog"> | Date | string
+  }, "id">
+
+  export type AuditLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    targetOrganizationId?: SortOrderInput | SortOrder
+    targetUserId?: SortOrderInput | SortOrder
+    action?: SortOrder
+    resourceType?: SortOrder
+    resourceId?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    _count?: AuditLogCountOrderByAggregateInput
+    _max?: AuditLogMaxOrderByAggregateInput
+    _min?: AuditLogMinOrderByAggregateInput
+  }
+
+  export type AuditLogScalarWhereWithAggregatesInput = {
+    AND?: AuditLogScalarWhereWithAggregatesInput | AuditLogScalarWhereWithAggregatesInput[]
+    OR?: AuditLogScalarWhereWithAggregatesInput[]
+    NOT?: AuditLogScalarWhereWithAggregatesInput | AuditLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AuditLog"> | string
+    actorUserId?: StringWithAggregatesFilter<"AuditLog"> | string
+    targetOrganizationId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    targetUserId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    action?: StringWithAggregatesFilter<"AuditLog"> | string
+    resourceType?: StringWithAggregatesFilter<"AuditLog"> | string
+    resourceId?: StringWithAggregatesFilter<"AuditLog"> | string
+    metadata?: JsonWithAggregatesFilter<"AuditLog">
+    createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -29553,6 +33111,216 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PlatformRoleAssignmentCreateInput = {
+    id?: string
+    userId: string
+    role: string
+    assignedBy: string
+    assignedAt?: Date | string
+  }
+
+  export type PlatformRoleAssignmentUncheckedCreateInput = {
+    id?: string
+    userId: string
+    role: string
+    assignedBy: string
+    assignedAt?: Date | string
+  }
+
+  export type PlatformRoleAssignmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlatformRoleAssignmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlatformRoleAssignmentCreateManyInput = {
+    id?: string
+    userId: string
+    role: string
+    assignedBy: string
+    assignedAt?: Date | string
+  }
+
+  export type PlatformRoleAssignmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlatformRoleAssignmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    assignedBy?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportSessionCreateInput = {
+    id?: string
+    actorUserId: string
+    organizationId: string
+    reason: string
+    status?: string
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+  }
+
+  export type SupportSessionUncheckedCreateInput = {
+    id?: string
+    actorUserId: string
+    organizationId: string
+    reason: string
+    status?: string
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+  }
+
+  export type SupportSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SupportSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SupportSessionCreateManyInput = {
+    id?: string
+    actorUserId: string
+    organizationId: string
+    reason: string
+    status?: string
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+  }
+
+  export type SupportSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SupportSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AuditLogCreateInput = {
+    id?: string
+    actorUserId: string
+    targetOrganizationId?: string | null
+    targetUserId?: string | null
+    action: string
+    resourceType: string
+    resourceId: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AuditLogUncheckedCreateInput = {
+    id?: string
+    actorUserId: string
+    targetOrganizationId?: string | null
+    targetUserId?: string | null
+    action: string
+    resourceType: string
+    resourceId: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AuditLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    targetOrganizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    resourceType?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuditLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    targetOrganizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    resourceType?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuditLogCreateManyInput = {
+    id?: string
+    actorUserId: string
+    targetOrganizationId?: string | null
+    targetUserId?: string | null
+    action: string
+    resourceType: string
+    resourceId: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AuditLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    targetOrganizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    resourceType?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuditLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorUserId?: StringFieldUpdateOperationsInput | string
+    targetOrganizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    resourceType?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -30789,6 +34557,99 @@ export namespace Prisma {
 
   export type DesignAssetSumOrderByAggregateInput = {
     size?: SortOrder
+  }
+
+  export type PlatformRoleAssignmentUserIdRoleCompoundUniqueInput = {
+    userId: string
+    role: string
+  }
+
+  export type PlatformRoleAssignmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    assignedBy?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type PlatformRoleAssignmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    assignedBy?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type PlatformRoleAssignmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    assignedBy?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type SupportSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    organizationId?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+  }
+
+  export type SupportSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    organizationId?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+  }
+
+  export type SupportSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    organizationId?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+  }
+
+  export type AuditLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    targetOrganizationId?: SortOrder
+    targetUserId?: SortOrder
+    action?: SortOrder
+    resourceType?: SortOrder
+    resourceId?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuditLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    targetOrganizationId?: SortOrder
+    targetUserId?: SortOrder
+    action?: SortOrder
+    resourceType?: SortOrder
+    resourceId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AuditLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    actorUserId?: SortOrder
+    targetOrganizationId?: SortOrder
+    targetUserId?: SortOrder
+    action?: SortOrder
+    resourceType?: SortOrder
+    resourceId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {

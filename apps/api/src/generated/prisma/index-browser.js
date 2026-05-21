@@ -362,6 +362,36 @@ exports.Prisma.DesignAssetScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PlatformRoleAssignmentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  role: 'role',
+  assignedBy: 'assignedBy',
+  assignedAt: 'assignedAt'
+};
+
+exports.Prisma.SupportSessionScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  organizationId: 'organizationId',
+  reason: 'reason',
+  status: 'status',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  targetOrganizationId: 'targetOrganizationId',
+  targetUserId: 'targetUserId',
+  action: 'action',
+  resourceType: 'resourceType',
+  resourceId: 'resourceId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -408,7 +438,10 @@ exports.Prisma.ModelName = {
   DesignSystemProfile: 'DesignSystemProfile',
   DesignColorGroup: 'DesignColorGroup',
   DesignColorToken: 'DesignColorToken',
-  DesignAsset: 'DesignAsset'
+  DesignAsset: 'DesignAsset',
+  PlatformRoleAssignment: 'PlatformRoleAssignment',
+  SupportSession: 'SupportSession',
+  AuditLog: 'AuditLog'
 };
 
 /**

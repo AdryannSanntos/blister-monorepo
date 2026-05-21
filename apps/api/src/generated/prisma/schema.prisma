@@ -363,3 +363,53 @@ model DesignAsset {
   @@index([organizationId, updatedAt])
   @@index([designSystemId, primaryRole])
 }
+
+// ---------------------------------------------------------------------------
+// Platform domain (global admin and support access)
+// ---------------------------------------------------------------------------
+
+model PlatformRoleAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  role       String
+  assignedBy String
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, role])
+  @@index([userId])
+}
+
+model SupportSession {
+  id             String    @id @default(cuid())
+  actorUserId    String
+  organizationId String
+  reason         String
+  status         String    @default("active")
+  startedAt      DateTime  @default(now())
+  endedAt        DateTime?
+
+  @@index([actorUserId])
+  @@index([organizationId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Audit domain
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id                   String   @id @default(cuid())
+  actorUserId          String
+  targetOrganizationId String?
+  targetUserId         String?
+  action               String
+  resourceType         String
+  resourceId           String
+  metadata             Json     @default("{}")
+  createdAt            DateTime @default(now())
+
+  @@index([actorUserId])
+  @@index([targetOrganizationId])
+  @@index([action])
+  @@index([createdAt])
+}
