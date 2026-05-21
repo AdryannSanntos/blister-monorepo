@@ -74,6 +74,16 @@ export type Invitation = $Result.DefaultSelection<Prisma.$InvitationPayload>
  */
 export type OnboardingDraft = $Result.DefaultSelection<Prisma.$OnboardingDraftPayload>
 /**
+ * Model ContextSource
+ * 
+ */
+export type ContextSource = $Result.DefaultSelection<Prisma.$ContextSourcePayload>
+/**
+ * Model ContextArtifact
+ * 
+ */
+export type ContextArtifact = $Result.DefaultSelection<Prisma.$ContextArtifactPayload>
+/**
  * Model Asset
  * 
  */
@@ -83,6 +93,26 @@ export type Asset = $Result.DefaultSelection<Prisma.$AssetPayload>
  * 
  */
 export type AssetRelation = $Result.DefaultSelection<Prisma.$AssetRelationPayload>
+/**
+ * Model DesignSystemProfile
+ * 
+ */
+export type DesignSystemProfile = $Result.DefaultSelection<Prisma.$DesignSystemProfilePayload>
+/**
+ * Model DesignColorGroup
+ * 
+ */
+export type DesignColorGroup = $Result.DefaultSelection<Prisma.$DesignColorGroupPayload>
+/**
+ * Model DesignColorToken
+ * 
+ */
+export type DesignColorToken = $Result.DefaultSelection<Prisma.$DesignColorTokenPayload>
+/**
+ * Model DesignAsset
+ * 
+ */
+export type DesignAsset = $Result.DefaultSelection<Prisma.$DesignAssetPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -323,6 +353,26 @@ export class PrismaClient<
   get onboardingDraft(): Prisma.OnboardingDraftDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.contextSource`: Exposes CRUD operations for the **ContextSource** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContextSources
+    * const contextSources = await prisma.contextSource.findMany()
+    * ```
+    */
+  get contextSource(): Prisma.ContextSourceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.contextArtifact`: Exposes CRUD operations for the **ContextArtifact** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ContextArtifacts
+    * const contextArtifacts = await prisma.contextArtifact.findMany()
+    * ```
+    */
+  get contextArtifact(): Prisma.ContextArtifactDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.asset`: Exposes CRUD operations for the **Asset** model.
     * Example usage:
     * ```ts
@@ -341,6 +391,46 @@ export class PrismaClient<
     * ```
     */
   get assetRelation(): Prisma.AssetRelationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.designSystemProfile`: Exposes CRUD operations for the **DesignSystemProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DesignSystemProfiles
+    * const designSystemProfiles = await prisma.designSystemProfile.findMany()
+    * ```
+    */
+  get designSystemProfile(): Prisma.DesignSystemProfileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.designColorGroup`: Exposes CRUD operations for the **DesignColorGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DesignColorGroups
+    * const designColorGroups = await prisma.designColorGroup.findMany()
+    * ```
+    */
+  get designColorGroup(): Prisma.DesignColorGroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.designColorToken`: Exposes CRUD operations for the **DesignColorToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DesignColorTokens
+    * const designColorTokens = await prisma.designColorToken.findMany()
+    * ```
+    */
+  get designColorToken(): Prisma.DesignColorTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.designAsset`: Exposes CRUD operations for the **DesignAsset** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DesignAssets
+    * const designAssets = await prisma.designAsset.findMany()
+    * ```
+    */
+  get designAsset(): Prisma.DesignAssetDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -794,8 +884,14 @@ export namespace Prisma {
     MembershipPermissionOverride: 'MembershipPermissionOverride',
     Invitation: 'Invitation',
     OnboardingDraft: 'OnboardingDraft',
+    ContextSource: 'ContextSource',
+    ContextArtifact: 'ContextArtifact',
     Asset: 'Asset',
-    AssetRelation: 'AssetRelation'
+    AssetRelation: 'AssetRelation',
+    DesignSystemProfile: 'DesignSystemProfile',
+    DesignColorGroup: 'DesignColorGroup',
+    DesignColorToken: 'DesignColorToken',
+    DesignAsset: 'DesignAsset'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -814,7 +910,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "asset" | "assetRelation"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1706,6 +1802,154 @@ export namespace Prisma {
           }
         }
       }
+      ContextSource: {
+        payload: Prisma.$ContextSourcePayload<ExtArgs>
+        fields: Prisma.ContextSourceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContextSourceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContextSourceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          findFirst: {
+            args: Prisma.ContextSourceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContextSourceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          findMany: {
+            args: Prisma.ContextSourceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>[]
+          }
+          create: {
+            args: Prisma.ContextSourceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          createMany: {
+            args: Prisma.ContextSourceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContextSourceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>[]
+          }
+          delete: {
+            args: Prisma.ContextSourceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          update: {
+            args: Prisma.ContextSourceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          deleteMany: {
+            args: Prisma.ContextSourceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContextSourceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContextSourceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>[]
+          }
+          upsert: {
+            args: Prisma.ContextSourceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextSourcePayload>
+          }
+          aggregate: {
+            args: Prisma.ContextSourceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContextSource>
+          }
+          groupBy: {
+            args: Prisma.ContextSourceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContextSourceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContextSourceCountArgs<ExtArgs>
+            result: $Utils.Optional<ContextSourceCountAggregateOutputType> | number
+          }
+        }
+      }
+      ContextArtifact: {
+        payload: Prisma.$ContextArtifactPayload<ExtArgs>
+        fields: Prisma.ContextArtifactFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ContextArtifactFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ContextArtifactFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          findFirst: {
+            args: Prisma.ContextArtifactFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ContextArtifactFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          findMany: {
+            args: Prisma.ContextArtifactFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>[]
+          }
+          create: {
+            args: Prisma.ContextArtifactCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          createMany: {
+            args: Prisma.ContextArtifactCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ContextArtifactCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>[]
+          }
+          delete: {
+            args: Prisma.ContextArtifactDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          update: {
+            args: Prisma.ContextArtifactUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          deleteMany: {
+            args: Prisma.ContextArtifactDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ContextArtifactUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ContextArtifactUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>[]
+          }
+          upsert: {
+            args: Prisma.ContextArtifactUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContextArtifactPayload>
+          }
+          aggregate: {
+            args: Prisma.ContextArtifactAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContextArtifact>
+          }
+          groupBy: {
+            args: Prisma.ContextArtifactGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContextArtifactGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ContextArtifactCountArgs<ExtArgs>
+            result: $Utils.Optional<ContextArtifactCountAggregateOutputType> | number
+          }
+        }
+      }
       Asset: {
         payload: Prisma.$AssetPayload<ExtArgs>
         fields: Prisma.AssetFieldRefs
@@ -1854,6 +2098,302 @@ export namespace Prisma {
           }
         }
       }
+      DesignSystemProfile: {
+        payload: Prisma.$DesignSystemProfilePayload<ExtArgs>
+        fields: Prisma.DesignSystemProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DesignSystemProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DesignSystemProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.DesignSystemProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DesignSystemProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          findMany: {
+            args: Prisma.DesignSystemProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>[]
+          }
+          create: {
+            args: Prisma.DesignSystemProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          createMany: {
+            args: Prisma.DesignSystemProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DesignSystemProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.DesignSystemProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          update: {
+            args: Prisma.DesignSystemProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.DesignSystemProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DesignSystemProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DesignSystemProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.DesignSystemProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignSystemProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.DesignSystemProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDesignSystemProfile>
+          }
+          groupBy: {
+            args: Prisma.DesignSystemProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DesignSystemProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DesignSystemProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<DesignSystemProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      DesignColorGroup: {
+        payload: Prisma.$DesignColorGroupPayload<ExtArgs>
+        fields: Prisma.DesignColorGroupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DesignColorGroupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DesignColorGroupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          findFirst: {
+            args: Prisma.DesignColorGroupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DesignColorGroupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          findMany: {
+            args: Prisma.DesignColorGroupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>[]
+          }
+          create: {
+            args: Prisma.DesignColorGroupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          createMany: {
+            args: Prisma.DesignColorGroupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DesignColorGroupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>[]
+          }
+          delete: {
+            args: Prisma.DesignColorGroupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          update: {
+            args: Prisma.DesignColorGroupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          deleteMany: {
+            args: Prisma.DesignColorGroupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DesignColorGroupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DesignColorGroupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>[]
+          }
+          upsert: {
+            args: Prisma.DesignColorGroupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorGroupPayload>
+          }
+          aggregate: {
+            args: Prisma.DesignColorGroupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDesignColorGroup>
+          }
+          groupBy: {
+            args: Prisma.DesignColorGroupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DesignColorGroupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DesignColorGroupCountArgs<ExtArgs>
+            result: $Utils.Optional<DesignColorGroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      DesignColorToken: {
+        payload: Prisma.$DesignColorTokenPayload<ExtArgs>
+        fields: Prisma.DesignColorTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DesignColorTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DesignColorTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.DesignColorTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DesignColorTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          findMany: {
+            args: Prisma.DesignColorTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>[]
+          }
+          create: {
+            args: Prisma.DesignColorTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          createMany: {
+            args: Prisma.DesignColorTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DesignColorTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.DesignColorTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          update: {
+            args: Prisma.DesignColorTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.DesignColorTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DesignColorTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DesignColorTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.DesignColorTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignColorTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.DesignColorTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDesignColorToken>
+          }
+          groupBy: {
+            args: Prisma.DesignColorTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DesignColorTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DesignColorTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<DesignColorTokenCountAggregateOutputType> | number
+          }
+        }
+      }
+      DesignAsset: {
+        payload: Prisma.$DesignAssetPayload<ExtArgs>
+        fields: Prisma.DesignAssetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DesignAssetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DesignAssetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          findFirst: {
+            args: Prisma.DesignAssetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DesignAssetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          findMany: {
+            args: Prisma.DesignAssetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>[]
+          }
+          create: {
+            args: Prisma.DesignAssetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          createMany: {
+            args: Prisma.DesignAssetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DesignAssetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>[]
+          }
+          delete: {
+            args: Prisma.DesignAssetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          update: {
+            args: Prisma.DesignAssetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          deleteMany: {
+            args: Prisma.DesignAssetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DesignAssetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DesignAssetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>[]
+          }
+          upsert: {
+            args: Prisma.DesignAssetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DesignAssetPayload>
+          }
+          aggregate: {
+            args: Prisma.DesignAssetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDesignAsset>
+          }
+          groupBy: {
+            args: Prisma.DesignAssetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DesignAssetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DesignAssetCountArgs<ExtArgs>
+            result: $Utils.Optional<DesignAssetCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1962,8 +2502,14 @@ export namespace Prisma {
     membershipPermissionOverride?: MembershipPermissionOverrideOmit
     invitation?: InvitationOmit
     onboardingDraft?: OnboardingDraftOmit
+    contextSource?: ContextSourceOmit
+    contextArtifact?: ContextArtifactOmit
     asset?: AssetOmit
     assetRelation?: AssetRelationOmit
+    designSystemProfile?: DesignSystemProfileOmit
+    designColorGroup?: DesignColorGroupOmit
+    designColorToken?: DesignColorTokenOmit
+    designAsset?: DesignAssetOmit
   }
 
   /* Types for Logging */
@@ -2106,6 +2652,7 @@ export namespace Prisma {
     roles: number
     invitations: number
     assets: number
+    contextSources: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2113,6 +2660,7 @@ export namespace Prisma {
     roles?: boolean | OrganizationCountOutputTypeCountRolesArgs
     invitations?: boolean | OrganizationCountOutputTypeCountInvitationsArgs
     assets?: boolean | OrganizationCountOutputTypeCountAssetsArgs
+    contextSources?: boolean | OrganizationCountOutputTypeCountContextSourcesArgs
   }
 
   // Custom InputTypes
@@ -2152,6 +2700,13 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountAssetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountContextSourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContextSourceWhereInput
   }
 
 
@@ -2263,6 +2818,77 @@ export namespace Prisma {
    */
   export type AssetCountOutputTypeCountRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetRelationWhereInput
+  }
+
+
+  /**
+   * Count Type DesignSystemProfileCountOutputType
+   */
+
+  export type DesignSystemProfileCountOutputType = {
+    colorGroups: number
+    assets: number
+  }
+
+  export type DesignSystemProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colorGroups?: boolean | DesignSystemProfileCountOutputTypeCountColorGroupsArgs
+    assets?: boolean | DesignSystemProfileCountOutputTypeCountAssetsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DesignSystemProfileCountOutputType without action
+   */
+  export type DesignSystemProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfileCountOutputType
+     */
+    select?: DesignSystemProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DesignSystemProfileCountOutputType without action
+   */
+  export type DesignSystemProfileCountOutputTypeCountColorGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignColorGroupWhereInput
+  }
+
+  /**
+   * DesignSystemProfileCountOutputType without action
+   */
+  export type DesignSystemProfileCountOutputTypeCountAssetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignAssetWhereInput
+  }
+
+
+  /**
+   * Count Type DesignColorGroupCountOutputType
+   */
+
+  export type DesignColorGroupCountOutputType = {
+    colors: number
+  }
+
+  export type DesignColorGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colors?: boolean | DesignColorGroupCountOutputTypeCountColorsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DesignColorGroupCountOutputType without action
+   */
+  export type DesignColorGroupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroupCountOutputType
+     */
+    select?: DesignColorGroupCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DesignColorGroupCountOutputType without action
+   */
+  export type DesignColorGroupCountOutputTypeCountColorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignColorTokenWhereInput
   }
 
 
@@ -6894,6 +7520,9 @@ export namespace Prisma {
     invitations?: boolean | Organization$invitationsArgs<ExtArgs>
     onboardingDraft?: boolean | Organization$onboardingDraftArgs<ExtArgs>
     assets?: boolean | Organization$assetsArgs<ExtArgs>
+    designSystem?: boolean | Organization$designSystemArgs<ExtArgs>
+    contextSources?: boolean | Organization$contextSourcesArgs<ExtArgs>
+    contextArtifact?: boolean | Organization$contextArtifactArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -6931,6 +7560,9 @@ export namespace Prisma {
     invitations?: boolean | Organization$invitationsArgs<ExtArgs>
     onboardingDraft?: boolean | Organization$onboardingDraftArgs<ExtArgs>
     assets?: boolean | Organization$assetsArgs<ExtArgs>
+    designSystem?: boolean | Organization$designSystemArgs<ExtArgs>
+    contextSources?: boolean | Organization$contextSourcesArgs<ExtArgs>
+    contextArtifact?: boolean | Organization$contextArtifactArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6944,6 +7576,9 @@ export namespace Prisma {
       invitations: Prisma.$InvitationPayload<ExtArgs>[]
       onboardingDraft: Prisma.$OnboardingDraftPayload<ExtArgs> | null
       assets: Prisma.$AssetPayload<ExtArgs>[]
+      designSystem: Prisma.$DesignSystemProfilePayload<ExtArgs> | null
+      contextSources: Prisma.$ContextSourcePayload<ExtArgs>[]
+      contextArtifact: Prisma.$ContextArtifactPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7351,6 +7986,9 @@ export namespace Prisma {
     invitations<T extends Organization$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     onboardingDraft<T extends Organization$onboardingDraftArgs<ExtArgs> = {}>(args?: Subset<T, Organization$onboardingDraftArgs<ExtArgs>>): Prisma__OnboardingDraftClient<$Result.GetResult<Prisma.$OnboardingDraftPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assets<T extends Organization$assetsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    designSystem<T extends Organization$designSystemArgs<ExtArgs> = {}>(args?: Subset<T, Organization$designSystemArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    contextSources<T extends Organization$contextSourcesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$contextSourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contextArtifact<T extends Organization$contextArtifactArgs<ExtArgs> = {}>(args?: Subset<T, Organization$contextArtifactArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7886,6 +8524,68 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AssetScalarFieldEnum | AssetScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.designSystem
+   */
+  export type Organization$designSystemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    where?: DesignSystemProfileWhereInput
+  }
+
+  /**
+   * Organization.contextSources
+   */
+  export type Organization$contextSourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    where?: ContextSourceWhereInput
+    orderBy?: ContextSourceOrderByWithRelationInput | ContextSourceOrderByWithRelationInput[]
+    cursor?: ContextSourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContextSourceScalarFieldEnum | ContextSourceScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.contextArtifact
+   */
+  export type Organization$contextArtifactArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    where?: ContextArtifactWhereInput
   }
 
   /**
@@ -15523,6 +16223,2472 @@ export namespace Prisma {
 
 
   /**
+   * Model ContextSource
+   */
+
+  export type AggregateContextSource = {
+    _count: ContextSourceCountAggregateOutputType | null
+    _avg: ContextSourceAvgAggregateOutputType | null
+    _sum: ContextSourceSumAggregateOutputType | null
+    _min: ContextSourceMinAggregateOutputType | null
+    _max: ContextSourceMaxAggregateOutputType | null
+  }
+
+  export type ContextSourceAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type ContextSourceSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type ContextSourceMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    title: string | null
+    description: string | null
+    sourceKind: string | null
+    sourceUrl: string | null
+    fileName: string | null
+    mimeType: string | null
+    fileSize: number | null
+    objectKey: string | null
+    publicUrl: string | null
+    pipelineStatus: string | null
+    pipelineError: string | null
+    extractedContent: string | null
+    normalizedContent: string | null
+    reviewNotes: string | null
+    reviewedAt: Date | null
+    reviewedById: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContextSourceMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    title: string | null
+    description: string | null
+    sourceKind: string | null
+    sourceUrl: string | null
+    fileName: string | null
+    mimeType: string | null
+    fileSize: number | null
+    objectKey: string | null
+    publicUrl: string | null
+    pipelineStatus: string | null
+    pipelineError: string | null
+    extractedContent: string | null
+    normalizedContent: string | null
+    reviewNotes: string | null
+    reviewedAt: Date | null
+    reviewedById: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContextSourceCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    title: number
+    description: number
+    sourceKind: number
+    sourceUrl: number
+    fileName: number
+    mimeType: number
+    fileSize: number
+    objectKey: number
+    publicUrl: number
+    pipelineStatus: number
+    pipelineError: number
+    extractedContent: number
+    normalizedContent: number
+    reviewNotes: number
+    reviewedAt: number
+    reviewedById: number
+    tags: number
+    category: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ContextSourceAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type ContextSourceSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type ContextSourceMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    title?: true
+    description?: true
+    sourceKind?: true
+    sourceUrl?: true
+    fileName?: true
+    mimeType?: true
+    fileSize?: true
+    objectKey?: true
+    publicUrl?: true
+    pipelineStatus?: true
+    pipelineError?: true
+    extractedContent?: true
+    normalizedContent?: true
+    reviewNotes?: true
+    reviewedAt?: true
+    reviewedById?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContextSourceMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    title?: true
+    description?: true
+    sourceKind?: true
+    sourceUrl?: true
+    fileName?: true
+    mimeType?: true
+    fileSize?: true
+    objectKey?: true
+    publicUrl?: true
+    pipelineStatus?: true
+    pipelineError?: true
+    extractedContent?: true
+    normalizedContent?: true
+    reviewNotes?: true
+    reviewedAt?: true
+    reviewedById?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContextSourceCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    title?: true
+    description?: true
+    sourceKind?: true
+    sourceUrl?: true
+    fileName?: true
+    mimeType?: true
+    fileSize?: true
+    objectKey?: true
+    publicUrl?: true
+    pipelineStatus?: true
+    pipelineError?: true
+    extractedContent?: true
+    normalizedContent?: true
+    reviewNotes?: true
+    reviewedAt?: true
+    reviewedById?: true
+    tags?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ContextSourceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContextSource to aggregate.
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextSources to fetch.
+     */
+    orderBy?: ContextSourceOrderByWithRelationInput | ContextSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContextSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContextSources
+    **/
+    _count?: true | ContextSourceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContextSourceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContextSourceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContextSourceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContextSourceMaxAggregateInputType
+  }
+
+  export type GetContextSourceAggregateType<T extends ContextSourceAggregateArgs> = {
+        [P in keyof T & keyof AggregateContextSource]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContextSource[P]>
+      : GetScalarType<T[P], AggregateContextSource[P]>
+  }
+
+
+
+
+  export type ContextSourceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContextSourceWhereInput
+    orderBy?: ContextSourceOrderByWithAggregationInput | ContextSourceOrderByWithAggregationInput[]
+    by: ContextSourceScalarFieldEnum[] | ContextSourceScalarFieldEnum
+    having?: ContextSourceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContextSourceCountAggregateInputType | true
+    _avg?: ContextSourceAvgAggregateInputType
+    _sum?: ContextSourceSumAggregateInputType
+    _min?: ContextSourceMinAggregateInputType
+    _max?: ContextSourceMaxAggregateInputType
+  }
+
+  export type ContextSourceGroupByOutputType = {
+    id: string
+    organizationId: string
+    title: string
+    description: string | null
+    sourceKind: string
+    sourceUrl: string | null
+    fileName: string | null
+    mimeType: string | null
+    fileSize: number | null
+    objectKey: string | null
+    publicUrl: string | null
+    pipelineStatus: string
+    pipelineError: string | null
+    extractedContent: string | null
+    normalizedContent: string | null
+    reviewNotes: string | null
+    reviewedAt: Date | null
+    reviewedById: string | null
+    tags: string[]
+    category: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ContextSourceCountAggregateOutputType | null
+    _avg: ContextSourceAvgAggregateOutputType | null
+    _sum: ContextSourceSumAggregateOutputType | null
+    _min: ContextSourceMinAggregateOutputType | null
+    _max: ContextSourceMaxAggregateOutputType | null
+  }
+
+  type GetContextSourceGroupByPayload<T extends ContextSourceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContextSourceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContextSourceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContextSourceGroupByOutputType[P]>
+            : GetScalarType<T[P], ContextSourceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContextSourceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    title?: boolean
+    description?: boolean
+    sourceKind?: boolean
+    sourceUrl?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    pipelineStatus?: boolean
+    pipelineError?: boolean
+    extractedContent?: boolean
+    normalizedContent?: boolean
+    reviewNotes?: boolean
+    reviewedAt?: boolean
+    reviewedById?: boolean
+    tags?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextSource"]>
+
+  export type ContextSourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    title?: boolean
+    description?: boolean
+    sourceKind?: boolean
+    sourceUrl?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    pipelineStatus?: boolean
+    pipelineError?: boolean
+    extractedContent?: boolean
+    normalizedContent?: boolean
+    reviewNotes?: boolean
+    reviewedAt?: boolean
+    reviewedById?: boolean
+    tags?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextSource"]>
+
+  export type ContextSourceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    title?: boolean
+    description?: boolean
+    sourceKind?: boolean
+    sourceUrl?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    pipelineStatus?: boolean
+    pipelineError?: boolean
+    extractedContent?: boolean
+    normalizedContent?: boolean
+    reviewNotes?: boolean
+    reviewedAt?: boolean
+    reviewedById?: boolean
+    tags?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextSource"]>
+
+  export type ContextSourceSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    title?: boolean
+    description?: boolean
+    sourceKind?: boolean
+    sourceUrl?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    pipelineStatus?: boolean
+    pipelineError?: boolean
+    extractedContent?: boolean
+    normalizedContent?: boolean
+    reviewNotes?: boolean
+    reviewedAt?: boolean
+    reviewedById?: boolean
+    tags?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ContextSourceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "title" | "description" | "sourceKind" | "sourceUrl" | "fileName" | "mimeType" | "fileSize" | "objectKey" | "publicUrl" | "pipelineStatus" | "pipelineError" | "extractedContent" | "normalizedContent" | "reviewNotes" | "reviewedAt" | "reviewedById" | "tags" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["contextSource"]>
+  export type ContextSourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ContextSourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ContextSourceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $ContextSourcePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContextSource"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      title: string
+      description: string | null
+      sourceKind: string
+      sourceUrl: string | null
+      fileName: string | null
+      mimeType: string | null
+      fileSize: number | null
+      objectKey: string | null
+      publicUrl: string | null
+      pipelineStatus: string
+      pipelineError: string | null
+      extractedContent: string | null
+      normalizedContent: string | null
+      reviewNotes: string | null
+      reviewedAt: Date | null
+      reviewedById: string | null
+      tags: string[]
+      category: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["contextSource"]>
+    composites: {}
+  }
+
+  type ContextSourceGetPayload<S extends boolean | null | undefined | ContextSourceDefaultArgs> = $Result.GetResult<Prisma.$ContextSourcePayload, S>
+
+  type ContextSourceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContextSourceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContextSourceCountAggregateInputType | true
+    }
+
+  export interface ContextSourceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContextSource'], meta: { name: 'ContextSource' } }
+    /**
+     * Find zero or one ContextSource that matches the filter.
+     * @param {ContextSourceFindUniqueArgs} args - Arguments to find a ContextSource
+     * @example
+     * // Get one ContextSource
+     * const contextSource = await prisma.contextSource.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContextSourceFindUniqueArgs>(args: SelectSubset<T, ContextSourceFindUniqueArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContextSource that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContextSourceFindUniqueOrThrowArgs} args - Arguments to find a ContextSource
+     * @example
+     * // Get one ContextSource
+     * const contextSource = await prisma.contextSource.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContextSourceFindUniqueOrThrowArgs>(args: SelectSubset<T, ContextSourceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContextSource that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceFindFirstArgs} args - Arguments to find a ContextSource
+     * @example
+     * // Get one ContextSource
+     * const contextSource = await prisma.contextSource.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContextSourceFindFirstArgs>(args?: SelectSubset<T, ContextSourceFindFirstArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContextSource that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceFindFirstOrThrowArgs} args - Arguments to find a ContextSource
+     * @example
+     * // Get one ContextSource
+     * const contextSource = await prisma.contextSource.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContextSourceFindFirstOrThrowArgs>(args?: SelectSubset<T, ContextSourceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContextSources that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContextSources
+     * const contextSources = await prisma.contextSource.findMany()
+     * 
+     * // Get first 10 ContextSources
+     * const contextSources = await prisma.contextSource.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contextSourceWithIdOnly = await prisma.contextSource.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContextSourceFindManyArgs>(args?: SelectSubset<T, ContextSourceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContextSource.
+     * @param {ContextSourceCreateArgs} args - Arguments to create a ContextSource.
+     * @example
+     * // Create one ContextSource
+     * const ContextSource = await prisma.contextSource.create({
+     *   data: {
+     *     // ... data to create a ContextSource
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContextSourceCreateArgs>(args: SelectSubset<T, ContextSourceCreateArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContextSources.
+     * @param {ContextSourceCreateManyArgs} args - Arguments to create many ContextSources.
+     * @example
+     * // Create many ContextSources
+     * const contextSource = await prisma.contextSource.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContextSourceCreateManyArgs>(args?: SelectSubset<T, ContextSourceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContextSources and returns the data saved in the database.
+     * @param {ContextSourceCreateManyAndReturnArgs} args - Arguments to create many ContextSources.
+     * @example
+     * // Create many ContextSources
+     * const contextSource = await prisma.contextSource.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContextSources and only return the `id`
+     * const contextSourceWithIdOnly = await prisma.contextSource.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContextSourceCreateManyAndReturnArgs>(args?: SelectSubset<T, ContextSourceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContextSource.
+     * @param {ContextSourceDeleteArgs} args - Arguments to delete one ContextSource.
+     * @example
+     * // Delete one ContextSource
+     * const ContextSource = await prisma.contextSource.delete({
+     *   where: {
+     *     // ... filter to delete one ContextSource
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContextSourceDeleteArgs>(args: SelectSubset<T, ContextSourceDeleteArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContextSource.
+     * @param {ContextSourceUpdateArgs} args - Arguments to update one ContextSource.
+     * @example
+     * // Update one ContextSource
+     * const contextSource = await prisma.contextSource.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContextSourceUpdateArgs>(args: SelectSubset<T, ContextSourceUpdateArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContextSources.
+     * @param {ContextSourceDeleteManyArgs} args - Arguments to filter ContextSources to delete.
+     * @example
+     * // Delete a few ContextSources
+     * const { count } = await prisma.contextSource.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContextSourceDeleteManyArgs>(args?: SelectSubset<T, ContextSourceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContextSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContextSources
+     * const contextSource = await prisma.contextSource.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContextSourceUpdateManyArgs>(args: SelectSubset<T, ContextSourceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContextSources and returns the data updated in the database.
+     * @param {ContextSourceUpdateManyAndReturnArgs} args - Arguments to update many ContextSources.
+     * @example
+     * // Update many ContextSources
+     * const contextSource = await prisma.contextSource.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContextSources and only return the `id`
+     * const contextSourceWithIdOnly = await prisma.contextSource.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContextSourceUpdateManyAndReturnArgs>(args: SelectSubset<T, ContextSourceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContextSource.
+     * @param {ContextSourceUpsertArgs} args - Arguments to update or create a ContextSource.
+     * @example
+     * // Update or create a ContextSource
+     * const contextSource = await prisma.contextSource.upsert({
+     *   create: {
+     *     // ... data to create a ContextSource
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContextSource we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContextSourceUpsertArgs>(args: SelectSubset<T, ContextSourceUpsertArgs<ExtArgs>>): Prisma__ContextSourceClient<$Result.GetResult<Prisma.$ContextSourcePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContextSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceCountArgs} args - Arguments to filter ContextSources to count.
+     * @example
+     * // Count the number of ContextSources
+     * const count = await prisma.contextSource.count({
+     *   where: {
+     *     // ... the filter for the ContextSources we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContextSourceCountArgs>(
+      args?: Subset<T, ContextSourceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContextSourceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContextSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContextSourceAggregateArgs>(args: Subset<T, ContextSourceAggregateArgs>): Prisma.PrismaPromise<GetContextSourceAggregateType<T>>
+
+    /**
+     * Group by ContextSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextSourceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContextSourceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContextSourceGroupByArgs['orderBy'] }
+        : { orderBy?: ContextSourceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContextSourceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContextSourceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContextSource model
+   */
+  readonly fields: ContextSourceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContextSource.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContextSourceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContextSource model
+   */
+  interface ContextSourceFieldRefs {
+    readonly id: FieldRef<"ContextSource", 'String'>
+    readonly organizationId: FieldRef<"ContextSource", 'String'>
+    readonly title: FieldRef<"ContextSource", 'String'>
+    readonly description: FieldRef<"ContextSource", 'String'>
+    readonly sourceKind: FieldRef<"ContextSource", 'String'>
+    readonly sourceUrl: FieldRef<"ContextSource", 'String'>
+    readonly fileName: FieldRef<"ContextSource", 'String'>
+    readonly mimeType: FieldRef<"ContextSource", 'String'>
+    readonly fileSize: FieldRef<"ContextSource", 'Int'>
+    readonly objectKey: FieldRef<"ContextSource", 'String'>
+    readonly publicUrl: FieldRef<"ContextSource", 'String'>
+    readonly pipelineStatus: FieldRef<"ContextSource", 'String'>
+    readonly pipelineError: FieldRef<"ContextSource", 'String'>
+    readonly extractedContent: FieldRef<"ContextSource", 'String'>
+    readonly normalizedContent: FieldRef<"ContextSource", 'String'>
+    readonly reviewNotes: FieldRef<"ContextSource", 'String'>
+    readonly reviewedAt: FieldRef<"ContextSource", 'DateTime'>
+    readonly reviewedById: FieldRef<"ContextSource", 'String'>
+    readonly tags: FieldRef<"ContextSource", 'String[]'>
+    readonly category: FieldRef<"ContextSource", 'String'>
+    readonly createdAt: FieldRef<"ContextSource", 'DateTime'>
+    readonly updatedAt: FieldRef<"ContextSource", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContextSource findUnique
+   */
+  export type ContextSourceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextSource to fetch.
+     */
+    where: ContextSourceWhereUniqueInput
+  }
+
+  /**
+   * ContextSource findUniqueOrThrow
+   */
+  export type ContextSourceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextSource to fetch.
+     */
+    where: ContextSourceWhereUniqueInput
+  }
+
+  /**
+   * ContextSource findFirst
+   */
+  export type ContextSourceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextSource to fetch.
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextSources to fetch.
+     */
+    orderBy?: ContextSourceOrderByWithRelationInput | ContextSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContextSources.
+     */
+    cursor?: ContextSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContextSources.
+     */
+    distinct?: ContextSourceScalarFieldEnum | ContextSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ContextSource findFirstOrThrow
+   */
+  export type ContextSourceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextSource to fetch.
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextSources to fetch.
+     */
+    orderBy?: ContextSourceOrderByWithRelationInput | ContextSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContextSources.
+     */
+    cursor?: ContextSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContextSources.
+     */
+    distinct?: ContextSourceScalarFieldEnum | ContextSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ContextSource findMany
+   */
+  export type ContextSourceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextSources to fetch.
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextSources to fetch.
+     */
+    orderBy?: ContextSourceOrderByWithRelationInput | ContextSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContextSources.
+     */
+    cursor?: ContextSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextSources.
+     */
+    skip?: number
+    distinct?: ContextSourceScalarFieldEnum | ContextSourceScalarFieldEnum[]
+  }
+
+  /**
+   * ContextSource create
+   */
+  export type ContextSourceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContextSource.
+     */
+    data: XOR<ContextSourceCreateInput, ContextSourceUncheckedCreateInput>
+  }
+
+  /**
+   * ContextSource createMany
+   */
+  export type ContextSourceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContextSources.
+     */
+    data: ContextSourceCreateManyInput | ContextSourceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContextSource createManyAndReturn
+   */
+  export type ContextSourceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContextSources.
+     */
+    data: ContextSourceCreateManyInput | ContextSourceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContextSource update
+   */
+  export type ContextSourceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContextSource.
+     */
+    data: XOR<ContextSourceUpdateInput, ContextSourceUncheckedUpdateInput>
+    /**
+     * Choose, which ContextSource to update.
+     */
+    where: ContextSourceWhereUniqueInput
+  }
+
+  /**
+   * ContextSource updateMany
+   */
+  export type ContextSourceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContextSources.
+     */
+    data: XOR<ContextSourceUpdateManyMutationInput, ContextSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which ContextSources to update
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * Limit how many ContextSources to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContextSource updateManyAndReturn
+   */
+  export type ContextSourceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * The data used to update ContextSources.
+     */
+    data: XOR<ContextSourceUpdateManyMutationInput, ContextSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which ContextSources to update
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * Limit how many ContextSources to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContextSource upsert
+   */
+  export type ContextSourceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContextSource to update in case it exists.
+     */
+    where: ContextSourceWhereUniqueInput
+    /**
+     * In case the ContextSource found by the `where` argument doesn't exist, create a new ContextSource with this data.
+     */
+    create: XOR<ContextSourceCreateInput, ContextSourceUncheckedCreateInput>
+    /**
+     * In case the ContextSource was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContextSourceUpdateInput, ContextSourceUncheckedUpdateInput>
+  }
+
+  /**
+   * ContextSource delete
+   */
+  export type ContextSourceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+    /**
+     * Filter which ContextSource to delete.
+     */
+    where: ContextSourceWhereUniqueInput
+  }
+
+  /**
+   * ContextSource deleteMany
+   */
+  export type ContextSourceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContextSources to delete
+     */
+    where?: ContextSourceWhereInput
+    /**
+     * Limit how many ContextSources to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContextSource without action
+   */
+  export type ContextSourceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextSource
+     */
+    select?: ContextSourceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextSource
+     */
+    omit?: ContextSourceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextSourceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ContextArtifact
+   */
+
+  export type AggregateContextArtifact = {
+    _count: ContextArtifactCountAggregateOutputType | null
+    _avg: ContextArtifactAvgAggregateOutputType | null
+    _sum: ContextArtifactSumAggregateOutputType | null
+    _min: ContextArtifactMinAggregateOutputType | null
+    _max: ContextArtifactMaxAggregateOutputType | null
+  }
+
+  export type ContextArtifactAvgAggregateOutputType = {
+    sourceCount: number | null
+  }
+
+  export type ContextArtifactSumAggregateOutputType = {
+    sourceCount: number | null
+  }
+
+  export type ContextArtifactMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    objectKey: string | null
+    publicUrl: string | null
+    syncStatus: string | null
+    syncedAt: Date | null
+    syncError: string | null
+    sourceCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContextArtifactMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    objectKey: string | null
+    publicUrl: string | null
+    syncStatus: string | null
+    syncedAt: Date | null
+    syncError: string | null
+    sourceCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ContextArtifactCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    objectKey: number
+    publicUrl: number
+    syncStatus: number
+    syncedAt: number
+    syncError: number
+    sourceCount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ContextArtifactAvgAggregateInputType = {
+    sourceCount?: true
+  }
+
+  export type ContextArtifactSumAggregateInputType = {
+    sourceCount?: true
+  }
+
+  export type ContextArtifactMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    objectKey?: true
+    publicUrl?: true
+    syncStatus?: true
+    syncedAt?: true
+    syncError?: true
+    sourceCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContextArtifactMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    objectKey?: true
+    publicUrl?: true
+    syncStatus?: true
+    syncedAt?: true
+    syncError?: true
+    sourceCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ContextArtifactCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    objectKey?: true
+    publicUrl?: true
+    syncStatus?: true
+    syncedAt?: true
+    syncError?: true
+    sourceCount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ContextArtifactAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContextArtifact to aggregate.
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextArtifacts to fetch.
+     */
+    orderBy?: ContextArtifactOrderByWithRelationInput | ContextArtifactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ContextArtifactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextArtifacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextArtifacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ContextArtifacts
+    **/
+    _count?: true | ContextArtifactCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ContextArtifactAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ContextArtifactSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ContextArtifactMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ContextArtifactMaxAggregateInputType
+  }
+
+  export type GetContextArtifactAggregateType<T extends ContextArtifactAggregateArgs> = {
+        [P in keyof T & keyof AggregateContextArtifact]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateContextArtifact[P]>
+      : GetScalarType<T[P], AggregateContextArtifact[P]>
+  }
+
+
+
+
+  export type ContextArtifactGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContextArtifactWhereInput
+    orderBy?: ContextArtifactOrderByWithAggregationInput | ContextArtifactOrderByWithAggregationInput[]
+    by: ContextArtifactScalarFieldEnum[] | ContextArtifactScalarFieldEnum
+    having?: ContextArtifactScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ContextArtifactCountAggregateInputType | true
+    _avg?: ContextArtifactAvgAggregateInputType
+    _sum?: ContextArtifactSumAggregateInputType
+    _min?: ContextArtifactMinAggregateInputType
+    _max?: ContextArtifactMaxAggregateInputType
+  }
+
+  export type ContextArtifactGroupByOutputType = {
+    id: string
+    organizationId: string
+    objectKey: string | null
+    publicUrl: string | null
+    syncStatus: string
+    syncedAt: Date | null
+    syncError: string | null
+    sourceCount: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ContextArtifactCountAggregateOutputType | null
+    _avg: ContextArtifactAvgAggregateOutputType | null
+    _sum: ContextArtifactSumAggregateOutputType | null
+    _min: ContextArtifactMinAggregateOutputType | null
+    _max: ContextArtifactMaxAggregateOutputType | null
+  }
+
+  type GetContextArtifactGroupByPayload<T extends ContextArtifactGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ContextArtifactGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ContextArtifactGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ContextArtifactGroupByOutputType[P]>
+            : GetScalarType<T[P], ContextArtifactGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ContextArtifactSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    syncStatus?: boolean
+    syncedAt?: boolean
+    syncError?: boolean
+    sourceCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextArtifact"]>
+
+  export type ContextArtifactSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    syncStatus?: boolean
+    syncedAt?: boolean
+    syncError?: boolean
+    sourceCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextArtifact"]>
+
+  export type ContextArtifactSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    syncStatus?: boolean
+    syncedAt?: boolean
+    syncError?: boolean
+    sourceCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contextArtifact"]>
+
+  export type ContextArtifactSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    syncStatus?: boolean
+    syncedAt?: boolean
+    syncError?: boolean
+    sourceCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ContextArtifactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "objectKey" | "publicUrl" | "syncStatus" | "syncedAt" | "syncError" | "sourceCount" | "createdAt" | "updatedAt", ExtArgs["result"]["contextArtifact"]>
+  export type ContextArtifactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ContextArtifactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ContextArtifactIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $ContextArtifactPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ContextArtifact"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      objectKey: string | null
+      publicUrl: string | null
+      syncStatus: string
+      syncedAt: Date | null
+      syncError: string | null
+      sourceCount: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["contextArtifact"]>
+    composites: {}
+  }
+
+  type ContextArtifactGetPayload<S extends boolean | null | undefined | ContextArtifactDefaultArgs> = $Result.GetResult<Prisma.$ContextArtifactPayload, S>
+
+  type ContextArtifactCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContextArtifactFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContextArtifactCountAggregateInputType | true
+    }
+
+  export interface ContextArtifactDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ContextArtifact'], meta: { name: 'ContextArtifact' } }
+    /**
+     * Find zero or one ContextArtifact that matches the filter.
+     * @param {ContextArtifactFindUniqueArgs} args - Arguments to find a ContextArtifact
+     * @example
+     * // Get one ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ContextArtifactFindUniqueArgs>(args: SelectSubset<T, ContextArtifactFindUniqueArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ContextArtifact that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ContextArtifactFindUniqueOrThrowArgs} args - Arguments to find a ContextArtifact
+     * @example
+     * // Get one ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ContextArtifactFindUniqueOrThrowArgs>(args: SelectSubset<T, ContextArtifactFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContextArtifact that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactFindFirstArgs} args - Arguments to find a ContextArtifact
+     * @example
+     * // Get one ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ContextArtifactFindFirstArgs>(args?: SelectSubset<T, ContextArtifactFindFirstArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ContextArtifact that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactFindFirstOrThrowArgs} args - Arguments to find a ContextArtifact
+     * @example
+     * // Get one ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ContextArtifactFindFirstOrThrowArgs>(args?: SelectSubset<T, ContextArtifactFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ContextArtifacts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ContextArtifacts
+     * const contextArtifacts = await prisma.contextArtifact.findMany()
+     * 
+     * // Get first 10 ContextArtifacts
+     * const contextArtifacts = await prisma.contextArtifact.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const contextArtifactWithIdOnly = await prisma.contextArtifact.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ContextArtifactFindManyArgs>(args?: SelectSubset<T, ContextArtifactFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ContextArtifact.
+     * @param {ContextArtifactCreateArgs} args - Arguments to create a ContextArtifact.
+     * @example
+     * // Create one ContextArtifact
+     * const ContextArtifact = await prisma.contextArtifact.create({
+     *   data: {
+     *     // ... data to create a ContextArtifact
+     *   }
+     * })
+     * 
+     */
+    create<T extends ContextArtifactCreateArgs>(args: SelectSubset<T, ContextArtifactCreateArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ContextArtifacts.
+     * @param {ContextArtifactCreateManyArgs} args - Arguments to create many ContextArtifacts.
+     * @example
+     * // Create many ContextArtifacts
+     * const contextArtifact = await prisma.contextArtifact.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ContextArtifactCreateManyArgs>(args?: SelectSubset<T, ContextArtifactCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ContextArtifacts and returns the data saved in the database.
+     * @param {ContextArtifactCreateManyAndReturnArgs} args - Arguments to create many ContextArtifacts.
+     * @example
+     * // Create many ContextArtifacts
+     * const contextArtifact = await prisma.contextArtifact.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ContextArtifacts and only return the `id`
+     * const contextArtifactWithIdOnly = await prisma.contextArtifact.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ContextArtifactCreateManyAndReturnArgs>(args?: SelectSubset<T, ContextArtifactCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ContextArtifact.
+     * @param {ContextArtifactDeleteArgs} args - Arguments to delete one ContextArtifact.
+     * @example
+     * // Delete one ContextArtifact
+     * const ContextArtifact = await prisma.contextArtifact.delete({
+     *   where: {
+     *     // ... filter to delete one ContextArtifact
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ContextArtifactDeleteArgs>(args: SelectSubset<T, ContextArtifactDeleteArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ContextArtifact.
+     * @param {ContextArtifactUpdateArgs} args - Arguments to update one ContextArtifact.
+     * @example
+     * // Update one ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ContextArtifactUpdateArgs>(args: SelectSubset<T, ContextArtifactUpdateArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ContextArtifacts.
+     * @param {ContextArtifactDeleteManyArgs} args - Arguments to filter ContextArtifacts to delete.
+     * @example
+     * // Delete a few ContextArtifacts
+     * const { count } = await prisma.contextArtifact.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ContextArtifactDeleteManyArgs>(args?: SelectSubset<T, ContextArtifactDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContextArtifacts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ContextArtifacts
+     * const contextArtifact = await prisma.contextArtifact.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ContextArtifactUpdateManyArgs>(args: SelectSubset<T, ContextArtifactUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ContextArtifacts and returns the data updated in the database.
+     * @param {ContextArtifactUpdateManyAndReturnArgs} args - Arguments to update many ContextArtifacts.
+     * @example
+     * // Update many ContextArtifacts
+     * const contextArtifact = await prisma.contextArtifact.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ContextArtifacts and only return the `id`
+     * const contextArtifactWithIdOnly = await prisma.contextArtifact.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ContextArtifactUpdateManyAndReturnArgs>(args: SelectSubset<T, ContextArtifactUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ContextArtifact.
+     * @param {ContextArtifactUpsertArgs} args - Arguments to update or create a ContextArtifact.
+     * @example
+     * // Update or create a ContextArtifact
+     * const contextArtifact = await prisma.contextArtifact.upsert({
+     *   create: {
+     *     // ... data to create a ContextArtifact
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ContextArtifact we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ContextArtifactUpsertArgs>(args: SelectSubset<T, ContextArtifactUpsertArgs<ExtArgs>>): Prisma__ContextArtifactClient<$Result.GetResult<Prisma.$ContextArtifactPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ContextArtifacts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactCountArgs} args - Arguments to filter ContextArtifacts to count.
+     * @example
+     * // Count the number of ContextArtifacts
+     * const count = await prisma.contextArtifact.count({
+     *   where: {
+     *     // ... the filter for the ContextArtifacts we want to count
+     *   }
+     * })
+    **/
+    count<T extends ContextArtifactCountArgs>(
+      args?: Subset<T, ContextArtifactCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ContextArtifactCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ContextArtifact.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ContextArtifactAggregateArgs>(args: Subset<T, ContextArtifactAggregateArgs>): Prisma.PrismaPromise<GetContextArtifactAggregateType<T>>
+
+    /**
+     * Group by ContextArtifact.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ContextArtifactGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ContextArtifactGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ContextArtifactGroupByArgs['orderBy'] }
+        : { orderBy?: ContextArtifactGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ContextArtifactGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContextArtifactGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ContextArtifact model
+   */
+  readonly fields: ContextArtifactFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ContextArtifact.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ContextArtifactClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ContextArtifact model
+   */
+  interface ContextArtifactFieldRefs {
+    readonly id: FieldRef<"ContextArtifact", 'String'>
+    readonly organizationId: FieldRef<"ContextArtifact", 'String'>
+    readonly objectKey: FieldRef<"ContextArtifact", 'String'>
+    readonly publicUrl: FieldRef<"ContextArtifact", 'String'>
+    readonly syncStatus: FieldRef<"ContextArtifact", 'String'>
+    readonly syncedAt: FieldRef<"ContextArtifact", 'DateTime'>
+    readonly syncError: FieldRef<"ContextArtifact", 'String'>
+    readonly sourceCount: FieldRef<"ContextArtifact", 'Int'>
+    readonly createdAt: FieldRef<"ContextArtifact", 'DateTime'>
+    readonly updatedAt: FieldRef<"ContextArtifact", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ContextArtifact findUnique
+   */
+  export type ContextArtifactFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextArtifact to fetch.
+     */
+    where: ContextArtifactWhereUniqueInput
+  }
+
+  /**
+   * ContextArtifact findUniqueOrThrow
+   */
+  export type ContextArtifactFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextArtifact to fetch.
+     */
+    where: ContextArtifactWhereUniqueInput
+  }
+
+  /**
+   * ContextArtifact findFirst
+   */
+  export type ContextArtifactFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextArtifact to fetch.
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextArtifacts to fetch.
+     */
+    orderBy?: ContextArtifactOrderByWithRelationInput | ContextArtifactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContextArtifacts.
+     */
+    cursor?: ContextArtifactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextArtifacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextArtifacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContextArtifacts.
+     */
+    distinct?: ContextArtifactScalarFieldEnum | ContextArtifactScalarFieldEnum[]
+  }
+
+  /**
+   * ContextArtifact findFirstOrThrow
+   */
+  export type ContextArtifactFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextArtifact to fetch.
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextArtifacts to fetch.
+     */
+    orderBy?: ContextArtifactOrderByWithRelationInput | ContextArtifactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ContextArtifacts.
+     */
+    cursor?: ContextArtifactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextArtifacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextArtifacts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContextArtifacts.
+     */
+    distinct?: ContextArtifactScalarFieldEnum | ContextArtifactScalarFieldEnum[]
+  }
+
+  /**
+   * ContextArtifact findMany
+   */
+  export type ContextArtifactFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter, which ContextArtifacts to fetch.
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ContextArtifacts to fetch.
+     */
+    orderBy?: ContextArtifactOrderByWithRelationInput | ContextArtifactOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ContextArtifacts.
+     */
+    cursor?: ContextArtifactWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ContextArtifacts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ContextArtifacts.
+     */
+    skip?: number
+    distinct?: ContextArtifactScalarFieldEnum | ContextArtifactScalarFieldEnum[]
+  }
+
+  /**
+   * ContextArtifact create
+   */
+  export type ContextArtifactCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ContextArtifact.
+     */
+    data: XOR<ContextArtifactCreateInput, ContextArtifactUncheckedCreateInput>
+  }
+
+  /**
+   * ContextArtifact createMany
+   */
+  export type ContextArtifactCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ContextArtifacts.
+     */
+    data: ContextArtifactCreateManyInput | ContextArtifactCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ContextArtifact createManyAndReturn
+   */
+  export type ContextArtifactCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * The data used to create many ContextArtifacts.
+     */
+    data: ContextArtifactCreateManyInput | ContextArtifactCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContextArtifact update
+   */
+  export type ContextArtifactUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ContextArtifact.
+     */
+    data: XOR<ContextArtifactUpdateInput, ContextArtifactUncheckedUpdateInput>
+    /**
+     * Choose, which ContextArtifact to update.
+     */
+    where: ContextArtifactWhereUniqueInput
+  }
+
+  /**
+   * ContextArtifact updateMany
+   */
+  export type ContextArtifactUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ContextArtifacts.
+     */
+    data: XOR<ContextArtifactUpdateManyMutationInput, ContextArtifactUncheckedUpdateManyInput>
+    /**
+     * Filter which ContextArtifacts to update
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * Limit how many ContextArtifacts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContextArtifact updateManyAndReturn
+   */
+  export type ContextArtifactUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * The data used to update ContextArtifacts.
+     */
+    data: XOR<ContextArtifactUpdateManyMutationInput, ContextArtifactUncheckedUpdateManyInput>
+    /**
+     * Filter which ContextArtifacts to update
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * Limit how many ContextArtifacts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ContextArtifact upsert
+   */
+  export type ContextArtifactUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ContextArtifact to update in case it exists.
+     */
+    where: ContextArtifactWhereUniqueInput
+    /**
+     * In case the ContextArtifact found by the `where` argument doesn't exist, create a new ContextArtifact with this data.
+     */
+    create: XOR<ContextArtifactCreateInput, ContextArtifactUncheckedCreateInput>
+    /**
+     * In case the ContextArtifact was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ContextArtifactUpdateInput, ContextArtifactUncheckedUpdateInput>
+  }
+
+  /**
+   * ContextArtifact delete
+   */
+  export type ContextArtifactDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+    /**
+     * Filter which ContextArtifact to delete.
+     */
+    where: ContextArtifactWhereUniqueInput
+  }
+
+  /**
+   * ContextArtifact deleteMany
+   */
+  export type ContextArtifactDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ContextArtifacts to delete
+     */
+    where?: ContextArtifactWhereInput
+    /**
+     * Limit how many ContextArtifacts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ContextArtifact without action
+   */
+  export type ContextArtifactDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ContextArtifact
+     */
+    select?: ContextArtifactSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ContextArtifact
+     */
+    omit?: ContextArtifactOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContextArtifactInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Asset
    */
 
@@ -17808,6 +20974,4814 @@ export namespace Prisma {
 
 
   /**
+   * Model DesignSystemProfile
+   */
+
+  export type AggregateDesignSystemProfile = {
+    _count: DesignSystemProfileCountAggregateOutputType | null
+    _min: DesignSystemProfileMinAggregateOutputType | null
+    _max: DesignSystemProfileMaxAggregateOutputType | null
+  }
+
+  export type DesignSystemProfileMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    brandEssence: string | null
+    desiredPerception: string | null
+    visualStyle: string | null
+    antiPatterns: string | null
+    conceptualReferences: string | null
+    aiNotes: string | null
+    artifactSyncStatus: string | null
+    artifactSyncedAt: Date | null
+    artifactSyncError: string | null
+    artifactObjectKey: string | null
+    contextArtifactSyncStatus: string | null
+    contextArtifactSyncedAt: Date | null
+    contextArtifactSyncError: string | null
+    contextArtifactObjectKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignSystemProfileMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    brandEssence: string | null
+    desiredPerception: string | null
+    visualStyle: string | null
+    antiPatterns: string | null
+    conceptualReferences: string | null
+    aiNotes: string | null
+    artifactSyncStatus: string | null
+    artifactSyncedAt: Date | null
+    artifactSyncError: string | null
+    artifactObjectKey: string | null
+    contextArtifactSyncStatus: string | null
+    contextArtifactSyncedAt: Date | null
+    contextArtifactSyncError: string | null
+    contextArtifactObjectKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignSystemProfileCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    brandEssence: number
+    desiredPerception: number
+    visualStyle: number
+    antiPatterns: number
+    conceptualReferences: number
+    aiNotes: number
+    artifactSyncStatus: number
+    artifactSyncedAt: number
+    artifactSyncError: number
+    artifactObjectKey: number
+    contextArtifactSyncStatus: number
+    contextArtifactSyncedAt: number
+    contextArtifactSyncError: number
+    contextArtifactObjectKey: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DesignSystemProfileMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    brandEssence?: true
+    desiredPerception?: true
+    visualStyle?: true
+    antiPatterns?: true
+    conceptualReferences?: true
+    aiNotes?: true
+    artifactSyncStatus?: true
+    artifactSyncedAt?: true
+    artifactSyncError?: true
+    artifactObjectKey?: true
+    contextArtifactSyncStatus?: true
+    contextArtifactSyncedAt?: true
+    contextArtifactSyncError?: true
+    contextArtifactObjectKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignSystemProfileMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    brandEssence?: true
+    desiredPerception?: true
+    visualStyle?: true
+    antiPatterns?: true
+    conceptualReferences?: true
+    aiNotes?: true
+    artifactSyncStatus?: true
+    artifactSyncedAt?: true
+    artifactSyncError?: true
+    artifactObjectKey?: true
+    contextArtifactSyncStatus?: true
+    contextArtifactSyncedAt?: true
+    contextArtifactSyncError?: true
+    contextArtifactObjectKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignSystemProfileCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    brandEssence?: true
+    desiredPerception?: true
+    visualStyle?: true
+    antiPatterns?: true
+    conceptualReferences?: true
+    aiNotes?: true
+    artifactSyncStatus?: true
+    artifactSyncedAt?: true
+    artifactSyncError?: true
+    artifactObjectKey?: true
+    contextArtifactSyncStatus?: true
+    contextArtifactSyncedAt?: true
+    contextArtifactSyncError?: true
+    contextArtifactObjectKey?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DesignSystemProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignSystemProfile to aggregate.
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignSystemProfiles to fetch.
+     */
+    orderBy?: DesignSystemProfileOrderByWithRelationInput | DesignSystemProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DesignSystemProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignSystemProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignSystemProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DesignSystemProfiles
+    **/
+    _count?: true | DesignSystemProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DesignSystemProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DesignSystemProfileMaxAggregateInputType
+  }
+
+  export type GetDesignSystemProfileAggregateType<T extends DesignSystemProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateDesignSystemProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDesignSystemProfile[P]>
+      : GetScalarType<T[P], AggregateDesignSystemProfile[P]>
+  }
+
+
+
+
+  export type DesignSystemProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignSystemProfileWhereInput
+    orderBy?: DesignSystemProfileOrderByWithAggregationInput | DesignSystemProfileOrderByWithAggregationInput[]
+    by: DesignSystemProfileScalarFieldEnum[] | DesignSystemProfileScalarFieldEnum
+    having?: DesignSystemProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DesignSystemProfileCountAggregateInputType | true
+    _min?: DesignSystemProfileMinAggregateInputType
+    _max?: DesignSystemProfileMaxAggregateInputType
+  }
+
+  export type DesignSystemProfileGroupByOutputType = {
+    id: string
+    organizationId: string
+    brandEssence: string | null
+    desiredPerception: string | null
+    visualStyle: string | null
+    antiPatterns: string | null
+    conceptualReferences: string | null
+    aiNotes: string | null
+    artifactSyncStatus: string
+    artifactSyncedAt: Date | null
+    artifactSyncError: string | null
+    artifactObjectKey: string | null
+    contextArtifactSyncStatus: string
+    contextArtifactSyncedAt: Date | null
+    contextArtifactSyncError: string | null
+    contextArtifactObjectKey: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DesignSystemProfileCountAggregateOutputType | null
+    _min: DesignSystemProfileMinAggregateOutputType | null
+    _max: DesignSystemProfileMaxAggregateOutputType | null
+  }
+
+  type GetDesignSystemProfileGroupByPayload<T extends DesignSystemProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DesignSystemProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DesignSystemProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DesignSystemProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], DesignSystemProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DesignSystemProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    brandEssence?: boolean
+    desiredPerception?: boolean
+    visualStyle?: boolean
+    antiPatterns?: boolean
+    conceptualReferences?: boolean
+    aiNotes?: boolean
+    artifactSyncStatus?: boolean
+    artifactSyncedAt?: boolean
+    artifactSyncError?: boolean
+    artifactObjectKey?: boolean
+    contextArtifactSyncStatus?: boolean
+    contextArtifactSyncedAt?: boolean
+    contextArtifactSyncError?: boolean
+    contextArtifactObjectKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    colorGroups?: boolean | DesignSystemProfile$colorGroupsArgs<ExtArgs>
+    assets?: boolean | DesignSystemProfile$assetsArgs<ExtArgs>
+    _count?: boolean | DesignSystemProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designSystemProfile"]>
+
+  export type DesignSystemProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    brandEssence?: boolean
+    desiredPerception?: boolean
+    visualStyle?: boolean
+    antiPatterns?: boolean
+    conceptualReferences?: boolean
+    aiNotes?: boolean
+    artifactSyncStatus?: boolean
+    artifactSyncedAt?: boolean
+    artifactSyncError?: boolean
+    artifactObjectKey?: boolean
+    contextArtifactSyncStatus?: boolean
+    contextArtifactSyncedAt?: boolean
+    contextArtifactSyncError?: boolean
+    contextArtifactObjectKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designSystemProfile"]>
+
+  export type DesignSystemProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    brandEssence?: boolean
+    desiredPerception?: boolean
+    visualStyle?: boolean
+    antiPatterns?: boolean
+    conceptualReferences?: boolean
+    aiNotes?: boolean
+    artifactSyncStatus?: boolean
+    artifactSyncedAt?: boolean
+    artifactSyncError?: boolean
+    artifactObjectKey?: boolean
+    contextArtifactSyncStatus?: boolean
+    contextArtifactSyncedAt?: boolean
+    contextArtifactSyncError?: boolean
+    contextArtifactObjectKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designSystemProfile"]>
+
+  export type DesignSystemProfileSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    brandEssence?: boolean
+    desiredPerception?: boolean
+    visualStyle?: boolean
+    antiPatterns?: boolean
+    conceptualReferences?: boolean
+    aiNotes?: boolean
+    artifactSyncStatus?: boolean
+    artifactSyncedAt?: boolean
+    artifactSyncError?: boolean
+    artifactObjectKey?: boolean
+    contextArtifactSyncStatus?: boolean
+    contextArtifactSyncedAt?: boolean
+    contextArtifactSyncError?: boolean
+    contextArtifactObjectKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DesignSystemProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "brandEssence" | "desiredPerception" | "visualStyle" | "antiPatterns" | "conceptualReferences" | "aiNotes" | "artifactSyncStatus" | "artifactSyncedAt" | "artifactSyncError" | "artifactObjectKey" | "contextArtifactSyncStatus" | "contextArtifactSyncedAt" | "contextArtifactSyncError" | "contextArtifactObjectKey" | "createdAt" | "updatedAt", ExtArgs["result"]["designSystemProfile"]>
+  export type DesignSystemProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    colorGroups?: boolean | DesignSystemProfile$colorGroupsArgs<ExtArgs>
+    assets?: boolean | DesignSystemProfile$assetsArgs<ExtArgs>
+    _count?: boolean | DesignSystemProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DesignSystemProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type DesignSystemProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $DesignSystemProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DesignSystemProfile"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      colorGroups: Prisma.$DesignColorGroupPayload<ExtArgs>[]
+      assets: Prisma.$DesignAssetPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      brandEssence: string | null
+      desiredPerception: string | null
+      visualStyle: string | null
+      antiPatterns: string | null
+      conceptualReferences: string | null
+      aiNotes: string | null
+      artifactSyncStatus: string
+      artifactSyncedAt: Date | null
+      artifactSyncError: string | null
+      artifactObjectKey: string | null
+      contextArtifactSyncStatus: string
+      contextArtifactSyncedAt: Date | null
+      contextArtifactSyncError: string | null
+      contextArtifactObjectKey: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["designSystemProfile"]>
+    composites: {}
+  }
+
+  type DesignSystemProfileGetPayload<S extends boolean | null | undefined | DesignSystemProfileDefaultArgs> = $Result.GetResult<Prisma.$DesignSystemProfilePayload, S>
+
+  type DesignSystemProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DesignSystemProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DesignSystemProfileCountAggregateInputType | true
+    }
+
+  export interface DesignSystemProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DesignSystemProfile'], meta: { name: 'DesignSystemProfile' } }
+    /**
+     * Find zero or one DesignSystemProfile that matches the filter.
+     * @param {DesignSystemProfileFindUniqueArgs} args - Arguments to find a DesignSystemProfile
+     * @example
+     * // Get one DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DesignSystemProfileFindUniqueArgs>(args: SelectSubset<T, DesignSystemProfileFindUniqueArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DesignSystemProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DesignSystemProfileFindUniqueOrThrowArgs} args - Arguments to find a DesignSystemProfile
+     * @example
+     * // Get one DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DesignSystemProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, DesignSystemProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignSystemProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileFindFirstArgs} args - Arguments to find a DesignSystemProfile
+     * @example
+     * // Get one DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DesignSystemProfileFindFirstArgs>(args?: SelectSubset<T, DesignSystemProfileFindFirstArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignSystemProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileFindFirstOrThrowArgs} args - Arguments to find a DesignSystemProfile
+     * @example
+     * // Get one DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DesignSystemProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, DesignSystemProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DesignSystemProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DesignSystemProfiles
+     * const designSystemProfiles = await prisma.designSystemProfile.findMany()
+     * 
+     * // Get first 10 DesignSystemProfiles
+     * const designSystemProfiles = await prisma.designSystemProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const designSystemProfileWithIdOnly = await prisma.designSystemProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DesignSystemProfileFindManyArgs>(args?: SelectSubset<T, DesignSystemProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DesignSystemProfile.
+     * @param {DesignSystemProfileCreateArgs} args - Arguments to create a DesignSystemProfile.
+     * @example
+     * // Create one DesignSystemProfile
+     * const DesignSystemProfile = await prisma.designSystemProfile.create({
+     *   data: {
+     *     // ... data to create a DesignSystemProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends DesignSystemProfileCreateArgs>(args: SelectSubset<T, DesignSystemProfileCreateArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DesignSystemProfiles.
+     * @param {DesignSystemProfileCreateManyArgs} args - Arguments to create many DesignSystemProfiles.
+     * @example
+     * // Create many DesignSystemProfiles
+     * const designSystemProfile = await prisma.designSystemProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DesignSystemProfileCreateManyArgs>(args?: SelectSubset<T, DesignSystemProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DesignSystemProfiles and returns the data saved in the database.
+     * @param {DesignSystemProfileCreateManyAndReturnArgs} args - Arguments to create many DesignSystemProfiles.
+     * @example
+     * // Create many DesignSystemProfiles
+     * const designSystemProfile = await prisma.designSystemProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DesignSystemProfiles and only return the `id`
+     * const designSystemProfileWithIdOnly = await prisma.designSystemProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DesignSystemProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, DesignSystemProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DesignSystemProfile.
+     * @param {DesignSystemProfileDeleteArgs} args - Arguments to delete one DesignSystemProfile.
+     * @example
+     * // Delete one DesignSystemProfile
+     * const DesignSystemProfile = await prisma.designSystemProfile.delete({
+     *   where: {
+     *     // ... filter to delete one DesignSystemProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DesignSystemProfileDeleteArgs>(args: SelectSubset<T, DesignSystemProfileDeleteArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DesignSystemProfile.
+     * @param {DesignSystemProfileUpdateArgs} args - Arguments to update one DesignSystemProfile.
+     * @example
+     * // Update one DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DesignSystemProfileUpdateArgs>(args: SelectSubset<T, DesignSystemProfileUpdateArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DesignSystemProfiles.
+     * @param {DesignSystemProfileDeleteManyArgs} args - Arguments to filter DesignSystemProfiles to delete.
+     * @example
+     * // Delete a few DesignSystemProfiles
+     * const { count } = await prisma.designSystemProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DesignSystemProfileDeleteManyArgs>(args?: SelectSubset<T, DesignSystemProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignSystemProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DesignSystemProfiles
+     * const designSystemProfile = await prisma.designSystemProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DesignSystemProfileUpdateManyArgs>(args: SelectSubset<T, DesignSystemProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignSystemProfiles and returns the data updated in the database.
+     * @param {DesignSystemProfileUpdateManyAndReturnArgs} args - Arguments to update many DesignSystemProfiles.
+     * @example
+     * // Update many DesignSystemProfiles
+     * const designSystemProfile = await prisma.designSystemProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DesignSystemProfiles and only return the `id`
+     * const designSystemProfileWithIdOnly = await prisma.designSystemProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DesignSystemProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, DesignSystemProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DesignSystemProfile.
+     * @param {DesignSystemProfileUpsertArgs} args - Arguments to update or create a DesignSystemProfile.
+     * @example
+     * // Update or create a DesignSystemProfile
+     * const designSystemProfile = await prisma.designSystemProfile.upsert({
+     *   create: {
+     *     // ... data to create a DesignSystemProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DesignSystemProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DesignSystemProfileUpsertArgs>(args: SelectSubset<T, DesignSystemProfileUpsertArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DesignSystemProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileCountArgs} args - Arguments to filter DesignSystemProfiles to count.
+     * @example
+     * // Count the number of DesignSystemProfiles
+     * const count = await prisma.designSystemProfile.count({
+     *   where: {
+     *     // ... the filter for the DesignSystemProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends DesignSystemProfileCountArgs>(
+      args?: Subset<T, DesignSystemProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DesignSystemProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DesignSystemProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DesignSystemProfileAggregateArgs>(args: Subset<T, DesignSystemProfileAggregateArgs>): Prisma.PrismaPromise<GetDesignSystemProfileAggregateType<T>>
+
+    /**
+     * Group by DesignSystemProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignSystemProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DesignSystemProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DesignSystemProfileGroupByArgs['orderBy'] }
+        : { orderBy?: DesignSystemProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DesignSystemProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDesignSystemProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DesignSystemProfile model
+   */
+  readonly fields: DesignSystemProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DesignSystemProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DesignSystemProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    colorGroups<T extends DesignSystemProfile$colorGroupsArgs<ExtArgs> = {}>(args?: Subset<T, DesignSystemProfile$colorGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assets<T extends DesignSystemProfile$assetsArgs<ExtArgs> = {}>(args?: Subset<T, DesignSystemProfile$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DesignSystemProfile model
+   */
+  interface DesignSystemProfileFieldRefs {
+    readonly id: FieldRef<"DesignSystemProfile", 'String'>
+    readonly organizationId: FieldRef<"DesignSystemProfile", 'String'>
+    readonly brandEssence: FieldRef<"DesignSystemProfile", 'String'>
+    readonly desiredPerception: FieldRef<"DesignSystemProfile", 'String'>
+    readonly visualStyle: FieldRef<"DesignSystemProfile", 'String'>
+    readonly antiPatterns: FieldRef<"DesignSystemProfile", 'String'>
+    readonly conceptualReferences: FieldRef<"DesignSystemProfile", 'String'>
+    readonly aiNotes: FieldRef<"DesignSystemProfile", 'String'>
+    readonly artifactSyncStatus: FieldRef<"DesignSystemProfile", 'String'>
+    readonly artifactSyncedAt: FieldRef<"DesignSystemProfile", 'DateTime'>
+    readonly artifactSyncError: FieldRef<"DesignSystemProfile", 'String'>
+    readonly artifactObjectKey: FieldRef<"DesignSystemProfile", 'String'>
+    readonly contextArtifactSyncStatus: FieldRef<"DesignSystemProfile", 'String'>
+    readonly contextArtifactSyncedAt: FieldRef<"DesignSystemProfile", 'DateTime'>
+    readonly contextArtifactSyncError: FieldRef<"DesignSystemProfile", 'String'>
+    readonly contextArtifactObjectKey: FieldRef<"DesignSystemProfile", 'String'>
+    readonly createdAt: FieldRef<"DesignSystemProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"DesignSystemProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DesignSystemProfile findUnique
+   */
+  export type DesignSystemProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignSystemProfile to fetch.
+     */
+    where: DesignSystemProfileWhereUniqueInput
+  }
+
+  /**
+   * DesignSystemProfile findUniqueOrThrow
+   */
+  export type DesignSystemProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignSystemProfile to fetch.
+     */
+    where: DesignSystemProfileWhereUniqueInput
+  }
+
+  /**
+   * DesignSystemProfile findFirst
+   */
+  export type DesignSystemProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignSystemProfile to fetch.
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignSystemProfiles to fetch.
+     */
+    orderBy?: DesignSystemProfileOrderByWithRelationInput | DesignSystemProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignSystemProfiles.
+     */
+    cursor?: DesignSystemProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignSystemProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignSystemProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignSystemProfiles.
+     */
+    distinct?: DesignSystemProfileScalarFieldEnum | DesignSystemProfileScalarFieldEnum[]
+  }
+
+  /**
+   * DesignSystemProfile findFirstOrThrow
+   */
+  export type DesignSystemProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignSystemProfile to fetch.
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignSystemProfiles to fetch.
+     */
+    orderBy?: DesignSystemProfileOrderByWithRelationInput | DesignSystemProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignSystemProfiles.
+     */
+    cursor?: DesignSystemProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignSystemProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignSystemProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignSystemProfiles.
+     */
+    distinct?: DesignSystemProfileScalarFieldEnum | DesignSystemProfileScalarFieldEnum[]
+  }
+
+  /**
+   * DesignSystemProfile findMany
+   */
+  export type DesignSystemProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignSystemProfiles to fetch.
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignSystemProfiles to fetch.
+     */
+    orderBy?: DesignSystemProfileOrderByWithRelationInput | DesignSystemProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DesignSystemProfiles.
+     */
+    cursor?: DesignSystemProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignSystemProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignSystemProfiles.
+     */
+    skip?: number
+    distinct?: DesignSystemProfileScalarFieldEnum | DesignSystemProfileScalarFieldEnum[]
+  }
+
+  /**
+   * DesignSystemProfile create
+   */
+  export type DesignSystemProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DesignSystemProfile.
+     */
+    data: XOR<DesignSystemProfileCreateInput, DesignSystemProfileUncheckedCreateInput>
+  }
+
+  /**
+   * DesignSystemProfile createMany
+   */
+  export type DesignSystemProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DesignSystemProfiles.
+     */
+    data: DesignSystemProfileCreateManyInput | DesignSystemProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DesignSystemProfile createManyAndReturn
+   */
+  export type DesignSystemProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many DesignSystemProfiles.
+     */
+    data: DesignSystemProfileCreateManyInput | DesignSystemProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignSystemProfile update
+   */
+  export type DesignSystemProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DesignSystemProfile.
+     */
+    data: XOR<DesignSystemProfileUpdateInput, DesignSystemProfileUncheckedUpdateInput>
+    /**
+     * Choose, which DesignSystemProfile to update.
+     */
+    where: DesignSystemProfileWhereUniqueInput
+  }
+
+  /**
+   * DesignSystemProfile updateMany
+   */
+  export type DesignSystemProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DesignSystemProfiles.
+     */
+    data: XOR<DesignSystemProfileUpdateManyMutationInput, DesignSystemProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignSystemProfiles to update
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * Limit how many DesignSystemProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignSystemProfile updateManyAndReturn
+   */
+  export type DesignSystemProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update DesignSystemProfiles.
+     */
+    data: XOR<DesignSystemProfileUpdateManyMutationInput, DesignSystemProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignSystemProfiles to update
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * Limit how many DesignSystemProfiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignSystemProfile upsert
+   */
+  export type DesignSystemProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DesignSystemProfile to update in case it exists.
+     */
+    where: DesignSystemProfileWhereUniqueInput
+    /**
+     * In case the DesignSystemProfile found by the `where` argument doesn't exist, create a new DesignSystemProfile with this data.
+     */
+    create: XOR<DesignSystemProfileCreateInput, DesignSystemProfileUncheckedCreateInput>
+    /**
+     * In case the DesignSystemProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DesignSystemProfileUpdateInput, DesignSystemProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * DesignSystemProfile delete
+   */
+  export type DesignSystemProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+    /**
+     * Filter which DesignSystemProfile to delete.
+     */
+    where: DesignSystemProfileWhereUniqueInput
+  }
+
+  /**
+   * DesignSystemProfile deleteMany
+   */
+  export type DesignSystemProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignSystemProfiles to delete
+     */
+    where?: DesignSystemProfileWhereInput
+    /**
+     * Limit how many DesignSystemProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignSystemProfile.colorGroups
+   */
+  export type DesignSystemProfile$colorGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    where?: DesignColorGroupWhereInput
+    orderBy?: DesignColorGroupOrderByWithRelationInput | DesignColorGroupOrderByWithRelationInput[]
+    cursor?: DesignColorGroupWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DesignColorGroupScalarFieldEnum | DesignColorGroupScalarFieldEnum[]
+  }
+
+  /**
+   * DesignSystemProfile.assets
+   */
+  export type DesignSystemProfile$assetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    where?: DesignAssetWhereInput
+    orderBy?: DesignAssetOrderByWithRelationInput | DesignAssetOrderByWithRelationInput[]
+    cursor?: DesignAssetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DesignAssetScalarFieldEnum | DesignAssetScalarFieldEnum[]
+  }
+
+  /**
+   * DesignSystemProfile without action
+   */
+  export type DesignSystemProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignSystemProfile
+     */
+    select?: DesignSystemProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignSystemProfile
+     */
+    omit?: DesignSystemProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignSystemProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DesignColorGroup
+   */
+
+  export type AggregateDesignColorGroup = {
+    _count: DesignColorGroupCountAggregateOutputType | null
+    _avg: DesignColorGroupAvgAggregateOutputType | null
+    _sum: DesignColorGroupSumAggregateOutputType | null
+    _min: DesignColorGroupMinAggregateOutputType | null
+    _max: DesignColorGroupMaxAggregateOutputType | null
+  }
+
+  export type DesignColorGroupAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type DesignColorGroupSumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type DesignColorGroupMinAggregateOutputType = {
+    id: string | null
+    designSystemId: string | null
+    name: string | null
+    description: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignColorGroupMaxAggregateOutputType = {
+    id: string | null
+    designSystemId: string | null
+    name: string | null
+    description: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignColorGroupCountAggregateOutputType = {
+    id: number
+    designSystemId: number
+    name: number
+    description: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DesignColorGroupAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type DesignColorGroupSumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type DesignColorGroupMinAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    name?: true
+    description?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignColorGroupMaxAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    name?: true
+    description?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignColorGroupCountAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    name?: true
+    description?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DesignColorGroupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignColorGroup to aggregate.
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorGroups to fetch.
+     */
+    orderBy?: DesignColorGroupOrderByWithRelationInput | DesignColorGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DesignColorGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DesignColorGroups
+    **/
+    _count?: true | DesignColorGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DesignColorGroupAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DesignColorGroupSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DesignColorGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DesignColorGroupMaxAggregateInputType
+  }
+
+  export type GetDesignColorGroupAggregateType<T extends DesignColorGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateDesignColorGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDesignColorGroup[P]>
+      : GetScalarType<T[P], AggregateDesignColorGroup[P]>
+  }
+
+
+
+
+  export type DesignColorGroupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignColorGroupWhereInput
+    orderBy?: DesignColorGroupOrderByWithAggregationInput | DesignColorGroupOrderByWithAggregationInput[]
+    by: DesignColorGroupScalarFieldEnum[] | DesignColorGroupScalarFieldEnum
+    having?: DesignColorGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DesignColorGroupCountAggregateInputType | true
+    _avg?: DesignColorGroupAvgAggregateInputType
+    _sum?: DesignColorGroupSumAggregateInputType
+    _min?: DesignColorGroupMinAggregateInputType
+    _max?: DesignColorGroupMaxAggregateInputType
+  }
+
+  export type DesignColorGroupGroupByOutputType = {
+    id: string
+    designSystemId: string
+    name: string
+    description: string | null
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DesignColorGroupCountAggregateOutputType | null
+    _avg: DesignColorGroupAvgAggregateOutputType | null
+    _sum: DesignColorGroupSumAggregateOutputType | null
+    _min: DesignColorGroupMinAggregateOutputType | null
+    _max: DesignColorGroupMaxAggregateOutputType | null
+  }
+
+  type GetDesignColorGroupGroupByPayload<T extends DesignColorGroupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DesignColorGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DesignColorGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DesignColorGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], DesignColorGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DesignColorGroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    name?: boolean
+    description?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+    colors?: boolean | DesignColorGroup$colorsArgs<ExtArgs>
+    _count?: boolean | DesignColorGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorGroup"]>
+
+  export type DesignColorGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    name?: boolean
+    description?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorGroup"]>
+
+  export type DesignColorGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    name?: boolean
+    description?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorGroup"]>
+
+  export type DesignColorGroupSelectScalar = {
+    id?: boolean
+    designSystemId?: boolean
+    name?: boolean
+    description?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DesignColorGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "designSystemId" | "name" | "description" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["designColorGroup"]>
+  export type DesignColorGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+    colors?: boolean | DesignColorGroup$colorsArgs<ExtArgs>
+    _count?: boolean | DesignColorGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DesignColorGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }
+  export type DesignColorGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }
+
+  export type $DesignColorGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DesignColorGroup"
+    objects: {
+      designSystem: Prisma.$DesignSystemProfilePayload<ExtArgs>
+      colors: Prisma.$DesignColorTokenPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      designSystemId: string
+      name: string
+      description: string | null
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["designColorGroup"]>
+    composites: {}
+  }
+
+  type DesignColorGroupGetPayload<S extends boolean | null | undefined | DesignColorGroupDefaultArgs> = $Result.GetResult<Prisma.$DesignColorGroupPayload, S>
+
+  type DesignColorGroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DesignColorGroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DesignColorGroupCountAggregateInputType | true
+    }
+
+  export interface DesignColorGroupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DesignColorGroup'], meta: { name: 'DesignColorGroup' } }
+    /**
+     * Find zero or one DesignColorGroup that matches the filter.
+     * @param {DesignColorGroupFindUniqueArgs} args - Arguments to find a DesignColorGroup
+     * @example
+     * // Get one DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DesignColorGroupFindUniqueArgs>(args: SelectSubset<T, DesignColorGroupFindUniqueArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DesignColorGroup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DesignColorGroupFindUniqueOrThrowArgs} args - Arguments to find a DesignColorGroup
+     * @example
+     * // Get one DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DesignColorGroupFindUniqueOrThrowArgs>(args: SelectSubset<T, DesignColorGroupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignColorGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupFindFirstArgs} args - Arguments to find a DesignColorGroup
+     * @example
+     * // Get one DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DesignColorGroupFindFirstArgs>(args?: SelectSubset<T, DesignColorGroupFindFirstArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignColorGroup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupFindFirstOrThrowArgs} args - Arguments to find a DesignColorGroup
+     * @example
+     * // Get one DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DesignColorGroupFindFirstOrThrowArgs>(args?: SelectSubset<T, DesignColorGroupFindFirstOrThrowArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DesignColorGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DesignColorGroups
+     * const designColorGroups = await prisma.designColorGroup.findMany()
+     * 
+     * // Get first 10 DesignColorGroups
+     * const designColorGroups = await prisma.designColorGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const designColorGroupWithIdOnly = await prisma.designColorGroup.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DesignColorGroupFindManyArgs>(args?: SelectSubset<T, DesignColorGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DesignColorGroup.
+     * @param {DesignColorGroupCreateArgs} args - Arguments to create a DesignColorGroup.
+     * @example
+     * // Create one DesignColorGroup
+     * const DesignColorGroup = await prisma.designColorGroup.create({
+     *   data: {
+     *     // ... data to create a DesignColorGroup
+     *   }
+     * })
+     * 
+     */
+    create<T extends DesignColorGroupCreateArgs>(args: SelectSubset<T, DesignColorGroupCreateArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DesignColorGroups.
+     * @param {DesignColorGroupCreateManyArgs} args - Arguments to create many DesignColorGroups.
+     * @example
+     * // Create many DesignColorGroups
+     * const designColorGroup = await prisma.designColorGroup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DesignColorGroupCreateManyArgs>(args?: SelectSubset<T, DesignColorGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DesignColorGroups and returns the data saved in the database.
+     * @param {DesignColorGroupCreateManyAndReturnArgs} args - Arguments to create many DesignColorGroups.
+     * @example
+     * // Create many DesignColorGroups
+     * const designColorGroup = await prisma.designColorGroup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DesignColorGroups and only return the `id`
+     * const designColorGroupWithIdOnly = await prisma.designColorGroup.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DesignColorGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, DesignColorGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DesignColorGroup.
+     * @param {DesignColorGroupDeleteArgs} args - Arguments to delete one DesignColorGroup.
+     * @example
+     * // Delete one DesignColorGroup
+     * const DesignColorGroup = await prisma.designColorGroup.delete({
+     *   where: {
+     *     // ... filter to delete one DesignColorGroup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DesignColorGroupDeleteArgs>(args: SelectSubset<T, DesignColorGroupDeleteArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DesignColorGroup.
+     * @param {DesignColorGroupUpdateArgs} args - Arguments to update one DesignColorGroup.
+     * @example
+     * // Update one DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DesignColorGroupUpdateArgs>(args: SelectSubset<T, DesignColorGroupUpdateArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DesignColorGroups.
+     * @param {DesignColorGroupDeleteManyArgs} args - Arguments to filter DesignColorGroups to delete.
+     * @example
+     * // Delete a few DesignColorGroups
+     * const { count } = await prisma.designColorGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DesignColorGroupDeleteManyArgs>(args?: SelectSubset<T, DesignColorGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignColorGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DesignColorGroups
+     * const designColorGroup = await prisma.designColorGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DesignColorGroupUpdateManyArgs>(args: SelectSubset<T, DesignColorGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignColorGroups and returns the data updated in the database.
+     * @param {DesignColorGroupUpdateManyAndReturnArgs} args - Arguments to update many DesignColorGroups.
+     * @example
+     * // Update many DesignColorGroups
+     * const designColorGroup = await prisma.designColorGroup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DesignColorGroups and only return the `id`
+     * const designColorGroupWithIdOnly = await prisma.designColorGroup.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DesignColorGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, DesignColorGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DesignColorGroup.
+     * @param {DesignColorGroupUpsertArgs} args - Arguments to update or create a DesignColorGroup.
+     * @example
+     * // Update or create a DesignColorGroup
+     * const designColorGroup = await prisma.designColorGroup.upsert({
+     *   create: {
+     *     // ... data to create a DesignColorGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DesignColorGroup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DesignColorGroupUpsertArgs>(args: SelectSubset<T, DesignColorGroupUpsertArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DesignColorGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupCountArgs} args - Arguments to filter DesignColorGroups to count.
+     * @example
+     * // Count the number of DesignColorGroups
+     * const count = await prisma.designColorGroup.count({
+     *   where: {
+     *     // ... the filter for the DesignColorGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends DesignColorGroupCountArgs>(
+      args?: Subset<T, DesignColorGroupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DesignColorGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DesignColorGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DesignColorGroupAggregateArgs>(args: Subset<T, DesignColorGroupAggregateArgs>): Prisma.PrismaPromise<GetDesignColorGroupAggregateType<T>>
+
+    /**
+     * Group by DesignColorGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DesignColorGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DesignColorGroupGroupByArgs['orderBy'] }
+        : { orderBy?: DesignColorGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DesignColorGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDesignColorGroupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DesignColorGroup model
+   */
+  readonly fields: DesignColorGroupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DesignColorGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DesignColorGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    designSystem<T extends DesignSystemProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DesignSystemProfileDefaultArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    colors<T extends DesignColorGroup$colorsArgs<ExtArgs> = {}>(args?: Subset<T, DesignColorGroup$colorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DesignColorGroup model
+   */
+  interface DesignColorGroupFieldRefs {
+    readonly id: FieldRef<"DesignColorGroup", 'String'>
+    readonly designSystemId: FieldRef<"DesignColorGroup", 'String'>
+    readonly name: FieldRef<"DesignColorGroup", 'String'>
+    readonly description: FieldRef<"DesignColorGroup", 'String'>
+    readonly sortOrder: FieldRef<"DesignColorGroup", 'Int'>
+    readonly createdAt: FieldRef<"DesignColorGroup", 'DateTime'>
+    readonly updatedAt: FieldRef<"DesignColorGroup", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DesignColorGroup findUnique
+   */
+  export type DesignColorGroupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorGroup to fetch.
+     */
+    where: DesignColorGroupWhereUniqueInput
+  }
+
+  /**
+   * DesignColorGroup findUniqueOrThrow
+   */
+  export type DesignColorGroupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorGroup to fetch.
+     */
+    where: DesignColorGroupWhereUniqueInput
+  }
+
+  /**
+   * DesignColorGroup findFirst
+   */
+  export type DesignColorGroupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorGroup to fetch.
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorGroups to fetch.
+     */
+    orderBy?: DesignColorGroupOrderByWithRelationInput | DesignColorGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignColorGroups.
+     */
+    cursor?: DesignColorGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignColorGroups.
+     */
+    distinct?: DesignColorGroupScalarFieldEnum | DesignColorGroupScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorGroup findFirstOrThrow
+   */
+  export type DesignColorGroupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorGroup to fetch.
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorGroups to fetch.
+     */
+    orderBy?: DesignColorGroupOrderByWithRelationInput | DesignColorGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignColorGroups.
+     */
+    cursor?: DesignColorGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignColorGroups.
+     */
+    distinct?: DesignColorGroupScalarFieldEnum | DesignColorGroupScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorGroup findMany
+   */
+  export type DesignColorGroupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorGroups to fetch.
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorGroups to fetch.
+     */
+    orderBy?: DesignColorGroupOrderByWithRelationInput | DesignColorGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DesignColorGroups.
+     */
+    cursor?: DesignColorGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorGroups.
+     */
+    skip?: number
+    distinct?: DesignColorGroupScalarFieldEnum | DesignColorGroupScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorGroup create
+   */
+  export type DesignColorGroupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DesignColorGroup.
+     */
+    data: XOR<DesignColorGroupCreateInput, DesignColorGroupUncheckedCreateInput>
+  }
+
+  /**
+   * DesignColorGroup createMany
+   */
+  export type DesignColorGroupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DesignColorGroups.
+     */
+    data: DesignColorGroupCreateManyInput | DesignColorGroupCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DesignColorGroup createManyAndReturn
+   */
+  export type DesignColorGroupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * The data used to create many DesignColorGroups.
+     */
+    data: DesignColorGroupCreateManyInput | DesignColorGroupCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignColorGroup update
+   */
+  export type DesignColorGroupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DesignColorGroup.
+     */
+    data: XOR<DesignColorGroupUpdateInput, DesignColorGroupUncheckedUpdateInput>
+    /**
+     * Choose, which DesignColorGroup to update.
+     */
+    where: DesignColorGroupWhereUniqueInput
+  }
+
+  /**
+   * DesignColorGroup updateMany
+   */
+  export type DesignColorGroupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DesignColorGroups.
+     */
+    data: XOR<DesignColorGroupUpdateManyMutationInput, DesignColorGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignColorGroups to update
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * Limit how many DesignColorGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignColorGroup updateManyAndReturn
+   */
+  export type DesignColorGroupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * The data used to update DesignColorGroups.
+     */
+    data: XOR<DesignColorGroupUpdateManyMutationInput, DesignColorGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignColorGroups to update
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * Limit how many DesignColorGroups to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignColorGroup upsert
+   */
+  export type DesignColorGroupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DesignColorGroup to update in case it exists.
+     */
+    where: DesignColorGroupWhereUniqueInput
+    /**
+     * In case the DesignColorGroup found by the `where` argument doesn't exist, create a new DesignColorGroup with this data.
+     */
+    create: XOR<DesignColorGroupCreateInput, DesignColorGroupUncheckedCreateInput>
+    /**
+     * In case the DesignColorGroup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DesignColorGroupUpdateInput, DesignColorGroupUncheckedUpdateInput>
+  }
+
+  /**
+   * DesignColorGroup delete
+   */
+  export type DesignColorGroupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+    /**
+     * Filter which DesignColorGroup to delete.
+     */
+    where: DesignColorGroupWhereUniqueInput
+  }
+
+  /**
+   * DesignColorGroup deleteMany
+   */
+  export type DesignColorGroupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignColorGroups to delete
+     */
+    where?: DesignColorGroupWhereInput
+    /**
+     * Limit how many DesignColorGroups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignColorGroup.colors
+   */
+  export type DesignColorGroup$colorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    where?: DesignColorTokenWhereInput
+    orderBy?: DesignColorTokenOrderByWithRelationInput | DesignColorTokenOrderByWithRelationInput[]
+    cursor?: DesignColorTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DesignColorTokenScalarFieldEnum | DesignColorTokenScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorGroup without action
+   */
+  export type DesignColorGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorGroup
+     */
+    select?: DesignColorGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorGroup
+     */
+    omit?: DesignColorGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorGroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DesignColorToken
+   */
+
+  export type AggregateDesignColorToken = {
+    _count: DesignColorTokenCountAggregateOutputType | null
+    _avg: DesignColorTokenAvgAggregateOutputType | null
+    _sum: DesignColorTokenSumAggregateOutputType | null
+    _min: DesignColorTokenMinAggregateOutputType | null
+    _max: DesignColorTokenMaxAggregateOutputType | null
+  }
+
+  export type DesignColorTokenAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type DesignColorTokenSumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type DesignColorTokenMinAggregateOutputType = {
+    id: string | null
+    colorGroupId: string | null
+    name: string | null
+    value: string | null
+    displayFormat: string | null
+    semanticRole: string | null
+    usageNote: string | null
+    restrictionNote: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignColorTokenMaxAggregateOutputType = {
+    id: string | null
+    colorGroupId: string | null
+    name: string | null
+    value: string | null
+    displayFormat: string | null
+    semanticRole: string | null
+    usageNote: string | null
+    restrictionNote: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignColorTokenCountAggregateOutputType = {
+    id: number
+    colorGroupId: number
+    name: number
+    value: number
+    displayFormat: number
+    semanticRole: number
+    usageNote: number
+    restrictionNote: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DesignColorTokenAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type DesignColorTokenSumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type DesignColorTokenMinAggregateInputType = {
+    id?: true
+    colorGroupId?: true
+    name?: true
+    value?: true
+    displayFormat?: true
+    semanticRole?: true
+    usageNote?: true
+    restrictionNote?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignColorTokenMaxAggregateInputType = {
+    id?: true
+    colorGroupId?: true
+    name?: true
+    value?: true
+    displayFormat?: true
+    semanticRole?: true
+    usageNote?: true
+    restrictionNote?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignColorTokenCountAggregateInputType = {
+    id?: true
+    colorGroupId?: true
+    name?: true
+    value?: true
+    displayFormat?: true
+    semanticRole?: true
+    usageNote?: true
+    restrictionNote?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DesignColorTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignColorToken to aggregate.
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorTokens to fetch.
+     */
+    orderBy?: DesignColorTokenOrderByWithRelationInput | DesignColorTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DesignColorTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DesignColorTokens
+    **/
+    _count?: true | DesignColorTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DesignColorTokenAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DesignColorTokenSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DesignColorTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DesignColorTokenMaxAggregateInputType
+  }
+
+  export type GetDesignColorTokenAggregateType<T extends DesignColorTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateDesignColorToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDesignColorToken[P]>
+      : GetScalarType<T[P], AggregateDesignColorToken[P]>
+  }
+
+
+
+
+  export type DesignColorTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignColorTokenWhereInput
+    orderBy?: DesignColorTokenOrderByWithAggregationInput | DesignColorTokenOrderByWithAggregationInput[]
+    by: DesignColorTokenScalarFieldEnum[] | DesignColorTokenScalarFieldEnum
+    having?: DesignColorTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DesignColorTokenCountAggregateInputType | true
+    _avg?: DesignColorTokenAvgAggregateInputType
+    _sum?: DesignColorTokenSumAggregateInputType
+    _min?: DesignColorTokenMinAggregateInputType
+    _max?: DesignColorTokenMaxAggregateInputType
+  }
+
+  export type DesignColorTokenGroupByOutputType = {
+    id: string
+    colorGroupId: string
+    name: string
+    value: string
+    displayFormat: string
+    semanticRole: string
+    usageNote: string | null
+    restrictionNote: string | null
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DesignColorTokenCountAggregateOutputType | null
+    _avg: DesignColorTokenAvgAggregateOutputType | null
+    _sum: DesignColorTokenSumAggregateOutputType | null
+    _min: DesignColorTokenMinAggregateOutputType | null
+    _max: DesignColorTokenMaxAggregateOutputType | null
+  }
+
+  type GetDesignColorTokenGroupByPayload<T extends DesignColorTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DesignColorTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DesignColorTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DesignColorTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], DesignColorTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DesignColorTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    colorGroupId?: boolean
+    name?: boolean
+    value?: boolean
+    displayFormat?: boolean
+    semanticRole?: boolean
+    usageNote?: boolean
+    restrictionNote?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorToken"]>
+
+  export type DesignColorTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    colorGroupId?: boolean
+    name?: boolean
+    value?: boolean
+    displayFormat?: boolean
+    semanticRole?: boolean
+    usageNote?: boolean
+    restrictionNote?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorToken"]>
+
+  export type DesignColorTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    colorGroupId?: boolean
+    name?: boolean
+    value?: boolean
+    displayFormat?: boolean
+    semanticRole?: boolean
+    usageNote?: boolean
+    restrictionNote?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designColorToken"]>
+
+  export type DesignColorTokenSelectScalar = {
+    id?: boolean
+    colorGroupId?: boolean
+    name?: boolean
+    value?: boolean
+    displayFormat?: boolean
+    semanticRole?: boolean
+    usageNote?: boolean
+    restrictionNote?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DesignColorTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "colorGroupId" | "name" | "value" | "displayFormat" | "semanticRole" | "usageNote" | "restrictionNote" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["designColorToken"]>
+  export type DesignColorTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }
+  export type DesignColorTokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }
+  export type DesignColorTokenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colorGroup?: boolean | DesignColorGroupDefaultArgs<ExtArgs>
+  }
+
+  export type $DesignColorTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DesignColorToken"
+    objects: {
+      colorGroup: Prisma.$DesignColorGroupPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      colorGroupId: string
+      name: string
+      value: string
+      displayFormat: string
+      semanticRole: string
+      usageNote: string | null
+      restrictionNote: string | null
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["designColorToken"]>
+    composites: {}
+  }
+
+  type DesignColorTokenGetPayload<S extends boolean | null | undefined | DesignColorTokenDefaultArgs> = $Result.GetResult<Prisma.$DesignColorTokenPayload, S>
+
+  type DesignColorTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DesignColorTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DesignColorTokenCountAggregateInputType | true
+    }
+
+  export interface DesignColorTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DesignColorToken'], meta: { name: 'DesignColorToken' } }
+    /**
+     * Find zero or one DesignColorToken that matches the filter.
+     * @param {DesignColorTokenFindUniqueArgs} args - Arguments to find a DesignColorToken
+     * @example
+     * // Get one DesignColorToken
+     * const designColorToken = await prisma.designColorToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DesignColorTokenFindUniqueArgs>(args: SelectSubset<T, DesignColorTokenFindUniqueArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DesignColorToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DesignColorTokenFindUniqueOrThrowArgs} args - Arguments to find a DesignColorToken
+     * @example
+     * // Get one DesignColorToken
+     * const designColorToken = await prisma.designColorToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DesignColorTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, DesignColorTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignColorToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenFindFirstArgs} args - Arguments to find a DesignColorToken
+     * @example
+     * // Get one DesignColorToken
+     * const designColorToken = await prisma.designColorToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DesignColorTokenFindFirstArgs>(args?: SelectSubset<T, DesignColorTokenFindFirstArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignColorToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenFindFirstOrThrowArgs} args - Arguments to find a DesignColorToken
+     * @example
+     * // Get one DesignColorToken
+     * const designColorToken = await prisma.designColorToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DesignColorTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, DesignColorTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DesignColorTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DesignColorTokens
+     * const designColorTokens = await prisma.designColorToken.findMany()
+     * 
+     * // Get first 10 DesignColorTokens
+     * const designColorTokens = await prisma.designColorToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const designColorTokenWithIdOnly = await prisma.designColorToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DesignColorTokenFindManyArgs>(args?: SelectSubset<T, DesignColorTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DesignColorToken.
+     * @param {DesignColorTokenCreateArgs} args - Arguments to create a DesignColorToken.
+     * @example
+     * // Create one DesignColorToken
+     * const DesignColorToken = await prisma.designColorToken.create({
+     *   data: {
+     *     // ... data to create a DesignColorToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends DesignColorTokenCreateArgs>(args: SelectSubset<T, DesignColorTokenCreateArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DesignColorTokens.
+     * @param {DesignColorTokenCreateManyArgs} args - Arguments to create many DesignColorTokens.
+     * @example
+     * // Create many DesignColorTokens
+     * const designColorToken = await prisma.designColorToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DesignColorTokenCreateManyArgs>(args?: SelectSubset<T, DesignColorTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DesignColorTokens and returns the data saved in the database.
+     * @param {DesignColorTokenCreateManyAndReturnArgs} args - Arguments to create many DesignColorTokens.
+     * @example
+     * // Create many DesignColorTokens
+     * const designColorToken = await prisma.designColorToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DesignColorTokens and only return the `id`
+     * const designColorTokenWithIdOnly = await prisma.designColorToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DesignColorTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, DesignColorTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DesignColorToken.
+     * @param {DesignColorTokenDeleteArgs} args - Arguments to delete one DesignColorToken.
+     * @example
+     * // Delete one DesignColorToken
+     * const DesignColorToken = await prisma.designColorToken.delete({
+     *   where: {
+     *     // ... filter to delete one DesignColorToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DesignColorTokenDeleteArgs>(args: SelectSubset<T, DesignColorTokenDeleteArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DesignColorToken.
+     * @param {DesignColorTokenUpdateArgs} args - Arguments to update one DesignColorToken.
+     * @example
+     * // Update one DesignColorToken
+     * const designColorToken = await prisma.designColorToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DesignColorTokenUpdateArgs>(args: SelectSubset<T, DesignColorTokenUpdateArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DesignColorTokens.
+     * @param {DesignColorTokenDeleteManyArgs} args - Arguments to filter DesignColorTokens to delete.
+     * @example
+     * // Delete a few DesignColorTokens
+     * const { count } = await prisma.designColorToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DesignColorTokenDeleteManyArgs>(args?: SelectSubset<T, DesignColorTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignColorTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DesignColorTokens
+     * const designColorToken = await prisma.designColorToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DesignColorTokenUpdateManyArgs>(args: SelectSubset<T, DesignColorTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignColorTokens and returns the data updated in the database.
+     * @param {DesignColorTokenUpdateManyAndReturnArgs} args - Arguments to update many DesignColorTokens.
+     * @example
+     * // Update many DesignColorTokens
+     * const designColorToken = await prisma.designColorToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DesignColorTokens and only return the `id`
+     * const designColorTokenWithIdOnly = await prisma.designColorToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DesignColorTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, DesignColorTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DesignColorToken.
+     * @param {DesignColorTokenUpsertArgs} args - Arguments to update or create a DesignColorToken.
+     * @example
+     * // Update or create a DesignColorToken
+     * const designColorToken = await prisma.designColorToken.upsert({
+     *   create: {
+     *     // ... data to create a DesignColorToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DesignColorToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DesignColorTokenUpsertArgs>(args: SelectSubset<T, DesignColorTokenUpsertArgs<ExtArgs>>): Prisma__DesignColorTokenClient<$Result.GetResult<Prisma.$DesignColorTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DesignColorTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenCountArgs} args - Arguments to filter DesignColorTokens to count.
+     * @example
+     * // Count the number of DesignColorTokens
+     * const count = await prisma.designColorToken.count({
+     *   where: {
+     *     // ... the filter for the DesignColorTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends DesignColorTokenCountArgs>(
+      args?: Subset<T, DesignColorTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DesignColorTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DesignColorToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DesignColorTokenAggregateArgs>(args: Subset<T, DesignColorTokenAggregateArgs>): Prisma.PrismaPromise<GetDesignColorTokenAggregateType<T>>
+
+    /**
+     * Group by DesignColorToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignColorTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DesignColorTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DesignColorTokenGroupByArgs['orderBy'] }
+        : { orderBy?: DesignColorTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DesignColorTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDesignColorTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DesignColorToken model
+   */
+  readonly fields: DesignColorTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DesignColorToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DesignColorTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    colorGroup<T extends DesignColorGroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DesignColorGroupDefaultArgs<ExtArgs>>): Prisma__DesignColorGroupClient<$Result.GetResult<Prisma.$DesignColorGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DesignColorToken model
+   */
+  interface DesignColorTokenFieldRefs {
+    readonly id: FieldRef<"DesignColorToken", 'String'>
+    readonly colorGroupId: FieldRef<"DesignColorToken", 'String'>
+    readonly name: FieldRef<"DesignColorToken", 'String'>
+    readonly value: FieldRef<"DesignColorToken", 'String'>
+    readonly displayFormat: FieldRef<"DesignColorToken", 'String'>
+    readonly semanticRole: FieldRef<"DesignColorToken", 'String'>
+    readonly usageNote: FieldRef<"DesignColorToken", 'String'>
+    readonly restrictionNote: FieldRef<"DesignColorToken", 'String'>
+    readonly sortOrder: FieldRef<"DesignColorToken", 'Int'>
+    readonly createdAt: FieldRef<"DesignColorToken", 'DateTime'>
+    readonly updatedAt: FieldRef<"DesignColorToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DesignColorToken findUnique
+   */
+  export type DesignColorTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorToken to fetch.
+     */
+    where: DesignColorTokenWhereUniqueInput
+  }
+
+  /**
+   * DesignColorToken findUniqueOrThrow
+   */
+  export type DesignColorTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorToken to fetch.
+     */
+    where: DesignColorTokenWhereUniqueInput
+  }
+
+  /**
+   * DesignColorToken findFirst
+   */
+  export type DesignColorTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorToken to fetch.
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorTokens to fetch.
+     */
+    orderBy?: DesignColorTokenOrderByWithRelationInput | DesignColorTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignColorTokens.
+     */
+    cursor?: DesignColorTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignColorTokens.
+     */
+    distinct?: DesignColorTokenScalarFieldEnum | DesignColorTokenScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorToken findFirstOrThrow
+   */
+  export type DesignColorTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorToken to fetch.
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorTokens to fetch.
+     */
+    orderBy?: DesignColorTokenOrderByWithRelationInput | DesignColorTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignColorTokens.
+     */
+    cursor?: DesignColorTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignColorTokens.
+     */
+    distinct?: DesignColorTokenScalarFieldEnum | DesignColorTokenScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorToken findMany
+   */
+  export type DesignColorTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignColorTokens to fetch.
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignColorTokens to fetch.
+     */
+    orderBy?: DesignColorTokenOrderByWithRelationInput | DesignColorTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DesignColorTokens.
+     */
+    cursor?: DesignColorTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignColorTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignColorTokens.
+     */
+    skip?: number
+    distinct?: DesignColorTokenScalarFieldEnum | DesignColorTokenScalarFieldEnum[]
+  }
+
+  /**
+   * DesignColorToken create
+   */
+  export type DesignColorTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DesignColorToken.
+     */
+    data: XOR<DesignColorTokenCreateInput, DesignColorTokenUncheckedCreateInput>
+  }
+
+  /**
+   * DesignColorToken createMany
+   */
+  export type DesignColorTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DesignColorTokens.
+     */
+    data: DesignColorTokenCreateManyInput | DesignColorTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DesignColorToken createManyAndReturn
+   */
+  export type DesignColorTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many DesignColorTokens.
+     */
+    data: DesignColorTokenCreateManyInput | DesignColorTokenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignColorToken update
+   */
+  export type DesignColorTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DesignColorToken.
+     */
+    data: XOR<DesignColorTokenUpdateInput, DesignColorTokenUncheckedUpdateInput>
+    /**
+     * Choose, which DesignColorToken to update.
+     */
+    where: DesignColorTokenWhereUniqueInput
+  }
+
+  /**
+   * DesignColorToken updateMany
+   */
+  export type DesignColorTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DesignColorTokens.
+     */
+    data: XOR<DesignColorTokenUpdateManyMutationInput, DesignColorTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignColorTokens to update
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * Limit how many DesignColorTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignColorToken updateManyAndReturn
+   */
+  export type DesignColorTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update DesignColorTokens.
+     */
+    data: XOR<DesignColorTokenUpdateManyMutationInput, DesignColorTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignColorTokens to update
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * Limit how many DesignColorTokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignColorToken upsert
+   */
+  export type DesignColorTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DesignColorToken to update in case it exists.
+     */
+    where: DesignColorTokenWhereUniqueInput
+    /**
+     * In case the DesignColorToken found by the `where` argument doesn't exist, create a new DesignColorToken with this data.
+     */
+    create: XOR<DesignColorTokenCreateInput, DesignColorTokenUncheckedCreateInput>
+    /**
+     * In case the DesignColorToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DesignColorTokenUpdateInput, DesignColorTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * DesignColorToken delete
+   */
+  export type DesignColorTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+    /**
+     * Filter which DesignColorToken to delete.
+     */
+    where: DesignColorTokenWhereUniqueInput
+  }
+
+  /**
+   * DesignColorToken deleteMany
+   */
+  export type DesignColorTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignColorTokens to delete
+     */
+    where?: DesignColorTokenWhereInput
+    /**
+     * Limit how many DesignColorTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignColorToken without action
+   */
+  export type DesignColorTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignColorToken
+     */
+    select?: DesignColorTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignColorToken
+     */
+    omit?: DesignColorTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignColorTokenInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DesignAsset
+   */
+
+  export type AggregateDesignAsset = {
+    _count: DesignAssetCountAggregateOutputType | null
+    _avg: DesignAssetAvgAggregateOutputType | null
+    _sum: DesignAssetSumAggregateOutputType | null
+    _min: DesignAssetMinAggregateOutputType | null
+    _max: DesignAssetMaxAggregateOutputType | null
+  }
+
+  export type DesignAssetAvgAggregateOutputType = {
+    size: number | null
+  }
+
+  export type DesignAssetSumAggregateOutputType = {
+    size: number | null
+  }
+
+  export type DesignAssetMinAggregateOutputType = {
+    id: string | null
+    designSystemId: string | null
+    organizationId: string | null
+    primaryRole: string | null
+    title: string | null
+    description: string | null
+    objectKey: string | null
+    publicUrl: string | null
+    fileName: string | null
+    contentType: string | null
+    size: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignAssetMaxAggregateOutputType = {
+    id: string | null
+    designSystemId: string | null
+    organizationId: string | null
+    primaryRole: string | null
+    title: string | null
+    description: string | null
+    objectKey: string | null
+    publicUrl: string | null
+    fileName: string | null
+    contentType: string | null
+    size: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DesignAssetCountAggregateOutputType = {
+    id: number
+    designSystemId: number
+    organizationId: number
+    primaryRole: number
+    secondaryTags: number
+    title: number
+    description: number
+    objectKey: number
+    publicUrl: number
+    fileName: number
+    contentType: number
+    size: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DesignAssetAvgAggregateInputType = {
+    size?: true
+  }
+
+  export type DesignAssetSumAggregateInputType = {
+    size?: true
+  }
+
+  export type DesignAssetMinAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    organizationId?: true
+    primaryRole?: true
+    title?: true
+    description?: true
+    objectKey?: true
+    publicUrl?: true
+    fileName?: true
+    contentType?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignAssetMaxAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    organizationId?: true
+    primaryRole?: true
+    title?: true
+    description?: true
+    objectKey?: true
+    publicUrl?: true
+    fileName?: true
+    contentType?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DesignAssetCountAggregateInputType = {
+    id?: true
+    designSystemId?: true
+    organizationId?: true
+    primaryRole?: true
+    secondaryTags?: true
+    title?: true
+    description?: true
+    objectKey?: true
+    publicUrl?: true
+    fileName?: true
+    contentType?: true
+    size?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DesignAssetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignAsset to aggregate.
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignAssets to fetch.
+     */
+    orderBy?: DesignAssetOrderByWithRelationInput | DesignAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DesignAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DesignAssets
+    **/
+    _count?: true | DesignAssetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DesignAssetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DesignAssetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DesignAssetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DesignAssetMaxAggregateInputType
+  }
+
+  export type GetDesignAssetAggregateType<T extends DesignAssetAggregateArgs> = {
+        [P in keyof T & keyof AggregateDesignAsset]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDesignAsset[P]>
+      : GetScalarType<T[P], AggregateDesignAsset[P]>
+  }
+
+
+
+
+  export type DesignAssetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignAssetWhereInput
+    orderBy?: DesignAssetOrderByWithAggregationInput | DesignAssetOrderByWithAggregationInput[]
+    by: DesignAssetScalarFieldEnum[] | DesignAssetScalarFieldEnum
+    having?: DesignAssetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DesignAssetCountAggregateInputType | true
+    _avg?: DesignAssetAvgAggregateInputType
+    _sum?: DesignAssetSumAggregateInputType
+    _min?: DesignAssetMinAggregateInputType
+    _max?: DesignAssetMaxAggregateInputType
+  }
+
+  export type DesignAssetGroupByOutputType = {
+    id: string
+    designSystemId: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags: string[]
+    title: string | null
+    description: string | null
+    objectKey: string
+    publicUrl: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DesignAssetCountAggregateOutputType | null
+    _avg: DesignAssetAvgAggregateOutputType | null
+    _sum: DesignAssetSumAggregateOutputType | null
+    _min: DesignAssetMinAggregateOutputType | null
+    _max: DesignAssetMaxAggregateOutputType | null
+  }
+
+  type GetDesignAssetGroupByPayload<T extends DesignAssetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DesignAssetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DesignAssetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DesignAssetGroupByOutputType[P]>
+            : GetScalarType<T[P], DesignAssetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DesignAssetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    organizationId?: boolean
+    primaryRole?: boolean
+    secondaryTags?: boolean
+    title?: boolean
+    description?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    fileName?: boolean
+    contentType?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designAsset"]>
+
+  export type DesignAssetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    organizationId?: boolean
+    primaryRole?: boolean
+    secondaryTags?: boolean
+    title?: boolean
+    description?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    fileName?: boolean
+    contentType?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designAsset"]>
+
+  export type DesignAssetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    designSystemId?: boolean
+    organizationId?: boolean
+    primaryRole?: boolean
+    secondaryTags?: boolean
+    title?: boolean
+    description?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    fileName?: boolean
+    contentType?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["designAsset"]>
+
+  export type DesignAssetSelectScalar = {
+    id?: boolean
+    designSystemId?: boolean
+    organizationId?: boolean
+    primaryRole?: boolean
+    secondaryTags?: boolean
+    title?: boolean
+    description?: boolean
+    objectKey?: boolean
+    publicUrl?: boolean
+    fileName?: boolean
+    contentType?: boolean
+    size?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DesignAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "designSystemId" | "organizationId" | "primaryRole" | "secondaryTags" | "title" | "description" | "objectKey" | "publicUrl" | "fileName" | "contentType" | "size" | "createdAt" | "updatedAt", ExtArgs["result"]["designAsset"]>
+  export type DesignAssetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }
+  export type DesignAssetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }
+  export type DesignAssetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    designSystem?: boolean | DesignSystemProfileDefaultArgs<ExtArgs>
+  }
+
+  export type $DesignAssetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DesignAsset"
+    objects: {
+      designSystem: Prisma.$DesignSystemProfilePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      designSystemId: string
+      organizationId: string
+      primaryRole: string
+      secondaryTags: string[]
+      title: string | null
+      description: string | null
+      objectKey: string
+      publicUrl: string | null
+      fileName: string
+      contentType: string
+      size: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["designAsset"]>
+    composites: {}
+  }
+
+  type DesignAssetGetPayload<S extends boolean | null | undefined | DesignAssetDefaultArgs> = $Result.GetResult<Prisma.$DesignAssetPayload, S>
+
+  type DesignAssetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DesignAssetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DesignAssetCountAggregateInputType | true
+    }
+
+  export interface DesignAssetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DesignAsset'], meta: { name: 'DesignAsset' } }
+    /**
+     * Find zero or one DesignAsset that matches the filter.
+     * @param {DesignAssetFindUniqueArgs} args - Arguments to find a DesignAsset
+     * @example
+     * // Get one DesignAsset
+     * const designAsset = await prisma.designAsset.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DesignAssetFindUniqueArgs>(args: SelectSubset<T, DesignAssetFindUniqueArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DesignAsset that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DesignAssetFindUniqueOrThrowArgs} args - Arguments to find a DesignAsset
+     * @example
+     * // Get one DesignAsset
+     * const designAsset = await prisma.designAsset.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DesignAssetFindUniqueOrThrowArgs>(args: SelectSubset<T, DesignAssetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignAsset that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetFindFirstArgs} args - Arguments to find a DesignAsset
+     * @example
+     * // Get one DesignAsset
+     * const designAsset = await prisma.designAsset.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DesignAssetFindFirstArgs>(args?: SelectSubset<T, DesignAssetFindFirstArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DesignAsset that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetFindFirstOrThrowArgs} args - Arguments to find a DesignAsset
+     * @example
+     * // Get one DesignAsset
+     * const designAsset = await prisma.designAsset.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DesignAssetFindFirstOrThrowArgs>(args?: SelectSubset<T, DesignAssetFindFirstOrThrowArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DesignAssets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DesignAssets
+     * const designAssets = await prisma.designAsset.findMany()
+     * 
+     * // Get first 10 DesignAssets
+     * const designAssets = await prisma.designAsset.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const designAssetWithIdOnly = await prisma.designAsset.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DesignAssetFindManyArgs>(args?: SelectSubset<T, DesignAssetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DesignAsset.
+     * @param {DesignAssetCreateArgs} args - Arguments to create a DesignAsset.
+     * @example
+     * // Create one DesignAsset
+     * const DesignAsset = await prisma.designAsset.create({
+     *   data: {
+     *     // ... data to create a DesignAsset
+     *   }
+     * })
+     * 
+     */
+    create<T extends DesignAssetCreateArgs>(args: SelectSubset<T, DesignAssetCreateArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DesignAssets.
+     * @param {DesignAssetCreateManyArgs} args - Arguments to create many DesignAssets.
+     * @example
+     * // Create many DesignAssets
+     * const designAsset = await prisma.designAsset.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DesignAssetCreateManyArgs>(args?: SelectSubset<T, DesignAssetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DesignAssets and returns the data saved in the database.
+     * @param {DesignAssetCreateManyAndReturnArgs} args - Arguments to create many DesignAssets.
+     * @example
+     * // Create many DesignAssets
+     * const designAsset = await prisma.designAsset.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DesignAssets and only return the `id`
+     * const designAssetWithIdOnly = await prisma.designAsset.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DesignAssetCreateManyAndReturnArgs>(args?: SelectSubset<T, DesignAssetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DesignAsset.
+     * @param {DesignAssetDeleteArgs} args - Arguments to delete one DesignAsset.
+     * @example
+     * // Delete one DesignAsset
+     * const DesignAsset = await prisma.designAsset.delete({
+     *   where: {
+     *     // ... filter to delete one DesignAsset
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DesignAssetDeleteArgs>(args: SelectSubset<T, DesignAssetDeleteArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DesignAsset.
+     * @param {DesignAssetUpdateArgs} args - Arguments to update one DesignAsset.
+     * @example
+     * // Update one DesignAsset
+     * const designAsset = await prisma.designAsset.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DesignAssetUpdateArgs>(args: SelectSubset<T, DesignAssetUpdateArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DesignAssets.
+     * @param {DesignAssetDeleteManyArgs} args - Arguments to filter DesignAssets to delete.
+     * @example
+     * // Delete a few DesignAssets
+     * const { count } = await prisma.designAsset.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DesignAssetDeleteManyArgs>(args?: SelectSubset<T, DesignAssetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DesignAssets
+     * const designAsset = await prisma.designAsset.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DesignAssetUpdateManyArgs>(args: SelectSubset<T, DesignAssetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DesignAssets and returns the data updated in the database.
+     * @param {DesignAssetUpdateManyAndReturnArgs} args - Arguments to update many DesignAssets.
+     * @example
+     * // Update many DesignAssets
+     * const designAsset = await prisma.designAsset.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DesignAssets and only return the `id`
+     * const designAssetWithIdOnly = await prisma.designAsset.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DesignAssetUpdateManyAndReturnArgs>(args: SelectSubset<T, DesignAssetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DesignAsset.
+     * @param {DesignAssetUpsertArgs} args - Arguments to update or create a DesignAsset.
+     * @example
+     * // Update or create a DesignAsset
+     * const designAsset = await prisma.designAsset.upsert({
+     *   create: {
+     *     // ... data to create a DesignAsset
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DesignAsset we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DesignAssetUpsertArgs>(args: SelectSubset<T, DesignAssetUpsertArgs<ExtArgs>>): Prisma__DesignAssetClient<$Result.GetResult<Prisma.$DesignAssetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DesignAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetCountArgs} args - Arguments to filter DesignAssets to count.
+     * @example
+     * // Count the number of DesignAssets
+     * const count = await prisma.designAsset.count({
+     *   where: {
+     *     // ... the filter for the DesignAssets we want to count
+     *   }
+     * })
+    **/
+    count<T extends DesignAssetCountArgs>(
+      args?: Subset<T, DesignAssetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DesignAssetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DesignAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DesignAssetAggregateArgs>(args: Subset<T, DesignAssetAggregateArgs>): Prisma.PrismaPromise<GetDesignAssetAggregateType<T>>
+
+    /**
+     * Group by DesignAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DesignAssetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DesignAssetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DesignAssetGroupByArgs['orderBy'] }
+        : { orderBy?: DesignAssetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DesignAssetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDesignAssetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DesignAsset model
+   */
+  readonly fields: DesignAssetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DesignAsset.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DesignAssetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    designSystem<T extends DesignSystemProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DesignSystemProfileDefaultArgs<ExtArgs>>): Prisma__DesignSystemProfileClient<$Result.GetResult<Prisma.$DesignSystemProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DesignAsset model
+   */
+  interface DesignAssetFieldRefs {
+    readonly id: FieldRef<"DesignAsset", 'String'>
+    readonly designSystemId: FieldRef<"DesignAsset", 'String'>
+    readonly organizationId: FieldRef<"DesignAsset", 'String'>
+    readonly primaryRole: FieldRef<"DesignAsset", 'String'>
+    readonly secondaryTags: FieldRef<"DesignAsset", 'String[]'>
+    readonly title: FieldRef<"DesignAsset", 'String'>
+    readonly description: FieldRef<"DesignAsset", 'String'>
+    readonly objectKey: FieldRef<"DesignAsset", 'String'>
+    readonly publicUrl: FieldRef<"DesignAsset", 'String'>
+    readonly fileName: FieldRef<"DesignAsset", 'String'>
+    readonly contentType: FieldRef<"DesignAsset", 'String'>
+    readonly size: FieldRef<"DesignAsset", 'Int'>
+    readonly createdAt: FieldRef<"DesignAsset", 'DateTime'>
+    readonly updatedAt: FieldRef<"DesignAsset", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DesignAsset findUnique
+   */
+  export type DesignAssetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignAsset to fetch.
+     */
+    where: DesignAssetWhereUniqueInput
+  }
+
+  /**
+   * DesignAsset findUniqueOrThrow
+   */
+  export type DesignAssetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignAsset to fetch.
+     */
+    where: DesignAssetWhereUniqueInput
+  }
+
+  /**
+   * DesignAsset findFirst
+   */
+  export type DesignAssetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignAsset to fetch.
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignAssets to fetch.
+     */
+    orderBy?: DesignAssetOrderByWithRelationInput | DesignAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignAssets.
+     */
+    cursor?: DesignAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignAssets.
+     */
+    distinct?: DesignAssetScalarFieldEnum | DesignAssetScalarFieldEnum[]
+  }
+
+  /**
+   * DesignAsset findFirstOrThrow
+   */
+  export type DesignAssetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignAsset to fetch.
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignAssets to fetch.
+     */
+    orderBy?: DesignAssetOrderByWithRelationInput | DesignAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DesignAssets.
+     */
+    cursor?: DesignAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DesignAssets.
+     */
+    distinct?: DesignAssetScalarFieldEnum | DesignAssetScalarFieldEnum[]
+  }
+
+  /**
+   * DesignAsset findMany
+   */
+  export type DesignAssetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which DesignAssets to fetch.
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DesignAssets to fetch.
+     */
+    orderBy?: DesignAssetOrderByWithRelationInput | DesignAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DesignAssets.
+     */
+    cursor?: DesignAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DesignAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DesignAssets.
+     */
+    skip?: number
+    distinct?: DesignAssetScalarFieldEnum | DesignAssetScalarFieldEnum[]
+  }
+
+  /**
+   * DesignAsset create
+   */
+  export type DesignAssetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DesignAsset.
+     */
+    data: XOR<DesignAssetCreateInput, DesignAssetUncheckedCreateInput>
+  }
+
+  /**
+   * DesignAsset createMany
+   */
+  export type DesignAssetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DesignAssets.
+     */
+    data: DesignAssetCreateManyInput | DesignAssetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DesignAsset createManyAndReturn
+   */
+  export type DesignAssetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * The data used to create many DesignAssets.
+     */
+    data: DesignAssetCreateManyInput | DesignAssetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignAsset update
+   */
+  export type DesignAssetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DesignAsset.
+     */
+    data: XOR<DesignAssetUpdateInput, DesignAssetUncheckedUpdateInput>
+    /**
+     * Choose, which DesignAsset to update.
+     */
+    where: DesignAssetWhereUniqueInput
+  }
+
+  /**
+   * DesignAsset updateMany
+   */
+  export type DesignAssetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DesignAssets.
+     */
+    data: XOR<DesignAssetUpdateManyMutationInput, DesignAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignAssets to update
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * Limit how many DesignAssets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignAsset updateManyAndReturn
+   */
+  export type DesignAssetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * The data used to update DesignAssets.
+     */
+    data: XOR<DesignAssetUpdateManyMutationInput, DesignAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which DesignAssets to update
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * Limit how many DesignAssets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DesignAsset upsert
+   */
+  export type DesignAssetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DesignAsset to update in case it exists.
+     */
+    where: DesignAssetWhereUniqueInput
+    /**
+     * In case the DesignAsset found by the `where` argument doesn't exist, create a new DesignAsset with this data.
+     */
+    create: XOR<DesignAssetCreateInput, DesignAssetUncheckedCreateInput>
+    /**
+     * In case the DesignAsset was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DesignAssetUpdateInput, DesignAssetUncheckedUpdateInput>
+  }
+
+  /**
+   * DesignAsset delete
+   */
+  export type DesignAssetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+    /**
+     * Filter which DesignAsset to delete.
+     */
+    where: DesignAssetWhereUniqueInput
+  }
+
+  /**
+   * DesignAsset deleteMany
+   */
+  export type DesignAssetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DesignAssets to delete
+     */
+    where?: DesignAssetWhereInput
+    /**
+     * Limit how many DesignAssets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DesignAsset without action
+   */
+  export type DesignAssetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DesignAsset
+     */
+    select?: DesignAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DesignAsset
+     */
+    omit?: DesignAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignAssetInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17971,6 +25945,50 @@ export namespace Prisma {
   export type OnboardingDraftScalarFieldEnum = (typeof OnboardingDraftScalarFieldEnum)[keyof typeof OnboardingDraftScalarFieldEnum]
 
 
+  export const ContextSourceScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    title: 'title',
+    description: 'description',
+    sourceKind: 'sourceKind',
+    sourceUrl: 'sourceUrl',
+    fileName: 'fileName',
+    mimeType: 'mimeType',
+    fileSize: 'fileSize',
+    objectKey: 'objectKey',
+    publicUrl: 'publicUrl',
+    pipelineStatus: 'pipelineStatus',
+    pipelineError: 'pipelineError',
+    extractedContent: 'extractedContent',
+    normalizedContent: 'normalizedContent',
+    reviewNotes: 'reviewNotes',
+    reviewedAt: 'reviewedAt',
+    reviewedById: 'reviewedById',
+    tags: 'tags',
+    category: 'category',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ContextSourceScalarFieldEnum = (typeof ContextSourceScalarFieldEnum)[keyof typeof ContextSourceScalarFieldEnum]
+
+
+  export const ContextArtifactScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    objectKey: 'objectKey',
+    publicUrl: 'publicUrl',
+    syncStatus: 'syncStatus',
+    syncedAt: 'syncedAt',
+    syncError: 'syncError',
+    sourceCount: 'sourceCount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ContextArtifactScalarFieldEnum = (typeof ContextArtifactScalarFieldEnum)[keyof typeof ContextArtifactScalarFieldEnum]
+
+
   export const AssetScalarFieldEnum: {
     id: 'id',
     organizationId: 'organizationId',
@@ -18002,6 +26020,80 @@ export namespace Prisma {
   };
 
   export type AssetRelationScalarFieldEnum = (typeof AssetRelationScalarFieldEnum)[keyof typeof AssetRelationScalarFieldEnum]
+
+
+  export const DesignSystemProfileScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    brandEssence: 'brandEssence',
+    desiredPerception: 'desiredPerception',
+    visualStyle: 'visualStyle',
+    antiPatterns: 'antiPatterns',
+    conceptualReferences: 'conceptualReferences',
+    aiNotes: 'aiNotes',
+    artifactSyncStatus: 'artifactSyncStatus',
+    artifactSyncedAt: 'artifactSyncedAt',
+    artifactSyncError: 'artifactSyncError',
+    artifactObjectKey: 'artifactObjectKey',
+    contextArtifactSyncStatus: 'contextArtifactSyncStatus',
+    contextArtifactSyncedAt: 'contextArtifactSyncedAt',
+    contextArtifactSyncError: 'contextArtifactSyncError',
+    contextArtifactObjectKey: 'contextArtifactObjectKey',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DesignSystemProfileScalarFieldEnum = (typeof DesignSystemProfileScalarFieldEnum)[keyof typeof DesignSystemProfileScalarFieldEnum]
+
+
+  export const DesignColorGroupScalarFieldEnum: {
+    id: 'id',
+    designSystemId: 'designSystemId',
+    name: 'name',
+    description: 'description',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DesignColorGroupScalarFieldEnum = (typeof DesignColorGroupScalarFieldEnum)[keyof typeof DesignColorGroupScalarFieldEnum]
+
+
+  export const DesignColorTokenScalarFieldEnum: {
+    id: 'id',
+    colorGroupId: 'colorGroupId',
+    name: 'name',
+    value: 'value',
+    displayFormat: 'displayFormat',
+    semanticRole: 'semanticRole',
+    usageNote: 'usageNote',
+    restrictionNote: 'restrictionNote',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DesignColorTokenScalarFieldEnum = (typeof DesignColorTokenScalarFieldEnum)[keyof typeof DesignColorTokenScalarFieldEnum]
+
+
+  export const DesignAssetScalarFieldEnum: {
+    id: 'id',
+    designSystemId: 'designSystemId',
+    organizationId: 'organizationId',
+    primaryRole: 'primaryRole',
+    secondaryTags: 'secondaryTags',
+    title: 'title',
+    description: 'description',
+    objectKey: 'objectKey',
+    publicUrl: 'publicUrl',
+    fileName: 'fileName',
+    contentType: 'contentType',
+    size: 'size',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DesignAssetScalarFieldEnum = (typeof DesignAssetScalarFieldEnum)[keyof typeof DesignAssetScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -18441,6 +26533,9 @@ export namespace Prisma {
     invitations?: InvitationListRelationFilter
     onboardingDraft?: XOR<OnboardingDraftNullableScalarRelationFilter, OnboardingDraftWhereInput> | null
     assets?: AssetListRelationFilter
+    designSystem?: XOR<DesignSystemProfileNullableScalarRelationFilter, DesignSystemProfileWhereInput> | null
+    contextSources?: ContextSourceListRelationFilter
+    contextArtifact?: XOR<ContextArtifactNullableScalarRelationFilter, ContextArtifactWhereInput> | null
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -18455,6 +26550,9 @@ export namespace Prisma {
     invitations?: InvitationOrderByRelationAggregateInput
     onboardingDraft?: OnboardingDraftOrderByWithRelationInput
     assets?: AssetOrderByRelationAggregateInput
+    designSystem?: DesignSystemProfileOrderByWithRelationInput
+    contextSources?: ContextSourceOrderByRelationAggregateInput
+    contextArtifact?: ContextArtifactOrderByWithRelationInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -18472,6 +26570,9 @@ export namespace Prisma {
     invitations?: InvitationListRelationFilter
     onboardingDraft?: XOR<OnboardingDraftNullableScalarRelationFilter, OnboardingDraftWhereInput> | null
     assets?: AssetListRelationFilter
+    designSystem?: XOR<DesignSystemProfileNullableScalarRelationFilter, DesignSystemProfileWhereInput> | null
+    contextSources?: ContextSourceListRelationFilter
+    contextArtifact?: XOR<ContextArtifactNullableScalarRelationFilter, ContextArtifactWhereInput> | null
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -18926,6 +27027,230 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"OnboardingDraft"> | Date | string
   }
 
+  export type ContextSourceWhereInput = {
+    AND?: ContextSourceWhereInput | ContextSourceWhereInput[]
+    OR?: ContextSourceWhereInput[]
+    NOT?: ContextSourceWhereInput | ContextSourceWhereInput[]
+    id?: StringFilter<"ContextSource"> | string
+    organizationId?: StringFilter<"ContextSource"> | string
+    title?: StringFilter<"ContextSource"> | string
+    description?: StringNullableFilter<"ContextSource"> | string | null
+    sourceKind?: StringFilter<"ContextSource"> | string
+    sourceUrl?: StringNullableFilter<"ContextSource"> | string | null
+    fileName?: StringNullableFilter<"ContextSource"> | string | null
+    mimeType?: StringNullableFilter<"ContextSource"> | string | null
+    fileSize?: IntNullableFilter<"ContextSource"> | number | null
+    objectKey?: StringNullableFilter<"ContextSource"> | string | null
+    publicUrl?: StringNullableFilter<"ContextSource"> | string | null
+    pipelineStatus?: StringFilter<"ContextSource"> | string
+    pipelineError?: StringNullableFilter<"ContextSource"> | string | null
+    extractedContent?: StringNullableFilter<"ContextSource"> | string | null
+    normalizedContent?: StringNullableFilter<"ContextSource"> | string | null
+    reviewNotes?: StringNullableFilter<"ContextSource"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ContextSource"> | Date | string | null
+    reviewedById?: StringNullableFilter<"ContextSource"> | string | null
+    tags?: StringNullableListFilter<"ContextSource">
+    category?: StringNullableFilter<"ContextSource"> | string | null
+    createdAt?: DateTimeFilter<"ContextSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ContextSource"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }
+
+  export type ContextSourceOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sourceKind?: SortOrder
+    sourceUrl?: SortOrderInput | SortOrder
+    fileName?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
+    objectKey?: SortOrderInput | SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    pipelineStatus?: SortOrder
+    pipelineError?: SortOrderInput | SortOrder
+    extractedContent?: SortOrderInput | SortOrder
+    normalizedContent?: SortOrderInput | SortOrder
+    reviewNotes?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+  }
+
+  export type ContextSourceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ContextSourceWhereInput | ContextSourceWhereInput[]
+    OR?: ContextSourceWhereInput[]
+    NOT?: ContextSourceWhereInput | ContextSourceWhereInput[]
+    organizationId?: StringFilter<"ContextSource"> | string
+    title?: StringFilter<"ContextSource"> | string
+    description?: StringNullableFilter<"ContextSource"> | string | null
+    sourceKind?: StringFilter<"ContextSource"> | string
+    sourceUrl?: StringNullableFilter<"ContextSource"> | string | null
+    fileName?: StringNullableFilter<"ContextSource"> | string | null
+    mimeType?: StringNullableFilter<"ContextSource"> | string | null
+    fileSize?: IntNullableFilter<"ContextSource"> | number | null
+    objectKey?: StringNullableFilter<"ContextSource"> | string | null
+    publicUrl?: StringNullableFilter<"ContextSource"> | string | null
+    pipelineStatus?: StringFilter<"ContextSource"> | string
+    pipelineError?: StringNullableFilter<"ContextSource"> | string | null
+    extractedContent?: StringNullableFilter<"ContextSource"> | string | null
+    normalizedContent?: StringNullableFilter<"ContextSource"> | string | null
+    reviewNotes?: StringNullableFilter<"ContextSource"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ContextSource"> | Date | string | null
+    reviewedById?: StringNullableFilter<"ContextSource"> | string | null
+    tags?: StringNullableListFilter<"ContextSource">
+    category?: StringNullableFilter<"ContextSource"> | string | null
+    createdAt?: DateTimeFilter<"ContextSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ContextSource"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }, "id">
+
+  export type ContextSourceOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sourceKind?: SortOrder
+    sourceUrl?: SortOrderInput | SortOrder
+    fileName?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
+    objectKey?: SortOrderInput | SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    pipelineStatus?: SortOrder
+    pipelineError?: SortOrderInput | SortOrder
+    extractedContent?: SortOrderInput | SortOrder
+    normalizedContent?: SortOrderInput | SortOrder
+    reviewNotes?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ContextSourceCountOrderByAggregateInput
+    _avg?: ContextSourceAvgOrderByAggregateInput
+    _max?: ContextSourceMaxOrderByAggregateInput
+    _min?: ContextSourceMinOrderByAggregateInput
+    _sum?: ContextSourceSumOrderByAggregateInput
+  }
+
+  export type ContextSourceScalarWhereWithAggregatesInput = {
+    AND?: ContextSourceScalarWhereWithAggregatesInput | ContextSourceScalarWhereWithAggregatesInput[]
+    OR?: ContextSourceScalarWhereWithAggregatesInput[]
+    NOT?: ContextSourceScalarWhereWithAggregatesInput | ContextSourceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ContextSource"> | string
+    organizationId?: StringWithAggregatesFilter<"ContextSource"> | string
+    title?: StringWithAggregatesFilter<"ContextSource"> | string
+    description?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    sourceKind?: StringWithAggregatesFilter<"ContextSource"> | string
+    sourceUrl?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    fileName?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    mimeType?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    fileSize?: IntNullableWithAggregatesFilter<"ContextSource"> | number | null
+    objectKey?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    publicUrl?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    pipelineStatus?: StringWithAggregatesFilter<"ContextSource"> | string
+    pipelineError?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    extractedContent?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    normalizedContent?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    reviewNotes?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"ContextSource"> | Date | string | null
+    reviewedById?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    tags?: StringNullableListFilter<"ContextSource">
+    category?: StringNullableWithAggregatesFilter<"ContextSource"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ContextSource"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ContextSource"> | Date | string
+  }
+
+  export type ContextArtifactWhereInput = {
+    AND?: ContextArtifactWhereInput | ContextArtifactWhereInput[]
+    OR?: ContextArtifactWhereInput[]
+    NOT?: ContextArtifactWhereInput | ContextArtifactWhereInput[]
+    id?: StringFilter<"ContextArtifact"> | string
+    organizationId?: StringFilter<"ContextArtifact"> | string
+    objectKey?: StringNullableFilter<"ContextArtifact"> | string | null
+    publicUrl?: StringNullableFilter<"ContextArtifact"> | string | null
+    syncStatus?: StringFilter<"ContextArtifact"> | string
+    syncedAt?: DateTimeNullableFilter<"ContextArtifact"> | Date | string | null
+    syncError?: StringNullableFilter<"ContextArtifact"> | string | null
+    sourceCount?: IntFilter<"ContextArtifact"> | number
+    createdAt?: DateTimeFilter<"ContextArtifact"> | Date | string
+    updatedAt?: DateTimeFilter<"ContextArtifact"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }
+
+  export type ContextArtifactOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    objectKey?: SortOrderInput | SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    syncStatus?: SortOrder
+    syncedAt?: SortOrderInput | SortOrder
+    syncError?: SortOrderInput | SortOrder
+    sourceCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+  }
+
+  export type ContextArtifactWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId?: string
+    AND?: ContextArtifactWhereInput | ContextArtifactWhereInput[]
+    OR?: ContextArtifactWhereInput[]
+    NOT?: ContextArtifactWhereInput | ContextArtifactWhereInput[]
+    objectKey?: StringNullableFilter<"ContextArtifact"> | string | null
+    publicUrl?: StringNullableFilter<"ContextArtifact"> | string | null
+    syncStatus?: StringFilter<"ContextArtifact"> | string
+    syncedAt?: DateTimeNullableFilter<"ContextArtifact"> | Date | string | null
+    syncError?: StringNullableFilter<"ContextArtifact"> | string | null
+    sourceCount?: IntFilter<"ContextArtifact"> | number
+    createdAt?: DateTimeFilter<"ContextArtifact"> | Date | string
+    updatedAt?: DateTimeFilter<"ContextArtifact"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }, "id" | "organizationId">
+
+  export type ContextArtifactOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    objectKey?: SortOrderInput | SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    syncStatus?: SortOrder
+    syncedAt?: SortOrderInput | SortOrder
+    syncError?: SortOrderInput | SortOrder
+    sourceCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ContextArtifactCountOrderByAggregateInput
+    _avg?: ContextArtifactAvgOrderByAggregateInput
+    _max?: ContextArtifactMaxOrderByAggregateInput
+    _min?: ContextArtifactMinOrderByAggregateInput
+    _sum?: ContextArtifactSumOrderByAggregateInput
+  }
+
+  export type ContextArtifactScalarWhereWithAggregatesInput = {
+    AND?: ContextArtifactScalarWhereWithAggregatesInput | ContextArtifactScalarWhereWithAggregatesInput[]
+    OR?: ContextArtifactScalarWhereWithAggregatesInput[]
+    NOT?: ContextArtifactScalarWhereWithAggregatesInput | ContextArtifactScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ContextArtifact"> | string
+    organizationId?: StringWithAggregatesFilter<"ContextArtifact"> | string
+    objectKey?: StringNullableWithAggregatesFilter<"ContextArtifact"> | string | null
+    publicUrl?: StringNullableWithAggregatesFilter<"ContextArtifact"> | string | null
+    syncStatus?: StringWithAggregatesFilter<"ContextArtifact"> | string
+    syncedAt?: DateTimeNullableWithAggregatesFilter<"ContextArtifact"> | Date | string | null
+    syncError?: StringNullableWithAggregatesFilter<"ContextArtifact"> | string | null
+    sourceCount?: IntWithAggregatesFilter<"ContextArtifact"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ContextArtifact"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ContextArtifact"> | Date | string
+  }
+
   export type AssetWhereInput = {
     AND?: AssetWhereInput | AssetWhereInput[]
     OR?: AssetWhereInput[]
@@ -19065,7 +27390,6 @@ export namespace Prisma {
 
   export type AssetRelationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    assetId_kind_value?: AssetRelationAssetIdKindValueCompoundUniqueInput
     AND?: AssetRelationWhereInput | AssetRelationWhereInput[]
     OR?: AssetRelationWhereInput[]
     NOT?: AssetRelationWhereInput | AssetRelationWhereInput[]
@@ -19073,7 +27397,7 @@ export namespace Prisma {
     kind?: StringFilter<"AssetRelation"> | string
     value?: StringFilter<"AssetRelation"> | string
     asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
-  }, "id" | "assetId_kind_value">
+  }, "id">
 
   export type AssetRelationOrderByWithAggregationInput = {
     id?: SortOrder
@@ -19093,6 +27417,393 @@ export namespace Prisma {
     assetId?: StringWithAggregatesFilter<"AssetRelation"> | string
     kind?: StringWithAggregatesFilter<"AssetRelation"> | string
     value?: StringWithAggregatesFilter<"AssetRelation"> | string
+  }
+
+  export type DesignSystemProfileWhereInput = {
+    AND?: DesignSystemProfileWhereInput | DesignSystemProfileWhereInput[]
+    OR?: DesignSystemProfileWhereInput[]
+    NOT?: DesignSystemProfileWhereInput | DesignSystemProfileWhereInput[]
+    id?: StringFilter<"DesignSystemProfile"> | string
+    organizationId?: StringFilter<"DesignSystemProfile"> | string
+    brandEssence?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    desiredPerception?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    visualStyle?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    antiPatterns?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    conceptualReferences?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    aiNotes?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    artifactSyncStatus?: StringFilter<"DesignSystemProfile"> | string
+    artifactSyncedAt?: DateTimeNullableFilter<"DesignSystemProfile"> | Date | string | null
+    artifactSyncError?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    artifactObjectKey?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    contextArtifactSyncStatus?: StringFilter<"DesignSystemProfile"> | string
+    contextArtifactSyncedAt?: DateTimeNullableFilter<"DesignSystemProfile"> | Date | string | null
+    contextArtifactSyncError?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    contextArtifactObjectKey?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    createdAt?: DateTimeFilter<"DesignSystemProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignSystemProfile"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    colorGroups?: DesignColorGroupListRelationFilter
+    assets?: DesignAssetListRelationFilter
+  }
+
+  export type DesignSystemProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    brandEssence?: SortOrderInput | SortOrder
+    desiredPerception?: SortOrderInput | SortOrder
+    visualStyle?: SortOrderInput | SortOrder
+    antiPatterns?: SortOrderInput | SortOrder
+    conceptualReferences?: SortOrderInput | SortOrder
+    aiNotes?: SortOrderInput | SortOrder
+    artifactSyncStatus?: SortOrder
+    artifactSyncedAt?: SortOrderInput | SortOrder
+    artifactSyncError?: SortOrderInput | SortOrder
+    artifactObjectKey?: SortOrderInput | SortOrder
+    contextArtifactSyncStatus?: SortOrder
+    contextArtifactSyncedAt?: SortOrderInput | SortOrder
+    contextArtifactSyncError?: SortOrderInput | SortOrder
+    contextArtifactObjectKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    colorGroups?: DesignColorGroupOrderByRelationAggregateInput
+    assets?: DesignAssetOrderByRelationAggregateInput
+  }
+
+  export type DesignSystemProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId?: string
+    AND?: DesignSystemProfileWhereInput | DesignSystemProfileWhereInput[]
+    OR?: DesignSystemProfileWhereInput[]
+    NOT?: DesignSystemProfileWhereInput | DesignSystemProfileWhereInput[]
+    brandEssence?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    desiredPerception?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    visualStyle?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    antiPatterns?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    conceptualReferences?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    aiNotes?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    artifactSyncStatus?: StringFilter<"DesignSystemProfile"> | string
+    artifactSyncedAt?: DateTimeNullableFilter<"DesignSystemProfile"> | Date | string | null
+    artifactSyncError?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    artifactObjectKey?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    contextArtifactSyncStatus?: StringFilter<"DesignSystemProfile"> | string
+    contextArtifactSyncedAt?: DateTimeNullableFilter<"DesignSystemProfile"> | Date | string | null
+    contextArtifactSyncError?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    contextArtifactObjectKey?: StringNullableFilter<"DesignSystemProfile"> | string | null
+    createdAt?: DateTimeFilter<"DesignSystemProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignSystemProfile"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    colorGroups?: DesignColorGroupListRelationFilter
+    assets?: DesignAssetListRelationFilter
+  }, "id" | "organizationId">
+
+  export type DesignSystemProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    brandEssence?: SortOrderInput | SortOrder
+    desiredPerception?: SortOrderInput | SortOrder
+    visualStyle?: SortOrderInput | SortOrder
+    antiPatterns?: SortOrderInput | SortOrder
+    conceptualReferences?: SortOrderInput | SortOrder
+    aiNotes?: SortOrderInput | SortOrder
+    artifactSyncStatus?: SortOrder
+    artifactSyncedAt?: SortOrderInput | SortOrder
+    artifactSyncError?: SortOrderInput | SortOrder
+    artifactObjectKey?: SortOrderInput | SortOrder
+    contextArtifactSyncStatus?: SortOrder
+    contextArtifactSyncedAt?: SortOrderInput | SortOrder
+    contextArtifactSyncError?: SortOrderInput | SortOrder
+    contextArtifactObjectKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DesignSystemProfileCountOrderByAggregateInput
+    _max?: DesignSystemProfileMaxOrderByAggregateInput
+    _min?: DesignSystemProfileMinOrderByAggregateInput
+  }
+
+  export type DesignSystemProfileScalarWhereWithAggregatesInput = {
+    AND?: DesignSystemProfileScalarWhereWithAggregatesInput | DesignSystemProfileScalarWhereWithAggregatesInput[]
+    OR?: DesignSystemProfileScalarWhereWithAggregatesInput[]
+    NOT?: DesignSystemProfileScalarWhereWithAggregatesInput | DesignSystemProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DesignSystemProfile"> | string
+    organizationId?: StringWithAggregatesFilter<"DesignSystemProfile"> | string
+    brandEssence?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    desiredPerception?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    visualStyle?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    antiPatterns?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    conceptualReferences?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    aiNotes?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    artifactSyncStatus?: StringWithAggregatesFilter<"DesignSystemProfile"> | string
+    artifactSyncedAt?: DateTimeNullableWithAggregatesFilter<"DesignSystemProfile"> | Date | string | null
+    artifactSyncError?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    artifactObjectKey?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    contextArtifactSyncStatus?: StringWithAggregatesFilter<"DesignSystemProfile"> | string
+    contextArtifactSyncedAt?: DateTimeNullableWithAggregatesFilter<"DesignSystemProfile"> | Date | string | null
+    contextArtifactSyncError?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    contextArtifactObjectKey?: StringNullableWithAggregatesFilter<"DesignSystemProfile"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DesignSystemProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DesignSystemProfile"> | Date | string
+  }
+
+  export type DesignColorGroupWhereInput = {
+    AND?: DesignColorGroupWhereInput | DesignColorGroupWhereInput[]
+    OR?: DesignColorGroupWhereInput[]
+    NOT?: DesignColorGroupWhereInput | DesignColorGroupWhereInput[]
+    id?: StringFilter<"DesignColorGroup"> | string
+    designSystemId?: StringFilter<"DesignColorGroup"> | string
+    name?: StringFilter<"DesignColorGroup"> | string
+    description?: StringNullableFilter<"DesignColorGroup"> | string | null
+    sortOrder?: IntFilter<"DesignColorGroup"> | number
+    createdAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+    designSystem?: XOR<DesignSystemProfileScalarRelationFilter, DesignSystemProfileWhereInput>
+    colors?: DesignColorTokenListRelationFilter
+  }
+
+  export type DesignColorGroupOrderByWithRelationInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    designSystem?: DesignSystemProfileOrderByWithRelationInput
+    colors?: DesignColorTokenOrderByRelationAggregateInput
+  }
+
+  export type DesignColorGroupWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    designSystemId_name?: DesignColorGroupDesignSystemIdNameCompoundUniqueInput
+    AND?: DesignColorGroupWhereInput | DesignColorGroupWhereInput[]
+    OR?: DesignColorGroupWhereInput[]
+    NOT?: DesignColorGroupWhereInput | DesignColorGroupWhereInput[]
+    designSystemId?: StringFilter<"DesignColorGroup"> | string
+    name?: StringFilter<"DesignColorGroup"> | string
+    description?: StringNullableFilter<"DesignColorGroup"> | string | null
+    sortOrder?: IntFilter<"DesignColorGroup"> | number
+    createdAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+    designSystem?: XOR<DesignSystemProfileScalarRelationFilter, DesignSystemProfileWhereInput>
+    colors?: DesignColorTokenListRelationFilter
+  }, "id" | "designSystemId_name">
+
+  export type DesignColorGroupOrderByWithAggregationInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DesignColorGroupCountOrderByAggregateInput
+    _avg?: DesignColorGroupAvgOrderByAggregateInput
+    _max?: DesignColorGroupMaxOrderByAggregateInput
+    _min?: DesignColorGroupMinOrderByAggregateInput
+    _sum?: DesignColorGroupSumOrderByAggregateInput
+  }
+
+  export type DesignColorGroupScalarWhereWithAggregatesInput = {
+    AND?: DesignColorGroupScalarWhereWithAggregatesInput | DesignColorGroupScalarWhereWithAggregatesInput[]
+    OR?: DesignColorGroupScalarWhereWithAggregatesInput[]
+    NOT?: DesignColorGroupScalarWhereWithAggregatesInput | DesignColorGroupScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DesignColorGroup"> | string
+    designSystemId?: StringWithAggregatesFilter<"DesignColorGroup"> | string
+    name?: StringWithAggregatesFilter<"DesignColorGroup"> | string
+    description?: StringNullableWithAggregatesFilter<"DesignColorGroup"> | string | null
+    sortOrder?: IntWithAggregatesFilter<"DesignColorGroup"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DesignColorGroup"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DesignColorGroup"> | Date | string
+  }
+
+  export type DesignColorTokenWhereInput = {
+    AND?: DesignColorTokenWhereInput | DesignColorTokenWhereInput[]
+    OR?: DesignColorTokenWhereInput[]
+    NOT?: DesignColorTokenWhereInput | DesignColorTokenWhereInput[]
+    id?: StringFilter<"DesignColorToken"> | string
+    colorGroupId?: StringFilter<"DesignColorToken"> | string
+    name?: StringFilter<"DesignColorToken"> | string
+    value?: StringFilter<"DesignColorToken"> | string
+    displayFormat?: StringFilter<"DesignColorToken"> | string
+    semanticRole?: StringFilter<"DesignColorToken"> | string
+    usageNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    restrictionNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    sortOrder?: IntFilter<"DesignColorToken"> | number
+    createdAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+    colorGroup?: XOR<DesignColorGroupScalarRelationFilter, DesignColorGroupWhereInput>
+  }
+
+  export type DesignColorTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    colorGroupId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    displayFormat?: SortOrder
+    semanticRole?: SortOrder
+    usageNote?: SortOrderInput | SortOrder
+    restrictionNote?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    colorGroup?: DesignColorGroupOrderByWithRelationInput
+  }
+
+  export type DesignColorTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    colorGroupId_name?: DesignColorTokenColorGroupIdNameCompoundUniqueInput
+    AND?: DesignColorTokenWhereInput | DesignColorTokenWhereInput[]
+    OR?: DesignColorTokenWhereInput[]
+    NOT?: DesignColorTokenWhereInput | DesignColorTokenWhereInput[]
+    colorGroupId?: StringFilter<"DesignColorToken"> | string
+    name?: StringFilter<"DesignColorToken"> | string
+    value?: StringFilter<"DesignColorToken"> | string
+    displayFormat?: StringFilter<"DesignColorToken"> | string
+    semanticRole?: StringFilter<"DesignColorToken"> | string
+    usageNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    restrictionNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    sortOrder?: IntFilter<"DesignColorToken"> | number
+    createdAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+    colorGroup?: XOR<DesignColorGroupScalarRelationFilter, DesignColorGroupWhereInput>
+  }, "id" | "colorGroupId_name">
+
+  export type DesignColorTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    colorGroupId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    displayFormat?: SortOrder
+    semanticRole?: SortOrder
+    usageNote?: SortOrderInput | SortOrder
+    restrictionNote?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DesignColorTokenCountOrderByAggregateInput
+    _avg?: DesignColorTokenAvgOrderByAggregateInput
+    _max?: DesignColorTokenMaxOrderByAggregateInput
+    _min?: DesignColorTokenMinOrderByAggregateInput
+    _sum?: DesignColorTokenSumOrderByAggregateInput
+  }
+
+  export type DesignColorTokenScalarWhereWithAggregatesInput = {
+    AND?: DesignColorTokenScalarWhereWithAggregatesInput | DesignColorTokenScalarWhereWithAggregatesInput[]
+    OR?: DesignColorTokenScalarWhereWithAggregatesInput[]
+    NOT?: DesignColorTokenScalarWhereWithAggregatesInput | DesignColorTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    colorGroupId?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    name?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    value?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    displayFormat?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    semanticRole?: StringWithAggregatesFilter<"DesignColorToken"> | string
+    usageNote?: StringNullableWithAggregatesFilter<"DesignColorToken"> | string | null
+    restrictionNote?: StringNullableWithAggregatesFilter<"DesignColorToken"> | string | null
+    sortOrder?: IntWithAggregatesFilter<"DesignColorToken"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DesignColorToken"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DesignColorToken"> | Date | string
+  }
+
+  export type DesignAssetWhereInput = {
+    AND?: DesignAssetWhereInput | DesignAssetWhereInput[]
+    OR?: DesignAssetWhereInput[]
+    NOT?: DesignAssetWhereInput | DesignAssetWhereInput[]
+    id?: StringFilter<"DesignAsset"> | string
+    designSystemId?: StringFilter<"DesignAsset"> | string
+    organizationId?: StringFilter<"DesignAsset"> | string
+    primaryRole?: StringFilter<"DesignAsset"> | string
+    secondaryTags?: StringNullableListFilter<"DesignAsset">
+    title?: StringNullableFilter<"DesignAsset"> | string | null
+    description?: StringNullableFilter<"DesignAsset"> | string | null
+    objectKey?: StringFilter<"DesignAsset"> | string
+    publicUrl?: StringNullableFilter<"DesignAsset"> | string | null
+    fileName?: StringFilter<"DesignAsset"> | string
+    contentType?: StringFilter<"DesignAsset"> | string
+    size?: IntFilter<"DesignAsset"> | number
+    createdAt?: DateTimeFilter<"DesignAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignAsset"> | Date | string
+    designSystem?: XOR<DesignSystemProfileScalarRelationFilter, DesignSystemProfileWhereInput>
+  }
+
+  export type DesignAssetOrderByWithRelationInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    organizationId?: SortOrder
+    primaryRole?: SortOrder
+    secondaryTags?: SortOrder
+    title?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    fileName?: SortOrder
+    contentType?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    designSystem?: DesignSystemProfileOrderByWithRelationInput
+  }
+
+  export type DesignAssetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DesignAssetWhereInput | DesignAssetWhereInput[]
+    OR?: DesignAssetWhereInput[]
+    NOT?: DesignAssetWhereInput | DesignAssetWhereInput[]
+    designSystemId?: StringFilter<"DesignAsset"> | string
+    organizationId?: StringFilter<"DesignAsset"> | string
+    primaryRole?: StringFilter<"DesignAsset"> | string
+    secondaryTags?: StringNullableListFilter<"DesignAsset">
+    title?: StringNullableFilter<"DesignAsset"> | string | null
+    description?: StringNullableFilter<"DesignAsset"> | string | null
+    objectKey?: StringFilter<"DesignAsset"> | string
+    publicUrl?: StringNullableFilter<"DesignAsset"> | string | null
+    fileName?: StringFilter<"DesignAsset"> | string
+    contentType?: StringFilter<"DesignAsset"> | string
+    size?: IntFilter<"DesignAsset"> | number
+    createdAt?: DateTimeFilter<"DesignAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignAsset"> | Date | string
+    designSystem?: XOR<DesignSystemProfileScalarRelationFilter, DesignSystemProfileWhereInput>
+  }, "id">
+
+  export type DesignAssetOrderByWithAggregationInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    organizationId?: SortOrder
+    primaryRole?: SortOrder
+    secondaryTags?: SortOrder
+    title?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrderInput | SortOrder
+    fileName?: SortOrder
+    contentType?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DesignAssetCountOrderByAggregateInput
+    _avg?: DesignAssetAvgOrderByAggregateInput
+    _max?: DesignAssetMaxOrderByAggregateInput
+    _min?: DesignAssetMinOrderByAggregateInput
+    _sum?: DesignAssetSumOrderByAggregateInput
+  }
+
+  export type DesignAssetScalarWhereWithAggregatesInput = {
+    AND?: DesignAssetScalarWhereWithAggregatesInput | DesignAssetScalarWhereWithAggregatesInput[]
+    OR?: DesignAssetScalarWhereWithAggregatesInput[]
+    NOT?: DesignAssetScalarWhereWithAggregatesInput | DesignAssetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DesignAsset"> | string
+    designSystemId?: StringWithAggregatesFilter<"DesignAsset"> | string
+    organizationId?: StringWithAggregatesFilter<"DesignAsset"> | string
+    primaryRole?: StringWithAggregatesFilter<"DesignAsset"> | string
+    secondaryTags?: StringNullableListFilter<"DesignAsset">
+    title?: StringNullableWithAggregatesFilter<"DesignAsset"> | string | null
+    description?: StringNullableWithAggregatesFilter<"DesignAsset"> | string | null
+    objectKey?: StringWithAggregatesFilter<"DesignAsset"> | string
+    publicUrl?: StringNullableWithAggregatesFilter<"DesignAsset"> | string | null
+    fileName?: StringWithAggregatesFilter<"DesignAsset"> | string
+    contentType?: StringWithAggregatesFilter<"DesignAsset"> | string
+    size?: IntWithAggregatesFilter<"DesignAsset"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DesignAsset"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DesignAsset"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -19443,6 +28154,9 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
     assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -19457,6 +28171,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
     assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -19471,6 +28188,9 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -19485,6 +28205,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -19933,6 +28656,270 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ContextSourceCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutContextSourcesInput
+  }
+
+  export type ContextSourceUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextSourceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutContextSourcesNestedInput
+  }
+
+  export type ContextSourceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextSourceCreateManyInput = {
+    id?: string
+    organizationId: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextSourceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextSourceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextArtifactCreateInput = {
+    id?: string
+    objectKey?: string | null
+    publicUrl?: string | null
+    syncStatus?: string
+    syncedAt?: Date | string | null
+    syncError?: string | null
+    sourceCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutContextArtifactInput
+  }
+
+  export type ContextArtifactUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    objectKey?: string | null
+    publicUrl?: string | null
+    syncStatus?: string
+    syncedAt?: Date | string | null
+    syncError?: string | null
+    sourceCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextArtifactUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutContextArtifactNestedInput
+  }
+
+  export type ContextArtifactUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextArtifactCreateManyInput = {
+    id?: string
+    organizationId: string
+    objectKey?: string | null
+    publicUrl?: string | null
+    syncStatus?: string
+    syncedAt?: Date | string | null
+    syncError?: string | null
+    sourceCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextArtifactUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextArtifactUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AssetCreateInput = {
     id?: string
     title: string
@@ -20122,6 +29109,448 @@ export namespace Prisma {
     assetId?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DesignSystemProfileCreateInput = {
+    id?: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDesignSystemInput
+    colorGroups?: DesignColorGroupCreateNestedManyWithoutDesignSystemInput
+    assets?: DesignAssetCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colorGroups?: DesignColorGroupUncheckedCreateNestedManyWithoutDesignSystemInput
+    assets?: DesignAssetUncheckedCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDesignSystemNestedInput
+    colorGroups?: DesignColorGroupUpdateManyWithoutDesignSystemNestedInput
+    assets?: DesignAssetUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignSystemProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colorGroups?: DesignColorGroupUncheckedUpdateManyWithoutDesignSystemNestedInput
+    assets?: DesignAssetUncheckedUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignSystemProfileCreateManyInput = {
+    id?: string
+    organizationId: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignSystemProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignSystemProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorGroupCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    designSystem: DesignSystemProfileCreateNestedOneWithoutColorGroupsInput
+    colors?: DesignColorTokenCreateNestedManyWithoutColorGroupInput
+  }
+
+  export type DesignColorGroupUncheckedCreateInput = {
+    id?: string
+    designSystemId: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colors?: DesignColorTokenUncheckedCreateNestedManyWithoutColorGroupInput
+  }
+
+  export type DesignColorGroupUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    designSystem?: DesignSystemProfileUpdateOneRequiredWithoutColorGroupsNestedInput
+    colors?: DesignColorTokenUpdateManyWithoutColorGroupNestedInput
+  }
+
+  export type DesignColorGroupUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    designSystemId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: DesignColorTokenUncheckedUpdateManyWithoutColorGroupNestedInput
+  }
+
+  export type DesignColorGroupCreateManyInput = {
+    id?: string
+    designSystemId: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorGroupUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorGroupUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    designSystemId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenCreateInput = {
+    id?: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colorGroup: DesignColorGroupCreateNestedOneWithoutColorsInput
+  }
+
+  export type DesignColorTokenUncheckedCreateInput = {
+    id?: string
+    colorGroupId: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colorGroup?: DesignColorGroupUpdateOneRequiredWithoutColorsNestedInput
+  }
+
+  export type DesignColorTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    colorGroupId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenCreateManyInput = {
+    id?: string
+    colorGroupId: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    colorGroupId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetCreateInput = {
+    id?: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    designSystem: DesignSystemProfileCreateNestedOneWithoutAssetsInput
+  }
+
+  export type DesignAssetUncheckedCreateInput = {
+    id?: string
+    designSystemId: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignAssetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    designSystem?: DesignSystemProfileUpdateOneRequiredWithoutAssetsNestedInput
+  }
+
+  export type DesignAssetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    designSystemId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetCreateManyInput = {
+    id?: string
+    designSystemId: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignAssetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    designSystemId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -20463,11 +29892,31 @@ export namespace Prisma {
     none?: AssetWhereInput
   }
 
+  export type DesignSystemProfileNullableScalarRelationFilter = {
+    is?: DesignSystemProfileWhereInput | null
+    isNot?: DesignSystemProfileWhereInput | null
+  }
+
+  export type ContextSourceListRelationFilter = {
+    every?: ContextSourceWhereInput
+    some?: ContextSourceWhereInput
+    none?: ContextSourceWhereInput
+  }
+
+  export type ContextArtifactNullableScalarRelationFilter = {
+    is?: ContextArtifactWhereInput | null
+    isNot?: ContextArtifactWhereInput | null
+  }
+
   export type RoleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type AssetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ContextSourceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20827,12 +30276,167 @@ export namespace Prisma {
     _max?: NestedJsonFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
     hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
     hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
     isEmpty?: boolean
+  }
+
+  export type ContextSourceCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    sourceKind?: SortOrder
+    sourceUrl?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    pipelineStatus?: SortOrder
+    pipelineError?: SortOrder
+    extractedContent?: SortOrder
+    normalizedContent?: SortOrder
+    reviewNotes?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedById?: SortOrder
+    tags?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextSourceAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type ContextSourceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    sourceKind?: SortOrder
+    sourceUrl?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    pipelineStatus?: SortOrder
+    pipelineError?: SortOrder
+    extractedContent?: SortOrder
+    normalizedContent?: SortOrder
+    reviewNotes?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedById?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextSourceMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    sourceKind?: SortOrder
+    sourceUrl?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    pipelineStatus?: SortOrder
+    pipelineError?: SortOrder
+    extractedContent?: SortOrder
+    normalizedContent?: SortOrder
+    reviewNotes?: SortOrder
+    reviewedAt?: SortOrder
+    reviewedById?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextSourceSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type ContextArtifactCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    syncStatus?: SortOrder
+    syncedAt?: SortOrder
+    syncError?: SortOrder
+    sourceCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextArtifactAvgOrderByAggregateInput = {
+    sourceCount?: SortOrder
+  }
+
+  export type ContextArtifactMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    syncStatus?: SortOrder
+    syncedAt?: SortOrder
+    syncError?: SortOrder
+    sourceCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextArtifactMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    syncStatus?: SortOrder
+    syncedAt?: SortOrder
+    syncError?: SortOrder
+    sourceCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ContextArtifactSumOrderByAggregateInput = {
+    sourceCount?: SortOrder
   }
 
   export type AssetRelationListRelationFilter = {
@@ -20908,12 +30512,6 @@ export namespace Prisma {
     isNot?: AssetWhereInput
   }
 
-  export type AssetRelationAssetIdKindValueCompoundUniqueInput = {
-    assetId: string
-    kind: string
-    value: string
-  }
-
   export type AssetRelationCountOrderByAggregateInput = {
     id?: SortOrder
     assetId?: SortOrder
@@ -20933,6 +30531,264 @@ export namespace Prisma {
     assetId?: SortOrder
     kind?: SortOrder
     value?: SortOrder
+  }
+
+  export type DesignColorGroupListRelationFilter = {
+    every?: DesignColorGroupWhereInput
+    some?: DesignColorGroupWhereInput
+    none?: DesignColorGroupWhereInput
+  }
+
+  export type DesignAssetListRelationFilter = {
+    every?: DesignAssetWhereInput
+    some?: DesignAssetWhereInput
+    none?: DesignAssetWhereInput
+  }
+
+  export type DesignColorGroupOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DesignAssetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DesignSystemProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    brandEssence?: SortOrder
+    desiredPerception?: SortOrder
+    visualStyle?: SortOrder
+    antiPatterns?: SortOrder
+    conceptualReferences?: SortOrder
+    aiNotes?: SortOrder
+    artifactSyncStatus?: SortOrder
+    artifactSyncedAt?: SortOrder
+    artifactSyncError?: SortOrder
+    artifactObjectKey?: SortOrder
+    contextArtifactSyncStatus?: SortOrder
+    contextArtifactSyncedAt?: SortOrder
+    contextArtifactSyncError?: SortOrder
+    contextArtifactObjectKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignSystemProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    brandEssence?: SortOrder
+    desiredPerception?: SortOrder
+    visualStyle?: SortOrder
+    antiPatterns?: SortOrder
+    conceptualReferences?: SortOrder
+    aiNotes?: SortOrder
+    artifactSyncStatus?: SortOrder
+    artifactSyncedAt?: SortOrder
+    artifactSyncError?: SortOrder
+    artifactObjectKey?: SortOrder
+    contextArtifactSyncStatus?: SortOrder
+    contextArtifactSyncedAt?: SortOrder
+    contextArtifactSyncError?: SortOrder
+    contextArtifactObjectKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignSystemProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    brandEssence?: SortOrder
+    desiredPerception?: SortOrder
+    visualStyle?: SortOrder
+    antiPatterns?: SortOrder
+    conceptualReferences?: SortOrder
+    aiNotes?: SortOrder
+    artifactSyncStatus?: SortOrder
+    artifactSyncedAt?: SortOrder
+    artifactSyncError?: SortOrder
+    artifactObjectKey?: SortOrder
+    contextArtifactSyncStatus?: SortOrder
+    contextArtifactSyncedAt?: SortOrder
+    contextArtifactSyncError?: SortOrder
+    contextArtifactObjectKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignSystemProfileScalarRelationFilter = {
+    is?: DesignSystemProfileWhereInput
+    isNot?: DesignSystemProfileWhereInput
+  }
+
+  export type DesignColorTokenListRelationFilter = {
+    every?: DesignColorTokenWhereInput
+    some?: DesignColorTokenWhereInput
+    none?: DesignColorTokenWhereInput
+  }
+
+  export type DesignColorTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DesignColorGroupDesignSystemIdNameCompoundUniqueInput = {
+    designSystemId: string
+    name: string
+  }
+
+  export type DesignColorGroupCountOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorGroupAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DesignColorGroupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorGroupMinOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorGroupSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DesignColorGroupScalarRelationFilter = {
+    is?: DesignColorGroupWhereInput
+    isNot?: DesignColorGroupWhereInput
+  }
+
+  export type DesignColorTokenColorGroupIdNameCompoundUniqueInput = {
+    colorGroupId: string
+    name: string
+  }
+
+  export type DesignColorTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    colorGroupId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    displayFormat?: SortOrder
+    semanticRole?: SortOrder
+    usageNote?: SortOrder
+    restrictionNote?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorTokenAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DesignColorTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    colorGroupId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    displayFormat?: SortOrder
+    semanticRole?: SortOrder
+    usageNote?: SortOrder
+    restrictionNote?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    colorGroupId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    displayFormat?: SortOrder
+    semanticRole?: SortOrder
+    usageNote?: SortOrder
+    restrictionNote?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignColorTokenSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DesignAssetCountOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    organizationId?: SortOrder
+    primaryRole?: SortOrder
+    secondaryTags?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    fileName?: SortOrder
+    contentType?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignAssetAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type DesignAssetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    organizationId?: SortOrder
+    primaryRole?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    fileName?: SortOrder
+    contentType?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignAssetMinOrderByAggregateInput = {
+    id?: SortOrder
+    designSystemId?: SortOrder
+    organizationId?: SortOrder
+    primaryRole?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    objectKey?: SortOrder
+    publicUrl?: SortOrder
+    fileName?: SortOrder
+    contentType?: SortOrder
+    size?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DesignAssetSumOrderByAggregateInput = {
+    size?: SortOrder
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
@@ -21185,6 +31041,25 @@ export namespace Prisma {
     connect?: AssetWhereUniqueInput | AssetWhereUniqueInput[]
   }
 
+  export type DesignSystemProfileCreateNestedOneWithoutOrganizationInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutOrganizationInput
+    connect?: DesignSystemProfileWhereUniqueInput
+  }
+
+  export type ContextSourceCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput> | ContextSourceCreateWithoutOrganizationInput[] | ContextSourceUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ContextSourceCreateOrConnectWithoutOrganizationInput | ContextSourceCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ContextSourceCreateManyOrganizationInputEnvelope
+    connect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+  }
+
+  export type ContextArtifactCreateNestedOneWithoutOrganizationInput = {
+    create?: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: ContextArtifactCreateOrConnectWithoutOrganizationInput
+    connect?: ContextArtifactWhereUniqueInput
+  }
+
   export type MembershipUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MembershipCreateWithoutOrganizationInput, MembershipUncheckedCreateWithoutOrganizationInput> | MembershipCreateWithoutOrganizationInput[] | MembershipUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MembershipCreateOrConnectWithoutOrganizationInput | MembershipCreateOrConnectWithoutOrganizationInput[]
@@ -21217,6 +31092,25 @@ export namespace Prisma {
     connectOrCreate?: AssetCreateOrConnectWithoutOrganizationInput | AssetCreateOrConnectWithoutOrganizationInput[]
     createMany?: AssetCreateManyOrganizationInputEnvelope
     connect?: AssetWhereUniqueInput | AssetWhereUniqueInput[]
+  }
+
+  export type DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutOrganizationInput
+    connect?: DesignSystemProfileWhereUniqueInput
+  }
+
+  export type ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput> | ContextSourceCreateWithoutOrganizationInput[] | ContextSourceUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ContextSourceCreateOrConnectWithoutOrganizationInput | ContextSourceCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ContextSourceCreateManyOrganizationInputEnvelope
+    connect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+  }
+
+  export type ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput = {
+    create?: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: ContextArtifactCreateOrConnectWithoutOrganizationInput
+    connect?: ContextArtifactWhereUniqueInput
   }
 
   export type MembershipUpdateManyWithoutOrganizationNestedInput = {
@@ -21285,6 +31179,40 @@ export namespace Prisma {
     deleteMany?: AssetScalarWhereInput | AssetScalarWhereInput[]
   }
 
+  export type DesignSystemProfileUpdateOneWithoutOrganizationNestedInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutOrganizationInput
+    upsert?: DesignSystemProfileUpsertWithoutOrganizationInput
+    disconnect?: DesignSystemProfileWhereInput | boolean
+    delete?: DesignSystemProfileWhereInput | boolean
+    connect?: DesignSystemProfileWhereUniqueInput
+    update?: XOR<XOR<DesignSystemProfileUpdateToOneWithWhereWithoutOrganizationInput, DesignSystemProfileUpdateWithoutOrganizationInput>, DesignSystemProfileUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput> | ContextSourceCreateWithoutOrganizationInput[] | ContextSourceUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ContextSourceCreateOrConnectWithoutOrganizationInput | ContextSourceCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ContextSourceUpsertWithWhereUniqueWithoutOrganizationInput | ContextSourceUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ContextSourceCreateManyOrganizationInputEnvelope
+    set?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    disconnect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    delete?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    connect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    update?: ContextSourceUpdateWithWhereUniqueWithoutOrganizationInput | ContextSourceUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ContextSourceUpdateManyWithWhereWithoutOrganizationInput | ContextSourceUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ContextSourceScalarWhereInput | ContextSourceScalarWhereInput[]
+  }
+
+  export type ContextArtifactUpdateOneWithoutOrganizationNestedInput = {
+    create?: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: ContextArtifactCreateOrConnectWithoutOrganizationInput
+    upsert?: ContextArtifactUpsertWithoutOrganizationInput
+    disconnect?: ContextArtifactWhereInput | boolean
+    delete?: ContextArtifactWhereInput | boolean
+    connect?: ContextArtifactWhereUniqueInput
+    update?: XOR<XOR<ContextArtifactUpdateToOneWithWhereWithoutOrganizationInput, ContextArtifactUpdateWithoutOrganizationInput>, ContextArtifactUncheckedUpdateWithoutOrganizationInput>
+  }
+
   export type MembershipUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MembershipCreateWithoutOrganizationInput, MembershipUncheckedCreateWithoutOrganizationInput> | MembershipCreateWithoutOrganizationInput[] | MembershipUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MembershipCreateOrConnectWithoutOrganizationInput | MembershipCreateOrConnectWithoutOrganizationInput[]
@@ -21349,6 +31277,40 @@ export namespace Prisma {
     update?: AssetUpdateWithWhereUniqueWithoutOrganizationInput | AssetUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: AssetUpdateManyWithWhereWithoutOrganizationInput | AssetUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: AssetScalarWhereInput | AssetScalarWhereInput[]
+  }
+
+  export type DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutOrganizationInput
+    upsert?: DesignSystemProfileUpsertWithoutOrganizationInput
+    disconnect?: DesignSystemProfileWhereInput | boolean
+    delete?: DesignSystemProfileWhereInput | boolean
+    connect?: DesignSystemProfileWhereUniqueInput
+    update?: XOR<XOR<DesignSystemProfileUpdateToOneWithWhereWithoutOrganizationInput, DesignSystemProfileUpdateWithoutOrganizationInput>, DesignSystemProfileUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput> | ContextSourceCreateWithoutOrganizationInput[] | ContextSourceUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ContextSourceCreateOrConnectWithoutOrganizationInput | ContextSourceCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ContextSourceUpsertWithWhereUniqueWithoutOrganizationInput | ContextSourceUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ContextSourceCreateManyOrganizationInputEnvelope
+    set?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    disconnect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    delete?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    connect?: ContextSourceWhereUniqueInput | ContextSourceWhereUniqueInput[]
+    update?: ContextSourceUpdateWithWhereUniqueWithoutOrganizationInput | ContextSourceUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ContextSourceUpdateManyWithWhereWithoutOrganizationInput | ContextSourceUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ContextSourceScalarWhereInput | ContextSourceScalarWhereInput[]
+  }
+
+  export type ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput = {
+    create?: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: ContextArtifactCreateOrConnectWithoutOrganizationInput
+    upsert?: ContextArtifactUpsertWithoutOrganizationInput
+    disconnect?: ContextArtifactWhereInput | boolean
+    delete?: ContextArtifactWhereInput | boolean
+    connect?: ContextArtifactWhereUniqueInput
+    update?: XOR<XOR<ContextArtifactUpdateToOneWithWhereWithoutOrganizationInput, ContextArtifactUpdateWithoutOrganizationInput>, ContextArtifactUncheckedUpdateWithoutOrganizationInput>
   }
 
   export type OrganizationCreateNestedOneWithoutRolesInput = {
@@ -21667,6 +31629,51 @@ export namespace Prisma {
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutOnboardingDraftInput, OrganizationUpdateWithoutOnboardingDraftInput>, OrganizationUncheckedUpdateWithoutOnboardingDraftInput>
   }
 
+  export type ContextSourceCreatetagsInput = {
+    set: string[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutContextSourcesInput = {
+    create?: XOR<OrganizationCreateWithoutContextSourcesInput, OrganizationUncheckedCreateWithoutContextSourcesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutContextSourcesInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ContextSourceUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutContextSourcesNestedInput = {
+    create?: XOR<OrganizationCreateWithoutContextSourcesInput, OrganizationUncheckedCreateWithoutContextSourcesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutContextSourcesInput
+    upsert?: OrganizationUpsertWithoutContextSourcesInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutContextSourcesInput, OrganizationUpdateWithoutContextSourcesInput>, OrganizationUncheckedUpdateWithoutContextSourcesInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutContextArtifactInput = {
+    create?: XOR<OrganizationCreateWithoutContextArtifactInput, OrganizationUncheckedCreateWithoutContextArtifactInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutContextArtifactInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutContextArtifactNestedInput = {
+    create?: XOR<OrganizationCreateWithoutContextArtifactInput, OrganizationUncheckedCreateWithoutContextArtifactInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutContextArtifactInput
+    upsert?: OrganizationUpsertWithoutContextArtifactInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutContextArtifactInput, OrganizationUpdateWithoutContextArtifactInput>, OrganizationUncheckedUpdateWithoutContextArtifactInput>
+  }
+
   export type AssetCreatetagsInput = {
     set: string[]
   }
@@ -21744,6 +31751,197 @@ export namespace Prisma {
     upsert?: AssetUpsertWithoutRelationsInput
     connect?: AssetWhereUniqueInput
     update?: XOR<XOR<AssetUpdateToOneWithWhereWithoutRelationsInput, AssetUpdateWithoutRelationsInput>, AssetUncheckedUpdateWithoutRelationsInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutDesignSystemInput = {
+    create?: XOR<OrganizationCreateWithoutDesignSystemInput, OrganizationUncheckedCreateWithoutDesignSystemInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutDesignSystemInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type DesignColorGroupCreateNestedManyWithoutDesignSystemInput = {
+    create?: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput> | DesignColorGroupCreateWithoutDesignSystemInput[] | DesignColorGroupUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutDesignSystemInput | DesignColorGroupCreateOrConnectWithoutDesignSystemInput[]
+    createMany?: DesignColorGroupCreateManyDesignSystemInputEnvelope
+    connect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+  }
+
+  export type DesignAssetCreateNestedManyWithoutDesignSystemInput = {
+    create?: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput> | DesignAssetCreateWithoutDesignSystemInput[] | DesignAssetUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignAssetCreateOrConnectWithoutDesignSystemInput | DesignAssetCreateOrConnectWithoutDesignSystemInput[]
+    createMany?: DesignAssetCreateManyDesignSystemInputEnvelope
+    connect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+  }
+
+  export type DesignColorGroupUncheckedCreateNestedManyWithoutDesignSystemInput = {
+    create?: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput> | DesignColorGroupCreateWithoutDesignSystemInput[] | DesignColorGroupUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutDesignSystemInput | DesignColorGroupCreateOrConnectWithoutDesignSystemInput[]
+    createMany?: DesignColorGroupCreateManyDesignSystemInputEnvelope
+    connect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+  }
+
+  export type DesignAssetUncheckedCreateNestedManyWithoutDesignSystemInput = {
+    create?: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput> | DesignAssetCreateWithoutDesignSystemInput[] | DesignAssetUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignAssetCreateOrConnectWithoutDesignSystemInput | DesignAssetCreateOrConnectWithoutDesignSystemInput[]
+    createMany?: DesignAssetCreateManyDesignSystemInputEnvelope
+    connect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutDesignSystemNestedInput = {
+    create?: XOR<OrganizationCreateWithoutDesignSystemInput, OrganizationUncheckedCreateWithoutDesignSystemInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutDesignSystemInput
+    upsert?: OrganizationUpsertWithoutDesignSystemInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutDesignSystemInput, OrganizationUpdateWithoutDesignSystemInput>, OrganizationUncheckedUpdateWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupUpdateManyWithoutDesignSystemNestedInput = {
+    create?: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput> | DesignColorGroupCreateWithoutDesignSystemInput[] | DesignColorGroupUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutDesignSystemInput | DesignColorGroupCreateOrConnectWithoutDesignSystemInput[]
+    upsert?: DesignColorGroupUpsertWithWhereUniqueWithoutDesignSystemInput | DesignColorGroupUpsertWithWhereUniqueWithoutDesignSystemInput[]
+    createMany?: DesignColorGroupCreateManyDesignSystemInputEnvelope
+    set?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    disconnect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    delete?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    connect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    update?: DesignColorGroupUpdateWithWhereUniqueWithoutDesignSystemInput | DesignColorGroupUpdateWithWhereUniqueWithoutDesignSystemInput[]
+    updateMany?: DesignColorGroupUpdateManyWithWhereWithoutDesignSystemInput | DesignColorGroupUpdateManyWithWhereWithoutDesignSystemInput[]
+    deleteMany?: DesignColorGroupScalarWhereInput | DesignColorGroupScalarWhereInput[]
+  }
+
+  export type DesignAssetUpdateManyWithoutDesignSystemNestedInput = {
+    create?: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput> | DesignAssetCreateWithoutDesignSystemInput[] | DesignAssetUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignAssetCreateOrConnectWithoutDesignSystemInput | DesignAssetCreateOrConnectWithoutDesignSystemInput[]
+    upsert?: DesignAssetUpsertWithWhereUniqueWithoutDesignSystemInput | DesignAssetUpsertWithWhereUniqueWithoutDesignSystemInput[]
+    createMany?: DesignAssetCreateManyDesignSystemInputEnvelope
+    set?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    disconnect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    delete?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    connect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    update?: DesignAssetUpdateWithWhereUniqueWithoutDesignSystemInput | DesignAssetUpdateWithWhereUniqueWithoutDesignSystemInput[]
+    updateMany?: DesignAssetUpdateManyWithWhereWithoutDesignSystemInput | DesignAssetUpdateManyWithWhereWithoutDesignSystemInput[]
+    deleteMany?: DesignAssetScalarWhereInput | DesignAssetScalarWhereInput[]
+  }
+
+  export type DesignColorGroupUncheckedUpdateManyWithoutDesignSystemNestedInput = {
+    create?: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput> | DesignColorGroupCreateWithoutDesignSystemInput[] | DesignColorGroupUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutDesignSystemInput | DesignColorGroupCreateOrConnectWithoutDesignSystemInput[]
+    upsert?: DesignColorGroupUpsertWithWhereUniqueWithoutDesignSystemInput | DesignColorGroupUpsertWithWhereUniqueWithoutDesignSystemInput[]
+    createMany?: DesignColorGroupCreateManyDesignSystemInputEnvelope
+    set?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    disconnect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    delete?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    connect?: DesignColorGroupWhereUniqueInput | DesignColorGroupWhereUniqueInput[]
+    update?: DesignColorGroupUpdateWithWhereUniqueWithoutDesignSystemInput | DesignColorGroupUpdateWithWhereUniqueWithoutDesignSystemInput[]
+    updateMany?: DesignColorGroupUpdateManyWithWhereWithoutDesignSystemInput | DesignColorGroupUpdateManyWithWhereWithoutDesignSystemInput[]
+    deleteMany?: DesignColorGroupScalarWhereInput | DesignColorGroupScalarWhereInput[]
+  }
+
+  export type DesignAssetUncheckedUpdateManyWithoutDesignSystemNestedInput = {
+    create?: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput> | DesignAssetCreateWithoutDesignSystemInput[] | DesignAssetUncheckedCreateWithoutDesignSystemInput[]
+    connectOrCreate?: DesignAssetCreateOrConnectWithoutDesignSystemInput | DesignAssetCreateOrConnectWithoutDesignSystemInput[]
+    upsert?: DesignAssetUpsertWithWhereUniqueWithoutDesignSystemInput | DesignAssetUpsertWithWhereUniqueWithoutDesignSystemInput[]
+    createMany?: DesignAssetCreateManyDesignSystemInputEnvelope
+    set?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    disconnect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    delete?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    connect?: DesignAssetWhereUniqueInput | DesignAssetWhereUniqueInput[]
+    update?: DesignAssetUpdateWithWhereUniqueWithoutDesignSystemInput | DesignAssetUpdateWithWhereUniqueWithoutDesignSystemInput[]
+    updateMany?: DesignAssetUpdateManyWithWhereWithoutDesignSystemInput | DesignAssetUpdateManyWithWhereWithoutDesignSystemInput[]
+    deleteMany?: DesignAssetScalarWhereInput | DesignAssetScalarWhereInput[]
+  }
+
+  export type DesignSystemProfileCreateNestedOneWithoutColorGroupsInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutColorGroupsInput, DesignSystemProfileUncheckedCreateWithoutColorGroupsInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutColorGroupsInput
+    connect?: DesignSystemProfileWhereUniqueInput
+  }
+
+  export type DesignColorTokenCreateNestedManyWithoutColorGroupInput = {
+    create?: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput> | DesignColorTokenCreateWithoutColorGroupInput[] | DesignColorTokenUncheckedCreateWithoutColorGroupInput[]
+    connectOrCreate?: DesignColorTokenCreateOrConnectWithoutColorGroupInput | DesignColorTokenCreateOrConnectWithoutColorGroupInput[]
+    createMany?: DesignColorTokenCreateManyColorGroupInputEnvelope
+    connect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+  }
+
+  export type DesignColorTokenUncheckedCreateNestedManyWithoutColorGroupInput = {
+    create?: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput> | DesignColorTokenCreateWithoutColorGroupInput[] | DesignColorTokenUncheckedCreateWithoutColorGroupInput[]
+    connectOrCreate?: DesignColorTokenCreateOrConnectWithoutColorGroupInput | DesignColorTokenCreateOrConnectWithoutColorGroupInput[]
+    createMany?: DesignColorTokenCreateManyColorGroupInputEnvelope
+    connect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+  }
+
+  export type DesignSystemProfileUpdateOneRequiredWithoutColorGroupsNestedInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutColorGroupsInput, DesignSystemProfileUncheckedCreateWithoutColorGroupsInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutColorGroupsInput
+    upsert?: DesignSystemProfileUpsertWithoutColorGroupsInput
+    connect?: DesignSystemProfileWhereUniqueInput
+    update?: XOR<XOR<DesignSystemProfileUpdateToOneWithWhereWithoutColorGroupsInput, DesignSystemProfileUpdateWithoutColorGroupsInput>, DesignSystemProfileUncheckedUpdateWithoutColorGroupsInput>
+  }
+
+  export type DesignColorTokenUpdateManyWithoutColorGroupNestedInput = {
+    create?: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput> | DesignColorTokenCreateWithoutColorGroupInput[] | DesignColorTokenUncheckedCreateWithoutColorGroupInput[]
+    connectOrCreate?: DesignColorTokenCreateOrConnectWithoutColorGroupInput | DesignColorTokenCreateOrConnectWithoutColorGroupInput[]
+    upsert?: DesignColorTokenUpsertWithWhereUniqueWithoutColorGroupInput | DesignColorTokenUpsertWithWhereUniqueWithoutColorGroupInput[]
+    createMany?: DesignColorTokenCreateManyColorGroupInputEnvelope
+    set?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    disconnect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    delete?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    connect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    update?: DesignColorTokenUpdateWithWhereUniqueWithoutColorGroupInput | DesignColorTokenUpdateWithWhereUniqueWithoutColorGroupInput[]
+    updateMany?: DesignColorTokenUpdateManyWithWhereWithoutColorGroupInput | DesignColorTokenUpdateManyWithWhereWithoutColorGroupInput[]
+    deleteMany?: DesignColorTokenScalarWhereInput | DesignColorTokenScalarWhereInput[]
+  }
+
+  export type DesignColorTokenUncheckedUpdateManyWithoutColorGroupNestedInput = {
+    create?: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput> | DesignColorTokenCreateWithoutColorGroupInput[] | DesignColorTokenUncheckedCreateWithoutColorGroupInput[]
+    connectOrCreate?: DesignColorTokenCreateOrConnectWithoutColorGroupInput | DesignColorTokenCreateOrConnectWithoutColorGroupInput[]
+    upsert?: DesignColorTokenUpsertWithWhereUniqueWithoutColorGroupInput | DesignColorTokenUpsertWithWhereUniqueWithoutColorGroupInput[]
+    createMany?: DesignColorTokenCreateManyColorGroupInputEnvelope
+    set?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    disconnect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    delete?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    connect?: DesignColorTokenWhereUniqueInput | DesignColorTokenWhereUniqueInput[]
+    update?: DesignColorTokenUpdateWithWhereUniqueWithoutColorGroupInput | DesignColorTokenUpdateWithWhereUniqueWithoutColorGroupInput[]
+    updateMany?: DesignColorTokenUpdateManyWithWhereWithoutColorGroupInput | DesignColorTokenUpdateManyWithWhereWithoutColorGroupInput[]
+    deleteMany?: DesignColorTokenScalarWhereInput | DesignColorTokenScalarWhereInput[]
+  }
+
+  export type DesignColorGroupCreateNestedOneWithoutColorsInput = {
+    create?: XOR<DesignColorGroupCreateWithoutColorsInput, DesignColorGroupUncheckedCreateWithoutColorsInput>
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutColorsInput
+    connect?: DesignColorGroupWhereUniqueInput
+  }
+
+  export type DesignColorGroupUpdateOneRequiredWithoutColorsNestedInput = {
+    create?: XOR<DesignColorGroupCreateWithoutColorsInput, DesignColorGroupUncheckedCreateWithoutColorsInput>
+    connectOrCreate?: DesignColorGroupCreateOrConnectWithoutColorsInput
+    upsert?: DesignColorGroupUpsertWithoutColorsInput
+    connect?: DesignColorGroupWhereUniqueInput
+    update?: XOR<XOR<DesignColorGroupUpdateToOneWithWhereWithoutColorsInput, DesignColorGroupUpdateWithoutColorsInput>, DesignColorGroupUncheckedUpdateWithoutColorsInput>
+  }
+
+  export type DesignAssetCreatesecondaryTagsInput = {
+    set: string[]
+  }
+
+  export type DesignSystemProfileCreateNestedOneWithoutAssetsInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutAssetsInput, DesignSystemProfileUncheckedCreateWithoutAssetsInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutAssetsInput
+    connect?: DesignSystemProfileWhereUniqueInput
+  }
+
+  export type DesignAssetUpdatesecondaryTagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type DesignSystemProfileUpdateOneRequiredWithoutAssetsNestedInput = {
+    create?: XOR<DesignSystemProfileCreateWithoutAssetsInput, DesignSystemProfileUncheckedCreateWithoutAssetsInput>
+    connectOrCreate?: DesignSystemProfileCreateOrConnectWithoutAssetsInput
+    upsert?: DesignSystemProfileUpsertWithoutAssetsInput
+    connect?: DesignSystemProfileWhereUniqueInput
+    update?: XOR<XOR<DesignSystemProfileUpdateToOneWithWhereWithoutAssetsInput, DesignSystemProfileUpdateWithoutAssetsInput>, DesignSystemProfileUncheckedUpdateWithoutAssetsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -21941,6 +32139,33 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -22495,6 +32720,142 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DesignSystemProfileCreateWithoutOrganizationInput = {
+    id?: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colorGroups?: DesignColorGroupCreateNestedManyWithoutDesignSystemInput
+    assets?: DesignAssetCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colorGroups?: DesignColorGroupUncheckedCreateNestedManyWithoutDesignSystemInput
+    assets?: DesignAssetUncheckedCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileCreateOrConnectWithoutOrganizationInput = {
+    where: DesignSystemProfileWhereUniqueInput
+    create: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceCreateWithoutOrganizationInput = {
+    id?: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextSourceUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextSourceCreateOrConnectWithoutOrganizationInput = {
+    where: ContextSourceWhereUniqueInput
+    create: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceCreateManyOrganizationInputEnvelope = {
+    data: ContextSourceCreateManyOrganizationInput | ContextSourceCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContextArtifactCreateWithoutOrganizationInput = {
+    id?: string
+    objectKey?: string | null
+    publicUrl?: string | null
+    syncStatus?: string
+    syncedAt?: Date | string | null
+    syncError?: string | null
+    sourceCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextArtifactUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    objectKey?: string | null
+    publicUrl?: string | null
+    syncStatus?: string
+    syncedAt?: Date | string | null
+    syncError?: string | null
+    sourceCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContextArtifactCreateOrConnectWithoutOrganizationInput = {
+    where: ContextArtifactWhereUniqueInput
+    create: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+  }
+
   export type MembershipUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: MembershipWhereUniqueInput
     update: XOR<MembershipUpdateWithoutOrganizationInput, MembershipUncheckedUpdateWithoutOrganizationInput>
@@ -22623,6 +32984,140 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Asset"> | Date | string
   }
 
+  export type DesignSystemProfileUpsertWithoutOrganizationInput = {
+    update: XOR<DesignSystemProfileUpdateWithoutOrganizationInput, DesignSystemProfileUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<DesignSystemProfileCreateWithoutOrganizationInput, DesignSystemProfileUncheckedCreateWithoutOrganizationInput>
+    where?: DesignSystemProfileWhereInput
+  }
+
+  export type DesignSystemProfileUpdateToOneWithWhereWithoutOrganizationInput = {
+    where?: DesignSystemProfileWhereInput
+    data: XOR<DesignSystemProfileUpdateWithoutOrganizationInput, DesignSystemProfileUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type DesignSystemProfileUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colorGroups?: DesignColorGroupUpdateManyWithoutDesignSystemNestedInput
+    assets?: DesignAssetUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignSystemProfileUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colorGroups?: DesignColorGroupUncheckedUpdateManyWithoutDesignSystemNestedInput
+    assets?: DesignAssetUncheckedUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type ContextSourceUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: ContextSourceWhereUniqueInput
+    update: XOR<ContextSourceUpdateWithoutOrganizationInput, ContextSourceUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ContextSourceCreateWithoutOrganizationInput, ContextSourceUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: ContextSourceWhereUniqueInput
+    data: XOR<ContextSourceUpdateWithoutOrganizationInput, ContextSourceUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ContextSourceUpdateManyWithWhereWithoutOrganizationInput = {
+    where: ContextSourceScalarWhereInput
+    data: XOR<ContextSourceUpdateManyMutationInput, ContextSourceUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type ContextSourceScalarWhereInput = {
+    AND?: ContextSourceScalarWhereInput | ContextSourceScalarWhereInput[]
+    OR?: ContextSourceScalarWhereInput[]
+    NOT?: ContextSourceScalarWhereInput | ContextSourceScalarWhereInput[]
+    id?: StringFilter<"ContextSource"> | string
+    organizationId?: StringFilter<"ContextSource"> | string
+    title?: StringFilter<"ContextSource"> | string
+    description?: StringNullableFilter<"ContextSource"> | string | null
+    sourceKind?: StringFilter<"ContextSource"> | string
+    sourceUrl?: StringNullableFilter<"ContextSource"> | string | null
+    fileName?: StringNullableFilter<"ContextSource"> | string | null
+    mimeType?: StringNullableFilter<"ContextSource"> | string | null
+    fileSize?: IntNullableFilter<"ContextSource"> | number | null
+    objectKey?: StringNullableFilter<"ContextSource"> | string | null
+    publicUrl?: StringNullableFilter<"ContextSource"> | string | null
+    pipelineStatus?: StringFilter<"ContextSource"> | string
+    pipelineError?: StringNullableFilter<"ContextSource"> | string | null
+    extractedContent?: StringNullableFilter<"ContextSource"> | string | null
+    normalizedContent?: StringNullableFilter<"ContextSource"> | string | null
+    reviewNotes?: StringNullableFilter<"ContextSource"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ContextSource"> | Date | string | null
+    reviewedById?: StringNullableFilter<"ContextSource"> | string | null
+    tags?: StringNullableListFilter<"ContextSource">
+    category?: StringNullableFilter<"ContextSource"> | string | null
+    createdAt?: DateTimeFilter<"ContextSource"> | Date | string
+    updatedAt?: DateTimeFilter<"ContextSource"> | Date | string
+  }
+
+  export type ContextArtifactUpsertWithoutOrganizationInput = {
+    update: XOR<ContextArtifactUpdateWithoutOrganizationInput, ContextArtifactUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ContextArtifactCreateWithoutOrganizationInput, ContextArtifactUncheckedCreateWithoutOrganizationInput>
+    where?: ContextArtifactWhereInput
+  }
+
+  export type ContextArtifactUpdateToOneWithWhereWithoutOrganizationInput = {
+    where?: ContextArtifactWhereInput
+    data: XOR<ContextArtifactUpdateWithoutOrganizationInput, ContextArtifactUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ContextArtifactUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextArtifactUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrganizationCreateWithoutRolesInput = {
     id?: string
     name: string
@@ -22634,6 +33129,9 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
     assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutRolesInput = {
@@ -22647,6 +33145,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
     assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutRolesInput = {
@@ -22718,6 +33219,9 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutRolesInput = {
@@ -22731,6 +33235,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
   }
 
   export type RolePermissionUpsertWithWhereUniqueWithoutRoleInput = {
@@ -22882,6 +33389,9 @@ export namespace Prisma {
     invitations?: InvitationCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
     assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembershipsInput = {
@@ -22895,6 +33405,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
     assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembershipsInput = {
@@ -23005,6 +33518,9 @@ export namespace Prisma {
     invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
@@ -23018,6 +33534,9 @@ export namespace Prisma {
     invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
   }
 
   export type MembershipRoleUpsertWithWhereUniqueWithoutMembershipInput = {
@@ -23272,6 +33791,9 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
     assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -23285,6 +33807,9 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
     assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -23351,6 +33876,9 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -23364,6 +33892,9 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
     assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutOnboardingDraftInput = {
@@ -23377,6 +33908,9 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     invitations?: InvitationCreateNestedManyWithoutOrganizationInput
     assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutOnboardingDraftInput = {
@@ -23390,6 +33924,9 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
     assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutOnboardingDraftInput = {
@@ -23419,6 +33956,9 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
     assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutOnboardingDraftInput = {
@@ -23432,6 +33972,169 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationCreateWithoutContextSourcesInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
+    assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutContextSourcesInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
+    assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutContextSourcesInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutContextSourcesInput, OrganizationUncheckedCreateWithoutContextSourcesInput>
+  }
+
+  export type OrganizationUpsertWithoutContextSourcesInput = {
+    update: XOR<OrganizationUpdateWithoutContextSourcesInput, OrganizationUncheckedUpdateWithoutContextSourcesInput>
+    create: XOR<OrganizationCreateWithoutContextSourcesInput, OrganizationUncheckedCreateWithoutContextSourcesInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutContextSourcesInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutContextSourcesInput, OrganizationUncheckedUpdateWithoutContextSourcesInput>
+  }
+
+  export type OrganizationUpdateWithoutContextSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutContextSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationCreateWithoutContextArtifactInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
+    assets?: AssetCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutContextArtifactInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
+    assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutContextArtifactInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutContextArtifactInput, OrganizationUncheckedCreateWithoutContextArtifactInput>
+  }
+
+  export type OrganizationUpsertWithoutContextArtifactInput = {
+    update: XOR<OrganizationUpdateWithoutContextArtifactInput, OrganizationUncheckedUpdateWithoutContextArtifactInput>
+    create: XOR<OrganizationCreateWithoutContextArtifactInput, OrganizationUncheckedCreateWithoutContextArtifactInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutContextArtifactInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutContextArtifactInput, OrganizationUncheckedUpdateWithoutContextArtifactInput>
+  }
+
+  export type OrganizationUpdateWithoutContextArtifactInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutContextArtifactInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutAssetsInput = {
@@ -23445,6 +34148,9 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     invitations?: InvitationCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
+    designSystem?: DesignSystemProfileCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetsInput = {
@@ -23458,6 +34164,9 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
     onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
+    designSystem?: DesignSystemProfileUncheckedCreateNestedOneWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetsInput = {
@@ -23509,6 +34218,9 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetsInput = {
@@ -23522,6 +34234,9 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
     onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
+    designSystem?: DesignSystemProfileUncheckedUpdateOneWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
   }
 
   export type AssetRelationUpsertWithWhereUniqueWithoutAssetInput = {
@@ -23644,6 +34359,556 @@ export namespace Prisma {
     operationalStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrganizationCreateWithoutDesignSystemInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftCreateNestedOneWithoutOrganizationInput
+    assets?: AssetCreateNestedManyWithoutOrganizationInput
+    contextSources?: ContextSourceCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactCreateNestedOneWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutDesignSystemInput = {
+    id?: string
+    name: string
+    slug: string
+    logo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    memberships?: MembershipUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    onboardingDraft?: OnboardingDraftUncheckedCreateNestedOneWithoutOrganizationInput
+    assets?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    contextSources?: ContextSourceUncheckedCreateNestedManyWithoutOrganizationInput
+    contextArtifact?: ContextArtifactUncheckedCreateNestedOneWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutDesignSystemInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutDesignSystemInput, OrganizationUncheckedCreateWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupCreateWithoutDesignSystemInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colors?: DesignColorTokenCreateNestedManyWithoutColorGroupInput
+  }
+
+  export type DesignColorGroupUncheckedCreateWithoutDesignSystemInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colors?: DesignColorTokenUncheckedCreateNestedManyWithoutColorGroupInput
+  }
+
+  export type DesignColorGroupCreateOrConnectWithoutDesignSystemInput = {
+    where: DesignColorGroupWhereUniqueInput
+    create: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupCreateManyDesignSystemInputEnvelope = {
+    data: DesignColorGroupCreateManyDesignSystemInput | DesignColorGroupCreateManyDesignSystemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DesignAssetCreateWithoutDesignSystemInput = {
+    id?: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignAssetUncheckedCreateWithoutDesignSystemInput = {
+    id?: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignAssetCreateOrConnectWithoutDesignSystemInput = {
+    where: DesignAssetWhereUniqueInput
+    create: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput>
+  }
+
+  export type DesignAssetCreateManyDesignSystemInputEnvelope = {
+    data: DesignAssetCreateManyDesignSystemInput | DesignAssetCreateManyDesignSystemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutDesignSystemInput = {
+    update: XOR<OrganizationUpdateWithoutDesignSystemInput, OrganizationUncheckedUpdateWithoutDesignSystemInput>
+    create: XOR<OrganizationCreateWithoutDesignSystemInput, OrganizationUncheckedCreateWithoutDesignSystemInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutDesignSystemInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutDesignSystemInput, OrganizationUncheckedUpdateWithoutDesignSystemInput>
+  }
+
+  export type OrganizationUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUpdateManyWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUpdateOneWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: MembershipUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    onboardingDraft?: OnboardingDraftUncheckedUpdateOneWithoutOrganizationNestedInput
+    assets?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextSources?: ContextSourceUncheckedUpdateManyWithoutOrganizationNestedInput
+    contextArtifact?: ContextArtifactUncheckedUpdateOneWithoutOrganizationNestedInput
+  }
+
+  export type DesignColorGroupUpsertWithWhereUniqueWithoutDesignSystemInput = {
+    where: DesignColorGroupWhereUniqueInput
+    update: XOR<DesignColorGroupUpdateWithoutDesignSystemInput, DesignColorGroupUncheckedUpdateWithoutDesignSystemInput>
+    create: XOR<DesignColorGroupCreateWithoutDesignSystemInput, DesignColorGroupUncheckedCreateWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupUpdateWithWhereUniqueWithoutDesignSystemInput = {
+    where: DesignColorGroupWhereUniqueInput
+    data: XOR<DesignColorGroupUpdateWithoutDesignSystemInput, DesignColorGroupUncheckedUpdateWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupUpdateManyWithWhereWithoutDesignSystemInput = {
+    where: DesignColorGroupScalarWhereInput
+    data: XOR<DesignColorGroupUpdateManyMutationInput, DesignColorGroupUncheckedUpdateManyWithoutDesignSystemInput>
+  }
+
+  export type DesignColorGroupScalarWhereInput = {
+    AND?: DesignColorGroupScalarWhereInput | DesignColorGroupScalarWhereInput[]
+    OR?: DesignColorGroupScalarWhereInput[]
+    NOT?: DesignColorGroupScalarWhereInput | DesignColorGroupScalarWhereInput[]
+    id?: StringFilter<"DesignColorGroup"> | string
+    designSystemId?: StringFilter<"DesignColorGroup"> | string
+    name?: StringFilter<"DesignColorGroup"> | string
+    description?: StringNullableFilter<"DesignColorGroup"> | string | null
+    sortOrder?: IntFilter<"DesignColorGroup"> | number
+    createdAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorGroup"> | Date | string
+  }
+
+  export type DesignAssetUpsertWithWhereUniqueWithoutDesignSystemInput = {
+    where: DesignAssetWhereUniqueInput
+    update: XOR<DesignAssetUpdateWithoutDesignSystemInput, DesignAssetUncheckedUpdateWithoutDesignSystemInput>
+    create: XOR<DesignAssetCreateWithoutDesignSystemInput, DesignAssetUncheckedCreateWithoutDesignSystemInput>
+  }
+
+  export type DesignAssetUpdateWithWhereUniqueWithoutDesignSystemInput = {
+    where: DesignAssetWhereUniqueInput
+    data: XOR<DesignAssetUpdateWithoutDesignSystemInput, DesignAssetUncheckedUpdateWithoutDesignSystemInput>
+  }
+
+  export type DesignAssetUpdateManyWithWhereWithoutDesignSystemInput = {
+    where: DesignAssetScalarWhereInput
+    data: XOR<DesignAssetUpdateManyMutationInput, DesignAssetUncheckedUpdateManyWithoutDesignSystemInput>
+  }
+
+  export type DesignAssetScalarWhereInput = {
+    AND?: DesignAssetScalarWhereInput | DesignAssetScalarWhereInput[]
+    OR?: DesignAssetScalarWhereInput[]
+    NOT?: DesignAssetScalarWhereInput | DesignAssetScalarWhereInput[]
+    id?: StringFilter<"DesignAsset"> | string
+    designSystemId?: StringFilter<"DesignAsset"> | string
+    organizationId?: StringFilter<"DesignAsset"> | string
+    primaryRole?: StringFilter<"DesignAsset"> | string
+    secondaryTags?: StringNullableListFilter<"DesignAsset">
+    title?: StringNullableFilter<"DesignAsset"> | string | null
+    description?: StringNullableFilter<"DesignAsset"> | string | null
+    objectKey?: StringFilter<"DesignAsset"> | string
+    publicUrl?: StringNullableFilter<"DesignAsset"> | string | null
+    fileName?: StringFilter<"DesignAsset"> | string
+    contentType?: StringFilter<"DesignAsset"> | string
+    size?: IntFilter<"DesignAsset"> | number
+    createdAt?: DateTimeFilter<"DesignAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignAsset"> | Date | string
+  }
+
+  export type DesignSystemProfileCreateWithoutColorGroupsInput = {
+    id?: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDesignSystemInput
+    assets?: DesignAssetCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileUncheckedCreateWithoutColorGroupsInput = {
+    id?: string
+    organizationId: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assets?: DesignAssetUncheckedCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileCreateOrConnectWithoutColorGroupsInput = {
+    where: DesignSystemProfileWhereUniqueInput
+    create: XOR<DesignSystemProfileCreateWithoutColorGroupsInput, DesignSystemProfileUncheckedCreateWithoutColorGroupsInput>
+  }
+
+  export type DesignColorTokenCreateWithoutColorGroupInput = {
+    id?: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorTokenUncheckedCreateWithoutColorGroupInput = {
+    id?: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorTokenCreateOrConnectWithoutColorGroupInput = {
+    where: DesignColorTokenWhereUniqueInput
+    create: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput>
+  }
+
+  export type DesignColorTokenCreateManyColorGroupInputEnvelope = {
+    data: DesignColorTokenCreateManyColorGroupInput | DesignColorTokenCreateManyColorGroupInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DesignSystemProfileUpsertWithoutColorGroupsInput = {
+    update: XOR<DesignSystemProfileUpdateWithoutColorGroupsInput, DesignSystemProfileUncheckedUpdateWithoutColorGroupsInput>
+    create: XOR<DesignSystemProfileCreateWithoutColorGroupsInput, DesignSystemProfileUncheckedCreateWithoutColorGroupsInput>
+    where?: DesignSystemProfileWhereInput
+  }
+
+  export type DesignSystemProfileUpdateToOneWithWhereWithoutColorGroupsInput = {
+    where?: DesignSystemProfileWhereInput
+    data: XOR<DesignSystemProfileUpdateWithoutColorGroupsInput, DesignSystemProfileUncheckedUpdateWithoutColorGroupsInput>
+  }
+
+  export type DesignSystemProfileUpdateWithoutColorGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDesignSystemNestedInput
+    assets?: DesignAssetUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignSystemProfileUncheckedUpdateWithoutColorGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assets?: DesignAssetUncheckedUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignColorTokenUpsertWithWhereUniqueWithoutColorGroupInput = {
+    where: DesignColorTokenWhereUniqueInput
+    update: XOR<DesignColorTokenUpdateWithoutColorGroupInput, DesignColorTokenUncheckedUpdateWithoutColorGroupInput>
+    create: XOR<DesignColorTokenCreateWithoutColorGroupInput, DesignColorTokenUncheckedCreateWithoutColorGroupInput>
+  }
+
+  export type DesignColorTokenUpdateWithWhereUniqueWithoutColorGroupInput = {
+    where: DesignColorTokenWhereUniqueInput
+    data: XOR<DesignColorTokenUpdateWithoutColorGroupInput, DesignColorTokenUncheckedUpdateWithoutColorGroupInput>
+  }
+
+  export type DesignColorTokenUpdateManyWithWhereWithoutColorGroupInput = {
+    where: DesignColorTokenScalarWhereInput
+    data: XOR<DesignColorTokenUpdateManyMutationInput, DesignColorTokenUncheckedUpdateManyWithoutColorGroupInput>
+  }
+
+  export type DesignColorTokenScalarWhereInput = {
+    AND?: DesignColorTokenScalarWhereInput | DesignColorTokenScalarWhereInput[]
+    OR?: DesignColorTokenScalarWhereInput[]
+    NOT?: DesignColorTokenScalarWhereInput | DesignColorTokenScalarWhereInput[]
+    id?: StringFilter<"DesignColorToken"> | string
+    colorGroupId?: StringFilter<"DesignColorToken"> | string
+    name?: StringFilter<"DesignColorToken"> | string
+    value?: StringFilter<"DesignColorToken"> | string
+    displayFormat?: StringFilter<"DesignColorToken"> | string
+    semanticRole?: StringFilter<"DesignColorToken"> | string
+    usageNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    restrictionNote?: StringNullableFilter<"DesignColorToken"> | string | null
+    sortOrder?: IntFilter<"DesignColorToken"> | number
+    createdAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+    updatedAt?: DateTimeFilter<"DesignColorToken"> | Date | string
+  }
+
+  export type DesignColorGroupCreateWithoutColorsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    designSystem: DesignSystemProfileCreateNestedOneWithoutColorGroupsInput
+  }
+
+  export type DesignColorGroupUncheckedCreateWithoutColorsInput = {
+    id?: string
+    designSystemId: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorGroupCreateOrConnectWithoutColorsInput = {
+    where: DesignColorGroupWhereUniqueInput
+    create: XOR<DesignColorGroupCreateWithoutColorsInput, DesignColorGroupUncheckedCreateWithoutColorsInput>
+  }
+
+  export type DesignColorGroupUpsertWithoutColorsInput = {
+    update: XOR<DesignColorGroupUpdateWithoutColorsInput, DesignColorGroupUncheckedUpdateWithoutColorsInput>
+    create: XOR<DesignColorGroupCreateWithoutColorsInput, DesignColorGroupUncheckedCreateWithoutColorsInput>
+    where?: DesignColorGroupWhereInput
+  }
+
+  export type DesignColorGroupUpdateToOneWithWhereWithoutColorsInput = {
+    where?: DesignColorGroupWhereInput
+    data: XOR<DesignColorGroupUpdateWithoutColorsInput, DesignColorGroupUncheckedUpdateWithoutColorsInput>
+  }
+
+  export type DesignColorGroupUpdateWithoutColorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    designSystem?: DesignSystemProfileUpdateOneRequiredWithoutColorGroupsNestedInput
+  }
+
+  export type DesignColorGroupUncheckedUpdateWithoutColorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    designSystemId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignSystemProfileCreateWithoutAssetsInput = {
+    id?: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutDesignSystemInput
+    colorGroups?: DesignColorGroupCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileUncheckedCreateWithoutAssetsInput = {
+    id?: string
+    organizationId: string
+    brandEssence?: string | null
+    desiredPerception?: string | null
+    visualStyle?: string | null
+    antiPatterns?: string | null
+    conceptualReferences?: string | null
+    aiNotes?: string | null
+    artifactSyncStatus?: string
+    artifactSyncedAt?: Date | string | null
+    artifactSyncError?: string | null
+    artifactObjectKey?: string | null
+    contextArtifactSyncStatus?: string
+    contextArtifactSyncedAt?: Date | string | null
+    contextArtifactSyncError?: string | null
+    contextArtifactObjectKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    colorGroups?: DesignColorGroupUncheckedCreateNestedManyWithoutDesignSystemInput
+  }
+
+  export type DesignSystemProfileCreateOrConnectWithoutAssetsInput = {
+    where: DesignSystemProfileWhereUniqueInput
+    create: XOR<DesignSystemProfileCreateWithoutAssetsInput, DesignSystemProfileUncheckedCreateWithoutAssetsInput>
+  }
+
+  export type DesignSystemProfileUpsertWithoutAssetsInput = {
+    update: XOR<DesignSystemProfileUpdateWithoutAssetsInput, DesignSystemProfileUncheckedUpdateWithoutAssetsInput>
+    create: XOR<DesignSystemProfileCreateWithoutAssetsInput, DesignSystemProfileUncheckedCreateWithoutAssetsInput>
+    where?: DesignSystemProfileWhereInput
+  }
+
+  export type DesignSystemProfileUpdateToOneWithWhereWithoutAssetsInput = {
+    where?: DesignSystemProfileWhereInput
+    data: XOR<DesignSystemProfileUpdateWithoutAssetsInput, DesignSystemProfileUncheckedUpdateWithoutAssetsInput>
+  }
+
+  export type DesignSystemProfileUpdateWithoutAssetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutDesignSystemNestedInput
+    colorGroups?: DesignColorGroupUpdateManyWithoutDesignSystemNestedInput
+  }
+
+  export type DesignSystemProfileUncheckedUpdateWithoutAssetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    brandEssence?: NullableStringFieldUpdateOperationsInput | string | null
+    desiredPerception?: NullableStringFieldUpdateOperationsInput | string | null
+    visualStyle?: NullableStringFieldUpdateOperationsInput | string | null
+    antiPatterns?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptualReferences?: NullableStringFieldUpdateOperationsInput | string | null
+    aiNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    artifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    artifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    artifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactSyncStatus?: StringFieldUpdateOperationsInput | string
+    contextArtifactSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contextArtifactSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    contextArtifactObjectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colorGroups?: DesignColorGroupUncheckedUpdateManyWithoutDesignSystemNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -23867,6 +35132,30 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ContextSourceCreateManyOrganizationInput = {
+    id?: string
+    title: string
+    description?: string | null
+    sourceKind: string
+    sourceUrl?: string | null
+    fileName?: string | null
+    mimeType?: string | null
+    fileSize?: number | null
+    objectKey?: string | null
+    publicUrl?: string | null
+    pipelineStatus?: string
+    pipelineError?: string | null
+    extractedContent?: string | null
+    normalizedContent?: string | null
+    reviewNotes?: string | null
+    reviewedAt?: Date | string | null
+    reviewedById?: string | null
+    tags?: ContextSourceCreatetagsInput | string[]
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type MembershipUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
@@ -24012,6 +35301,78 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ContextSourceUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextSourceUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ContextSourceUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceKind?: StringFieldUpdateOperationsInput | string
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    objectKey?: NullableStringFieldUpdateOperationsInput | string | null
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStatus?: StringFieldUpdateOperationsInput | string
+    pipelineError?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    normalizedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ContextSourceUpdatetagsInput | string[]
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RolePermissionCreateManyRoleInput = {
     id?: string
     key: string
@@ -24126,6 +35487,160 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     kind?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DesignColorGroupCreateManyDesignSystemInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignAssetCreateManyDesignSystemInput = {
+    id?: string
+    organizationId: string
+    primaryRole: string
+    secondaryTags?: DesignAssetCreatesecondaryTagsInput | string[]
+    title?: string | null
+    description?: string | null
+    objectKey: string
+    publicUrl?: string | null
+    fileName: string
+    contentType: string
+    size: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorGroupUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: DesignColorTokenUpdateManyWithoutColorGroupNestedInput
+  }
+
+  export type DesignColorGroupUncheckedUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    colors?: DesignColorTokenUncheckedUpdateManyWithoutColorGroupNestedInput
+  }
+
+  export type DesignColorGroupUncheckedUpdateManyWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetUncheckedUpdateWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignAssetUncheckedUpdateManyWithoutDesignSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    primaryRole?: StringFieldUpdateOperationsInput | string
+    secondaryTags?: DesignAssetUpdatesecondaryTagsInput | string[]
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    objectKey?: StringFieldUpdateOperationsInput | string
+    publicUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenCreateManyColorGroupInput = {
+    id?: string
+    name: string
+    value: string
+    displayFormat?: string
+    semanticRole: string
+    usageNote?: string | null
+    restrictionNote?: string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DesignColorTokenUpdateWithoutColorGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenUncheckedUpdateWithoutColorGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DesignColorTokenUncheckedUpdateManyWithoutColorGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    displayFormat?: StringFieldUpdateOperationsInput | string
+    semanticRole?: StringFieldUpdateOperationsInput | string
+    usageNote?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

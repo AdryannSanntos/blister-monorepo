@@ -235,6 +235,44 @@ exports.Prisma.OnboardingDraftScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ContextSourceScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  title: 'title',
+  description: 'description',
+  sourceKind: 'sourceKind',
+  sourceUrl: 'sourceUrl',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  objectKey: 'objectKey',
+  publicUrl: 'publicUrl',
+  pipelineStatus: 'pipelineStatus',
+  pipelineError: 'pipelineError',
+  extractedContent: 'extractedContent',
+  normalizedContent: 'normalizedContent',
+  reviewNotes: 'reviewNotes',
+  reviewedAt: 'reviewedAt',
+  reviewedById: 'reviewedById',
+  tags: 'tags',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContextArtifactScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  objectKey: 'objectKey',
+  publicUrl: 'publicUrl',
+  syncStatus: 'syncStatus',
+  syncedAt: 'syncedAt',
+  syncError: 'syncError',
+  sourceCount: 'sourceCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AssetScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -260,6 +298,68 @@ exports.Prisma.AssetRelationScalarFieldEnum = {
   assetId: 'assetId',
   kind: 'kind',
   value: 'value'
+};
+
+exports.Prisma.DesignSystemProfileScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  brandEssence: 'brandEssence',
+  desiredPerception: 'desiredPerception',
+  visualStyle: 'visualStyle',
+  antiPatterns: 'antiPatterns',
+  conceptualReferences: 'conceptualReferences',
+  aiNotes: 'aiNotes',
+  artifactSyncStatus: 'artifactSyncStatus',
+  artifactSyncedAt: 'artifactSyncedAt',
+  artifactSyncError: 'artifactSyncError',
+  artifactObjectKey: 'artifactObjectKey',
+  contextArtifactSyncStatus: 'contextArtifactSyncStatus',
+  contextArtifactSyncedAt: 'contextArtifactSyncedAt',
+  contextArtifactSyncError: 'contextArtifactSyncError',
+  contextArtifactObjectKey: 'contextArtifactObjectKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DesignColorGroupScalarFieldEnum = {
+  id: 'id',
+  designSystemId: 'designSystemId',
+  name: 'name',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DesignColorTokenScalarFieldEnum = {
+  id: 'id',
+  colorGroupId: 'colorGroupId',
+  name: 'name',
+  value: 'value',
+  displayFormat: 'displayFormat',
+  semanticRole: 'semanticRole',
+  usageNote: 'usageNote',
+  restrictionNote: 'restrictionNote',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DesignAssetScalarFieldEnum = {
+  id: 'id',
+  designSystemId: 'designSystemId',
+  organizationId: 'organizationId',
+  primaryRole: 'primaryRole',
+  secondaryTags: 'secondaryTags',
+  title: 'title',
+  description: 'description',
+  objectKey: 'objectKey',
+  publicUrl: 'publicUrl',
+  fileName: 'fileName',
+  contentType: 'contentType',
+  size: 'size',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -301,8 +401,14 @@ exports.Prisma.ModelName = {
   MembershipPermissionOverride: 'MembershipPermissionOverride',
   Invitation: 'Invitation',
   OnboardingDraft: 'OnboardingDraft',
+  ContextSource: 'ContextSource',
+  ContextArtifact: 'ContextArtifact',
   Asset: 'Asset',
-  AssetRelation: 'AssetRelation'
+  AssetRelation: 'AssetRelation',
+  DesignSystemProfile: 'DesignSystemProfile',
+  DesignColorGroup: 'DesignColorGroup',
+  DesignColorToken: 'DesignColorToken',
+  DesignAsset: 'DesignAsset'
 };
 
 /**

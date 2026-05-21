@@ -86,6 +86,9 @@ model Organization {
   invitations     Invitation[]
   onboardingDraft OnboardingDraft?
   assets          Asset[]
+  designSystem    DesignSystemProfile?
+  contextSources  ContextSource[]
+  contextArtifact ContextArtifact?
 }
 
 model Role {
@@ -183,7 +186,56 @@ model OnboardingDraft {
 }
 
 // ---------------------------------------------------------------------------
-// Assets domain
+// Context domain
+// ---------------------------------------------------------------------------
+
+model ContextSource {
+  id                 String    @id @default(cuid())
+  organizationId     String
+  title              String
+  description        String?
+  sourceKind         String
+  sourceUrl          String?
+  fileName           String?
+  mimeType           String?
+  fileSize           Int?
+  objectKey          String?
+  publicUrl          String?
+  pipelineStatus     String    @default("pending")
+  pipelineError      String?
+  extractedContent   String?
+  normalizedContent  String?
+  reviewNotes        String?
+  reviewedAt         DateTime?
+  reviewedById       String?
+  tags               String[]  @default([])
+  category           String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, updatedAt])
+  @@index([organizationId, pipelineStatus])
+}
+
+model ContextArtifact {
+  id             String    @id @default(cuid())
+  organizationId String    @unique
+  objectKey      String?
+  publicUrl      String?
+  syncStatus     String    @default("idle")
+  syncedAt       DateTime?
+  syncError      String?
+  sourceCount    Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Assets and company context domain (legacy - mantido para compatibilidade)
 // ---------------------------------------------------------------------------
 
 model Asset {
@@ -197,18 +249,20 @@ model Asset {
   mimeType          String?
   visibleType       String?
   visibleCategory   String?
-  tags              String[]
+  tags              String[] @default([])
   contextRole       Boolean  @default(false)
   operationalRole   Boolean  @default(true)
   contextStatus     String?
-  operationalStatus String?  @default("active")
+  operationalStatus String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
   organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   relations    AssetRelation[]
 
-  @@index([organizationId])
+  @@index([organizationId, updatedAt])
+  @@index([organizationId, contextRole])
+  @@index([organizationId, operationalRole])
 }
 
 model AssetRelation {
@@ -219,5 +273,93 @@ model AssetRelation {
 
   asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
 
-  @@unique([assetId, kind, value])
+  @@index([assetId])
+}
+
+// ---------------------------------------------------------------------------
+// Company design system domain
+// ---------------------------------------------------------------------------
+
+model DesignSystemProfile {
+  id                         String    @id @default(cuid())
+  organizationId             String    @unique
+  brandEssence               String?
+  desiredPerception          String?
+  visualStyle                String?
+  antiPatterns               String?
+  conceptualReferences       String?
+  aiNotes                    String?
+  artifactSyncStatus         String    @default("idle")
+  artifactSyncedAt           DateTime?
+  artifactSyncError          String?
+  artifactObjectKey          String?
+  contextArtifactSyncStatus  String    @default("idle")
+  contextArtifactSyncedAt    DateTime?
+  contextArtifactSyncError   String?
+  contextArtifactObjectKey   String?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  colorGroups  DesignColorGroup[]
+  assets       DesignAsset[]
+
+  @@index([organizationId, artifactSyncStatus])
+}
+
+model DesignColorGroup {
+  id              String   @id @default(cuid())
+  designSystemId  String
+  name            String
+  description     String?
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  designSystem DesignSystemProfile @relation(fields: [designSystemId], references: [id], onDelete: Cascade)
+  colors       DesignColorToken[]
+
+  @@unique([designSystemId, name])
+  @@index([designSystemId, sortOrder])
+}
+
+model DesignColorToken {
+  id              String   @id @default(cuid())
+  colorGroupId    String
+  name            String
+  value           String
+  displayFormat   String   @default("hex")
+  semanticRole    String
+  usageNote       String?
+  restrictionNote String?
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  colorGroup DesignColorGroup @relation(fields: [colorGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([colorGroupId, name])
+  @@index([colorGroupId, sortOrder])
+}
+
+model DesignAsset {
+  id              String   @id @default(cuid())
+  designSystemId  String
+  organizationId  String
+  primaryRole     String
+  secondaryTags   String[] @default([])
+  title           String?
+  description     String?
+  objectKey       String
+  publicUrl       String?
+  fileName        String
+  contentType     String
+  size            Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  designSystem DesignSystemProfile @relation(fields: [designSystemId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, updatedAt])
+  @@index([designSystemId, primaryRole])
 }

@@ -1,6 +1,6 @@
+import { randomBytes, scryptSync } from 'node:crypto';
 import { defaultSystemRoles, getDefaultRolePermissions } from '@company-os/authz';
 import type { DefaultSystemRole } from '@company-os/authz';
-import { randomBytes, scryptSync } from 'node:crypto';
 import { PrismaClient } from '../src/generated/prisma';
 
 // Mesmo algoritmo do @better-auth/utils/password
@@ -19,6 +19,57 @@ const prisma = new PrismaClient();
 
 const SEED_USER_ID = 'seed_dev_adryan_user_01';
 const SEED_ORG_ID = 'seed_dev_workana_ai_org';
+const SEED_ONBOARDING_DATA = {
+  'company-basics': {
+    companyName: 'Workana AI',
+    industry: 'SaaS B2B para operacao com freelancers, fornecedores e times remotos',
+    description:
+      'Workana AI organiza contexto, briefing, equipe, permissoes, assets, agentes e integracoes para empresas que coordenam trabalho distribuido com foco em execucao.',
+    website: 'https://www.workana.com',
+  },
+  positioning: {
+    mission:
+      'Ajudar empresas a coordenar trabalho com freelancers e parceiros com mais contexto, velocidade e padrao operacional.',
+    vision:
+      'Ser a camada operacional de inteligencia usada por empresas para escalar execucao com times flexiveis e externos.',
+    valueProposition:
+      'Centralizamos o brain da empresa e conectamos esse contexto a fluxos, equipe e agentes para reduzir retrabalho, acelerar entregas e manter consistencia.',
+  },
+  'products-services': {
+    products:
+      'Workspace por empresa, onboarding do Brain, gestao de equipe, roles e permissoes, assets de contexto, integracoes e agentes operacionais.',
+    pricing:
+      'Modelo SaaS B2B por empresa, com expansao futura por assentos, uso de agentes e creditos.',
+  },
+  'target-audience': {
+    idealCustomer:
+      'Empresas que contratam e coordenam freelancers, fornecedores e times remotos e precisam padronizar contexto, processos e execucao.',
+    painPoints:
+      'Briefings descentralizados, perda de contexto, onboarding lento, baixa previsibilidade, retrabalho e dificuldade para manter padrao entre pessoas e agentes.',
+    channels:
+      'Base Workana, indicacao, inside sales, conteudo consultivo e parcerias com operacoes e liderancas de growth, marketing e delivery.',
+  },
+  'tone-of-voice': {
+    tone: 'Direto, consultivo, operacional e confiante.',
+    communicationStyle:
+      'Clareza acima de tudo, linguagem B2B, foco em execucao, sem jargoes vazios e sem soar como chatbot generico.',
+    avoidWords:
+      'Evitar hype, promessas vagas, excesso de buzzwords, linguagem infantilizada e qualquer tom de assistente genérico.',
+  },
+  'differentials-faq': {
+    differentials:
+      'Conecta contexto da empresa, permissoes, equipe e agentes no mesmo workspace; nasce orientado a operacao real, nao apenas conversa; respeita governanca e escalabilidade desde a base.',
+    faq: 'O que e o Brain? Como o contexto e usado pelos agentes? Como funciona permissao por empresa? Como onboardar equipe? O que muda para quem trabalha com freelancers? Como integrar sistemas externos?',
+  },
+  'processes-rules': {
+    processes:
+      'Toda empresa passa por selecao/criacao de workspace, onboarding inicial do Brain, configuracao de equipe e permissoes e depois operacao via dashboard com assets e integracoes.',
+    rules:
+      'Toda acao sensivel precisa de permissao explicita; userId nunca vem do body; contexto de empresa existe apenas dentro de dashboard/onboarding; o Brain deve refletir a operacao real da empresa.',
+    tools:
+      'Next.js, NestJS, Prisma, PostgreSQL, better-auth, CASL, Zod, TanStack Query/Table, shadcn/ui e Resend.',
+  },
+} as const;
 
 async function main() {
   console.log('Iniciando seed...');
@@ -102,12 +153,29 @@ async function main() {
       userId: user.id,
       organizationId: org.id,
       roles: {
-        create: { roleId: roleIds['owner'] },
+        create: { roleId: roleIds.owner },
       },
     },
   });
 
   console.log('  Membership: owner');
+
+  await prisma.onboardingDraft.upsert({
+    where: { organizationId: org.id },
+    update: {
+      currentStep: 8,
+      data: SEED_ONBOARDING_DATA,
+      publishedAt: new Date(),
+    },
+    create: {
+      organizationId: org.id,
+      currentStep: 8,
+      data: SEED_ONBOARDING_DATA,
+      publishedAt: new Date(),
+    },
+  });
+
+  console.log('  Brain: configurado e publicado');
   console.log('');
   console.log('Seed concluido.');
   console.log('  Email: cttadryansantoss@gmail.com');
