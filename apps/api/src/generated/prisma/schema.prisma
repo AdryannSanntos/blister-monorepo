@@ -605,3 +605,39 @@ model AgentRunStep {
 
   @@index([runId, createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// Credits and technical cost ledgers
+// ---------------------------------------------------------------------------
+
+model CreditLedgerEntry {
+  id              String   @id @default(cuid())
+  organizationId  String
+  runId           String?
+  entryType       String
+  amount          Int
+  balanceAfter    Int
+  metadata        Json     @default("{}")
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([entryType])
+}
+
+model TechnicalCostLedgerEntry {
+  id             String   @id @default(cuid())
+  organizationId String?
+  runId          String?
+  providerId     String?
+  modelId        String?
+  amount         Float
+  currency       String   @default("USD")
+  unit           String   @default("estimated")
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([providerId, createdAt])
+  @@index([modelId, createdAt])
+}

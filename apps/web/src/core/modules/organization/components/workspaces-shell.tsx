@@ -17,6 +17,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getInitials } from "src/core/modules/dashboard/hooks/use-dashboard-data";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use-platform-admin";
 import {
   AppSidebar,
   type SidebarGroupDef,
@@ -33,31 +34,42 @@ import {
 import { authClient } from "src/core/shared/utils/auth-client";
 import { queryClient } from "src/core/shared/utils/query-client";
 
-const sidebarGroups: SidebarGroupDef[] = [
-  {
-    items: [
-      {
-        label: "Minhas empresas",
-        icon: Building2,
-        href: "/workspaces",
-        match: (p: string) => p === "/workspaces",
-      },
-      {
-        label: "Configurações",
-        icon: Settings,
-        href: "/workspaces/account/settings",
-        match: (p: string) => p.startsWith("/workspaces/account/settings"),
-      },
-    ],
-  },
-];
-
 export function WorkspacesShell({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { data: session } = authClient.useSession();
   const { activeOrgId, clearActiveOrg } = useActiveOrganization();
+  const { canAccessPlatformAdmin } = usePlatformRoleAccess();
+
+  const sidebarGroups: SidebarGroupDef[] = [
+    {
+      items: [
+        {
+          label: "Minhas empresas",
+          icon: Building2,
+          href: "/workspaces",
+          match: (p: string) => p === "/workspaces",
+        },
+        ...(canAccessPlatformAdmin
+          ? [
+              {
+                label: "Admin de plataforma",
+                icon: Settings,
+                href: "/workspaces/admin",
+                match: (p: string) => p.startsWith("/workspaces/admin"),
+              },
+            ]
+          : []),
+        {
+          label: "Configurações",
+          icon: Settings,
+          href: "/workspaces/account/settings",
+          match: (p: string) => p.startsWith("/workspaces/account/settings"),
+        },
+      ],
+    },
+  ];
 
   const displayName = session?.user?.name ?? session?.user?.email ?? "Usuário";
   const userInitials = getInitials(displayName);

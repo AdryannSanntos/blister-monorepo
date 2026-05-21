@@ -173,6 +173,16 @@ export type AgentRun = $Result.DefaultSelection<Prisma.$AgentRunPayload>
  * 
  */
 export type AgentRunStep = $Result.DefaultSelection<Prisma.$AgentRunStepPayload>
+/**
+ * Model CreditLedgerEntry
+ * 
+ */
+export type CreditLedgerEntry = $Result.DefaultSelection<Prisma.$CreditLedgerEntryPayload>
+/**
+ * Model TechnicalCostLedgerEntry
+ * 
+ */
+export type TechnicalCostLedgerEntry = $Result.DefaultSelection<Prisma.$TechnicalCostLedgerEntryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -611,6 +621,26 @@ export class PrismaClient<
     * ```
     */
   get agentRunStep(): Prisma.AgentRunStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.creditLedgerEntry`: Exposes CRUD operations for the **CreditLedgerEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CreditLedgerEntries
+    * const creditLedgerEntries = await prisma.creditLedgerEntry.findMany()
+    * ```
+    */
+  get creditLedgerEntry(): Prisma.CreditLedgerEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.technicalCostLedgerEntry`: Exposes CRUD operations for the **TechnicalCostLedgerEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TechnicalCostLedgerEntries
+    * const technicalCostLedgerEntries = await prisma.technicalCostLedgerEntry.findMany()
+    * ```
+    */
+  get technicalCostLedgerEntry(): Prisma.TechnicalCostLedgerEntryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1083,7 +1113,9 @@ export namespace Prisma {
     CompanyAgent: 'CompanyAgent',
     AgentVersion: 'AgentVersion',
     AgentRun: 'AgentRun',
-    AgentRunStep: 'AgentRunStep'
+    AgentRunStep: 'AgentRunStep',
+    CreditLedgerEntry: 'CreditLedgerEntry',
+    TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1102,7 +1134,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "agentVersion" | "agentRun" | "agentRunStep"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "agentVersion" | "agentRun" | "agentRunStep" | "creditLedgerEntry" | "technicalCostLedgerEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3474,6 +3506,154 @@ export namespace Prisma {
           }
         }
       }
+      CreditLedgerEntry: {
+        payload: Prisma.$CreditLedgerEntryPayload<ExtArgs>
+        fields: Prisma.CreditLedgerEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CreditLedgerEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CreditLedgerEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.CreditLedgerEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CreditLedgerEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          findMany: {
+            args: Prisma.CreditLedgerEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>[]
+          }
+          create: {
+            args: Prisma.CreditLedgerEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          createMany: {
+            args: Prisma.CreditLedgerEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CreditLedgerEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.CreditLedgerEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          update: {
+            args: Prisma.CreditLedgerEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.CreditLedgerEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CreditLedgerEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CreditLedgerEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.CreditLedgerEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CreditLedgerEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.CreditLedgerEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreditLedgerEntry>
+          }
+          groupBy: {
+            args: Prisma.CreditLedgerEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CreditLedgerEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CreditLedgerEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<CreditLedgerEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      TechnicalCostLedgerEntry: {
+        payload: Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>
+        fields: Prisma.TechnicalCostLedgerEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TechnicalCostLedgerEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TechnicalCostLedgerEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.TechnicalCostLedgerEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TechnicalCostLedgerEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          findMany: {
+            args: Prisma.TechnicalCostLedgerEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>[]
+          }
+          create: {
+            args: Prisma.TechnicalCostLedgerEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          createMany: {
+            args: Prisma.TechnicalCostLedgerEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TechnicalCostLedgerEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.TechnicalCostLedgerEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          update: {
+            args: Prisma.TechnicalCostLedgerEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.TechnicalCostLedgerEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TechnicalCostLedgerEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TechnicalCostLedgerEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.TechnicalCostLedgerEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TechnicalCostLedgerEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.TechnicalCostLedgerEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTechnicalCostLedgerEntry>
+          }
+          groupBy: {
+            args: Prisma.TechnicalCostLedgerEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TechnicalCostLedgerEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TechnicalCostLedgerEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<TechnicalCostLedgerEntryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3602,6 +3782,8 @@ export namespace Prisma {
     agentVersion?: AgentVersionOmit
     agentRun?: AgentRunOmit
     agentRunStep?: AgentRunStepOmit
+    creditLedgerEntry?: CreditLedgerEntryOmit
+    technicalCostLedgerEntry?: TechnicalCostLedgerEntryOmit
   }
 
   /* Types for Logging */
@@ -40602,6 +40784,2177 @@ export namespace Prisma {
 
 
   /**
+   * Model CreditLedgerEntry
+   */
+
+  export type AggregateCreditLedgerEntry = {
+    _count: CreditLedgerEntryCountAggregateOutputType | null
+    _avg: CreditLedgerEntryAvgAggregateOutputType | null
+    _sum: CreditLedgerEntrySumAggregateOutputType | null
+    _min: CreditLedgerEntryMinAggregateOutputType | null
+    _max: CreditLedgerEntryMaxAggregateOutputType | null
+  }
+
+  export type CreditLedgerEntryAvgAggregateOutputType = {
+    amount: number | null
+    balanceAfter: number | null
+  }
+
+  export type CreditLedgerEntrySumAggregateOutputType = {
+    amount: number | null
+    balanceAfter: number | null
+  }
+
+  export type CreditLedgerEntryMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    runId: string | null
+    entryType: string | null
+    amount: number | null
+    balanceAfter: number | null
+    createdByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type CreditLedgerEntryMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    runId: string | null
+    entryType: string | null
+    amount: number | null
+    balanceAfter: number | null
+    createdByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type CreditLedgerEntryCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    runId: number
+    entryType: number
+    amount: number
+    balanceAfter: number
+    metadata: number
+    createdByUserId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CreditLedgerEntryAvgAggregateInputType = {
+    amount?: true
+    balanceAfter?: true
+  }
+
+  export type CreditLedgerEntrySumAggregateInputType = {
+    amount?: true
+    balanceAfter?: true
+  }
+
+  export type CreditLedgerEntryMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    entryType?: true
+    amount?: true
+    balanceAfter?: true
+    createdByUserId?: true
+    createdAt?: true
+  }
+
+  export type CreditLedgerEntryMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    entryType?: true
+    amount?: true
+    balanceAfter?: true
+    createdByUserId?: true
+    createdAt?: true
+  }
+
+  export type CreditLedgerEntryCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    entryType?: true
+    amount?: true
+    balanceAfter?: true
+    metadata?: true
+    createdByUserId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CreditLedgerEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreditLedgerEntry to aggregate.
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreditLedgerEntries to fetch.
+     */
+    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CreditLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreditLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreditLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CreditLedgerEntries
+    **/
+    _count?: true | CreditLedgerEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CreditLedgerEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CreditLedgerEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CreditLedgerEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CreditLedgerEntryMaxAggregateInputType
+  }
+
+  export type GetCreditLedgerEntryAggregateType<T extends CreditLedgerEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreditLedgerEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreditLedgerEntry[P]>
+      : GetScalarType<T[P], AggregateCreditLedgerEntry[P]>
+  }
+
+
+
+
+  export type CreditLedgerEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreditLedgerEntryWhereInput
+    orderBy?: CreditLedgerEntryOrderByWithAggregationInput | CreditLedgerEntryOrderByWithAggregationInput[]
+    by: CreditLedgerEntryScalarFieldEnum[] | CreditLedgerEntryScalarFieldEnum
+    having?: CreditLedgerEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CreditLedgerEntryCountAggregateInputType | true
+    _avg?: CreditLedgerEntryAvgAggregateInputType
+    _sum?: CreditLedgerEntrySumAggregateInputType
+    _min?: CreditLedgerEntryMinAggregateInputType
+    _max?: CreditLedgerEntryMaxAggregateInputType
+  }
+
+  export type CreditLedgerEntryGroupByOutputType = {
+    id: string
+    organizationId: string
+    runId: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata: JsonValue
+    createdByUserId: string | null
+    createdAt: Date
+    _count: CreditLedgerEntryCountAggregateOutputType | null
+    _avg: CreditLedgerEntryAvgAggregateOutputType | null
+    _sum: CreditLedgerEntrySumAggregateOutputType | null
+    _min: CreditLedgerEntryMinAggregateOutputType | null
+    _max: CreditLedgerEntryMaxAggregateOutputType | null
+  }
+
+  type GetCreditLedgerEntryGroupByPayload<T extends CreditLedgerEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CreditLedgerEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CreditLedgerEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CreditLedgerEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], CreditLedgerEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CreditLedgerEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    entryType?: boolean
+    amount?: boolean
+    balanceAfter?: boolean
+    metadata?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["creditLedgerEntry"]>
+
+  export type CreditLedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    entryType?: boolean
+    amount?: boolean
+    balanceAfter?: boolean
+    metadata?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["creditLedgerEntry"]>
+
+  export type CreditLedgerEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    entryType?: boolean
+    amount?: boolean
+    balanceAfter?: boolean
+    metadata?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["creditLedgerEntry"]>
+
+  export type CreditLedgerEntrySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    entryType?: boolean
+    amount?: boolean
+    balanceAfter?: boolean
+    metadata?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+  }
+
+  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "entryType" | "amount" | "balanceAfter" | "metadata" | "createdByUserId" | "createdAt", ExtArgs["result"]["creditLedgerEntry"]>
+
+  export type $CreditLedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CreditLedgerEntry"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      runId: string | null
+      entryType: string
+      amount: number
+      balanceAfter: number
+      metadata: Prisma.JsonValue
+      createdByUserId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["creditLedgerEntry"]>
+    composites: {}
+  }
+
+  type CreditLedgerEntryGetPayload<S extends boolean | null | undefined | CreditLedgerEntryDefaultArgs> = $Result.GetResult<Prisma.$CreditLedgerEntryPayload, S>
+
+  type CreditLedgerEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CreditLedgerEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CreditLedgerEntryCountAggregateInputType | true
+    }
+
+  export interface CreditLedgerEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CreditLedgerEntry'], meta: { name: 'CreditLedgerEntry' } }
+    /**
+     * Find zero or one CreditLedgerEntry that matches the filter.
+     * @param {CreditLedgerEntryFindUniqueArgs} args - Arguments to find a CreditLedgerEntry
+     * @example
+     * // Get one CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CreditLedgerEntryFindUniqueArgs>(args: SelectSubset<T, CreditLedgerEntryFindUniqueArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CreditLedgerEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CreditLedgerEntryFindUniqueOrThrowArgs} args - Arguments to find a CreditLedgerEntry
+     * @example
+     * // Get one CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CreditLedgerEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, CreditLedgerEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreditLedgerEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryFindFirstArgs} args - Arguments to find a CreditLedgerEntry
+     * @example
+     * // Get one CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CreditLedgerEntryFindFirstArgs>(args?: SelectSubset<T, CreditLedgerEntryFindFirstArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CreditLedgerEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryFindFirstOrThrowArgs} args - Arguments to find a CreditLedgerEntry
+     * @example
+     * // Get one CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CreditLedgerEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, CreditLedgerEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CreditLedgerEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CreditLedgerEntries
+     * const creditLedgerEntries = await prisma.creditLedgerEntry.findMany()
+     * 
+     * // Get first 10 CreditLedgerEntries
+     * const creditLedgerEntries = await prisma.creditLedgerEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const creditLedgerEntryWithIdOnly = await prisma.creditLedgerEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CreditLedgerEntryFindManyArgs>(args?: SelectSubset<T, CreditLedgerEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CreditLedgerEntry.
+     * @param {CreditLedgerEntryCreateArgs} args - Arguments to create a CreditLedgerEntry.
+     * @example
+     * // Create one CreditLedgerEntry
+     * const CreditLedgerEntry = await prisma.creditLedgerEntry.create({
+     *   data: {
+     *     // ... data to create a CreditLedgerEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends CreditLedgerEntryCreateArgs>(args: SelectSubset<T, CreditLedgerEntryCreateArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CreditLedgerEntries.
+     * @param {CreditLedgerEntryCreateManyArgs} args - Arguments to create many CreditLedgerEntries.
+     * @example
+     * // Create many CreditLedgerEntries
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CreditLedgerEntryCreateManyArgs>(args?: SelectSubset<T, CreditLedgerEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CreditLedgerEntries and returns the data saved in the database.
+     * @param {CreditLedgerEntryCreateManyAndReturnArgs} args - Arguments to create many CreditLedgerEntries.
+     * @example
+     * // Create many CreditLedgerEntries
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CreditLedgerEntries and only return the `id`
+     * const creditLedgerEntryWithIdOnly = await prisma.creditLedgerEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CreditLedgerEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, CreditLedgerEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CreditLedgerEntry.
+     * @param {CreditLedgerEntryDeleteArgs} args - Arguments to delete one CreditLedgerEntry.
+     * @example
+     * // Delete one CreditLedgerEntry
+     * const CreditLedgerEntry = await prisma.creditLedgerEntry.delete({
+     *   where: {
+     *     // ... filter to delete one CreditLedgerEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CreditLedgerEntryDeleteArgs>(args: SelectSubset<T, CreditLedgerEntryDeleteArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CreditLedgerEntry.
+     * @param {CreditLedgerEntryUpdateArgs} args - Arguments to update one CreditLedgerEntry.
+     * @example
+     * // Update one CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CreditLedgerEntryUpdateArgs>(args: SelectSubset<T, CreditLedgerEntryUpdateArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CreditLedgerEntries.
+     * @param {CreditLedgerEntryDeleteManyArgs} args - Arguments to filter CreditLedgerEntries to delete.
+     * @example
+     * // Delete a few CreditLedgerEntries
+     * const { count } = await prisma.creditLedgerEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CreditLedgerEntryDeleteManyArgs>(args?: SelectSubset<T, CreditLedgerEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreditLedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CreditLedgerEntries
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CreditLedgerEntryUpdateManyArgs>(args: SelectSubset<T, CreditLedgerEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CreditLedgerEntries and returns the data updated in the database.
+     * @param {CreditLedgerEntryUpdateManyAndReturnArgs} args - Arguments to update many CreditLedgerEntries.
+     * @example
+     * // Update many CreditLedgerEntries
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CreditLedgerEntries and only return the `id`
+     * const creditLedgerEntryWithIdOnly = await prisma.creditLedgerEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CreditLedgerEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, CreditLedgerEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CreditLedgerEntry.
+     * @param {CreditLedgerEntryUpsertArgs} args - Arguments to update or create a CreditLedgerEntry.
+     * @example
+     * // Update or create a CreditLedgerEntry
+     * const creditLedgerEntry = await prisma.creditLedgerEntry.upsert({
+     *   create: {
+     *     // ... data to create a CreditLedgerEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CreditLedgerEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CreditLedgerEntryUpsertArgs>(args: SelectSubset<T, CreditLedgerEntryUpsertArgs<ExtArgs>>): Prisma__CreditLedgerEntryClient<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CreditLedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryCountArgs} args - Arguments to filter CreditLedgerEntries to count.
+     * @example
+     * // Count the number of CreditLedgerEntries
+     * const count = await prisma.creditLedgerEntry.count({
+     *   where: {
+     *     // ... the filter for the CreditLedgerEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends CreditLedgerEntryCountArgs>(
+      args?: Subset<T, CreditLedgerEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CreditLedgerEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CreditLedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CreditLedgerEntryAggregateArgs>(args: Subset<T, CreditLedgerEntryAggregateArgs>): Prisma.PrismaPromise<GetCreditLedgerEntryAggregateType<T>>
+
+    /**
+     * Group by CreditLedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CreditLedgerEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CreditLedgerEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CreditLedgerEntryGroupByArgs['orderBy'] }
+        : { orderBy?: CreditLedgerEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CreditLedgerEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreditLedgerEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CreditLedgerEntry model
+   */
+  readonly fields: CreditLedgerEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CreditLedgerEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CreditLedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CreditLedgerEntry model
+   */
+  interface CreditLedgerEntryFieldRefs {
+    readonly id: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly organizationId: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly runId: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly entryType: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly amount: FieldRef<"CreditLedgerEntry", 'Int'>
+    readonly balanceAfter: FieldRef<"CreditLedgerEntry", 'Int'>
+    readonly metadata: FieldRef<"CreditLedgerEntry", 'Json'>
+    readonly createdByUserId: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly createdAt: FieldRef<"CreditLedgerEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CreditLedgerEntry findUnique
+   */
+  export type CreditLedgerEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which CreditLedgerEntry to fetch.
+     */
+    where: CreditLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * CreditLedgerEntry findUniqueOrThrow
+   */
+  export type CreditLedgerEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which CreditLedgerEntry to fetch.
+     */
+    where: CreditLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * CreditLedgerEntry findFirst
+   */
+  export type CreditLedgerEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which CreditLedgerEntry to fetch.
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreditLedgerEntries to fetch.
+     */
+    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreditLedgerEntries.
+     */
+    cursor?: CreditLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreditLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreditLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreditLedgerEntries.
+     */
+    distinct?: CreditLedgerEntryScalarFieldEnum | CreditLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * CreditLedgerEntry findFirstOrThrow
+   */
+  export type CreditLedgerEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which CreditLedgerEntry to fetch.
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreditLedgerEntries to fetch.
+     */
+    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CreditLedgerEntries.
+     */
+    cursor?: CreditLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreditLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreditLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CreditLedgerEntries.
+     */
+    distinct?: CreditLedgerEntryScalarFieldEnum | CreditLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * CreditLedgerEntry findMany
+   */
+  export type CreditLedgerEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which CreditLedgerEntries to fetch.
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CreditLedgerEntries to fetch.
+     */
+    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CreditLedgerEntries.
+     */
+    cursor?: CreditLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CreditLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CreditLedgerEntries.
+     */
+    skip?: number
+    distinct?: CreditLedgerEntryScalarFieldEnum | CreditLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * CreditLedgerEntry create
+   */
+  export type CreditLedgerEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to create a CreditLedgerEntry.
+     */
+    data: XOR<CreditLedgerEntryCreateInput, CreditLedgerEntryUncheckedCreateInput>
+  }
+
+  /**
+   * CreditLedgerEntry createMany
+   */
+  export type CreditLedgerEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CreditLedgerEntries.
+     */
+    data: CreditLedgerEntryCreateManyInput | CreditLedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreditLedgerEntry createManyAndReturn
+   */
+  export type CreditLedgerEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many CreditLedgerEntries.
+     */
+    data: CreditLedgerEntryCreateManyInput | CreditLedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CreditLedgerEntry update
+   */
+  export type CreditLedgerEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to update a CreditLedgerEntry.
+     */
+    data: XOR<CreditLedgerEntryUpdateInput, CreditLedgerEntryUncheckedUpdateInput>
+    /**
+     * Choose, which CreditLedgerEntry to update.
+     */
+    where: CreditLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * CreditLedgerEntry updateMany
+   */
+  export type CreditLedgerEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CreditLedgerEntries.
+     */
+    data: XOR<CreditLedgerEntryUpdateManyMutationInput, CreditLedgerEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which CreditLedgerEntries to update
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * Limit how many CreditLedgerEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreditLedgerEntry updateManyAndReturn
+   */
+  export type CreditLedgerEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update CreditLedgerEntries.
+     */
+    data: XOR<CreditLedgerEntryUpdateManyMutationInput, CreditLedgerEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which CreditLedgerEntries to update
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * Limit how many CreditLedgerEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreditLedgerEntry upsert
+   */
+  export type CreditLedgerEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The filter to search for the CreditLedgerEntry to update in case it exists.
+     */
+    where: CreditLedgerEntryWhereUniqueInput
+    /**
+     * In case the CreditLedgerEntry found by the `where` argument doesn't exist, create a new CreditLedgerEntry with this data.
+     */
+    create: XOR<CreditLedgerEntryCreateInput, CreditLedgerEntryUncheckedCreateInput>
+    /**
+     * In case the CreditLedgerEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CreditLedgerEntryUpdateInput, CreditLedgerEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * CreditLedgerEntry delete
+   */
+  export type CreditLedgerEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter which CreditLedgerEntry to delete.
+     */
+    where: CreditLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * CreditLedgerEntry deleteMany
+   */
+  export type CreditLedgerEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CreditLedgerEntries to delete
+     */
+    where?: CreditLedgerEntryWhereInput
+    /**
+     * Limit how many CreditLedgerEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CreditLedgerEntry without action
+   */
+  export type CreditLedgerEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TechnicalCostLedgerEntry
+   */
+
+  export type AggregateTechnicalCostLedgerEntry = {
+    _count: TechnicalCostLedgerEntryCountAggregateOutputType | null
+    _avg: TechnicalCostLedgerEntryAvgAggregateOutputType | null
+    _sum: TechnicalCostLedgerEntrySumAggregateOutputType | null
+    _min: TechnicalCostLedgerEntryMinAggregateOutputType | null
+    _max: TechnicalCostLedgerEntryMaxAggregateOutputType | null
+  }
+
+  export type TechnicalCostLedgerEntryAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type TechnicalCostLedgerEntrySumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type TechnicalCostLedgerEntryMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    runId: string | null
+    providerId: string | null
+    modelId: string | null
+    amount: number | null
+    currency: string | null
+    unit: string | null
+    createdAt: Date | null
+  }
+
+  export type TechnicalCostLedgerEntryMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    runId: string | null
+    providerId: string | null
+    modelId: string | null
+    amount: number | null
+    currency: string | null
+    unit: string | null
+    createdAt: Date | null
+  }
+
+  export type TechnicalCostLedgerEntryCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    runId: number
+    providerId: number
+    modelId: number
+    amount: number
+    currency: number
+    unit: number
+    metadata: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TechnicalCostLedgerEntryAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type TechnicalCostLedgerEntrySumAggregateInputType = {
+    amount?: true
+  }
+
+  export type TechnicalCostLedgerEntryMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    providerId?: true
+    modelId?: true
+    amount?: true
+    currency?: true
+    unit?: true
+    createdAt?: true
+  }
+
+  export type TechnicalCostLedgerEntryMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    providerId?: true
+    modelId?: true
+    amount?: true
+    currency?: true
+    unit?: true
+    createdAt?: true
+  }
+
+  export type TechnicalCostLedgerEntryCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    runId?: true
+    providerId?: true
+    modelId?: true
+    amount?: true
+    currency?: true
+    unit?: true
+    metadata?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TechnicalCostLedgerEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TechnicalCostLedgerEntry to aggregate.
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TechnicalCostLedgerEntries to fetch.
+     */
+    orderBy?: TechnicalCostLedgerEntryOrderByWithRelationInput | TechnicalCostLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TechnicalCostLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TechnicalCostLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TechnicalCostLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TechnicalCostLedgerEntries
+    **/
+    _count?: true | TechnicalCostLedgerEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TechnicalCostLedgerEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TechnicalCostLedgerEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TechnicalCostLedgerEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TechnicalCostLedgerEntryMaxAggregateInputType
+  }
+
+  export type GetTechnicalCostLedgerEntryAggregateType<T extends TechnicalCostLedgerEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateTechnicalCostLedgerEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTechnicalCostLedgerEntry[P]>
+      : GetScalarType<T[P], AggregateTechnicalCostLedgerEntry[P]>
+  }
+
+
+
+
+  export type TechnicalCostLedgerEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TechnicalCostLedgerEntryWhereInput
+    orderBy?: TechnicalCostLedgerEntryOrderByWithAggregationInput | TechnicalCostLedgerEntryOrderByWithAggregationInput[]
+    by: TechnicalCostLedgerEntryScalarFieldEnum[] | TechnicalCostLedgerEntryScalarFieldEnum
+    having?: TechnicalCostLedgerEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TechnicalCostLedgerEntryCountAggregateInputType | true
+    _avg?: TechnicalCostLedgerEntryAvgAggregateInputType
+    _sum?: TechnicalCostLedgerEntrySumAggregateInputType
+    _min?: TechnicalCostLedgerEntryMinAggregateInputType
+    _max?: TechnicalCostLedgerEntryMaxAggregateInputType
+  }
+
+  export type TechnicalCostLedgerEntryGroupByOutputType = {
+    id: string
+    organizationId: string | null
+    runId: string | null
+    providerId: string | null
+    modelId: string | null
+    amount: number
+    currency: string
+    unit: string
+    metadata: JsonValue
+    createdAt: Date
+    _count: TechnicalCostLedgerEntryCountAggregateOutputType | null
+    _avg: TechnicalCostLedgerEntryAvgAggregateOutputType | null
+    _sum: TechnicalCostLedgerEntrySumAggregateOutputType | null
+    _min: TechnicalCostLedgerEntryMinAggregateOutputType | null
+    _max: TechnicalCostLedgerEntryMaxAggregateOutputType | null
+  }
+
+  type GetTechnicalCostLedgerEntryGroupByPayload<T extends TechnicalCostLedgerEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TechnicalCostLedgerEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TechnicalCostLedgerEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TechnicalCostLedgerEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], TechnicalCostLedgerEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TechnicalCostLedgerEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    amount?: boolean
+    currency?: boolean
+    unit?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["technicalCostLedgerEntry"]>
+
+  export type TechnicalCostLedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    amount?: boolean
+    currency?: boolean
+    unit?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["technicalCostLedgerEntry"]>
+
+  export type TechnicalCostLedgerEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    amount?: boolean
+    currency?: boolean
+    unit?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["technicalCostLedgerEntry"]>
+
+  export type TechnicalCostLedgerEntrySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    runId?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    amount?: boolean
+    currency?: boolean
+    unit?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }
+
+  export type TechnicalCostLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "providerId" | "modelId" | "amount" | "currency" | "unit" | "metadata" | "createdAt", ExtArgs["result"]["technicalCostLedgerEntry"]>
+
+  export type $TechnicalCostLedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TechnicalCostLedgerEntry"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string | null
+      runId: string | null
+      providerId: string | null
+      modelId: string | null
+      amount: number
+      currency: string
+      unit: string
+      metadata: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["technicalCostLedgerEntry"]>
+    composites: {}
+  }
+
+  type TechnicalCostLedgerEntryGetPayload<S extends boolean | null | undefined | TechnicalCostLedgerEntryDefaultArgs> = $Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload, S>
+
+  type TechnicalCostLedgerEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TechnicalCostLedgerEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TechnicalCostLedgerEntryCountAggregateInputType | true
+    }
+
+  export interface TechnicalCostLedgerEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TechnicalCostLedgerEntry'], meta: { name: 'TechnicalCostLedgerEntry' } }
+    /**
+     * Find zero or one TechnicalCostLedgerEntry that matches the filter.
+     * @param {TechnicalCostLedgerEntryFindUniqueArgs} args - Arguments to find a TechnicalCostLedgerEntry
+     * @example
+     * // Get one TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TechnicalCostLedgerEntryFindUniqueArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryFindUniqueArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TechnicalCostLedgerEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TechnicalCostLedgerEntryFindUniqueOrThrowArgs} args - Arguments to find a TechnicalCostLedgerEntry
+     * @example
+     * // Get one TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TechnicalCostLedgerEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TechnicalCostLedgerEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryFindFirstArgs} args - Arguments to find a TechnicalCostLedgerEntry
+     * @example
+     * // Get one TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TechnicalCostLedgerEntryFindFirstArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryFindFirstArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TechnicalCostLedgerEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryFindFirstOrThrowArgs} args - Arguments to find a TechnicalCostLedgerEntry
+     * @example
+     * // Get one TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TechnicalCostLedgerEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TechnicalCostLedgerEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntries = await prisma.technicalCostLedgerEntry.findMany()
+     * 
+     * // Get first 10 TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntries = await prisma.technicalCostLedgerEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const technicalCostLedgerEntryWithIdOnly = await prisma.technicalCostLedgerEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TechnicalCostLedgerEntryFindManyArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TechnicalCostLedgerEntry.
+     * @param {TechnicalCostLedgerEntryCreateArgs} args - Arguments to create a TechnicalCostLedgerEntry.
+     * @example
+     * // Create one TechnicalCostLedgerEntry
+     * const TechnicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.create({
+     *   data: {
+     *     // ... data to create a TechnicalCostLedgerEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends TechnicalCostLedgerEntryCreateArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryCreateArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TechnicalCostLedgerEntries.
+     * @param {TechnicalCostLedgerEntryCreateManyArgs} args - Arguments to create many TechnicalCostLedgerEntries.
+     * @example
+     * // Create many TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TechnicalCostLedgerEntryCreateManyArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TechnicalCostLedgerEntries and returns the data saved in the database.
+     * @param {TechnicalCostLedgerEntryCreateManyAndReturnArgs} args - Arguments to create many TechnicalCostLedgerEntries.
+     * @example
+     * // Create many TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TechnicalCostLedgerEntries and only return the `id`
+     * const technicalCostLedgerEntryWithIdOnly = await prisma.technicalCostLedgerEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TechnicalCostLedgerEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TechnicalCostLedgerEntry.
+     * @param {TechnicalCostLedgerEntryDeleteArgs} args - Arguments to delete one TechnicalCostLedgerEntry.
+     * @example
+     * // Delete one TechnicalCostLedgerEntry
+     * const TechnicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.delete({
+     *   where: {
+     *     // ... filter to delete one TechnicalCostLedgerEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TechnicalCostLedgerEntryDeleteArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryDeleteArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TechnicalCostLedgerEntry.
+     * @param {TechnicalCostLedgerEntryUpdateArgs} args - Arguments to update one TechnicalCostLedgerEntry.
+     * @example
+     * // Update one TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TechnicalCostLedgerEntryUpdateArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryUpdateArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TechnicalCostLedgerEntries.
+     * @param {TechnicalCostLedgerEntryDeleteManyArgs} args - Arguments to filter TechnicalCostLedgerEntries to delete.
+     * @example
+     * // Delete a few TechnicalCostLedgerEntries
+     * const { count } = await prisma.technicalCostLedgerEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TechnicalCostLedgerEntryDeleteManyArgs>(args?: SelectSubset<T, TechnicalCostLedgerEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TechnicalCostLedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TechnicalCostLedgerEntryUpdateManyArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TechnicalCostLedgerEntries and returns the data updated in the database.
+     * @param {TechnicalCostLedgerEntryUpdateManyAndReturnArgs} args - Arguments to update many TechnicalCostLedgerEntries.
+     * @example
+     * // Update many TechnicalCostLedgerEntries
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TechnicalCostLedgerEntries and only return the `id`
+     * const technicalCostLedgerEntryWithIdOnly = await prisma.technicalCostLedgerEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TechnicalCostLedgerEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TechnicalCostLedgerEntry.
+     * @param {TechnicalCostLedgerEntryUpsertArgs} args - Arguments to update or create a TechnicalCostLedgerEntry.
+     * @example
+     * // Update or create a TechnicalCostLedgerEntry
+     * const technicalCostLedgerEntry = await prisma.technicalCostLedgerEntry.upsert({
+     *   create: {
+     *     // ... data to create a TechnicalCostLedgerEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TechnicalCostLedgerEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TechnicalCostLedgerEntryUpsertArgs>(args: SelectSubset<T, TechnicalCostLedgerEntryUpsertArgs<ExtArgs>>): Prisma__TechnicalCostLedgerEntryClient<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TechnicalCostLedgerEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryCountArgs} args - Arguments to filter TechnicalCostLedgerEntries to count.
+     * @example
+     * // Count the number of TechnicalCostLedgerEntries
+     * const count = await prisma.technicalCostLedgerEntry.count({
+     *   where: {
+     *     // ... the filter for the TechnicalCostLedgerEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends TechnicalCostLedgerEntryCountArgs>(
+      args?: Subset<T, TechnicalCostLedgerEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TechnicalCostLedgerEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TechnicalCostLedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TechnicalCostLedgerEntryAggregateArgs>(args: Subset<T, TechnicalCostLedgerEntryAggregateArgs>): Prisma.PrismaPromise<GetTechnicalCostLedgerEntryAggregateType<T>>
+
+    /**
+     * Group by TechnicalCostLedgerEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TechnicalCostLedgerEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TechnicalCostLedgerEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TechnicalCostLedgerEntryGroupByArgs['orderBy'] }
+        : { orderBy?: TechnicalCostLedgerEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TechnicalCostLedgerEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTechnicalCostLedgerEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TechnicalCostLedgerEntry model
+   */
+  readonly fields: TechnicalCostLedgerEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TechnicalCostLedgerEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TechnicalCostLedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TechnicalCostLedgerEntry model
+   */
+  interface TechnicalCostLedgerEntryFieldRefs {
+    readonly id: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly organizationId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly runId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly providerId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly modelId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly amount: FieldRef<"TechnicalCostLedgerEntry", 'Float'>
+    readonly currency: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly unit: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly metadata: FieldRef<"TechnicalCostLedgerEntry", 'Json'>
+    readonly createdAt: FieldRef<"TechnicalCostLedgerEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TechnicalCostLedgerEntry findUnique
+   */
+  export type TechnicalCostLedgerEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which TechnicalCostLedgerEntry to fetch.
+     */
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * TechnicalCostLedgerEntry findUniqueOrThrow
+   */
+  export type TechnicalCostLedgerEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which TechnicalCostLedgerEntry to fetch.
+     */
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * TechnicalCostLedgerEntry findFirst
+   */
+  export type TechnicalCostLedgerEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which TechnicalCostLedgerEntry to fetch.
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TechnicalCostLedgerEntries to fetch.
+     */
+    orderBy?: TechnicalCostLedgerEntryOrderByWithRelationInput | TechnicalCostLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TechnicalCostLedgerEntries.
+     */
+    cursor?: TechnicalCostLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TechnicalCostLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TechnicalCostLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TechnicalCostLedgerEntries.
+     */
+    distinct?: TechnicalCostLedgerEntryScalarFieldEnum | TechnicalCostLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TechnicalCostLedgerEntry findFirstOrThrow
+   */
+  export type TechnicalCostLedgerEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which TechnicalCostLedgerEntry to fetch.
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TechnicalCostLedgerEntries to fetch.
+     */
+    orderBy?: TechnicalCostLedgerEntryOrderByWithRelationInput | TechnicalCostLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TechnicalCostLedgerEntries.
+     */
+    cursor?: TechnicalCostLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TechnicalCostLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TechnicalCostLedgerEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TechnicalCostLedgerEntries.
+     */
+    distinct?: TechnicalCostLedgerEntryScalarFieldEnum | TechnicalCostLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TechnicalCostLedgerEntry findMany
+   */
+  export type TechnicalCostLedgerEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which TechnicalCostLedgerEntries to fetch.
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TechnicalCostLedgerEntries to fetch.
+     */
+    orderBy?: TechnicalCostLedgerEntryOrderByWithRelationInput | TechnicalCostLedgerEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TechnicalCostLedgerEntries.
+     */
+    cursor?: TechnicalCostLedgerEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TechnicalCostLedgerEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TechnicalCostLedgerEntries.
+     */
+    skip?: number
+    distinct?: TechnicalCostLedgerEntryScalarFieldEnum | TechnicalCostLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TechnicalCostLedgerEntry create
+   */
+  export type TechnicalCostLedgerEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to create a TechnicalCostLedgerEntry.
+     */
+    data: XOR<TechnicalCostLedgerEntryCreateInput, TechnicalCostLedgerEntryUncheckedCreateInput>
+  }
+
+  /**
+   * TechnicalCostLedgerEntry createMany
+   */
+  export type TechnicalCostLedgerEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TechnicalCostLedgerEntries.
+     */
+    data: TechnicalCostLedgerEntryCreateManyInput | TechnicalCostLedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TechnicalCostLedgerEntry createManyAndReturn
+   */
+  export type TechnicalCostLedgerEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many TechnicalCostLedgerEntries.
+     */
+    data: TechnicalCostLedgerEntryCreateManyInput | TechnicalCostLedgerEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TechnicalCostLedgerEntry update
+   */
+  export type TechnicalCostLedgerEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to update a TechnicalCostLedgerEntry.
+     */
+    data: XOR<TechnicalCostLedgerEntryUpdateInput, TechnicalCostLedgerEntryUncheckedUpdateInput>
+    /**
+     * Choose, which TechnicalCostLedgerEntry to update.
+     */
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * TechnicalCostLedgerEntry updateMany
+   */
+  export type TechnicalCostLedgerEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TechnicalCostLedgerEntries.
+     */
+    data: XOR<TechnicalCostLedgerEntryUpdateManyMutationInput, TechnicalCostLedgerEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which TechnicalCostLedgerEntries to update
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * Limit how many TechnicalCostLedgerEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TechnicalCostLedgerEntry updateManyAndReturn
+   */
+  export type TechnicalCostLedgerEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update TechnicalCostLedgerEntries.
+     */
+    data: XOR<TechnicalCostLedgerEntryUpdateManyMutationInput, TechnicalCostLedgerEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which TechnicalCostLedgerEntries to update
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * Limit how many TechnicalCostLedgerEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TechnicalCostLedgerEntry upsert
+   */
+  export type TechnicalCostLedgerEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * The filter to search for the TechnicalCostLedgerEntry to update in case it exists.
+     */
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+    /**
+     * In case the TechnicalCostLedgerEntry found by the `where` argument doesn't exist, create a new TechnicalCostLedgerEntry with this data.
+     */
+    create: XOR<TechnicalCostLedgerEntryCreateInput, TechnicalCostLedgerEntryUncheckedCreateInput>
+    /**
+     * In case the TechnicalCostLedgerEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TechnicalCostLedgerEntryUpdateInput, TechnicalCostLedgerEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * TechnicalCostLedgerEntry delete
+   */
+  export type TechnicalCostLedgerEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Filter which TechnicalCostLedgerEntry to delete.
+     */
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+  }
+
+  /**
+   * TechnicalCostLedgerEntry deleteMany
+   */
+  export type TechnicalCostLedgerEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TechnicalCostLedgerEntries to delete
+     */
+    where?: TechnicalCostLedgerEntryWhereInput
+    /**
+     * Limit how many TechnicalCostLedgerEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TechnicalCostLedgerEntry without action
+   */
+  export type TechnicalCostLedgerEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -41114,6 +43467,37 @@ export namespace Prisma {
   };
 
   export type AgentRunStepScalarFieldEnum = (typeof AgentRunStepScalarFieldEnum)[keyof typeof AgentRunStepScalarFieldEnum]
+
+
+  export const CreditLedgerEntryScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    runId: 'runId',
+    entryType: 'entryType',
+    amount: 'amount',
+    balanceAfter: 'balanceAfter',
+    metadata: 'metadata',
+    createdByUserId: 'createdByUserId',
+    createdAt: 'createdAt'
+  };
+
+  export type CreditLedgerEntryScalarFieldEnum = (typeof CreditLedgerEntryScalarFieldEnum)[keyof typeof CreditLedgerEntryScalarFieldEnum]
+
+
+  export const TechnicalCostLedgerEntryScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    runId: 'runId',
+    providerId: 'providerId',
+    modelId: 'modelId',
+    amount: 'amount',
+    currency: 'currency',
+    unit: 'unit',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+  };
+
+  export type TechnicalCostLedgerEntryScalarFieldEnum = (typeof TechnicalCostLedgerEntryScalarFieldEnum)[keyof typeof TechnicalCostLedgerEntryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -43852,6 +46236,159 @@ export namespace Prisma {
     startedAt?: DateTimeNullableWithAggregatesFilter<"AgentRunStep"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"AgentRunStep"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AgentRunStep"> | Date | string
+  }
+
+  export type CreditLedgerEntryWhereInput = {
+    AND?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
+    OR?: CreditLedgerEntryWhereInput[]
+    NOT?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
+    id?: StringFilter<"CreditLedgerEntry"> | string
+    organizationId?: StringFilter<"CreditLedgerEntry"> | string
+    runId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    entryType?: StringFilter<"CreditLedgerEntry"> | string
+    amount?: IntFilter<"CreditLedgerEntry"> | number
+    balanceAfter?: IntFilter<"CreditLedgerEntry"> | number
+    metadata?: JsonFilter<"CreditLedgerEntry">
+    createdByUserId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    createdAt?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
+  }
+
+  export type CreditLedgerEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrderInput | SortOrder
+    entryType?: SortOrder
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+    metadata?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CreditLedgerEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
+    OR?: CreditLedgerEntryWhereInput[]
+    NOT?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
+    organizationId?: StringFilter<"CreditLedgerEntry"> | string
+    runId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    entryType?: StringFilter<"CreditLedgerEntry"> | string
+    amount?: IntFilter<"CreditLedgerEntry"> | number
+    balanceAfter?: IntFilter<"CreditLedgerEntry"> | number
+    metadata?: JsonFilter<"CreditLedgerEntry">
+    createdByUserId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    createdAt?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
+  }, "id">
+
+  export type CreditLedgerEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrderInput | SortOrder
+    entryType?: SortOrder
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+    metadata?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CreditLedgerEntryCountOrderByAggregateInput
+    _avg?: CreditLedgerEntryAvgOrderByAggregateInput
+    _max?: CreditLedgerEntryMaxOrderByAggregateInput
+    _min?: CreditLedgerEntryMinOrderByAggregateInput
+    _sum?: CreditLedgerEntrySumOrderByAggregateInput
+  }
+
+  export type CreditLedgerEntryScalarWhereWithAggregatesInput = {
+    AND?: CreditLedgerEntryScalarWhereWithAggregatesInput | CreditLedgerEntryScalarWhereWithAggregatesInput[]
+    OR?: CreditLedgerEntryScalarWhereWithAggregatesInput[]
+    NOT?: CreditLedgerEntryScalarWhereWithAggregatesInput | CreditLedgerEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
+    organizationId?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
+    runId?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
+    entryType?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
+    amount?: IntWithAggregatesFilter<"CreditLedgerEntry"> | number
+    balanceAfter?: IntWithAggregatesFilter<"CreditLedgerEntry"> | number
+    metadata?: JsonWithAggregatesFilter<"CreditLedgerEntry">
+    createdByUserId?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CreditLedgerEntry"> | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryWhereInput = {
+    AND?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
+    OR?: TechnicalCostLedgerEntryWhereInput[]
+    NOT?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
+    id?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    organizationId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    runId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    providerId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    modelId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    amount?: FloatFilter<"TechnicalCostLedgerEntry"> | number
+    currency?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    unit?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    metadata?: JsonFilter<"TechnicalCostLedgerEntry">
+    createdAt?: DateTimeFilter<"TechnicalCostLedgerEntry"> | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
+    runId?: SortOrderInput | SortOrder
+    providerId?: SortOrderInput | SortOrder
+    modelId?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    unit?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
+    OR?: TechnicalCostLedgerEntryWhereInput[]
+    NOT?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
+    organizationId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    runId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    providerId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    modelId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    amount?: FloatFilter<"TechnicalCostLedgerEntry"> | number
+    currency?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    unit?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    metadata?: JsonFilter<"TechnicalCostLedgerEntry">
+    createdAt?: DateTimeFilter<"TechnicalCostLedgerEntry"> | Date | string
+  }, "id">
+
+  export type TechnicalCostLedgerEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrderInput | SortOrder
+    runId?: SortOrderInput | SortOrder
+    providerId?: SortOrderInput | SortOrder
+    modelId?: SortOrderInput | SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    unit?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    _count?: TechnicalCostLedgerEntryCountOrderByAggregateInput
+    _avg?: TechnicalCostLedgerEntryAvgOrderByAggregateInput
+    _max?: TechnicalCostLedgerEntryMaxOrderByAggregateInput
+    _min?: TechnicalCostLedgerEntryMinOrderByAggregateInput
+    _sum?: TechnicalCostLedgerEntrySumOrderByAggregateInput
+  }
+
+  export type TechnicalCostLedgerEntryScalarWhereWithAggregatesInput = {
+    AND?: TechnicalCostLedgerEntryScalarWhereWithAggregatesInput | TechnicalCostLedgerEntryScalarWhereWithAggregatesInput[]
+    OR?: TechnicalCostLedgerEntryScalarWhereWithAggregatesInput[]
+    NOT?: TechnicalCostLedgerEntryScalarWhereWithAggregatesInput | TechnicalCostLedgerEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string
+    organizationId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
+    runId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
+    providerId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
+    modelId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
+    amount?: FloatWithAggregatesFilter<"TechnicalCostLedgerEntry"> | number
+    currency?: StringWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string
+    unit?: StringWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string
+    metadata?: JsonWithAggregatesFilter<"TechnicalCostLedgerEntry">
+    createdAt?: DateTimeWithAggregatesFilter<"TechnicalCostLedgerEntry"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -46773,6 +49310,181 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CreditLedgerEntryCreateInput = {
+    id?: string
+    organizationId: string
+    runId?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    runId?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryCreateManyInput = {
+    id?: string
+    organizationId: string
+    runId?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryCreateInput = {
+    id?: string
+    organizationId?: string | null
+    runId?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedCreateInput = {
+    id?: string
+    organizationId?: string | null
+    runId?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryCreateManyInput = {
+    id?: string
+    organizationId?: string | null
+    runId?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -48633,6 +51345,122 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type CreditLedgerEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    entryType?: SortOrder
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+    metadata?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CreditLedgerEntryAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+  }
+
+  export type CreditLedgerEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    entryType?: SortOrder
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CreditLedgerEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    entryType?: SortOrder
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CreditLedgerEntrySumOrderByAggregateInput = {
+    amount?: SortOrder
+    balanceAfter?: SortOrder
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type TechnicalCostLedgerEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    unit?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntryAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    unit?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    runId?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    unit?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntrySumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -50254,6 +53082,14 @@ export namespace Prisma {
     update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutStepsInput, AgentRunUpdateWithoutStepsInput>, AgentRunUncheckedUpdateWithoutStepsInput>
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -50499,6 +53335,22 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type AccountCreateWithoutUserInput = {

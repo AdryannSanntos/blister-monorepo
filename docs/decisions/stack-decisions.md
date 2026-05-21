@@ -30,6 +30,13 @@
 - `axios` é o cliente HTTP padrão
 - `lucide-react` é a biblioteca de ícones
 - `next-themes` usa light default com dark disponível
+- `@xyflow/react` está aprovado para o builder visual de agentes
+
+### Decisão: canvas especializado para agent builder
+
+- motivo: o builder visual de agentes precisa de handles, edges, pan/zoom, seleção, extensibilidade para minimap e estado de grafo real
+- restrição: toda primitive visual do canvas deve ser encapsulada e estilizada com os tokens do Workana AI
+- risco aceito: a dependência adiciona peso de bundle, mitigado por carregamento apenas nas rotas do builder
 
 ## Backend
 

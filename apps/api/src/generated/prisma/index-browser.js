@@ -526,6 +526,31 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  runId: 'runId',
+  entryType: 'entryType',
+  amount: 'amount',
+  balanceAfter: 'balanceAfter',
+  metadata: 'metadata',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  runId: 'runId',
+  providerId: 'providerId',
+  modelId: 'modelId',
+  amount: 'amount',
+  currency: 'currency',
+  unit: 'unit',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -589,7 +614,9 @@ exports.Prisma.ModelName = {
   CompanyAgent: 'CompanyAgent',
   AgentVersion: 'AgentVersion',
   AgentRun: 'AgentRun',
-  AgentRunStep: 'AgentRunStep'
+  AgentRunStep: 'AgentRunStep',
+  CreditLedgerEntry: 'CreditLedgerEntry',
+  TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry'
 };
 
 /**

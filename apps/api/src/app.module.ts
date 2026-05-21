@@ -10,6 +10,7 @@ import { AuditModule } from './audit/audit.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { AssetsModule } from './assets/assets.module';
+import { CreditsModule } from './credits/credits.module';
 import { ContextModule } from './context/context.module';
 import { DesignSystemModule } from './design-system/design-system.module';
 import { EmailModule } from './email';
@@ -28,6 +29,7 @@ import { PrismaModule } from './prisma/prisma.module';
     OrganizationModule,
     OnboardingModule,
     AssetsModule,
+    CreditsModule,
     ContextModule,
     DesignSystemModule,
     PlatformModule,
