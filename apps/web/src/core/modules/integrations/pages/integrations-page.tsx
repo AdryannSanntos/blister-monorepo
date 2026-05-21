@@ -16,6 +16,7 @@ import { Badge } from 'src/core/shared/components/ui/badge';
 import { Button } from 'src/core/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from 'src/core/shared/components/ui/card';
 import { DataTable } from 'src/core/shared/components/ui/data-table';
+import { PageLayout } from 'src/core/shared/components/ui/page-layout';
 
 type ConnectorCard = {
   id: string;
@@ -138,21 +139,11 @@ export function IntegrationsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-          Workspace
-        </p>
-        <h1 className="mt-1 text-[28px] font-medium tracking-[-0.02em] text-[var(--fg-primary)]">
-          Integrações
-        </h1>
-        <p className="mt-2 max-w-3xl text-[14px] text-[var(--fg-tertiary)]">
-          Estruture fontes de contexto e canais de publicação com a mesma governança do restante do
-          workspace. Nesta fase, a experiência já está pronta para crescer, mesmo sem conexões reais
-          ainda.
-        </p>
-      </div>
-
+    <PageLayout
+      eyebrow="Workspace"
+      title="Integrações"
+      description="Estruture fontes de contexto e canais de publicação com a mesma governança do restante do workspace. Nesta fase, a experiência já está pronta para crescer, mesmo sem conexões reais ainda."
+    >
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader className="p-6">
@@ -266,6 +257,6 @@ export function IntegrationsPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }

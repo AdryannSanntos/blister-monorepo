@@ -8,13 +8,23 @@ import {
   FormLabel,
   FormMessage,
 } from "src/core/shared/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "src/core/shared/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "src/core/shared/components/ui/radio-group";
 import { Textarea } from "src/core/shared/components/ui/textarea";
 import { cn } from "src/core/shared/utils";
-import type { OnboardingFormValues } from "../onboarding-form-schema";
+import {
+  type OnboardingFormValues,
+  onboardingTextareaMaxLengths,
+} from "../onboarding-form-schema";
+import { TextareaFieldHint } from "../textarea-field-hint";
 
 const PRICING_OPTIONS = [
-  { value: "Assinatura (SaaS)", description: "Cobrança mensal ou anual recorrente" },
+  {
+    value: "Assinatura (SaaS)",
+    description: "Cobrança mensal ou anual recorrente",
+  },
   { value: "One-time", description: "Pagamento único por produto ou projeto" },
   { value: "Freemium", description: "Plano grátis com upgrades pagos" },
   { value: "Sob demanda", description: "Cobrança por uso ou por hora" },
@@ -28,7 +38,9 @@ export function ProductsServicesStep({ form }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Produtos e serviços</h3>
+        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">
+          Produtos e serviços
+        </h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
           Descreva o que você vende e como cobra por isso.
         </p>
@@ -43,10 +55,15 @@ export function ProductsServicesStep({ form }: Props) {
               <FormControl>
                 <Textarea
                   placeholder="Liste os principais produtos ou serviços que sua empresa oferece."
+                  maxLength={onboardingTextareaMaxLengths.products}
                   rows={4}
                   {...field}
                 />
               </FormControl>
+              <TextareaFieldHint
+                currentLength={field.value.length}
+                maxLength={onboardingTextareaMaxLengths.products}
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -66,6 +83,7 @@ export function ProductsServicesStep({ form }: Props) {
                   {PRICING_OPTIONS.map((option) => (
                     <label
                       key={option.value}
+                      htmlFor={`pricing-${option.value}`}
                       className={cn(
                         "flex cursor-pointer flex-col gap-1 rounded-[var(--r-md)] border p-3 transition-colors",
                         field.value === option.value
@@ -74,11 +92,19 @@ export function ProductsServicesStep({ form }: Props) {
                       )}
                     >
                       <div className="flex items-center gap-2">
-                        <RadioGroupItem value={option.value} className="shrink-0" />
-                        <span className={cn(
-                          "text-[12.5px] font-medium",
-                          field.value === option.value ? "text-[var(--accent)]" : "text-[var(--fg-primary)]",
-                        )}>
+                        <RadioGroupItem
+                          id={`pricing-${option.value}`}
+                          value={option.value}
+                          className="shrink-0"
+                        />
+                        <span
+                          className={cn(
+                            "text-[12.5px] font-medium",
+                            field.value === option.value
+                              ? "text-[var(--accent)]"
+                              : "text-[var(--fg-primary)]",
+                          )}
+                        >
                           {option.value}
                         </span>
                       </div>

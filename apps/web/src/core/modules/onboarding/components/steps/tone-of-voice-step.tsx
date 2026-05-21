@@ -9,9 +9,16 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { TagInput } from "src/core/shared/components/ui/tag-input";
-import { ToggleGroup, ToggleGroupItem } from "src/core/shared/components/ui/toggle-group";
 import { Textarea } from "src/core/shared/components/ui/textarea";
-import type { OnboardingFormValues } from "../onboarding-form-schema";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "src/core/shared/components/ui/toggle-group";
+import {
+  type OnboardingFormValues,
+  onboardingTextareaMaxLengths,
+} from "../onboarding-form-schema";
+import { TextareaFieldHint } from "../textarea-field-hint";
 
 const TONE_OPTIONS = [
   { value: "Profissional", emoji: "💼" },
@@ -28,7 +35,9 @@ export function ToneOfVoiceStep({ form }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Tom de voz e comunicação</h3>
+        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">
+          Tom de voz e comunicação
+        </h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
           Como sua marca fala com o mundo. Isso guia toda a geração de conteúdo.
         </p>
@@ -44,7 +53,9 @@ export function ToneOfVoiceStep({ form }: Props) {
                 <ToggleGroup
                   type="single"
                   value={field.value}
-                  onValueChange={(val) => { if (val) field.onChange(val); }}
+                  onValueChange={(val) => {
+                    if (val) field.onChange(val);
+                  }}
                   className="flex flex-wrap gap-2"
                 >
                   {TONE_OPTIONS.map((option) => (
@@ -72,10 +83,15 @@ export function ToneOfVoiceStep({ form }: Props) {
               <FormControl>
                 <Textarea
                   placeholder="Como a empresa se comunica com clientes e parceiros? Seja específico."
+                  maxLength={onboardingTextareaMaxLengths.communicationStyle}
                   rows={3}
                   {...field}
                 />
               </FormControl>
+              <TextareaFieldHint
+                currentLength={field.value.length}
+                maxLength={onboardingTextareaMaxLengths.communicationStyle}
+              />
               <FormMessage />
             </FormItem>
           )}

@@ -80,7 +80,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     <FormItemContext.Provider value={{ id }}>
       <div
         data-slot="form-item"
-        className={cn("relative flex flex-col gap-[4px] pb-2", className)}
+        className={cn("flex flex-col gap-1", className)}
         {...props}
       />
     </FormItemContext.Provider>
@@ -100,7 +100,7 @@ function FormLabel({
       data-slot="form-label"
       data-error={!!error}
       className={cn(
-        "text-[12px] font-medium leading-[1.3] text-[var(--fg-secondary)] data-[error=true]:text-[var(--danger)]",
+        "min-h-[20px] text-[12px] font-medium leading-[1.3] text-[var(--fg-secondary)] data-[error=true]:text-[var(--danger)]",
         className,
       )}
       htmlFor={formItemId}
@@ -147,26 +147,27 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+function FormMessage({ className, children, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? "") : props.children;
-
-  if (!body) {
-    return null;
-  }
+  const body = error ? String(error?.message ?? "") : children;
 
   return (
     <p
       data-slot="form-message"
       id={formMessageId}
       className={cn(
-        "absolute bottom-[-10px] left-0 inline-flex items-center gap-1 text-[11.5px] leading-none text-[var(--danger)]",
+        "flex h-[14px] items-center gap-1 text-[11.5px] leading-none text-[var(--danger)]",
+        !body && "invisible pointer-events-none",
         className,
       )}
       {...props}
     >
-      <AlertTriangle className="mt-[1px] size-3 shrink-0" />
-      {body}
+      {body ? (
+        <>
+          <AlertTriangle className="size-3 shrink-0" />
+          {body}
+        </>
+      ) : null}
     </p>
   );
 }

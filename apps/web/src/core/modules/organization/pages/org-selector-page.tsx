@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "src/core/shared/components/ui/card";
+import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { Separator } from "src/core/shared/components/ui/separator";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { useActiveOrganization } from "../hooks/use-active-organization";
@@ -93,24 +94,35 @@ export function OrgSelectorPage() {
             })}
           </ul>
         ) : (
-          <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <p className="text-[14px] font-medium text-[var(--fg-primary)]">
-              Nenhum workspace encontrado
-            </p>
-            <p className="text-[13px] text-[var(--fg-tertiary)]">
-              Crie seu primeiro workspace para começar.
-            </p>
-          </div>
+          <EmptyState
+            icon={Building2}
+            title="Nenhum workspace encontrado"
+            description="O workspace organiza equipe, permissões, assets e contexto operacional da empresa. Crie o primeiro para começar."
+            action={
+              <Button asChild>
+                <Link href="/workspace/create">
+                  <Plus className="size-4" />
+                  Criar workspace
+                </Link>
+              </Button>
+            }
+            compact
+            className="py-12"
+          />
         )}
 
-        <Separator />
+        {organizations && organizations.length > 0 ? (
+          <>
+            <Separator />
 
-        <Button variant="outline" className="w-full" asChild>
-          <Link href="/workspace/create">
-            <Plus className="size-4" />
-            Criar novo workspace
-          </Link>
-        </Button>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/workspace/create">
+                <Plus className="size-4" />
+                Criar novo workspace
+              </Link>
+            </Button>
+          </>
+        ) : null}
       </CardContent>
     </Card>
   );

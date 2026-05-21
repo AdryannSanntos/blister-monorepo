@@ -52,7 +52,7 @@ export function TagInput({
   return (
     <div
       className={cn(
-        "flex min-h-[34px] flex-wrap gap-1.5 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-2 py-1.5 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] focus-within:border-[var(--accent)] focus-within:bg-[var(--bg-base)] focus-within:ring-[3px] focus-within:ring-[var(--accent-soft)]",
+        "flex min-h-9 flex-wrap gap-1.5 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-2 py-1.5 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] focus-within:border-[var(--accent)] focus-within:bg-[var(--bg-base)] focus-within:ring-[3px] focus-within:ring-[var(--accent-soft)]",
         className,
       )}
     >

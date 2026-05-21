@@ -14,6 +14,7 @@ import {
   MoreHorizontal,
   UserCheck,
   UserPlus,
+  Users,
   UserX,
 } from "lucide-react";
 import { useState } from "react";
@@ -74,6 +75,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
+import { TableEmptyState } from "src/core/shared/components/ui/empty-state";
 import {
   Popover,
   PopoverContent,
@@ -93,7 +95,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "src/core/shared/components/ui/tabs";
+import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { authClient } from "src/core/shared/utils/auth-client";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 
 function getInitials(name: string | null | undefined, email: string): string {
   if (name) {
@@ -147,9 +151,15 @@ type MembersTableProps = {
   members: OrganizationMember[];
   orgId: string;
   roles: { id: string; name: string }[];
+  onInviteMember: () => void;
 };
 
-function MembersTable({ members, orgId, roles }: MembersTableProps) {
+function MembersTable({
+  members,
+  orgId,
+  roles,
+  onInviteMember,
+}: MembersTableProps) {
   const removeMember = useRemoveMember(orgId);
   const updateRoles = useUpdateMemberRoles(orgId);
   const deactivate = useDeactivateMember(orgId);
@@ -350,14 +360,20 @@ function MembersTable({ members, orgId, roles }: MembersTableProps) {
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-[var(--fg-tertiary)]"
-                >
-                  Nenhum membro encontrado.
-                </TableCell>
-              </TableRow>
+              <TableEmptyState
+                colSpan={columns.length}
+                icon={Users}
+                title="Nenhum membro encontrado"
+                description="Os membros formam a equipe ativa do workspace e concentram acesso, contexto e execução operacional. Convide a primeira pessoa para começar a colaborar."
+                action={
+                  <PermissionGate permission="member.invite">
+                    <Button onClick={onInviteMember}>
+                      <UserPlus className="size-4" />
+                      Convidar membro
+                    </Button>
+                  </PermissionGate>
+                }
+              />
             )}
           </TableBody>
         </Table>
@@ -563,9 +579,15 @@ type InvitesTableProps = {
   invitations: Invitation[];
   orgId: string;
   roles: { id: string; name: string }[];
+  onInviteMember: () => void;
 };
 
-function InvitesTable({ invitations, orgId, roles }: InvitesTableProps) {
+function InvitesTable({
+  invitations,
+  orgId,
+  roles,
+  onInviteMember,
+}: InvitesTableProps) {
   const cancelInvitation = useCancelInvitation(orgId);
 
   function getRoleName(roleId: string | null): string {
@@ -622,14 +644,20 @@ function InvitesTable({ invitations, orgId, roles }: InvitesTableProps) {
               </TableRow>
             ))
           ) : (
-            <TableRow>
-              <TableCell
-                colSpan={5}
-                className="h-24 text-center text-[var(--fg-tertiary)]"
-              >
-                Nenhum convite enviado.
-              </TableCell>
-            </TableRow>
+            <TableEmptyState
+              colSpan={5}
+              icon={UserPlus}
+              title="Nenhum convite enviado"
+              description="Os convites ajudam a trazer novas pessoas para o workspace com rastreabilidade e controle de acesso desde o primeiro contato. Envie o primeiro quando quiser expandir a equipe."
+              action={
+                <PermissionGate permission="member.invite">
+                  <Button onClick={onInviteMember}>
+                    <UserPlus className="size-4" />
+                    Enviar primeiro convite
+                  </Button>
+                </PermissionGate>
+              }
+            />
           )}
         </TableBody>
       </Table>
@@ -647,6 +675,7 @@ export function TeamPage() {
     useInvitations(activeOrgId);
   const { data: roles = [] } = useOrganizationRoles(activeOrgId);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [tab, setTab] = useQueryState("tab", parseAsStringLiteral(["members", "invites"]).withDefault("members"));
 
   if (!abilityLoading && cannot("read", "Member")) {
     return (
@@ -661,25 +690,20 @@ export function TeamPage() {
   const inviterId = session?.user?.id ?? "";
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-[var(--fg-primary)]">
-            Equipe
-          </h1>
-          <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-            Gerencie os membros e convites do seu workspace.
-          </p>
-        </div>
+    <PageLayout
+      eyebrow="Workspace"
+      title="Equipe"
+      description="Gerencie os membros e convites do workspace. Controle acesso, cargos e status de cada pessoa da equipe."
+      actions={
         <PermissionGate permission="member.invite">
           <Button onClick={() => setInviteDialogOpen(true)}>
             <UserPlus className="size-4" />
             Convidar membro
           </Button>
         </PermissionGate>
-      </div>
-
-      <Tabs defaultValue="members">
+      }
+    >
+      <Tabs value={tab} onValueChange={(v) => void setTab(v as "members" | "invites")}>
         <TabsList variant="underline">
           <TabsTrigger value="members">
             Membros{" "}
@@ -709,6 +733,7 @@ export function TeamPage() {
               members={members}
               orgId={activeOrgId ?? ""}
               roles={roles}
+              onInviteMember={() => setInviteDialogOpen(true)}
             />
           )}
         </TabsContent>
@@ -723,6 +748,7 @@ export function TeamPage() {
               invitations={invitations}
               orgId={activeOrgId ?? ""}
               roles={roles}
+              onInviteMember={() => setInviteDialogOpen(true)}
             />
           )}
         </TabsContent>
@@ -736,6 +762,6 @@ export function TeamPage() {
           inviterId={inviterId}
         />
       )}
-    </div>
+    </PageLayout>
   );
 }

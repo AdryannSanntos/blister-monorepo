@@ -34,16 +34,16 @@ function SelectTrigger({
 }) {
   return (
     <SelectPrimitive.Trigger
-      data-slot="select-trigger"
-      data-size={size}
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-3 py-0 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none whitespace-nowrap transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-[var(--fg-quaternary)] data-[size=default]:h-[34px] data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)]",
+        "flex w-full items-center justify-between gap-2 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-3 py-0 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none whitespace-nowrap transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-[var(--fg-quaternary)] data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)]",
         "focus:border-[var(--accent)] focus:bg-[var(--bg-base)] focus:ring-[3px] focus:ring-[var(--accent-soft)]",
         "aria-invalid:border-[var(--danger)]",
         "aria-invalid:focus:ring-[3px] aria-invalid:focus:ring-[var(--danger-soft)]",
         className,
       )}
       {...props}
+      data-slot="select-trigger"
+      data-size={size}
     >
       {children}
       <SelectPrimitive.Icon asChild>

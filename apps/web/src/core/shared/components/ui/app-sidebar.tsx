@@ -3,29 +3,28 @@
 import type { AppPermissionKey } from "@company-os/authz";
 import { permissionMap } from "@company-os/authz";
 import {
-  Bell,
+  ArrowLeftRight,
+  Bot,
   Brain,
   ChevronRight,
   ChevronsUpDown,
   Coins,
-  FileText,
-  FolderOpen,
+  FileCode2,
+  History,
   Home,
   Image,
   KeyRound,
-  LayoutTemplate,
   Library,
   type LucideIcon,
-  Megaphone,
+  Mail,
   PanelLeftClose,
   PanelLeftOpen,
+  PenLine,
   PlugZap,
   Settings,
+  Share2,
   Shield,
-  Sparkles,
   Users,
-  Workflow,
-  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -63,6 +62,8 @@ type Item = {
   label: string;
   icon: LucideIcon;
   badge?: { value: string; tone?: "accent" | "warning" | "neutral" };
+  beta?: boolean;
+  soon?: boolean;
   dot?: boolean;
   active?: boolean;
   href?: string;
@@ -73,48 +74,71 @@ type Item = {
 
 type Group = {
   label?: string;
+  /** Quando false, o label é estático (sem chevron, sem colapsar). Default: true quando há label. */
+  collapsible?: boolean;
   items: Item[];
 };
+
+const SIDEBAR_OPEN_KEY = "workana-ai:sidebar-open";
+const SIDEBAR_GROUPS_KEY = "workana-ai:sidebar-groups-state";
+
+function readStorage<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw !== null ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStorage(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {}
+}
 
 const defaultGroups: Group[] = [
   {
     items: [{ label: "Dashboard", icon: Home, href: "/dashboard" }],
   },
   {
-    label: "Inteligência operacional",
+    label: "Agentes",
+    collapsible: false,
+    items: [
+      { label: "Meus agentes", icon: Bot },
+      { label: "Gerar copy", icon: PenLine },
+      { label: "Gerar imagem", icon: Image },
+      { label: "Criar post", icon: Share2 },
+      { label: "Adaptar conteúdo", icon: ArrowLeftRight },
+      { label: "Criar email", icon: Mail },
+      { label: "Histórico", icon: History },
+      { label: "Créditos", icon: Coins },
+    ],
+  },
+  {
+    label: "Empresa",
+    collapsible: false,
     items: [
       { label: "Brain", icon: Brain, href: "/onboarding" },
-      { label: "Agentes", icon: Shield },
-      { label: "Créditos", icon: Coins },
-      { label: "Fontes do brain", icon: Library },
-    ],
-  },
-  {
-    label: "Execução",
-    items: [
-      { label: "Histórico de execuções", icon: Sparkles },
-      { label: "Templates de briefing", icon: Image },
-      { label: "Demandas", icon: FileText },
-      { label: "Relatórios", icon: Megaphone },
-    ],
-  },
-  {
-    label: "Automações",
-    items: [
-      { label: "Workflows", icon: Zap },
-      { label: "Execuções", icon: Workflow },
-      { label: "Agenda operacional", icon: Bell },
-      { label: "Alertas", icon: Bell },
+      { label: "Contexto", icon: Library, href: "/dashboard/workspace/context", permission: "context.read" },
+      {
+        label: "Design System",
+        icon: FileCode2,
+        href: "/dashboard/workspace/design-system",
+        permission: "design-system.read",
+      },
+      { label: "Integrações", icon: PlugZap, href: "/dashboard/workspace/integrations" },
     ],
   },
   {
     label: "Workspace",
+    collapsible: false,
     items: [
-      { label: "Equipe", icon: Users },
-      { label: "Permissões", icon: KeyRound },
-      { label: "Integrações", icon: PlugZap },
-      { label: "Brain assets", icon: FolderOpen },
-      { label: "Configurações", icon: Settings },
+      { label: "Equipe", icon: Users, href: "/dashboard/workspace/team" },
+      { label: "Permissões", icon: KeyRound, href: "/dashboard/workspace/permissions" },
+      { label: "Configurações", icon: Settings, href: "/dashboard/workspace/settings" },
+      { label: "Admin", icon: Shield },
     ],
   },
 ];
@@ -200,36 +224,15 @@ function AppSidebar({
   );
 
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
-    () =>
-      Object.fromEntries(
-        labeledGroups.flatMap((group) => {
-          if (!group.label) return [];
-
-          return [
-            [
-              group.label,
-              group.items.some((item) => isItemActive(item, pathname)),
-            ],
-          ];
-        }),
-      ),
+    () => readStorage<Record<string, boolean>>(SIDEBAR_GROUPS_KEY, {}),
   );
 
-  React.useEffect(() => {
+  function toggleGroup(label: string) {
     setOpenGroups((prev) => {
-      const next = { ...prev };
-      for (const group of groups) {
-        if (!group.label) continue;
-        if (group.items.some((item) => isItemActive(item, pathname))) {
-          next[group.label] = true;
-        }
-      }
+      const next = { ...prev, [label]: !prev[label] };
+      writeStorage(SIDEBAR_GROUPS_KEY, next);
       return next;
     });
-  }, [groups, isItemActive, pathname]);
-
-  function toggleGroup(label: string) {
-    setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
   }
 
   const workspaceNode =
@@ -327,27 +330,34 @@ function AppSidebar({
           {filteredGroups.map((group, groupIndex) => {
             const label = group.label;
             const isLabeledGroup = Boolean(label);
-            const isGroupOpen = label ? (openGroups[label] ?? false) : true;
+            const isCollapsible = group.collapsible !== false && isLabeledGroup;
+            const isGroupOpen = isCollapsible ? (label ? (openGroups[label] ?? true) : true) : true;
 
             return (
               <Collapsible
                 key={label ?? `group-${groupIndex}`}
                 open={collapsed || !isLabeledGroup || isGroupOpen}
-                onOpenChange={label ? () => toggleGroup(label) : undefined}
+                onOpenChange={isCollapsible && label ? () => toggleGroup(label) : undefined}
               >
                 <SidebarGroup className="gap-0 p-0">
                   {!collapsed && isLabeledGroup ? (
-                    <CollapsibleTrigger asChild>
-                      <SidebarGroupLabel className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]">
+                    isCollapsible ? (
+                      <CollapsibleTrigger asChild>
+                        <SidebarGroupLabel className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]">
+                          {label}
+                          <ChevronRight
+                            className={cn(
+                              "size-3 shrink-0 transition-transform duration-[var(--dur-base)]",
+                              isGroupOpen && "rotate-90",
+                            )}
+                          />
+                        </SidebarGroupLabel>
+                      </CollapsibleTrigger>
+                    ) : (
+                      <SidebarGroupLabel className="px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)]">
                         {label}
-                        <ChevronRight
-                          className={cn(
-                            "size-3 shrink-0 transition-transform duration-[var(--dur-base)]",
-                            isGroupOpen && "rotate-90",
-                          )}
-                        />
                       </SidebarGroupLabel>
-                    </CollapsibleTrigger>
+                    )
                   ) : null}
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <SidebarGroupContent>
@@ -383,17 +393,19 @@ function AppSidebar({
                           );
                           const button = (
                             <SidebarMenuButton
-                              asChild={Boolean(item.href)}
+                              asChild={Boolean(item.href) && !item.soon}
                               isActive={isActive}
-                              onClick={item.onSelect}
+                              disabled={item.soon}
+                              onClick={!item.soon ? item.onSelect : undefined}
                               className={cn(
                                 "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
                                 "hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]",
                                 "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
+                                item.soon && "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--fg-secondary)]",
                                 collapsed && "justify-center px-0",
                               )}
                             >
-                              {item.href ? (
+                              {item.href && !item.soon ? (
                                 <Link href={item.href}>{content}</Link>
                               ) : (
                                 content
@@ -418,23 +430,30 @@ function AppSidebar({
                                   </TooltipTrigger>
                                   <TooltipContent side="right">
                                     {item.label}
+                                    {item.soon ? " · Em breve" : ""}
                                   </TooltipContent>
                                 </Tooltip>
                               ) : (
                                 button
                               )}
-                              {!collapsed && item.badge ? (
-                                <SidebarMenuBadge
-                                  className={cn(
-                                    "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
-                                    item.badge.tone === "accent"
-                                      ? "bg-[var(--accent-soft)] text-[var(--accent)]"
-                                      : item.badge.tone === "warning"
-                                        ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
-                                        : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
-                                  )}
-                                >
-                                  {item.badge.value}
+                              {!collapsed && (item.badge || item.soon) ? (
+                                <SidebarMenuBadge className="pointer-events-none">
+                                  {item.soon ? (
+                                    <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
+                                      Em breve
+                                    </span>
+                                  ) : item.badge ? (
+                                    <span className={cn(
+                                      "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
+                                      item.badge.tone === "accent"
+                                        ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                                        : item.badge.tone === "warning"
+                                          ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
+                                          : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
+                                    )}>
+                                      {item.badge.value}
+                                    </span>
+                                  ) : null}
                                 </SidebarMenuBadge>
                               ) : null}
                             </SidebarMenuItem>

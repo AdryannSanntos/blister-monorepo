@@ -17,7 +17,11 @@ import {
   SelectValue,
 } from "src/core/shared/components/ui/select";
 import { Textarea } from "src/core/shared/components/ui/textarea";
-import type { OnboardingFormValues } from "../onboarding-form-schema";
+import {
+  type OnboardingFormValues,
+  onboardingTextareaMaxLengths,
+} from "../onboarding-form-schema";
+import { TextareaFieldHint } from "../textarea-field-hint";
 
 const INDUSTRIES = [
   "Tecnologia / SaaS",
@@ -40,9 +44,12 @@ export function CompanyBasicsStep({ form }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Dados básicos da empresa</h3>
+        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">
+          Dados básicos da empresa
+        </h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Essas informações contextualizam todo o trabalho coordenado pelo Workana AI.
+          Essas informações contextualizam todo o trabalho coordenado pelo
+          Workana AI.
         </p>
       </div>
       <div className="space-y-4">
@@ -92,10 +99,16 @@ export function CompanyBasicsStep({ form }: Props) {
               <FormControl>
                 <Textarea
                   placeholder="Em poucas frases, o que sua empresa faz e qual problema resolve?"
+                  maxLength={onboardingTextareaMaxLengths.description}
                   rows={3}
                   {...field}
                 />
               </FormControl>
+              <TextareaFieldHint
+                currentLength={field.value.length}
+                maxLength={onboardingTextareaMaxLengths.description}
+                helperText="Resuma a empresa, a oferta e o problema principal que ela resolve."
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -105,7 +118,10 @@ export function CompanyBasicsStep({ form }: Props) {
           name="website"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Website <span className="text-[var(--fg-quaternary)]">(opcional)</span></FormLabel>
+              <FormLabel>
+                Website{" "}
+                <span className="text-[var(--fg-quaternary)]">(opcional)</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="https://acme.com" type="url" {...field} />
               </FormControl>

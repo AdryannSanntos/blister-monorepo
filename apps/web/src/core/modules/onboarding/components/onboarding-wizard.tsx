@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,6 +23,11 @@ import {
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
 import { Button } from "src/core/shared/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "src/core/shared/components/ui/dialog";
 import { Form } from "src/core/shared/components/ui/form";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { cn } from "src/core/shared/utils";
@@ -73,6 +79,17 @@ const STEP_DESCRIPTIONS = [
 
 const TOTAL_STEPS = STEP_KEYS.length;
 
+// Steps where skip is allowed (not welcome, not review-publish)
+const SKIPPABLE_STEP_KEYS: string[] = [
+  "company-basics",
+  "positioning",
+  "products-services",
+  "target-audience",
+  "tone-of-voice",
+  "differentials-faq",
+  "processes-rules",
+];
+
 function getErrorMessage(value: unknown): string {
   if (typeof value === "string") return value;
   if (Array.isArray(value)) return value.map(getErrorMessage).filter(Boolean).join(" ");
@@ -84,7 +101,21 @@ function getErrorMessage(value: unknown): string {
   return "";
 }
 
-export function OnboardingWizard() {
+type OnboardingWizardProps = {
+  /** 'page' = standalone full-screen, 'modal' = rendered inside a Dialog */
+  mode?: "page" | "modal";
+  /** Only used when mode='modal' */
+  open?: boolean;
+  onClose?: () => void;
+};
+
+function WizardContent({
+  mode,
+  onClose,
+}: {
+  mode: "page" | "modal";
+  onClose?: () => void;
+}) {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const { activeOrgId, isLoaded: isActiveOrgLoaded } = useActiveOrganization();
@@ -93,7 +124,17 @@ export function OnboardingWizard() {
   const saveMutation = useSaveOnboardingDraft(activeOrgId);
   const publishMutation = usePublishOnboarding(activeOrgId);
 
-  const [currentStep, setCurrentStep] = useState(0);
+  // Page mode tracks current step in URL; modal mode uses local state
+  const [urlStep, setUrlStep] = useQueryState("step", parseAsInteger.withDefault(0));
+  const [localStep, setLocalStep] = useState(0);
+  const currentStep = mode === "page" ? urlStep : localStep;
+  function setCurrentStep(step: number) {
+    if (mode === "page") {
+      void setUrlStep(step);
+    } else {
+      setLocalStep(step);
+    }
+  }
   const [initialized, setInitialized] = useState(false);
 
   const form = useForm<OnboardingFormValues>({
@@ -105,30 +146,43 @@ export function OnboardingWizard() {
   const activeOrg = organizations?.find((org) => org.id === activeOrgId);
   const isOwner = activeOrg?.roles?.some((r) => r.name === "owner") ?? false;
 
+  // Page mode only: redirect if no active org
   useEffect(() => {
-    if (isActiveOrgLoaded && !activeOrgId) router.replace("/app");
-  }, [activeOrgId, isActiveOrgLoaded, router]);
+    if (mode === "page" && isActiveOrgLoaded && !activeOrgId) {
+      router.replace("/app");
+    }
+  }, [activeOrgId, isActiveOrgLoaded, router, mode]);
 
-  // Redireciona membros não-donos direto para o dashboard
+  // Page mode only: redirect non-owners to dashboard
   useEffect(() => {
-    if (!isOrgsLoading && organizations && activeOrgId && !isOwner) {
+    if (mode === "page" && !isOrgsLoading && organizations && activeOrgId && !isOwner) {
       router.replace("/dashboard");
     }
-  }, [isOrgsLoading, organizations, activeOrgId, isOwner, router]);
+  }, [isOrgsLoading, organizations, activeOrgId, isOwner, router, mode]);
 
+  // Initialize step and form values once the draft query settles (with or without data)
   useEffect(() => {
-    if (draft && !initialized) {
+    if (isLoading) return;
+    if (initialized) return;
+    if (draft) {
       setCurrentStep(draft.currentStep);
       form.reset(getOnboardingFormValues((draft.data as Record<string, unknown>) ?? {}));
-      setInitialized(true);
     }
-  }, [draft, form, initialized]);
+    setInitialized(true);
+  }, [isLoading, draft, form, initialized]);
 
+  // When published: page mode redirects, modal mode closes
   useEffect(() => {
-    if (draft?.publishedAt) router.replace("/dashboard");
-  }, [draft?.publishedAt, router]);
+    if (!initialized) return;
+    if (!draft?.publishedAt) return;
+    if (mode === "modal") {
+      onClose?.();
+    } else {
+      router.replace("/dashboard");
+    }
+  }, [draft?.publishedAt, mode, onClose, router, initialized]);
 
-async function save(step: number) {
+  async function save(step: number) {
     try {
       await saveMutation.mutateAsync({
         currentStep: step,
@@ -140,11 +194,18 @@ async function save(step: number) {
   }
 
   async function handleNext() {
-    const stepFields = onboardingStepFields[STEP_KEYS[currentStep] as keyof typeof onboardingStepFields];
+    const stepKey = STEP_KEYS[currentStep];
+    const stepFields = onboardingStepFields[stepKey as keyof typeof onboardingStepFields];
     if (stepFields) {
       const isValid = await form.trigger([...stepFields], { shouldFocus: true });
       if (!isValid) return;
     }
+    const nextStep = currentStep + 1;
+    setCurrentStep(nextStep);
+    await save(nextStep);
+  }
+
+  async function handleSkip() {
     const nextStep = currentStep + 1;
     setCurrentStep(nextStep);
     await save(nextStep);
@@ -162,24 +223,34 @@ async function save(step: number) {
       await save(currentStep);
       await publishMutation.mutateAsync(session.user.id);
       toast.success("Brain publicado com sucesso!");
-      router.push("/dashboard");
+      if (mode === "modal") {
+        onClose?.();
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: unknown } } };
       const message = getErrorMessage(error?.response?.data?.message).toLowerCase();
       if (message.includes("owner")) {
-        toast.error("Apenas o owner pode publicar o onboarding.");
+        toast.error("Apenas o owner pode publicar o Brain.");
       } else if (message.includes("already")) {
-        toast.error("O onboarding já foi publicado.");
-        router.push("/dashboard");
+        toast.error("O Brain já foi publicado.");
+        if (mode === "modal") onClose?.();
+        else router.push("/dashboard");
       } else {
         toast.error("Erro ao publicar. Tente novamente.");
       }
     }
   }
 
-  if (isLoading || isOrgsLoading || !initialized || !isActiveOrgLoaded || !activeOrgId) {
+  const showLoading =
+    mode === "modal"
+      ? isLoading || !initialized
+      : isLoading || isOrgsLoading || !initialized || !isActiveOrgLoaded || !activeOrgId;
+
+  if (showLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex h-full min-h-[400px] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
       </div>
     );
@@ -188,17 +259,29 @@ async function save(step: number) {
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === TOTAL_STEPS - 1;
   const stepKey = STEP_KEYS[currentStep];
+  const canSkip = SKIPPABLE_STEP_KEYS.includes(stepKey);
   const reviewData = buildOnboardingDraftData(form.getValues());
 
   return (
-    <div className="flex min-h-screen bg-[var(--bg-canvas)]">
+    <div className={cn("flex", mode === "page" ? "min-h-screen bg-[var(--bg-canvas)]" : "h-full")}>
       {/* Sidebar */}
-      <aside className="hidden w-[280px] shrink-0 flex-col border-r border-[var(--line-subtle)] bg-[var(--bg-base)] lg:flex">
-        <div className="flex h-16 items-center gap-2.5 border-b border-[var(--line-subtle)] px-6">
-          <div className="flex size-7 items-center justify-center rounded-[var(--r-sm)] bg-primary text-primary-foreground text-[12px] font-semibold">
-            C
-          </div>
-          <span className="text-[13px] font-medium text-[var(--fg-primary)]">Workana AI</span>
+      <aside
+        className={cn(
+          "w-[240px] shrink-0 flex-col border-r border-[var(--line-subtle)] bg-[var(--bg-base)]",
+          mode === "page" ? "hidden lg:flex" : "hidden sm:flex",
+        )}
+      >
+        <div className="flex h-14 items-center gap-2.5 border-b border-[var(--line-subtle)] px-5">
+          {mode === "modal" ? (
+            <span className="text-[13px] font-medium text-[var(--fg-primary)]">Configurar Brain</span>
+          ) : (
+            <>
+              <div className="flex size-6 items-center justify-center rounded-[var(--r-sm)] bg-primary text-primary-foreground text-[11px] font-semibold">
+                W
+              </div>
+              <span className="text-[13px] font-medium text-[var(--fg-primary)]">Workana AI</span>
+            </>
+          )}
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -213,7 +296,7 @@ async function save(step: number) {
                 <li key={key}>
                   <div
                     className={cn(
-                      "flex items-center gap-3 rounded-[var(--r-md)] px-3 py-2.5 text-[13px] transition-colors",
+                      "flex items-center gap-3 rounded-[var(--r-md)] px-3 py-2 text-[13px] transition-colors",
                       isCurrent && "bg-[var(--accent-soft)] text-[var(--accent)]",
                       !isCurrent && isDone && "text-[var(--fg-secondary)]",
                       !isCurrent && !isDone && "text-[var(--fg-quaternary)]",
@@ -230,10 +313,10 @@ async function save(step: number) {
                       {isDone ? <Check className="size-3" /> : index + 1}
                     </span>
                     <div className="min-w-0">
-                      <p className={cn("truncate text-[12.5px]", isCurrent && "font-medium")}>
+                      <p className={cn("truncate text-[12px]", isCurrent && "font-medium")}>
                         {STEP_LABELS[index]}
                       </p>
-                      <p className="truncate text-[11px] text-[var(--fg-quaternary)]">
+                      <p className="truncate text-[10.5px] text-[var(--fg-quaternary)]">
                         {STEP_DESCRIPTIONS[index]}
                       </p>
                     </div>
@@ -244,8 +327,8 @@ async function save(step: number) {
           </ul>
         </nav>
 
-        <div className="border-t border-[var(--line-subtle)] px-6 py-4">
-          <p className="text-[11.5px] text-[var(--fg-quaternary)]">
+        <div className="border-t border-[var(--line-subtle)] px-5 py-4">
+          <p className="text-[11px] text-[var(--fg-quaternary)]">
             Passo {currentStep + 1} de {TOTAL_STEPS}
           </p>
           <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-[var(--bg-sunken)]">
@@ -257,10 +340,26 @@ async function save(step: number) {
         </div>
       </aside>
 
-      {/* Conteúdo */}
+      {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col">
+        {/* Mobile progress bar */}
+        <div className="flex items-center justify-between border-b border-[var(--line-subtle)] px-4 py-3 sm:hidden">
+          <span className="text-[12px] text-[var(--fg-quaternary)]">
+            Passo {currentStep + 1} de {TOTAL_STEPS} · {STEP_LABELS[currentStep]}
+          </span>
+          {mode === "modal" && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex size-7 items-center justify-center rounded-[var(--r-sm)] text-[var(--fg-quaternary)] hover:bg-[var(--bg-hover)]"
+            >
+              <X className="size-4" />
+            </button>
+          )}
+        </div>
+
         <div className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-2xl px-6 py-10 lg:px-12">
+          <div className="mx-auto max-w-2xl px-6 py-8 lg:px-10">
             <Form {...form}>
               {stepKey === "welcome" && <WelcomeStep />}
               {stepKey === "company-basics" && <CompanyBasicsStep form={form} />}
@@ -275,23 +374,51 @@ async function save(step: number) {
           </div>
         </div>
 
-        <div className="sticky bottom-0 border-t border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-6 py-4 lg:px-12">
-          <div className="mx-auto flex max-w-2xl justify-between">
+        <div className="sticky bottom-0 border-t border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-6 py-4 lg:px-10">
+          <div className="mx-auto flex max-w-2xl items-center justify-between">
             <Button variant="outline" onClick={handleBack} disabled={isFirstStep}>
               Voltar
             </Button>
-            {isLastStep ? (
-              <Button onClick={handlePublish} disabled={publishMutation.isPending}>
-                {publishMutation.isPending ? "Publicando..." : "Publicar Brain"}
-              </Button>
-            ) : (
-              <Button onClick={handleNext} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? "Salvando..." : "Continuar"}
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {canSkip && (
+                <Button
+                  variant="ghost"
+                  onClick={handleSkip}
+                  disabled={saveMutation.isPending}
+                  className="text-[var(--fg-tertiary)]"
+                >
+                  Pular etapa
+                </Button>
+              )}
+              {isLastStep ? (
+                <Button onClick={handlePublish} disabled={publishMutation.isPending}>
+                  {publishMutation.isPending ? "Publicando..." : "Publicar Brain"}
+                </Button>
+              ) : (
+                <Button onClick={handleNext} disabled={saveMutation.isPending}>
+                  {saveMutation.isPending ? "Salvando..." : "Continuar"}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+export function OnboardingWizard({ mode = "page", open, onClose }: OnboardingWizardProps) {
+  if (mode === "modal") {
+    return (
+      <Dialog open={open} onOpenChange={(o) => !o && onClose?.()}>
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] p-0 gap-0 overflow-hidden">
+          <DialogTitle className="sr-only">Configurar Brain</DialogTitle>
+          {/* key forces remount on each open so it always reads fresh cache */}
+          {open && <WizardContent key={String(open)} mode="modal" onClose={onClose} />}
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return <WizardContent mode="page" />;
 }

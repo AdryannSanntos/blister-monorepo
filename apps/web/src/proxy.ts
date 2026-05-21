@@ -87,9 +87,14 @@ async function getSession(request: NextRequest) {
   return response.json();
 }
 
-async function resolveAuthenticatedState(userId: string, activeOrgId: string | null) {
+async function resolveAuthenticatedState(
+  userId: string,
+  activeOrgId: string | null,
+) {
   const organizations =
-    (await fetchApiJson<OrganizationSummary[]>(`/organizations/user/${userId}`)) ?? [];
+    (await fetchApiJson<OrganizationSummary[]>(
+      `/organizations/user/${userId}`,
+    )) ?? [];
 
   if (organizations.length === 0) {
     return {
@@ -104,7 +109,8 @@ async function resolveAuthenticatedState(userId: string, activeOrgId: string | n
     ? activeOrgId
     : null;
   const resolvedActiveOrgId =
-    validActiveOrgId ?? (organizations.length === 1 ? organizations[0].id : null);
+    validActiveOrgId ??
+    (organizations.length === 1 ? organizations[0].id : null);
 
   if (!resolvedActiveOrgId) {
     return {
@@ -129,8 +135,15 @@ async function resolveAuthenticatedState(userId: string, activeOrgId: string | n
   };
 }
 
-function shouldAllowRoute(pathname: string, destination: string, onboardingPublished: boolean | null) {
-  if (pathname.startsWith(WORKSPACE_CREATE_PATH) || pathname.startsWith(WORKSPACE_SELECT_PATH)) {
+function shouldAllowRoute(
+  pathname: string,
+  destination: string,
+  onboardingPublished: boolean | null,
+) {
+  if (
+    pathname.startsWith(WORKSPACE_CREATE_PATH) ||
+    pathname.startsWith(WORKSPACE_SELECT_PATH)
+  ) {
     return true;
   }
 
@@ -171,7 +184,12 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!isAuthenticated) {
-    if (isDashboardRoute || isOnboardingRoute || isWorkspaceRoute || isAppRoute) {
+    if (
+      isDashboardRoute ||
+      isOnboardingRoute ||
+      isWorkspaceRoute ||
+      isAppRoute
+    ) {
       return redirect(request, buildLoginRedirectPath(request));
     }
 
@@ -191,7 +209,10 @@ export async function proxy(request: NextRequest) {
     isAuthRoute || isAppRoute ? state.destination : pathname;
 
   if (isAuthRoute) {
-    return withActiveOrgCookie(redirect(request, state.destination), state.activeOrgId);
+    return withActiveOrgCookie(
+      redirect(request, state.destination),
+      state.activeOrgId,
+    );
   }
 
   if (isInviteAcceptRoute) {
@@ -212,10 +233,18 @@ export async function proxy(request: NextRequest) {
       );
     }
 
+    if (isWorkspaceRoute) {
+      // Workspace routes intentionally run outside a company context.
+      return withActiveOrgCookie(NextResponse.next(), null);
+    }
+
     return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
   }
 
-  return withActiveOrgCookie(redirect(request, state.destination), state.activeOrgId);
+  return withActiveOrgCookie(
+    redirect(request, state.destination),
+    state.activeOrgId,
+  );
 }
 
 export const config = {

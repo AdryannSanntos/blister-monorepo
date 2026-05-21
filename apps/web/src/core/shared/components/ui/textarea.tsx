@@ -9,7 +9,6 @@ type TextareaProps = React.ComponentProps<'textarea'> & {
 function Textarea({ className, size = 'md', ...props }: TextareaProps) {
   return (
     <textarea
-      data-slot="textarea"
       data-size={size}
       className={cn(
         'flex min-h-[68px] w-full resize-y rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[140ms] ease-out placeholder:text-[var(--fg-quaternary)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] disabled:cursor-not-allowed disabled:opacity-50',
@@ -25,6 +24,7 @@ function Textarea({ className, size = 'md', ...props }: TextareaProps) {
         className,
       )}
       {...props}
+      data-slot="textarea"
     />
   );
 }

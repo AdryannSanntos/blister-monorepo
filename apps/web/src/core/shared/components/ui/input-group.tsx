@@ -14,12 +14,10 @@ type InputGroupProps = React.ComponentProps<'div'> & {
 function InputGroup({ className, size = 'md', ...props }: InputGroupProps) {
   return (
     <div
-      data-slot="input-group"
-      data-size={size}
       className={cn(
         'group/input-group relative flex min-w-0 w-full items-center gap-2 border border-[var(--line-strong)] bg-[var(--bg-sunken)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[140ms] ease-out hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))]',
         'data-[size=sm]:h-7 data-[size=sm]:rounded-[var(--r-sm)] data-[size=sm]:px-2.5',
-        'data-[size=md]:h-[34px] data-[size=md]:rounded-[var(--r-md)] data-[size=md]:px-3',
+        'data-[size=md]:h-9 data-[size=md]:rounded-[var(--r-md)] data-[size=md]:px-3',
         'data-[size=lg]:h-11 data-[size=lg]:rounded-[var(--r-md)] data-[size=lg]:px-3.5',
         'has-[>textarea]:h-auto has-[>textarea]:items-start has-[>textarea]:py-2',
 
@@ -40,6 +38,8 @@ function InputGroup({ className, size = 'md', ...props }: InputGroupProps) {
         className,
       )}
       {...props}
+      data-slot="input-group"
+      data-size={size}
     />
   );
 }

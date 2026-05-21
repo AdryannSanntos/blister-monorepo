@@ -67,7 +67,7 @@ function getPostLoginRedirectPath(searchParams: { get: (name: string) => string 
   return (
     getSafeRedirectPath(searchParams.get('redirect')) ??
     getSafeRedirectPath(searchParams.get('next')) ??
-    '/app'
+    '/dashboard'
   );
 }
 
@@ -167,7 +167,7 @@ export function LoginPage() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <FormField
             control={form.control}
             name="email"
@@ -253,7 +253,7 @@ export function LoginPage() {
         <Button
           type="button"
           variant="outline"
-          className="w-full justify-center border-black bg-black text-white hover:bg-black/90 hover:text-white"
+          className="w-full justify-center border-black bg-black text-white shadow-none hover:bg-black/90 hover:text-white"
           disabled
           title="Login com Apple ainda não está configurado neste ambiente."
         >

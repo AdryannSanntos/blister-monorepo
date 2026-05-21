@@ -14,8 +14,8 @@ import { Button } from "src/core/shared/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
 } from "src/core/shared/components/ui/card";
+import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -24,11 +24,15 @@ import {
   TableHeader,
   TableRow,
 } from "src/core/shared/components/ui/table";
+import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { authClient } from "src/core/shared/utils/auth-client";
 
 const statusConfig: Record<
   string,
-  { label: string; variant: "default" | "secondary" | "outline" | "success" | "warning" }
+  {
+    label: string;
+    variant: "default" | "secondary" | "outline" | "success" | "warning";
+  }
 > = {
   pending: { label: "Pendente", variant: "warning" },
   accepted: { label: "Aceito", variant: "success" },
@@ -64,42 +68,37 @@ export function InviteListPage() {
   if (!activeOrgId || !session?.user) return null;
 
   return (
-    <div className="space-y-6">
+    <PageLayout
+      eyebrow="Workspace"
+      title="Convites"
+      description="Gerencie os convites enviados para o workspace. Acompanhe o status de cada convite e cancele quando necessário."
+      actions={
+        <Button onClick={() => setDialogOpen(true)}>
+          <UserPlus />
+          Convidar membro
+        </Button>
+      }
+    >
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between border-b border-[var(--line-subtle)] px-6 py-4">
-          <div>
-            <h2 className="text-[15px] font-medium text-[var(--fg-primary)]">Convites</h2>
-            <p className="mt-0.5 text-[12.5px] text-[var(--fg-tertiary)]">
-              Gerencie os convites enviados para o seu workspace.
-            </p>
-          </div>
-          <Button size="md" onClick={() => setDialogOpen(true)}>
-            <UserPlus />
-            Convidar membro
-          </Button>
-        </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
             </div>
           ) : !invitations || invitations.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <div className="flex size-12 items-center justify-center rounded-full bg-[var(--bg-raised)]">
-                <UserPlus className="size-5 text-[var(--fg-quaternary)]" />
-              </div>
-              <div>
-                <p className="text-[13px] font-medium text-[var(--fg-primary)]">
-                  Nenhum convite enviado ainda
-                </p>
-                <p className="mt-1 text-[12.5px] text-[var(--fg-tertiary)]">
-                  Convide membros para colaborar no workspace.
-                </p>
-              </div>
-              <Button variant="outline" size="md" onClick={() => setDialogOpen(true)}>
-                <UserPlus />
-                Enviar primeiro convite
-              </Button>
+            <div className="p-6">
+              <EmptyState
+                icon={UserPlus}
+                title="Nenhum convite enviado ainda"
+                description="Os convites ajudam a trazer novas pessoas para o workspace com controle desde o primeiro acesso. Envie o primeiro para começar a montar a equipe."
+                action={
+                  <Button onClick={() => setDialogOpen(true)}>
+                    <UserPlus />
+                    Enviar primeiro convite
+                  </Button>
+                }
+                compact
+              />
             </div>
           ) : (
             <Table>
@@ -113,7 +112,10 @@ export function InviteListPage() {
               </TableHeader>
               <TableBody>
                 {invitations.map((inv) => {
-                  const status = statusConfig[inv.status] ?? { label: inv.status, variant: "outline" as const };
+                  const status = statusConfig[inv.status] ?? {
+                    label: inv.status,
+                    variant: "outline" as const,
+                  };
                   return (
                     <TableRow key={inv.id}>
                       <TableCell className="pl-6 font-medium text-[var(--fg-primary)]">
@@ -152,6 +154,6 @@ export function InviteListPage() {
         orgId={activeOrgId}
         inviterId={session.user.id}
       />
-    </div>
+    </PageLayout>
   );
 }

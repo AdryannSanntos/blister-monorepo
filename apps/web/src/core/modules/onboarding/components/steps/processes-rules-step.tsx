@@ -10,7 +10,11 @@ import {
 } from "src/core/shared/components/ui/form";
 import { TagInput } from "src/core/shared/components/ui/tag-input";
 import { Textarea } from "src/core/shared/components/ui/textarea";
-import type { OnboardingFormValues } from "../onboarding-form-schema";
+import {
+  type OnboardingFormValues,
+  onboardingTextareaMaxLengths,
+} from "../onboarding-form-schema";
+import { TextareaFieldHint } from "../textarea-field-hint";
 
 type Props = { form: UseFormReturn<OnboardingFormValues> };
 
@@ -18,9 +22,12 @@ export function ProcessesRulesStep({ form }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">Processos e regras internas</h3>
+        <h3 className="text-[20px] font-medium text-[var(--fg-primary)]">
+          Processos e regras internas
+        </h3>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Estas informações garantem que o Workana AI respeitará como sua empresa opera.
+          Estas informações garantem que o Workana AI respeitará como sua
+          empresa opera.
         </p>
       </div>
       <div className="space-y-4">
@@ -33,10 +40,15 @@ export function ProcessesRulesStep({ form }: Props) {
               <FormControl>
                 <Textarea
                   placeholder="Descreva os principais processos da empresa (vendas, atendimento, operação...)."
+                  maxLength={onboardingTextareaMaxLengths.processes}
                   rows={4}
                   {...field}
                 />
               </FormControl>
+              <TextareaFieldHint
+                currentLength={field.value.length}
+                maxLength={onboardingTextareaMaxLengths.processes}
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -50,10 +62,15 @@ export function ProcessesRulesStep({ form }: Props) {
               <FormControl>
                 <Textarea
                   placeholder="Regras que a IA deve sempre respeitar ao gerar conteúdo ou interagir."
+                  maxLength={onboardingTextareaMaxLengths.rules}
                   rows={3}
                   {...field}
                 />
               </FormControl>
+              <TextareaFieldHint
+                currentLength={field.value.length}
+                maxLength={onboardingTextareaMaxLengths.rules}
+              />
               <FormMessage />
             </FormItem>
           )}

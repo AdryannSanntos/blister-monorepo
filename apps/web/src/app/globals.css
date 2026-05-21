@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -311,6 +312,17 @@ body {
   }
 }
 
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes accordion-down {
   from {
     height: 0;
@@ -380,6 +392,15 @@ body {
   background: radial-gradient(circle, #3366ff 0%, #1a3f8f 50%, transparent 70%);
 }
 
+/* Form field invalid — border always red, even on hover */
+input[data-slot="input"][aria-invalid="true"],
+textarea[data-slot="textarea"][aria-invalid="true"],
+button[data-slot="select-trigger"][aria-invalid="true"],
+div[data-slot="input-group"][aria-invalid="true"],
+div[data-slot="input-group"]:has([aria-invalid="true"]) {
+  border-color: var(--danger) !important;
+}
+
 /* Form field focus — !important needed: border-color is overridden by equal-specificity hover utilities */
 input[data-slot="input"]:focus,
 textarea[data-slot="textarea"]:focus {
@@ -414,3 +435,56 @@ div[data-slot="input-group"]:has([aria-invalid="true"]:focus) {
   border-color: var(--danger) !important;
   box-shadow: 0 0 0 3px var(--danger-soft);
 }
+
+/* ─── markdown prose ──────────────────────────────────────────────────────── */
+.md-prose {
+  color: var(--fg-primary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.md-prose h1,.md-prose h2,.md-prose h3,.md-prose h4 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--fg-primary);
+}
+.md-prose h1 { font-size: 1.5em; }
+.md-prose h2 { font-size: 1.25em; }
+.md-prose h3 { font-size: 1.1em; }
+.md-prose p  { margin-bottom: 0.875em; }
+.md-prose a  { color: var(--accent); text-decoration: underline; }
+.md-prose strong { font-weight: 600; }
+.md-prose em { font-style: italic; }
+.md-prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 0.875em; }
+.md-prose ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 0.875em; }
+.md-prose li { margin-bottom: 0.25em; }
+.md-prose code:not(pre code) {
+  background: var(--bg-sunken);
+  border: 1px solid var(--line-subtle);
+  border-radius: 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+.md-prose pre {
+  background: var(--bg-sunken);
+  border: 1px solid var(--line-subtle);
+  border-radius: 8px;
+  overflow-x: auto;
+  padding: 1em 1.25em;
+  margin-bottom: 0.875em;
+}
+.md-prose pre code { background: none; border: none; padding: 0; font-size: 0.8125em; }
+.md-prose blockquote {
+  border-left: 3px solid var(--line-default);
+  color: var(--fg-secondary);
+  margin-left: 0;
+  padding-left: 1em;
+  margin-bottom: 0.875em;
+}
+.md-prose hr { border: none; border-top: 1px solid var(--line-subtle); margin: 1.5em 0; }
+.md-prose table { border-collapse: collapse; width: 100%; margin-bottom: 0.875em; font-size: 0.9em; }
+.md-prose th,.md-prose td { border: 1px solid var(--line-subtle); padding: 0.5em 0.75em; text-align: left; }
+.md-prose th { background: var(--bg-sunken); font-weight: 600; }
+.md-prose img { max-width: 100%; border-radius: 6px; }

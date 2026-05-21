@@ -73,7 +73,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 bg-[var(--bg-sunken)] px-3 text-left align-middle text-[11px] font-medium tracking-[0.06em] whitespace-nowrap text-[var(--fg-tertiary)] uppercase first:rounded-tl-[var(--r-md)] last:rounded-tr-[var(--r-md)] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "h-10 bg-[var(--bg-sunken)] px-3 text-left align-middle text-[11px] font-medium tracking-[0.06em] whitespace-nowrap text-[var(--fg-tertiary)] uppercase first:rounded-tl-[var(--r-md)] last:rounded-tr-[var(--r-md)] [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}
@@ -86,7 +86,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "border-b border-[var(--line-subtle)] p-3 align-middle text-[13px] whitespace-nowrap text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] group-last:border-b-0 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "border-b border-[var(--line-subtle)] p-3 align-middle text-[13px] whitespace-nowrap text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] group-last:border-b-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}

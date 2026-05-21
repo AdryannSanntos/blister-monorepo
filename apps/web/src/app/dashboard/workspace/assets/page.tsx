@@ -1,5 +1,5 @@
-import { AssetsPage } from 'src/core/modules/assets/pages/assets-page';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <AssetsPage />;
+  redirect('/dashboard/workspace/context');
 }

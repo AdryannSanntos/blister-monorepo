@@ -26,6 +26,7 @@ import {
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
+import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { authClient } from "src/core/shared/utils/auth-client";
 
 function getInitials(name: string | null | undefined, email: string): string {
@@ -226,18 +227,13 @@ function PasswordCard() {
 
 export function AccountSettingsPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-[var(--fg-primary)]">
-          Configurações da conta
-        </h1>
-        <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Gerencie as informações pessoais da sua conta.
-        </p>
-      </div>
-
+    <PageLayout
+      eyebrow="Conta"
+      title="Configurações da conta"
+      description="Gerencie seu perfil pessoal e credenciais de acesso. Estas configurações são independentes do workspace."
+    >
       <ProfileCard />
       <PasswordCard />
-    </div>
+    </PageLayout>
   );
 }

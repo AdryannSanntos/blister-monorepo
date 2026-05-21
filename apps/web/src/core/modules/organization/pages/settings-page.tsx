@@ -45,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "src/core/shared/components/ui/select";
+import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { apiClient } from "src/core/shared/utils/api-client";
 import { authClient } from "src/core/shared/utils/auth-client";
 
@@ -405,16 +406,11 @@ export function SettingsPage() {
   const currentUserId = session?.user?.id ?? "";
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-[var(--fg-primary)]">
-          Configurações
-        </h1>
-        <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Gerencie as configurações gerais do workspace.
-        </p>
-      </div>
-
+    <PageLayout
+      eyebrow="Workspace"
+      title="Configurações"
+      description="Gerencie o nome, slug e identidade do workspace. Operações destrutivas ficam na zona de perigo abaixo."
+    >
       <GeneralSettingsCard orgId={activeOrgId} org={org} />
 
       {/* Danger Zone */}
@@ -484,6 +480,6 @@ export function SettingsPage() {
         orgId={activeOrgId}
         orgName={org.name}
       />
-    </div>
+    </PageLayout>
   );
 }

@@ -1,7 +1,11 @@
-'use client';
+"use client";
 
-import type { ColumnDef, RowSelectionState } from '@tanstack/react-table';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   Archive,
   ChevronRight,
@@ -12,35 +16,42 @@ import {
   Plus,
   Sparkles,
   Trash2,
-} from 'lucide-react';
-import Link from 'next/link';
-import type { Dispatch, SetStateAction } from 'react';
-import { useDeferredValue, useState } from 'react';
-import { AddAssetDialog } from 'src/core/modules/assets/components/add-asset-dialog';
-import { AssetDetailSheet } from 'src/core/modules/assets/components/asset-detail-sheet';
+} from "lucide-react";
+import Link from "next/link";
+import type { Dispatch, SetStateAction } from "react";
+import { useDeferredValue, useState } from "react";
+import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
+import { AddAssetDialog } from "src/core/modules/assets/components/add-asset-dialog";
+import { AssetDetailSheet } from "src/core/modules/assets/components/asset-detail-sheet";
 import {
   type AssetRoleFilter,
   type ContextAssetStatus,
   type OperationalAssetStatus,
-  type WorkspaceAsset,
   useAssets,
   useBulkUpdateAssets,
-} from 'src/core/modules/assets/hooks/use-assets';
-import { useAbility } from 'src/core/modules/organization/hooks/use-ability';
-import { useActiveOrganization } from 'src/core/modules/organization/hooks/use-active-organization';
-import { PermissionGate } from 'src/core/shared/components/permission-gate';
-import { Badge } from 'src/core/shared/components/ui/badge';
-import { Button } from 'src/core/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from 'src/core/shared/components/ui/card';
-import { Checkbox } from 'src/core/shared/components/ui/checkbox';
-import { Input } from 'src/core/shared/components/ui/input';
+  type WorkspaceAsset,
+} from "src/core/modules/assets/hooks/use-assets";
+import { useAbility } from "src/core/modules/organization/hooks/use-ability";
+import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { PermissionGate } from "src/core/shared/components/permission-gate";
+import { Badge } from "src/core/shared/components/ui/badge";
+import { Button } from "src/core/shared/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "src/core/shared/components/ui/card";
+import { Checkbox } from "src/core/shared/components/ui/checkbox";
+import { TableEmptyState } from "src/core/shared/components/ui/empty-state";
+import { Input } from "src/core/shared/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'src/core/shared/components/ui/select';
+} from "src/core/shared/components/ui/select";
 import {
   Table,
   TableBody,
@@ -48,60 +59,69 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from 'src/core/shared/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/core/shared/components/ui/tabs';
+} from "src/core/shared/components/ui/table";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "src/core/shared/components/ui/tabs";
+import { PageLayout } from "src/core/shared/components/ui/page-layout";
 
 const categoryLabels: Record<string, string> = {
-  brand: 'Marca',
-  commercial: 'Comercial',
-  institutional: 'Institucional',
-  'published-content': 'Conteúdo publicado',
-  'visual-reference': 'Referência visual',
-  page: 'Página',
-  campaign: 'Campanha',
-  other: 'Outro',
+  brand: "Marca",
+  commercial: "Comercial",
+  institutional: "Institucional",
+  "published-content": "Conteúdo publicado",
+  "visual-reference": "Referência visual",
+  page: "Página",
+  campaign: "Campanha",
+  other: "Outro",
 };
 
 function statusLabel(status: string | null) {
-  if (!status) return 'Sem status';
+  if (!status) return "Sem status";
   const labels: Record<string, string> = {
-    uploaded: 'Enviado',
-    processed: 'Processado',
-    suggested: 'Sugerido',
-    approved: 'Aprovado',
-    discarded: 'Descartado',
-    active: 'Ativo',
-    archived: 'Arquivado',
-    obsolete: 'Obsoleto',
+    uploaded: "Enviado",
+    processed: "Processado",
+    suggested: "Sugerido",
+    approved: "Aprovado",
+    discarded: "Descartado",
+    active: "Ativo",
+    archived: "Arquivado",
+    obsolete: "Obsoleto",
   };
 
   return labels[status] ?? status;
 }
 
 function statusVariant(status: string | null) {
-  if (status === 'approved' || status === 'active') return 'success' as const;
-  if (status === 'discarded' || status === 'obsolete') return 'destructive' as const;
-  return 'secondary' as const;
+  if (status === "approved" || status === "active") return "success" as const;
+  if (status === "discarded" || status === "obsolete")
+    return "destructive" as const;
+  return "secondary" as const;
 }
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
+  return new Date(value).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 }
 
 function roleLabel(asset: WorkspaceAsset) {
-  if (asset.contextRole && asset.operationalRole) return 'Contexto + Operacional';
-  if (asset.contextRole) return 'Contexto';
-  if (asset.operationalRole) return 'Operacional';
-  return 'Sem papel';
+  if (asset.contextRole && asset.operationalRole)
+    return "Contexto + Operacional";
+  if (asset.contextRole) return "Contexto";
+  if (asset.operationalRole) return "Operacional";
+  return "Sem papel";
 }
 
 function sourceIcon(asset: WorkspaceAsset) {
-  if (asset.sourceKind === 'url') return <Link2 className="size-4 text-[var(--fg-tertiary)]" />;
-  if (asset.visibleType === 'image') {
+  if (asset.sourceKind === "url")
+    return <Link2 className="size-4 text-[var(--fg-tertiary)]" />;
+  if (asset.visibleType === "image") {
     return <ImageIcon className="size-4 text-[var(--fg-tertiary)]" />;
   }
   return <FileText className="size-4 text-[var(--fg-tertiary)]" />;
@@ -114,14 +134,21 @@ type AssetsTableProps = {
   onOpenDetail: (assetId: string) => void;
 };
 
-function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: AssetsTableProps) {
+function AssetsTable({
+  assets,
+  selected,
+  onSelectedChange,
+  onOpenDetail,
+}: AssetsTableProps) {
   const columns: ColumnDef<WorkspaceAsset>[] = [
     {
-      id: 'select',
+      id: "select",
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(checked) => table.toggleAllPageRowsSelected(Boolean(checked))}
+          onCheckedChange={(checked) =>
+            table.toggleAllPageRowsSelected(Boolean(checked))
+          }
           aria-label="Selecionar todos os assets"
         />
       ),
@@ -137,8 +164,8 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
       enableHiding: false,
     },
     {
-      id: 'title',
-      header: 'Asset',
+      id: "title",
+      header: "Asset",
       cell: ({ row }) => {
         const asset = row.original;
         return (
@@ -151,7 +178,10 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
                 {asset.title}
               </p>
               <p className="truncate text-[12px] text-[var(--fg-tertiary)]">
-                {asset.description || asset.fileName || asset.sourceUrl || 'Sem descrição'}
+                {asset.description ||
+                  asset.fileName ||
+                  asset.sourceUrl ||
+                  "Sem descrição"}
               </p>
             </div>
           </div>
@@ -159,41 +189,47 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
       },
     },
     {
-      id: 'category',
-      header: 'Categoria',
+      id: "category",
+      header: "Categoria",
       cell: ({ row }) => {
         const asset = row.original;
         return (
           <div className="space-y-1">
             <p className="text-[12px] text-[var(--fg-secondary)]">
-              {asset.visibleType || 'Sem tipo'}
+              {asset.visibleType || "Sem tipo"}
             </p>
             <Badge variant="secondary">
-              {categoryLabels[asset.visibleCategory ?? ''] ??
+              {categoryLabels[asset.visibleCategory ?? ""] ??
                 asset.visibleCategory ??
-                'Sem categoria'}
+                "Sem categoria"}
             </Badge>
           </div>
         );
       },
     },
     {
-      id: 'role',
-      header: 'Papel',
-      cell: ({ row }) => <Badge variant="secondary">{roleLabel(row.original)}</Badge>,
+      id: "role",
+      header: "Papel",
+      cell: ({ row }) => (
+        <Badge variant="secondary">{roleLabel(row.original)}</Badge>
+      ),
     },
     {
-      id: 'status',
-      header: 'Status',
+      id: "status",
+      header: "Status",
       cell: ({ row }) => {
         const asset = row.original;
-        const status = asset.contextRole ? asset.contextStatus : asset.operationalStatus;
-        return <Badge variant={statusVariant(status)}>{statusLabel(status)}</Badge>;
+        const status = asset.contextRole
+          ? asset.contextStatus
+          : asset.operationalStatus;
+        return (
+          <Badge variant={statusVariant(status)}>{statusLabel(status)}</Badge>
+        );
       },
     },
     {
-      id: 'relations',
-      header: 'Relações',
+      id: "relations",
+      header: "Relações",
       cell: ({ row }) => {
         const relations = row.original.relations.slice(0, 2);
         const overflow = row.original.relations.length - relations.length;
@@ -204,16 +240,20 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
                 {relation.value}
               </Badge>
             ))}
-            {overflow > 0 ? <Badge variant="secondary">+{overflow}</Badge> : null}
+            {overflow > 0 ? (
+              <Badge variant="secondary">+{overflow}</Badge>
+            ) : null}
           </div>
         ) : (
-          <span className="text-[12px] text-[var(--fg-tertiary)]">Sem relações</span>
+          <span className="text-[12px] text-[var(--fg-tertiary)]">
+            Sem relações
+          </span>
         );
       },
     },
     {
-      id: 'updatedAt',
-      header: 'Atualizado',
+      id: "updatedAt",
+      header: "Atualizado",
       cell: ({ row }) => (
         <span className="font-mono text-[12px] tabular-nums text-[var(--fg-tertiary)]">
           {formatDate(row.original.updatedAt)}
@@ -241,7 +281,10 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
                 <TableHead key={header.id}>
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                 </TableHead>
               ))}
             </TableRow>
@@ -259,7 +302,9 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
                   <TableCell
                     key={cell.id}
                     onClick={
-                      cell.column.id === 'select' ? (event) => event.stopPropagation() : undefined
+                      cell.column.id === "select"
+                        ? (event) => event.stopPropagation()
+                        : undefined
                     }
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -268,14 +313,12 @@ function AssetsTable({ assets, selected, onSelectedChange, onOpenDetail }: Asset
               </TableRow>
             ))
           ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center text-[var(--fg-tertiary)]"
-              >
-                Nenhum asset encontrado.
-              </TableCell>
-            </TableRow>
+            <TableEmptyState
+              colSpan={columns.length}
+              icon={FolderOpen}
+              title="Nenhum asset encontrado"
+              description="Assets ajudam a empresa a preservar contexto, referências e materiais reutilizáveis para operação e IA. Adicione o primeiro para começar."
+            />
           )}
         </TableBody>
       </Table>
@@ -289,29 +332,53 @@ type SummaryCardsProps = {
 };
 
 function SummaryCards({ activeTab, assets }: SummaryCardsProps) {
-  if (activeTab === 'context') {
+  if (activeTab === "context") {
     const counts = {
-      uploaded: assets.filter((asset) => asset.contextStatus === 'uploaded').length,
-      processed: assets.filter((asset) => asset.contextStatus === 'processed').length,
-      suggested: assets.filter((asset) => asset.contextStatus === 'suggested').length,
-      approved: assets.filter((asset) => asset.contextStatus === 'approved').length,
+      uploaded: assets.filter((asset) => asset.contextStatus === "uploaded")
+        .length,
+      processed: assets.filter((asset) => asset.contextStatus === "processed")
+        .length,
+      suggested: assets.filter((asset) => asset.contextStatus === "suggested")
+        .length,
+      approved: assets.filter((asset) => asset.contextStatus === "approved")
+        .length,
     };
 
     return (
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: 'Enviados', value: counts.uploaded, copy: 'Aguardando pipeline inicial' },
-          { label: 'Processados', value: counts.processed, copy: 'Prontos para sugestão' },
-          { label: 'Sugeridos', value: counts.suggested, copy: 'Pedem revisão humana' },
-          { label: 'Aprovados', value: counts.approved, copy: 'Já fortalecem o contexto' },
+          {
+            label: "Enviados",
+            value: counts.uploaded,
+            copy: "Aguardando pipeline inicial",
+          },
+          {
+            label: "Processados",
+            value: counts.processed,
+            copy: "Prontos para sugestão",
+          },
+          {
+            label: "Sugeridos",
+            value: counts.suggested,
+            copy: "Pedem revisão humana",
+          },
+          {
+            label: "Aprovados",
+            value: counts.approved,
+            copy: "Já fortalecem o contexto",
+          },
         ].map((item) => (
           <Card key={item.label}>
             <CardContent className="px-5 py-5">
               <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
                 {item.label}
               </p>
-              <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">{item.value}</p>
-              <p className="mt-1 text-[12px] text-[var(--fg-tertiary)]">{item.copy}</p>
+              <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
+                {item.value}
+              </p>
+              <p className="mt-1 text-[12px] text-[var(--fg-tertiary)]">
+                {item.copy}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -320,27 +387,52 @@ function SummaryCards({ activeTab, assets }: SummaryCardsProps) {
   }
 
   const counts = {
-    active: assets.filter((asset) => asset.operationalStatus === 'active').length,
-    archived: assets.filter((asset) => asset.operationalStatus === 'archived').length,
-    obsolete: assets.filter((asset) => asset.operationalStatus === 'obsolete').length,
-    reusable: assets.filter((asset) => asset.operationalRole && asset.relations.length > 0).length,
+    active: assets.filter((asset) => asset.operationalStatus === "active")
+      .length,
+    archived: assets.filter((asset) => asset.operationalStatus === "archived")
+      .length,
+    obsolete: assets.filter((asset) => asset.operationalStatus === "obsolete")
+      .length,
+    reusable: assets.filter(
+      (asset) => asset.operationalRole && asset.relations.length > 0,
+    ).length,
   };
 
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {[
-        { label: 'Ativos', value: counts.active, copy: 'Disponíveis para reutilização' },
-        { label: 'Arquivados', value: counts.archived, copy: 'Histórico preservado' },
-        { label: 'Obsoletos', value: counts.obsolete, copy: 'Não sugerir por padrão' },
-        { label: 'Prontos para IA', value: counts.reusable, copy: 'Com relações úteis de negócio' },
+        {
+          label: "Ativos",
+          value: counts.active,
+          copy: "Disponíveis para reutilização",
+        },
+        {
+          label: "Arquivados",
+          value: counts.archived,
+          copy: "Histórico preservado",
+        },
+        {
+          label: "Obsoletos",
+          value: counts.obsolete,
+          copy: "Não sugerir por padrão",
+        },
+        {
+          label: "Prontos para IA",
+          value: counts.reusable,
+          copy: "Com relações úteis de negócio",
+        },
       ].map((item) => (
         <Card key={item.label}>
           <CardContent className="px-5 py-5">
             <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
               {item.label}
             </p>
-            <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">{item.value}</p>
-            <p className="mt-1 text-[12px] text-[var(--fg-tertiary)]">{item.copy}</p>
+            <p className="mt-2 text-2xl font-medium text-[var(--fg-primary)]">
+              {item.value}
+            </p>
+            <p className="mt-1 text-[12px] text-[var(--fg-tertiary)]">
+              {item.copy}
+            </p>
           </CardContent>
         </Card>
       ))}
@@ -357,8 +449,8 @@ function EmptyPermissionState() {
         </CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6 pt-0 text-[14px] text-[var(--fg-secondary)]">
-        O papel padrão de member não acessa `Assets`. Peça a um owner ou admin para ajustar seu
-        acesso.
+        O papel padrão de member não acessa `Contexto`. Peça a um owner ou admin
+        para ajustar seu acesso.
       </CardContent>
     </Card>
   );
@@ -367,14 +459,21 @@ function EmptyPermissionState() {
 export function AssetsPage() {
   const { activeOrgId } = useActiveOrganization();
   const { can, isLoading: isAbilityLoading } = useAbility();
-  const canReadAssets = can('read', 'Asset');
-  const [activeTab, setActiveTab] = useState<AssetRoleFilter>('context');
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [contextStatusFilter, setContextStatusFilter] = useState<ContextAssetStatus | 'all'>('all');
-  const [operationalStatusFilter, setOperationalStatusFilter] = useState<
-    OperationalAssetStatus | 'all'
-  >('all');
+  const canReadAssets = can("read", "Asset");
+  const [activeTab, setActiveTab] = useQueryState(
+    "tab",
+    parseAsStringLiteral(["context", "operational"] as const).withDefault("context"),
+  );
+  const [search, setSearch] = useQueryState("q", parseAsString.withDefault(""));
+  const [categoryFilter, setCategoryFilter] = useQueryState("category", parseAsString.withDefault("all"));
+  const [contextStatusFilter, setContextStatusFilter] = useQueryState(
+    "contextStatus",
+    parseAsString.withDefault("all"),
+  );
+  const [operationalStatusFilter, setOperationalStatusFilter] = useQueryState(
+    "opStatus",
+    parseAsString.withDefault("all"),
+  );
   const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [contextDialogOpen, setContextDialogOpen] = useState(false);
@@ -386,15 +485,17 @@ export function AssetsPage() {
     role: activeTab,
     search: deferredSearch || undefined,
     contextStatus:
-      activeTab === 'context' && contextStatusFilter !== 'all' ? contextStatusFilter : undefined,
+      activeTab === "context" && contextStatusFilter !== "all"
+        ? (contextStatusFilter as ContextAssetStatus)
+        : undefined,
     operationalStatus:
-      activeTab === 'operational' && operationalStatusFilter !== 'all'
-        ? operationalStatusFilter
+      activeTab === "operational" && operationalStatusFilter !== "all"
+        ? (operationalStatusFilter as OperationalAssetStatus)
         : undefined,
   });
 
   const filteredAssets = assets.filter((asset) => {
-    if (categoryFilter === 'all') return true;
+    if (categoryFilter === "all") return true;
     return asset.visibleCategory === categoryFilter;
   });
 
@@ -404,11 +505,13 @@ export function AssetsPage() {
     .filter(Boolean) as string[];
 
   const categoryOptions = Array.from(
-    new Set(filteredAssets.map((asset) => asset.visibleCategory).filter(Boolean)),
+    new Set(
+      filteredAssets.map((asset) => asset.visibleCategory).filter(Boolean),
+    ),
   );
 
   async function handleBulkAction(
-    action: Parameters<typeof bulkUpdateAssets.mutateAsync>[0]['action'],
+    action: Parameters<typeof bulkUpdateAssets.mutateAsync>[0]["action"],
   ) {
     if (selectedAssetIds.length === 0) return;
     await bulkUpdateAssets.mutateAsync({ assetIds: selectedAssetIds, action });
@@ -424,24 +527,17 @@ export function AssetsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-            Workspace
-          </p>
-          <h1 className="mt-1 text-[28px] font-medium tracking-[-0.02em] text-[var(--fg-primary)]">
-            Assets
-          </h1>
-          <p className="mt-2 max-w-3xl text-[14px] text-[var(--fg-tertiary)]">
-            Organize a biblioteca da empresa em duas camadas claras: fontes de contexto e materiais
-            operacionais reutilizáveis.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
+    <PageLayout
+      eyebrow="Workspace"
+      title="Contexto"
+      description="Centralize as fontes de contexto da empresa e acompanhe os materiais de apoio que ainda alimentam a operação. A camada visual e de assets de marca migra para Design System."
+      actions={
+        <>
           <PermissionGate permission="asset.create">
-            <Button variant="outline" onClick={() => setContextDialogOpen(true)}>
+            <Button
+              variant="outline"
+              onClick={() => setContextDialogOpen(true)}
+            >
               <Plus className="size-4" />
               Adicionar fonte de contexto
             </Button>
@@ -449,18 +545,19 @@ export function AssetsPage() {
           <PermissionGate permission="asset.create">
             <Button onClick={() => setOperationalDialogOpen(true)}>
               <FolderOpen className="size-4" />
-              Adicionar asset operacional
+              Adicionar material de apoio
             </Button>
           </PermissionGate>
-        </div>
-      </div>
+        </>
+      }
+    >
 
       <Tabs
         value={activeTab}
         onValueChange={(value) => {
-          setActiveTab(value as AssetRoleFilter);
+          void setActiveTab(value as "context" | "operational");
           setSelectedRows({});
-          setCategoryFilter('all');
+          void setCategoryFilter("all");
         }}
       >
         <TabsList variant="underline">
@@ -475,16 +572,15 @@ export function AssetsPage() {
             <CardContent className="flex flex-col gap-4 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-2xl">
                 <p className="text-[13px] text-[var(--fg-secondary)]">
-                  Use esta aba para cadastrar fontes que ajudam a enriquecer o contexto oficial da
-                  empresa. O sistema opera o pipeline, mas a aprovação continua humana.
+                  Use esta aba para cadastrar fontes que ajudam a enriquecer o
+                  contexto oficial da empresa. O sistema opera o pipeline, mas a
+                  aprovação continua humana.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Select
                   value={contextStatusFilter}
-                  onValueChange={(value) =>
-                    setContextStatusFilter(value as ContextAssetStatus | 'all')
-                  }
+                  onValueChange={(value) => void setContextStatusFilter(value)}
                 >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Status do contexto" />
@@ -514,16 +610,15 @@ export function AssetsPage() {
             <CardContent className="flex flex-col gap-4 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-2xl">
                 <p className="text-[13px] text-[var(--fg-secondary)]">
-                  Reúna materiais reutilizáveis para futuras gerações de post, copy, visual e
-                  páginas. A IA pode sugeri-los depois com base em encaixe semântico e uso real.
+                  Reúna materiais reutilizáveis para futuras gerações de post,
+                  copy, visual e páginas. A IA pode sugeri-los depois com base
+                  em encaixe semântico e uso real.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Select
                   value={operationalStatusFilter}
-                  onValueChange={(value) =>
-                    setOperationalStatusFilter(value as OperationalAssetStatus | 'all')
-                  }
+                  onValueChange={(value) => void setOperationalStatusFilter(value)}
                 >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Status operacional" />
@@ -547,19 +642,19 @@ export function AssetsPage() {
             <div className="flex flex-1 flex-wrap gap-2">
               <Input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => void setSearch(event.target.value)}
                 placeholder="Buscar por título, descrição ou origem..."
                 className="max-w-md"
               />
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <Select value={categoryFilter} onValueChange={(v) => void setCategoryFilter(v)}>
                 <SelectTrigger className="w-[220px]">
                   <SelectValue placeholder="Categoria visível" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas as categorias</SelectItem>
                   {categoryOptions.map((category) => (
-                    <SelectItem key={category} value={category ?? 'other'}>
-                      {categoryLabels[category ?? ''] ?? category}
+                    <SelectItem key={category} value={category ?? "other"}>
+                      {categoryLabels[category ?? ""] ?? category}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -572,13 +667,13 @@ export function AssetsPage() {
                   {selectedAssetIds.length} selecionado(s)
                 </span>
 
-                {activeTab === 'context' ? (
+                {activeTab === "context" ? (
                   <>
                     <PermissionGate permission="asset.context.review">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleBulkAction('approve_context')}
+                        onClick={() => handleBulkAction("approve_context")}
                       >
                         <Sparkles className="size-4" />
                         Aprovar
@@ -588,7 +683,7 @@ export function AssetsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleBulkAction('discard_context')}
+                        onClick={() => handleBulkAction("discard_context")}
                       >
                         <Trash2 className="size-4" />
                         Descartar
@@ -598,7 +693,11 @@ export function AssetsPage() {
                 ) : (
                   <>
                     <PermissionGate permission="asset.archive">
-                      <Button variant="ghost" size="sm" onClick={() => handleBulkAction('archive')}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleBulkAction("archive")}
+                      >
                         <Archive className="size-4" />
                         Arquivar
                       </Button>
@@ -607,7 +706,7 @@ export function AssetsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleBulkAction('mark_obsolete')}
+                        onClick={() => handleBulkAction("mark_obsolete")}
                       >
                         <Trash2 className="size-4" />
                         Marcar obsoleto
@@ -617,7 +716,7 @@ export function AssetsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleBulkAction('promote_to_context')}
+                        onClick={() => handleBulkAction("promote_to_context")}
                       >
                         <Sparkles className="size-4" />
                         Promover para contexto
@@ -632,20 +731,20 @@ export function AssetsPage() {
           {categoryOptions.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               <Button
-                variant={categoryFilter === 'all' ? 'outline' : 'ghost'}
+                variant={categoryFilter === "all" ? "outline" : "ghost"}
                 size="sm"
-                onClick={() => setCategoryFilter('all')}
+                onClick={() => void setCategoryFilter("all")}
               >
                 Todas
               </Button>
               {categoryOptions.map((category) => (
                 <Button
                   key={category}
-                  variant={categoryFilter === category ? 'outline' : 'ghost'}
+                  variant={categoryFilter === category ? "outline" : "ghost"}
                   size="sm"
-                  onClick={() => setCategoryFilter(category ?? 'all')}
+                  onClick={() => void setCategoryFilter(category ?? "all")}
                 >
-                  {categoryLabels[category ?? ''] ?? category}
+                  {categoryLabels[category ?? ""] ?? category}
                 </Button>
               ))}
             </div>
@@ -686,6 +785,6 @@ export function AssetsPage() {
           if (!open) setSelectedAssetId(null);
         }}
       />
-    </div>
+    </PageLayout>
   );
 }

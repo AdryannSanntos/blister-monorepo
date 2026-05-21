@@ -107,6 +107,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/core/shared/components/ui/dialog";
+import { EmptyState } from "@/core/shared/components/ui/empty-state";
 import { Display } from "@/core/shared/components/ui/display";
 import {
   Drawer,
@@ -2479,20 +2480,20 @@ export function DesignSystemPage() {
           >
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>
-                <CardHeader>
-                  <CardTitle>No automations yet</CardTitle>
-                  <CardDescription>
-                    Automations run skills on a schedule or trigger. Start from
-                    a template or describe what you want — Aurora will draft it.
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter className="gap-3">
-                  <Button>
-                    <WandSparkles data-icon="inline-start" />
-                    Describe an automation
-                  </Button>
-                  <Button variant="outline">Browse templates</Button>
-                </CardFooter>
+                <CardContent className="p-6">
+                  <EmptyState
+                    icon={WandSparkles}
+                    title="No automations yet"
+                    description="Automations run skills on a schedule or trigger. Start from a template or describe what you want and Aurora will draft the first setup."
+                    action={
+                      <Button>
+                        <WandSparkles data-icon="inline-start" />
+                        Describe an automation
+                      </Button>
+                    }
+                    compact
+                  />
+                </CardContent>
               </Card>
               <Card>
                 <CardHeader>
