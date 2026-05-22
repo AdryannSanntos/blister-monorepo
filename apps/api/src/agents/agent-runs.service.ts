@@ -33,6 +33,10 @@ export class AgentRunsService {
       throw new NotFoundException('Agent does not have an active version');
     }
 
+    const queuedCount = await this.prisma.agentRun.count({
+      where: { organizationId, status: 'queued' },
+    });
+
     const run = await this.prisma.agentRun.create({
       data: {
         organizationId,
@@ -47,6 +51,7 @@ export class AgentRunsService {
         agentId,
         agentVersionId: agent.activeVersionId,
         status: 'queued',
+        queuePosition: queuedCount + 1,
         inputPayload: toJsonValue(input.input),
         createdByUserId: userId,
       },

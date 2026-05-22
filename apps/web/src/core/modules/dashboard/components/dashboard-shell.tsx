@@ -1,40 +1,31 @@
 "use client";
 
 import {
-  ArrowLeftRight,
   Bell,
   Bot,
   Brain,
   Building2,
-  ChevronsUpDown,
-  ClipboardList,
-  Coins,
   FileCode2,
-  History,
-  Image,
   KeyRound,
   LayoutDashboard,
   Library,
   LogOut,
-  Mail,
-  MessageCircle,
-  Moon,
   PanelLeftClose,
   PanelLeftOpen,
-  PenLine,
   PlugZap,
-  Plus,
   Settings,
-  Share2,
-  Sun,
-  User,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import { type ReactNode, useState } from "react";
 import { toast } from "sonner";
+import { useAgentRuns } from "src/core/modules/agents/hooks/use-agent-runs";
+import { useCompanyAgents } from "src/core/modules/agents/hooks/use-agents";
+import {
+  UserTrigger,
+  WorkspaceTrigger,
+} from "src/core/modules/dashboard/components/sidebar-triggers";
 import {
   getInitials,
   useDashboardData,
@@ -44,7 +35,6 @@ import {
   AppSidebar,
   type SidebarGroupDef,
 } from "src/core/shared/components/ui/app-sidebar";
-import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -58,7 +48,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
@@ -97,7 +86,6 @@ function getHeaderTitle(pathname: string) {
 export function DashboardShell({ children }: DashboardShellProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     try {
@@ -111,11 +99,44 @@ export function DashboardShell({ children }: DashboardShellProps) {
     displayName,
     activeOrganization,
     activeRole,
-    organizations,
-    setActiveOrgId,
     clearActiveOrg,
     isLoading,
   } = useDashboardData();
+
+  const agents = useCompanyAgents(activeOrganization?.id ?? null);
+  const runs = useAgentRuns(activeOrganization?.id ?? null, undefined, {
+    pollActive: true,
+  });
+
+  const runningByAgent = new Map<string, number>();
+  if (runs.data) {
+    for (const run of runs.data) {
+      if (run.status === "running" || run.status === "queued") {
+        runningByAgent.set(
+          run.agentId,
+          (runningByAgent.get(run.agentId) ?? 0) + 1,
+        );
+      }
+    }
+  }
+
+  const dynamicAgentItems: SidebarGroupDef["items"] = (agents.data ?? [])
+    .filter((a) => a.status === "active")
+    .slice(0, 8)
+    .map((agent) => ({
+      label: agent.name,
+      icon: Bot,
+      href: `/dashboard/workspace/agents/${agent.id}`,
+      permission: "agent.read" as const,
+      badge: runningByAgent.has(agent.id)
+        ? {
+            value: String(runningByAgent.get(agent.id)),
+            tone: "warning" as const,
+          }
+        : undefined,
+      match: (p: string) =>
+        p.startsWith(`/dashboard/workspace/agents/${agent.id}`),
+    }));
 
   const userInitials = getInitials(displayName);
   const workspaceInitials = getInitials(
@@ -135,16 +156,6 @@ export function DashboardShell({ children }: DashboardShellProps) {
     router.refresh();
   }
 
-  function handleSelectWorkspace(organizationId: string) {
-    if (organizationId === activeOrganization?.id) return;
-    setActiveOrgId(organizationId);
-    router.push("/dashboard");
-  }
-
-  function showComingSoon(label: string) {
-    toast.info(`${label} estará disponível em breve.`);
-  }
-
   const sidebarGroups: SidebarGroupDef[] = [
     {
       items: [
@@ -153,13 +164,6 @@ export function DashboardShell({ children }: DashboardShellProps) {
           icon: LayoutDashboard,
           href: "/dashboard",
           match: (p) => p === "/dashboard",
-        },
-        {
-          label: "Chat",
-          icon: MessageCircle,
-          href: "/dashboard/workspace/chat",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/chat"),
         },
         {
           label: "Notificações",
@@ -223,13 +227,6 @@ export function DashboardShell({ children }: DashboardShellProps) {
           permission: "company.update" as const,
           match: (p) => p.startsWith("/dashboard/workspace/settings"),
         },
-        {
-          label: "Créditos",
-          icon: Coins,
-          href: "/dashboard/workspace/agents/credits",
-          permission: "credit.read" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/credits"),
-        },
       ],
     },
     {
@@ -237,74 +234,20 @@ export function DashboardShell({ children }: DashboardShellProps) {
       collapsible: true,
       items: [
         {
-          label: "Integrações",
-          icon: PlugZap,
-          href: "/dashboard/workspace/integrations",
-          beta: true,
-          permission: "integration.read" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/integrations"),
-        },
-        {
           label: "Meus agentes",
           icon: Bot,
           href: "/dashboard/workspace/agents",
           permission: "agent.read" as const,
           match: (p) => p === "/dashboard/workspace/agents",
         },
+        ...dynamicAgentItems,
         {
-          label: "Histórico",
-          icon: History,
-          href: "/dashboard/workspace/agents/history",
-          permission: "agent.run.read" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/history"),
-        },
-      ],
-    },
-    {
-      label: "Automações",
-      collapsible: true,
-      items: [
-        {
-          label: "Briefing",
-          icon: ClipboardList,
-          href: "/dashboard/workspace/agents/analysis",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/analysis"),
-        },
-        {
-          label: "Gerar copy",
-          icon: PenLine,
-          href: "/dashboard/workspace/agents/copy",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/copy"),
-        },
-        {
-          label: "Gerar imagem",
-          icon: Image,
-          href: "/dashboard/workspace/agents/image",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/image"),
-        },
-        {
-          label: "Criar post",
-          icon: Share2,
-          href: "/dashboard/workspace/agents/post",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/post"),
-        },
-        {
-          label: "Gerar e-mail",
-          icon: Mail,
-          href: "/dashboard/workspace/agents/email",
-          permission: "agent.execute" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/agents/email"),
-        },
-        {
-          label: "Adaptar conteúdo",
-          icon: ArrowLeftRight,
-          soon: true,
-          permission: "agent.execute" as const,
-          onSelect: () => showComingSoon("Adaptar conteúdo"),
+          label: "Integrações",
+          icon: PlugZap,
+          href: "/dashboard/workspace/integrations",
+          beta: true,
+          permission: "integration.read" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/integrations"),
         },
       ],
     },
@@ -337,7 +280,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         groups={sidebarGroups}
         workspace={{
           name: activeOrganization.name,
-          meta: `${activeOrganization.slug} · ${organizations.length} workspace${organizations.length > 1 ? "s" : ""}`,
+          meta: activeOrganization.slug,
           initials: workspaceInitials,
         }}
         user={{
@@ -347,117 +290,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
           initials: userInitials,
         }}
         workspaceTrigger={(collapsed) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className={
-                  collapsed
-                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-                    : "flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
-                }
-              >
-                <Avatar
-                  shape="square"
-                  className={collapsed ? "size-8" : "size-10"}
-                >
-                  <AvatarFallback
-                    className={collapsed ? "text-[12px]" : "text-[13px]"}
-                  >
-                    {workspaceInitials}
-                  </AvatarFallback>
-                </Avatar>
-                {!collapsed && (
-                  <>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
-                        {activeOrganization.name}
-                      </p>
-                      <p className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                        {activeOrganization.slug}
-                      </p>
-                    </div>
-                    <ChevronsUpDown className="size-3.5 shrink-0 text-[var(--fg-quaternary)]" />
-                  </>
-                )}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-72">
-              <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {organizations.map((org) => (
-                <DropdownMenuItem
-                  key={org.id}
-                  onClick={() => handleSelectWorkspace(org.id)}
-                >
-                  <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="truncate text-[13px] font-medium">
-                      {org.name}
-                    </span>
-                    <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                      {org.slug}
-                    </span>
-                  </span>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => router.push("/workspaces/create")}
-              >
-                <Plus className="size-3.5 text-[var(--fg-tertiary)]" />
-                <span className="text-[13px]">Criar novo workspace</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <WorkspaceTrigger
+            collapsed={collapsed}
+            workspaceInitials={workspaceInitials}
+          />
         )}
         userTrigger={(collapsed) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className={
-                  collapsed
-                    ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-                    : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left"
-                }
-              >
-                <Avatar className={collapsed ? "size-8" : "size-9"}>
-                  <AvatarFallback className="text-[11px]">
-                    {userInitials}
-                  </AvatarFallback>
-                </Avatar>
-                {!collapsed && (
-                  <>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
-                        {displayName}
-                      </p>
-                    </div>
-                    <ChevronsUpDown className="size-3.5 shrink-0 text-[var(--fg-quaternary)]" />
-                  </>
-                )}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="end" className="w-56">
-              <DropdownMenuItem
-                onClick={() => router.push("/dashboard/account/settings")}
-              >
-                <User />
-                Configurações da conta
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                {theme === "dark" ? <Sun /> : <Moon />}
-                Alternar tema
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleSignOut}>
-                <LogOut />
-                Sair
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserTrigger
+            collapsed={collapsed}
+            displayName={displayName}
+            userInitials={userInitials}
+          />
         )}
       />
 

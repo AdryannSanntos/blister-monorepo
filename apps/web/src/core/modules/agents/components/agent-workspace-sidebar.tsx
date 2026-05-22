@@ -1,79 +1,182 @@
 "use client";
 
-import { History, MessageCircle, Settings, Workflow } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "src/core/shared/utils";
+import {
+  ArrowLeft,
+  GitBranch,
+  History,
+  MessageCircle,
+  MessageSquare,
+  Plus,
+  Settings,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  useAgentThreads,
+  useCreateThread,
+} from "src/core/modules/agents/hooks/use-agent-chat";
+import type { Agent } from "src/core/modules/agents/hooks/use-agents";
+import {
+  UserTrigger,
+  WorkspaceTrigger,
+} from "src/core/modules/dashboard/components/sidebar-triggers";
+import {
+  getInitials,
+  useDashboardData,
+} from "src/core/modules/dashboard/hooks/use-dashboard-data";
+import {
+  AppSidebar,
+  type SidebarGroupDef,
+} from "src/core/shared/components/ui/app-sidebar";
 
-type AgentWorkspaceSidebarProps = {
-  agentId: string;
-  agentName: string;
+type Props = {
+  orgId: string;
+  agent: Agent;
+  activeThreadId?: string | null;
+  hasActiveRun?: boolean;
 };
 
-const navItems = (agentId: string) => [
-  {
-    key: "chat",
-    label: "Chat",
-    icon: MessageCircle,
-    href: `/dashboard/workspace/agents/${agentId}/chat`,
-  },
-  {
-    key: "workflow",
-    label: "Workflow",
-    icon: Workflow,
-    href: `/dashboard/workspace/agents/${agentId}/workflow`,
-  },
-  {
-    key: "executions",
-    label: "Execuções",
-    icon: History,
-    href: `/dashboard/workspace/agents/${agentId}/executions`,
-  },
-  {
-    key: "settings",
-    label: "Configurações",
-    icon: Settings,
-    href: `/dashboard/workspace/agents/${agentId}/settings`,
-  },
-];
-
 export function AgentWorkspaceSidebar({
-  agentId,
-  agentName,
-}: AgentWorkspaceSidebarProps) {
-  const pathname = usePathname();
-  const items = navItems(agentId);
+  orgId,
+  agent,
+  activeThreadId,
+  hasActiveRun,
+}: Props) {
+  const router = useRouter();
+  const { displayName, activeOrganization, activeRole } = useDashboardData();
+  const threads = useAgentThreads(orgId, agent.id);
+  const createThread = useCreateThread(orgId, agent.id);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const saved = localStorage.getItem("workana-ai:agent-sidebar-open");
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const basePath = `/dashboard/workspace/agents/${agent.id}`;
+  const userInitials = getInitials(displayName);
+  const workspaceInitials = getInitials(
+    activeOrganization?.name ?? "Workspace",
+  );
+
+  async function handleNewThread() {
+    const thread = await createThread.mutateAsync(undefined);
+    router.push(`${basePath}/chat?thread=${thread.id}`);
+  }
+
+  const threadItems = (threads.data ?? []).map((thread) => ({
+    label: thread.title ?? "Conversa sem título",
+    icon: MessageSquare,
+    href: `${basePath}/chat?thread=${thread.id}`,
+    permission: "agent.execute" as const,
+    active: thread.id === activeThreadId,
+  }));
+
+  const sidebarGroups: SidebarGroupDef[] = [
+    {
+      items: [
+        {
+          label: "Voltar ao dashboard",
+          icon: ArrowLeft,
+          href: "/dashboard/workspace/agents",
+        },
+      ],
+    },
+    {
+      label: agent.name,
+      collapsible: false,
+      items: [
+        {
+          label: "Chat",
+          icon: MessageCircle,
+          href: `${basePath}/chat`,
+          permission: "agent.read" as const,
+          match: (p) => p.startsWith(`${basePath}/chat`),
+          badge: hasActiveRun
+            ? { value: "•", tone: "warning" as const }
+            : undefined,
+        },
+        {
+          label: "Workflow",
+          icon: GitBranch,
+          href: `${basePath}/workflow`,
+          permission: "agent.update" as const,
+          match: (p) => p.startsWith(`${basePath}/workflow`),
+        },
+        {
+          label: "Execuções",
+          icon: History,
+          href: `${basePath}/executions`,
+          permission: "agent.run.read" as const,
+          match: (p) => p.startsWith(`${basePath}/executions`),
+        },
+        {
+          label: "Configurações",
+          icon: Settings,
+          href: `${basePath}/settings`,
+          permission: "agent.update" as const,
+          match: (p) => p.startsWith(`${basePath}/settings`),
+        },
+      ],
+    },
+    {
+      label: "Conversas",
+      collapsible: true,
+      items: [
+        {
+          label: "Nova conversa",
+          icon: Plus,
+          onSelect: () => void handleNewThread(),
+          permission: "agent.execute" as const,
+        },
+        ...threadItems,
+      ],
+    },
+  ];
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="border-b border-[var(--line-subtle)] px-4 py-4">
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-          Agente
-        </p>
-        <p className="mt-1 truncate text-[14px] font-medium text-[var(--fg-primary)]">
-          {agentName}
-        </p>
-      </div>
-      <nav className="flex-1 space-y-0.5 p-2">
-        {items.map((item) => {
-          const isActive = pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2.5 rounded-[var(--r-md)] px-3 py-2 text-[13px] transition-colors",
-                isActive
-                  ? "bg-[var(--bg-active)] font-medium text-[var(--fg-primary)]"
-                  : "text-[var(--fg-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]",
-              )}
-            >
-              <item.icon className="size-4 shrink-0" />
-              {item.label}
-            </Link>
+    <AppSidebar
+      defaultOpen
+      open={sidebarOpen}
+      onOpenChange={(next) => {
+        setSidebarOpen(next);
+        try {
+          localStorage.setItem(
+            "workana-ai:agent-sidebar-open",
+            JSON.stringify(next),
           );
-        })}
-      </nav>
-    </div>
+        } catch {}
+      }}
+      fullHeight
+      className="shrink-0 p-3"
+      groups={sidebarGroups}
+      workspace={{
+        name: activeOrganization?.name ?? "Workspace",
+        meta: activeOrganization?.slug ?? "",
+        initials: workspaceInitials,
+      }}
+      user={{
+        name: displayName,
+        email: "",
+        role: activeRole ?? "member",
+        initials: userInitials,
+      }}
+      workspaceTrigger={(collapsed) => (
+        <WorkspaceTrigger
+          collapsed={collapsed}
+          workspaceInitials={workspaceInitials}
+        />
+      )}
+      userTrigger={(collapsed) => (
+        <UserTrigger
+          collapsed={collapsed}
+          displayName={displayName}
+          userInitials={userInitials}
+        />
+      )}
+    />
   );
 }

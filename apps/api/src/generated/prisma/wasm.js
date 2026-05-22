@@ -642,7 +642,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/adryansantos/Documents/PROJETOS/company-os-monorepo/apps/api/src/generated/prisma",
+      "value": "/Users/adryansantos/Documents/Documentos - MacBook Air de Adryan - 1/PROJETOS/company-os-monorepo/apps/api/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -656,7 +656,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/adryansantos/Documents/PROJETOS/company-os-monorepo/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "/Users/adryansantos/Documents/Documentos - MacBook Air de Adryan - 1/PROJETOS/company-os-monorepo/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -670,7 +670,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

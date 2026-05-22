@@ -1,104 +1,85 @@
 import {
-  ArrowDownToLine,
-  ArrowUpFromLine,
   Brain,
-  GitFork,
-  ImageIcon,
-  Library,
+  Database,
+  FileCode2,
+  HardDrive,
+  Image,
+  ListChecks,
   type LucideIcon,
-  MessageSquareText,
-  ShieldCheck,
-  Shuffle,
+  RefreshCw,
+  Sparkles,
 } from "lucide-react";
 
-export type BlockType =
+export type BlockTypeKey =
   | "input"
-  | "output"
   | "llm_generate"
   | "image_generate"
-  | "condition"
-  | "brain_context"
-  | "context_retrieval"
-  | "transform"
-  | "review_gate";
+  | "question_form"
+  | "html_validation"
+  | "output";
 
-export type BlockMeta = {
-  type: BlockType;
+export type BlockTypeDef = {
+  key: BlockTypeKey;
   label: string;
   description: string;
   icon: LucideIcon;
-  color: string;
-  maxInstances?: number;
+  tone: string;
 };
 
-export const BLOCK_REGISTRY: BlockMeta[] = [
-  {
-    type: "input",
+export const BLOCK_TYPES: Record<BlockTypeKey, BlockTypeDef> = {
+  input: {
+    key: "input",
     label: "Entrada",
-    description: "Ponto de entrada do fluxo",
-    icon: ArrowDownToLine,
-    color: "var(--accent)",
-    maxInstances: 1,
+    description: "Recebe a mensagem do usuário ou payload externo.",
+    icon: Database,
+    tone: "text-[var(--info)]",
   },
-  {
-    type: "llm_generate",
-    label: "Gerar texto (LLM)",
-    description: "Geração de texto via modelo de linguagem",
-    icon: MessageSquareText,
-    color: "#8b5cf6",
+  llm_generate: {
+    key: "llm_generate",
+    label: "Gerar com LLM",
+    description: "Chama um modelo de linguagem para gerar texto.",
+    icon: Sparkles,
+    tone: "text-[var(--accent)]",
   },
-  {
-    type: "image_generate",
+  image_generate: {
+    key: "image_generate",
     label: "Gerar imagem",
-    description: "Geração de imagem via modelo generativo",
-    icon: ImageIcon,
-    color: "#f59e0b",
+    description: "Gera uma imagem a partir de prompt.",
+    icon: Image,
+    tone: "text-[var(--accent)]",
   },
-  {
-    type: "brain_context",
-    label: "Brain da empresa",
-    description: "Consulta o brain do workspace",
-    icon: Brain,
-    color: "#06b6d4",
+  question_form: {
+    key: "question_form",
+    label: "Perguntar ao usuário",
+    description: "Coleta informações antes de continuar.",
+    icon: ListChecks,
+    tone: "text-[var(--warning)]",
   },
-  {
-    type: "context_retrieval",
-    label: "Buscar contexto",
-    description: "Recupera contexto de fontes registradas",
-    icon: Library,
-    color: "#10b981",
+  html_validation: {
+    key: "html_validation",
+    label: "Validar HTML",
+    description: "Confere se o HTML gerado é válido antes de seguir.",
+    icon: FileCode2,
+    tone: "text-[var(--info)]",
   },
-  {
-    type: "condition",
-    label: "Condição",
-    description: "Ramificação condicional do fluxo",
-    icon: GitFork,
-    color: "#ec4899",
-  },
-  {
-    type: "transform",
-    label: "Transformar",
-    description: "Transforma dados entre blocos",
-    icon: Shuffle,
-    color: "#64748b",
-  },
-  {
-    type: "review_gate",
-    label: "Revisão manual",
-    description: "Pausa o fluxo para aprovação humana",
-    icon: ShieldCheck,
-    color: "#f97316",
-  },
-  {
-    type: "output",
+  output: {
+    key: "output",
     label: "Saída",
-    description: "Ponto de saída do fluxo",
-    icon: ArrowUpFromLine,
-    color: "#22c55e",
-    maxInstances: 1,
+    description: "Entrega o resultado final ao usuário.",
+    icon: HardDrive,
+    tone: "text-[var(--success)]",
   },
-];
+};
 
-export function getBlockMeta(type: BlockType): BlockMeta {
-  return BLOCK_REGISTRY.find((b) => b.type === type) ?? BLOCK_REGISTRY[0];
+export const STEP_ICONS: Record<string, LucideIcon> = {
+  intent_classification: Brain,
+  context_retrieval: Database,
+  llm_call: Sparkles,
+  html_validation: FileCode2,
+  output_storage: HardDrive,
+  attempt: RefreshCw,
+};
+
+export function getStepIcon(blockType: string): LucideIcon {
+  return STEP_ICONS[blockType] ?? Sparkles;
 }

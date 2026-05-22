@@ -79,7 +79,28 @@ Exceções aceitas: pickers, controles de formulário, onboarding, showcases vis
 - **Filtros:** passar a prop `filters` com `DataTableFilter[]`; cada filtro define `id`, `label` e `options` com predicados específicos do fluxo. O icon button `SlidersHorizontal` aparece na toolbar esquerda automaticamente.
 - **Floating footer de seleção:** aparece automaticamente quando há linhas selecionadas e `footerActions` (bulk actions + export). É sticky na área de conteúdo (`sticky bottom-4`), não na viewport. Ações padrão: exportar CSV e exportar PDF (via `exportOptions`). Ações extras via `bulkActions` — sempre incluir excluir quando a permissão existir.
 
-### 9. Animações são parte da experiência — nunca omitir
+### 9. Simplicidade radical — a IA trabalha, o usuário guia
+
+**Esta é uma regra crítica e inviolável de produto.**
+
+O sistema deve ser operável por qualquer pessoa, inclusive quem nunca usou IA. Antes de criar qualquer fluxo ou tela, pergunte: *"a pessoa consegue usar isso sem ler um tutorial?"*
+
+**Princípios obrigatórios:**
+
+- **Zero formulários desnecessários.** Se a IA pode inferir a informação pelo contexto ou por conversa, não peça upfront. Formulários com mais de 2–3 campos para iniciar uma tarefa são um sinal vermelho.
+- **Chat como interface padrão para qualquer geração.** Geração de imagem, copy, e-mail, briefing, post — tudo começa com o usuário escrevendo em linguagem natural. A IA faz perguntas se precisar de mais contexto. O resultado aparece direto no chat. O usuário refina por conversa.
+- **Iteração no chat, não em formulários.** Após a IA gerar algo (imagem, texto, PDF), o usuário pede ajustes escrevendo. Nunca redirecionar para um formulário de edição.
+- **Inputs só quando estritamente necessários.** Se um campo pode ser evitado (inferido, sugerido pela IA, ou perguntado no chat), ele não deve existir na UI.
+- **Ações em 1 clique sempre que possível.** O usuário não deve navegar por múltiplas telas para completar uma tarefa rotineira.
+- **A IA assume defaults inteligentes.** Ao criar um agente, iniciar uma execução ou configurar algo, a IA preenche o que sabe e expõe apenas o que é realmente decisão do usuário.
+
+**Exemplo correto:** fluxo de gerar imagem = campo de texto livre ("descreva a imagem") + botão enviar → imagem aparece no chat → usuário pede ajustes no mesmo chat.
+
+**Exemplo errado:** formulário com campos de estilo, resolução, formato, tom, referência de cor, etc. antes de gerar qualquer coisa.
+
+Violar esta regra em qualquer nova tela ou componente é equivalente a violar a regra de permissões — bloqueia a entrega.
+
+### 10. Animações são parte da experiência — nunca omitir
 
 Todo componente interativo deve ter suas animações padrão funcionando: modals, selects, dropdowns, drawers, toasts, accordions, etc.
 
@@ -90,7 +111,7 @@ Todo componente interativo deve ter suas animações padrão funcionando: modals
 
 Ao instalar ou recriar componentes shadcn/ui, verificar que `tw-animate-css` está presente e o `@plugin` está declarado. Sem o plugin, todas as animações de entrada/saída de overlays ficam silenciosamente desabilitadas.
 
-### 10. Convenção de rotas: workspace vs. dashboard
+### 11. Convenção de rotas: workspace vs. dashboard
 
 ```
 /workspace/*  →  fora de qualquer empresa  (selecionar/criar workspace)

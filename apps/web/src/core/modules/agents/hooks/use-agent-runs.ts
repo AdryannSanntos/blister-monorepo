@@ -4,124 +4,74 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-type AgentSummary = {
-  id: string;
-  name: string;
-  templateId?: string | null;
-};
+export type RunStatus =
+  | "queued"
+  | "running"
+  | "completed"
+  | "error"
+  | "cancelled";
 
-type AgentVersionSummary = {
+export type RunStep = {
   id: string;
-  versionNumber: number;
-  status: string;
-};
-
-export type AgentRunStep = {
-  id: string;
-  blockKey: string;
   blockType: string;
-  status: string;
-  inputPayload?: unknown;
-  outputPayload?: unknown;
-  errorMessage?: string | null;
-  startedAt?: string | null;
-  completedAt?: string | null;
+  status: "queued" | "running" | "completed" | "error";
+  inputPayload: unknown;
+  outputPayload: unknown;
+  errorMessage: string | null;
+  retryCount: number;
+  startedAt: string | null;
+  finishedAt: string | null;
   createdAt: string;
 };
 
 export type AgentRun = {
   id: string;
-  organizationId: string;
   agentId: string;
-  agentVersionId: string;
-  status: string;
-  inputPayload?: unknown;
-  outputPayload?: unknown;
-  errorMessage?: string | null;
+  organizationId: string;
+  status: RunStatus;
+  queuePosition: number | null;
+  inputPayload: unknown;
+  outputPayload: unknown;
+  errorMessage: string | null;
+  creditDelta: number;
+  technicalCost: number;
   createdByUserId: string;
-  creditDelta?: number;
-  technicalCost?: number;
   createdAt: string;
   updatedAt: string;
-  agent: AgentSummary;
-  agentVersion?: AgentVersionSummary;
-  steps?: AgentRunStep[];
+  steps?: RunStep[];
 };
 
-export type AgentRunDetail = {
-  run: AgentRun;
-  creditEntries: CreditLedgerEntry[];
-  technicalCosts: TechnicalCostEntry[];
+type ListRunsFilters = {
+  agentId?: string;
+  status?: string;
+  onlyOwnRuns?: boolean;
 };
 
-export type CreditBalance = {
-  organizationId: string;
-  balance: number;
-};
+const runsKey = (orgId: string, filters?: ListRunsFilters) =>
+  [
+    "agent-runs",
+    orgId,
+    filters?.agentId ?? null,
+    filters?.status ?? null,
+    filters?.onlyOwnRuns ?? null,
+  ] as const;
+const runKey = (orgId: string, runId: string) =>
+  ["agent-run", orgId, runId] as const;
 
-export type CreditLedgerEntry = {
-  id: string;
-  organizationId: string;
-  runId?: string | null;
-  entryType: string;
-  amount: number;
-  balanceAfter: number;
-  metadata?: Record<string, unknown>;
-  createdByUserId?: string | null;
-  createdAt: string;
-};
-
-export type TechnicalCostEntry = {
-  id: string;
-  runId?: string | null;
-  providerId?: string | null;
-  modelId?: string | null;
-  amount: number;
-  currency: string;
-  unit: string;
-  createdAt: string;
-};
-
-type UseAgentRunsOptions = {
-  pollActive?: boolean;
-};
-
-function invalidateRuns(
-  queryClient: ReturnType<typeof useQueryClient>,
-  orgId: string,
-) {
-  return Promise.all([
-    queryClient.invalidateQueries({ queryKey: ["agent-runs", orgId] }),
-    queryClient.invalidateQueries({ queryKey: ["agent-run", orgId] }),
-  ]);
-}
-
-export function useRunAgent(orgId: string | null, agentId: string | null) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post<AgentRun>(
-        `/organizations/${orgId}/agents/${agentId}/runs`,
-        payload,
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      if (orgId) await invalidateRuns(queryClient, orgId);
-      toast.success("Run enfileirado.");
-    },
-    onError: () => toast.error("Erro ao enfileirar run."),
-  });
+function hasActiveRuns(runs: AgentRun[] | undefined) {
+  return Boolean(
+    runs?.some((r) => r.status === "queued" || r.status === "running"),
+  );
 }
 
 export function useAgentRuns(
-  orgId: string | null,
-  filters?: Record<string, string | boolean>,
-  options?: UseAgentRunsOptions,
+  orgId: string | null | undefined,
+  filters?: ListRunsFilters,
+  opts?: { pollActive?: boolean },
 ) {
-  return useQuery<AgentRun[]>({
-    queryKey: ["agent-runs", orgId, filters],
+  return useQuery({
+    queryKey: runsKey(orgId ?? "", filters),
+    enabled: Boolean(orgId),
     queryFn: async () => {
       const { data } = await apiClient.get<AgentRun[]>(
         `/organizations/${orgId}/agents/runs`,
@@ -129,13 +79,9 @@ export function useAgentRuns(
       );
       return data;
     },
-    enabled: Boolean(orgId),
     refetchInterval: (query) => {
-      if (!options?.pollActive) return false;
-      const runs = query.state.data as AgentRun[] | undefined;
-      return runs?.some(
-        (run) => run.status === "queued" || run.status === "running",
-      )
+      if (opts?.pollActive === false) return false;
+      return hasActiveRuns(query.state.data as AgentRun[] | undefined)
         ? 3000
         : false;
     },
@@ -143,51 +89,45 @@ export function useAgentRuns(
 }
 
 export function useAgentRun(
-  orgId: string | null,
-  runId: string | null,
-  options?: UseAgentRunsOptions,
+  orgId: string | null | undefined,
+  runId: string | null | undefined,
 ) {
-  return useQuery<AgentRunDetail>({
-    queryKey: ["agent-run", orgId, runId],
+  return useQuery({
+    queryKey: runKey(orgId ?? "", runId ?? ""),
+    enabled: Boolean(orgId && runId),
     queryFn: async () => {
-      const { data } = await apiClient.get<AgentRunDetail>(
+      const { data } = await apiClient.get<AgentRun>(
         `/organizations/${orgId}/agents/runs/${runId}`,
       );
       return data;
     },
-    enabled: Boolean(orgId && runId),
     refetchInterval: (query) => {
-      if (!options?.pollActive) return false;
-      const run = (query.state.data as AgentRunDetail | undefined)?.run;
-      return run && (run.status === "queued" || run.status === "running")
-        ? 3000
-        : false;
+      const run = query.state.data as AgentRun | undefined;
+      if (!run) return false;
+      return run.status === "queued" || run.status === "running" ? 2000 : false;
     },
   });
 }
 
-export function useOrganizationCredits(orgId: string | null) {
-  return useQuery<CreditBalance>({
-    queryKey: ["organization-credits", orgId],
-    queryFn: async () => {
-      const { data } = await apiClient.get<CreditBalance>(
-        `/organizations/${orgId}/credits`,
+export function useCreateRun(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: Record<string, unknown>) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.post<AgentRun>(
+        `/organizations/${orgId}/agents/${agentId}/runs`,
+        { input },
       );
       return data;
     },
-    enabled: Boolean(orgId),
-  });
-}
-
-export function useOrganizationCreditLedger(orgId: string | null) {
-  return useQuery<CreditLedgerEntry[]>({
-    queryKey: ["organization-credit-ledger", orgId],
-    queryFn: async () => {
-      const { data } = await apiClient.get<CreditLedgerEntry[]>(
-        `/organizations/${orgId}/credits/ledger`,
-      );
-      return data;
+    onSuccess: () => {
+      if (orgId) {
+        queryClient.invalidateQueries({ queryKey: ["agent-runs", orgId] });
+      }
     },
-    enabled: Boolean(orgId),
+    onError: () => toast.error("Erro ao iniciar execução."),
   });
 }

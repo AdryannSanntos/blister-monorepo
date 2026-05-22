@@ -1,0 +1,242 @@
+/* Workana AI — agent-elements bridge.
+   All --an-* tokens are remapped to project design tokens so components
+   inherit Workana AI identity automatically and resolve light/dark via tokens. */
+:root {
+  /* Geometry — keep numeric values but align with project radius scale */
+  --an-border-radius: var(--r-lg, 12px);
+  --an-message-border-radius: var(--an-border-radius);
+  --an-input-border-radius: var(--r-lg, 12px);
+  --an-tool-border-radius: var(--r-md, 8px);
+  --an-message-radius-inner-offset: 4px;
+  --an-max-width: 720px;
+
+  /* Surfaces */
+  --an-background: var(--bg-canvas);
+  --an-background-secondary: var(--bg-base);
+  --an-background-tertiary: var(--bg-raised);
+
+  /* Text */
+  --an-foreground: var(--fg-primary);
+  --an-foreground-muted: var(--fg-tertiary);
+  --an-foreground-subtle: var(--fg-quaternary);
+
+  /* Lines */
+  --an-border-color: var(--line-default);
+
+  /* Accent */
+  --an-primary-color: var(--accent);
+
+  /* User messages */
+  --an-user-message-bg: var(--bg-raised);
+  --an-user-message-text: var(--fg-primary);
+
+  /* Input */
+  --an-input-background: var(--bg-base);
+  --an-input-border-color: var(--line-default);
+  --an-input-color: var(--fg-primary);
+  --an-input-placeholder-color: var(--fg-quaternary);
+  --an-input-focus-outline: transparent;
+  --an-context-padding: 12px;
+
+  /* Send/Stop */
+  --an-send-button-bg: var(--accent);
+  --an-send-button-color: var(--fg-on-accent, #ffffff);
+
+  /* Tools */
+  --an-tool-background: var(--bg-base);
+  --an-tool-border-color: var(--line-subtle);
+  --an-tool-color: var(--fg-primary);
+  --an-tool-color-muted: var(--fg-tertiary);
+
+  /* Code blocks */
+  --an-code-background: var(--bg-sunken);
+  --an-code-color: var(--fg-secondary);
+
+  /* Diff (semantic project tokens) */
+  --an-diff-added-bg: color-mix(in oklch, var(--success) 12%, transparent);
+  --an-diff-added-border: color-mix(in oklch, var(--success) 45%, transparent);
+  --an-diff-added-text: var(--success);
+  --an-diff-removed-bg: color-mix(in oklch, var(--danger) 12%, transparent);
+  --an-diff-removed-border: color-mix(in oklch, var(--danger) 45%, transparent);
+  --an-diff-removed-text: var(--danger);
+}
+
+/* Project resolves theming via project tokens (light/dark on .dark root). The
+   --an-* aliases above already pick up the active values, so no extra dark
+   block is needed. */
+
+@theme inline {
+  --color-an-background: var(--an-background);
+  --color-an-background-secondary: var(--an-background-secondary);
+  --color-an-background-tertiary: var(--an-background-tertiary);
+  --color-an-foreground: var(--an-foreground);
+  --color-an-foreground-muted: var(--an-foreground-muted);
+  --color-an-foreground-subtle: var(--an-foreground-subtle);
+  --color-an-border-color: var(--an-border-color);
+  --color-an-primary-color: var(--an-primary-color);
+  --color-an-user-message-bg: var(--an-user-message-bg);
+  --color-an-user-message-text: var(--an-user-message-text);
+  --color-an-input-background: var(--an-input-background);
+  --color-an-input-border-color: var(--an-input-border-color);
+  --color-an-input-color: var(--an-input-color);
+  --color-an-input-placeholder-color: var(--an-input-placeholder-color);
+  --color-an-input-focus-outline: var(--an-input-focus-outline);
+  --color-an-send-button-bg: var(--an-send-button-bg);
+  --color-an-send-button-color: var(--an-send-button-color);
+  --color-an-tool-background: var(--an-tool-background);
+  --color-an-tool-border-color: var(--an-tool-border-color);
+  --color-an-tool-color: var(--an-tool-color);
+  --color-an-tool-color-muted: var(--an-tool-color-muted);
+  --color-an-code-background: var(--an-code-background);
+  --color-an-code-color: var(--an-code-color);
+  --color-an-diff-added-bg: var(--an-diff-added-bg);
+  --color-an-diff-added-border: var(--an-diff-added-border);
+  --color-an-diff-added-text: var(--an-diff-added-text);
+  --color-an-diff-removed-bg: var(--an-diff-removed-bg);
+  --color-an-diff-removed-border: var(--an-diff-removed-border);
+  --color-an-diff-removed-text: var(--an-diff-removed-text);
+  --radius-an-message: var(--an-message-border-radius);
+  --radius-an-message-inner: calc(
+    var(--an-message-border-radius) -
+    var(--an-message-radius-inner-offset)
+  );
+  --radius-an-input-border-radius: var(--an-input-border-radius);
+  --radius-an-tool-border-radius: var(--an-tool-border-radius);
+  --spacing-an-context-padding: var(--an-context-padding);
+  --max-width-an: var(--an-max-width);
+  --spacing-an-user-message-x: 14px;
+  --spacing-an-user-message-y: 10px;
+}
+
+/* Shimmer / blink / loading animations — token-aware */
+@keyframes an-shimmer {
+  from {
+    background-position: 100% center;
+  }
+  to {
+    background-position: 0% center;
+  }
+}
+@keyframes an-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes loading-dots {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes an-ellipsis {
+  0% {
+    width: 0;
+  }
+  33% {
+    width: 0.33em;
+  }
+  66% {
+    width: 0.66em;
+  }
+  100% {
+    width: 1em;
+  }
+}
+
+.an-text-shimmer {
+  display: inline-block;
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--fg-quaternary) 0%,
+    var(--fg-quaternary) 40%,
+    var(--fg-tertiary) 50%,
+    var(--fg-quaternary) 60%,
+    var(--fg-quaternary) 100%
+  );
+  background-repeat: no-repeat;
+}
+
+.an-text-shimmer--active {
+  animation: an-shimmer var(--an-shimmer-duration, 2s) linear infinite;
+}
+
+.an-ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  width: 0;
+  vertical-align: bottom;
+  animation: an-ellipsis 1.2s steps(1, end) infinite;
+}
+
+.an-markdown pre code {
+  counter-reset: none !important;
+}
+.an-markdown pre code > span::before {
+  content: none !important;
+  display: none !important;
+}
+.an-markdown pre code > span {
+  padding-left: 0 !important;
+}
+
+/* Diff */
+.an-edit-diff,
+.an-edit-diff pre,
+.an-edit-diff code {
+  font-size: 12px;
+}
+
+/* Markdown code blocks */
+.an-markdown [data-streamdown="code-block"] {
+  padding: 0;
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-md);
+  background: transparent;
+  gap: 0;
+}
+.an-markdown [data-streamdown="code-block-header"] {
+  padding: 0px 10px 0px 8px;
+  height: 28px;
+  font-size: 12px;
+  background-color: var(--bg-sunken);
+  border-bottom: 1px solid var(--line-subtle);
+  position: relative;
+}
+.an-markdown div:has(> [data-streamdown="code-block-actions"]) {
+  position: absolute;
+  height: 28px;
+  margin: 0;
+  top: 0;
+  right: 0;
+  padding-right: 8px;
+}
+.an-markdown [data-streamdown="code-block-actions"] {
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  padding: 0;
+}
+.an-markdown [data-streamdown="code-block-actions"] button > svg {
+  width: 14px;
+  height: 14px;
+}
+.an-markdown [data-streamdown="code-block-body"] {
+  margin: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: transparent;
+  border: transparent;
+  overflow-x: auto;
+}
+.an-markdown [data-streamdown="code-block"] pre,
+.an-markdown [data-streamdown="code-block"] code {
+  font-size: 12px;
+  background: transparent;
+}

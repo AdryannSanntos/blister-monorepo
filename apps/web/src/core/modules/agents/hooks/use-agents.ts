@@ -3,226 +3,224 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { apiClient } from "src/core/shared/utils/api-client";
-import type { AgentFlowDefinition } from "../schemas/agent-flow-schema";
+
+export type AgentStatus = "draft" | "active" | "archived";
 
 export type AgentVersion = {
   id: string;
-  versionNumber: number;
-  status: string;
-  flowDefinition: AgentFlowDefinition;
-  inputSchema: Record<string, unknown>;
-  outputSchema: Record<string, unknown>;
-  publishedAt?: string | null;
+  version: number;
+  status: "draft" | "published" | "active" | "archived";
+  flowDefinition: unknown;
+  inputSchema: unknown;
+  outputSchema: unknown;
+  notes: string | null;
   createdAt: string;
+  updatedAt: string;
 };
 
-export type CompanyAgent = {
+export type Agent = {
   id: string;
-  organizationId: string;
-  templateId?: string | null;
-  slug: string;
   name: string;
-  description?: string | null;
-  status: string;
-  activeVersionId?: string | null;
+  slug: string;
+  description: string | null;
+  status: AgentStatus;
+  category: string;
+  templateId: string | null;
+  activeVersionId: string | null;
   createdAt: string;
   updatedAt: string;
   versions?: AgentVersion[];
 };
 
-export type AgentTemplate = {
-  id: string;
-  slug: string;
+export type CreateAgentInput = {
   name: string;
-  category: string;
-  status: string;
+  slug: string;
+  description?: string;
+  category?: string;
 };
 
-function invalidateAgents(
-  queryClient: ReturnType<typeof useQueryClient>,
-  orgId: string,
-) {
-  return Promise.all([
-    queryClient.invalidateQueries({ queryKey: ["company-agents", orgId] }),
-    queryClient.invalidateQueries({ queryKey: ["company-agent", orgId] }),
-  ]);
-}
+export type UpdateAgentInput = {
+  name?: string;
+  description?: string;
+  slug?: string;
+  status?: AgentStatus;
+};
 
-export function useCompanyAgents(orgId: string | null) {
-  return useQuery<CompanyAgent[]>({
-    queryKey: ["company-agents", orgId],
+export type SaveDraftVersionInput = {
+  flowDefinition: { nodes: unknown[] };
+  inputSchema: Record<string, unknown>;
+  outputSchema: Record<string, unknown>;
+  notes?: string;
+};
+
+const agentsKey = (orgId: string) => ["agents", orgId] as const;
+const agentKey = (orgId: string, agentId: string) =>
+  ["agents", orgId, agentId] as const;
+
+export function useCompanyAgents(orgId: string | null | undefined) {
+  return useQuery({
+    queryKey: agentsKey(orgId ?? ""),
+    enabled: Boolean(orgId),
     queryFn: async () => {
-      const { data } = await apiClient.get<CompanyAgent[]>(
+      const { data } = await apiClient.get<Agent[]>(
         `/organizations/${orgId}/agents`,
       );
       return data;
     },
-    enabled: Boolean(orgId),
   });
 }
 
-export function useCompanyAgent(orgId: string | null, agentId: string | null) {
-  return useQuery<CompanyAgent>({
-    queryKey: ["company-agent", orgId, agentId],
+export function useCompanyAgent(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  return useQuery({
+    queryKey: agentKey(orgId ?? "", agentId ?? ""),
+    enabled: Boolean(orgId && agentId),
     queryFn: async () => {
-      const { data } = await apiClient.get<CompanyAgent>(
+      const { data } = await apiClient.get<Agent>(
         `/organizations/${orgId}/agents/${agentId}`,
       );
       return data;
     },
-    enabled: Boolean(orgId && agentId),
   });
 }
 
-export function useCreateCompanyAgent(orgId: string | null) {
+export function useCreateAgent(orgId: string | null | undefined) {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post<CompanyAgent>(
+    mutationFn: async (input: CreateAgentInput) => {
+      if (!orgId) throw new Error("orgId required");
+      const { data } = await apiClient.post<Agent>(
         `/organizations/${orgId}/agents`,
-        payload,
+        input,
       );
       return data;
     },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
-      toast.success("Agente criado com sucesso.");
+    onSuccess: () => {
+      if (orgId) queryClient.invalidateQueries({ queryKey: agentsKey(orgId) });
+      toast.success("Agente criado.");
     },
     onError: () => toast.error("Erro ao criar agente."),
   });
 }
 
-export function useSaveAgentDraft(
-  orgId: string | null,
-  agentId: string | null,
+export function useUpdateAgent(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
 ) {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post<AgentVersion>(
-        `/organizations/${orgId}/agents/${agentId}/versions/draft`,
-        payload,
+    mutationFn: async (input: UpdateAgentInput) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.patch<Agent>(
+        `/organizations/${orgId}/agents/${agentId}`,
+        input,
       );
       return data;
     },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
-      toast.success("Draft salvo com sucesso.");
+    onSuccess: () => {
+      if (orgId) {
+        queryClient.invalidateQueries({ queryKey: agentsKey(orgId) });
+        if (agentId) {
+          queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+        }
+      }
+      toast.success("Agente atualizado.");
     },
-    onError: () => toast.error("Erro ao salvar draft."),
+    onError: () => toast.error("Erro ao atualizar agente."),
   });
 }
 
-export function usePublishAgentVersion(
-  orgId: string | null,
-  agentId: string | null,
+export function useArchiveAgent(orgId: string | null | undefined) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (agentId: string) => {
+      if (!orgId) throw new Error("orgId required");
+      const { data } = await apiClient.patch<Agent>(
+        `/organizations/${orgId}/agents/${agentId}`,
+        { status: "archived" },
+      );
+      return data;
+    },
+    onSuccess: (_data, agentId) => {
+      if (orgId) {
+        queryClient.invalidateQueries({ queryKey: agentsKey(orgId) });
+        queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+      }
+      toast.success("Agente arquivado.");
+    },
+    onError: () => toast.error("Erro ao arquivar agente."),
+  });
+}
+
+export function useSaveDraftVersion(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
 ) {
   const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: SaveDraftVersionInput) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.post<AgentVersion>(
+        `/organizations/${orgId}/agents/${agentId}/versions/draft`,
+        input,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      if (orgId && agentId) {
+        queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+      }
+      toast.success("Rascunho salvo.");
+    },
+    onError: () => toast.error("Erro ao salvar rascunho."),
+  });
+}
 
+export function usePublishVersion(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (versionId: string) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
       const { data } = await apiClient.post<AgentVersion>(
         `/organizations/${orgId}/agents/${agentId}/versions/${versionId}/publish`,
       );
       return data;
     },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
+    onSuccess: () => {
+      if (orgId && agentId) {
+        queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+      }
       toast.success("Versão publicada.");
     },
     onError: () => toast.error("Erro ao publicar versão."),
   });
 }
 
-export function useActivateAgentVersion(
-  orgId: string | null,
-  agentId: string | null,
+export function useActivateVersion(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
 ) {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (versionId: string) => {
-      const { data } = await apiClient.post<CompanyAgent>(
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.post<AgentVersion>(
         `/organizations/${orgId}/agents/${agentId}/versions/${versionId}/activate`,
       );
       return data;
     },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
+    onSuccess: () => {
+      if (orgId && agentId) {
+        queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+        queryClient.invalidateQueries({ queryKey: agentsKey(orgId) });
+      }
       toast.success("Versão ativada.");
     },
     onError: () => toast.error("Erro ao ativar versão."),
   });
-}
-
-export function useUpdateCompanyAgent(
-  orgId: string | null,
-  agentId: string | null,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (payload: {
-      name?: string;
-      slug?: string;
-      description?: string;
-      status?: string;
-    }) => {
-      const { data } = await apiClient.patch<CompanyAgent>(
-        `/organizations/${orgId}/agents/${agentId}`,
-        payload,
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
-      toast.success("Agente atualizado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao atualizar agente."),
-  });
-}
-
-export function useArchiveCompanyAgent(orgId: string | null) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (agentId: string) => {
-      const { data } = await apiClient.patch<CompanyAgent>(
-        `/organizations/${orgId}/agents/${agentId}`,
-        { status: "archived" },
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      if (orgId) await invalidateAgents(queryClient, orgId);
-      toast.success("Agente arquivado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao arquivar agente."),
-  });
-}
-
-export type FlowType =
-  | "analysis"
-  | "copy"
-  | "image"
-  | "post"
-  | "email";
-
-export function resolveFlowAgent(
-  agents: CompanyAgent[] | undefined,
-  flowType: FlowType,
-): CompanyAgent | null {
-  if (!agents?.length) return null;
-  const bySlug = agents.find(
-    (a) =>
-      a.slug.startsWith(`${flowType}-`) || a.slug === flowType,
-  );
-  if (bySlug) return bySlug;
-  const byTemplate = agents.find(
-    (a) => a.templateId?.includes(flowType),
-  );
-  if (byTemplate) return byTemplate;
-  return agents.find((a) => a.status === "active") ?? agents[0];
 }

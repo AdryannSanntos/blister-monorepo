@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CreditsModule } from '../credits/credits.module';
 import { PlatformModule } from '../platform/platform.module';
+import { StorageModule } from '../storage/storage.module';
 import { AgentChatController } from './agent-chat.controller';
 import { AgentChatService } from './agent-chat.service';
 import { AgentExecutionService } from './agent-execution.service';
@@ -18,10 +19,11 @@ import { RagContextService } from './context/rag-context.service';
 import { StructuredContextService } from './context/structured-context.service';
 import { CompanyChatController } from './company-chat.controller';
 import { CompanyChatService } from './company-chat.service';
+import { AgentNotificationsService } from './agent-notifications.service';
 import { HtmlPreviewService } from './html-preview.service';
 
 @Module({
-  imports: [AIRuntimeModule, CreditsModule, PlatformModule],
+  imports: [AIRuntimeModule, CreditsModule, PlatformModule, StorageModule],
   controllers: [AgentsController, AgentRunsController, PlatformAgentRunsController, AgentChatController, CompanyChatController],
   providers: [
     AgentsService,
@@ -36,6 +38,7 @@ import { HtmlPreviewService } from './html-preview.service';
     StructuredContextService,
     RagContextService,
     ContextRerankerService,
+    AgentNotificationsService,
   ],
   exports: [
     AgentsService,
@@ -50,6 +53,7 @@ import { HtmlPreviewService } from './html-preview.service';
     StructuredContextService,
     RagContextService,
     ContextRerankerService,
+    AgentNotificationsService,
   ],
 })
 export class AgentsModule {}

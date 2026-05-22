@@ -225,6 +225,122 @@ export class AgentChatService {
     return { message: regenerationRequest, decision, run };
   }
 
+  async listThreads(
+    organizationId: string,
+    agentId: string,
+    userId: string,
+    options: { cursor?: string; limit: number },
+  ) {
+    await this.ensureAgentBelongsToOrganization(organizationId, agentId);
+
+    const threads = await this.prisma.agentChatThread.findMany({
+      where: {
+        organizationId,
+        agentId,
+        scope: 'agent_chat',
+        createdByUserId: userId,
+        ...(options.cursor ? { id: { lt: options.cursor } } : {}),
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: options.limit,
+      select: {
+        id: true,
+        title: true,
+        scope: true,
+        agentId: true,
+        parentThreadId: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: { select: { messages: true } },
+      },
+    });
+
+    return {
+      threads,
+      nextCursor: threads.length === options.limit ? threads[threads.length - 1]?.id : null,
+    };
+  }
+
+  async listCompanyThreads(
+    organizationId: string,
+    userId: string,
+    options: { cursor?: string; limit: number },
+  ) {
+    const threads = await this.prisma.agentChatThread.findMany({
+      where: {
+        organizationId,
+        scope: 'company_chat',
+        createdByUserId: userId,
+        ...(options.cursor ? { id: { lt: options.cursor } } : {}),
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: options.limit,
+      select: {
+        id: true,
+        title: true,
+        scope: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: { select: { messages: true } },
+      },
+    });
+
+    return {
+      threads,
+      nextCursor: threads.length === options.limit ? threads[threads.length - 1]?.id : null,
+    };
+  }
+
+  async listMessages(
+    organizationId: string,
+    threadId: string,
+    userId: string,
+    options: { cursor?: string; limit: number },
+  ) {
+    const thread = await this.prisma.agentChatThread.findFirst({
+      where: { id: threadId, organizationId },
+      select: { id: true, createdByUserId: true },
+    });
+
+    if (!thread) throw new NotFoundException('Chat thread not found');
+    if (thread.createdByUserId !== userId) throw new NotFoundException('Chat thread not found');
+
+    const messages = await this.prisma.agentChatMessage.findMany({
+      where: {
+        threadId,
+        ...(options.cursor ? { id: { lt: options.cursor } } : {}),
+      },
+      orderBy: { createdAt: 'asc' },
+      take: options.limit,
+      select: {
+        id: true,
+        role: true,
+        content: true,
+        metadata: true,
+        agentRunId: true,
+        editedFromMessageId: true,
+        regeneratedFromMessageId: true,
+        createdAt: true,
+        agentRun: {
+          select: {
+            id: true,
+            status: true,
+            queuePosition: true,
+            steps: {
+              select: { id: true, blockType: true, status: true, createdAt: true },
+              orderBy: { createdAt: 'asc' },
+            },
+          },
+        },
+      },
+    });
+
+    return {
+      messages,
+      nextCursor: messages.length === options.limit ? messages[messages.length - 1]?.id : null,
+    };
+  }
+
   private async ensureThreadExists(threadId: string) {
     const thread = await this.prisma.agentChatThread.findUnique({ where: { id: threadId } });
 

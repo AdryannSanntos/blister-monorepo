@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Param, Post, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import type { Request } from 'express';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
@@ -9,10 +9,49 @@ import {
   editMessageAndBranchSchema,
   regenerateMessageSchema,
 } from './dto';
+import { z } from 'zod';
+
+const listThreadsQuerySchema = z.object({
+  cursor: z.string().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
+const listMessagesQuerySchema = z.object({
+  cursor: z.string().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
 
 @Controller('organizations/:orgId/agents/:agentId/chat')
 export class AgentChatController {
   constructor(private readonly agentChatService: AgentChatService) {}
+
+  @Get('threads')
+  @RequirePermission('agent.execute')
+  async listThreads(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Query() query: unknown,
+    @Req() req: Request,
+  ) {
+    const parsed = listThreadsQuerySchema.safeParse(query);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentChatService.listThreads(orgId, agentId, currentUser.id, parsed.data);
+  }
+
+  @Get('threads/:threadId/messages')
+  @RequirePermission('agent.execute')
+  async listMessages(
+    @Param('orgId') orgId: string,
+    @Param('threadId') threadId: string,
+    @Query() query: unknown,
+    @Req() req: Request,
+  ) {
+    const parsed = listMessagesQuerySchema.safeParse(query);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentChatService.listMessages(orgId, threadId, currentUser.id, parsed.data);
+  }
 
   @Post('threads')
   @RequirePermission('agent.execute')

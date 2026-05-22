@@ -1,242 +1,108 @@
 "use client";
 
-import { Trash2, X } from "lucide-react";
+import type { Node } from "@xyflow/react";
+import { X } from "lucide-react";
 import { Button } from "src/core/shared/components/ui/button";
 import { Input } from "src/core/shared/components/ui/input";
+import { Label } from "src/core/shared/components/ui/label";
 import { Textarea } from "src/core/shared/components/ui/textarea";
-import { getBlockMeta, type BlockType } from "./block-types";
+import { BLOCK_TYPES, type BlockTypeKey } from "./block-types";
 
-type NodeConfigPanelProps = {
-  nodeId: string;
-  blockType: BlockType;
-  label: string;
-  config: Record<string, unknown>;
-  onUpdateLabel: (label: string) => void;
-  onUpdateConfig: (config: Record<string, unknown>) => void;
-  onDelete: () => void;
+type Props = {
+  node: Node | null;
   onClose: () => void;
+  onChange: (nodeId: string, patch: Partial<Node["data"]>) => void;
+  onDelete: (nodeId: string) => void;
 };
 
-export function NodeConfigPanel({
-  nodeId,
-  blockType,
-  label,
-  config,
-  onUpdateLabel,
-  onUpdateConfig,
-  onDelete,
-  onClose,
-}: NodeConfigPanelProps) {
-  const meta = getBlockMeta(blockType);
-  const Icon = meta.icon;
-  const isTerminal = blockType === "input" || blockType === "output";
+export function NodeConfigPanel({ node, onClose, onChange, onDelete }: Props) {
+  if (!node) return null;
+  const data = node.data as {
+    blockType: BlockTypeKey;
+    label?: string;
+    prompt?: string;
+  };
+  const type = BLOCK_TYPES[data.blockType];
+  const Icon = type.icon;
+
+  const canConfigurePrompt =
+    data.blockType === "llm_generate" || data.blockType === "image_generate";
 
   return (
-    <div className="flex h-full flex-col border-l border-[var(--line-default)] bg-[var(--bg-base)]">
-      <div className="flex items-center justify-between gap-3 border-b border-[var(--line-subtle)] px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div
-            className="flex size-7 items-center justify-center rounded-[var(--r-md)]"
-            style={{
-              backgroundColor: `${meta.color}18`,
-              color: meta.color,
-            }}
-          >
-            <Icon className="size-3.5" />
-          </div>
-          <p className="text-[13px] font-medium text-[var(--fg-primary)]">
-            {meta.label}
+    <aside className="flex w-80 shrink-0 flex-col border-l border-[var(--line-subtle)] bg-[var(--bg-base)]">
+      <div className="flex items-center justify-between gap-2 border-b border-[var(--line-subtle)] px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <Icon className={`size-4 ${type.tone}`} />
+          <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
+            {type.label}
           </p>
         </div>
-        <Button variant="ghost" size="icon-sm" onClick={onClose}>
-          <X className="size-4" />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={onClose}
+          aria-label="Fechar"
+        >
+          <X className="size-3.5" />
         </Button>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto p-4">
         <div className="space-y-1.5">
-          <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-            Nome do bloco
-          </label>
+          <Label
+            htmlFor="node-label"
+            className="text-[11px] uppercase tracking-[0.08em] text-[var(--fg-quaternary)]"
+          >
+            Rótulo
+          </Label>
           <Input
-            value={label}
-            onChange={(e) => onUpdateLabel(e.target.value)}
-            placeholder={meta.label}
+            id="node-label"
+            value={data.label ?? ""}
+            onChange={(e) => onChange(node.id, { label: e.target.value })}
+            placeholder={type.label}
           />
         </div>
 
-        <div className="space-y-1.5">
-          <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-            ID
-          </label>
-          <p className="font-mono text-[12px] text-[var(--fg-quaternary)]">
-            {nodeId}
+        {canConfigurePrompt && (
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="node-prompt"
+              className="text-[11px] uppercase tracking-[0.08em] text-[var(--fg-quaternary)]"
+            >
+              Prompt
+            </Label>
+            <Textarea
+              id="node-prompt"
+              value={data.prompt ?? ""}
+              onChange={(e) => onChange(node.id, { prompt: e.target.value })}
+              placeholder="Descreva o que este bloco deve fazer..."
+              className="min-h-[140px]"
+            />
+            <p className="text-[11px] text-[var(--fg-tertiary)]">
+              Use variáveis em {`{{chaves}}`} para referenciar saídas de outros
+              blocos.
+            </p>
+          </div>
+        )}
+
+        <div className="rounded-[var(--r-md)] border border-[var(--line-subtle)] bg-[var(--bg-sunken)] p-3">
+          <p className="text-[12px] text-[var(--fg-tertiary)]">
+            {type.description}
           </p>
         </div>
-
-        {blockType === "llm_generate" && (
-          <>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Provider ID
-              </label>
-              <Input
-                value={String(config.providerId ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, providerId: e.target.value })
-                }
-                placeholder="openrouter"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Model ID
-              </label>
-              <Input
-                value={String(config.modelId ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, modelId: e.target.value })
-                }
-                placeholder="anthropic/claude-sonnet-4"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Prompt
-              </label>
-              <Textarea
-                value={String(config.prompt ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, prompt: e.target.value })
-                }
-                rows={5}
-                placeholder="Instruções para o modelo..."
-              />
-            </div>
-          </>
-        )}
-
-        {blockType === "image_generate" && (
-          <>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Provider ID
-              </label>
-              <Input
-                value={String(config.providerId ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, providerId: e.target.value })
-                }
-                placeholder="openrouter"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Model ID
-              </label>
-              <Input
-                value={String(config.modelId ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, modelId: e.target.value })
-                }
-                placeholder="dall-e-3"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Prompt
-              </label>
-              <Textarea
-                value={String(config.prompt ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, prompt: e.target.value })
-                }
-                rows={4}
-                placeholder="Descrição da imagem a gerar..."
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-                Tamanho
-              </label>
-              <Input
-                value={String(config.size ?? "")}
-                onChange={(e) =>
-                  onUpdateConfig({ ...config, size: e.target.value })
-                }
-                placeholder="1024x1024"
-              />
-            </div>
-          </>
-        )}
-
-        {blockType === "condition" && (
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-              Condição
-            </label>
-            <Textarea
-              value={String(config.condition ?? "")}
-              onChange={(e) =>
-                onUpdateConfig({ ...config, condition: e.target.value })
-              }
-              rows={3}
-              placeholder="output.includes('approved')"
-            />
-          </div>
-        )}
-
-        {blockType === "brain_context" && (
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-              Query de contexto
-            </label>
-            <Textarea
-              value={String(config.query ?? "")}
-              onChange={(e) =>
-                onUpdateConfig({ ...config, query: e.target.value })
-              }
-              rows={3}
-              placeholder="Buscar informações sobre..."
-            />
-          </div>
-        )}
-
-        {blockType === "transform" && (
-          <div className="space-y-1.5">
-            <label className="text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--fg-tertiary)]">
-              Template de transformação
-            </label>
-            <Textarea
-              value={String(config.template ?? "")}
-              onChange={(e) =>
-                onUpdateConfig({ ...config, template: e.target.value })
-              }
-              rows={4}
-              placeholder="{{input.text | uppercase}}"
-            />
-          </div>
-        )}
-
-        {(blockType === "input" || blockType === "output") && (
-          <p className="text-[12px] text-[var(--fg-tertiary)]">
-            Bloco terminal — não requer configuração adicional.
-          </p>
-        )}
       </div>
 
-      {!isTerminal && (
-        <div className="border-t border-[var(--line-subtle)] p-4">
+      {data.blockType !== "input" && data.blockType !== "output" && (
+        <div className="border-t border-[var(--line-subtle)] p-3">
           <Button
-            variant="outline"
-            className="w-full text-[var(--danger)] hover:bg-[color-mix(in_oklch,var(--danger)_10%,transparent)]"
-            onClick={onDelete}
+            variant="ghost"
+            className="w-full justify-center text-[var(--danger)] hover:bg-[color-mix(in_oklch,var(--danger)_10%,transparent)]"
+            onClick={() => onDelete(node.id)}
           >
-            <Trash2 className="size-4" />
             Remover bloco
           </Button>
         </div>
       )}
-    </div>
+    </aside>
   );
 }
