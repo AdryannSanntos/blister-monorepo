@@ -31,9 +31,10 @@ apps/api/src/<dominio>/
 - Classificacao de mensagem decide conversa vs execucao; pedido de artefato final deve forcar execucao.
 - Execucoes por empresa limitadas a 3 simultaneas, com fila FIFO para excedente.
 - Retry automatico maximo de 1 tentativa e timeline de tentativas no mesmo run.
-- Retrieval de contexto em camadas: estruturado -> vetorial (pgvector) -> rerank.
+- Retrieval de contexto em camadas: conversa atual -> memoria do mesmo agente -> estruturado -> vetorial (pgvector) -> rerank.
 - Retrieval deve respeitar permissao do solicitante e bloquear segredos/credenciais.
 - Delegacao do chat geral para agente especializado deve manter resposta no chat geral e rastrear run delegado.
+- Arquivos gerados devem ir para storage S3-compativel; `AgentRun` guarda referencias/metadados, nao binarios.
 
 ## Guards
 

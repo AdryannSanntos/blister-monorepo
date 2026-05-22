@@ -387,6 +387,8 @@ It defines:
 
 Templates are not directly edited by companies.
 
+For Agents V1, templates may seed behavior or support platform governance, but they must not appear as visible default agents in the company catalog. The visible company catalog is custom-only.
+
 ### CompanyAgent
 
 Company-level agent instance.
@@ -403,6 +405,8 @@ It defines:
 - company-specific policy overrides
 
 Company agents can be created from templates or built from controlled blocks.
+
+For Agents V1, company-facing lists and routes show only custom company agents. Any system/internal agent used for context or delegation remains hidden from the catalog.
 
 ### AgentVersion
 

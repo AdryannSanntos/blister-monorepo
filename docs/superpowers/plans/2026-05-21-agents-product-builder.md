@@ -5,10 +5,11 @@
 > - `docs/superpowers/plans/2026-05-22-agents-full-focus-chat-workflow.md`
 >
 > In V1, company catalog is custom-only and full-focus single-agent workspace is mandatory.
+> System/default templates may exist as platform internals, but they are not visible catalog entries in V1.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build user-facing agent experiences: dedicated Analysis, Copy, Image, Post, and Email flows; company agent catalog; workspace run history and costs; and a visual block-based agent builder.
+**Goal:** Build user-facing agent experiences: company agent catalog, single-agent workspace, workspace run history and costs, and a visual block-based agent builder. Dedicated Analysis, Copy, Image, Post, and Email flows in this historical plan are superseded for V1 unless instantiated as custom company agents.
 
 **Architecture:** Product screens execute versioned agents through the Agents Core. The visual builder edits draft `AgentVersion` flow JSON and never calls providers directly. Workspace screens use company permissions and active organization context.
 
@@ -22,7 +23,7 @@ This plan depends on `docs/superpowers/plans/2026-05-21-agents-platform-foundati
 
 Included:
 
-- dedicated product flows
+- historical dedicated product flow examples only when instantiated as custom company agents
 - company agent catalog
 - workspace agent run history
 - workspace credit and usage views
@@ -52,11 +53,7 @@ Excluded from initial delivery:
 - `apps/web/src/core/modules/agents/pages/agent-builder-page.tsx` — visual builder route
 - `apps/web/src/core/modules/agents/pages/agent-history-page.tsx` — workspace runs history
 - `apps/web/src/core/modules/agents/pages/agent-credits-page.tsx` — workspace credits and usage
-- `apps/web/src/core/modules/agents/pages/agent-analysis-page.tsx` — Analysis dedicated flow
-- `apps/web/src/core/modules/agents/pages/agent-copy-page.tsx` — Copy dedicated flow
-- `apps/web/src/core/modules/agents/pages/agent-image-page.tsx` — Image dedicated flow
-- `apps/web/src/core/modules/agents/pages/agent-post-page.tsx` — Post dedicated flow
-- `apps/web/src/core/modules/agents/pages/agent-email-page.tsx` — Email dedicated flow
+- Analysis/Copy/Image/Post/Email dedicated pages — historical examples only; do not create fixed V1 routes unless they are custom company agent workspaces
 - `apps/web/src/core/modules/agents/components/agents-table.tsx` — company agent DataTable
 - `apps/web/src/core/modules/agents/components/agent-run-table.tsx` — run DataTable
 - `apps/web/src/core/modules/agents/components/agent-run-detail-sheet.tsx` — run detail sheet
@@ -78,11 +75,7 @@ Excluded from initial delivery:
 - `apps/web/src/app/dashboard/workspace/agents/page.tsx` — company agents route
 - `apps/web/src/app/dashboard/workspace/agents/history/page.tsx` — run history route
 - `apps/web/src/app/dashboard/workspace/agents/credits/page.tsx` — credits route
-- `apps/web/src/app/dashboard/workspace/agents/analysis/page.tsx` — Analysis route
-- `apps/web/src/app/dashboard/workspace/agents/copy/page.tsx` — Copy route
-- `apps/web/src/app/dashboard/workspace/agents/image/page.tsx` — Image route
-- `apps/web/src/app/dashboard/workspace/agents/post/page.tsx` — Post route
-- `apps/web/src/app/dashboard/workspace/agents/email/page.tsx` — Email route
+- Dedicated Analysis/Copy/Image/Post/Email app routes — superseded for V1; use the custom agent workspace route instead
 - `apps/web/src/app/dashboard/workspace/agents/[agentId]/page.tsx` — agent detail route
 - `apps/web/src/app/dashboard/workspace/agents/[agentId]/builder/page.tsx` — builder route
 
@@ -95,9 +88,9 @@ Excluded from initial delivery:
 
 ### Backend files to extend if missing from foundation
 
-- `apps/api/src/agents/agents.controller.ts` — ensure dry-run and template-instantiation endpoints exist
+- `apps/api/src/agents/agents.controller.ts` — ensure dry-run endpoints exist without exposing system templates as V1 catalog defaults
 - `apps/api/src/agents/agent-runs.controller.ts` — ensure polling/detail endpoints support product screens
-- `apps/api/src/agents/dto/agent-run.dto.ts` — add dedicated flow input schemas if backend validates per template
+- `apps/api/src/agents/dto/agent-run.dto.ts` — add dedicated flow input schemas if backend validates per workflow
 
 ---
 
@@ -214,7 +207,7 @@ Use `PageLayout` with eyebrow `Workspace`.
 Columns:
 
 - name
-- type: system/custom
+- visibility: custom catalog item
 - status
 - active version
 - last run
@@ -224,7 +217,7 @@ Columns:
 
 Filters:
 
-- type
+- visibility
 - status
 - category
 
@@ -235,7 +228,7 @@ Bulk actions:
 Export columns:
 
 - name
-- type
+- visibility
 - status
 - last run
 - average credits
@@ -389,10 +382,10 @@ Review with project frontend/design/review skills.
 
 ## Task 6: Build Dedicated Analysis Flow
 
+> **Superseded for Agents V1:** Do not implement Tasks 6-10 as fixed sidebar items, fixed visible routes, or visible default/template agents. Reuse these form/output details only as examples when a company creates a custom agent.
+
 **Files:**
-- Create: `apps/web/src/core/modules/agents/pages/agent-analysis-page.tsx`
-- Create: `apps/web/src/app/dashboard/workspace/agents/analysis/page.tsx`
-- Modify: `apps/web/src/core/modules/dashboard/components/dashboard-shell.tsx`
+- No fixed V1 files. Use these details only inside a custom agent workspace.
 
 - [ ] **Step 1: Add input form**
 
@@ -416,7 +409,7 @@ Render structured sections:
 
 - [ ] **Step 3: Execute agent**
 
-Use `useRunAgent` against the Analysis template/company agent.
+Use `useRunAgent` against the custom company agent instance.
 
 - [ ] **Step 4: Add run status UI**
 
@@ -438,9 +431,7 @@ Review with project frontend/design/review skills.
 ## Task 7: Build Dedicated Copy Flow
 
 **Files:**
-- Create: `apps/web/src/core/modules/agents/pages/agent-copy-page.tsx`
-- Create: `apps/web/src/app/dashboard/workspace/agents/copy/page.tsx`
-- Modify: `apps/web/src/core/modules/dashboard/components/dashboard-shell.tsx`
+- No fixed V1 files. Use these details only inside a custom agent workspace.
 
 - [ ] **Step 1: Add input form**
 
@@ -467,7 +458,7 @@ Actions:
 
 - [ ] **Step 3: Execute agent**
 
-Use the Copy agent template/company agent.
+Use the custom company agent instance.
 
 - [ ] **Step 4: Run lint and review**
 
@@ -480,9 +471,7 @@ Review with project skills.
 ## Task 8: Build Dedicated Image Flow
 
 **Files:**
-- Create: `apps/web/src/core/modules/agents/pages/agent-image-page.tsx`
-- Create: `apps/web/src/app/dashboard/workspace/agents/image/page.tsx`
-- Modify: `apps/web/src/core/modules/dashboard/components/dashboard-shell.tsx`
+- No fixed V1 files. Use these details only inside a custom agent workspace.
 
 - [ ] **Step 1: Add input form**
 
@@ -496,6 +485,8 @@ Fields:
 - optional visual reference
 
 - [ ] **Step 2: Add output grid**
+
+Generated files must be loaded from S3-compatible storage references in the run payload. Do not embed image binaries or ad hoc file URLs in `AgentRun.output`.
 
 Actions:
 
@@ -521,9 +512,7 @@ Review with project skills.
 ## Task 9: Build Dedicated Post Flow
 
 **Files:**
-- Create: `apps/web/src/core/modules/agents/pages/agent-post-page.tsx`
-- Create: `apps/web/src/app/dashboard/workspace/agents/post/page.tsx`
-- Modify: `apps/web/src/core/modules/dashboard/components/dashboard-shell.tsx`
+- No fixed V1 files. Use these details only inside a custom agent workspace.
 
 - [ ] **Step 1: Add input form**
 
@@ -561,9 +550,7 @@ Review with project skills.
 ## Task 10: Build Dedicated Email Flow
 
 **Files:**
-- Create: `apps/web/src/core/modules/agents/pages/agent-email-page.tsx`
-- Create: `apps/web/src/app/dashboard/workspace/agents/email/page.tsx`
-- Modify: `apps/web/src/core/modules/dashboard/components/dashboard-shell.tsx`
+- No fixed V1 files. Use these details only inside a custom agent workspace.
 
 - [ ] **Step 1: Add input form**
 
@@ -665,7 +652,7 @@ Review with project skills.
 
 Route: `/dashboard/workspace/agents/:agentId/builder`
 
-Use a full-height content area inside dashboard shell.
+Use the shared full-focus agent workspace layout, not the dashboard shell. The agent workspace internal nav must expose Chat, Workflow, Executions, and Settings.
 
 - [ ] **Step 2: Add canvas**
 

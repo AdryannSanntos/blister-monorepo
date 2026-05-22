@@ -11,11 +11,7 @@
 ─ Dashboard
 ─ AGENTES (grupo)
   ├── Meus agentes
-  ├── Gerar copy
-  ├── Gerar imagem
-  ├── Criar post
-  ├── Adaptar conteúdo
-  ├── Criar email
+  ├── Agentes da empresa (lista recolhivel)
   ├── Histórico
   └── Créditos
 ─ EMPRESA (grupo)
@@ -73,7 +69,7 @@ Visão geral operacional do workspace. Cards e métricas de uso.
 1. **Boas-vindas / status do Brain** — se brain não publicado, banner CTA → "Completar Brain"
 2. **Execuções recentes** — últimas 5 runs de agentes, link para histórico completo
 3. **Uso de créditos** — barra de progresso com saldo atual vs. limite do plano
-4. **Agentes rápidos** — atalhos para os agentes mais usados (Copy, Post, Adaptar, Imagem)
+4. **Agentes rápidos** — atalhos para agentes customizados mais usados pela empresa
 5. **Equipe** — membros online / membros com convites pendentes
 
 **Variações:**
@@ -106,7 +102,7 @@ Domínio visual da empresa, separado de `Contexto`. Concentra identidade, grupos
 
 ## GRUPO: Agentes
 
-> Os agentes são o coração do produto. Toda geração de conteúdo, imagem ou adaptação acontece através de um agente. Agentes default do sistema (Adapta, Copy, Post, Imagem, Email) são instâncias pré-configuradas com workflow declarativo. A empresa pode criar agentes próprios além dos defaults.
+> Os agentes são o coração do produto. Toda geração de conteúdo, imagem ou adaptação acontece através de um agente. No V1, o catálogo visível é custom-only por empresa; agentes internos do sistema podem existir para contexto/delegação, mas não aparecem como defaults selecionáveis.
 
 ### Meus agentes
 
@@ -114,9 +110,9 @@ Domínio visual da empresa, separado de `Contexto`. Concentra identidade, grupos
 
 **Tela: catálogo de agentes**
 
-Lista de todos os agentes disponíveis no workspace, em tabela (TanStack Table).
+Lista de agentes customizados disponíveis no workspace, em tabela (TanStack Table).
 
-**Colunas:** nome, tipo (sistema / custom), último uso, custo médio/run, status (ativo/inativo).
+**Colunas:** nome, visibilidade, último uso, custo médio/run, status (ativo/inativo).
 
 **Ações disponíveis:**
 - Executar agente → abre tela de execução (run screen)
@@ -139,9 +135,13 @@ Wizard em steps:
 
 ---
 
-### Gerar copy
+### Templates historicos de fluxo (superseded no V1)
 
-**Rota:** `/dashboard/agents/copy` (execução direta do agente Copy)
+Os fluxos abaixo de copy, imagem, post, adaptacao e email ficam apenas como exemplos historicos de formularios/templates. No V1, eles nao devem virar itens fixos da sidebar nem rotas visiveis por default. Quando usados, devem ser instanciados como agentes customizados pela empresa e acessados pelo workspace full-focus do agente.
+
+### Gerar copy (exemplo historico)
+
+**Rota historica:** `/dashboard/agents/copy` (superseded no V1; usar rota do agente customizado)
 
 **Tela: run screen do agente Copy**
 
@@ -174,13 +174,13 @@ Wizard em steps:
 - Brain não publicado → banner de aviso acima do form ("Brain incompleto — suas saídas serão genéricas")
 - Erro de execução → toast de erro + botão "Tentar novamente" + link para suporte
 
-**Permissão:** `skill.execute`
+**Permissão histórica:** `agent.execute` quando instanciado como agente customizado
 
 ---
 
-### Gerar imagem
+### Gerar imagem (exemplo historico)
 
-**Rota:** `/dashboard/agents/image`
+**Rota historica:** `/dashboard/agents/image` (superseded no V1; usar rota do agente customizado)
 
 **Tela: run screen do agente Imagem**
 
@@ -210,13 +210,13 @@ Wizard em steps:
 - Provider offline → aviso inline com opção de trocar provider
 - Imagem bloqueada por safety filter → mensagem explicativa, botão "Ajustar prompt"
 
-**Permissão:** `skill.execute`
+**Permissão histórica:** `agent.execute` quando instanciado como agente customizado
 
 ---
 
-### Criar post
+### Criar post (exemplo historico)
 
-**Rota:** `/dashboard/agents/post`
+**Rota historica:** `/dashboard/agents/post` (superseded no V1; usar rota do agente customizado)
 
 **Tela: run screen do agente Post**
 
@@ -245,13 +245,13 @@ Wizard em steps:
 - Salvar no histórico
 - **Agendar** (feature futura) → badge "Em breve"
 
-**Permissão:** `skill.execute`
+**Permissão histórica:** `agent.execute` quando instanciado como agente customizado
 
 ---
 
-### Adaptar conteúdo
+### Adaptar conteúdo (exemplo historico)
 
-**Rota:** `/dashboard/agents/adapt`
+**Rota historica:** `/dashboard/agents/adapt` (superseded no V1; usar rota do agente customizado)
 
 **Tela: run screen do agente Adapta**
 
@@ -279,13 +279,13 @@ Wizard em steps:
 - Conteúdo muito longo → aviso de estimativa de custo antes de executar
 - Múltiplas plataformas → custo exibido por destino + custo total
 
-**Permissão:** `skill.execute`
+**Permissão histórica:** `agent.execute` quando instanciado como agente customizado
 
 ---
 
-### Criar email
+### Criar email (exemplo historico)
 
-**Rota:** `/dashboard/agents/email`
+**Rota historica:** `/dashboard/agents/email` (superseded no V1; usar rota do agente customizado)
 
 **Tela: run screen do agente Email**
 
@@ -304,7 +304,7 @@ Wizard em steps:
 - Alternativas de subject line ranqueadas
 - Ações: copiar HTML, copiar texto puro, editar inline, salvar, adaptar
 
-**Permissão:** `skill.execute`
+**Permissão histórica:** `agent.execute` quando instanciado como agente customizado
 
 ---
 
@@ -384,7 +384,7 @@ Tabela (TanStack Table) com todas as execuções `AgentRun` do workspace (ou do 
 
 **Rota:** `/dashboard/workspace/brain` (hoje aponta para `/onboarding`)
 
-> O Brain é o contexto persistido da empresa. Ele é injetado como system prompt nos agentes default. Um brain bem preenchido melhora a qualidade de todos os outputs gerados.
+> O Brain é o contexto persistido da empresa. Ele alimenta o agente interno de contexto e os agentes customizados conforme permissões. Um brain bem preenchido melhora a qualidade de todos os outputs gerados.
 
 **Tela: visão do Brain publicado**
 
@@ -802,7 +802,7 @@ Usuário acessa run screen do agente
 
 ### Fluxo: automação (agentes em fluxo)
 
-> Automações são agentes default do sistema rodando em sequência orquestrada. Não é um módulo separado — é uma configuração de workflow que encadeia agentes.
+> Automações são workflows de agentes customizados e/ou agentes internos orquestrados em sequência. Não é um módulo separado — é uma configuração de workflow que encadeia agentes.
 
 ```
 Trigger (manual / agendado / webhook / evento de integração)
@@ -828,12 +828,8 @@ Trigger (manual / agendado / webhook / evento de integração)
 | Item da sidebar  | Permissão mínima         | Visível para `member`? |
 |------------------|--------------------------|------------------------|
 | Dashboard        | autenticado              | ✅                     |
-| Meus agentes     | `skill.read`             | ✅                     |
-| Gerar copy       | `skill.execute`          | ✅                     |
-| Gerar imagem     | `skill.execute`          | ✅                     |
-| Criar post       | `skill.execute`          | ✅                     |
-| Adaptar conteúdo | `skill.execute`          | ✅                     |
-| Criar email      | `skill.execute`          | ✅                     |
+| Meus agentes     | `agent.read`             | ✅                     |
+| Agente customizado | `agent.execute`        | ✅                     |
 | Histórico        | `output.read`            | ✅ (só próprio)        |
 | Créditos         | autenticado (saldo)      | ✅ (só próprio)        |
 | Brain            | `brain.read`             | ✅ (read-only)         |

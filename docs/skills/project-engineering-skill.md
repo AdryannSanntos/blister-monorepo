@@ -36,10 +36,13 @@ packages/configs  presets TypeScript
 
 - Workflow e versionamento sempre por agente, nunca por usuario.
 - Chat geral sempre passa por agente de contexto interno.
+- Delegacao para agente especializado mantem resposta no chat geral e registra detalhe no historico do agente delegado.
 - Edicao de mensagem no chat cria branch novo de conversa.
 - Conversa ativa bloqueia input enquanto execucao ativa estiver em andamento.
 - Fila de execucao por empresa: maximo 3 simultaneas, overflow FIFO.
+- Retry automatico maximo de 1 tentativa na mesma run/timeline.
 - Retrieval de contexto deve ser permission-aware e sem segredos/credenciais.
+- Arquivos gerados usam storage S3-compativel com referencias no payload da run.
 
 ## Produto e Linguagem
 
@@ -80,7 +83,7 @@ packages/configs  presets TypeScript
 
 - Brain persistido/versionado
 - Créditos por empresa
-- Agentes default
+- Agentes customizados e agente interno de contexto
 - Histórico de execuções
 - Integrações reais
 - Automações e analytics

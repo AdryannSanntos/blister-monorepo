@@ -514,8 +514,8 @@ DTOs must validate:
 
 Test cases:
 
-- create company agent from template
 - create custom company agent
+- optionally create company agent from template without exposing templates as visible V1 catalog defaults
 - save draft version
 - publish draft version
 - activate published version
@@ -572,6 +572,7 @@ Must verify:
 - `userId` comes from `req.currentUser.id`
 - `orgId` comes from params
 - versions are immutable once published
+- visible company catalog remains custom-only in V1
 
 ---
 
@@ -599,6 +600,9 @@ Do not trust provider/model/user data from the task payload. Load execution deta
 Test cases:
 
 - creates queued run
+- caps running runs at 3 per organization
+- queues overflow runs in FIFO order
+- stores retry attempts in the same run timeline with maximum 1 automatic retry
 - enqueues Trigger.dev task
 - filters runs by organization
 - filters member-visible runs to own runs when required by service policy
@@ -610,20 +614,23 @@ Test cases:
 
 Permission: `agent.execute`
 
-Creates `AgentRun` with status `queued` and enqueues `agent-run` Trigger task.
+Creates `AgentRun` with status `queued` and enqueues `agent-run` Trigger task. If fewer than 3 runs are active for the organization, the run may be promoted to execution; otherwise it remains queued with FIFO position.
 
 - [ ] **Step 4: Implement Trigger task**
 
 Task flow:
 
 1. load run and version
-2. update run to `running`
-3. execute version flow sequentially
-4. call AI Runtime for AI blocks
-5. create `AgentRunStep` per block
-6. create technical cost ledger entries
-7. create product credit debit entry
-8. update run to `success` or `error`
+2. acquire organization execution slot respecting max 3 running runs
+3. update run to `running`
+4. execute version flow sequentially
+5. call AI Runtime for AI blocks
+6. create `AgentRunStep` per block and attempt
+7. create technical cost ledger entries
+8. create product credit debit entry
+9. retry once automatically on retryable failure in the same run timeline
+10. update run to `success` or `error`
+11. release slot and promote next queued run FIFO
 
 - [ ] **Step 5: Add polling-friendly run endpoints**
 

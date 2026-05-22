@@ -15,7 +15,7 @@ Workana AI é uma camada de inteligência para empresas que coordenam freelancer
 - Brain da empresa
 - Roles e permissões
 - Créditos
-- Agentes default
+- Agentes customizados por empresa
 - Histórico de execuções
 - Configurações do workspace
 

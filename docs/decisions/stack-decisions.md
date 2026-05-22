@@ -65,4 +65,4 @@
 
 Implementado: auth, organizações, memberships, roles/permissões, convites, onboarding draft, dashboard shell, assets e tela base de integrações.
 
-Ainda pendente como domínio real: Brain persistido/versionado, créditos, agentes default, histórico de execuções, automações, analytics e integrações reais.
+Ainda pendente como domínio real: Brain persistido/versionado, créditos, agentes customizados, agente interno de contexto, histórico de execuções, automações, analytics e integrações reais.

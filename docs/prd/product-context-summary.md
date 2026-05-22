@@ -6,7 +6,7 @@ Workana AI é uma camada de inteligência para empresas que contratam, coordenam
 
 - Workspace por empresa
 - Brain da empresa como núcleo de contexto
-- Agentes de IA para briefing, triagem, copy, organização, follow-up, resumo e análise
+- Agentes de IA customizados por empresa, com agente interno de contexto para chat geral
 - Créditos por empresa para consumo de IA
 - Convites, membros, roles e permissões
 - Assets e integrações como fontes de contexto e operação
@@ -28,7 +28,7 @@ Ainda precisa virar domínio real:
 
 - Brain persistido/versionado
 - créditos
-- agentes default
+- agentes customizados e agente interno de contexto
 - histórico de execuções
 - integrações reais
 

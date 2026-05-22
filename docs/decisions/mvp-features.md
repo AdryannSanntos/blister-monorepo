@@ -15,7 +15,7 @@ Mandatory overrides for Agents V1:
 
 ## Visão do produto
 
-Workana AI é uma plataforma B2B que ajuda empresas a coordenar trabalho com freelancers, fornecedores e times remotos usando IA. O núcleo operacional são os **agentes**: toda funcionalidade de geração de conteúdo, imagem, copy ou adaptação é executada por um agente — seja um agente default do sistema ou um agente criado pela própria empresa.
+Workana AI é uma plataforma B2B que ajuda empresas a coordenar trabalho com freelancers, fornecedores e times remotos usando IA. O núcleo operacional são os **agentes**: no V1, o catálogo visível da empresa é custom-only, enquanto agentes internos do sistema operam apenas contexto e delegação sem aparecer como itens do catálogo.
 
 ---
 
@@ -90,39 +90,35 @@ Workana AI é uma plataforma B2B que ajuda empresas a coordenar trabalho com fre
 
 ---
 
-### 9. Agentes — default do sistema 🔴 não implementado (prioridade máxima)
+### 9. Agentes customizados por empresa 🔴 não implementado (prioridade máxima)
 
-Toda funcionalidade de geração com IA usa um agente. Agentes default do sistema:
-
-- **Adapta**: adapta um conteúdo para outro formato, tom ou plataforma
-- **Copy**: geração de textos publicitários, CTAs, headlines
-- **Post**: monta um post completo (texto + sugestão de criativo)
-- **Imagem**: gera imagem via provider (Flux, SDXL, gpt-image) com prompt assistido
+Toda funcionalidade operacional com IA usa um agente versionado. No V1, o catálogo visível da empresa é custom-only; agentes internos do sistema existem apenas para chat de contexto, roteamento e delegação.
 
 Modelagem necessária:
 
 ```
-Agent        (id, key, name, type, workflowId, defaultModel, costPerRun, isSystem)
-Workflow     (id, agentId, steps[])   — DSL declarativo, não código por agente
-AgentRun     (id, agentId, userId, companyId, input, output, status, creditsSpent, createdAt)
+Agent        (id, key, name, activeVersionId, defaultModel, costPerRun, visibility)
+AgentVersion (id, agentId, version, status, flowDefinition, inputSchema, outputSchema)
+AgentRun     (id, agentId, agentVersionId, userId, companyId, input, outputRefs, status, creditsSpent, createdAt)
 ```
 
 Pontos de atenção:
-- Workflow declarativo (JSON/DSL) — um arquivo de config por agente, não código separado
+- Workflow declarativo e versionado em `AgentVersion` — não código separado por agente
 - Cada step do workflow é rastreável (debug + cobrança)
 - Primeiro step: classificador/planner que decide os steps seguintes
 - Outputs estruturados (não texto solto) — frontend renderiza cards, imagens, variações
-- Empresas podem criar agentes próprios além dos defaults
+- Empresas criam e gerenciam agentes próprios; defaults/templates do sistema não aparecem no catálogo V1
 
 ---
 
-### 10. Chat com IA (multi-modelo) 🔴 não implementado
+### 10. Chat geral com agente de contexto 🔴 não implementado
 
-- Seleção de modelo por conversa (provider + model id)
+- Sempre executado via agente de contexto interno
 - Histórico de conversas por usuário/empresa
 - Streaming por SSE
-- Brain da empresa injetado como system prompt opcional
-- Função "adaptar output": pega saída do chat e aciona agente Adapta
+- Contexto recuperado em camadas: conversa atual, memória do mesmo agente, dados estruturados, RAG pgvector e rerank
+- Delegação para agente especializado mantém a resposta no chat principal
+- Editar mensagem cria branch; regenerate e copy são ações obrigatórias
 - Consumo amarrado ao `CreditLedger`
 - Abstrair provider por interface `AiProvider` (troca de modelo sem refatorar consumidores)
 
@@ -156,6 +152,8 @@ Regras:
 - Filtros: agente, status, período
 - Detalhe da execução (input, output, steps, créditos gastos)
 - Vinculado ao `CreditLedger`
+- Limite de 3 execuções simultâneas por empresa; excedente entra em fila FIFO
+- Retry automático máximo de 1 tentativa dentro da mesma execução/timeline
 
 ---
 
@@ -211,9 +209,9 @@ CompanyFeatureFlag(companyId, flagKey, enabled)
 1. Endurecer autorização do Brain (remover `userId` do body, guard correto no onboarding/publish)
 2. Criar domínio persistido `CompanyBrain` separado do draft de onboarding
 3. Modelar e implementar `Agent` + `Workflow` + `AgentRun`
-4. Implementar agentes default (Adapta, Copy, Post, Imagem)
+4. Implementar catálogo custom-only e agente interno de contexto para chat geral
 5. Implementar `CreditLedger` vinculado às execuções
-6. Chat com IA + streaming SSE
+6. Chat geral com agente de contexto + streaming SSE
 7. Histórico de execuções na UI
 
 ---

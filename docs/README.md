@@ -6,10 +6,11 @@ Esta pasta concentra a documentação viva do Workana AI e substitui referência
 
 1. `docs/prd/workana-ai-master.md` — documento mestre de produto, escopo, UX e identidade
 2. `CLAUDE.md` — regras operacionais obrigatórias do monorepo
-3. `docs/decisions/stack-decisions.md` — decisões técnicas aprovadas
-4. `docs/decisions/execution-order.md` — ordem de execução do produto
-5. `docs/design-system/README.md` — sistema visual e tokens oficiais
-6. `docs/skills/README.md` — skills operacionais para agentes
+3. `docs/decisions/2026-05-22-agents-v1-contract.md` — contrato vigente de Agentes V1
+4. `docs/decisions/stack-decisions.md` — decisões técnicas aprovadas
+5. `docs/decisions/execution-order.md` — ordem de execução do produto
+6. `docs/design-system/README.md` — sistema visual e tokens oficiais
+7. `docs/skills/README.md` — skills operacionais para agentes
 
 ## Estrutura
 

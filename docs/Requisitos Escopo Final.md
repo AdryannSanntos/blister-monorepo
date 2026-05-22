@@ -169,14 +169,12 @@ Estados:
 ### 4.8 Agentes
 Agente é uma unidade operacional de IA com objetivo, workflow, instruções e resultado esperado.
 
-Agentes default do MVP:
-- agente de briefing
-- agente de triagem
-- agente de copy
-- agente de organização
-- agente de follow-up
-- agente de resumo
-- agente de análise
+Agentes no MVP:
+- catálogo visível custom-only por empresa
+- agente interno de contexto para chat geral
+- workflow e versionamento por agente
+- branch de conversa ao editar mensagem
+- execução com fila FIFO, limite de 3 simultâneas por empresa e 1 retry na mesma run
 
 Estados:
 - draft
@@ -312,7 +310,7 @@ A interface deve evitar aparência genérica de dashboard SaaS. O objetivo é pa
 - Brain da empresa com texto, instruções, arquivos e assets
 - roles e permissões por empresa
 - créditos de IA por empresa
-- agentes default
+- agentes customizados por empresa
 - histórico de execuções
 - configurações do workspace
 
@@ -364,7 +362,7 @@ A interface deve evitar aparência genérica de dashboard SaaS. O objetivo é pa
 - Convites são por email.
 - Roles e permissões são obrigatórias.
 - Créditos são por empresa.
-- Agentes default fazem parte do MVP.
+- Agentes customizados por empresa fazem parte do MVP; agentes internos do sistema não aparecem no catálogo V1.
 - A UI deve ser única, forte e não genérica.
 - Azul é a base visual principal.
 

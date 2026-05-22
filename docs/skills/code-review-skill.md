@@ -69,10 +69,14 @@ Guiar a revisão de código neste projeto com foco em segurança, permissões, c
 
 - [ ] Editar mensagem no chat cria branch de conversa
 - [ ] Conversa com execução ativa bloqueia input
+- [ ] Catálogo visível de agentes da empresa é custom-only no V1
+- [ ] Chat geral sempre usa agente interno de contexto
+- [ ] Raciocínio interno, prompts ocultos e hidden reasoning não são expostos
 - [ ] Timeline de execução tem tentativas no mesmo run
 - [ ] Cap de concorrência por empresa (3) + fila FIFO preservados
 - [ ] Retrieval de contexto é permission-aware e remove segredos/credenciais
 - [ ] Delegação do chat geral mantém resposta no chat principal
+- [ ] Arquivos gerados usam storage S3-compatível e `AgentRun` guarda apenas referências/metadados
 
 ## Checklist Baixo — Design System e UI
 

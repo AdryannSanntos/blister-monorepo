@@ -50,7 +50,7 @@ Entram no MVP:
 - brain da empresa com texto, instruções, arquivos e assets
 - roles e permissões por empresa
 - créditos de IA por empresa
-- agentes default
+- agentes customizados por empresa
 - histórico de execuções
 - configurações do workspace
 
@@ -179,15 +179,13 @@ Estados:
 
 Agente é uma unidade operacional de IA com objetivo, workflow, instruções e resultado esperado.
 
-Agentes default sugeridos:
+Agentes no V1:
 
-- agente de briefing
-- agente de triagem
-- agente de copy
-- agente de organização
-- agente de follow-up
-- agente de resumo
-- agente de análise
+- catálogo visível custom-only por empresa
+- tela única full-focus por agente
+- workflow e versionamento por agente
+- chat com branch por edição, regenerate e copy
+- agentes internos do sistema apenas para contexto/delegação, sem exposição no catálogo
 
 Estados:
 
@@ -311,6 +309,6 @@ Regras:
 - Convites são por email.
 - Roles e permissões são obrigatórias.
 - Créditos são por empresa.
-- Agentes default fazem parte do MVP.
+- Agentes customizados por empresa fazem parte do MVP; agentes internos do sistema não aparecem no catálogo V1.
 - UI deve ser única, forte e não genérica.
 - Azul é a base visual principal.

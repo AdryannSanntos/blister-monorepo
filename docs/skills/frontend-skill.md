@@ -28,10 +28,13 @@ apps/web/src/core/shared/components/ui/  shadcn/ui oficial
 
 - Chat geral e editor de workflow devem usar layout full-focus compartilhado (fora do dashboard shell).
 - Cada agente deve abrir em tela unica full-focus com nave interna: Chat, Workflow, Execucoes, Configuracoes.
-- Pensamentos/processamento no chat ficam recolhidos por padrao.
+- Chat geral sempre usa agente de contexto interno; delegacao especializada deve responder no chat principal.
+- Editar mensagem cria branch de conversa; regenerate e copy devem estar disponiveis.
+- Eventos seguros de processamento ficam recolhidos por padrao; raciocinio interno, prompts ocultos e hidden reasoning nunca sao exibidos.
 - Execucoes no detalhe do agente mostram timeline aberta por padrao.
 - Durante execucao ativa da conversa, input do chat deve ficar bloqueado.
 - Resultado do agente deve aparecer no chat com abas interativas de outputs/arquivos.
+- Arquivos gerados usam storage S3-compativel; a UI consome apenas referencias e metadados salvos no payload da run.
 
 ## Linguagem de Produto
 
