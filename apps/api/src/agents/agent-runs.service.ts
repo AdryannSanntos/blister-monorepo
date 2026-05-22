@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import type { ExecuteAgentDto, ListAgentRunsDto } from './dto';
 import { AgentExecutionService } from './agent-execution.service';
+import { AgentQueueService } from './agent-queue.service';
+import type { ExecuteAgentDto, ListAgentRunsDto } from './dto';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
@@ -10,6 +11,7 @@ const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.I
 export class AgentRunsService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly agentQueueService: AgentQueueService,
     private readonly agentExecutionService: AgentExecutionService,
   ) {}
 
@@ -34,6 +36,14 @@ export class AgentRunsService {
     const run = await this.prisma.agentRun.create({
       data: {
         organizationId,
+        threadId:
+          typeof input.input.threadId === 'string' && input.input.threadId.length > 0
+            ? input.input.threadId
+            : null,
+        sourceMessageId:
+          typeof input.input.messageId === 'string' && input.input.messageId.length > 0
+            ? input.input.messageId
+            : null,
         agentId,
         agentVersionId: agent.activeVersionId,
         status: 'queued',
@@ -42,14 +52,36 @@ export class AgentRunsService {
       },
     });
 
-    await this.agentExecutionService.enqueueRun({
-      organizationId,
-      agentRunId: run.id,
-      agentId,
-      agentVersionId: agent.activeVersionId,
-    });
+    const promotedRun = await this.agentQueueService.promoteNextQueuedRun(organizationId);
 
-    return run;
+    if (promotedRun?.id === run.id) {
+      try {
+        await this.agentExecutionService.enqueueRun({
+          organizationId,
+          agentRunId: run.id,
+          agentId,
+          agentVersionId: agent.activeVersionId,
+        });
+      } catch {
+        await this.prisma.agentRun.update({
+          where: { id: run.id },
+          data: {
+            status: 'queued',
+            processingLeaseId: null,
+            leaseExpiresAt: null,
+          },
+        });
+      }
+    }
+
+    if (run.sourceMessageId) {
+      await this.prisma.agentChatMessage.update({
+        where: { id: run.sourceMessageId },
+        data: { agentRunId: run.id },
+      });
+    }
+
+    return promotedRun ?? run;
   }
 
   async listRuns(organizationId: string, filters: ListAgentRunsDto, viewerUserId: string) {
@@ -60,26 +92,98 @@ export class AgentRunsService {
         ...(filters.status ? { status: filters.status } : {}),
         ...(filters.onlyOwnRuns ? { createdByUserId: viewerUserId } : {}),
       },
-      include: { agent: true, agentVersion: true, steps: true },
+      select: {
+        id: true,
+        organizationId: true,
+        threadId: true,
+        sourceMessageId: true,
+        agentId: true,
+        agentVersionId: true,
+        status: true,
+        queuePosition: true,
+        attemptCount: true,
+        errorMessage: true,
+        startedAt: true,
+        completedAt: true,
+        createdByUserId: true,
+        createdAt: true,
+        updatedAt: true,
+        agent: {
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            status: true,
+          },
+        },
+        steps: {
+          select: {
+            id: true,
+            blockKey: true,
+            blockType: true,
+            status: true,
+            errorMessage: true,
+            startedAt: true,
+            completedAt: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
 
     return this.attachRunLedgerSummaries(runs);
   }
 
-  async getRun(
-    organizationId: string,
-    runId: string,
-    viewerUserId: string,
-    onlyOwnRuns = false,
-  ) {
+  async getRun(organizationId: string, runId: string, viewerUserId: string, onlyOwnRuns = false) {
     const run = await this.prisma.agentRun.findFirst({
       where: {
         id: runId,
         organizationId,
         ...(onlyOwnRuns ? { createdByUserId: viewerUserId } : {}),
       },
-      include: { agent: true, agentVersion: true, steps: true },
+      select: {
+        id: true,
+        organizationId: true,
+        threadId: true,
+        sourceMessageId: true,
+        agentId: true,
+        agentVersionId: true,
+        status: true,
+        queuePosition: true,
+        attemptCount: true,
+        errorMessage: true,
+        startedAt: true,
+        completedAt: true,
+        createdByUserId: true,
+        createdAt: true,
+        updatedAt: true,
+        outputPayload: true,
+        processingMetadata: true,
+        agent: {
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            status: true,
+          },
+        },
+        steps: {
+          select: {
+            id: true,
+            blockKey: true,
+            blockType: true,
+            status: true,
+            errorMessage: true,
+            metadata: true,
+            startedAt: true,
+            completedAt: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
     });
 
     if (!run) {

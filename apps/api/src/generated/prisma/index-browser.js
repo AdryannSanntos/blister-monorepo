@@ -501,12 +501,22 @@ exports.Prisma.AgentVersionScalarFieldEnum = {
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  threadId: 'threadId',
+  sourceMessageId: 'sourceMessageId',
   agentId: 'agentId',
   agentVersionId: 'agentVersionId',
   status: 'status',
+  queuePosition: 'queuePosition',
+  attemptCount: 'attemptCount',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
+  processingMetadata: 'processingMetadata',
+  processingLeaseId: 'processingLeaseId',
+  leaseExpiresAt: 'leaseExpiresAt',
   errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  lastAttemptAt: 'lastAttemptAt',
   createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -518,6 +528,7 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   blockKey: 'blockKey',
   blockType: 'blockType',
   status: 'status',
+  metadata: 'metadata',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
@@ -526,10 +537,37 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AgentChatThreadScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  agentId: 'agentId',
+  scope: 'scope',
+  title: 'title',
+  parentThreadId: 'parentThreadId',
+  branchedFromMessageId: 'branchedFromMessageId',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentChatMessageScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  agentRunId: 'agentRunId',
+  role: 'role',
+  content: 'content',
+  metadata: 'metadata',
+  editedFromMessageId: 'editedFromMessageId',
+  regeneratedFromMessageId: 'regeneratedFromMessageId',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   runId: 'runId',
+  idempotencyKey: 'idempotencyKey',
   entryType: 'entryType',
   amount: 'amount',
   balanceAfter: 'balanceAfter',
@@ -542,6 +580,7 @@ exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   runId: 'runId',
+  idempotencyKey: 'idempotencyKey',
   providerId: 'providerId',
   modelId: 'modelId',
   amount: 'amount',
@@ -615,6 +654,8 @@ exports.Prisma.ModelName = {
   AgentVersion: 'AgentVersion',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
+  AgentChatThread: 'AgentChatThread',
+  AgentChatMessage: 'AgentChatMessage',
   CreditLedgerEntry: 'CreditLedgerEntry',
   TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry'
 };

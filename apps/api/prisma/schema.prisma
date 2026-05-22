@@ -538,6 +538,7 @@ model CompanyAgent {
   updatedAt       DateTime @updatedAt
 
   template AgentTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  chatThreads AgentChatThread[]
   versions AgentVersion[]
   runs     AgentRun[]
 
@@ -570,19 +571,34 @@ model AgentVersion {
 model AgentRun {
   id              String    @id @default(cuid())
   organizationId  String
+  threadId        String?
+  sourceMessageId String?
   agentId         String
   agentVersionId  String
   status          String    @default("queued")
+  queuePosition   Int?
+  attemptCount    Int       @default(0)
   inputPayload    Json      @default("{}")
   outputPayload   Json?
+  processingMetadata Json   @default("{}")
+  processingLeaseId  String?
+  leaseExpiresAt   DateTime?
   errorMessage    String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  lastAttemptAt   DateTime?
   createdByUserId String
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   agent        CompanyAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentVersion AgentVersion @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
+  thread       AgentChatThread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+  sourceMessage AgentChatMessage? @relation("AgentRunSourceMessage", fields: [sourceMessageId], references: [id], onDelete: SetNull)
+  chatMessages AgentChatMessage[]
+  creditEntries CreditLedgerEntry[]
   steps        AgentRunStep[]
+  technicalCostEntries TechnicalCostLedgerEntry[]
 
   @@index([organizationId, status, createdAt])
   @@index([agentId, createdAt])
@@ -594,6 +610,7 @@ model AgentRunStep {
   blockKey      String
   blockType     String
   status        String
+  metadata      Json      @default("{}")
   inputPayload  Json      @default("{}")
   outputPayload Json?
   errorMessage  String?
@@ -606,6 +623,54 @@ model AgentRunStep {
   @@index([runId, createdAt])
 }
 
+model AgentChatThread {
+  id                    String   @id @default(cuid())
+  organizationId        String
+  agentId               String?
+  scope                 String
+  title                 String?
+  parentThreadId        String?
+  branchedFromMessageId String?
+  createdByUserId       String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  agent              CompanyAgent?    @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  parentThread       AgentChatThread? @relation("AgentChatThreadBranches", fields: [parentThreadId], references: [id], onDelete: SetNull)
+  branches           AgentChatThread[] @relation("AgentChatThreadBranches")
+  branchedFromMessage AgentChatMessage? @relation("AgentChatThreadBranchMessage", fields: [branchedFromMessageId], references: [id], onDelete: SetNull)
+  messages           AgentChatMessage[]
+  runs               AgentRun[]
+
+  @@index([organizationId, scope, updatedAt])
+  @@index([agentId, updatedAt])
+}
+
+model AgentChatMessage {
+  id                       String   @id @default(cuid())
+  threadId                 String
+  agentRunId               String?
+  role                     String
+  content                  String   @db.Text
+  metadata                 Json     @default("{}")
+  editedFromMessageId      String?
+  regeneratedFromMessageId String?
+  createdByUserId          String?
+  createdAt                DateTime @default(now())
+
+  thread                 AgentChatThread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  agentRun               AgentRun?         @relation(fields: [agentRunId], references: [id], onDelete: SetNull)
+  editedFromMessage      AgentChatMessage? @relation("AgentChatMessageEdits", fields: [editedFromMessageId], references: [id], onDelete: SetNull)
+  editedVariants         AgentChatMessage[] @relation("AgentChatMessageEdits")
+  regeneratedFromMessage AgentChatMessage? @relation("AgentChatMessageRegenerations", fields: [regeneratedFromMessageId], references: [id], onDelete: SetNull)
+  regenerations          AgentChatMessage[] @relation("AgentChatMessageRegenerations")
+  branches               AgentChatThread[] @relation("AgentChatThreadBranchMessage")
+  sourceRuns             AgentRun[] @relation("AgentRunSourceMessage")
+
+  @@index([threadId, createdAt])
+  @@index([agentRunId])
+}
+
 // ---------------------------------------------------------------------------
 // Credits and technical cost ledgers
 // ---------------------------------------------------------------------------
@@ -614,12 +679,15 @@ model CreditLedgerEntry {
   id              String   @id @default(cuid())
   organizationId  String
   runId           String?
+  idempotencyKey  String?   @unique
   entryType       String
   amount          Int
   balanceAfter    Int
   metadata        Json     @default("{}")
   createdByUserId String?
   createdAt       DateTime @default(now())
+
+  run AgentRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, createdAt])
   @@index([entryType])
@@ -629,6 +697,7 @@ model TechnicalCostLedgerEntry {
   id             String   @id @default(cuid())
   organizationId String?
   runId          String?
+  idempotencyKey String?   @unique
   providerId     String?
   modelId        String?
   amount         Float
@@ -636,6 +705,8 @@ model TechnicalCostLedgerEntry {
   unit           String   @default("estimated")
   metadata       Json     @default("{}")
   createdAt      DateTime @default(now())
+
+  run AgentRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
 
   @@index([createdAt])
   @@index([providerId, createdAt])

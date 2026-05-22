@@ -2,17 +2,49 @@ import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CreditsModule } from '../credits/credits.module';
 import { PlatformModule } from '../platform/platform.module';
+import { AgentChatService } from './agent-chat.service';
 import { AgentExecutionService } from './agent-execution.service';
+import { AgentIntentService } from './agent-intent.service';
+import { AgentQueueService } from './agent-queue.service';
 import { AgentRunsController } from './agent-runs.controller';
 import { PlatformAgentRunsController } from './agent-runs.controller';
 import { AgentRunsService } from './agent-runs.service';
 import { AgentsController } from './agents.controller';
 import { AgentsService } from './agents.service';
+import { ContextPolicyService } from './context/context-policy.service';
+import { ContextRerankerService } from './context/context-reranker.service';
+import { RagContextService } from './context/rag-context.service';
+import { StructuredContextService } from './context/structured-context.service';
+import { HtmlPreviewService } from './html-preview.service';
 
 @Module({
   imports: [AIRuntimeModule, CreditsModule, PlatformModule],
   controllers: [AgentsController, AgentRunsController, PlatformAgentRunsController],
-  providers: [AgentsService, AgentRunsService, AgentExecutionService],
-  exports: [AgentsService, AgentRunsService, AgentExecutionService],
+  providers: [
+    AgentsService,
+    AgentRunsService,
+    AgentExecutionService,
+    AgentChatService,
+    HtmlPreviewService,
+    AgentIntentService,
+    AgentQueueService,
+    ContextPolicyService,
+    StructuredContextService,
+    RagContextService,
+    ContextRerankerService,
+  ],
+  exports: [
+    AgentsService,
+    AgentRunsService,
+    AgentExecutionService,
+    AgentChatService,
+    HtmlPreviewService,
+    AgentIntentService,
+    AgentQueueService,
+    ContextPolicyService,
+    StructuredContextService,
+    RagContextService,
+    ContextRerankerService,
+  ],
 })
 export class AgentsModule {}

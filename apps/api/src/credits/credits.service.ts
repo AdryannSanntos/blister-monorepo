@@ -8,6 +8,7 @@ const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.I
 type RecordTechnicalCostInput = {
   organizationId?: string;
   runId?: string;
+  idempotencyKey?: string;
   providerId?: string;
   modelId?: string;
   amount: number;
@@ -62,10 +63,24 @@ export class CreditsService {
     });
   }
 
-  async debitRunCredits(runId: string, amount: number, options: { strict?: boolean } = {}) {
+  async debitRunCredits(
+    runId: string,
+    amount: number,
+    options: { strict?: boolean; idempotencyKey?: string } = {},
+  ) {
     const run = await this.prisma.agentRun.findUnique({ where: { id: runId } });
     if (!run) {
       throw new NotFoundException('Agent run not found');
+    }
+
+    if (options.idempotencyKey) {
+      const existingEntry = await this.prisma.creditLedgerEntry.findUnique({
+        where: { idempotencyKey: options.idempotencyKey },
+      });
+
+      if (existingEntry) {
+        return existingEntry;
+      }
     }
 
     const { balance } = await this.getOrganizationBalance(run.organizationId);
@@ -77,6 +92,7 @@ export class CreditsService {
       data: {
         organizationId: run.organizationId,
         runId,
+        idempotencyKey: options.idempotencyKey,
         entryType: 'run_debit',
         amount: -amount,
         balanceAfter: balance - amount,
@@ -86,10 +102,21 @@ export class CreditsService {
   }
 
   async recordTechnicalCost(input: RecordTechnicalCostInput) {
+    if (input.idempotencyKey) {
+      const existingEntry = await this.prisma.technicalCostLedgerEntry.findUnique({
+        where: { idempotencyKey: input.idempotencyKey },
+      });
+
+      if (existingEntry) {
+        return existingEntry;
+      }
+    }
+
     return this.prisma.technicalCostLedgerEntry.create({
       data: {
         organizationId: input.organizationId ?? null,
         runId: input.runId ?? null,
+        idempotencyKey: input.idempotencyKey ?? null,
         providerId: input.providerId ?? null,
         modelId: input.modelId ?? null,
         amount: input.amount,
@@ -135,7 +162,10 @@ export class CreditsService {
 
     const grouped = new Map<string, number>();
     for (const entry of filteredEntries) {
-      const key = filters.groupBy === 'provider' ? entry.providerId ?? 'unknown' : entry.modelId ?? 'unknown';
+      const key =
+        filters.groupBy === 'provider'
+          ? (entry.providerId ?? 'unknown')
+          : (entry.modelId ?? 'unknown');
       grouped.set(key, (grouped.get(key) ?? 0) + entry.amount);
     }
 

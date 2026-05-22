@@ -1,4 +1,9 @@
-import { DeleteObjectCommand, PutBucketCorsCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  PutBucketCorsCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -15,6 +20,12 @@ export type CreatePresignedUploadUrlInput = {
 export type PutMarkdownArtifactInput = {
   key: string;
   body: string;
+};
+
+export type PutObjectInput = {
+  key: string;
+  body: Buffer | Uint8Array | string;
+  contentType: string;
 };
 
 @Injectable()
@@ -59,6 +70,10 @@ export class StorageService {
     return `organizations/${organizationId}/design-system/assets/${assetRole}/${fileName.replace(/[\\/]/g, '-')}`;
   }
 
+  buildAgentRunArtifactKey(organizationId: string, runId: string, fileName: string) {
+    return `organizations/${organizationId}/agent-runs/${runId}/${fileName.replace(/[\\/]/g, '-')}`;
+  }
+
   buildPublicObjectUrl(key: string) {
     const publicBaseUrl = this.config.get<string>('AWS_S3_PUBLIC_BASE_URL')?.replace(/\/$/, '');
     const encodedKey = key.split('/').map(encodeURIComponent).join('/');
@@ -73,7 +88,13 @@ export class StorageService {
   }
 
   private getAllowedBrowserOrigins() {
-    return this.config.get<string>('CORS_ORIGIN')?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? ['http://localhost:3000'];
+    return (
+      this.config
+        .get<string>('CORS_ORIGIN')
+        ?.split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean) ?? ['http://localhost:3000']
+    );
   }
 
   private async ensureLocalBrowserUploadCors() {
@@ -121,6 +142,17 @@ export class StorageService {
         Key: input.key,
         Body: input.body,
         ContentType: 'text/markdown; charset=utf-8',
+      }),
+    );
+  }
+
+  async putObject(input: PutObjectInput) {
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: input.key,
+        Body: input.body,
+        ContentType: input.contentType,
       }),
     );
   }

@@ -174,6 +174,16 @@ export type AgentRun = $Result.DefaultSelection<Prisma.$AgentRunPayload>
  */
 export type AgentRunStep = $Result.DefaultSelection<Prisma.$AgentRunStepPayload>
 /**
+ * Model AgentChatThread
+ * 
+ */
+export type AgentChatThread = $Result.DefaultSelection<Prisma.$AgentChatThreadPayload>
+/**
+ * Model AgentChatMessage
+ * 
+ */
+export type AgentChatMessage = $Result.DefaultSelection<Prisma.$AgentChatMessagePayload>
+/**
  * Model CreditLedgerEntry
  * 
  */
@@ -621,6 +631,26 @@ export class PrismaClient<
     * ```
     */
   get agentRunStep(): Prisma.AgentRunStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.agentChatThread`: Exposes CRUD operations for the **AgentChatThread** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AgentChatThreads
+    * const agentChatThreads = await prisma.agentChatThread.findMany()
+    * ```
+    */
+  get agentChatThread(): Prisma.AgentChatThreadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.agentChatMessage`: Exposes CRUD operations for the **AgentChatMessage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AgentChatMessages
+    * const agentChatMessages = await prisma.agentChatMessage.findMany()
+    * ```
+    */
+  get agentChatMessage(): Prisma.AgentChatMessageDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.creditLedgerEntry`: Exposes CRUD operations for the **CreditLedgerEntry** model.
@@ -1114,6 +1144,8 @@ export namespace Prisma {
     AgentVersion: 'AgentVersion',
     AgentRun: 'AgentRun',
     AgentRunStep: 'AgentRunStep',
+    AgentChatThread: 'AgentChatThread',
+    AgentChatMessage: 'AgentChatMessage',
     CreditLedgerEntry: 'CreditLedgerEntry',
     TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry'
   };
@@ -1134,7 +1166,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "agentVersion" | "agentRun" | "agentRunStep" | "creditLedgerEntry" | "technicalCostLedgerEntry"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "agentVersion" | "agentRun" | "agentRunStep" | "agentChatThread" | "agentChatMessage" | "creditLedgerEntry" | "technicalCostLedgerEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3506,6 +3538,154 @@ export namespace Prisma {
           }
         }
       }
+      AgentChatThread: {
+        payload: Prisma.$AgentChatThreadPayload<ExtArgs>
+        fields: Prisma.AgentChatThreadFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AgentChatThreadFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AgentChatThreadFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          findFirst: {
+            args: Prisma.AgentChatThreadFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AgentChatThreadFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          findMany: {
+            args: Prisma.AgentChatThreadFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>[]
+          }
+          create: {
+            args: Prisma.AgentChatThreadCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          createMany: {
+            args: Prisma.AgentChatThreadCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AgentChatThreadCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>[]
+          }
+          delete: {
+            args: Prisma.AgentChatThreadDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          update: {
+            args: Prisma.AgentChatThreadUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          deleteMany: {
+            args: Prisma.AgentChatThreadDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AgentChatThreadUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AgentChatThreadUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>[]
+          }
+          upsert: {
+            args: Prisma.AgentChatThreadUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatThreadPayload>
+          }
+          aggregate: {
+            args: Prisma.AgentChatThreadAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentChatThread>
+          }
+          groupBy: {
+            args: Prisma.AgentChatThreadGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentChatThreadGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AgentChatThreadCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentChatThreadCountAggregateOutputType> | number
+          }
+        }
+      }
+      AgentChatMessage: {
+        payload: Prisma.$AgentChatMessagePayload<ExtArgs>
+        fields: Prisma.AgentChatMessageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AgentChatMessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AgentChatMessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          findFirst: {
+            args: Prisma.AgentChatMessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AgentChatMessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          findMany: {
+            args: Prisma.AgentChatMessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>[]
+          }
+          create: {
+            args: Prisma.AgentChatMessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          createMany: {
+            args: Prisma.AgentChatMessageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AgentChatMessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>[]
+          }
+          delete: {
+            args: Prisma.AgentChatMessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          update: {
+            args: Prisma.AgentChatMessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          deleteMany: {
+            args: Prisma.AgentChatMessageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AgentChatMessageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AgentChatMessageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>[]
+          }
+          upsert: {
+            args: Prisma.AgentChatMessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentChatMessagePayload>
+          }
+          aggregate: {
+            args: Prisma.AgentChatMessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentChatMessage>
+          }
+          groupBy: {
+            args: Prisma.AgentChatMessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentChatMessageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AgentChatMessageCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentChatMessageCountAggregateOutputType> | number
+          }
+        }
+      }
       CreditLedgerEntry: {
         payload: Prisma.$CreditLedgerEntryPayload<ExtArgs>
         fields: Prisma.CreditLedgerEntryFieldRefs
@@ -3782,6 +3962,8 @@ export namespace Prisma {
     agentVersion?: AgentVersionOmit
     agentRun?: AgentRunOmit
     agentRunStep?: AgentRunStepOmit
+    agentChatThread?: AgentChatThreadOmit
+    agentChatMessage?: AgentChatMessageOmit
     creditLedgerEntry?: CreditLedgerEntryOmit
     technicalCostLedgerEntry?: TechnicalCostLedgerEntryOmit
   }
@@ -4251,11 +4433,13 @@ export namespace Prisma {
    */
 
   export type CompanyAgentCountOutputType = {
+    chatThreads: number
     versions: number
     runs: number
   }
 
   export type CompanyAgentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chatThreads?: boolean | CompanyAgentCountOutputTypeCountChatThreadsArgs
     versions?: boolean | CompanyAgentCountOutputTypeCountVersionsArgs
     runs?: boolean | CompanyAgentCountOutputTypeCountRunsArgs
   }
@@ -4269,6 +4453,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the CompanyAgentCountOutputType
      */
     select?: CompanyAgentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CompanyAgentCountOutputType without action
+   */
+  export type CompanyAgentCountOutputTypeCountChatThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatThreadWhereInput
   }
 
   /**
@@ -4322,11 +4513,17 @@ export namespace Prisma {
    */
 
   export type AgentRunCountOutputType = {
+    chatMessages: number
+    creditEntries: number
     steps: number
+    technicalCostEntries: number
   }
 
   export type AgentRunCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chatMessages?: boolean | AgentRunCountOutputTypeCountChatMessagesArgs
+    creditEntries?: boolean | AgentRunCountOutputTypeCountCreditEntriesArgs
     steps?: boolean | AgentRunCountOutputTypeCountStepsArgs
+    technicalCostEntries?: boolean | AgentRunCountOutputTypeCountTechnicalCostEntriesArgs
   }
 
   // Custom InputTypes
@@ -4343,8 +4540,136 @@ export namespace Prisma {
   /**
    * AgentRunCountOutputType without action
    */
+  export type AgentRunCountOutputTypeCountChatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentRunCountOutputType without action
+   */
+  export type AgentRunCountOutputTypeCountCreditEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CreditLedgerEntryWhereInput
+  }
+
+  /**
+   * AgentRunCountOutputType without action
+   */
   export type AgentRunCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentRunStepWhereInput
+  }
+
+  /**
+   * AgentRunCountOutputType without action
+   */
+  export type AgentRunCountOutputTypeCountTechnicalCostEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TechnicalCostLedgerEntryWhereInput
+  }
+
+
+  /**
+   * Count Type AgentChatThreadCountOutputType
+   */
+
+  export type AgentChatThreadCountOutputType = {
+    branches: number
+    messages: number
+    runs: number
+  }
+
+  export type AgentChatThreadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    branches?: boolean | AgentChatThreadCountOutputTypeCountBranchesArgs
+    messages?: boolean | AgentChatThreadCountOutputTypeCountMessagesArgs
+    runs?: boolean | AgentChatThreadCountOutputTypeCountRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThreadCountOutputType
+     */
+    select?: AgentChatThreadCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatThreadWhereInput
+  }
+
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentRunWhereInput
+  }
+
+
+  /**
+   * Count Type AgentChatMessageCountOutputType
+   */
+
+  export type AgentChatMessageCountOutputType = {
+    editedVariants: number
+    regenerations: number
+    branches: number
+    sourceRuns: number
+  }
+
+  export type AgentChatMessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    editedVariants?: boolean | AgentChatMessageCountOutputTypeCountEditedVariantsArgs
+    regenerations?: boolean | AgentChatMessageCountOutputTypeCountRegenerationsArgs
+    branches?: boolean | AgentChatMessageCountOutputTypeCountBranchesArgs
+    sourceRuns?: boolean | AgentChatMessageCountOutputTypeCountSourceRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessageCountOutputType
+     */
+    select?: AgentChatMessageCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountEditedVariantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountRegenerationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatThreadWhereInput
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountSourceRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentRunWhereInput
   }
 
 
@@ -36270,6 +36595,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     template?: boolean | CompanyAgent$templateArgs<ExtArgs>
+    chatThreads?: boolean | CompanyAgent$chatThreadsArgs<ExtArgs>
     versions?: boolean | CompanyAgent$versionsArgs<ExtArgs>
     runs?: boolean | CompanyAgent$runsArgs<ExtArgs>
     _count?: boolean | CompanyAgentCountOutputTypeDefaultArgs<ExtArgs>
@@ -36325,6 +36651,7 @@ export namespace Prisma {
   export type CompanyAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "templateId" | "slug" | "name" | "description" | "status" | "activeVersionId" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAgent"]>
   export type CompanyAgentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     template?: boolean | CompanyAgent$templateArgs<ExtArgs>
+    chatThreads?: boolean | CompanyAgent$chatThreadsArgs<ExtArgs>
     versions?: boolean | CompanyAgent$versionsArgs<ExtArgs>
     runs?: boolean | CompanyAgent$runsArgs<ExtArgs>
     _count?: boolean | CompanyAgentCountOutputTypeDefaultArgs<ExtArgs>
@@ -36340,6 +36667,7 @@ export namespace Prisma {
     name: "CompanyAgent"
     objects: {
       template: Prisma.$AgentTemplatePayload<ExtArgs> | null
+      chatThreads: Prisma.$AgentChatThreadPayload<ExtArgs>[]
       versions: Prisma.$AgentVersionPayload<ExtArgs>[]
       runs: Prisma.$AgentRunPayload<ExtArgs>[]
     }
@@ -36751,6 +37079,7 @@ export namespace Prisma {
   export interface Prisma__CompanyAgentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     template<T extends CompanyAgent$templateArgs<ExtArgs> = {}>(args?: Subset<T, CompanyAgent$templateArgs<ExtArgs>>): Prisma__AgentTemplateClient<$Result.GetResult<Prisma.$AgentTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    chatThreads<T extends CompanyAgent$chatThreadsArgs<ExtArgs> = {}>(args?: Subset<T, CompanyAgent$chatThreadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     versions<T extends CompanyAgent$versionsArgs<ExtArgs> = {}>(args?: Subset<T, CompanyAgent$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     runs<T extends CompanyAgent$runsArgs<ExtArgs> = {}>(args?: Subset<T, CompanyAgent$runsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -37206,6 +37535,30 @@ export namespace Prisma {
      */
     include?: AgentTemplateInclude<ExtArgs> | null
     where?: AgentTemplateWhereInput
+  }
+
+  /**
+   * CompanyAgent.chatThreads
+   */
+  export type CompanyAgent$chatThreadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    where?: AgentChatThreadWhereInput
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    cursor?: AgentChatThreadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
   }
 
   /**
@@ -38495,17 +38848,38 @@ export namespace Prisma {
 
   export type AggregateAgentRun = {
     _count: AgentRunCountAggregateOutputType | null
+    _avg: AgentRunAvgAggregateOutputType | null
+    _sum: AgentRunSumAggregateOutputType | null
     _min: AgentRunMinAggregateOutputType | null
     _max: AgentRunMaxAggregateOutputType | null
+  }
+
+  export type AgentRunAvgAggregateOutputType = {
+    queuePosition: number | null
+    attemptCount: number | null
+  }
+
+  export type AgentRunSumAggregateOutputType = {
+    queuePosition: number | null
+    attemptCount: number | null
   }
 
   export type AgentRunMinAggregateOutputType = {
     id: string | null
     organizationId: string | null
+    threadId: string | null
+    sourceMessageId: string | null
     agentId: string | null
     agentVersionId: string | null
     status: string | null
+    queuePosition: number | null
+    attemptCount: number | null
+    processingLeaseId: string | null
+    leaseExpiresAt: Date | null
     errorMessage: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    lastAttemptAt: Date | null
     createdByUserId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -38514,10 +38888,19 @@ export namespace Prisma {
   export type AgentRunMaxAggregateOutputType = {
     id: string | null
     organizationId: string | null
+    threadId: string | null
+    sourceMessageId: string | null
     agentId: string | null
     agentVersionId: string | null
     status: string | null
+    queuePosition: number | null
+    attemptCount: number | null
+    processingLeaseId: string | null
+    leaseExpiresAt: Date | null
     errorMessage: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    lastAttemptAt: Date | null
     createdByUserId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -38526,12 +38909,22 @@ export namespace Prisma {
   export type AgentRunCountAggregateOutputType = {
     id: number
     organizationId: number
+    threadId: number
+    sourceMessageId: number
     agentId: number
     agentVersionId: number
     status: number
+    queuePosition: number
+    attemptCount: number
     inputPayload: number
     outputPayload: number
+    processingMetadata: number
+    processingLeaseId: number
+    leaseExpiresAt: number
     errorMessage: number
+    startedAt: number
+    completedAt: number
+    lastAttemptAt: number
     createdByUserId: number
     createdAt: number
     updatedAt: number
@@ -38539,13 +38932,32 @@ export namespace Prisma {
   }
 
 
+  export type AgentRunAvgAggregateInputType = {
+    queuePosition?: true
+    attemptCount?: true
+  }
+
+  export type AgentRunSumAggregateInputType = {
+    queuePosition?: true
+    attemptCount?: true
+  }
+
   export type AgentRunMinAggregateInputType = {
     id?: true
     organizationId?: true
+    threadId?: true
+    sourceMessageId?: true
     agentId?: true
     agentVersionId?: true
     status?: true
+    queuePosition?: true
+    attemptCount?: true
+    processingLeaseId?: true
+    leaseExpiresAt?: true
     errorMessage?: true
+    startedAt?: true
+    completedAt?: true
+    lastAttemptAt?: true
     createdByUserId?: true
     createdAt?: true
     updatedAt?: true
@@ -38554,10 +38966,19 @@ export namespace Prisma {
   export type AgentRunMaxAggregateInputType = {
     id?: true
     organizationId?: true
+    threadId?: true
+    sourceMessageId?: true
     agentId?: true
     agentVersionId?: true
     status?: true
+    queuePosition?: true
+    attemptCount?: true
+    processingLeaseId?: true
+    leaseExpiresAt?: true
     errorMessage?: true
+    startedAt?: true
+    completedAt?: true
+    lastAttemptAt?: true
     createdByUserId?: true
     createdAt?: true
     updatedAt?: true
@@ -38566,12 +38987,22 @@ export namespace Prisma {
   export type AgentRunCountAggregateInputType = {
     id?: true
     organizationId?: true
+    threadId?: true
+    sourceMessageId?: true
     agentId?: true
     agentVersionId?: true
     status?: true
+    queuePosition?: true
+    attemptCount?: true
     inputPayload?: true
     outputPayload?: true
+    processingMetadata?: true
+    processingLeaseId?: true
+    leaseExpiresAt?: true
     errorMessage?: true
+    startedAt?: true
+    completedAt?: true
+    lastAttemptAt?: true
     createdByUserId?: true
     createdAt?: true
     updatedAt?: true
@@ -38616,6 +39047,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: AgentRunAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AgentRunSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: AgentRunMinAggregateInputType
@@ -38646,6 +39089,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: AgentRunCountAggregateInputType | true
+    _avg?: AgentRunAvgAggregateInputType
+    _sum?: AgentRunSumAggregateInputType
     _min?: AgentRunMinAggregateInputType
     _max?: AgentRunMaxAggregateInputType
   }
@@ -38653,16 +39098,28 @@ export namespace Prisma {
   export type AgentRunGroupByOutputType = {
     id: string
     organizationId: string
+    threadId: string | null
+    sourceMessageId: string | null
     agentId: string
     agentVersionId: string
     status: string
+    queuePosition: number | null
+    attemptCount: number
     inputPayload: JsonValue
     outputPayload: JsonValue | null
+    processingMetadata: JsonValue
+    processingLeaseId: string | null
+    leaseExpiresAt: Date | null
     errorMessage: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    lastAttemptAt: Date | null
     createdByUserId: string
     createdAt: Date
     updatedAt: Date
     _count: AgentRunCountAggregateOutputType | null
+    _avg: AgentRunAvgAggregateOutputType | null
+    _sum: AgentRunSumAggregateOutputType | null
     _min: AgentRunMinAggregateOutputType | null
     _max: AgentRunMaxAggregateOutputType | null
   }
@@ -38684,81 +39141,139 @@ export namespace Prisma {
   export type AgentRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    threadId?: boolean
+    sourceMessageId?: boolean
     agentId?: boolean
     agentVersionId?: boolean
     status?: boolean
+    queuePosition?: boolean
+    attemptCount?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
+    processingMetadata?: boolean
+    processingLeaseId?: boolean
+    leaseExpiresAt?: boolean
     errorMessage?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    lastAttemptAt?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
+    chatMessages?: boolean | AgentRun$chatMessagesArgs<ExtArgs>
+    creditEntries?: boolean | AgentRun$creditEntriesArgs<ExtArgs>
     steps?: boolean | AgentRun$stepsArgs<ExtArgs>
+    technicalCostEntries?: boolean | AgentRun$technicalCostEntriesArgs<ExtArgs>
     _count?: boolean | AgentRunCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["agentRun"]>
 
   export type AgentRunSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    threadId?: boolean
+    sourceMessageId?: boolean
     agentId?: boolean
     agentVersionId?: boolean
     status?: boolean
+    queuePosition?: boolean
+    attemptCount?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
+    processingMetadata?: boolean
+    processingLeaseId?: boolean
+    leaseExpiresAt?: boolean
     errorMessage?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    lastAttemptAt?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
   }, ExtArgs["result"]["agentRun"]>
 
   export type AgentRunSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
+    threadId?: boolean
+    sourceMessageId?: boolean
     agentId?: boolean
     agentVersionId?: boolean
     status?: boolean
+    queuePosition?: boolean
+    attemptCount?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
+    processingMetadata?: boolean
+    processingLeaseId?: boolean
+    leaseExpiresAt?: boolean
     errorMessage?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    lastAttemptAt?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
   }, ExtArgs["result"]["agentRun"]>
 
   export type AgentRunSelectScalar = {
     id?: boolean
     organizationId?: boolean
+    threadId?: boolean
+    sourceMessageId?: boolean
     agentId?: boolean
     agentVersionId?: boolean
     status?: boolean
+    queuePosition?: boolean
+    attemptCount?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
+    processingMetadata?: boolean
+    processingLeaseId?: boolean
+    leaseExpiresAt?: boolean
     errorMessage?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    lastAttemptAt?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "agentId" | "agentVersionId" | "status" | "inputPayload" | "outputPayload" | "errorMessage" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["agentRun"]>
+  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "threadId" | "sourceMessageId" | "agentId" | "agentVersionId" | "status" | "queuePosition" | "attemptCount" | "inputPayload" | "outputPayload" | "processingMetadata" | "processingLeaseId" | "leaseExpiresAt" | "errorMessage" | "startedAt" | "completedAt" | "lastAttemptAt" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["agentRun"]>
   export type AgentRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
+    chatMessages?: boolean | AgentRun$chatMessagesArgs<ExtArgs>
+    creditEntries?: boolean | AgentRun$creditEntriesArgs<ExtArgs>
     steps?: boolean | AgentRun$stepsArgs<ExtArgs>
+    technicalCostEntries?: boolean | AgentRun$technicalCostEntriesArgs<ExtArgs>
     _count?: boolean | AgentRunCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AgentRunIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
   }
   export type AgentRunIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agent?: boolean | CompanyAgentDefaultArgs<ExtArgs>
     agentVersion?: boolean | AgentVersionDefaultArgs<ExtArgs>
+    thread?: boolean | AgentRun$threadArgs<ExtArgs>
+    sourceMessage?: boolean | AgentRun$sourceMessageArgs<ExtArgs>
   }
 
   export type $AgentRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -38766,17 +39281,32 @@ export namespace Prisma {
     objects: {
       agent: Prisma.$CompanyAgentPayload<ExtArgs>
       agentVersion: Prisma.$AgentVersionPayload<ExtArgs>
+      thread: Prisma.$AgentChatThreadPayload<ExtArgs> | null
+      sourceMessage: Prisma.$AgentChatMessagePayload<ExtArgs> | null
+      chatMessages: Prisma.$AgentChatMessagePayload<ExtArgs>[]
+      creditEntries: Prisma.$CreditLedgerEntryPayload<ExtArgs>[]
       steps: Prisma.$AgentRunStepPayload<ExtArgs>[]
+      technicalCostEntries: Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       organizationId: string
+      threadId: string | null
+      sourceMessageId: string | null
       agentId: string
       agentVersionId: string
       status: string
+      queuePosition: number | null
+      attemptCount: number
       inputPayload: Prisma.JsonValue
       outputPayload: Prisma.JsonValue | null
+      processingMetadata: Prisma.JsonValue
+      processingLeaseId: string | null
+      leaseExpiresAt: Date | null
       errorMessage: string | null
+      startedAt: Date | null
+      completedAt: Date | null
+      lastAttemptAt: Date | null
       createdByUserId: string
       createdAt: Date
       updatedAt: Date
@@ -39176,7 +39706,12 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     agent<T extends CompanyAgentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyAgentDefaultArgs<ExtArgs>>): Prisma__CompanyAgentClient<$Result.GetResult<Prisma.$CompanyAgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     agentVersion<T extends AgentVersionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentVersionDefaultArgs<ExtArgs>>): Prisma__AgentVersionClient<$Result.GetResult<Prisma.$AgentVersionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    thread<T extends AgentRun$threadArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$threadArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    sourceMessage<T extends AgentRun$sourceMessageArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$sourceMessageArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    chatMessages<T extends AgentRun$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creditEntries<T extends AgentRun$creditEntriesArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$creditEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     steps<T extends AgentRun$stepsArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    technicalCostEntries<T extends AgentRun$technicalCostEntriesArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$technicalCostEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TechnicalCostLedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -39208,12 +39743,22 @@ export namespace Prisma {
   interface AgentRunFieldRefs {
     readonly id: FieldRef<"AgentRun", 'String'>
     readonly organizationId: FieldRef<"AgentRun", 'String'>
+    readonly threadId: FieldRef<"AgentRun", 'String'>
+    readonly sourceMessageId: FieldRef<"AgentRun", 'String'>
     readonly agentId: FieldRef<"AgentRun", 'String'>
     readonly agentVersionId: FieldRef<"AgentRun", 'String'>
     readonly status: FieldRef<"AgentRun", 'String'>
+    readonly queuePosition: FieldRef<"AgentRun", 'Int'>
+    readonly attemptCount: FieldRef<"AgentRun", 'Int'>
     readonly inputPayload: FieldRef<"AgentRun", 'Json'>
     readonly outputPayload: FieldRef<"AgentRun", 'Json'>
+    readonly processingMetadata: FieldRef<"AgentRun", 'Json'>
+    readonly processingLeaseId: FieldRef<"AgentRun", 'String'>
+    readonly leaseExpiresAt: FieldRef<"AgentRun", 'DateTime'>
     readonly errorMessage: FieldRef<"AgentRun", 'String'>
+    readonly startedAt: FieldRef<"AgentRun", 'DateTime'>
+    readonly completedAt: FieldRef<"AgentRun", 'DateTime'>
+    readonly lastAttemptAt: FieldRef<"AgentRun", 'DateTime'>
     readonly createdByUserId: FieldRef<"AgentRun", 'String'>
     readonly createdAt: FieldRef<"AgentRun", 'DateTime'>
     readonly updatedAt: FieldRef<"AgentRun", 'DateTime'>
@@ -39613,6 +40158,92 @@ export namespace Prisma {
   }
 
   /**
+   * AgentRun.thread
+   */
+  export type AgentRun$threadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    where?: AgentChatThreadWhereInput
+  }
+
+  /**
+   * AgentRun.sourceMessage
+   */
+  export type AgentRun$sourceMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentRun.chatMessages
+   */
+  export type AgentRun$chatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    cursor?: AgentChatMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRun.creditEntries
+   */
+  export type AgentRun$creditEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CreditLedgerEntry
+     */
+    select?: CreditLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CreditLedgerEntry
+     */
+    omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    where?: CreditLedgerEntryWhereInput
+    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
+    cursor?: CreditLedgerEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CreditLedgerEntryScalarFieldEnum | CreditLedgerEntryScalarFieldEnum[]
+  }
+
+  /**
    * AgentRun.steps
    */
   export type AgentRun$stepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -39634,6 +40265,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentRunStepScalarFieldEnum | AgentRunStepScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRun.technicalCostEntries
+   */
+  export type AgentRun$technicalCostEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TechnicalCostLedgerEntry
+     */
+    select?: TechnicalCostLedgerEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TechnicalCostLedgerEntry
+     */
+    omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    where?: TechnicalCostLedgerEntryWhereInput
+    orderBy?: TechnicalCostLedgerEntryOrderByWithRelationInput | TechnicalCostLedgerEntryOrderByWithRelationInput[]
+    cursor?: TechnicalCostLedgerEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TechnicalCostLedgerEntryScalarFieldEnum | TechnicalCostLedgerEntryScalarFieldEnum[]
   }
 
   /**
@@ -39695,6 +40350,7 @@ export namespace Prisma {
     blockKey: number
     blockType: number
     status: number
+    metadata: number
     inputPayload: number
     outputPayload: number
     errorMessage: number
@@ -39735,6 +40391,7 @@ export namespace Prisma {
     blockKey?: true
     blockType?: true
     status?: true
+    metadata?: true
     inputPayload?: true
     outputPayload?: true
     errorMessage?: true
@@ -39822,6 +40479,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata: JsonValue
     inputPayload: JsonValue
     outputPayload: JsonValue | null
     errorMessage: string | null
@@ -39853,6 +40511,7 @@ export namespace Prisma {
     blockKey?: boolean
     blockType?: boolean
     status?: boolean
+    metadata?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
     errorMessage?: boolean
@@ -39868,6 +40527,7 @@ export namespace Prisma {
     blockKey?: boolean
     blockType?: boolean
     status?: boolean
+    metadata?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
     errorMessage?: boolean
@@ -39883,6 +40543,7 @@ export namespace Prisma {
     blockKey?: boolean
     blockType?: boolean
     status?: boolean
+    metadata?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
     errorMessage?: boolean
@@ -39898,6 +40559,7 @@ export namespace Prisma {
     blockKey?: boolean
     blockType?: boolean
     status?: boolean
+    metadata?: boolean
     inputPayload?: boolean
     outputPayload?: boolean
     errorMessage?: boolean
@@ -39906,7 +40568,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type AgentRunStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "runId" | "blockKey" | "blockType" | "status" | "inputPayload" | "outputPayload" | "errorMessage" | "startedAt" | "completedAt" | "createdAt", ExtArgs["result"]["agentRunStep"]>
+  export type AgentRunStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "runId" | "blockKey" | "blockType" | "status" | "metadata" | "inputPayload" | "outputPayload" | "errorMessage" | "startedAt" | "completedAt" | "createdAt", ExtArgs["result"]["agentRunStep"]>
   export type AgentRunStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     run?: boolean | AgentRunDefaultArgs<ExtArgs>
   }
@@ -39928,6 +40590,7 @@ export namespace Prisma {
       blockKey: string
       blockType: string
       status: string
+      metadata: Prisma.JsonValue
       inputPayload: Prisma.JsonValue
       outputPayload: Prisma.JsonValue | null
       errorMessage: string | null
@@ -40363,6 +41026,7 @@ export namespace Prisma {
     readonly blockKey: FieldRef<"AgentRunStep", 'String'>
     readonly blockType: FieldRef<"AgentRunStep", 'String'>
     readonly status: FieldRef<"AgentRunStep", 'String'>
+    readonly metadata: FieldRef<"AgentRunStep", 'Json'>
     readonly inputPayload: FieldRef<"AgentRunStep", 'Json'>
     readonly outputPayload: FieldRef<"AgentRunStep", 'Json'>
     readonly errorMessage: FieldRef<"AgentRunStep", 'String'>
@@ -40784,6 +41448,2602 @@ export namespace Prisma {
 
 
   /**
+   * Model AgentChatThread
+   */
+
+  export type AggregateAgentChatThread = {
+    _count: AgentChatThreadCountAggregateOutputType | null
+    _min: AgentChatThreadMinAggregateOutputType | null
+    _max: AgentChatThreadMaxAggregateOutputType | null
+  }
+
+  export type AgentChatThreadMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    agentId: string | null
+    scope: string | null
+    title: string | null
+    parentThreadId: string | null
+    branchedFromMessageId: string | null
+    createdByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentChatThreadMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    agentId: string | null
+    scope: string | null
+    title: string | null
+    parentThreadId: string | null
+    branchedFromMessageId: string | null
+    createdByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentChatThreadCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    agentId: number
+    scope: number
+    title: number
+    parentThreadId: number
+    branchedFromMessageId: number
+    createdByUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AgentChatThreadMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    scope?: true
+    title?: true
+    parentThreadId?: true
+    branchedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentChatThreadMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    scope?: true
+    title?: true
+    parentThreadId?: true
+    branchedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentChatThreadCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    scope?: true
+    title?: true
+    parentThreadId?: true
+    branchedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AgentChatThreadAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentChatThread to aggregate.
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatThreads to fetch.
+     */
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AgentChatThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AgentChatThreads
+    **/
+    _count?: true | AgentChatThreadCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AgentChatThreadMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AgentChatThreadMaxAggregateInputType
+  }
+
+  export type GetAgentChatThreadAggregateType<T extends AgentChatThreadAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentChatThread]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAgentChatThread[P]>
+      : GetScalarType<T[P], AggregateAgentChatThread[P]>
+  }
+
+
+
+
+  export type AgentChatThreadGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatThreadWhereInput
+    orderBy?: AgentChatThreadOrderByWithAggregationInput | AgentChatThreadOrderByWithAggregationInput[]
+    by: AgentChatThreadScalarFieldEnum[] | AgentChatThreadScalarFieldEnum
+    having?: AgentChatThreadScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AgentChatThreadCountAggregateInputType | true
+    _min?: AgentChatThreadMinAggregateInputType
+    _max?: AgentChatThreadMaxAggregateInputType
+  }
+
+  export type AgentChatThreadGroupByOutputType = {
+    id: string
+    organizationId: string
+    agentId: string | null
+    scope: string
+    title: string | null
+    parentThreadId: string | null
+    branchedFromMessageId: string | null
+    createdByUserId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: AgentChatThreadCountAggregateOutputType | null
+    _min: AgentChatThreadMinAggregateOutputType | null
+    _max: AgentChatThreadMaxAggregateOutputType | null
+  }
+
+  type GetAgentChatThreadGroupByPayload<T extends AgentChatThreadGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AgentChatThreadGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AgentChatThreadGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AgentChatThreadGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentChatThreadGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AgentChatThreadSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    scope?: boolean
+    title?: boolean
+    parentThreadId?: boolean
+    branchedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branches?: boolean | AgentChatThread$branchesArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+    messages?: boolean | AgentChatThread$messagesArgs<ExtArgs>
+    runs?: boolean | AgentChatThread$runsArgs<ExtArgs>
+    _count?: boolean | AgentChatThreadCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatThread"]>
+
+  export type AgentChatThreadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    scope?: boolean
+    title?: boolean
+    parentThreadId?: boolean
+    branchedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatThread"]>
+
+  export type AgentChatThreadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    scope?: boolean
+    title?: boolean
+    parentThreadId?: boolean
+    branchedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatThread"]>
+
+  export type AgentChatThreadSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    scope?: boolean
+    title?: boolean
+    parentThreadId?: boolean
+    branchedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AgentChatThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "agentId" | "scope" | "title" | "parentThreadId" | "branchedFromMessageId" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["agentChatThread"]>
+  export type AgentChatThreadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branches?: boolean | AgentChatThread$branchesArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+    messages?: boolean | AgentChatThread$messagesArgs<ExtArgs>
+    runs?: boolean | AgentChatThread$runsArgs<ExtArgs>
+    _count?: boolean | AgentChatThreadCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AgentChatThreadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+  }
+  export type AgentChatThreadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agent?: boolean | AgentChatThread$agentArgs<ExtArgs>
+    parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
+    branchedFromMessage?: boolean | AgentChatThread$branchedFromMessageArgs<ExtArgs>
+  }
+
+  export type $AgentChatThreadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentChatThread"
+    objects: {
+      agent: Prisma.$CompanyAgentPayload<ExtArgs> | null
+      parentThread: Prisma.$AgentChatThreadPayload<ExtArgs> | null
+      branches: Prisma.$AgentChatThreadPayload<ExtArgs>[]
+      branchedFromMessage: Prisma.$AgentChatMessagePayload<ExtArgs> | null
+      messages: Prisma.$AgentChatMessagePayload<ExtArgs>[]
+      runs: Prisma.$AgentRunPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      agentId: string | null
+      scope: string
+      title: string | null
+      parentThreadId: string | null
+      branchedFromMessageId: string | null
+      createdByUserId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["agentChatThread"]>
+    composites: {}
+  }
+
+  type AgentChatThreadGetPayload<S extends boolean | null | undefined | AgentChatThreadDefaultArgs> = $Result.GetResult<Prisma.$AgentChatThreadPayload, S>
+
+  type AgentChatThreadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentChatThreadFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentChatThreadCountAggregateInputType | true
+    }
+
+  export interface AgentChatThreadDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentChatThread'], meta: { name: 'AgentChatThread' } }
+    /**
+     * Find zero or one AgentChatThread that matches the filter.
+     * @param {AgentChatThreadFindUniqueArgs} args - Arguments to find a AgentChatThread
+     * @example
+     * // Get one AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AgentChatThreadFindUniqueArgs>(args: SelectSubset<T, AgentChatThreadFindUniqueArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AgentChatThread that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AgentChatThreadFindUniqueOrThrowArgs} args - Arguments to find a AgentChatThread
+     * @example
+     * // Get one AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AgentChatThreadFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentChatThreadFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentChatThread that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadFindFirstArgs} args - Arguments to find a AgentChatThread
+     * @example
+     * // Get one AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AgentChatThreadFindFirstArgs>(args?: SelectSubset<T, AgentChatThreadFindFirstArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentChatThread that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadFindFirstOrThrowArgs} args - Arguments to find a AgentChatThread
+     * @example
+     * // Get one AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AgentChatThreadFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentChatThreadFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AgentChatThreads that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AgentChatThreads
+     * const agentChatThreads = await prisma.agentChatThread.findMany()
+     * 
+     * // Get first 10 AgentChatThreads
+     * const agentChatThreads = await prisma.agentChatThread.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const agentChatThreadWithIdOnly = await prisma.agentChatThread.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AgentChatThreadFindManyArgs>(args?: SelectSubset<T, AgentChatThreadFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AgentChatThread.
+     * @param {AgentChatThreadCreateArgs} args - Arguments to create a AgentChatThread.
+     * @example
+     * // Create one AgentChatThread
+     * const AgentChatThread = await prisma.agentChatThread.create({
+     *   data: {
+     *     // ... data to create a AgentChatThread
+     *   }
+     * })
+     * 
+     */
+    create<T extends AgentChatThreadCreateArgs>(args: SelectSubset<T, AgentChatThreadCreateArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AgentChatThreads.
+     * @param {AgentChatThreadCreateManyArgs} args - Arguments to create many AgentChatThreads.
+     * @example
+     * // Create many AgentChatThreads
+     * const agentChatThread = await prisma.agentChatThread.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AgentChatThreadCreateManyArgs>(args?: SelectSubset<T, AgentChatThreadCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AgentChatThreads and returns the data saved in the database.
+     * @param {AgentChatThreadCreateManyAndReturnArgs} args - Arguments to create many AgentChatThreads.
+     * @example
+     * // Create many AgentChatThreads
+     * const agentChatThread = await prisma.agentChatThread.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AgentChatThreads and only return the `id`
+     * const agentChatThreadWithIdOnly = await prisma.agentChatThread.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AgentChatThreadCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentChatThreadCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AgentChatThread.
+     * @param {AgentChatThreadDeleteArgs} args - Arguments to delete one AgentChatThread.
+     * @example
+     * // Delete one AgentChatThread
+     * const AgentChatThread = await prisma.agentChatThread.delete({
+     *   where: {
+     *     // ... filter to delete one AgentChatThread
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AgentChatThreadDeleteArgs>(args: SelectSubset<T, AgentChatThreadDeleteArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AgentChatThread.
+     * @param {AgentChatThreadUpdateArgs} args - Arguments to update one AgentChatThread.
+     * @example
+     * // Update one AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AgentChatThreadUpdateArgs>(args: SelectSubset<T, AgentChatThreadUpdateArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AgentChatThreads.
+     * @param {AgentChatThreadDeleteManyArgs} args - Arguments to filter AgentChatThreads to delete.
+     * @example
+     * // Delete a few AgentChatThreads
+     * const { count } = await prisma.agentChatThread.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AgentChatThreadDeleteManyArgs>(args?: SelectSubset<T, AgentChatThreadDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentChatThreads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AgentChatThreads
+     * const agentChatThread = await prisma.agentChatThread.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AgentChatThreadUpdateManyArgs>(args: SelectSubset<T, AgentChatThreadUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentChatThreads and returns the data updated in the database.
+     * @param {AgentChatThreadUpdateManyAndReturnArgs} args - Arguments to update many AgentChatThreads.
+     * @example
+     * // Update many AgentChatThreads
+     * const agentChatThread = await prisma.agentChatThread.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AgentChatThreads and only return the `id`
+     * const agentChatThreadWithIdOnly = await prisma.agentChatThread.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AgentChatThreadUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentChatThreadUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AgentChatThread.
+     * @param {AgentChatThreadUpsertArgs} args - Arguments to update or create a AgentChatThread.
+     * @example
+     * // Update or create a AgentChatThread
+     * const agentChatThread = await prisma.agentChatThread.upsert({
+     *   create: {
+     *     // ... data to create a AgentChatThread
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AgentChatThread we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AgentChatThreadUpsertArgs>(args: SelectSubset<T, AgentChatThreadUpsertArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AgentChatThreads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadCountArgs} args - Arguments to filter AgentChatThreads to count.
+     * @example
+     * // Count the number of AgentChatThreads
+     * const count = await prisma.agentChatThread.count({
+     *   where: {
+     *     // ... the filter for the AgentChatThreads we want to count
+     *   }
+     * })
+    **/
+    count<T extends AgentChatThreadCountArgs>(
+      args?: Subset<T, AgentChatThreadCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AgentChatThreadCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AgentChatThread.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AgentChatThreadAggregateArgs>(args: Subset<T, AgentChatThreadAggregateArgs>): Prisma.PrismaPromise<GetAgentChatThreadAggregateType<T>>
+
+    /**
+     * Group by AgentChatThread.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatThreadGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AgentChatThreadGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AgentChatThreadGroupByArgs['orderBy'] }
+        : { orderBy?: AgentChatThreadGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AgentChatThreadGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentChatThreadGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AgentChatThread model
+   */
+  readonly fields: AgentChatThreadFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AgentChatThread.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AgentChatThreadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    agent<T extends AgentChatThread$agentArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$agentArgs<ExtArgs>>): Prisma__CompanyAgentClient<$Result.GetResult<Prisma.$CompanyAgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parentThread<T extends AgentChatThread$parentThreadArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$parentThreadArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    branches<T extends AgentChatThread$branchesArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    branchedFromMessage<T extends AgentChatThread$branchedFromMessageArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$branchedFromMessageArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    messages<T extends AgentChatThread$messagesArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    runs<T extends AgentChatThread$runsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$runsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AgentChatThread model
+   */
+  interface AgentChatThreadFieldRefs {
+    readonly id: FieldRef<"AgentChatThread", 'String'>
+    readonly organizationId: FieldRef<"AgentChatThread", 'String'>
+    readonly agentId: FieldRef<"AgentChatThread", 'String'>
+    readonly scope: FieldRef<"AgentChatThread", 'String'>
+    readonly title: FieldRef<"AgentChatThread", 'String'>
+    readonly parentThreadId: FieldRef<"AgentChatThread", 'String'>
+    readonly branchedFromMessageId: FieldRef<"AgentChatThread", 'String'>
+    readonly createdByUserId: FieldRef<"AgentChatThread", 'String'>
+    readonly createdAt: FieldRef<"AgentChatThread", 'DateTime'>
+    readonly updatedAt: FieldRef<"AgentChatThread", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AgentChatThread findUnique
+   */
+  export type AgentChatThreadFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatThread to fetch.
+     */
+    where: AgentChatThreadWhereUniqueInput
+  }
+
+  /**
+   * AgentChatThread findUniqueOrThrow
+   */
+  export type AgentChatThreadFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatThread to fetch.
+     */
+    where: AgentChatThreadWhereUniqueInput
+  }
+
+  /**
+   * AgentChatThread findFirst
+   */
+  export type AgentChatThreadFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatThread to fetch.
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatThreads to fetch.
+     */
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentChatThreads.
+     */
+    cursor?: AgentChatThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentChatThreads.
+     */
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread findFirstOrThrow
+   */
+  export type AgentChatThreadFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatThread to fetch.
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatThreads to fetch.
+     */
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentChatThreads.
+     */
+    cursor?: AgentChatThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatThreads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentChatThreads.
+     */
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread findMany
+   */
+  export type AgentChatThreadFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatThreads to fetch.
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatThreads to fetch.
+     */
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AgentChatThreads.
+     */
+    cursor?: AgentChatThreadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatThreads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatThreads.
+     */
+    skip?: number
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread create
+   */
+  export type AgentChatThreadCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AgentChatThread.
+     */
+    data: XOR<AgentChatThreadCreateInput, AgentChatThreadUncheckedCreateInput>
+  }
+
+  /**
+   * AgentChatThread createMany
+   */
+  export type AgentChatThreadCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AgentChatThreads.
+     */
+    data: AgentChatThreadCreateManyInput | AgentChatThreadCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AgentChatThread createManyAndReturn
+   */
+  export type AgentChatThreadCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * The data used to create many AgentChatThreads.
+     */
+    data: AgentChatThreadCreateManyInput | AgentChatThreadCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatThread update
+   */
+  export type AgentChatThreadUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AgentChatThread.
+     */
+    data: XOR<AgentChatThreadUpdateInput, AgentChatThreadUncheckedUpdateInput>
+    /**
+     * Choose, which AgentChatThread to update.
+     */
+    where: AgentChatThreadWhereUniqueInput
+  }
+
+  /**
+   * AgentChatThread updateMany
+   */
+  export type AgentChatThreadUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AgentChatThreads.
+     */
+    data: XOR<AgentChatThreadUpdateManyMutationInput, AgentChatThreadUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentChatThreads to update
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * Limit how many AgentChatThreads to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentChatThread updateManyAndReturn
+   */
+  export type AgentChatThreadUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * The data used to update AgentChatThreads.
+     */
+    data: XOR<AgentChatThreadUpdateManyMutationInput, AgentChatThreadUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentChatThreads to update
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * Limit how many AgentChatThreads to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatThread upsert
+   */
+  export type AgentChatThreadUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AgentChatThread to update in case it exists.
+     */
+    where: AgentChatThreadWhereUniqueInput
+    /**
+     * In case the AgentChatThread found by the `where` argument doesn't exist, create a new AgentChatThread with this data.
+     */
+    create: XOR<AgentChatThreadCreateInput, AgentChatThreadUncheckedCreateInput>
+    /**
+     * In case the AgentChatThread was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AgentChatThreadUpdateInput, AgentChatThreadUncheckedUpdateInput>
+  }
+
+  /**
+   * AgentChatThread delete
+   */
+  export type AgentChatThreadDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    /**
+     * Filter which AgentChatThread to delete.
+     */
+    where: AgentChatThreadWhereUniqueInput
+  }
+
+  /**
+   * AgentChatThread deleteMany
+   */
+  export type AgentChatThreadDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentChatThreads to delete
+     */
+    where?: AgentChatThreadWhereInput
+    /**
+     * Limit how many AgentChatThreads to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentChatThread.agent
+   */
+  export type AgentChatThread$agentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyAgent
+     */
+    select?: CompanyAgentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyAgent
+     */
+    omit?: CompanyAgentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyAgentInclude<ExtArgs> | null
+    where?: CompanyAgentWhereInput
+  }
+
+  /**
+   * AgentChatThread.parentThread
+   */
+  export type AgentChatThread$parentThreadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    where?: AgentChatThreadWhereInput
+  }
+
+  /**
+   * AgentChatThread.branches
+   */
+  export type AgentChatThread$branchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    where?: AgentChatThreadWhereInput
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    cursor?: AgentChatThreadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread.branchedFromMessage
+   */
+  export type AgentChatThread$branchedFromMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatThread.messages
+   */
+  export type AgentChatThread$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    cursor?: AgentChatMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread.runs
+   */
+  export type AgentChatThread$runsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+    orderBy?: AgentRunOrderByWithRelationInput | AgentRunOrderByWithRelationInput[]
+    cursor?: AgentRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentRunScalarFieldEnum | AgentRunScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread without action
+   */
+  export type AgentChatThreadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AgentChatMessage
+   */
+
+  export type AggregateAgentChatMessage = {
+    _count: AgentChatMessageCountAggregateOutputType | null
+    _min: AgentChatMessageMinAggregateOutputType | null
+    _max: AgentChatMessageMaxAggregateOutputType | null
+  }
+
+  export type AgentChatMessageMinAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    agentRunId: string | null
+    role: string | null
+    content: string | null
+    editedFromMessageId: string | null
+    regeneratedFromMessageId: string | null
+    createdByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type AgentChatMessageMaxAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    agentRunId: string | null
+    role: string | null
+    content: string | null
+    editedFromMessageId: string | null
+    regeneratedFromMessageId: string | null
+    createdByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type AgentChatMessageCountAggregateOutputType = {
+    id: number
+    threadId: number
+    agentRunId: number
+    role: number
+    content: number
+    metadata: number
+    editedFromMessageId: number
+    regeneratedFromMessageId: number
+    createdByUserId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AgentChatMessageMinAggregateInputType = {
+    id?: true
+    threadId?: true
+    agentRunId?: true
+    role?: true
+    content?: true
+    editedFromMessageId?: true
+    regeneratedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+  }
+
+  export type AgentChatMessageMaxAggregateInputType = {
+    id?: true
+    threadId?: true
+    agentRunId?: true
+    role?: true
+    content?: true
+    editedFromMessageId?: true
+    regeneratedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+  }
+
+  export type AgentChatMessageCountAggregateInputType = {
+    id?: true
+    threadId?: true
+    agentRunId?: true
+    role?: true
+    content?: true
+    metadata?: true
+    editedFromMessageId?: true
+    regeneratedFromMessageId?: true
+    createdByUserId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AgentChatMessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentChatMessage to aggregate.
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatMessages to fetch.
+     */
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AgentChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AgentChatMessages
+    **/
+    _count?: true | AgentChatMessageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AgentChatMessageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AgentChatMessageMaxAggregateInputType
+  }
+
+  export type GetAgentChatMessageAggregateType<T extends AgentChatMessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentChatMessage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAgentChatMessage[P]>
+      : GetScalarType<T[P], AggregateAgentChatMessage[P]>
+  }
+
+
+
+
+  export type AgentChatMessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentChatMessageWhereInput
+    orderBy?: AgentChatMessageOrderByWithAggregationInput | AgentChatMessageOrderByWithAggregationInput[]
+    by: AgentChatMessageScalarFieldEnum[] | AgentChatMessageScalarFieldEnum
+    having?: AgentChatMessageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AgentChatMessageCountAggregateInputType | true
+    _min?: AgentChatMessageMinAggregateInputType
+    _max?: AgentChatMessageMaxAggregateInputType
+  }
+
+  export type AgentChatMessageGroupByOutputType = {
+    id: string
+    threadId: string
+    agentRunId: string | null
+    role: string
+    content: string
+    metadata: JsonValue
+    editedFromMessageId: string | null
+    regeneratedFromMessageId: string | null
+    createdByUserId: string | null
+    createdAt: Date
+    _count: AgentChatMessageCountAggregateOutputType | null
+    _min: AgentChatMessageMinAggregateOutputType | null
+    _max: AgentChatMessageMaxAggregateOutputType | null
+  }
+
+  type GetAgentChatMessageGroupByPayload<T extends AgentChatMessageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AgentChatMessageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AgentChatMessageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AgentChatMessageGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentChatMessageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AgentChatMessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    agentRunId?: boolean
+    role?: boolean
+    content?: boolean
+    metadata?: boolean
+    editedFromMessageId?: boolean
+    regeneratedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    editedVariants?: boolean | AgentChatMessage$editedVariantsArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+    regenerations?: boolean | AgentChatMessage$regenerationsArgs<ExtArgs>
+    branches?: boolean | AgentChatMessage$branchesArgs<ExtArgs>
+    sourceRuns?: boolean | AgentChatMessage$sourceRunsArgs<ExtArgs>
+    _count?: boolean | AgentChatMessageCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatMessage"]>
+
+  export type AgentChatMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    agentRunId?: boolean
+    role?: boolean
+    content?: boolean
+    metadata?: boolean
+    editedFromMessageId?: boolean
+    regeneratedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatMessage"]>
+
+  export type AgentChatMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    agentRunId?: boolean
+    role?: boolean
+    content?: boolean
+    metadata?: boolean
+    editedFromMessageId?: boolean
+    regeneratedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+  }, ExtArgs["result"]["agentChatMessage"]>
+
+  export type AgentChatMessageSelectScalar = {
+    id?: boolean
+    threadId?: boolean
+    agentRunId?: boolean
+    role?: boolean
+    content?: boolean
+    metadata?: boolean
+    editedFromMessageId?: boolean
+    regeneratedFromMessageId?: boolean
+    createdByUserId?: boolean
+    createdAt?: boolean
+  }
+
+  export type AgentChatMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "agentRunId" | "role" | "content" | "metadata" | "editedFromMessageId" | "regeneratedFromMessageId" | "createdByUserId" | "createdAt", ExtArgs["result"]["agentChatMessage"]>
+  export type AgentChatMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    editedVariants?: boolean | AgentChatMessage$editedVariantsArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+    regenerations?: boolean | AgentChatMessage$regenerationsArgs<ExtArgs>
+    branches?: boolean | AgentChatMessage$branchesArgs<ExtArgs>
+    sourceRuns?: boolean | AgentChatMessage$sourceRunsArgs<ExtArgs>
+    _count?: boolean | AgentChatMessageCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AgentChatMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+  }
+  export type AgentChatMessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    agentRun?: boolean | AgentChatMessage$agentRunArgs<ExtArgs>
+    editedFromMessage?: boolean | AgentChatMessage$editedFromMessageArgs<ExtArgs>
+    regeneratedFromMessage?: boolean | AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>
+  }
+
+  export type $AgentChatMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentChatMessage"
+    objects: {
+      thread: Prisma.$AgentChatThreadPayload<ExtArgs>
+      agentRun: Prisma.$AgentRunPayload<ExtArgs> | null
+      editedFromMessage: Prisma.$AgentChatMessagePayload<ExtArgs> | null
+      editedVariants: Prisma.$AgentChatMessagePayload<ExtArgs>[]
+      regeneratedFromMessage: Prisma.$AgentChatMessagePayload<ExtArgs> | null
+      regenerations: Prisma.$AgentChatMessagePayload<ExtArgs>[]
+      branches: Prisma.$AgentChatThreadPayload<ExtArgs>[]
+      sourceRuns: Prisma.$AgentRunPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      threadId: string
+      agentRunId: string | null
+      role: string
+      content: string
+      metadata: Prisma.JsonValue
+      editedFromMessageId: string | null
+      regeneratedFromMessageId: string | null
+      createdByUserId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["agentChatMessage"]>
+    composites: {}
+  }
+
+  type AgentChatMessageGetPayload<S extends boolean | null | undefined | AgentChatMessageDefaultArgs> = $Result.GetResult<Prisma.$AgentChatMessagePayload, S>
+
+  type AgentChatMessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentChatMessageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentChatMessageCountAggregateInputType | true
+    }
+
+  export interface AgentChatMessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentChatMessage'], meta: { name: 'AgentChatMessage' } }
+    /**
+     * Find zero or one AgentChatMessage that matches the filter.
+     * @param {AgentChatMessageFindUniqueArgs} args - Arguments to find a AgentChatMessage
+     * @example
+     * // Get one AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AgentChatMessageFindUniqueArgs>(args: SelectSubset<T, AgentChatMessageFindUniqueArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AgentChatMessage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AgentChatMessageFindUniqueOrThrowArgs} args - Arguments to find a AgentChatMessage
+     * @example
+     * // Get one AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AgentChatMessageFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentChatMessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentChatMessage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageFindFirstArgs} args - Arguments to find a AgentChatMessage
+     * @example
+     * // Get one AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AgentChatMessageFindFirstArgs>(args?: SelectSubset<T, AgentChatMessageFindFirstArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentChatMessage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageFindFirstOrThrowArgs} args - Arguments to find a AgentChatMessage
+     * @example
+     * // Get one AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AgentChatMessageFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentChatMessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AgentChatMessages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AgentChatMessages
+     * const agentChatMessages = await prisma.agentChatMessage.findMany()
+     * 
+     * // Get first 10 AgentChatMessages
+     * const agentChatMessages = await prisma.agentChatMessage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const agentChatMessageWithIdOnly = await prisma.agentChatMessage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AgentChatMessageFindManyArgs>(args?: SelectSubset<T, AgentChatMessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AgentChatMessage.
+     * @param {AgentChatMessageCreateArgs} args - Arguments to create a AgentChatMessage.
+     * @example
+     * // Create one AgentChatMessage
+     * const AgentChatMessage = await prisma.agentChatMessage.create({
+     *   data: {
+     *     // ... data to create a AgentChatMessage
+     *   }
+     * })
+     * 
+     */
+    create<T extends AgentChatMessageCreateArgs>(args: SelectSubset<T, AgentChatMessageCreateArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AgentChatMessages.
+     * @param {AgentChatMessageCreateManyArgs} args - Arguments to create many AgentChatMessages.
+     * @example
+     * // Create many AgentChatMessages
+     * const agentChatMessage = await prisma.agentChatMessage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AgentChatMessageCreateManyArgs>(args?: SelectSubset<T, AgentChatMessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AgentChatMessages and returns the data saved in the database.
+     * @param {AgentChatMessageCreateManyAndReturnArgs} args - Arguments to create many AgentChatMessages.
+     * @example
+     * // Create many AgentChatMessages
+     * const agentChatMessage = await prisma.agentChatMessage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AgentChatMessages and only return the `id`
+     * const agentChatMessageWithIdOnly = await prisma.agentChatMessage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AgentChatMessageCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentChatMessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AgentChatMessage.
+     * @param {AgentChatMessageDeleteArgs} args - Arguments to delete one AgentChatMessage.
+     * @example
+     * // Delete one AgentChatMessage
+     * const AgentChatMessage = await prisma.agentChatMessage.delete({
+     *   where: {
+     *     // ... filter to delete one AgentChatMessage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AgentChatMessageDeleteArgs>(args: SelectSubset<T, AgentChatMessageDeleteArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AgentChatMessage.
+     * @param {AgentChatMessageUpdateArgs} args - Arguments to update one AgentChatMessage.
+     * @example
+     * // Update one AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AgentChatMessageUpdateArgs>(args: SelectSubset<T, AgentChatMessageUpdateArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AgentChatMessages.
+     * @param {AgentChatMessageDeleteManyArgs} args - Arguments to filter AgentChatMessages to delete.
+     * @example
+     * // Delete a few AgentChatMessages
+     * const { count } = await prisma.agentChatMessage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AgentChatMessageDeleteManyArgs>(args?: SelectSubset<T, AgentChatMessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AgentChatMessages
+     * const agentChatMessage = await prisma.agentChatMessage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AgentChatMessageUpdateManyArgs>(args: SelectSubset<T, AgentChatMessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentChatMessages and returns the data updated in the database.
+     * @param {AgentChatMessageUpdateManyAndReturnArgs} args - Arguments to update many AgentChatMessages.
+     * @example
+     * // Update many AgentChatMessages
+     * const agentChatMessage = await prisma.agentChatMessage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AgentChatMessages and only return the `id`
+     * const agentChatMessageWithIdOnly = await prisma.agentChatMessage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AgentChatMessageUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentChatMessageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AgentChatMessage.
+     * @param {AgentChatMessageUpsertArgs} args - Arguments to update or create a AgentChatMessage.
+     * @example
+     * // Update or create a AgentChatMessage
+     * const agentChatMessage = await prisma.agentChatMessage.upsert({
+     *   create: {
+     *     // ... data to create a AgentChatMessage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AgentChatMessage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AgentChatMessageUpsertArgs>(args: SelectSubset<T, AgentChatMessageUpsertArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AgentChatMessages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageCountArgs} args - Arguments to filter AgentChatMessages to count.
+     * @example
+     * // Count the number of AgentChatMessages
+     * const count = await prisma.agentChatMessage.count({
+     *   where: {
+     *     // ... the filter for the AgentChatMessages we want to count
+     *   }
+     * })
+    **/
+    count<T extends AgentChatMessageCountArgs>(
+      args?: Subset<T, AgentChatMessageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AgentChatMessageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AgentChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AgentChatMessageAggregateArgs>(args: Subset<T, AgentChatMessageAggregateArgs>): Prisma.PrismaPromise<GetAgentChatMessageAggregateType<T>>
+
+    /**
+     * Group by AgentChatMessage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentChatMessageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AgentChatMessageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AgentChatMessageGroupByArgs['orderBy'] }
+        : { orderBy?: AgentChatMessageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AgentChatMessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentChatMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AgentChatMessage model
+   */
+  readonly fields: AgentChatMessageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AgentChatMessage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AgentChatMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends AgentChatThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThreadDefaultArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    agentRun<T extends AgentChatMessage$agentRunArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$agentRunArgs<ExtArgs>>): Prisma__AgentRunClient<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    editedFromMessage<T extends AgentChatMessage$editedFromMessageArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$editedFromMessageArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    editedVariants<T extends AgentChatMessage$editedVariantsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$editedVariantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    regeneratedFromMessage<T extends AgentChatMessage$regeneratedFromMessageArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$regeneratedFromMessageArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    regenerations<T extends AgentChatMessage$regenerationsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$regenerationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    branches<T extends AgentChatMessage$branchesArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sourceRuns<T extends AgentChatMessage$sourceRunsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$sourceRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AgentChatMessage model
+   */
+  interface AgentChatMessageFieldRefs {
+    readonly id: FieldRef<"AgentChatMessage", 'String'>
+    readonly threadId: FieldRef<"AgentChatMessage", 'String'>
+    readonly agentRunId: FieldRef<"AgentChatMessage", 'String'>
+    readonly role: FieldRef<"AgentChatMessage", 'String'>
+    readonly content: FieldRef<"AgentChatMessage", 'String'>
+    readonly metadata: FieldRef<"AgentChatMessage", 'Json'>
+    readonly editedFromMessageId: FieldRef<"AgentChatMessage", 'String'>
+    readonly regeneratedFromMessageId: FieldRef<"AgentChatMessage", 'String'>
+    readonly createdByUserId: FieldRef<"AgentChatMessage", 'String'>
+    readonly createdAt: FieldRef<"AgentChatMessage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AgentChatMessage findUnique
+   */
+  export type AgentChatMessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatMessage to fetch.
+     */
+    where: AgentChatMessageWhereUniqueInput
+  }
+
+  /**
+   * AgentChatMessage findUniqueOrThrow
+   */
+  export type AgentChatMessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatMessage to fetch.
+     */
+    where: AgentChatMessageWhereUniqueInput
+  }
+
+  /**
+   * AgentChatMessage findFirst
+   */
+  export type AgentChatMessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatMessage to fetch.
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatMessages to fetch.
+     */
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentChatMessages.
+     */
+    cursor?: AgentChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentChatMessages.
+     */
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage findFirstOrThrow
+   */
+  export type AgentChatMessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatMessage to fetch.
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatMessages to fetch.
+     */
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentChatMessages.
+     */
+    cursor?: AgentChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatMessages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentChatMessages.
+     */
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage findMany
+   */
+  export type AgentChatMessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentChatMessages to fetch.
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentChatMessages to fetch.
+     */
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AgentChatMessages.
+     */
+    cursor?: AgentChatMessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentChatMessages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentChatMessages.
+     */
+    skip?: number
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage create
+   */
+  export type AgentChatMessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AgentChatMessage.
+     */
+    data: XOR<AgentChatMessageCreateInput, AgentChatMessageUncheckedCreateInput>
+  }
+
+  /**
+   * AgentChatMessage createMany
+   */
+  export type AgentChatMessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AgentChatMessages.
+     */
+    data: AgentChatMessageCreateManyInput | AgentChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AgentChatMessage createManyAndReturn
+   */
+  export type AgentChatMessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * The data used to create many AgentChatMessages.
+     */
+    data: AgentChatMessageCreateManyInput | AgentChatMessageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatMessage update
+   */
+  export type AgentChatMessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AgentChatMessage.
+     */
+    data: XOR<AgentChatMessageUpdateInput, AgentChatMessageUncheckedUpdateInput>
+    /**
+     * Choose, which AgentChatMessage to update.
+     */
+    where: AgentChatMessageWhereUniqueInput
+  }
+
+  /**
+   * AgentChatMessage updateMany
+   */
+  export type AgentChatMessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AgentChatMessages.
+     */
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentChatMessages to update
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * Limit how many AgentChatMessages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentChatMessage updateManyAndReturn
+   */
+  export type AgentChatMessageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * The data used to update AgentChatMessages.
+     */
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentChatMessages to update
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * Limit how many AgentChatMessages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentChatMessage upsert
+   */
+  export type AgentChatMessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AgentChatMessage to update in case it exists.
+     */
+    where: AgentChatMessageWhereUniqueInput
+    /**
+     * In case the AgentChatMessage found by the `where` argument doesn't exist, create a new AgentChatMessage with this data.
+     */
+    create: XOR<AgentChatMessageCreateInput, AgentChatMessageUncheckedCreateInput>
+    /**
+     * In case the AgentChatMessage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AgentChatMessageUpdateInput, AgentChatMessageUncheckedUpdateInput>
+  }
+
+  /**
+   * AgentChatMessage delete
+   */
+  export type AgentChatMessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    /**
+     * Filter which AgentChatMessage to delete.
+     */
+    where: AgentChatMessageWhereUniqueInput
+  }
+
+  /**
+   * AgentChatMessage deleteMany
+   */
+  export type AgentChatMessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentChatMessages to delete
+     */
+    where?: AgentChatMessageWhereInput
+    /**
+     * Limit how many AgentChatMessages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentChatMessage.agentRun
+   */
+  export type AgentChatMessage$agentRunArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+  }
+
+  /**
+   * AgentChatMessage.editedFromMessage
+   */
+  export type AgentChatMessage$editedFromMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatMessage.editedVariants
+   */
+  export type AgentChatMessage$editedVariantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    cursor?: AgentChatMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage.regeneratedFromMessage
+   */
+  export type AgentChatMessage$regeneratedFromMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+  }
+
+  /**
+   * AgentChatMessage.regenerations
+   */
+  export type AgentChatMessage$regenerationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+    where?: AgentChatMessageWhereInput
+    orderBy?: AgentChatMessageOrderByWithRelationInput | AgentChatMessageOrderByWithRelationInput[]
+    cursor?: AgentChatMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatMessageScalarFieldEnum | AgentChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage.branches
+   */
+  export type AgentChatMessage$branchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatThread
+     */
+    select?: AgentChatThreadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatThread
+     */
+    omit?: AgentChatThreadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatThreadInclude<ExtArgs> | null
+    where?: AgentChatThreadWhereInput
+    orderBy?: AgentChatThreadOrderByWithRelationInput | AgentChatThreadOrderByWithRelationInput[]
+    cursor?: AgentChatThreadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentChatThreadScalarFieldEnum | AgentChatThreadScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage.sourceRuns
+   */
+  export type AgentChatMessage$sourceRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+    orderBy?: AgentRunOrderByWithRelationInput | AgentRunOrderByWithRelationInput[]
+    cursor?: AgentRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentRunScalarFieldEnum | AgentRunScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage without action
+   */
+  export type AgentChatMessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentChatMessage
+     */
+    select?: AgentChatMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentChatMessage
+     */
+    omit?: AgentChatMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentChatMessageInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model CreditLedgerEntry
    */
 
@@ -40809,6 +44069,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     runId: string | null
+    idempotencyKey: string | null
     entryType: string | null
     amount: number | null
     balanceAfter: number | null
@@ -40820,6 +44081,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     runId: string | null
+    idempotencyKey: string | null
     entryType: string | null
     amount: number | null
     balanceAfter: number | null
@@ -40831,6 +44093,7 @@ export namespace Prisma {
     id: number
     organizationId: number
     runId: number
+    idempotencyKey: number
     entryType: number
     amount: number
     balanceAfter: number
@@ -40855,6 +44118,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     entryType?: true
     amount?: true
     balanceAfter?: true
@@ -40866,6 +44130,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     entryType?: true
     amount?: true
     balanceAfter?: true
@@ -40877,6 +44142,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     entryType?: true
     amount?: true
     balanceAfter?: true
@@ -40976,6 +44242,7 @@ export namespace Prisma {
     id: string
     organizationId: string
     runId: string | null
+    idempotencyKey: string | null
     entryType: string
     amount: number
     balanceAfter: number
@@ -41007,42 +44274,49 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     entryType?: boolean
     amount?: boolean
     balanceAfter?: boolean
     metadata?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     entryType?: boolean
     amount?: boolean
     balanceAfter?: boolean
     metadata?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     entryType?: boolean
     amount?: boolean
     balanceAfter?: boolean
     metadata?: boolean
     createdByUserId?: boolean
     createdAt?: boolean
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectScalar = {
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     entryType?: boolean
     amount?: boolean
     balanceAfter?: boolean
@@ -41051,15 +44325,27 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "entryType" | "amount" | "balanceAfter" | "metadata" | "createdByUserId" | "createdAt", ExtArgs["result"]["creditLedgerEntry"]>
+  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "idempotencyKey" | "entryType" | "amount" | "balanceAfter" | "metadata" | "createdByUserId" | "createdAt", ExtArgs["result"]["creditLedgerEntry"]>
+  export type CreditLedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
+  }
+  export type CreditLedgerEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
+  }
+  export type CreditLedgerEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | CreditLedgerEntry$runArgs<ExtArgs>
+  }
 
   export type $CreditLedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CreditLedgerEntry"
-    objects: {}
+    objects: {
+      run: Prisma.$AgentRunPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       organizationId: string
       runId: string | null
+      idempotencyKey: string | null
       entryType: string
       amount: number
       balanceAfter: number
@@ -41460,6 +44746,7 @@ export namespace Prisma {
    */
   export interface Prisma__CreditLedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    run<T extends CreditLedgerEntry$runArgs<ExtArgs> = {}>(args?: Subset<T, CreditLedgerEntry$runArgs<ExtArgs>>): Prisma__AgentRunClient<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -41492,6 +44779,7 @@ export namespace Prisma {
     readonly id: FieldRef<"CreditLedgerEntry", 'String'>
     readonly organizationId: FieldRef<"CreditLedgerEntry", 'String'>
     readonly runId: FieldRef<"CreditLedgerEntry", 'String'>
+    readonly idempotencyKey: FieldRef<"CreditLedgerEntry", 'String'>
     readonly entryType: FieldRef<"CreditLedgerEntry", 'String'>
     readonly amount: FieldRef<"CreditLedgerEntry", 'Int'>
     readonly balanceAfter: FieldRef<"CreditLedgerEntry", 'Int'>
@@ -41515,6 +44803,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which CreditLedgerEntry to fetch.
      */
     where: CreditLedgerEntryWhereUniqueInput
@@ -41533,6 +44825,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which CreditLedgerEntry to fetch.
      */
     where: CreditLedgerEntryWhereUniqueInput
@@ -41550,6 +44846,10 @@ export namespace Prisma {
      * Omit specific fields from the CreditLedgerEntry
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
     /**
      * Filter, which CreditLedgerEntry to fetch.
      */
@@ -41599,6 +44899,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which CreditLedgerEntry to fetch.
      */
     where?: CreditLedgerEntryWhereInput
@@ -41647,6 +44951,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which CreditLedgerEntries to fetch.
      */
     where?: CreditLedgerEntryWhereInput
@@ -41690,6 +44998,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * The data needed to create a CreditLedgerEntry.
      */
     data: XOR<CreditLedgerEntryCreateInput, CreditLedgerEntryUncheckedCreateInput>
@@ -41723,6 +45035,10 @@ export namespace Prisma {
      */
     data: CreditLedgerEntryCreateManyInput | CreditLedgerEntryCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -41737,6 +45053,10 @@ export namespace Prisma {
      * Omit specific fields from the CreditLedgerEntry
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
     /**
      * The data needed to update a CreditLedgerEntry.
      */
@@ -41789,6 +45109,10 @@ export namespace Prisma {
      * Limit how many CreditLedgerEntries to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -41803,6 +45127,10 @@ export namespace Prisma {
      * Omit specific fields from the CreditLedgerEntry
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
     /**
      * The filter to search for the CreditLedgerEntry to update in case it exists.
      */
@@ -41830,6 +45158,10 @@ export namespace Prisma {
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter which CreditLedgerEntry to delete.
      */
     where: CreditLedgerEntryWhereUniqueInput
@@ -41850,6 +45182,25 @@ export namespace Prisma {
   }
 
   /**
+   * CreditLedgerEntry.run
+   */
+  export type CreditLedgerEntry$runArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+  }
+
+  /**
    * CreditLedgerEntry without action
    */
   export type CreditLedgerEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -41861,6 +45212,10 @@ export namespace Prisma {
      * Omit specific fields from the CreditLedgerEntry
      */
     omit?: CreditLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CreditLedgerEntryInclude<ExtArgs> | null
   }
 
 
@@ -41888,6 +45243,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     runId: string | null
+    idempotencyKey: string | null
     providerId: string | null
     modelId: string | null
     amount: number | null
@@ -41900,6 +45256,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     runId: string | null
+    idempotencyKey: string | null
     providerId: string | null
     modelId: string | null
     amount: number | null
@@ -41912,6 +45269,7 @@ export namespace Prisma {
     id: number
     organizationId: number
     runId: number
+    idempotencyKey: number
     providerId: number
     modelId: number
     amount: number
@@ -41935,6 +45293,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     providerId?: true
     modelId?: true
     amount?: true
@@ -41947,6 +45306,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     providerId?: true
     modelId?: true
     amount?: true
@@ -41959,6 +45319,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     runId?: true
+    idempotencyKey?: true
     providerId?: true
     modelId?: true
     amount?: true
@@ -42059,6 +45420,7 @@ export namespace Prisma {
     id: string
     organizationId: string | null
     runId: string | null
+    idempotencyKey: string | null
     providerId: string | null
     modelId: string | null
     amount: number
@@ -42091,6 +45453,7 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     providerId?: boolean
     modelId?: boolean
     amount?: boolean
@@ -42098,12 +45461,14 @@ export namespace Prisma {
     unit?: boolean
     metadata?: boolean
     createdAt?: boolean
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["technicalCostLedgerEntry"]>
 
   export type TechnicalCostLedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     providerId?: boolean
     modelId?: boolean
     amount?: boolean
@@ -42111,12 +45476,14 @@ export namespace Prisma {
     unit?: boolean
     metadata?: boolean
     createdAt?: boolean
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["technicalCostLedgerEntry"]>
 
   export type TechnicalCostLedgerEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     providerId?: boolean
     modelId?: boolean
     amount?: boolean
@@ -42124,12 +45491,14 @@ export namespace Prisma {
     unit?: boolean
     metadata?: boolean
     createdAt?: boolean
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
   }, ExtArgs["result"]["technicalCostLedgerEntry"]>
 
   export type TechnicalCostLedgerEntrySelectScalar = {
     id?: boolean
     organizationId?: boolean
     runId?: boolean
+    idempotencyKey?: boolean
     providerId?: boolean
     modelId?: boolean
     amount?: boolean
@@ -42139,15 +45508,27 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type TechnicalCostLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "providerId" | "modelId" | "amount" | "currency" | "unit" | "metadata" | "createdAt", ExtArgs["result"]["technicalCostLedgerEntry"]>
+  export type TechnicalCostLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "runId" | "idempotencyKey" | "providerId" | "modelId" | "amount" | "currency" | "unit" | "metadata" | "createdAt", ExtArgs["result"]["technicalCostLedgerEntry"]>
+  export type TechnicalCostLedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
+  }
+  export type TechnicalCostLedgerEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
+  }
+  export type TechnicalCostLedgerEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | TechnicalCostLedgerEntry$runArgs<ExtArgs>
+  }
 
   export type $TechnicalCostLedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TechnicalCostLedgerEntry"
-    objects: {}
+    objects: {
+      run: Prisma.$AgentRunPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       organizationId: string | null
       runId: string | null
+      idempotencyKey: string | null
       providerId: string | null
       modelId: string | null
       amount: number
@@ -42549,6 +45930,7 @@ export namespace Prisma {
    */
   export interface Prisma__TechnicalCostLedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    run<T extends TechnicalCostLedgerEntry$runArgs<ExtArgs> = {}>(args?: Subset<T, TechnicalCostLedgerEntry$runArgs<ExtArgs>>): Prisma__AgentRunClient<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -42581,6 +45963,7 @@ export namespace Prisma {
     readonly id: FieldRef<"TechnicalCostLedgerEntry", 'String'>
     readonly organizationId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
     readonly runId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
+    readonly idempotencyKey: FieldRef<"TechnicalCostLedgerEntry", 'String'>
     readonly providerId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
     readonly modelId: FieldRef<"TechnicalCostLedgerEntry", 'String'>
     readonly amount: FieldRef<"TechnicalCostLedgerEntry", 'Float'>
@@ -42605,6 +45988,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which TechnicalCostLedgerEntry to fetch.
      */
     where: TechnicalCostLedgerEntryWhereUniqueInput
@@ -42623,6 +46010,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which TechnicalCostLedgerEntry to fetch.
      */
     where: TechnicalCostLedgerEntryWhereUniqueInput
@@ -42640,6 +46031,10 @@ export namespace Prisma {
      * Omit specific fields from the TechnicalCostLedgerEntry
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
     /**
      * Filter, which TechnicalCostLedgerEntry to fetch.
      */
@@ -42689,6 +46084,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which TechnicalCostLedgerEntry to fetch.
      */
     where?: TechnicalCostLedgerEntryWhereInput
@@ -42737,6 +46136,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter, which TechnicalCostLedgerEntries to fetch.
      */
     where?: TechnicalCostLedgerEntryWhereInput
@@ -42780,6 +46183,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * The data needed to create a TechnicalCostLedgerEntry.
      */
     data: XOR<TechnicalCostLedgerEntryCreateInput, TechnicalCostLedgerEntryUncheckedCreateInput>
@@ -42813,6 +46220,10 @@ export namespace Prisma {
      */
     data: TechnicalCostLedgerEntryCreateManyInput | TechnicalCostLedgerEntryCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -42827,6 +46238,10 @@ export namespace Prisma {
      * Omit specific fields from the TechnicalCostLedgerEntry
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
     /**
      * The data needed to update a TechnicalCostLedgerEntry.
      */
@@ -42879,6 +46294,10 @@ export namespace Prisma {
      * Limit how many TechnicalCostLedgerEntries to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -42893,6 +46312,10 @@ export namespace Prisma {
      * Omit specific fields from the TechnicalCostLedgerEntry
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
     /**
      * The filter to search for the TechnicalCostLedgerEntry to update in case it exists.
      */
@@ -42920,6 +46343,10 @@ export namespace Prisma {
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
+    /**
      * Filter which TechnicalCostLedgerEntry to delete.
      */
     where: TechnicalCostLedgerEntryWhereUniqueInput
@@ -42940,6 +46367,25 @@ export namespace Prisma {
   }
 
   /**
+   * TechnicalCostLedgerEntry.run
+   */
+  export type TechnicalCostLedgerEntry$runArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+  }
+
+  /**
    * TechnicalCostLedgerEntry without action
    */
   export type TechnicalCostLedgerEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -42951,6 +46397,10 @@ export namespace Prisma {
      * Omit specific fields from the TechnicalCostLedgerEntry
      */
     omit?: TechnicalCostLedgerEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TechnicalCostLedgerEntryInclude<ExtArgs> | null
   }
 
 
@@ -43438,12 +46888,22 @@ export namespace Prisma {
   export const AgentRunScalarFieldEnum: {
     id: 'id',
     organizationId: 'organizationId',
+    threadId: 'threadId',
+    sourceMessageId: 'sourceMessageId',
     agentId: 'agentId',
     agentVersionId: 'agentVersionId',
     status: 'status',
+    queuePosition: 'queuePosition',
+    attemptCount: 'attemptCount',
     inputPayload: 'inputPayload',
     outputPayload: 'outputPayload',
+    processingMetadata: 'processingMetadata',
+    processingLeaseId: 'processingLeaseId',
+    leaseExpiresAt: 'leaseExpiresAt',
     errorMessage: 'errorMessage',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt',
+    lastAttemptAt: 'lastAttemptAt',
     createdByUserId: 'createdByUserId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -43458,6 +46918,7 @@ export namespace Prisma {
     blockKey: 'blockKey',
     blockType: 'blockType',
     status: 'status',
+    metadata: 'metadata',
     inputPayload: 'inputPayload',
     outputPayload: 'outputPayload',
     errorMessage: 'errorMessage',
@@ -43469,10 +46930,43 @@ export namespace Prisma {
   export type AgentRunStepScalarFieldEnum = (typeof AgentRunStepScalarFieldEnum)[keyof typeof AgentRunStepScalarFieldEnum]
 
 
+  export const AgentChatThreadScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    agentId: 'agentId',
+    scope: 'scope',
+    title: 'title',
+    parentThreadId: 'parentThreadId',
+    branchedFromMessageId: 'branchedFromMessageId',
+    createdByUserId: 'createdByUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AgentChatThreadScalarFieldEnum = (typeof AgentChatThreadScalarFieldEnum)[keyof typeof AgentChatThreadScalarFieldEnum]
+
+
+  export const AgentChatMessageScalarFieldEnum: {
+    id: 'id',
+    threadId: 'threadId',
+    agentRunId: 'agentRunId',
+    role: 'role',
+    content: 'content',
+    metadata: 'metadata',
+    editedFromMessageId: 'editedFromMessageId',
+    regeneratedFromMessageId: 'regeneratedFromMessageId',
+    createdByUserId: 'createdByUserId',
+    createdAt: 'createdAt'
+  };
+
+  export type AgentChatMessageScalarFieldEnum = (typeof AgentChatMessageScalarFieldEnum)[keyof typeof AgentChatMessageScalarFieldEnum]
+
+
   export const CreditLedgerEntryScalarFieldEnum: {
     id: 'id',
     organizationId: 'organizationId',
     runId: 'runId',
+    idempotencyKey: 'idempotencyKey',
     entryType: 'entryType',
     amount: 'amount',
     balanceAfter: 'balanceAfter',
@@ -43488,6 +46982,7 @@ export namespace Prisma {
     id: 'id',
     organizationId: 'organizationId',
     runId: 'runId',
+    idempotencyKey: 'idempotencyKey',
     providerId: 'providerId',
     modelId: 'modelId',
     amount: 'amount',
@@ -45881,6 +49376,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CompanyAgent"> | Date | string
     updatedAt?: DateTimeFilter<"CompanyAgent"> | Date | string
     template?: XOR<AgentTemplateNullableScalarRelationFilter, AgentTemplateWhereInput> | null
+    chatThreads?: AgentChatThreadListRelationFilter
     versions?: AgentVersionListRelationFilter
     runs?: AgentRunListRelationFilter
   }
@@ -45899,6 +49395,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     template?: AgentTemplateOrderByWithRelationInput
+    chatThreads?: AgentChatThreadOrderByRelationAggregateInput
     versions?: AgentVersionOrderByRelationAggregateInput
     runs?: AgentRunOrderByRelationAggregateInput
   }
@@ -45921,6 +49418,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CompanyAgent"> | Date | string
     updatedAt?: DateTimeFilter<"CompanyAgent"> | Date | string
     template?: XOR<AgentTemplateNullableScalarRelationFilter, AgentTemplateWhereInput> | null
+    chatThreads?: AgentChatThreadListRelationFilter
     versions?: AgentVersionListRelationFilter
     runs?: AgentRunListRelationFilter
   }, "id" | "organizationId_slug">
@@ -46068,35 +49566,65 @@ export namespace Prisma {
     NOT?: AgentRunWhereInput | AgentRunWhereInput[]
     id?: StringFilter<"AgentRun"> | string
     organizationId?: StringFilter<"AgentRun"> | string
+    threadId?: StringNullableFilter<"AgentRun"> | string | null
+    sourceMessageId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
     agentVersionId?: StringFilter<"AgentRun"> | string
     status?: StringFilter<"AgentRun"> | string
+    queuePosition?: IntNullableFilter<"AgentRun"> | number | null
+    attemptCount?: IntFilter<"AgentRun"> | number
     inputPayload?: JsonFilter<"AgentRun">
     outputPayload?: JsonNullableFilter<"AgentRun">
+    processingMetadata?: JsonFilter<"AgentRun">
+    processingLeaseId?: StringNullableFilter<"AgentRun"> | string | null
+    leaseExpiresAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     errorMessage?: StringNullableFilter<"AgentRun"> | string | null
+    startedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    lastAttemptAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     createdByUserId?: StringFilter<"AgentRun"> | string
     createdAt?: DateTimeFilter<"AgentRun"> | Date | string
     updatedAt?: DateTimeFilter<"AgentRun"> | Date | string
     agent?: XOR<CompanyAgentScalarRelationFilter, CompanyAgentWhereInput>
     agentVersion?: XOR<AgentVersionScalarRelationFilter, AgentVersionWhereInput>
+    thread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
+    sourceMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    chatMessages?: AgentChatMessageListRelationFilter
+    creditEntries?: CreditLedgerEntryListRelationFilter
     steps?: AgentRunStepListRelationFilter
+    technicalCostEntries?: TechnicalCostLedgerEntryListRelationFilter
   }
 
   export type AgentRunOrderByWithRelationInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    threadId?: SortOrderInput | SortOrder
+    sourceMessageId?: SortOrderInput | SortOrder
     agentId?: SortOrder
     agentVersionId?: SortOrder
     status?: SortOrder
+    queuePosition?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrderInput | SortOrder
+    processingMetadata?: SortOrder
+    processingLeaseId?: SortOrderInput | SortOrder
+    leaseExpiresAt?: SortOrderInput | SortOrder
     errorMessage?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastAttemptAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     agent?: CompanyAgentOrderByWithRelationInput
     agentVersion?: AgentVersionOrderByWithRelationInput
+    thread?: AgentChatThreadOrderByWithRelationInput
+    sourceMessage?: AgentChatMessageOrderByWithRelationInput
+    chatMessages?: AgentChatMessageOrderByRelationAggregateInput
+    creditEntries?: CreditLedgerEntryOrderByRelationAggregateInput
     steps?: AgentRunStepOrderByRelationAggregateInput
+    technicalCostEntries?: TechnicalCostLedgerEntryOrderByRelationAggregateInput
   }
 
   export type AgentRunWhereUniqueInput = Prisma.AtLeast<{
@@ -46105,35 +49633,62 @@ export namespace Prisma {
     OR?: AgentRunWhereInput[]
     NOT?: AgentRunWhereInput | AgentRunWhereInput[]
     organizationId?: StringFilter<"AgentRun"> | string
+    threadId?: StringNullableFilter<"AgentRun"> | string | null
+    sourceMessageId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
     agentVersionId?: StringFilter<"AgentRun"> | string
     status?: StringFilter<"AgentRun"> | string
+    queuePosition?: IntNullableFilter<"AgentRun"> | number | null
+    attemptCount?: IntFilter<"AgentRun"> | number
     inputPayload?: JsonFilter<"AgentRun">
     outputPayload?: JsonNullableFilter<"AgentRun">
+    processingMetadata?: JsonFilter<"AgentRun">
+    processingLeaseId?: StringNullableFilter<"AgentRun"> | string | null
+    leaseExpiresAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     errorMessage?: StringNullableFilter<"AgentRun"> | string | null
+    startedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    lastAttemptAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     createdByUserId?: StringFilter<"AgentRun"> | string
     createdAt?: DateTimeFilter<"AgentRun"> | Date | string
     updatedAt?: DateTimeFilter<"AgentRun"> | Date | string
     agent?: XOR<CompanyAgentScalarRelationFilter, CompanyAgentWhereInput>
     agentVersion?: XOR<AgentVersionScalarRelationFilter, AgentVersionWhereInput>
+    thread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
+    sourceMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    chatMessages?: AgentChatMessageListRelationFilter
+    creditEntries?: CreditLedgerEntryListRelationFilter
     steps?: AgentRunStepListRelationFilter
+    technicalCostEntries?: TechnicalCostLedgerEntryListRelationFilter
   }, "id">
 
   export type AgentRunOrderByWithAggregationInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    threadId?: SortOrderInput | SortOrder
+    sourceMessageId?: SortOrderInput | SortOrder
     agentId?: SortOrder
     agentVersionId?: SortOrder
     status?: SortOrder
+    queuePosition?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrderInput | SortOrder
+    processingMetadata?: SortOrder
+    processingLeaseId?: SortOrderInput | SortOrder
+    leaseExpiresAt?: SortOrderInput | SortOrder
     errorMessage?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastAttemptAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AgentRunCountOrderByAggregateInput
+    _avg?: AgentRunAvgOrderByAggregateInput
     _max?: AgentRunMaxOrderByAggregateInput
     _min?: AgentRunMinOrderByAggregateInput
+    _sum?: AgentRunSumOrderByAggregateInput
   }
 
   export type AgentRunScalarWhereWithAggregatesInput = {
@@ -46142,12 +49697,22 @@ export namespace Prisma {
     NOT?: AgentRunScalarWhereWithAggregatesInput | AgentRunScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"AgentRun"> | string
     organizationId?: StringWithAggregatesFilter<"AgentRun"> | string
+    threadId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
+    sourceMessageId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     agentId?: StringWithAggregatesFilter<"AgentRun"> | string
     agentVersionId?: StringWithAggregatesFilter<"AgentRun"> | string
     status?: StringWithAggregatesFilter<"AgentRun"> | string
+    queuePosition?: IntNullableWithAggregatesFilter<"AgentRun"> | number | null
+    attemptCount?: IntWithAggregatesFilter<"AgentRun"> | number
     inputPayload?: JsonWithAggregatesFilter<"AgentRun">
     outputPayload?: JsonNullableWithAggregatesFilter<"AgentRun">
+    processingMetadata?: JsonWithAggregatesFilter<"AgentRun">
+    processingLeaseId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
+    leaseExpiresAt?: DateTimeNullableWithAggregatesFilter<"AgentRun"> | Date | string | null
     errorMessage?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
+    startedAt?: DateTimeNullableWithAggregatesFilter<"AgentRun"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"AgentRun"> | Date | string | null
+    lastAttemptAt?: DateTimeNullableWithAggregatesFilter<"AgentRun"> | Date | string | null
     createdByUserId?: StringWithAggregatesFilter<"AgentRun"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AgentRun"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AgentRun"> | Date | string
@@ -46162,6 +49727,7 @@ export namespace Prisma {
     blockKey?: StringFilter<"AgentRunStep"> | string
     blockType?: StringFilter<"AgentRunStep"> | string
     status?: StringFilter<"AgentRunStep"> | string
+    metadata?: JsonFilter<"AgentRunStep">
     inputPayload?: JsonFilter<"AgentRunStep">
     outputPayload?: JsonNullableFilter<"AgentRunStep">
     errorMessage?: StringNullableFilter<"AgentRunStep"> | string | null
@@ -46177,6 +49743,7 @@ export namespace Prisma {
     blockKey?: SortOrder
     blockType?: SortOrder
     status?: SortOrder
+    metadata?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrderInput | SortOrder
     errorMessage?: SortOrderInput | SortOrder
@@ -46195,6 +49762,7 @@ export namespace Prisma {
     blockKey?: StringFilter<"AgentRunStep"> | string
     blockType?: StringFilter<"AgentRunStep"> | string
     status?: StringFilter<"AgentRunStep"> | string
+    metadata?: JsonFilter<"AgentRunStep">
     inputPayload?: JsonFilter<"AgentRunStep">
     outputPayload?: JsonNullableFilter<"AgentRunStep">
     errorMessage?: StringNullableFilter<"AgentRunStep"> | string | null
@@ -46210,6 +49778,7 @@ export namespace Prisma {
     blockKey?: SortOrder
     blockType?: SortOrder
     status?: SortOrder
+    metadata?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrderInput | SortOrder
     errorMessage?: SortOrderInput | SortOrder
@@ -46230,12 +49799,209 @@ export namespace Prisma {
     blockKey?: StringWithAggregatesFilter<"AgentRunStep"> | string
     blockType?: StringWithAggregatesFilter<"AgentRunStep"> | string
     status?: StringWithAggregatesFilter<"AgentRunStep"> | string
+    metadata?: JsonWithAggregatesFilter<"AgentRunStep">
     inputPayload?: JsonWithAggregatesFilter<"AgentRunStep">
     outputPayload?: JsonNullableWithAggregatesFilter<"AgentRunStep">
     errorMessage?: StringNullableWithAggregatesFilter<"AgentRunStep"> | string | null
     startedAt?: DateTimeNullableWithAggregatesFilter<"AgentRunStep"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"AgentRunStep"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AgentRunStep"> | Date | string
+  }
+
+  export type AgentChatThreadWhereInput = {
+    AND?: AgentChatThreadWhereInput | AgentChatThreadWhereInput[]
+    OR?: AgentChatThreadWhereInput[]
+    NOT?: AgentChatThreadWhereInput | AgentChatThreadWhereInput[]
+    id?: StringFilter<"AgentChatThread"> | string
+    organizationId?: StringFilter<"AgentChatThread"> | string
+    agentId?: StringNullableFilter<"AgentChatThread"> | string | null
+    scope?: StringFilter<"AgentChatThread"> | string
+    title?: StringNullableFilter<"AgentChatThread"> | string | null
+    parentThreadId?: StringNullableFilter<"AgentChatThread"> | string | null
+    branchedFromMessageId?: StringNullableFilter<"AgentChatThread"> | string | null
+    createdByUserId?: StringFilter<"AgentChatThread"> | string
+    createdAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+    agent?: XOR<CompanyAgentNullableScalarRelationFilter, CompanyAgentWhereInput> | null
+    parentThread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
+    branches?: AgentChatThreadListRelationFilter
+    branchedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    messages?: AgentChatMessageListRelationFilter
+    runs?: AgentRunListRelationFilter
+  }
+
+  export type AgentChatThreadOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrderInput | SortOrder
+    scope?: SortOrder
+    title?: SortOrderInput | SortOrder
+    parentThreadId?: SortOrderInput | SortOrder
+    branchedFromMessageId?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    agent?: CompanyAgentOrderByWithRelationInput
+    parentThread?: AgentChatThreadOrderByWithRelationInput
+    branches?: AgentChatThreadOrderByRelationAggregateInput
+    branchedFromMessage?: AgentChatMessageOrderByWithRelationInput
+    messages?: AgentChatMessageOrderByRelationAggregateInput
+    runs?: AgentRunOrderByRelationAggregateInput
+  }
+
+  export type AgentChatThreadWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AgentChatThreadWhereInput | AgentChatThreadWhereInput[]
+    OR?: AgentChatThreadWhereInput[]
+    NOT?: AgentChatThreadWhereInput | AgentChatThreadWhereInput[]
+    organizationId?: StringFilter<"AgentChatThread"> | string
+    agentId?: StringNullableFilter<"AgentChatThread"> | string | null
+    scope?: StringFilter<"AgentChatThread"> | string
+    title?: StringNullableFilter<"AgentChatThread"> | string | null
+    parentThreadId?: StringNullableFilter<"AgentChatThread"> | string | null
+    branchedFromMessageId?: StringNullableFilter<"AgentChatThread"> | string | null
+    createdByUserId?: StringFilter<"AgentChatThread"> | string
+    createdAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+    agent?: XOR<CompanyAgentNullableScalarRelationFilter, CompanyAgentWhereInput> | null
+    parentThread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
+    branches?: AgentChatThreadListRelationFilter
+    branchedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    messages?: AgentChatMessageListRelationFilter
+    runs?: AgentRunListRelationFilter
+  }, "id">
+
+  export type AgentChatThreadOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrderInput | SortOrder
+    scope?: SortOrder
+    title?: SortOrderInput | SortOrder
+    parentThreadId?: SortOrderInput | SortOrder
+    branchedFromMessageId?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AgentChatThreadCountOrderByAggregateInput
+    _max?: AgentChatThreadMaxOrderByAggregateInput
+    _min?: AgentChatThreadMinOrderByAggregateInput
+  }
+
+  export type AgentChatThreadScalarWhereWithAggregatesInput = {
+    AND?: AgentChatThreadScalarWhereWithAggregatesInput | AgentChatThreadScalarWhereWithAggregatesInput[]
+    OR?: AgentChatThreadScalarWhereWithAggregatesInput[]
+    NOT?: AgentChatThreadScalarWhereWithAggregatesInput | AgentChatThreadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentChatThread"> | string
+    organizationId?: StringWithAggregatesFilter<"AgentChatThread"> | string
+    agentId?: StringNullableWithAggregatesFilter<"AgentChatThread"> | string | null
+    scope?: StringWithAggregatesFilter<"AgentChatThread"> | string
+    title?: StringNullableWithAggregatesFilter<"AgentChatThread"> | string | null
+    parentThreadId?: StringNullableWithAggregatesFilter<"AgentChatThread"> | string | null
+    branchedFromMessageId?: StringNullableWithAggregatesFilter<"AgentChatThread"> | string | null
+    createdByUserId?: StringWithAggregatesFilter<"AgentChatThread"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"AgentChatThread"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AgentChatThread"> | Date | string
+  }
+
+  export type AgentChatMessageWhereInput = {
+    AND?: AgentChatMessageWhereInput | AgentChatMessageWhereInput[]
+    OR?: AgentChatMessageWhereInput[]
+    NOT?: AgentChatMessageWhereInput | AgentChatMessageWhereInput[]
+    id?: StringFilter<"AgentChatMessage"> | string
+    threadId?: StringFilter<"AgentChatMessage"> | string
+    agentRunId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    role?: StringFilter<"AgentChatMessage"> | string
+    content?: StringFilter<"AgentChatMessage"> | string
+    metadata?: JsonFilter<"AgentChatMessage">
+    editedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    regeneratedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdByUserId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdAt?: DateTimeFilter<"AgentChatMessage"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    agentRun?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
+    editedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    editedVariants?: AgentChatMessageListRelationFilter
+    regeneratedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    regenerations?: AgentChatMessageListRelationFilter
+    branches?: AgentChatThreadListRelationFilter
+    sourceRuns?: AgentRunListRelationFilter
+  }
+
+  export type AgentChatMessageOrderByWithRelationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    agentRunId?: SortOrderInput | SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    metadata?: SortOrder
+    editedFromMessageId?: SortOrderInput | SortOrder
+    regeneratedFromMessageId?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    thread?: AgentChatThreadOrderByWithRelationInput
+    agentRun?: AgentRunOrderByWithRelationInput
+    editedFromMessage?: AgentChatMessageOrderByWithRelationInput
+    editedVariants?: AgentChatMessageOrderByRelationAggregateInput
+    regeneratedFromMessage?: AgentChatMessageOrderByWithRelationInput
+    regenerations?: AgentChatMessageOrderByRelationAggregateInput
+    branches?: AgentChatThreadOrderByRelationAggregateInput
+    sourceRuns?: AgentRunOrderByRelationAggregateInput
+  }
+
+  export type AgentChatMessageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AgentChatMessageWhereInput | AgentChatMessageWhereInput[]
+    OR?: AgentChatMessageWhereInput[]
+    NOT?: AgentChatMessageWhereInput | AgentChatMessageWhereInput[]
+    threadId?: StringFilter<"AgentChatMessage"> | string
+    agentRunId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    role?: StringFilter<"AgentChatMessage"> | string
+    content?: StringFilter<"AgentChatMessage"> | string
+    metadata?: JsonFilter<"AgentChatMessage">
+    editedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    regeneratedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdByUserId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdAt?: DateTimeFilter<"AgentChatMessage"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    agentRun?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
+    editedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    editedVariants?: AgentChatMessageListRelationFilter
+    regeneratedFromMessage?: XOR<AgentChatMessageNullableScalarRelationFilter, AgentChatMessageWhereInput> | null
+    regenerations?: AgentChatMessageListRelationFilter
+    branches?: AgentChatThreadListRelationFilter
+    sourceRuns?: AgentRunListRelationFilter
+  }, "id">
+
+  export type AgentChatMessageOrderByWithAggregationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    agentRunId?: SortOrderInput | SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    metadata?: SortOrder
+    editedFromMessageId?: SortOrderInput | SortOrder
+    regeneratedFromMessageId?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AgentChatMessageCountOrderByAggregateInput
+    _max?: AgentChatMessageMaxOrderByAggregateInput
+    _min?: AgentChatMessageMinOrderByAggregateInput
+  }
+
+  export type AgentChatMessageScalarWhereWithAggregatesInput = {
+    AND?: AgentChatMessageScalarWhereWithAggregatesInput | AgentChatMessageScalarWhereWithAggregatesInput[]
+    OR?: AgentChatMessageScalarWhereWithAggregatesInput[]
+    NOT?: AgentChatMessageScalarWhereWithAggregatesInput | AgentChatMessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentChatMessage"> | string
+    threadId?: StringWithAggregatesFilter<"AgentChatMessage"> | string
+    agentRunId?: StringNullableWithAggregatesFilter<"AgentChatMessage"> | string | null
+    role?: StringWithAggregatesFilter<"AgentChatMessage"> | string
+    content?: StringWithAggregatesFilter<"AgentChatMessage"> | string
+    metadata?: JsonWithAggregatesFilter<"AgentChatMessage">
+    editedFromMessageId?: StringNullableWithAggregatesFilter<"AgentChatMessage"> | string | null
+    regeneratedFromMessageId?: StringNullableWithAggregatesFilter<"AgentChatMessage"> | string | null
+    createdByUserId?: StringNullableWithAggregatesFilter<"AgentChatMessage"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AgentChatMessage"> | Date | string
   }
 
   export type CreditLedgerEntryWhereInput = {
@@ -46245,28 +50011,33 @@ export namespace Prisma {
     id?: StringFilter<"CreditLedgerEntry"> | string
     organizationId?: StringFilter<"CreditLedgerEntry"> | string
     runId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     entryType?: StringFilter<"CreditLedgerEntry"> | string
     amount?: IntFilter<"CreditLedgerEntry"> | number
     balanceAfter?: IntFilter<"CreditLedgerEntry"> | number
     metadata?: JsonFilter<"CreditLedgerEntry">
     createdByUserId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     createdAt?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
+    run?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
   }
 
   export type CreditLedgerEntryOrderByWithRelationInput = {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
     entryType?: SortOrder
     amount?: SortOrder
     balanceAfter?: SortOrder
     metadata?: SortOrder
     createdByUserId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    run?: AgentRunOrderByWithRelationInput
   }
 
   export type CreditLedgerEntryWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    idempotencyKey?: string
     AND?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
     OR?: CreditLedgerEntryWhereInput[]
     NOT?: CreditLedgerEntryWhereInput | CreditLedgerEntryWhereInput[]
@@ -46278,12 +50049,14 @@ export namespace Prisma {
     metadata?: JsonFilter<"CreditLedgerEntry">
     createdByUserId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     createdAt?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
-  }, "id">
+    run?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
+  }, "id" | "idempotencyKey">
 
   export type CreditLedgerEntryOrderByWithAggregationInput = {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
     entryType?: SortOrder
     amount?: SortOrder
     balanceAfter?: SortOrder
@@ -46304,6 +50077,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
     organizationId?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
     runId?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     entryType?: StringWithAggregatesFilter<"CreditLedgerEntry"> | string
     amount?: IntWithAggregatesFilter<"CreditLedgerEntry"> | number
     balanceAfter?: IntWithAggregatesFilter<"CreditLedgerEntry"> | number
@@ -46319,6 +50093,7 @@ export namespace Prisma {
     id?: StringFilter<"TechnicalCostLedgerEntry"> | string
     organizationId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
     runId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
     providerId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
     modelId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
     amount?: FloatFilter<"TechnicalCostLedgerEntry"> | number
@@ -46326,12 +50101,14 @@ export namespace Prisma {
     unit?: StringFilter<"TechnicalCostLedgerEntry"> | string
     metadata?: JsonFilter<"TechnicalCostLedgerEntry">
     createdAt?: DateTimeFilter<"TechnicalCostLedgerEntry"> | Date | string
+    run?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
   }
 
   export type TechnicalCostLedgerEntryOrderByWithRelationInput = {
     id?: SortOrder
     organizationId?: SortOrderInput | SortOrder
     runId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
     providerId?: SortOrderInput | SortOrder
     modelId?: SortOrderInput | SortOrder
     amount?: SortOrder
@@ -46339,10 +50116,12 @@ export namespace Prisma {
     unit?: SortOrder
     metadata?: SortOrder
     createdAt?: SortOrder
+    run?: AgentRunOrderByWithRelationInput
   }
 
   export type TechnicalCostLedgerEntryWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    idempotencyKey?: string
     AND?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
     OR?: TechnicalCostLedgerEntryWhereInput[]
     NOT?: TechnicalCostLedgerEntryWhereInput | TechnicalCostLedgerEntryWhereInput[]
@@ -46355,12 +50134,14 @@ export namespace Prisma {
     unit?: StringFilter<"TechnicalCostLedgerEntry"> | string
     metadata?: JsonFilter<"TechnicalCostLedgerEntry">
     createdAt?: DateTimeFilter<"TechnicalCostLedgerEntry"> | Date | string
-  }, "id">
+    run?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
+  }, "id" | "idempotencyKey">
 
   export type TechnicalCostLedgerEntryOrderByWithAggregationInput = {
     id?: SortOrder
     organizationId?: SortOrderInput | SortOrder
     runId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
     providerId?: SortOrderInput | SortOrder
     modelId?: SortOrderInput | SortOrder
     amount?: SortOrder
@@ -46382,6 +50163,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string
     organizationId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
     runId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
     providerId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
     modelId?: StringNullableWithAggregatesFilter<"TechnicalCostLedgerEntry"> | string | null
     amount?: FloatWithAggregatesFilter<"TechnicalCostLedgerEntry"> | number
@@ -48899,6 +52681,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     template?: AgentTemplateCreateNestedOneWithoutAgentsInput
+    chatThreads?: AgentChatThreadCreateNestedManyWithoutAgentInput
     versions?: AgentVersionCreateNestedManyWithoutCompanyAgentInput
     runs?: AgentRunCreateNestedManyWithoutAgentInput
   }
@@ -48916,6 +52699,7 @@ export namespace Prisma {
     updatedByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatThreads?: AgentChatThreadUncheckedCreateNestedManyWithoutAgentInput
     versions?: AgentVersionUncheckedCreateNestedManyWithoutCompanyAgentInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutAgentInput
   }
@@ -48933,6 +52717,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: AgentTemplateUpdateOneWithoutAgentsNestedInput
+    chatThreads?: AgentChatThreadUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUpdateManyWithoutCompanyAgentNestedInput
     runs?: AgentRunUpdateManyWithoutAgentNestedInput
   }
@@ -48950,6 +52735,7 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatThreads?: AgentChatThreadUncheckedUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUncheckedUpdateManyWithoutCompanyAgentNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutAgentNestedInput
   }
@@ -49117,71 +52903,133 @@ export namespace Prisma {
     id?: string
     organizationId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     agent: CompanyAgentCreateNestedOneWithoutRunsInput
     agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
     steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunUncheckedCreateInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentId: string
     agentVersionId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
     agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     agentVersionId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunCreateManyInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentId: string
     agentVersionId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49191,9 +53039,17 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49202,12 +53058,22 @@ export namespace Prisma {
   export type AgentRunUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     agentVersionId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49218,6 +53084,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -49233,6 +53100,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -49246,6 +53114,7 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49261,6 +53130,7 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49275,6 +53145,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -49288,6 +53159,7 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49302,6 +53174,7 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49310,22 +53183,227 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AgentChatThreadCreateInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadCreateManyInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentChatThreadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageCreateInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageCreateManyInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AgentChatMessageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CreditLedgerEntryCreateInput = {
     id?: string
     organizationId: string
-    runId?: string | null
+    idempotencyKey?: string | null
     entryType: string
     amount: number
     balanceAfter: number
     metadata?: JsonNullValueInput | InputJsonValue
     createdByUserId?: string | null
     createdAt?: Date | string
+    run?: AgentRunCreateNestedOneWithoutCreditEntriesInput
   }
 
   export type CreditLedgerEntryUncheckedCreateInput = {
     id?: string
     organizationId: string
     runId?: string | null
+    idempotencyKey?: string | null
     entryType: string
     amount: number
     balanceAfter: number
@@ -49337,19 +53415,21 @@ export namespace Prisma {
   export type CreditLedgerEntryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     balanceAfter?: IntFieldUpdateOperationsInput | number
     metadata?: JsonNullValueInput | InputJsonValue
     createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    run?: AgentRunUpdateOneWithoutCreditEntriesNestedInput
   }
 
   export type CreditLedgerEntryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     balanceAfter?: IntFieldUpdateOperationsInput | number
@@ -49362,6 +53442,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     runId?: string | null
+    idempotencyKey?: string | null
     entryType: string
     amount: number
     balanceAfter: number
@@ -49373,7 +53454,7 @@ export namespace Prisma {
   export type CreditLedgerEntryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     balanceAfter?: IntFieldUpdateOperationsInput | number
@@ -49386,6 +53467,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     balanceAfter?: IntFieldUpdateOperationsInput | number
@@ -49397,7 +53479,7 @@ export namespace Prisma {
   export type TechnicalCostLedgerEntryCreateInput = {
     id?: string
     organizationId?: string | null
-    runId?: string | null
+    idempotencyKey?: string | null
     providerId?: string | null
     modelId?: string | null
     amount: number
@@ -49405,12 +53487,14 @@ export namespace Prisma {
     unit?: string
     metadata?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    run?: AgentRunCreateNestedOneWithoutTechnicalCostEntriesInput
   }
 
   export type TechnicalCostLedgerEntryUncheckedCreateInput = {
     id?: string
     organizationId?: string | null
     runId?: string | null
+    idempotencyKey?: string | null
     providerId?: string | null
     modelId?: string | null
     amount: number
@@ -49423,7 +53507,7 @@ export namespace Prisma {
   export type TechnicalCostLedgerEntryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
-    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     modelId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
@@ -49431,12 +53515,14 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     metadata?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    run?: AgentRunUpdateOneWithoutTechnicalCostEntriesNestedInput
   }
 
   export type TechnicalCostLedgerEntryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     modelId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
@@ -49450,6 +53536,7 @@ export namespace Prisma {
     id?: string
     organizationId?: string | null
     runId?: string | null
+    idempotencyKey?: string | null
     providerId?: string | null
     modelId?: string | null
     amount: number
@@ -49462,7 +53549,7 @@ export namespace Prisma {
   export type TechnicalCostLedgerEntryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
-    runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     modelId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
@@ -49476,6 +53563,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     runId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     modelId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: FloatFieldUpdateOperationsInput | number
@@ -51070,6 +55158,12 @@ export namespace Prisma {
     isNot?: AgentTemplateWhereInput | null
   }
 
+  export type AgentChatThreadListRelationFilter = {
+    every?: AgentChatThreadWhereInput
+    some?: AgentChatThreadWhereInput
+    none?: AgentChatThreadWhereInput
+  }
+
   export type AgentVersionListRelationFilter = {
     every?: AgentVersionWhereInput
     some?: AgentVersionWhereInput
@@ -51080,6 +55174,10 @@ export namespace Prisma {
     every?: AgentRunWhereInput
     some?: AgentRunWhereInput
     none?: AgentRunWhereInput
+  }
+
+  export type AgentChatThreadOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type AgentVersionOrderByRelationAggregateInput = {
@@ -51228,37 +55326,101 @@ export namespace Prisma {
     isNot?: AgentVersionWhereInput
   }
 
+  export type AgentChatThreadNullableScalarRelationFilter = {
+    is?: AgentChatThreadWhereInput | null
+    isNot?: AgentChatThreadWhereInput | null
+  }
+
+  export type AgentChatMessageNullableScalarRelationFilter = {
+    is?: AgentChatMessageWhereInput | null
+    isNot?: AgentChatMessageWhereInput | null
+  }
+
+  export type AgentChatMessageListRelationFilter = {
+    every?: AgentChatMessageWhereInput
+    some?: AgentChatMessageWhereInput
+    none?: AgentChatMessageWhereInput
+  }
+
+  export type CreditLedgerEntryListRelationFilter = {
+    every?: CreditLedgerEntryWhereInput
+    some?: CreditLedgerEntryWhereInput
+    none?: CreditLedgerEntryWhereInput
+  }
+
   export type AgentRunStepListRelationFilter = {
     every?: AgentRunStepWhereInput
     some?: AgentRunStepWhereInput
     none?: AgentRunStepWhereInput
   }
 
+  export type TechnicalCostLedgerEntryListRelationFilter = {
+    every?: TechnicalCostLedgerEntryWhereInput
+    some?: TechnicalCostLedgerEntryWhereInput
+    none?: TechnicalCostLedgerEntryWhereInput
+  }
+
+  export type AgentChatMessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CreditLedgerEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type AgentRunStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TechnicalCostLedgerEntryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type AgentRunCountOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    threadId?: SortOrder
+    sourceMessageId?: SortOrder
     agentId?: SortOrder
     agentVersionId?: SortOrder
     status?: SortOrder
+    queuePosition?: SortOrder
+    attemptCount?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrder
+    processingMetadata?: SortOrder
+    processingLeaseId?: SortOrder
+    leaseExpiresAt?: SortOrder
     errorMessage?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    lastAttemptAt?: SortOrder
     createdByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
+  export type AgentRunAvgOrderByAggregateInput = {
+    queuePosition?: SortOrder
+    attemptCount?: SortOrder
+  }
+
   export type AgentRunMaxOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    threadId?: SortOrder
+    sourceMessageId?: SortOrder
     agentId?: SortOrder
     agentVersionId?: SortOrder
     status?: SortOrder
+    queuePosition?: SortOrder
+    attemptCount?: SortOrder
+    processingLeaseId?: SortOrder
+    leaseExpiresAt?: SortOrder
     errorMessage?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    lastAttemptAt?: SortOrder
     createdByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51267,13 +55429,27 @@ export namespace Prisma {
   export type AgentRunMinOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
+    threadId?: SortOrder
+    sourceMessageId?: SortOrder
     agentId?: SortOrder
     agentVersionId?: SortOrder
     status?: SortOrder
+    queuePosition?: SortOrder
+    attemptCount?: SortOrder
+    processingLeaseId?: SortOrder
+    leaseExpiresAt?: SortOrder
     errorMessage?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    lastAttemptAt?: SortOrder
     createdByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type AgentRunSumOrderByAggregateInput = {
+    queuePosition?: SortOrder
+    attemptCount?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -51313,6 +55489,7 @@ export namespace Prisma {
     blockKey?: SortOrder
     blockType?: SortOrder
     status?: SortOrder
+    metadata?: SortOrder
     inputPayload?: SortOrder
     outputPayload?: SortOrder
     errorMessage?: SortOrder
@@ -51345,10 +55522,102 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type CompanyAgentNullableScalarRelationFilter = {
+    is?: CompanyAgentWhereInput | null
+    isNot?: CompanyAgentWhereInput | null
+  }
+
+  export type AgentChatThreadCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    scope?: SortOrder
+    title?: SortOrder
+    parentThreadId?: SortOrder
+    branchedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentChatThreadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    scope?: SortOrder
+    title?: SortOrder
+    parentThreadId?: SortOrder
+    branchedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentChatThreadMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    scope?: SortOrder
+    title?: SortOrder
+    parentThreadId?: SortOrder
+    branchedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentChatThreadScalarRelationFilter = {
+    is?: AgentChatThreadWhereInput
+    isNot?: AgentChatThreadWhereInput
+  }
+
+  export type AgentRunNullableScalarRelationFilter = {
+    is?: AgentRunWhereInput | null
+    isNot?: AgentRunWhereInput | null
+  }
+
+  export type AgentChatMessageCountOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    agentRunId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    metadata?: SortOrder
+    editedFromMessageId?: SortOrder
+    regeneratedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AgentChatMessageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    agentRunId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    editedFromMessageId?: SortOrder
+    regeneratedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AgentChatMessageMinOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    agentRunId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    editedFromMessageId?: SortOrder
+    regeneratedFromMessageId?: SortOrder
+    createdByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type CreditLedgerEntryCountOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     entryType?: SortOrder
     amount?: SortOrder
     balanceAfter?: SortOrder
@@ -51366,6 +55635,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     entryType?: SortOrder
     amount?: SortOrder
     balanceAfter?: SortOrder
@@ -51377,6 +55647,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     entryType?: SortOrder
     amount?: SortOrder
     balanceAfter?: SortOrder
@@ -51404,6 +55675,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     providerId?: SortOrder
     modelId?: SortOrder
     amount?: SortOrder
@@ -51421,6 +55693,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     providerId?: SortOrder
     modelId?: SortOrder
     amount?: SortOrder
@@ -51433,6 +55706,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     runId?: SortOrder
+    idempotencyKey?: SortOrder
     providerId?: SortOrder
     modelId?: SortOrder
     amount?: SortOrder
@@ -52848,6 +57122,13 @@ export namespace Prisma {
     connect?: AgentTemplateWhereUniqueInput
   }
 
+  export type AgentChatThreadCreateNestedManyWithoutAgentInput = {
+    create?: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput> | AgentChatThreadCreateWithoutAgentInput[] | AgentChatThreadUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutAgentInput | AgentChatThreadCreateOrConnectWithoutAgentInput[]
+    createMany?: AgentChatThreadCreateManyAgentInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+  }
+
   export type AgentVersionCreateNestedManyWithoutCompanyAgentInput = {
     create?: XOR<AgentVersionCreateWithoutCompanyAgentInput, AgentVersionUncheckedCreateWithoutCompanyAgentInput> | AgentVersionCreateWithoutCompanyAgentInput[] | AgentVersionUncheckedCreateWithoutCompanyAgentInput[]
     connectOrCreate?: AgentVersionCreateOrConnectWithoutCompanyAgentInput | AgentVersionCreateOrConnectWithoutCompanyAgentInput[]
@@ -52860,6 +57141,13 @@ export namespace Prisma {
     connectOrCreate?: AgentRunCreateOrConnectWithoutAgentInput | AgentRunCreateOrConnectWithoutAgentInput[]
     createMany?: AgentRunCreateManyAgentInputEnvelope
     connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type AgentChatThreadUncheckedCreateNestedManyWithoutAgentInput = {
+    create?: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput> | AgentChatThreadCreateWithoutAgentInput[] | AgentChatThreadUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutAgentInput | AgentChatThreadCreateOrConnectWithoutAgentInput[]
+    createMany?: AgentChatThreadCreateManyAgentInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
   }
 
   export type AgentVersionUncheckedCreateNestedManyWithoutCompanyAgentInput = {
@@ -52884,6 +57172,20 @@ export namespace Prisma {
     delete?: AgentTemplateWhereInput | boolean
     connect?: AgentTemplateWhereUniqueInput
     update?: XOR<XOR<AgentTemplateUpdateToOneWithWhereWithoutAgentsInput, AgentTemplateUpdateWithoutAgentsInput>, AgentTemplateUncheckedUpdateWithoutAgentsInput>
+  }
+
+  export type AgentChatThreadUpdateManyWithoutAgentNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput> | AgentChatThreadCreateWithoutAgentInput[] | AgentChatThreadUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutAgentInput | AgentChatThreadCreateOrConnectWithoutAgentInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutAgentInput | AgentChatThreadUpsertWithWhereUniqueWithoutAgentInput[]
+    createMany?: AgentChatThreadCreateManyAgentInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutAgentInput | AgentChatThreadUpdateWithWhereUniqueWithoutAgentInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutAgentInput | AgentChatThreadUpdateManyWithWhereWithoutAgentInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
   }
 
   export type AgentVersionUpdateManyWithoutCompanyAgentNestedInput = {
@@ -52912,6 +57214,20 @@ export namespace Prisma {
     update?: AgentRunUpdateWithWhereUniqueWithoutAgentInput | AgentRunUpdateWithWhereUniqueWithoutAgentInput[]
     updateMany?: AgentRunUpdateManyWithWhereWithoutAgentInput | AgentRunUpdateManyWithWhereWithoutAgentInput[]
     deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutAgentNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput> | AgentChatThreadCreateWithoutAgentInput[] | AgentChatThreadUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutAgentInput | AgentChatThreadCreateOrConnectWithoutAgentInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutAgentInput | AgentChatThreadUpsertWithWhereUniqueWithoutAgentInput[]
+    createMany?: AgentChatThreadCreateManyAgentInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutAgentInput | AgentChatThreadUpdateWithWhereUniqueWithoutAgentInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutAgentInput | AgentChatThreadUpdateManyWithWhereWithoutAgentInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
   }
 
   export type AgentVersionUncheckedUpdateManyWithoutCompanyAgentNestedInput = {
@@ -53010,6 +57326,32 @@ export namespace Prisma {
     connect?: AgentVersionWhereUniqueInput
   }
 
+  export type AgentChatThreadCreateNestedOneWithoutRunsInput = {
+    create?: XOR<AgentChatThreadCreateWithoutRunsInput, AgentChatThreadUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutRunsInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutSourceRunsInput = {
+    create?: XOR<AgentChatMessageCreateWithoutSourceRunsInput, AgentChatMessageUncheckedCreateWithoutSourceRunsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutSourceRunsInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedManyWithoutAgentRunInput = {
+    create?: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput> | AgentChatMessageCreateWithoutAgentRunInput[] | AgentChatMessageUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutAgentRunInput | AgentChatMessageCreateOrConnectWithoutAgentRunInput[]
+    createMany?: AgentChatMessageCreateManyAgentRunInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type CreditLedgerEntryCreateNestedManyWithoutRunInput = {
+    create?: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput> | CreditLedgerEntryCreateWithoutRunInput[] | CreditLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutRunInput | CreditLedgerEntryCreateOrConnectWithoutRunInput[]
+    createMany?: CreditLedgerEntryCreateManyRunInputEnvelope
+    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+  }
+
   export type AgentRunStepCreateNestedManyWithoutRunInput = {
     create?: XOR<AgentRunStepCreateWithoutRunInput, AgentRunStepUncheckedCreateWithoutRunInput> | AgentRunStepCreateWithoutRunInput[] | AgentRunStepUncheckedCreateWithoutRunInput[]
     connectOrCreate?: AgentRunStepCreateOrConnectWithoutRunInput | AgentRunStepCreateOrConnectWithoutRunInput[]
@@ -53017,11 +57359,39 @@ export namespace Prisma {
     connect?: AgentRunStepWhereUniqueInput | AgentRunStepWhereUniqueInput[]
   }
 
+  export type TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput = {
+    create?: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput> | TechnicalCostLedgerEntryCreateWithoutRunInput[] | TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput | TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput[]
+    createMany?: TechnicalCostLedgerEntryCreateManyRunInputEnvelope
+    connect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput = {
+    create?: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput> | AgentChatMessageCreateWithoutAgentRunInput[] | AgentChatMessageUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutAgentRunInput | AgentChatMessageCreateOrConnectWithoutAgentRunInput[]
+    createMany?: AgentChatMessageCreateManyAgentRunInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput = {
+    create?: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput> | CreditLedgerEntryCreateWithoutRunInput[] | CreditLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutRunInput | CreditLedgerEntryCreateOrConnectWithoutRunInput[]
+    createMany?: CreditLedgerEntryCreateManyRunInputEnvelope
+    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+  }
+
   export type AgentRunStepUncheckedCreateNestedManyWithoutRunInput = {
     create?: XOR<AgentRunStepCreateWithoutRunInput, AgentRunStepUncheckedCreateWithoutRunInput> | AgentRunStepCreateWithoutRunInput[] | AgentRunStepUncheckedCreateWithoutRunInput[]
     connectOrCreate?: AgentRunStepCreateOrConnectWithoutRunInput | AgentRunStepCreateOrConnectWithoutRunInput[]
     createMany?: AgentRunStepCreateManyRunInputEnvelope
     connect?: AgentRunStepWhereUniqueInput | AgentRunStepWhereUniqueInput[]
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput = {
+    create?: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput> | TechnicalCostLedgerEntryCreateWithoutRunInput[] | TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput | TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput[]
+    createMany?: TechnicalCostLedgerEntryCreateManyRunInputEnvelope
+    connect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
   }
 
   export type CompanyAgentUpdateOneRequiredWithoutRunsNestedInput = {
@@ -53040,6 +57410,54 @@ export namespace Prisma {
     update?: XOR<XOR<AgentVersionUpdateToOneWithWhereWithoutRunsInput, AgentVersionUpdateWithoutRunsInput>, AgentVersionUncheckedUpdateWithoutRunsInput>
   }
 
+  export type AgentChatThreadUpdateOneWithoutRunsNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutRunsInput, AgentChatThreadUncheckedCreateWithoutRunsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutRunsInput
+    upsert?: AgentChatThreadUpsertWithoutRunsInput
+    disconnect?: AgentChatThreadWhereInput | boolean
+    delete?: AgentChatThreadWhereInput | boolean
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutRunsInput, AgentChatThreadUpdateWithoutRunsInput>, AgentChatThreadUncheckedUpdateWithoutRunsInput>
+  }
+
+  export type AgentChatMessageUpdateOneWithoutSourceRunsNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutSourceRunsInput, AgentChatMessageUncheckedCreateWithoutSourceRunsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutSourceRunsInput
+    upsert?: AgentChatMessageUpsertWithoutSourceRunsInput
+    disconnect?: AgentChatMessageWhereInput | boolean
+    delete?: AgentChatMessageWhereInput | boolean
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutSourceRunsInput, AgentChatMessageUpdateWithoutSourceRunsInput>, AgentChatMessageUncheckedUpdateWithoutSourceRunsInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithoutAgentRunNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput> | AgentChatMessageCreateWithoutAgentRunInput[] | AgentChatMessageUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutAgentRunInput | AgentChatMessageCreateOrConnectWithoutAgentRunInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutAgentRunInput | AgentChatMessageUpsertWithWhereUniqueWithoutAgentRunInput[]
+    createMany?: AgentChatMessageCreateManyAgentRunInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutAgentRunInput | AgentChatMessageUpdateWithWhereUniqueWithoutAgentRunInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutAgentRunInput | AgentChatMessageUpdateManyWithWhereWithoutAgentRunInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type CreditLedgerEntryUpdateManyWithoutRunNestedInput = {
+    create?: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput> | CreditLedgerEntryCreateWithoutRunInput[] | CreditLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutRunInput | CreditLedgerEntryCreateOrConnectWithoutRunInput[]
+    upsert?: CreditLedgerEntryUpsertWithWhereUniqueWithoutRunInput | CreditLedgerEntryUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: CreditLedgerEntryCreateManyRunInputEnvelope
+    set?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    disconnect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    delete?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    update?: CreditLedgerEntryUpdateWithWhereUniqueWithoutRunInput | CreditLedgerEntryUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: CreditLedgerEntryUpdateManyWithWhereWithoutRunInput | CreditLedgerEntryUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
+  }
+
   export type AgentRunStepUpdateManyWithoutRunNestedInput = {
     create?: XOR<AgentRunStepCreateWithoutRunInput, AgentRunStepUncheckedCreateWithoutRunInput> | AgentRunStepCreateWithoutRunInput[] | AgentRunStepUncheckedCreateWithoutRunInput[]
     connectOrCreate?: AgentRunStepCreateOrConnectWithoutRunInput | AgentRunStepCreateOrConnectWithoutRunInput[]
@@ -53052,6 +57470,48 @@ export namespace Prisma {
     update?: AgentRunStepUpdateWithWhereUniqueWithoutRunInput | AgentRunStepUpdateWithWhereUniqueWithoutRunInput[]
     updateMany?: AgentRunStepUpdateManyWithWhereWithoutRunInput | AgentRunStepUpdateManyWithWhereWithoutRunInput[]
     deleteMany?: AgentRunStepScalarWhereInput | AgentRunStepScalarWhereInput[]
+  }
+
+  export type TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput = {
+    create?: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput> | TechnicalCostLedgerEntryCreateWithoutRunInput[] | TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput | TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput[]
+    upsert?: TechnicalCostLedgerEntryUpsertWithWhereUniqueWithoutRunInput | TechnicalCostLedgerEntryUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: TechnicalCostLedgerEntryCreateManyRunInputEnvelope
+    set?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    disconnect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    delete?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    connect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    update?: TechnicalCostLedgerEntryUpdateWithWhereUniqueWithoutRunInput | TechnicalCostLedgerEntryUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: TechnicalCostLedgerEntryUpdateManyWithWhereWithoutRunInput | TechnicalCostLedgerEntryUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: TechnicalCostLedgerEntryScalarWhereInput | TechnicalCostLedgerEntryScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput> | AgentChatMessageCreateWithoutAgentRunInput[] | AgentChatMessageUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutAgentRunInput | AgentChatMessageCreateOrConnectWithoutAgentRunInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutAgentRunInput | AgentChatMessageUpsertWithWhereUniqueWithoutAgentRunInput[]
+    createMany?: AgentChatMessageCreateManyAgentRunInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutAgentRunInput | AgentChatMessageUpdateWithWhereUniqueWithoutAgentRunInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutAgentRunInput | AgentChatMessageUpdateManyWithWhereWithoutAgentRunInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput = {
+    create?: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput> | CreditLedgerEntryCreateWithoutRunInput[] | CreditLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutRunInput | CreditLedgerEntryCreateOrConnectWithoutRunInput[]
+    upsert?: CreditLedgerEntryUpsertWithWhereUniqueWithoutRunInput | CreditLedgerEntryUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: CreditLedgerEntryCreateManyRunInputEnvelope
+    set?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    disconnect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    delete?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
+    update?: CreditLedgerEntryUpdateWithWhereUniqueWithoutRunInput | CreditLedgerEntryUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: CreditLedgerEntryUpdateManyWithWhereWithoutRunInput | CreditLedgerEntryUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
   }
 
   export type AgentRunStepUncheckedUpdateManyWithoutRunNestedInput = {
@@ -53068,6 +57528,20 @@ export namespace Prisma {
     deleteMany?: AgentRunStepScalarWhereInput | AgentRunStepScalarWhereInput[]
   }
 
+  export type TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput = {
+    create?: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput> | TechnicalCostLedgerEntryCreateWithoutRunInput[] | TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput | TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput[]
+    upsert?: TechnicalCostLedgerEntryUpsertWithWhereUniqueWithoutRunInput | TechnicalCostLedgerEntryUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: TechnicalCostLedgerEntryCreateManyRunInputEnvelope
+    set?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    disconnect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    delete?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    connect?: TechnicalCostLedgerEntryWhereUniqueInput | TechnicalCostLedgerEntryWhereUniqueInput[]
+    update?: TechnicalCostLedgerEntryUpdateWithWhereUniqueWithoutRunInput | TechnicalCostLedgerEntryUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: TechnicalCostLedgerEntryUpdateManyWithWhereWithoutRunInput | TechnicalCostLedgerEntryUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: TechnicalCostLedgerEntryScalarWhereInput | TechnicalCostLedgerEntryScalarWhereInput[]
+  }
+
   export type AgentRunCreateNestedOneWithoutStepsInput = {
     create?: XOR<AgentRunCreateWithoutStepsInput, AgentRunUncheckedCreateWithoutStepsInput>
     connectOrCreate?: AgentRunCreateOrConnectWithoutStepsInput
@@ -53082,12 +57556,448 @@ export namespace Prisma {
     update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutStepsInput, AgentRunUpdateWithoutStepsInput>, AgentRunUncheckedUpdateWithoutStepsInput>
   }
 
+  export type CompanyAgentCreateNestedOneWithoutChatThreadsInput = {
+    create?: XOR<CompanyAgentCreateWithoutChatThreadsInput, CompanyAgentUncheckedCreateWithoutChatThreadsInput>
+    connectOrCreate?: CompanyAgentCreateOrConnectWithoutChatThreadsInput
+    connect?: CompanyAgentWhereUniqueInput
+  }
+
+  export type AgentChatThreadCreateNestedOneWithoutBranchesInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchesInput, AgentChatThreadUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchesInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentChatThreadCreateNestedManyWithoutParentThreadInput = {
+    create?: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput> | AgentChatThreadCreateWithoutParentThreadInput[] | AgentChatThreadUncheckedCreateWithoutParentThreadInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutParentThreadInput | AgentChatThreadCreateOrConnectWithoutParentThreadInput[]
+    createMany?: AgentChatThreadCreateManyParentThreadInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutBranchesInput = {
+    create?: XOR<AgentChatMessageCreateWithoutBranchesInput, AgentChatMessageUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutBranchesInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedManyWithoutThreadInput = {
+    create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
+    createMany?: AgentChatMessageCreateManyThreadInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentRunCreateNestedManyWithoutThreadInput = {
+    create?: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput> | AgentRunCreateWithoutThreadInput[] | AgentRunUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutThreadInput | AgentRunCreateOrConnectWithoutThreadInput[]
+    createMany?: AgentRunCreateManyThreadInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput = {
+    create?: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput> | AgentChatThreadCreateWithoutParentThreadInput[] | AgentChatThreadUncheckedCreateWithoutParentThreadInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutParentThreadInput | AgentChatThreadCreateOrConnectWithoutParentThreadInput[]
+    createMany?: AgentChatThreadCreateManyParentThreadInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
+    createMany?: AgentChatMessageCreateManyThreadInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentRunUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput> | AgentRunCreateWithoutThreadInput[] | AgentRunUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutThreadInput | AgentRunCreateOrConnectWithoutThreadInput[]
+    createMany?: AgentRunCreateManyThreadInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type CompanyAgentUpdateOneWithoutChatThreadsNestedInput = {
+    create?: XOR<CompanyAgentCreateWithoutChatThreadsInput, CompanyAgentUncheckedCreateWithoutChatThreadsInput>
+    connectOrCreate?: CompanyAgentCreateOrConnectWithoutChatThreadsInput
+    upsert?: CompanyAgentUpsertWithoutChatThreadsInput
+    disconnect?: CompanyAgentWhereInput | boolean
+    delete?: CompanyAgentWhereInput | boolean
+    connect?: CompanyAgentWhereUniqueInput
+    update?: XOR<XOR<CompanyAgentUpdateToOneWithWhereWithoutChatThreadsInput, CompanyAgentUpdateWithoutChatThreadsInput>, CompanyAgentUncheckedUpdateWithoutChatThreadsInput>
+  }
+
+  export type AgentChatThreadUpdateOneWithoutBranchesNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchesInput, AgentChatThreadUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchesInput
+    upsert?: AgentChatThreadUpsertWithoutBranchesInput
+    disconnect?: AgentChatThreadWhereInput | boolean
+    delete?: AgentChatThreadWhereInput | boolean
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutBranchesInput, AgentChatThreadUpdateWithoutBranchesInput>, AgentChatThreadUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type AgentChatThreadUpdateManyWithoutParentThreadNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput> | AgentChatThreadCreateWithoutParentThreadInput[] | AgentChatThreadUncheckedCreateWithoutParentThreadInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutParentThreadInput | AgentChatThreadCreateOrConnectWithoutParentThreadInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput | AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput[]
+    createMany?: AgentChatThreadCreateManyParentThreadInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutParentThreadInput | AgentChatThreadUpdateWithWhereUniqueWithoutParentThreadInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutParentThreadInput | AgentChatThreadUpdateManyWithWhereWithoutParentThreadInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUpdateOneWithoutBranchesNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutBranchesInput, AgentChatMessageUncheckedCreateWithoutBranchesInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutBranchesInput
+    upsert?: AgentChatMessageUpsertWithoutBranchesInput
+    disconnect?: AgentChatMessageWhereInput | boolean
+    delete?: AgentChatMessageWhereInput | boolean
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutBranchesInput, AgentChatMessageUpdateWithoutBranchesInput>, AgentChatMessageUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput | AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: AgentChatMessageCreateManyThreadInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutThreadInput | AgentChatMessageUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutThreadInput | AgentChatMessageUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentRunUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput> | AgentRunCreateWithoutThreadInput[] | AgentRunUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutThreadInput | AgentRunCreateOrConnectWithoutThreadInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutThreadInput | AgentRunUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: AgentRunCreateManyThreadInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutThreadInput | AgentRunUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutThreadInput | AgentRunUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput> | AgentChatThreadCreateWithoutParentThreadInput[] | AgentChatThreadUncheckedCreateWithoutParentThreadInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutParentThreadInput | AgentChatThreadCreateOrConnectWithoutParentThreadInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput | AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput[]
+    createMany?: AgentChatThreadCreateManyParentThreadInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutParentThreadInput | AgentChatThreadUpdateWithWhereUniqueWithoutParentThreadInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutParentThreadInput | AgentChatThreadUpdateManyWithWhereWithoutParentThreadInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput | AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: AgentChatMessageCreateManyThreadInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutThreadInput | AgentChatMessageUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutThreadInput | AgentChatMessageUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput> | AgentRunCreateWithoutThreadInput[] | AgentRunUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutThreadInput | AgentRunCreateOrConnectWithoutThreadInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutThreadInput | AgentRunUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: AgentRunCreateManyThreadInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutThreadInput | AgentRunUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutThreadInput | AgentRunUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type AgentChatThreadCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<AgentChatThreadCreateWithoutMessagesInput, AgentChatThreadUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutMessagesInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentRunCreateNestedOneWithoutChatMessagesInput = {
+    create?: XOR<AgentRunCreateWithoutChatMessagesInput, AgentRunUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutChatMessagesInput
+    connect?: AgentRunWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutEditedVariantsInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedVariantsInput, AgentChatMessageUncheckedCreateWithoutEditedVariantsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedVariantsInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyEditedFromMessageInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutRegenerationsInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegenerationsInput, AgentChatMessageUncheckedCreateWithoutRegenerationsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegenerationsInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput> | AgentChatMessageCreateWithoutRegeneratedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput | AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyRegeneratedFromMessageInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput> | AgentChatThreadCreateWithoutBranchedFromMessageInput[] | AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput | AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput[]
+    createMany?: AgentChatThreadCreateManyBranchedFromMessageInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+  }
+
+  export type AgentRunCreateNestedManyWithoutSourceMessageInput = {
+    create?: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput> | AgentRunCreateWithoutSourceMessageInput[] | AgentRunUncheckedCreateWithoutSourceMessageInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutSourceMessageInput | AgentRunCreateOrConnectWithoutSourceMessageInput[]
+    createMany?: AgentRunCreateManySourceMessageInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyEditedFromMessageInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput> | AgentChatMessageCreateWithoutRegeneratedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput | AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyRegeneratedFromMessageInputEnvelope
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+  }
+
+  export type AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput> | AgentChatThreadCreateWithoutBranchedFromMessageInput[] | AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput | AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput[]
+    createMany?: AgentChatThreadCreateManyBranchedFromMessageInputEnvelope
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+  }
+
+  export type AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput = {
+    create?: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput> | AgentRunCreateWithoutSourceMessageInput[] | AgentRunUncheckedCreateWithoutSourceMessageInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutSourceMessageInput | AgentRunCreateOrConnectWithoutSourceMessageInput[]
+    createMany?: AgentRunCreateManySourceMessageInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutMessagesInput, AgentChatThreadUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutMessagesInput
+    upsert?: AgentChatThreadUpsertWithoutMessagesInput
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutMessagesInput, AgentChatThreadUpdateWithoutMessagesInput>, AgentChatThreadUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type AgentRunUpdateOneWithoutChatMessagesNestedInput = {
+    create?: XOR<AgentRunCreateWithoutChatMessagesInput, AgentRunUncheckedCreateWithoutChatMessagesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutChatMessagesInput
+    upsert?: AgentRunUpsertWithoutChatMessagesInput
+    disconnect?: AgentRunWhereInput | boolean
+    delete?: AgentRunWhereInput | boolean
+    connect?: AgentRunWhereUniqueInput
+    update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutChatMessagesInput, AgentRunUpdateWithoutChatMessagesInput>, AgentRunUncheckedUpdateWithoutChatMessagesInput>
+  }
+
+  export type AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedVariantsInput, AgentChatMessageUncheckedCreateWithoutEditedVariantsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedVariantsInput
+    upsert?: AgentChatMessageUpsertWithoutEditedVariantsInput
+    disconnect?: AgentChatMessageWhereInput | boolean
+    delete?: AgentChatMessageWhereInput | boolean
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutEditedVariantsInput, AgentChatMessageUpdateWithoutEditedVariantsInput>, AgentChatMessageUncheckedUpdateWithoutEditedVariantsInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput | AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyEditedFromMessageInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutEditedFromMessageInput | AgentChatMessageUpdateWithWhereUniqueWithoutEditedFromMessageInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutEditedFromMessageInput | AgentChatMessageUpdateManyWithWhereWithoutEditedFromMessageInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUpdateOneWithoutRegenerationsNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegenerationsInput, AgentChatMessageUncheckedCreateWithoutRegenerationsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegenerationsInput
+    upsert?: AgentChatMessageUpsertWithoutRegenerationsInput
+    disconnect?: AgentChatMessageWhereInput | boolean
+    delete?: AgentChatMessageWhereInput | boolean
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutRegenerationsInput, AgentChatMessageUpdateWithoutRegenerationsInput>, AgentChatMessageUncheckedUpdateWithoutRegenerationsInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput> | AgentChatMessageCreateWithoutRegeneratedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput | AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput | AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyRegeneratedFromMessageInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutRegeneratedFromMessageInput | AgentChatMessageUpdateWithWhereUniqueWithoutRegeneratedFromMessageInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutRegeneratedFromMessageInput | AgentChatMessageUpdateManyWithWhereWithoutRegeneratedFromMessageInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput> | AgentChatThreadCreateWithoutBranchedFromMessageInput[] | AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput | AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput | AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput[]
+    createMany?: AgentChatThreadCreateManyBranchedFromMessageInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutBranchedFromMessageInput | AgentChatThreadUpdateWithWhereUniqueWithoutBranchedFromMessageInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutBranchedFromMessageInput | AgentChatThreadUpdateManyWithWhereWithoutBranchedFromMessageInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+  }
+
+  export type AgentRunUpdateManyWithoutSourceMessageNestedInput = {
+    create?: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput> | AgentRunCreateWithoutSourceMessageInput[] | AgentRunUncheckedCreateWithoutSourceMessageInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutSourceMessageInput | AgentRunCreateOrConnectWithoutSourceMessageInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutSourceMessageInput | AgentRunUpsertWithWhereUniqueWithoutSourceMessageInput[]
+    createMany?: AgentRunCreateManySourceMessageInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutSourceMessageInput | AgentRunUpdateWithWhereUniqueWithoutSourceMessageInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutSourceMessageInput | AgentRunUpdateManyWithWhereWithoutSourceMessageInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput | AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyEditedFromMessageInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutEditedFromMessageInput | AgentChatMessageUpdateWithWhereUniqueWithoutEditedFromMessageInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutEditedFromMessageInput | AgentChatMessageUpdateManyWithWhereWithoutEditedFromMessageInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput> | AgentChatMessageCreateWithoutRegeneratedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput[]
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput | AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput[]
+    upsert?: AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput | AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput[]
+    createMany?: AgentChatMessageCreateManyRegeneratedFromMessageInputEnvelope
+    set?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    disconnect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    delete?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    connect?: AgentChatMessageWhereUniqueInput | AgentChatMessageWhereUniqueInput[]
+    update?: AgentChatMessageUpdateWithWhereUniqueWithoutRegeneratedFromMessageInput | AgentChatMessageUpdateWithWhereUniqueWithoutRegeneratedFromMessageInput[]
+    updateMany?: AgentChatMessageUpdateManyWithWhereWithoutRegeneratedFromMessageInput | AgentChatMessageUpdateManyWithWhereWithoutRegeneratedFromMessageInput[]
+    deleteMany?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput> | AgentChatThreadCreateWithoutBranchedFromMessageInput[] | AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput[]
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput | AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput[]
+    upsert?: AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput | AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput[]
+    createMany?: AgentChatThreadCreateManyBranchedFromMessageInputEnvelope
+    set?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    disconnect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    delete?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    connect?: AgentChatThreadWhereUniqueInput | AgentChatThreadWhereUniqueInput[]
+    update?: AgentChatThreadUpdateWithWhereUniqueWithoutBranchedFromMessageInput | AgentChatThreadUpdateWithWhereUniqueWithoutBranchedFromMessageInput[]
+    updateMany?: AgentChatThreadUpdateManyWithWhereWithoutBranchedFromMessageInput | AgentChatThreadUpdateManyWithWhereWithoutBranchedFromMessageInput[]
+    deleteMany?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput = {
+    create?: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput> | AgentRunCreateWithoutSourceMessageInput[] | AgentRunUncheckedCreateWithoutSourceMessageInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutSourceMessageInput | AgentRunCreateOrConnectWithoutSourceMessageInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutSourceMessageInput | AgentRunUpsertWithWhereUniqueWithoutSourceMessageInput[]
+    createMany?: AgentRunCreateManySourceMessageInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutSourceMessageInput | AgentRunUpdateWithWhereUniqueWithoutSourceMessageInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutSourceMessageInput | AgentRunUpdateManyWithWhereWithoutSourceMessageInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type AgentRunCreateNestedOneWithoutCreditEntriesInput = {
+    create?: XOR<AgentRunCreateWithoutCreditEntriesInput, AgentRunUncheckedCreateWithoutCreditEntriesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutCreditEntriesInput
+    connect?: AgentRunWhereUniqueInput
+  }
+
+  export type AgentRunUpdateOneWithoutCreditEntriesNestedInput = {
+    create?: XOR<AgentRunCreateWithoutCreditEntriesInput, AgentRunUncheckedCreateWithoutCreditEntriesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutCreditEntriesInput
+    upsert?: AgentRunUpsertWithoutCreditEntriesInput
+    disconnect?: AgentRunWhereInput | boolean
+    delete?: AgentRunWhereInput | boolean
+    connect?: AgentRunWhereUniqueInput
+    update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutCreditEntriesInput, AgentRunUpdateWithoutCreditEntriesInput>, AgentRunUncheckedUpdateWithoutCreditEntriesInput>
+  }
+
+  export type AgentRunCreateNestedOneWithoutTechnicalCostEntriesInput = {
+    create?: XOR<AgentRunCreateWithoutTechnicalCostEntriesInput, AgentRunUncheckedCreateWithoutTechnicalCostEntriesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutTechnicalCostEntriesInput
+    connect?: AgentRunWhereUniqueInput
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type AgentRunUpdateOneWithoutTechnicalCostEntriesNestedInput = {
+    create?: XOR<AgentRunCreateWithoutTechnicalCostEntriesInput, AgentRunUncheckedCreateWithoutTechnicalCostEntriesInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutTechnicalCostEntriesInput
+    upsert?: AgentRunUpsertWithoutTechnicalCostEntriesInput
+    disconnect?: AgentRunWhereInput | boolean
+    delete?: AgentRunWhereInput | boolean
+    connect?: AgentRunWhereUniqueInput
+    update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutTechnicalCostEntriesInput, AgentRunUpdateWithoutTechnicalCostEntriesInput>, AgentRunUncheckedUpdateWithoutTechnicalCostEntriesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -56564,6 +61474,7 @@ export namespace Prisma {
     updatedByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatThreads?: AgentChatThreadCreateNestedManyWithoutAgentInput
     versions?: AgentVersionCreateNestedManyWithoutCompanyAgentInput
     runs?: AgentRunCreateNestedManyWithoutAgentInput
   }
@@ -56580,6 +61491,7 @@ export namespace Prisma {
     updatedByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatThreads?: AgentChatThreadUncheckedCreateNestedManyWithoutAgentInput
     versions?: AgentVersionUncheckedCreateNestedManyWithoutCompanyAgentInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutAgentInput
   }
@@ -56671,6 +61583,46 @@ export namespace Prisma {
     create: XOR<AgentTemplateCreateWithoutAgentsInput, AgentTemplateUncheckedCreateWithoutAgentsInput>
   }
 
+  export type AgentChatThreadCreateWithoutAgentInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutAgentInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutAgentInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput>
+  }
+
+  export type AgentChatThreadCreateManyAgentInputEnvelope = {
+    data: AgentChatThreadCreateManyAgentInput | AgentChatThreadCreateManyAgentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AgentVersionCreateWithoutCompanyAgentInput = {
     id?: string
     versionNumber: number
@@ -56717,28 +61669,54 @@ export namespace Prisma {
     id?: string
     organizationId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
     steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunUncheckedCreateWithoutAgentInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentVersionId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunCreateOrConnectWithoutAgentInput = {
@@ -56800,6 +61778,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AgentChatThreadUpsertWithWhereUniqueWithoutAgentInput = {
+    where: AgentChatThreadWhereUniqueInput
+    update: XOR<AgentChatThreadUpdateWithoutAgentInput, AgentChatThreadUncheckedUpdateWithoutAgentInput>
+    create: XOR<AgentChatThreadCreateWithoutAgentInput, AgentChatThreadUncheckedCreateWithoutAgentInput>
+  }
+
+  export type AgentChatThreadUpdateWithWhereUniqueWithoutAgentInput = {
+    where: AgentChatThreadWhereUniqueInput
+    data: XOR<AgentChatThreadUpdateWithoutAgentInput, AgentChatThreadUncheckedUpdateWithoutAgentInput>
+  }
+
+  export type AgentChatThreadUpdateManyWithWhereWithoutAgentInput = {
+    where: AgentChatThreadScalarWhereInput
+    data: XOR<AgentChatThreadUpdateManyMutationInput, AgentChatThreadUncheckedUpdateManyWithoutAgentInput>
+  }
+
+  export type AgentChatThreadScalarWhereInput = {
+    AND?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+    OR?: AgentChatThreadScalarWhereInput[]
+    NOT?: AgentChatThreadScalarWhereInput | AgentChatThreadScalarWhereInput[]
+    id?: StringFilter<"AgentChatThread"> | string
+    organizationId?: StringFilter<"AgentChatThread"> | string
+    agentId?: StringNullableFilter<"AgentChatThread"> | string | null
+    scope?: StringFilter<"AgentChatThread"> | string
+    title?: StringNullableFilter<"AgentChatThread"> | string | null
+    parentThreadId?: StringNullableFilter<"AgentChatThread"> | string | null
+    branchedFromMessageId?: StringNullableFilter<"AgentChatThread"> | string | null
+    createdByUserId?: StringFilter<"AgentChatThread"> | string
+    createdAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentChatThread"> | Date | string
+  }
+
   export type AgentVersionUpsertWithWhereUniqueWithoutCompanyAgentInput = {
     where: AgentVersionWhereUniqueInput
     update: XOR<AgentVersionUpdateWithoutCompanyAgentInput, AgentVersionUncheckedUpdateWithoutCompanyAgentInput>
@@ -56857,12 +61867,22 @@ export namespace Prisma {
     NOT?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
     id?: StringFilter<"AgentRun"> | string
     organizationId?: StringFilter<"AgentRun"> | string
+    threadId?: StringNullableFilter<"AgentRun"> | string | null
+    sourceMessageId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
     agentVersionId?: StringFilter<"AgentRun"> | string
     status?: StringFilter<"AgentRun"> | string
+    queuePosition?: IntNullableFilter<"AgentRun"> | number | null
+    attemptCount?: IntFilter<"AgentRun"> | number
     inputPayload?: JsonFilter<"AgentRun">
     outputPayload?: JsonNullableFilter<"AgentRun">
+    processingMetadata?: JsonFilter<"AgentRun">
+    processingLeaseId?: StringNullableFilter<"AgentRun"> | string | null
+    leaseExpiresAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     errorMessage?: StringNullableFilter<"AgentRun"> | string | null
+    startedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
+    lastAttemptAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     createdByUserId?: StringFilter<"AgentRun"> | string
     createdAt?: DateTimeFilter<"AgentRun"> | Date | string
     updatedAt?: DateTimeFilter<"AgentRun"> | Date | string
@@ -56881,6 +61901,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     template?: AgentTemplateCreateNestedOneWithoutAgentsInput
+    chatThreads?: AgentChatThreadCreateNestedManyWithoutAgentInput
     runs?: AgentRunCreateNestedManyWithoutAgentInput
   }
 
@@ -56897,6 +61918,7 @@ export namespace Prisma {
     updatedByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatThreads?: AgentChatThreadUncheckedCreateNestedManyWithoutAgentInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutAgentInput
   }
 
@@ -56909,28 +61931,54 @@ export namespace Prisma {
     id?: string
     organizationId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
     steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunUncheckedCreateWithoutAgentVersionInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunCreateOrConnectWithoutAgentVersionInput = {
@@ -56967,6 +62015,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: AgentTemplateUpdateOneWithoutAgentsNestedInput
+    chatThreads?: AgentChatThreadUpdateManyWithoutAgentNestedInput
     runs?: AgentRunUpdateManyWithoutAgentNestedInput
   }
 
@@ -56983,6 +62032,7 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatThreads?: AgentChatThreadUncheckedUpdateManyWithoutAgentNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutAgentNestedInput
   }
 
@@ -57015,6 +62065,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     template?: AgentTemplateCreateNestedOneWithoutAgentsInput
+    chatThreads?: AgentChatThreadCreateNestedManyWithoutAgentInput
     versions?: AgentVersionCreateNestedManyWithoutCompanyAgentInput
   }
 
@@ -57031,6 +62082,7 @@ export namespace Prisma {
     updatedByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatThreads?: AgentChatThreadUncheckedCreateNestedManyWithoutAgentInput
     versions?: AgentVersionUncheckedCreateNestedManyWithoutCompanyAgentInput
   }
 
@@ -57076,11 +62128,160 @@ export namespace Prisma {
     create: XOR<AgentVersionCreateWithoutRunsInput, AgentVersionUncheckedCreateWithoutRunsInput>
   }
 
+  export type AgentChatThreadCreateWithoutRunsInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutRunsInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutRunsInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutRunsInput, AgentChatThreadUncheckedCreateWithoutRunsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutSourceRunsInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutSourceRunsInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutSourceRunsInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutSourceRunsInput, AgentChatMessageUncheckedCreateWithoutSourceRunsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutAgentRunInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutAgentRunInput = {
+    id?: string
+    threadId: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutAgentRunInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput>
+  }
+
+  export type AgentChatMessageCreateManyAgentRunInputEnvelope = {
+    data: AgentChatMessageCreateManyAgentRunInput | AgentChatMessageCreateManyAgentRunInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CreditLedgerEntryCreateWithoutRunInput = {
+    id?: string
+    organizationId: string
+    idempotencyKey?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedCreateWithoutRunInput = {
+    id?: string
+    organizationId: string
+    idempotencyKey?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryCreateOrConnectWithoutRunInput = {
+    where: CreditLedgerEntryWhereUniqueInput
+    create: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput>
+  }
+
+  export type CreditLedgerEntryCreateManyRunInputEnvelope = {
+    data: CreditLedgerEntryCreateManyRunInput | CreditLedgerEntryCreateManyRunInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AgentRunStepCreateWithoutRunInput = {
     id?: string
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -57094,6 +62295,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -57109,6 +62311,42 @@ export namespace Prisma {
 
   export type AgentRunStepCreateManyRunInputEnvelope = {
     data: AgentRunStepCreateManyRunInput | AgentRunStepCreateManyRunInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TechnicalCostLedgerEntryCreateWithoutRunInput = {
+    id?: string
+    organizationId?: string | null
+    idempotencyKey?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput = {
+    id?: string
+    organizationId?: string | null
+    idempotencyKey?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TechnicalCostLedgerEntryCreateOrConnectWithoutRunInput = {
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+    create: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput>
+  }
+
+  export type TechnicalCostLedgerEntryCreateManyRunInputEnvelope = {
+    data: TechnicalCostLedgerEntryCreateManyRunInput | TechnicalCostLedgerEntryCreateManyRunInput[]
     skipDuplicates?: boolean
   }
 
@@ -57136,6 +62374,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     template?: AgentTemplateUpdateOneWithoutAgentsNestedInput
+    chatThreads?: AgentChatThreadUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUpdateManyWithoutCompanyAgentNestedInput
   }
 
@@ -57152,6 +62391,7 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatThreads?: AgentChatThreadUncheckedUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUncheckedUpdateManyWithoutCompanyAgentNestedInput
   }
 
@@ -57198,6 +62438,154 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AgentChatThreadUpsertWithoutRunsInput = {
+    update: XOR<AgentChatThreadUpdateWithoutRunsInput, AgentChatThreadUncheckedUpdateWithoutRunsInput>
+    create: XOR<AgentChatThreadCreateWithoutRunsInput, AgentChatThreadUncheckedCreateWithoutRunsInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutRunsInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutRunsInput, AgentChatThreadUncheckedUpdateWithoutRunsInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithoutSourceRunsInput = {
+    update: XOR<AgentChatMessageUpdateWithoutSourceRunsInput, AgentChatMessageUncheckedUpdateWithoutSourceRunsInput>
+    create: XOR<AgentChatMessageCreateWithoutSourceRunsInput, AgentChatMessageUncheckedCreateWithoutSourceRunsInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutSourceRunsInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutSourceRunsInput, AgentChatMessageUncheckedUpdateWithoutSourceRunsInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutSourceRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutSourceRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithWhereUniqueWithoutAgentRunInput = {
+    where: AgentChatMessageWhereUniqueInput
+    update: XOR<AgentChatMessageUpdateWithoutAgentRunInput, AgentChatMessageUncheckedUpdateWithoutAgentRunInput>
+    create: XOR<AgentChatMessageCreateWithoutAgentRunInput, AgentChatMessageUncheckedCreateWithoutAgentRunInput>
+  }
+
+  export type AgentChatMessageUpdateWithWhereUniqueWithoutAgentRunInput = {
+    where: AgentChatMessageWhereUniqueInput
+    data: XOR<AgentChatMessageUpdateWithoutAgentRunInput, AgentChatMessageUncheckedUpdateWithoutAgentRunInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithWhereWithoutAgentRunInput = {
+    where: AgentChatMessageScalarWhereInput
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyWithoutAgentRunInput>
+  }
+
+  export type AgentChatMessageScalarWhereInput = {
+    AND?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+    OR?: AgentChatMessageScalarWhereInput[]
+    NOT?: AgentChatMessageScalarWhereInput | AgentChatMessageScalarWhereInput[]
+    id?: StringFilter<"AgentChatMessage"> | string
+    threadId?: StringFilter<"AgentChatMessage"> | string
+    agentRunId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    role?: StringFilter<"AgentChatMessage"> | string
+    content?: StringFilter<"AgentChatMessage"> | string
+    metadata?: JsonFilter<"AgentChatMessage">
+    editedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    regeneratedFromMessageId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdByUserId?: StringNullableFilter<"AgentChatMessage"> | string | null
+    createdAt?: DateTimeFilter<"AgentChatMessage"> | Date | string
+  }
+
+  export type CreditLedgerEntryUpsertWithWhereUniqueWithoutRunInput = {
+    where: CreditLedgerEntryWhereUniqueInput
+    update: XOR<CreditLedgerEntryUpdateWithoutRunInput, CreditLedgerEntryUncheckedUpdateWithoutRunInput>
+    create: XOR<CreditLedgerEntryCreateWithoutRunInput, CreditLedgerEntryUncheckedCreateWithoutRunInput>
+  }
+
+  export type CreditLedgerEntryUpdateWithWhereUniqueWithoutRunInput = {
+    where: CreditLedgerEntryWhereUniqueInput
+    data: XOR<CreditLedgerEntryUpdateWithoutRunInput, CreditLedgerEntryUncheckedUpdateWithoutRunInput>
+  }
+
+  export type CreditLedgerEntryUpdateManyWithWhereWithoutRunInput = {
+    where: CreditLedgerEntryScalarWhereInput
+    data: XOR<CreditLedgerEntryUpdateManyMutationInput, CreditLedgerEntryUncheckedUpdateManyWithoutRunInput>
+  }
+
+  export type CreditLedgerEntryScalarWhereInput = {
+    AND?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
+    OR?: CreditLedgerEntryScalarWhereInput[]
+    NOT?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
+    id?: StringFilter<"CreditLedgerEntry"> | string
+    organizationId?: StringFilter<"CreditLedgerEntry"> | string
+    runId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    entryType?: StringFilter<"CreditLedgerEntry"> | string
+    amount?: IntFilter<"CreditLedgerEntry"> | number
+    balanceAfter?: IntFilter<"CreditLedgerEntry"> | number
+    metadata?: JsonFilter<"CreditLedgerEntry">
+    createdByUserId?: StringNullableFilter<"CreditLedgerEntry"> | string | null
+    createdAt?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
+  }
+
   export type AgentRunStepUpsertWithWhereUniqueWithoutRunInput = {
     where: AgentRunStepWhereUniqueInput
     update: XOR<AgentRunStepUpdateWithoutRunInput, AgentRunStepUncheckedUpdateWithoutRunInput>
@@ -57223,6 +62611,7 @@ export namespace Prisma {
     blockKey?: StringFilter<"AgentRunStep"> | string
     blockType?: StringFilter<"AgentRunStep"> | string
     status?: StringFilter<"AgentRunStep"> | string
+    metadata?: JsonFilter<"AgentRunStep">
     inputPayload?: JsonFilter<"AgentRunStep">
     outputPayload?: JsonNullableFilter<"AgentRunStep">
     errorMessage?: StringNullableFilter<"AgentRunStep"> | string | null
@@ -57231,32 +62620,91 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AgentRunStep"> | Date | string
   }
 
+  export type TechnicalCostLedgerEntryUpsertWithWhereUniqueWithoutRunInput = {
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+    update: XOR<TechnicalCostLedgerEntryUpdateWithoutRunInput, TechnicalCostLedgerEntryUncheckedUpdateWithoutRunInput>
+    create: XOR<TechnicalCostLedgerEntryCreateWithoutRunInput, TechnicalCostLedgerEntryUncheckedCreateWithoutRunInput>
+  }
+
+  export type TechnicalCostLedgerEntryUpdateWithWhereUniqueWithoutRunInput = {
+    where: TechnicalCostLedgerEntryWhereUniqueInput
+    data: XOR<TechnicalCostLedgerEntryUpdateWithoutRunInput, TechnicalCostLedgerEntryUncheckedUpdateWithoutRunInput>
+  }
+
+  export type TechnicalCostLedgerEntryUpdateManyWithWhereWithoutRunInput = {
+    where: TechnicalCostLedgerEntryScalarWhereInput
+    data: XOR<TechnicalCostLedgerEntryUpdateManyMutationInput, TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunInput>
+  }
+
+  export type TechnicalCostLedgerEntryScalarWhereInput = {
+    AND?: TechnicalCostLedgerEntryScalarWhereInput | TechnicalCostLedgerEntryScalarWhereInput[]
+    OR?: TechnicalCostLedgerEntryScalarWhereInput[]
+    NOT?: TechnicalCostLedgerEntryScalarWhereInput | TechnicalCostLedgerEntryScalarWhereInput[]
+    id?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    organizationId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    runId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    idempotencyKey?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    providerId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    modelId?: StringNullableFilter<"TechnicalCostLedgerEntry"> | string | null
+    amount?: FloatFilter<"TechnicalCostLedgerEntry"> | number
+    currency?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    unit?: StringFilter<"TechnicalCostLedgerEntry"> | string
+    metadata?: JsonFilter<"TechnicalCostLedgerEntry">
+    createdAt?: DateTimeFilter<"TechnicalCostLedgerEntry"> | Date | string
+  }
+
   export type AgentRunCreateWithoutStepsInput = {
     id?: string
     organizationId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     agent: CompanyAgentCreateNestedOneWithoutRunsInput
     agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunUncheckedCreateWithoutStepsInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentId: string
     agentVersionId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
   }
 
   export type AgentRunCreateOrConnectWithoutStepsInput = {
@@ -57279,28 +62727,1348 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
     agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     agentVersionId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type CompanyAgentCreateWithoutChatThreadsInput = {
+    id?: string
+    organizationId: string
+    slug: string
+    name: string
+    description?: string | null
+    status?: string
+    activeVersionId?: string | null
+    createdByUserId: string
+    updatedByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    template?: AgentTemplateCreateNestedOneWithoutAgentsInput
+    versions?: AgentVersionCreateNestedManyWithoutCompanyAgentInput
+    runs?: AgentRunCreateNestedManyWithoutAgentInput
+  }
+
+  export type CompanyAgentUncheckedCreateWithoutChatThreadsInput = {
+    id?: string
+    organizationId: string
+    templateId?: string | null
+    slug: string
+    name: string
+    description?: string | null
+    status?: string
+    activeVersionId?: string | null
+    createdByUserId: string
+    updatedByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    versions?: AgentVersionUncheckedCreateNestedManyWithoutCompanyAgentInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutAgentInput
+  }
+
+  export type CompanyAgentCreateOrConnectWithoutChatThreadsInput = {
+    where: CompanyAgentWhereUniqueInput
+    create: XOR<CompanyAgentCreateWithoutChatThreadsInput, CompanyAgentUncheckedCreateWithoutChatThreadsInput>
+  }
+
+  export type AgentChatThreadCreateWithoutBranchesInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutBranchesInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutBranchesInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutBranchesInput, AgentChatThreadUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type AgentChatThreadCreateWithoutParentThreadInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutParentThreadInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutParentThreadInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput>
+  }
+
+  export type AgentChatThreadCreateManyParentThreadInputEnvelope = {
+    data: AgentChatThreadCreateManyParentThreadInput | AgentChatThreadCreateManyParentThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentChatMessageCreateWithoutBranchesInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutBranchesInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutBranchesInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutBranchesInput, AgentChatMessageUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type AgentChatMessageCreateWithoutThreadInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutThreadInput = {
+    id?: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutThreadInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput>
+  }
+
+  export type AgentChatMessageCreateManyThreadInputEnvelope = {
+    data: AgentChatMessageCreateManyThreadInput | AgentChatMessageCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentRunCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    sourceMessageId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutThreadInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput>
+  }
+
+  export type AgentRunCreateManyThreadInputEnvelope = {
+    data: AgentRunCreateManyThreadInput | AgentRunCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyAgentUpsertWithoutChatThreadsInput = {
+    update: XOR<CompanyAgentUpdateWithoutChatThreadsInput, CompanyAgentUncheckedUpdateWithoutChatThreadsInput>
+    create: XOR<CompanyAgentCreateWithoutChatThreadsInput, CompanyAgentUncheckedCreateWithoutChatThreadsInput>
+    where?: CompanyAgentWhereInput
+  }
+
+  export type CompanyAgentUpdateToOneWithWhereWithoutChatThreadsInput = {
+    where?: CompanyAgentWhereInput
+    data: XOR<CompanyAgentUpdateWithoutChatThreadsInput, CompanyAgentUncheckedUpdateWithoutChatThreadsInput>
+  }
+
+  export type CompanyAgentUpdateWithoutChatThreadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    updatedByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    template?: AgentTemplateUpdateOneWithoutAgentsNestedInput
+    versions?: AgentVersionUpdateManyWithoutCompanyAgentNestedInput
+    runs?: AgentRunUpdateManyWithoutAgentNestedInput
+  }
+
+  export type CompanyAgentUncheckedUpdateWithoutChatThreadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    updatedByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    versions?: AgentVersionUncheckedUpdateManyWithoutCompanyAgentNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutAgentNestedInput
+  }
+
+  export type AgentChatThreadUpsertWithoutBranchesInput = {
+    update: XOR<AgentChatThreadUpdateWithoutBranchesInput, AgentChatThreadUncheckedUpdateWithoutBranchesInput>
+    create: XOR<AgentChatThreadCreateWithoutBranchesInput, AgentChatThreadUncheckedCreateWithoutBranchesInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutBranchesInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutBranchesInput, AgentChatThreadUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput = {
+    where: AgentChatThreadWhereUniqueInput
+    update: XOR<AgentChatThreadUpdateWithoutParentThreadInput, AgentChatThreadUncheckedUpdateWithoutParentThreadInput>
+    create: XOR<AgentChatThreadCreateWithoutParentThreadInput, AgentChatThreadUncheckedCreateWithoutParentThreadInput>
+  }
+
+  export type AgentChatThreadUpdateWithWhereUniqueWithoutParentThreadInput = {
+    where: AgentChatThreadWhereUniqueInput
+    data: XOR<AgentChatThreadUpdateWithoutParentThreadInput, AgentChatThreadUncheckedUpdateWithoutParentThreadInput>
+  }
+
+  export type AgentChatThreadUpdateManyWithWhereWithoutParentThreadInput = {
+    where: AgentChatThreadScalarWhereInput
+    data: XOR<AgentChatThreadUpdateManyMutationInput, AgentChatThreadUncheckedUpdateManyWithoutParentThreadInput>
+  }
+
+  export type AgentChatMessageUpsertWithoutBranchesInput = {
+    update: XOR<AgentChatMessageUpdateWithoutBranchesInput, AgentChatMessageUncheckedUpdateWithoutBranchesInput>
+    create: XOR<AgentChatMessageCreateWithoutBranchesInput, AgentChatMessageUncheckedCreateWithoutBranchesInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutBranchesInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutBranchesInput, AgentChatMessageUncheckedUpdateWithoutBranchesInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutBranchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput = {
+    where: AgentChatMessageWhereUniqueInput
+    update: XOR<AgentChatMessageUpdateWithoutThreadInput, AgentChatMessageUncheckedUpdateWithoutThreadInput>
+    create: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput>
+  }
+
+  export type AgentChatMessageUpdateWithWhereUniqueWithoutThreadInput = {
+    where: AgentChatMessageWhereUniqueInput
+    data: XOR<AgentChatMessageUpdateWithoutThreadInput, AgentChatMessageUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithWhereWithoutThreadInput = {
+    where: AgentChatMessageScalarWhereInput
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type AgentRunUpsertWithWhereUniqueWithoutThreadInput = {
+    where: AgentRunWhereUniqueInput
+    update: XOR<AgentRunUpdateWithoutThreadInput, AgentRunUncheckedUpdateWithoutThreadInput>
+    create: XOR<AgentRunCreateWithoutThreadInput, AgentRunUncheckedCreateWithoutThreadInput>
+  }
+
+  export type AgentRunUpdateWithWhereUniqueWithoutThreadInput = {
+    where: AgentRunWhereUniqueInput
+    data: XOR<AgentRunUpdateWithoutThreadInput, AgentRunUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type AgentRunUpdateManyWithWhereWithoutThreadInput = {
+    where: AgentRunScalarWhereInput
+    data: XOR<AgentRunUpdateManyMutationInput, AgentRunUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type AgentChatThreadCreateWithoutMessagesInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutMessagesInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutMessagesInput, AgentChatThreadUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type AgentRunCreateWithoutChatMessagesInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutChatMessagesInput = {
+    id?: string
+    organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutChatMessagesInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutChatMessagesInput, AgentRunUncheckedCreateWithoutChatMessagesInput>
+  }
+
+  export type AgentChatMessageCreateWithoutEditedVariantsInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutEditedVariantsInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutEditedVariantsInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutEditedVariantsInput, AgentChatMessageUncheckedCreateWithoutEditedVariantsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutEditedFromMessageInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput>
+  }
+
+  export type AgentChatMessageCreateManyEditedFromMessageInputEnvelope = {
+    data: AgentChatMessageCreateManyEditedFromMessageInput | AgentChatMessageCreateManyEditedFromMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentChatMessageCreateWithoutRegenerationsInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutRegenerationsInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutRegenerationsInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutRegenerationsInput, AgentChatMessageUncheckedCreateWithoutRegenerationsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutRegeneratedFromMessageInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput>
+  }
+
+  export type AgentChatMessageCreateManyRegeneratedFromMessageInputEnvelope = {
+    data: AgentChatMessageCreateManyRegeneratedFromMessageInput | AgentChatMessageCreateManyRegeneratedFromMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentChatThreadCreateWithoutBranchedFromMessageInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput>
+  }
+
+  export type AgentChatThreadCreateManyBranchedFromMessageInputEnvelope = {
+    data: AgentChatThreadCreateManyBranchedFromMessageInput | AgentChatThreadCreateManyBranchedFromMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentRunCreateWithoutSourceMessageInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutSourceMessageInput = {
+    id?: string
+    organizationId: string
+    threadId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutSourceMessageInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput>
+  }
+
+  export type AgentRunCreateManySourceMessageInputEnvelope = {
+    data: AgentRunCreateManySourceMessageInput | AgentRunCreateManySourceMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentChatThreadUpsertWithoutMessagesInput = {
+    update: XOR<AgentChatThreadUpdateWithoutMessagesInput, AgentChatThreadUncheckedUpdateWithoutMessagesInput>
+    create: XOR<AgentChatThreadCreateWithoutMessagesInput, AgentChatThreadUncheckedCreateWithoutMessagesInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutMessagesInput, AgentChatThreadUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentRunUpsertWithoutChatMessagesInput = {
+    update: XOR<AgentRunUpdateWithoutChatMessagesInput, AgentRunUncheckedUpdateWithoutChatMessagesInput>
+    create: XOR<AgentRunCreateWithoutChatMessagesInput, AgentRunUncheckedCreateWithoutChatMessagesInput>
+    where?: AgentRunWhereInput
+  }
+
+  export type AgentRunUpdateToOneWithWhereWithoutChatMessagesInput = {
+    where?: AgentRunWhereInput
+    data: XOR<AgentRunUpdateWithoutChatMessagesInput, AgentRunUncheckedUpdateWithoutChatMessagesInput>
+  }
+
+  export type AgentRunUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutChatMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithoutEditedVariantsInput = {
+    update: XOR<AgentChatMessageUpdateWithoutEditedVariantsInput, AgentChatMessageUncheckedUpdateWithoutEditedVariantsInput>
+    create: XOR<AgentChatMessageCreateWithoutEditedVariantsInput, AgentChatMessageUncheckedCreateWithoutEditedVariantsInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutEditedVariantsInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutEditedVariantsInput, AgentChatMessageUncheckedUpdateWithoutEditedVariantsInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutEditedVariantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutEditedVariantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    update: XOR<AgentChatMessageUpdateWithoutEditedFromMessageInput, AgentChatMessageUncheckedUpdateWithoutEditedFromMessageInput>
+    create: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput>
+  }
+
+  export type AgentChatMessageUpdateWithWhereUniqueWithoutEditedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    data: XOR<AgentChatMessageUpdateWithoutEditedFromMessageInput, AgentChatMessageUncheckedUpdateWithoutEditedFromMessageInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithWhereWithoutEditedFromMessageInput = {
+    where: AgentChatMessageScalarWhereInput
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageInput>
+  }
+
+  export type AgentChatMessageUpsertWithoutRegenerationsInput = {
+    update: XOR<AgentChatMessageUpdateWithoutRegenerationsInput, AgentChatMessageUncheckedUpdateWithoutRegenerationsInput>
+    create: XOR<AgentChatMessageCreateWithoutRegenerationsInput, AgentChatMessageUncheckedCreateWithoutRegenerationsInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutRegenerationsInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutRegenerationsInput, AgentChatMessageUncheckedUpdateWithoutRegenerationsInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutRegenerationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutRegenerationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    update: XOR<AgentChatMessageUpdateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedUpdateWithoutRegeneratedFromMessageInput>
+    create: XOR<AgentChatMessageCreateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput>
+  }
+
+  export type AgentChatMessageUpdateWithWhereUniqueWithoutRegeneratedFromMessageInput = {
+    where: AgentChatMessageWhereUniqueInput
+    data: XOR<AgentChatMessageUpdateWithoutRegeneratedFromMessageInput, AgentChatMessageUncheckedUpdateWithoutRegeneratedFromMessageInput>
+  }
+
+  export type AgentChatMessageUpdateManyWithWhereWithoutRegeneratedFromMessageInput = {
+    where: AgentChatMessageScalarWhereInput
+    data: XOR<AgentChatMessageUpdateManyMutationInput, AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageInput>
+  }
+
+  export type AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput = {
+    where: AgentChatThreadWhereUniqueInput
+    update: XOR<AgentChatThreadUpdateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedUpdateWithoutBranchedFromMessageInput>
+    create: XOR<AgentChatThreadCreateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput>
+  }
+
+  export type AgentChatThreadUpdateWithWhereUniqueWithoutBranchedFromMessageInput = {
+    where: AgentChatThreadWhereUniqueInput
+    data: XOR<AgentChatThreadUpdateWithoutBranchedFromMessageInput, AgentChatThreadUncheckedUpdateWithoutBranchedFromMessageInput>
+  }
+
+  export type AgentChatThreadUpdateManyWithWhereWithoutBranchedFromMessageInput = {
+    where: AgentChatThreadScalarWhereInput
+    data: XOR<AgentChatThreadUpdateManyMutationInput, AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageInput>
+  }
+
+  export type AgentRunUpsertWithWhereUniqueWithoutSourceMessageInput = {
+    where: AgentRunWhereUniqueInput
+    update: XOR<AgentRunUpdateWithoutSourceMessageInput, AgentRunUncheckedUpdateWithoutSourceMessageInput>
+    create: XOR<AgentRunCreateWithoutSourceMessageInput, AgentRunUncheckedCreateWithoutSourceMessageInput>
+  }
+
+  export type AgentRunUpdateWithWhereUniqueWithoutSourceMessageInput = {
+    where: AgentRunWhereUniqueInput
+    data: XOR<AgentRunUpdateWithoutSourceMessageInput, AgentRunUncheckedUpdateWithoutSourceMessageInput>
+  }
+
+  export type AgentRunUpdateManyWithWhereWithoutSourceMessageInput = {
+    where: AgentRunScalarWhereInput
+    data: XOR<AgentRunUpdateManyMutationInput, AgentRunUncheckedUpdateManyWithoutSourceMessageInput>
+  }
+
+  export type AgentRunCreateWithoutCreditEntriesInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutCreditEntriesInput = {
+    id?: string
+    organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutCreditEntriesInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutCreditEntriesInput, AgentRunUncheckedCreateWithoutCreditEntriesInput>
+  }
+
+  export type AgentRunUpsertWithoutCreditEntriesInput = {
+    update: XOR<AgentRunUpdateWithoutCreditEntriesInput, AgentRunUncheckedUpdateWithoutCreditEntriesInput>
+    create: XOR<AgentRunCreateWithoutCreditEntriesInput, AgentRunUncheckedCreateWithoutCreditEntriesInput>
+    where?: AgentRunWhereInput
+  }
+
+  export type AgentRunUpdateToOneWithWhereWithoutCreditEntriesInput = {
+    where?: AgentRunWhereInput
+    data: XOR<AgentRunUpdateWithoutCreditEntriesInput, AgentRunUncheckedUpdateWithoutCreditEntriesInput>
+  }
+
+  export type AgentRunUpdateWithoutCreditEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutCreditEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunCreateWithoutTechnicalCostEntriesInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agent: CompanyAgentCreateNestedOneWithoutRunsInput
+    agentVersion: AgentVersionCreateNestedOneWithoutRunsInput
+    thread?: AgentChatThreadCreateNestedOneWithoutRunsInput
+    sourceMessage?: AgentChatMessageCreateNestedOneWithoutSourceRunsInput
+    chatMessages?: AgentChatMessageCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutTechnicalCostEntriesInput = {
+    id?: string
+    organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chatMessages?: AgentChatMessageUncheckedCreateNestedManyWithoutAgentRunInput
+    creditEntries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutTechnicalCostEntriesInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutTechnicalCostEntriesInput, AgentRunUncheckedCreateWithoutTechnicalCostEntriesInput>
+  }
+
+  export type AgentRunUpsertWithoutTechnicalCostEntriesInput = {
+    update: XOR<AgentRunUpdateWithoutTechnicalCostEntriesInput, AgentRunUncheckedUpdateWithoutTechnicalCostEntriesInput>
+    create: XOR<AgentRunCreateWithoutTechnicalCostEntriesInput, AgentRunUncheckedCreateWithoutTechnicalCostEntriesInput>
+    where?: AgentRunWhereInput
+  }
+
+  export type AgentRunUpdateToOneWithWhereWithoutTechnicalCostEntriesInput = {
+    where?: AgentRunWhereInput
+    data: XOR<AgentRunUpdateWithoutTechnicalCostEntriesInput, AgentRunUncheckedUpdateWithoutTechnicalCostEntriesInput>
+  }
+
+  export type AgentRunUpdateWithoutTechnicalCostEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutTechnicalCostEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -58213,6 +64981,7 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatThreads?: AgentChatThreadUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUpdateManyWithoutCompanyAgentNestedInput
     runs?: AgentRunUpdateManyWithoutAgentNestedInput
   }
@@ -58229,6 +64998,7 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatThreads?: AgentChatThreadUncheckedUpdateManyWithoutAgentNestedInput
     versions?: AgentVersionUncheckedUpdateManyWithoutCompanyAgentNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutAgentNestedInput
   }
@@ -58245,6 +65015,18 @@ export namespace Prisma {
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatThreadCreateManyAgentInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AgentVersionCreateManyCompanyAgentInput = {
@@ -58265,14 +65047,66 @@ export namespace Prisma {
   export type AgentRunCreateManyAgentInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentVersionId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AgentChatThreadUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AgentVersionUpdateWithoutCompanyAgentInput = {
@@ -58326,38 +65160,74 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateWithoutAgentInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentVersionId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateManyWithoutAgentInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentVersionId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58366,11 +65236,21 @@ export namespace Prisma {
   export type AgentRunCreateManyAgentVersionInput = {
     id?: string
     organizationId: string
+    threadId?: string | null
+    sourceMessageId?: string | null
     agentId: string
     status?: string
+    queuePosition?: number | null
+    attemptCount?: number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
     errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58380,41 +65260,101 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateWithoutAgentVersionInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
   }
 
   export type AgentRunUncheckedUpdateManyWithoutAgentVersionInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageCreateManyAgentRunInput = {
+    id?: string
+    threadId: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CreditLedgerEntryCreateManyRunInput = {
+    id?: string
+    organizationId: string
+    idempotencyKey?: string | null
+    entryType: string
+    amount: number
+    balanceAfter: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
   }
 
   export type AgentRunStepCreateManyRunInput = {
@@ -58422,6 +65362,7 @@ export namespace Prisma {
     blockKey: string
     blockType: string
     status: string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: string | null
@@ -58430,11 +65371,105 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type TechnicalCostLedgerEntryCreateManyRunInput = {
+    id?: string
+    organizationId?: string | null
+    idempotencyKey?: string | null
+    providerId?: string | null
+    modelId?: string | null
+    amount: number
+    currency?: string
+    unit?: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AgentChatMessageUpdateWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CreditLedgerEntryUncheckedUpdateManyWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    balanceAfter?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AgentRunStepUpdateWithoutRunInput = {
     id?: StringFieldUpdateOperationsInput | string
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58448,6 +65483,7 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58461,12 +65497,528 @@ export namespace Prisma {
     blockKey?: StringFieldUpdateOperationsInput | string
     blockType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
     inputPayload?: JsonNullValueInput | InputJsonValue
     outputPayload?: NullableJsonNullValueInput | InputJsonValue
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatThreadCreateManyParentThreadInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentChatMessageCreateManyThreadInput = {
+    id?: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AgentRunCreateManyThreadInput = {
+    id?: string
+    organizationId: string
+    sourceMessageId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentChatThreadUpdateWithoutParentThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutParentThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutParentThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    sourceMessage?: AgentChatMessageUpdateOneWithoutSourceRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sourceMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageCreateManyEditedFromMessageInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AgentChatMessageCreateManyRegeneratedFromMessageInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AgentChatThreadCreateManyBranchedFromMessageInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentRunCreateManySourceMessageInput = {
+    id?: string
+    organizationId: string
+    threadId?: string | null
+    agentId: string
+    agentVersionId: string
+    status?: string
+    queuePosition?: number | null
+    attemptCount?: number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: string | null
+    leaseExpiresAt?: Date | string | null
+    errorMessage?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastAttemptAt?: Date | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentChatMessageUpdateWithoutEditedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutEditedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatMessageUpdateWithoutRegeneratedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutRegeneratedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentChatThreadUpdateWithoutBranchedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutBranchedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunUpdateWithoutSourceMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agent?: CompanyAgentUpdateOneRequiredWithoutRunsNestedInput
+    agentVersion?: AgentVersionUpdateOneRequiredWithoutRunsNestedInput
+    thread?: AgentChatThreadUpdateOneWithoutRunsNestedInput
+    chatMessages?: AgentChatMessageUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutSourceMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatMessages?: AgentChatMessageUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditEntries?: CreditLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutRunNestedInput
+    technicalCostEntries?: TechnicalCostLedgerEntryUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutSourceMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersionId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    queuePosition?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    processingMetadata?: JsonNullValueInput | InputJsonValue
+    processingLeaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
