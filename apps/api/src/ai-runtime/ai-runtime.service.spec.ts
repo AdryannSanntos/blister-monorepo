@@ -1,8 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
-import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { ProviderExecutionError } from './adapters/ai-provider.adapter';
+import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
@@ -45,6 +45,7 @@ describe('AIRuntimeService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    process.env.OPENROUTER_API_KEY = '';
   });
 
   it('resolves OpenRouter model for text request', async () => {
@@ -56,7 +57,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { supportsTextGeneration: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst.mockResolvedValue({
@@ -84,7 +89,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { supportsImageGeneration: false },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
 
@@ -93,7 +102,11 @@ describe('AIRuntimeService', () => {
 
   it('uses company credential when policy allows it', async () => {
     prisma.aIProviderPolicy.findMany.mockResolvedValue([
-      { providerId: 'provider-1', allowedModelIds: [], metadata: { allowCompanyCredentials: true } },
+      {
+        providerId: 'provider-1',
+        allowedModelIds: [],
+        metadata: { allowCompanyCredentials: true },
+      },
     ]);
     prisma.aIModel.findMany.mockResolvedValue([
       {
@@ -102,7 +115,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { text: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst
@@ -120,7 +137,11 @@ describe('AIRuntimeService', () => {
 
   it('falls back to platform credential when no company credential exists', async () => {
     prisma.aIProviderPolicy.findMany.mockResolvedValue([
-      { providerId: 'provider-1', allowedModelIds: [], metadata: { allowCompanyCredentials: true } },
+      {
+        providerId: 'provider-1',
+        allowedModelIds: [],
+        metadata: { allowCompanyCredentials: true },
+      },
     ]);
     prisma.aIModel.findMany.mockResolvedValue([
       {
@@ -129,7 +150,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { text: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst
@@ -151,7 +176,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { text: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst.mockResolvedValue({ id: 'platform-cred', value: 'platform-key' });
@@ -174,7 +203,11 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { text: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst.mockResolvedValue({ id: 'platform-cred', value: 'platform-key' });
@@ -192,11 +225,46 @@ describe('AIRuntimeService', () => {
         slug: 'openrouter-gpt-4o-mini',
         externalModelId: 'openai/gpt-4o-mini',
         capabilityMetadata: { text: true },
-        provider: { id: 'provider-1', slug: 'openrouter', schemaMetadata: { adapter: 'openrouter' } },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
       },
     ]);
     prisma.aICredential.findFirst.mockResolvedValue(null);
 
     await expect(service.generateText({ prompt: 'hello' })).rejects.toThrow(NotFoundException);
+  });
+
+  it('falls back to OPENROUTER_API_KEY when no credential exists in the database', async () => {
+    process.env.OPENROUTER_API_KEY = 'env-openrouter-key';
+
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'model-1',
+        providerId: 'provider-1',
+        slug: 'openrouter-gpt-4o-mini',
+        externalModelId: 'openai/gpt-4o-mini',
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue(null);
+    openRouterAdapter.generateText.mockResolvedValue({ text: 'hello', usage: {} });
+
+    const result = await service.generateText({ prompt: 'hello' });
+
+    expect(result.credentialId).toBe('env:openrouter');
+    expect(openRouterAdapter.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        credential: expect.objectContaining({ value: 'env-openrouter-key' }),
+      }),
+    );
   });
 });

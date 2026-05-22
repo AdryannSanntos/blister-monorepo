@@ -36,7 +36,7 @@ export function ContextTabs({ orgId, sources, artifact }: Props) {
       </TabsContent>
 
       <TabsContent value="artifact">
-        <ContextArtifactTab artifact={artifact} orgId={orgId} />
+        <ContextArtifactTab artifact={artifact} orgId={orgId} sources={sources} />
       </TabsContent>
     </Tabs>
   );

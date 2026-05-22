@@ -1,1 +1,4 @@
 .trigger
+trigger.config.js
+trigger.config.d.ts
+trigger.config.js.map

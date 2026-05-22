@@ -53,7 +53,7 @@ export class AgentRunsService {
   }
 
   async listRuns(organizationId: string, filters: ListAgentRunsDto, viewerUserId: string) {
-    return this.prisma.agentRun.findMany({
+    const runs = await this.prisma.agentRun.findMany({
       where: {
         organizationId,
         ...(filters.agentId ? { agentId: filters.agentId } : {}),
@@ -63,6 +63,8 @@ export class AgentRunsService {
       include: { agent: true, agentVersion: true, steps: true },
       orderBy: { createdAt: 'desc' },
     });
+
+    return this.attachRunLedgerSummaries(runs);
   }
 
   async getRun(
@@ -84,7 +86,18 @@ export class AgentRunsService {
       throw new NotFoundException('Agent run not found');
     }
 
-    return run;
+    const [creditEntries, technicalCosts] = await Promise.all([
+      this.prisma.creditLedgerEntry.findMany({
+        where: { runId },
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.prisma.technicalCostLedgerEntry.findMany({
+        where: { runId },
+        orderBy: { createdAt: 'asc' },
+      }),
+    ]);
+
+    return { run, creditEntries, technicalCosts };
   }
 
   async listPlatformRuns(filters: {
@@ -177,5 +190,45 @@ export class AgentRunsService {
     });
 
     return { run, costs, creditEntries, auditSummary };
+  }
+
+  private async attachRunLedgerSummaries<TRun extends { id: string }>(runs: TRun[]) {
+    if (runs.length === 0) {
+      return runs.map((run) => ({
+        ...run,
+        creditDelta: 0,
+        technicalCost: 0,
+      }));
+    }
+
+    const runIds = runs.map((run) => run.id);
+    const [creditEntries, technicalCosts] = await Promise.all([
+      this.prisma.creditLedgerEntry.findMany({
+        where: { runId: { in: runIds } },
+        select: { runId: true, amount: true },
+      }),
+      this.prisma.technicalCostLedgerEntry.findMany({
+        where: { runId: { in: runIds } },
+        select: { runId: true, amount: true },
+      }),
+    ]);
+
+    const creditByRunId = new Map<string, number>();
+    for (const entry of creditEntries) {
+      if (!entry.runId) continue;
+      creditByRunId.set(entry.runId, (creditByRunId.get(entry.runId) ?? 0) + entry.amount);
+    }
+
+    const costByRunId = new Map<string, number>();
+    for (const entry of technicalCosts) {
+      if (!entry.runId) continue;
+      costByRunId.set(entry.runId, (costByRunId.get(entry.runId) ?? 0) + entry.amount);
+    }
+
+    return runs.map((run) => ({
+      ...run,
+      creditDelta: creditByRunId.get(run.id) ?? 0,
+      technicalCost: costByRunId.get(run.id) ?? 0,
+    }));
   }
 }

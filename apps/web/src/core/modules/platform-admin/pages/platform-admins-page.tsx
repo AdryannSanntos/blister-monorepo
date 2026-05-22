@@ -3,6 +3,7 @@
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "src/core/shared/components/ui/button";
+import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import {
   type ColumnDef,
   DataTable,
@@ -32,6 +33,8 @@ const columns: ColumnDef<PlatformAdminAssignment>[] = [
 
 export function PlatformAdminsPage() {
   const [open, setOpen] = useState(false);
+  const [assignmentToRemove, setAssignmentToRemove] =
+    useState<PlatformAdminAssignment | null>(null);
   const admins = usePlatformAdmins();
   const removeRole = useRemovePlatformRole();
 
@@ -60,7 +63,7 @@ export function PlatformAdminsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => removeRole.mutate(row.original.id)}
+                  onClick={() => setAssignmentToRemove(row.original)}
                 >
                   <Trash2 className="size-4" />
                 </Button>
@@ -75,6 +78,25 @@ export function PlatformAdminsPage() {
           }}
         />
       </PageLayout>
+      <ConfirmationDialog
+        open={Boolean(assignmentToRemove)}
+        onOpenChange={(open) => !open && setAssignmentToRemove(null)}
+        title="Remover role global"
+        description={
+          <>
+            O acesso global de <strong>{assignmentToRemove?.userId}</strong> como{" "}
+            <strong>{assignmentToRemove?.role}</strong> será removido.
+          </>
+        }
+        confirmLabel={removeRole.isPending ? "Removendo..." : "Remover role"}
+        pending={removeRole.isPending}
+        destructive
+        onConfirm={async () => {
+          if (!assignmentToRemove) return;
+          await removeRole.mutateAsync(assignmentToRemove.id);
+          setAssignmentToRemove(null);
+        }}
+      />
       <AdminRoleDialog open={open} onOpenChange={setOpen} />
     </>
   );

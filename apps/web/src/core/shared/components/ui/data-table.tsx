@@ -394,7 +394,7 @@ function DataTable<TData, TValue>({
                       {header.isPlaceholder ? null : canSort ? (
                         <button
                           type="button"
-                          className="-mx-1 inline-flex items-center gap-1 rounded-[var(--r-sm)] px-1 py-0.5 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
+                          className="-mx-1 inline-flex items-center gap-1 rounded-[var(--r-sm)] px-1 py-0.5 text-left uppercase transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(header.column.columnDef.header, header.getContext())}

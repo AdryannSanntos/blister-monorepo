@@ -22,10 +22,12 @@ function isPdf(mimeType: string | null) {
 }
 
 function isMarkdown(mimeType: string | null, fileName: string | null) {
+  const normalizedFileName = fileName?.toLowerCase();
+
   return (
     mimeType === "text/markdown" ||
-    Boolean(fileName?.endsWith(".md")) ||
-    Boolean(fileName?.endsWith(".mdx"))
+    Boolean(normalizedFileName?.endsWith(".md")) ||
+    Boolean(normalizedFileName?.endsWith(".mdx"))
   );
 }
 

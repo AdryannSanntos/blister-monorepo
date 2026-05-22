@@ -11,15 +11,25 @@ import {
   CardHeader,
   CardTitle,
 } from 'src/core/shared/components/ui/card';
+import { DataTable, type ColumnDef } from 'src/core/shared/components/ui/data-table';
 import { cn } from 'src/core/shared/utils';
-import type { ContextArtifact } from '../hooks/use-context-sources';
+import type { ContextArtifact, ContextSource } from '../hooks/use-context-sources';
 import { useSyncContextArtifact } from '../hooks/use-context-sources';
 
-type Props = { artifact: ContextArtifact; orgId: string | null };
+type Props = { artifact: ContextArtifact; orgId: string | null; sources: ContextSource[] };
 
-export function ContextArtifactTab({ artifact, orgId }: Props) {
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+export function ContextArtifactTab({ artifact, orgId, sources }: Props) {
   const sync = useSyncContextArtifact(orgId);
   const status = artifact?.syncStatus ?? 'idle';
+  const approvedSources = sources.filter((s) => s.pipelineStatus === 'approved');
 
   const statusConfig = {
     idle: {
@@ -49,6 +59,55 @@ export function ContextArtifactTab({ artifact, orgId }: Props) {
   }[status];
 
   const Icon = statusConfig.icon;
+
+  const columns: ColumnDef<ContextSource>[] = [
+    {
+      id: 'title',
+      header: 'Fonte',
+      enableSorting: true,
+      sortingFn: (a, b) => a.original.title.localeCompare(b.original.title),
+      meta: { label: 'Fonte' },
+      cell: ({ row }) => (
+        <div className="min-w-0">
+          <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
+            {row.original.title}
+          </p>
+          <p className="truncate text-[12px] text-[var(--fg-tertiary)]">
+            {row.original.sourceKind === 'url' ? row.original.sourceUrl ?? 'URL' : row.original.fileName ?? 'Manual'}
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 'sourceKind',
+      header: 'Tipo',
+      enableSorting: true,
+      sortingFn: (a, b) => a.original.sourceKind.localeCompare(b.original.sourceKind),
+      meta: { label: 'Tipo' },
+      cell: ({ row }) => (
+        <span className="text-[12px] text-[var(--fg-secondary)]">
+          {row.original.sourceKind === 'file'
+            ? 'Arquivo'
+            : row.original.sourceKind === 'url'
+              ? 'URL'
+              : 'Manual'}
+        </span>
+      ),
+    },
+    {
+      id: 'updatedAt',
+      header: 'Atualizado',
+      enableSorting: true,
+      sortingFn: (a, b) =>
+        new Date(a.original.updatedAt).getTime() - new Date(b.original.updatedAt).getTime(),
+      meta: { label: 'Atualizado' },
+      cell: ({ row }) => (
+        <span className="font-mono text-[12px] tabular-nums text-[var(--fg-tertiary)]">
+          {formatDate(row.original.updatedAt)}
+        </span>
+      ),
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -141,6 +200,33 @@ export function ContextArtifactTab({ artifact, orgId }: Props) {
               usado pelos agentes.
             </p>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <CardTitle className="text-[14px]">Histórico do artefato</CardTitle>
+              <CardDescription className="mt-1 text-[12px]">
+                Fontes aprovadas que compõem o contexto atual.
+              </CardDescription>
+            </div>
+            <Badge variant="secondary">{approvedSources.length}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <DataTable
+            columns={columns}
+            data={approvedSources}
+            getRowId={(source) => source.id}
+            containerClassName="border-[var(--line-subtle)] shadow-[0_0_0_1px_var(--line-subtle)]"
+            emptyState={{
+              icon: FileText,
+              title: 'Nenhuma fonte aprovada ainda',
+              description: 'Aprove fontes na aba Fontes para alimentar o context.md.',
+            }}
+          />
         </CardContent>
       </Card>
     </div>

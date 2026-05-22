@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { cn } from 'src/core/shared/utils';
 
 // ─── token types ─────────────────────────────────────────────────────────────
@@ -162,7 +163,7 @@ function parseBlocks(markdown: string): Token[] {
         bqLines.push(lines[j].slice(2));
         j++;
       }
-      tokens.push({ t: 'blockquote', children: parseInline(bqLines.join(' ')) });
+      tokens.push({ t: 'blockquote', children: parseInline(bqLines.join('\n')) });
       continue;
     }
 
@@ -179,7 +180,7 @@ function parseBlocks(markdown: string): Token[] {
       pLines.push(lines[j]);
       j++;
     }
-    tokens.push({ t: 'p', children: parseInline(pLines.join(' ')) });
+    tokens.push({ t: 'p', children: parseInline(pLines.join('\n')) });
   }
 
   return tokens;
@@ -203,7 +204,16 @@ function renderInline(tokens: InlineToken[], key: string) {
         // eslint-disable-next-line @next/next/no-img-element
         return <img key={`${key}-${i}`} src={tok.src} alt={tok.alt} />;
       default:
-        return <span key={`${key}-${i}`}>{tok.v}</span>;
+        return (
+          <span key={`${key}-${i}`}>
+            {tok.v.split('\n').map((part, partIndex) => (
+              <React.Fragment key={`${key}-${i}-${partIndex}`}>
+                {partIndex > 0 ? <br /> : null}
+                {part}
+              </React.Fragment>
+            ))}
+          </span>
+        );
     }
   });
 }

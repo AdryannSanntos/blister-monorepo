@@ -32,6 +32,15 @@ packages/configs  presets TypeScript
 - `better-auth` trata apenas auth/sessão.
 - Roles de sistema `owner`, `admin`, `member` são imutáveis.
 
+## Regras Especificas de Agentes V1
+
+- Workflow e versionamento sempre por agente, nunca por usuario.
+- Chat geral sempre passa por agente de contexto interno.
+- Edicao de mensagem no chat cria branch novo de conversa.
+- Conversa ativa bloqueia input enquanto execucao ativa estiver em andamento.
+- Fila de execucao por empresa: maximo 3 simultaneas, overflow FIFO.
+- Retrieval de contexto deve ser permission-aware e sem segredos/credenciais.
+
 ## Produto e Linguagem
 
 - Usar **Workana AI** como marca.

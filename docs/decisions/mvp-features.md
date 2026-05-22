@@ -1,5 +1,18 @@
 # MVP — Workana AI
 
+## Update 2026-05-22 — Agents V1 Contract
+
+This document has historical sections. For Agents V1, when there is conflict, follow `docs/decisions/2026-05-22-agents-v1-contract.md`.
+
+Mandatory overrides for Agents V1:
+
+- Company agent catalog is custom-only in V1.
+- Company chat always runs through internal context agent.
+- Delegated execution returns response in company chat, with detailed execution in delegated agent history.
+- Full-focus layout is mandatory for company chat and workflow editing routes.
+- Execution concurrency: max 3 running per company, FIFO queue for overflow, 1 automatic retry in same run.
+- Retrieval is permission-aware and must exclude credentials/secrets.
+
 ## Visão do produto
 
 Workana AI é uma plataforma B2B que ajuda empresas a coordenar trabalho com freelancers, fornecedores e times remotos usando IA. O núcleo operacional são os **agentes**: toda funcionalidade de geração de conteúdo, imagem, copy ou adaptação é executada por um agente — seja um agente default do sistema ou um agente criado pela própria empresa.

@@ -20,6 +20,7 @@ import { z } from "zod";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
+import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import {
   Form,
   FormControl,
@@ -328,23 +329,7 @@ export function ContextSourceDetailSheet({ orgId, source, onClose }: Props) {
         {/* ── footer ── */}
         <div className="border-t border-[var(--line-subtle)] px-6 py-4">
           <PermissionGate permission="context.delete">
-            {confirmDelete ? (
-              <div className="flex items-center gap-2">
-                <p className="flex-1 text-[13px] text-[var(--fg-tertiary)]">Confirmar exclusão?</p>
-                <Button size="sm" variant="outline" onClick={() => setConfirmDelete(false)}>
-                  Cancelar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={del.isPending}
-                >
-                  {del.isPending && <Loader2 className="size-3.5 animate-spin" />}
-                  Excluir
-                </Button>
-              </div>
-            ) : (
+            {!confirmDelete ? (
               <Button
                 size="sm"
                 variant="ghost"
@@ -354,11 +339,22 @@ export function ContextSourceDetailSheet({ orgId, source, onClose }: Props) {
                 <Trash2 className="size-3.5" />
                 Remover fonte
               </Button>
-            )}
+            ) : null}
           </PermissionGate>
         </div>
       </SheetContent>
     </Sheet>
+
+    <ConfirmationDialog
+      open={confirmDelete}
+      onOpenChange={setConfirmDelete}
+      title="Remover fonte"
+      description="Esta fonte será removida do contexto da empresa e sairá do artefato consolidado."
+      confirmLabel="Remover fonte"
+      pending={del.isPending}
+      destructive
+      onConfirm={handleDelete}
+    />
 
     {previewDialogOpen && (
       <ContextSourcePreviewDialog

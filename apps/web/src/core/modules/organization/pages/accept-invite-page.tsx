@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { useAcceptInvitation } from "src/core/modules/organization/hooks/use-invitations";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -22,7 +21,6 @@ export function AcceptInvitePage() {
   const invitationId = searchParams.get("invitationId") ?? "";
   const orgId = searchParams.get("orgId") ?? "";
   const { data: session } = authClient.useSession();
-  const { setActiveOrgId } = useActiveOrganization();
   const acceptMutation = useAcceptInvitation();
   const [accepted, setAccepted] = useState(false);
 
@@ -95,7 +93,6 @@ export function AcceptInvitePage() {
         userId: session.user.id,
       });
       setAccepted(true);
-      setActiveOrgId(orgId);
       toast.success("Convite aceito! Redirecionando...");
       setTimeout(() => router.push("/app"), 1500);
     } catch {

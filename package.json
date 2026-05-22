@@ -11,6 +11,7 @@
     "dev:all": "turbo dev",
     "dev:web": "pnpm --dir apps/web dev",
     "dev:api": "pnpm --dir apps/api dev",
+    "dev:video": "pnpm --dir apps/video dev",
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",

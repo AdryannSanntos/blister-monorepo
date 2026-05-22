@@ -46,6 +46,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "src/core/shared/components/ui/alert-dialog";
+import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import {
   Avatar,
   AvatarFallback,
@@ -589,6 +590,8 @@ function InvitesTable({
   onInviteMember,
 }: InvitesTableProps) {
   const cancelInvitation = useCancelInvitation(orgId);
+  const [invitationToCancel, setInvitationToCancel] =
+    useState<Invitation | null>(null);
 
   function getRoleName(roleId: string | null): string {
     if (!roleId) return "Padrão";
@@ -633,7 +636,7 @@ function InvitesTable({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => cancelInvitation.mutate(inv.id)}
+                        onClick={() => setInvitationToCancel(inv)}
                         disabled={cancelInvitation.isPending}
                       >
                         Cancelar
@@ -661,6 +664,26 @@ function InvitesTable({
           )}
         </TableBody>
       </Table>
+
+      <ConfirmationDialog
+        open={Boolean(invitationToCancel)}
+        onOpenChange={(open) => !open && setInvitationToCancel(null)}
+        title="Cancelar convite"
+        description={
+          <>
+            O convite para <strong>{invitationToCancel?.email}</strong> deixará
+            de ser válido imediatamente.
+          </>
+        }
+        confirmLabel={cancelInvitation.isPending ? "Cancelando..." : "Cancelar convite"}
+        pending={cancelInvitation.isPending}
+        destructive
+        onConfirm={async () => {
+          if (!invitationToCancel) return;
+          await cancelInvitation.mutateAsync(invitationToCancel.id);
+          setInvitationToCancel(null);
+        }}
+      />
     </div>
   );
 }

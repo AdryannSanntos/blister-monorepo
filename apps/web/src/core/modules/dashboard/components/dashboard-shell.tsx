@@ -7,6 +7,7 @@ import {
   Brain,
   Building2,
   ChevronsUpDown,
+  ClipboardList,
   Coins,
   FileCode2,
   History,
@@ -16,7 +17,7 @@ import {
   Library,
   LogOut,
   Mail,
-  MessageSquare,
+  MessageCircle,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
@@ -79,6 +80,7 @@ function getHeaderTitle(pathname: string) {
   if (pathname.startsWith("/dashboard/workspace/assets")) return "Contexto";
   if (pathname.startsWith("/dashboard/workspace/design-system"))
     return "Design System";
+  if (pathname.startsWith("/dashboard/workspace/agents")) return "Agentes";
   if (pathname.startsWith("/dashboard/workspace/team")) return "Equipe";
   if (pathname.startsWith("/dashboard/workspace/permissions"))
     return "Permissões";
@@ -153,10 +155,10 @@ export function DashboardShell({ children }: DashboardShellProps) {
           match: (p) => p === "/dashboard",
         },
         {
-          label: "Assistente",
-          icon: MessageSquare,
+          label: "Chat",
+          icon: MessageCircle,
           soon: true,
-          onSelect: () => showComingSoon("Assistente"),
+          onSelect: () => showComingSoon("Chat"),
         },
         {
           label: "Notificações",
@@ -184,7 +186,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
           href: "/dashboard/workspace/context",
           beta: true,
           permission: "context.read" as const,
-          match: (p) => p.startsWith("/dashboard/workspace/context") || p.startsWith("/dashboard/workspace/assets"),
+          match: (p) =>
+            p.startsWith("/dashboard/workspace/context") ||
+            p.startsWith("/dashboard/workspace/assets"),
         },
         {
           label: "Design System",
@@ -221,9 +225,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
         {
           label: "Créditos",
           icon: Coins,
-          soon: true,
-          permission: "company.read" as const,
-          onSelect: () => showComingSoon("Créditos"),
+          href: "/dashboard/workspace/agents/credits",
+          permission: "credit.read" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/credits"),
         },
       ],
     },
@@ -242,16 +246,16 @@ export function DashboardShell({ children }: DashboardShellProps) {
         {
           label: "Meus agentes",
           icon: Bot,
-          soon: true,
-          permission: "skill.read" as const,
-          onSelect: () => showComingSoon("Meus agentes"),
+          href: "/dashboard/workspace/agents",
+          permission: "agent.read" as const,
+          match: (p) => p === "/dashboard/workspace/agents",
         },
         {
           label: "Histórico",
           icon: History,
-          soon: true,
-          permission: "output.read" as const,
-          onSelect: () => showComingSoon("Histórico"),
+          href: "/dashboard/workspace/agents/history",
+          permission: "agent.run.read" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/history"),
         },
       ],
     },
@@ -260,46 +264,46 @@ export function DashboardShell({ children }: DashboardShellProps) {
       collapsible: true,
       items: [
         {
+          label: "Briefing",
+          icon: ClipboardList,
+          href: "/dashboard/workspace/agents/analysis",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/analysis"),
+        },
+        {
           label: "Gerar copy",
           icon: PenLine,
-          soon: true,
-          permission: "skill.execute" as const,
-          onSelect: () => showComingSoon("Gerar copy"),
+          href: "/dashboard/workspace/agents/copy",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/copy"),
         },
         {
           label: "Gerar imagem",
           icon: Image,
-          soon: true,
-          permission: "skill.execute" as const,
-          onSelect: () => showComingSoon("Gerar imagem"),
+          href: "/dashboard/workspace/agents/image",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/image"),
         },
         {
           label: "Criar post",
           icon: Share2,
-          soon: true,
-          permission: "skill.execute" as const,
-          onSelect: () => showComingSoon("Criar post"),
+          href: "/dashboard/workspace/agents/post",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/post"),
         },
         {
-          label: "Gerar landing page",
-          icon: FileCode2,
-          soon: true,
-          permission: "skill.execute" as const,
-          onSelect: () => showComingSoon("Gerar landing page"),
+          label: "Gerar e-mail",
+          icon: Mail,
+          href: "/dashboard/workspace/agents/email",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/agents/email"),
         },
         {
           label: "Adaptar conteúdo",
           icon: ArrowLeftRight,
           soon: true,
-          permission: "skill.execute" as const,
+          permission: "agent.execute" as const,
           onSelect: () => showComingSoon("Adaptar conteúdo"),
-        },
-        {
-          label: "Criar email",
-          icon: Mail,
-          soon: true,
-          permission: "skill.execute" as const,
-          onSelect: () => showComingSoon("Criar email"),
         },
       ],
     },
@@ -320,7 +324,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
         open={sidebarOpen}
         onOpenChange={(next) => {
           setSidebarOpen(next);
-          try { localStorage.setItem("workana-ai:sidebar-open", JSON.stringify(next)); } catch {}
+          try {
+            localStorage.setItem(
+              "workana-ai:sidebar-open",
+              JSON.stringify(next),
+            );
+          } catch {}
         }}
         fullHeight
         className="shrink-0 p-3"
@@ -392,7 +401,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => router.push("/workspace/create")}
+                onClick={() => router.push("/workspaces/create")}
               >
                 <Plus className="size-3.5 text-[var(--fg-tertiary)]" />
                 <span className="text-[13px]">Criar novo workspace</span>

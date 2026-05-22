@@ -100,7 +100,7 @@ export function OrgSelectorPage() {
             description="O workspace organiza equipe, permissões, assets e contexto operacional da empresa. Crie o primeiro para começar."
             action={
               <Button asChild>
-                <Link href="/workspace/create">
+                <Link href="/workspaces/create">
                   <Plus className="size-4" />
                   Criar workspace
                 </Link>
@@ -116,7 +116,7 @@ export function OrgSelectorPage() {
             <Separator />
 
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/workspace/create">
+              <Link href="/workspaces/create">
                 <Plus className="size-4" />
                 Criar novo workspace
               </Link>

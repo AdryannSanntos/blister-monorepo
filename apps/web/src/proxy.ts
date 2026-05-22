@@ -1,11 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { resolvePostLoginRouting } from "src/core/modules/organization/utils/post-login-routing";
 
 const AUTH_PREFIX = "/auth";
 const DASHBOARD_PREFIX = "/dashboard";
 const ONBOARDING_PREFIX = "/onboarding";
-const WORKSPACE_PREFIX = "/workspace";
-const WORKSPACE_CREATE_PATH = "/workspace/create";
-const WORKSPACE_SELECT_PATH = "/workspace/select";
+const WORKSPACES_PREFIX = "/workspaces";
+const WORKSPACE_CREATE_PATH = "/workspaces/create";
+const WORKSPACES_PATH = "/workspaces";
 const INVITE_ACCEPT_PATH = "/invite/accept";
 const APP_PREFIX = "/app";
 const AUTH_API_PREFIX = "/api/auth";
@@ -105,6 +106,15 @@ async function resolveAuthenticatedState(
     };
   }
 
+  if (organizations.length > 1) {
+    return {
+      destination: WORKSPACES_PATH,
+      activeOrgId: null,
+      organizations,
+      onboardingPublished: null,
+    };
+  }
+
   const validActiveOrgId = organizations.some((org) => org.id === activeOrgId)
     ? activeOrgId
     : null;
@@ -114,7 +124,7 @@ async function resolveAuthenticatedState(
 
   if (!resolvedActiveOrgId) {
     return {
-      destination: WORKSPACE_SELECT_PATH,
+      destination: WORKSPACES_PATH,
       activeOrgId: null,
       organizations,
       onboardingPublished: null,
@@ -142,7 +152,7 @@ function shouldAllowRoute(
 ) {
   if (
     pathname.startsWith(WORKSPACE_CREATE_PATH) ||
-    pathname.startsWith(WORKSPACE_SELECT_PATH)
+    pathname.startsWith(WORKSPACES_PATH)
   ) {
     return true;
   }
@@ -174,7 +184,8 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute = pathname.startsWith(AUTH_PREFIX);
   const isDashboardRoute = pathname.startsWith(DASHBOARD_PREFIX);
   const isOnboardingRoute = pathname.startsWith(ONBOARDING_PREFIX);
-  const isWorkspaceRoute = pathname.startsWith(WORKSPACE_PREFIX);
+  const isWorkspacesRoute = pathname.startsWith(WORKSPACES_PREFIX);
+  const isWorkspaceCreateRoute = pathname.startsWith(WORKSPACE_CREATE_PATH);
   const isInviteAcceptRoute = pathname.startsWith(INVITE_ACCEPT_PATH);
   const isAppRoute = pathname.startsWith(APP_PREFIX);
   const activeOrgId = request.cookies.get(ACTIVE_ORG_COOKIE)?.value ?? null;
@@ -187,7 +198,8 @@ export async function proxy(request: NextRequest) {
     if (
       isDashboardRoute ||
       isOnboardingRoute ||
-      isWorkspaceRoute ||
+      isWorkspacesRoute ||
+      isWorkspaceCreateRoute ||
       isAppRoute
     ) {
       return redirect(request, buildLoginRedirectPath(request));
@@ -205,13 +217,14 @@ export async function proxy(request: NextRequest) {
   }
 
   const state = await resolveAuthenticatedState(userId, activeOrgId);
+  const entryState = resolvePostLoginRouting(state.organizations, activeOrgId);
   const responseDestination =
-    isAuthRoute || isAppRoute ? state.destination : pathname;
+    isAuthRoute || isAppRoute ? entryState.destination : pathname;
 
   if (isAuthRoute) {
     return withActiveOrgCookie(
-      redirect(request, state.destination),
-      state.activeOrgId,
+      redirect(request, entryState.destination),
+      entryState.activeOrgId,
     );
   }
 
@@ -219,7 +232,13 @@ export async function proxy(request: NextRequest) {
     return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
   }
 
-  if (isDashboardRoute || isOnboardingRoute || isWorkspaceRoute || isAppRoute) {
+  if (
+    isDashboardRoute ||
+    isOnboardingRoute ||
+    isWorkspacesRoute ||
+    isWorkspaceCreateRoute ||
+    isAppRoute
+  ) {
     if (
       !shouldAllowRoute(
         pathname,
@@ -228,13 +247,13 @@ export async function proxy(request: NextRequest) {
       )
     ) {
       return withActiveOrgCookie(
-        redirect(request, state.destination),
-        state.activeOrgId,
+        redirect(request, responseDestination),
+        isAuthRoute || isAppRoute ? entryState.activeOrgId : state.activeOrgId,
       );
     }
 
-    if (isWorkspaceRoute) {
-      // Workspace routes intentionally run outside a company context.
+    if (isWorkspacesRoute || isWorkspaceCreateRoute) {
+      // Workspace selection and company creation run outside a company context.
       return withActiveOrgCookie(NextResponse.next(), null);
     }
 

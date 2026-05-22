@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CreditsModule } from '../credits/credits.module';
+import { PlatformModule } from '../platform/platform.module';
 import { AgentExecutionService } from './agent-execution.service';
 import { AgentRunsController } from './agent-runs.controller';
 import { PlatformAgentRunsController } from './agent-runs.controller';
@@ -9,7 +10,7 @@ import { AgentsController } from './agents.controller';
 import { AgentsService } from './agents.service';
 
 @Module({
-  imports: [AIRuntimeModule, CreditsModule],
+  imports: [AIRuntimeModule, CreditsModule, PlatformModule],
   controllers: [AgentsController, AgentRunsController, PlatformAgentRunsController],
   providers: [AgentsService, AgentRunsService, AgentExecutionService],
   exports: [AgentsService, AgentRunsService, AgentExecutionService],

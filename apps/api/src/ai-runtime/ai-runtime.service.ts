@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import type { AIModel, AIProvider, AIProviderPolicy } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import {
   type AIRuntimeCapability,
   type AIRuntimeEmbeddingResult,
@@ -12,6 +11,7 @@ import {
   ProviderExecutionError,
   ProviderNotConfiguredError,
 } from './adapters/ai-provider.adapter';
+import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
@@ -116,9 +116,19 @@ export class AIRuntimeService {
       : [];
 
     const candidateModel = await this.selectModel(request, capability, providerPolicies);
-    const policy = providerPolicies.find((candidate) => candidate.providerId === candidateModel.providerId) ?? null;
-    const credential = await this.resolveCredential(request.organizationId, candidateModel.providerId, policy);
-    const adapter = this.resolveAdapter(candidateModel.provider.slug, candidateModel.provider.schemaMetadata);
+    const policy =
+      providerPolicies.find((candidate) => candidate.providerId === candidateModel.providerId) ??
+      null;
+    const credential = await this.resolveCredential(
+      request.organizationId,
+      candidateModel.providerId,
+      candidateModel.provider.slug,
+      policy,
+    );
+    const adapter = this.resolveAdapter(
+      candidateModel.provider.slug,
+      candidateModel.provider.schemaMetadata,
+    );
 
     if (!adapter.supports(capability)) {
       throw new BadRequestException(
@@ -174,6 +184,7 @@ export class AIRuntimeService {
   private async resolveCredential(
     organizationId: string | undefined,
     providerId: string,
+    providerSlug: string,
     policy: AIProviderPolicy | null,
   ): Promise<AIRuntimeResolvedCredential> {
     const allowCompanyCredentials =
@@ -199,10 +210,32 @@ export class AIRuntimeService {
     });
 
     if (!platformCredential) {
+      const envCredential = this.resolveEnvCredential(providerSlug);
+      if (envCredential) {
+        return envCredential;
+      }
+
       throw new NotFoundException('No credential available for the selected provider');
     }
 
     return { id: platformCredential.id, value: platformCredential.value, scope: 'platform' };
+  }
+
+  private resolveEnvCredential(providerSlug: string): AIRuntimeResolvedCredential | null {
+    if (providerSlug !== 'openrouter') {
+      return null;
+    }
+
+    const value = process.env.OPENROUTER_API_KEY?.trim();
+    if (!value) {
+      return null;
+    }
+
+    return {
+      id: 'env:openrouter',
+      value,
+      scope: 'platform',
+    };
   }
 
   private resolveAdapter(providerSlug: string, schemaMetadata: unknown) {
@@ -229,9 +262,10 @@ export class AIRuntimeService {
   }
 
   private modelSupportsCapability(metadata: unknown, capability: AIRuntimeCapability) {
-    const flags = metadata && typeof metadata === 'object' && !Array.isArray(metadata)
-      ? (metadata as Record<string, unknown>)
-      : {};
+    const flags =
+      metadata && typeof metadata === 'object' && !Array.isArray(metadata)
+        ? (metadata as Record<string, unknown>)
+        : {};
 
     const capabilityKeys: Record<AIRuntimeCapability, string[]> = {
       text_generation: ['supportsTextGeneration', 'text'],
@@ -243,7 +277,9 @@ export class AIRuntimeService {
     return capabilityKeys[capability].some((key) => flags[key] === true);
   }
 
-  private attachExecutionMetadata<T extends AIRuntimeTextResult | AIRuntimeImageResult | AIRuntimeEmbeddingResult>(
+  private attachExecutionMetadata<
+    T extends AIRuntimeTextResult | AIRuntimeImageResult | AIRuntimeEmbeddingResult,
+  >(
     result: T,
     resolved: {
       credential: AIRuntimeResolvedCredential;

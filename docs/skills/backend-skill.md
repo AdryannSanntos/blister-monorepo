@@ -26,6 +26,15 @@ apps/api/src/<dominio>/
 - `better-auth` não gerencia organização, roles, permissões, créditos ou brain.
 - A API não expõe metadados internos da IA sem decisão documentada.
 
+## Regras de Agentes V1
+
+- Classificacao de mensagem decide conversa vs execucao; pedido de artefato final deve forcar execucao.
+- Execucoes por empresa limitadas a 3 simultaneas, com fila FIFO para excedente.
+- Retry automatico maximo de 1 tentativa e timeline de tentativas no mesmo run.
+- Retrieval de contexto em camadas: estruturado -> vetorial (pgvector) -> rerank.
+- Retrieval deve respeitar permissao do solicitante e bloquear segredos/credenciais.
+- Delegacao do chat geral para agente especializado deve manter resposta no chat geral e rastrear run delegado.
+
 ## Guards
 
 ```

@@ -44,7 +44,7 @@ export function WorkspacesPage() {
       description="Selecione uma empresa para acessar o workspace ou crie uma nova."
       actions={
         <Button variant="outline" size="sm" asChild>
-          <Link href="/workspace/create">
+          <Link href="/workspaces/create">
             <Plus className="size-3.5" />
             Nova empresa
           </Link>
@@ -96,7 +96,7 @@ export function WorkspacesPage() {
             </p>
           </div>
           <Button variant="outline" size="sm" asChild>
-            <Link href="/workspace/create">
+            <Link href="/workspaces/create">
               <Plus className="size-3.5" />
               Criar empresa
             </Link>

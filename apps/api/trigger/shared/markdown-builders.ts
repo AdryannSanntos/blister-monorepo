@@ -39,9 +39,15 @@ export async function buildContextMarkdownFromSources(prisma: PrismaClient, orga
 
   if (sources.length === 0) return base;
 
-  const files  = sources.filter((s) => s.sourceKind === 'file');
-  const urls   = sources.filter((s) => s.sourceKind === 'url');
-  const manual = sources.filter((s) => s.sourceKind === 'manual');
+  const files = sources.filter(
+    (s) => s.sourceKind === 'file' && Boolean(s.fileName || s.publicUrl || s.objectKey || s.title),
+  );
+  const urls = sources.filter(
+    (s) => s.sourceKind === 'url' && Boolean(s.sourceUrl || s.normalizedContent || s.extractedContent || s.description),
+  );
+  const manual = sources.filter(
+    (s) => s.sourceKind === 'manual' && Boolean(s.normalizedContent ?? s.extractedContent ?? s.description),
+  );
 
   const lines: string[] = [];
 
@@ -52,7 +58,7 @@ export async function buildContextMarkdownFromSources(prisma: PrismaClient, orga
         ? `[${s.fileName ?? s.title}](${s.publicUrl})`
         : (s.objectKey ?? s.fileName ?? s.title);
       lines.push(`### ${s.title}${s.category ? ` (${s.category})` : ''}`, '');
-      lines.push(`- File: ${ref}`);
+      if (ref) lines.push(`- File: ${ref}`);
       if (s.description) lines.push(`- Description: ${s.description}`);
       const content = s.normalizedContent ?? s.extractedContent;
       if (content) { lines.push('', content); }

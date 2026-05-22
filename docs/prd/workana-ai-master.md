@@ -1,5 +1,18 @@
 # Workana AI — Documento Mestre do Projeto
 
+## Update 2026-05-22 — Contrato de Agentes V1
+
+Quando houver conflito nas secoes historicas deste PRD, o escopo oficial de Agentes V1 segue `docs/decisions/2026-05-22-agents-v1-contract.md`.
+
+Resumo do contrato travado:
+
+- Catalogo de agentes da empresa: custom-only no V1.
+- Chat geral: sempre via agente de contexto interno.
+- Delegacao: resposta continua no chat geral; detalhamento da execucao fica no agente delegado.
+- UX: telas full-focus para chat geral, workspace do agente e edicao de workflow.
+- Governanca de execucao: max 3 simultaneas por empresa, fila FIFO, 1 retry automatico na mesma execucao.
+- Contexto da IA: retrieval em camadas com permissao e bloqueio de segredos.
+
 ## Resumo executivo
 
 Workana AI é uma camada de inteligência para empresas que contratam, coordenam e escalam trabalho com freelancers, fornecedores e times remotos. O produto centraliza contexto, briefings, demandas, agentes de IA, créditos, equipe, permissões e integrações dentro de um workspace por empresa.

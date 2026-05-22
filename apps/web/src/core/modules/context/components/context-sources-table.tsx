@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { PermissionGate } from 'src/core/shared/components/permission-gate';
 import { Badge } from 'src/core/shared/components/ui/badge';
 import { Button } from 'src/core/shared/components/ui/button';
+import { ConfirmationDialog } from 'src/core/shared/components/ui/confirmation-dialog';
 import { DataTable, type DataTableFilter } from 'src/core/shared/components/ui/data-table';
 import {
   DropdownMenu,
@@ -84,6 +85,7 @@ type Props = { sources: ContextSource[]; orgId: string | null };
 export function ContextSourcesTable({ sources, orgId }: Props) {
   const [dialogKind, setDialogKind] = useState<ContextSourceKind | null>(null);
   const [detailSource, setDetailSource] = useState<ContextSource | null>(null);
+  const [sourceToDelete, setSourceToDelete] = useState<ContextSource | null>(null);
   const deleteSource = useDeleteContextSource(orgId);
   const reviewSource = useReviewContextSource(orgId);
   const [sourcesPage, setSourcesPage] = useQueryState('sourcesPage', parseAsInteger.withDefault(0));
@@ -224,7 +226,7 @@ export function ContextSourcesTable({ sources, orgId }: Props) {
               <PermissionGate permission="context.delete">
                 <DropdownMenuItem
                   className="text-[var(--danger)]"
-                  onClick={() => deleteSource.mutate(row.original.id)}
+                  onClick={() => setSourceToDelete(row.original)}
                 >
                   <Trash2 className="size-4" />
                   Remover
@@ -394,6 +396,26 @@ export function ContextSourcesTable({ sources, orgId }: Props) {
           onClose={() => setDetailSource(null)}
         />
       )}
+
+      <ConfirmationDialog
+        open={Boolean(sourceToDelete)}
+        onOpenChange={(open) => !open && setSourceToDelete(null)}
+        title="Remover fonte"
+        description={
+          <>
+            A fonte <strong>{sourceToDelete?.title}</strong> será removida do
+            contexto e não participará mais do artefato consolidado.
+          </>
+        }
+        confirmLabel="Remover fonte"
+        pending={deleteSource.isPending}
+        destructive
+        onConfirm={async () => {
+          if (!sourceToDelete) return;
+          await deleteSource.mutateAsync(sourceToDelete.id);
+          setSourceToDelete(null);
+        }}
+      />
     </>
   );
 }

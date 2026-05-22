@@ -23,7 +23,8 @@ export const contextSourceIngestTask = task({
         data: { pipelineStatus: 'ingesting', pipelineError: null },
       });
 
-      let extractedContent: string | null = null;
+    let extractedContent: string | null = null;
+    let pipelineError: string | null = null;
 
       if (source.sourceKind === 'url' && source.sourceUrl) {
         await prisma.contextSource.update({ where: { id: sourceId }, data: { pipelineStatus: 'extracting' } });
@@ -39,7 +40,8 @@ export const contextSourceIngestTask = task({
             .trim()
             .slice(0, 12_000);
         } catch {
-          extractedContent = `URL source: ${source.sourceUrl}`;
+          extractedContent = null;
+          pipelineError = 'Falha ao extrair conteúdo da URL.';
         }
       } else if (source.sourceKind === 'manual') {
         extractedContent = source.description ?? null;
@@ -54,7 +56,7 @@ export const contextSourceIngestTask = task({
           pipelineStatus: 'review',
           extractedContent,
           normalizedContent: extractedContent,
-          pipelineError: null,
+          pipelineError,
         },
       });
 

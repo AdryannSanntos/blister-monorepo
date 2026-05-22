@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
+import { resolvePostLoginRouting } from "src/core/modules/organization/utils/post-login-routing";
 import { authClient } from "src/core/shared/utils/auth-client";
 
 export function AppEntryPage() {
@@ -14,6 +15,7 @@ export function AppEntryPage() {
     useActiveOrganization();
   const { data: organizations, isLoading: isOrganizationsLoading } =
     useUserOrganizations(session?.user?.id);
+  const entryRouting = resolvePostLoginRouting(organizations ?? [], activeOrgId);
 
   const validActiveOrgId = organizations?.some((org) => org.id === activeOrgId)
     ? activeOrgId
@@ -27,7 +29,10 @@ export function AppEntryPage() {
       return;
     }
 
-    if (!organizations.some((org) => org.id === activeOrgId)) {
+    if (
+      organizations.length > 1 ||
+      !organizations.some((org) => org.id === activeOrgId)
+    ) {
       clearActiveOrg();
     }
   }, [activeOrgId, clearActiveOrg, isLoaded, organizations]);
@@ -54,24 +59,14 @@ export function AppEntryPage() {
       return;
     }
 
-    if (!organizations || organizations.length === 0) {
-      router.replace("/workspace/create");
-      return;
-    }
-
-    if (!selectedOrgId) {
-      router.replace("/workspace/select");
-      return;
-    }
-
-    router.replace("/dashboard");
+    router.replace(entryRouting.destination);
   }, [
+    entryRouting.destination,
     isLoaded,
     isOrganizationsLoading,
     isSessionPending,
     organizations,
     router,
-    selectedOrgId,
     session?.user,
   ]);
 

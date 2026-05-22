@@ -15,6 +15,7 @@ import {
   Card,
   CardContent,
 } from "src/core/shared/components/ui/card";
+import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import {
   Table,
@@ -54,6 +55,10 @@ export function InviteListPage() {
   const { data: invitations, isLoading } = useInvitations(activeOrgId);
   const cancelMutation = useCancelInvitation(activeOrgId);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [invitationToCancel, setInvitationToCancel] = useState<{
+    id: string;
+    email: string;
+  } | null>(null);
 
   if (!abilityLoading && cannot("read", "Member")) {
     return (
@@ -132,7 +137,12 @@ export function InviteListPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => cancelMutation.mutate(inv.id)}
+                            onClick={() =>
+                              setInvitationToCancel({
+                                id: inv.id,
+                                email: inv.email,
+                              })
+                            }
                             disabled={cancelMutation.isPending}
                           >
                             Cancelar
@@ -153,6 +163,26 @@ export function InviteListPage() {
         onOpenChange={setDialogOpen}
         orgId={activeOrgId}
         inviterId={session.user.id}
+      />
+
+      <ConfirmationDialog
+        open={Boolean(invitationToCancel)}
+        onOpenChange={(open) => !open && setInvitationToCancel(null)}
+        title="Cancelar convite"
+        description={
+          <>
+            O convite para <strong>{invitationToCancel?.email}</strong> deixará
+            de ser válido imediatamente.
+          </>
+        }
+        confirmLabel="Cancelar convite"
+        pending={cancelMutation.isPending}
+        destructive
+        onConfirm={async () => {
+          if (!invitationToCancel) return;
+          await cancelMutation.mutateAsync(invitationToCancel.id);
+          setInvitationToCancel(null);
+        }}
       />
     </PageLayout>
   );

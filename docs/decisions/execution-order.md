@@ -1,5 +1,16 @@
 # Ordem de Execução — Workana AI
 
+## Update 2026-05-22 — Agents Scope Lock
+
+When this file conflicts with the latest agents scope, follow `docs/decisions/2026-05-22-agents-v1-contract.md`.
+
+Locked priorities for current Agents V1 execution:
+
+1. Layered context retrieval (structured + pgvector + rerank) with permission-aware filtering.
+2. Company chat via internal context agent with delegation support.
+3. Full-focus routes for company chat and single-agent workspace.
+4. Queue and execution governance (3 concurrent per company, FIFO, 1 retry).
+
 ## Diretriz
 
 O produto deve primeiro garantir acesso, workspace e contexto da empresa. Depois evolui para Brain, equipe, governança, créditos, agentes e execução operacional. Integrações e automações entram após o núcleo estar estável.

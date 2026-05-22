@@ -165,6 +165,7 @@ describe('AICatalogService', () => {
       providerId: 'provider-1',
       label: 'Primary OpenRouter',
       value: 'secret-platform-key',
+      schemaMetadata: {},
     });
 
     expect(prisma.aICredential.create).toHaveBeenCalledWith({
@@ -197,6 +198,7 @@ describe('AICatalogService', () => {
       organizationId: 'org-1',
       label: 'Acme OpenAI Key',
       value: 'secret-company-key',
+      schemaMetadata: {},
     });
 
     expect(prisma.aICredential.create).toHaveBeenCalledWith({

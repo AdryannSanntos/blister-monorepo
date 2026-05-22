@@ -30,8 +30,8 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "Minhas empresas",
     icon: Building2,
-    href: "/workspace/select",
-    match: (p) => p.startsWith("/workspace/select") || p === "/workspace",
+    href: "/workspaces",
+    match: (p) => p === "/workspaces",
   },
   {
     label: "Configurações da conta",
@@ -73,7 +73,7 @@ export function WorkspaceShell({ children }: { children: ReactNode }) {
       <aside className="flex w-[220px] shrink-0 flex-col border-r border-[var(--line-subtle)] bg-[var(--bg-base)] p-3">
         {/* Company selector */}
         <Link
-          href="/workspace/select"
+          href="/workspaces"
           className={cn(
             "mb-3 flex items-center gap-3 rounded-[var(--r-md)] border p-2.5 transition-colors",
             "border-dashed border-[var(--line-default)] bg-[var(--bg-sunken)] hover:bg-[var(--bg-raised)]",

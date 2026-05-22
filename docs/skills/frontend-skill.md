@@ -24,6 +24,15 @@ apps/web/src/core/shared/components/ui/  shadcn/ui oficial
 - A UI usa tokens semânticos, não cores raw.
 - Reutilizar componentes existentes antes de criar novos.
 
+## Regras de UX para Agentes V1
+
+- Chat geral e editor de workflow devem usar layout full-focus compartilhado (fora do dashboard shell).
+- Cada agente deve abrir em tela unica full-focus com nave interna: Chat, Workflow, Execucoes, Configuracoes.
+- Pensamentos/processamento no chat ficam recolhidos por padrao.
+- Execucoes no detalhe do agente mostram timeline aberta por padrao.
+- Durante execucao ativa da conversa, input do chat deve ficar bloqueado.
+- Resultado do agente deve aparecer no chat com abas interativas de outputs/arquivos.
+
 ## Linguagem de Produto
 
 Use: Workana AI, Workspace, Company, Brain, Agentes, Créditos, Integrações, Assets, Execuções.

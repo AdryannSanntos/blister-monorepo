@@ -30,6 +30,7 @@ Guiar a revisão de código neste projeto com foco em segurança, permissões, c
 **Frontend:**
 - [ ] Toda ação de escrita/exclusão dentro de `<PermissionGate permission="...">`
 - [ ] Nenhuma lógica de permissão hardcoded — sempre via `useAbility()` ou `PermissionGate`
+- [ ] Chats e execuções visíveis apenas para autor + owner/admin (quando aplicável)
 
 ## Checklist Alto — Contratos e Dados
 
@@ -62,6 +63,16 @@ Guiar a revisão de código neste projeto com foco em segurança, permissões, c
 - [ ] Estado de servidor em React Query, não em `useState`
 - [ ] `activeOrgId` de `useActiveOrganization()`, não de sessão better-auth
 - [ ] Estrutura `core/modules` e `core/shared` respeitada
+- [ ] Rotas de chat geral/workflow/agent workspace usam layout full-focus, não dashboard shell
+
+## Checklist Específico — Agentes V1
+
+- [ ] Editar mensagem no chat cria branch de conversa
+- [ ] Conversa com execução ativa bloqueia input
+- [ ] Timeline de execução tem tentativas no mesmo run
+- [ ] Cap de concorrência por empresa (3) + fila FIFO preservados
+- [ ] Retrieval de contexto é permission-aware e remove segredos/credenciais
+- [ ] Delegação do chat geral mantém resposta no chat principal
 
 ## Checklist Baixo — Design System e UI
 

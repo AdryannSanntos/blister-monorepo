@@ -313,7 +313,7 @@ function DeleteWorkspaceDialog({
       await apiClient.delete(`/organizations/${orgId}`);
       clearActiveOrg();
       toast.success("Workspace excluído com sucesso.");
-      router.push("/workspace/select");
+      router.push("/workspaces");
     } catch {
       toast.error("Erro ao excluir workspace. Tente novamente.");
     } finally {

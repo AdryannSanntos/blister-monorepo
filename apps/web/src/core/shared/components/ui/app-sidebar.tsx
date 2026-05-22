@@ -227,6 +227,38 @@ function AppSidebar({
     () => readStorage<Record<string, boolean>>(SIDEBAR_GROUPS_KEY, {}),
   );
 
+  React.useEffect(() => {
+    const activeCollapsibleLabels = filteredGroups
+      .filter((group) => group.label && group.collapsible !== false)
+      .filter((group) =>
+        group.items.some((item) => isItemActive(item, pathname)),
+      )
+      .map((group) => group.label as string);
+
+    if (activeCollapsibleLabels.length === 0) {
+      return;
+    }
+
+    setOpenGroups((prev) => {
+      let changed = false;
+      const next = { ...prev };
+
+      for (const label of activeCollapsibleLabels) {
+        if (next[label] === false) {
+          next[label] = true;
+          changed = true;
+        }
+      }
+
+      if (!changed) {
+        return prev;
+      }
+
+      writeStorage(SIDEBAR_GROUPS_KEY, next);
+      return next;
+    });
+  }, [filteredGroups, isItemActive, pathname]);
+
   function toggleGroup(label: string) {
     setOpenGroups((prev) => {
       const next = { ...prev, [label]: !prev[label] };
