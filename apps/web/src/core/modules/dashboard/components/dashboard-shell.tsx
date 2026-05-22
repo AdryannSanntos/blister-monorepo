@@ -157,8 +157,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
         {
           label: "Chat",
           icon: MessageCircle,
-          soon: true,
-          onSelect: () => showComingSoon("Chat"),
+          href: "/dashboard/workspace/chat",
+          permission: "agent.execute" as const,
+          match: (p) => p.startsWith("/dashboard/workspace/chat"),
         },
         {
           label: "Notificações",
