@@ -43,11 +43,17 @@ function getImageUrlFromPart(part: unknown): string | null {
   }
 
   if (type === "file") {
-    const filePart = part as { mimeType?: string; url?: string; data?: string };
-    if (filePart.mimeType?.startsWith("image/")) {
+    const filePart = part as {
+      mimeType?: string;
+      mediaType?: string;
+      url?: string;
+      data?: string;
+    };
+    const contentType = filePart.mediaType ?? filePart.mimeType;
+    if (contentType?.startsWith("image/")) {
       if (filePart.url) return filePart.url;
       if (filePart.data) {
-        return `data:${filePart.mimeType};base64,${filePart.data}`;
+        return `data:${contentType};base64,${filePart.data}`;
       }
     }
   }
@@ -62,6 +68,7 @@ type FilePart = {
   fileName?: string;
   size?: number;
   mimeType?: string;
+  mediaType?: string;
   url?: string;
 };
 
@@ -71,7 +78,8 @@ function getFileFromPart(part: unknown) {
   const filePart = part as FilePart;
   const filename =
     filePart.filename || filePart.name || filePart.fileName || "Attachment";
-  const isImage = filePart.mimeType?.startsWith("image/") ?? false;
+  const contentType = filePart.mediaType ?? filePart.mimeType;
+  const isImage = contentType?.startsWith("image/") ?? false;
   if (isImage) return null;
   return {
     filename,

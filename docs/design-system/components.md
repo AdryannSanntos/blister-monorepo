@@ -76,6 +76,33 @@ Devem nascer em `core/modules/<dominio>/components` quando forem específicos:
 - `IntegrationConnectCard`
 - `AssetDetailSheet`
 
+### Domínio Agents (`core/modules/agents/components`)
+
+- `AgentWorkspaceSidebar` — sidebar do workspace de agente. Usa `AppSidebar` com botão de fechar embutido no item "Voltar ao dashboard" (`action`) e `showToggle={!sidebarOpen}` para reabrir quando colapsada. Intercepta criação de nova thread quando o agente não está ativo.
+- `AgentInactiveDialog` — modal de status quando `agent.status !== "active"`. Em modo `blocking`, suprime `showCloseButton`, `Esc`, click fora e redireciona para `/workflow` ao tentar fechar.
+- `ChatMessageBubble` — bubble unificado de mensagem do chat. Renderiza `UserMessage` (agent-elements) para o usuário e card com `Markdown` + `ToolRenderer[]` para o agente. Timestamp e menu de 3 pontos só aparecem no hover/focus.
+- `ExecutionInlineCard` — card de execução inline no chat. Expandable, lazy-fetcha o run completo via `useAgentRun` e renderiza `ExecutionTimeline` dentro do próprio card. Substitui o uso de drawer dentro do chat.
+- `RunDetailSheet` — drawer detalhado de execução para `/executions` (não usar no chat). Tem guards de data inválida e custo `null`.
+
+### Flow Builder (`core/modules/agents/components/flow-builder`)
+
+- `FlowCanvas` — canvas com React Flow v12. Background grid duplo (24px/120px), gradient radial seguindo o cursor, zoom controls em `Panel position="bottom-left"`, context menu radial (`RadialBlockPicker`) no botão direito.
+- `FlowBlockNode` — node de bloco. Variação circular para `input`/`output` (terminais) e card horizontal para os demais. Selected: `ring-4 ring-[var(--accent)]/40`. Dropdown menu controlado externamente (`menuOpen`/`onMenuOpenChange`) para garantir um único menu aberto.
+- `FlowDeleteEdge` — edge customizado com botão de delete que segue o cursor sobre a curva via `getPointAtLength` + refinamento ternário. Wrapper `<g>` evita ciclo de mouseLeave entre path e botão.
+- `WorkflowSidebar` — sidebar floating direita (`absolute right-3 top-3 bottom-3`). Top tabs underline (Blocos / Configuração) + tabs de categoria internas (gap apenas, sem custom).
+- `RadialBlockPicker` — menu de contexto radial único, com hub central de label e blocos dispostos em círculo. Não usar `DropdownMenu` aqui — é uma experiência customizada propositalmente diferente.
+
+### Agent Elements (`components/agent-elements`)
+
+Bibliotecas de UI especializadas para chat/tool-calling. **Reutilize antes de criar UI nova de agente:**
+
+- `InputBar` — composer principal (suggestions, anexos, infoBar, atalhos)
+- `UserMessage` — bubble do usuário
+- `Markdown` — renderer markdown padronizado do produto
+- `ToolRenderer` — renderiza tool parts no bubble do agente
+- `ToolRowBase` — base expandable de linha de tool
+- `SpiralLoader`, `TextShimmer` — feedback visual oficial
+
 ## Variantes Relevantes
 
 - Button: `default`, `flat`, `secondary`, `outline`, `ghost`, `destructive`, `link`

@@ -1,10 +1,21 @@
 "use client";
 
+import type { UIMessage } from "ai";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Copy, MoreHorizontal, Pencil, RefreshCw } from "lucide-react";
+import {
+  Bot,
+  Copy,
+  MoreHorizontal,
+  Pencil,
+  RefreshCw,
+} from "lucide-react";
 import { toast } from "sonner";
 import { ExecutionInlineCard } from "src/core/modules/agents/components/chat/execution-inline-card";
+import {
+  getMessageToolSections,
+  toUserUiMessage,
+} from "src/core/modules/agents/components/chat/chat-message-parts";
 import type { ChatMessage } from "src/core/modules/agents/hooks/use-agent-chat";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -15,12 +26,16 @@ import {
 } from "src/core/shared/components/ui/dropdown-menu";
 import { cn } from "src/core/shared/utils";
 import { Markdown } from "@/components/agent-elements/markdown";
+import { SpiralLoader } from "@/components/agent-elements/spiral-loader";
+import { ToolRenderer } from "@/components/agent-elements/tools/tool-renderer";
+import { ToolRowBase } from "@/components/agent-elements/tools/tool-row-base";
+import { UserMessage } from "@/components/agent-elements/user-message";
 
 type Props = {
   message: ChatMessage;
+  orgId: string;
   onEdit?: (message: ChatMessage) => void;
   onRegenerate?: (message: ChatMessage) => void;
-  onOpenRun?: (runId: string) => void;
 };
 
 function formatTime(value: string) {
@@ -33,11 +48,15 @@ function formatTime(value: string) {
 
 export function ChatMessageBubble({
   message,
+  orgId,
   onEdit,
   onRegenerate,
-  onOpenRun,
 }: Props) {
   const isUser = message.role === "user";
+  const runIsActive =
+    message.agentRun?.status === "queued" || message.agentRun?.status === "running";
+  const userMessage: UIMessage = toUserUiMessage(message);
+  const toolSections = getMessageToolSections(message);
 
   async function handleCopy() {
     try {
@@ -57,37 +76,61 @@ export function ChatMessageBubble({
     >
       <div
         className={cn(
-          "flex max-w-[80%] flex-col gap-1",
+          "flex max-w-[min(100%,54rem)] flex-col gap-4",
           isUser ? "items-end" : "items-start",
         )}
       >
-        <div
-          className={cn(
-            "rounded-[var(--r-lg)] px-3.5 py-2.5 text-[13.5px] leading-[1.55]",
-            isUser
-              ? "bg-[var(--bg-raised)] text-[var(--fg-primary)]"
-              : "text-[var(--fg-primary)]",
-          )}
-        >
-          {isUser ? (
-            <p className="whitespace-pre-wrap">{message.content}</p>
-          ) : (
-            <Markdown content={message.content} />
-          )}
-        </div>
+        {isUser ? (
+          <div className="max-w-[80%]">
+            <UserMessage message={userMessage} />
+          </div>
+        ) : (
+          <div className="w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] shadow-[0_8px_28px_color-mix(in_oklch,#000_5%,transparent)]">
+            <div className="flex items-center gap-2 border-b border-[var(--line-subtle)] px-4 py-3">
+              <div className="flex size-8 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+                <Bot className="size-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[13px] font-medium text-[var(--fg-primary)]">
+                  Agente
+                </p>
+                <p className="text-[11.5px] text-[var(--fg-tertiary)]">
+                  {runIsActive ? "Respondendo agora" : "Resposta gerada"}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4 px-4 py-4">
+              {message.content ? <Markdown content={message.content} /> : null}
 
-        {message.agentRun && (
-          <div className="w-full max-w-md">
-            <ExecutionInlineCard
-              run={message.agentRun}
-              onClick={() =>
-                message.agentRun && onOpenRun?.(message.agentRun.id)
-              }
-            />
+              {toolSections.map((section, index) => (
+                <ToolRenderer
+                  key={section.part.toolCallId ?? `${message.id}-tool-${index}`}
+                  part={section.part}
+                  nestedTools={section.nestedTools}
+                  chatStatus={runIsActive ? "streaming" : undefined}
+                />
+              ))}
+
+              {message.agentRun && runIsActive && toolSections.length === 0 ? (
+                <ToolRowBase
+                  icon={<SpiralLoader size={12} />}
+                  shimmerLabel="Executando etapa"
+                  completeLabel="Etapa em andamento"
+                  detail="O agente ainda esta processando esta resposta."
+                  isAnimating
+                />
+              ) : null}
+            </div>
           </div>
         )}
 
-        <div className="flex items-center gap-2 px-1">
+        {message.agentRun && (
+          <div className="w-full max-w-md">
+            <ExecutionInlineCard run={message.agentRun} orgId={orgId} />
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 px-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100">
           <span className="text-[10.5px] text-[var(--fg-quaternary)] tabular-nums">
             {formatTime(message.createdAt)}
           </span>
@@ -97,7 +140,7 @@ export function ChatMessageBubble({
                 variant="ghost"
                 size="icon-sm"
                 aria-label="Mais ações"
-                className="size-5 opacity-0 transition-opacity group-hover:opacity-100"
+                className="size-5 text-[var(--fg-tertiary)] hover:text-[var(--fg-primary)]"
               >
                 <MoreHorizontal className="size-3" />
               </Button>

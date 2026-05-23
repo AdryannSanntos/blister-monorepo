@@ -111,7 +111,31 @@ Todo componente interativo deve ter suas animações padrão funcionando: modals
 
 Ao instalar ou recriar componentes shadcn/ui, verificar que `tw-animate-css` está presente e o `@plugin` está declarado. Sem o plugin, todas as animações de entrada/saída de overlays ficam silenciosamente desabilitadas.
 
-### 11. Convenção de rotas: workspace vs. dashboard
+### 11. Agentes só executam com versão ativa
+
+Toda execução de agente (`/messages` → run → steps) depende de `agent.activeVersionId`. O ciclo é `draft → publish → activate` e isso deve acontecer em uma única ação UI — o botão "Publicar agente" no workflow builder faz save+publish+activate juntos. Nunca exponha publish e activate como botões separados; o usuário não precisa entender essa diferença interna.
+
+Quando `agent.status !== "active"`, `AgentInactiveDialog` em modo `blocking` deve cobrir qualquer página que dependa do agente. O modal não pode ser fechado por Esc/clique fora; tentar fechar redireciona para `/workflow`. O input do chat também precisa ficar `disabled={!isAgentActive}`.
+
+Backend `agent-version.dto.ts` aceita `flowDefinition.config` (workflow-level) e `node.config` (com label/prompt/position/successors). Nunca expandir a UI para mandar campos fora desse contrato sem antes ajustar o schema Zod.
+
+Leia `docs/skills/agents-skill.md` antes de qualquer mudança em `apps/web/src/core/modules/agents/**`, `apps/web/src/components/agent-elements/**` ou `apps/api/src/agents/**`.
+
+### 12. Espaçamento padronizado de UI
+
+Padrão geral: **24px entre agrupamentos, 16px dentro de um agrupamento.**
+
+| Contexto | Valor |
+|----------|-------|
+| Entre mensagens de chat | `gap-6` (24px) |
+| Dentro de uma mensagem (bubble → execução → footer) | `gap-4` (16px) |
+| Tools dentro do bubble do agente | `space-y-4` (16px) |
+| Sections de página | `gap-6` |
+| Cards/blocos em sidebar | `gap-2`/`gap-3` |
+
+Não inventar valores soltos via arbitrary classes.
+
+### 13. Convenção de rotas: workspace vs. dashboard
 
 ```
 /workspace/*  →  fora de qualquer empresa  (selecionar/criar workspace)

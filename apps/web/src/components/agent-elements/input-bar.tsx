@@ -419,7 +419,7 @@ export const InputBar = memo(function InputBar({
     : suggestions?.itemClassName;
 
   return (
-    <div className={cn("shrink-0 px-3 pb-3", className)}>
+    <div className={cn("shrink-0 p-3", className)}>
       <div className="mx-auto max-w-an">
         <div
           className={cn(
@@ -429,6 +429,15 @@ export const InputBar = memo(function InputBar({
               : null,
           )}
         >
+          {suggestionItems.length > 0 && (
+            <Suggestions
+              items={suggestionItems}
+              onSelect={handleSuggestionSelect}
+              disabled={disabled || isStreaming}
+              className={cn("mb-4 px-3", suggestionsClassName)}
+              itemClassName={suggestionItemClassName}
+            />
+          )}
           {infoBarPosition === "top" && infoBarNode}
           {questionBarNode}
           <div
@@ -560,15 +569,6 @@ export const InputBar = memo(function InputBar({
               </div>
             </div>
           </div>
-          {suggestionItems.length > 0 && (
-            <Suggestions
-              items={suggestionItems}
-              onSelect={handleSuggestionSelect}
-              disabled={disabled || isStreaming}
-              className={cn("mt-4 px-3", suggestionsClassName)}
-              itemClassName={suggestionItemClassName}
-            />
-          )}
           {infoBarPosition === "bottom" && infoBarNode}
         </div>
       </div>

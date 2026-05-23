@@ -1,15 +1,15 @@
 "use client";
 
 import type { Edge, Node } from "@xyflow/react";
-import { Plus, Save, Send, ToggleRight } from "lucide-react";
+import { Network, Play, Rocket, Save } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import {
-  BLOCK_TYPES,
-  type BlockTypeKey,
-} from "src/core/modules/agents/components/flow-builder/block-types";
+import { type BlockTypeKey } from "src/core/modules/agents/components/flow-builder/block-types";
 import { FlowCanvas } from "src/core/modules/agents/components/flow-builder/flow-canvas";
-import { NodeConfigPanel } from "src/core/modules/agents/components/flow-builder/node-config-panel";
+import {
+  type WorkflowConfig,
+  WorkflowSidebar,
+} from "src/core/modules/agents/components/flow-builder/workflow-sidebar";
 import {
   useActivateVersion,
   useCompanyAgent,
@@ -19,21 +19,20 @@ import {
 import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
-import { Badge } from "src/core/shared/components/ui/badge";
+import { AgentContentLayout } from "src/core/shared/components/ui/agent-content-layout";
 import { Button } from "src/core/shared/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "src/core/shared/components/ui/dropdown-menu";
 
 type FlowNodeData = {
   blockType: BlockTypeKey;
   label?: string;
   prompt?: string;
+};
+
+const DEFAULT_WORKFLOW_CONFIG: WorkflowConfig = {
+  name: "",
+  objective: "",
+  instructions: "",
+  fallbackMessage: "",
 };
 
 function draftVersionRef(
@@ -48,13 +47,13 @@ const DEFAULT_NODES: Node<FlowNodeData>[] = [
   {
     id: "input",
     type: "block",
-    position: { x: 200, y: 40 },
+    position: { x: 80, y: 180 },
     data: { blockType: "input", label: "Entrada" },
   },
   {
     id: "output",
     type: "block",
-    position: { x: 200, y: 300 },
+    position: { x: 440, y: 180 },
     data: { blockType: "output", label: "Saída" },
   },
 ];
@@ -84,27 +83,41 @@ export function AgentWorkflowPage() {
   const [nodes, setNodes] = useState<Node<FlowNodeData>[]>(DEFAULT_NODES);
   const [edges, setEdges] = useState<Edge[]>(DEFAULT_EDGES);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [openMenuNodeId, setOpenMenuNodeId] = useState<string | null>(null);
+  const [workflowConfig, setWorkflowConfig] = useState<WorkflowConfig>(
+    DEFAULT_WORKFLOW_CONFIG,
+  );
   const [hydrated, setHydrated] = useState(false);
 
   // Hidrata o canvas a partir da versão ativa (ou rascunho mais recente).
   useEffect(() => {
     if (hydrated) return;
     const version = activeVersion ?? draftVersionRef(agent.data);
-    const flow = version?.flowDefinition as
-      | {
-          nodes?: Array<{
-            id: string;
-            type: BlockTypeKey;
-            config?: {
-              label?: string;
-              prompt?: string;
-              position?: { x: number; y: number };
-              successors?: string[];
-            };
-          }>;
-        }
-      | undefined;
-    if (!flow?.nodes || flow.nodes.length === 0) return;
+    if (!version?.flowDefinition) {
+      setHydrated(true);
+      return;
+    }
+    const flow = version.flowDefinition as {
+      config?: Partial<WorkflowConfig>;
+      nodes?: Array<{
+        id: string;
+        type: BlockTypeKey;
+        config?: {
+          label?: string;
+          prompt?: string;
+          position?: { x: number; y: number };
+          successors?: string[];
+        };
+      }>;
+    };
+    setWorkflowConfig({
+      ...DEFAULT_WORKFLOW_CONFIG,
+      ...(flow.config ?? {}),
+    });
+    if (!flow.nodes || flow.nodes.length === 0) {
+      setHydrated(true);
+      return;
+    }
     setNodes(
       flow.nodes.map((n, i) => ({
         id: n.id,
@@ -133,16 +146,20 @@ export function AgentWorkflowPage() {
 
   const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
 
-  function addBlock(blockType: BlockTypeKey) {
+  function addBlock(
+    blockType: BlockTypeKey,
+    position?: { x: number; y: number },
+  ) {
     const id = `${blockType}-${Date.now()}`;
-    const lastY = nodes.reduce((max, n) => Math.max(max, n.position.y), 0);
+    const lastX = nodes.reduce((max, n) => Math.max(max, n.position.x), 0);
     const newNode: Node<FlowNodeData> = {
       id,
       type: "block",
-      position: { x: 200, y: lastY + 120 },
-      data: { blockType, label: BLOCK_TYPES[blockType].label },
+      position: position ?? { x: lastX + 300, y: 180 },
+      data: { blockType },
     };
     setNodes([...nodes, newNode]);
+    setSelectedNodeId(id);
   }
 
   function patchNode(nodeId: string, patch: Partial<FlowNodeData>) {
@@ -161,10 +178,19 @@ export function AgentWorkflowPage() {
     setSelectedNodeId(null);
   }
 
+  function deleteEdge(edgeId: string) {
+    setEdges((prev) => prev.filter((e) => e.id !== edgeId));
+  }
+
+  function patchWorkflowConfig(patch: Partial<WorkflowConfig>) {
+    setWorkflowConfig((prev) => ({ ...prev, ...patch }));
+  }
+
+  function handleSelectNode(nodeId: string | null) {
+    setSelectedNodeId(nodeId);
+  }
+
   async function handleSaveDraft() {
-    // Backend strict schema só aceita { nodes: [{ id, type, config }] }.
-    // Persistimos posição e arestas dentro de `config` (campo open) para não
-    // perder layout/conexões entre saves.
     const flowNodes = nodes.map((n) => {
       const successors = edges
         .filter((e) => e.source === n.id)
@@ -180,8 +206,11 @@ export function AgentWorkflowPage() {
         },
       };
     });
-    await saveDraft.mutateAsync({
-      flowDefinition: { nodes: flowNodes },
+    return saveDraft.mutateAsync({
+      flowDefinition: {
+        config: workflowConfig,
+        nodes: flowNodes,
+      },
       inputSchema: {},
       outputSchema: {},
     });
@@ -189,56 +218,43 @@ export function AgentWorkflowPage() {
 
   const canEdit = !cannot("update", "Agent");
   const draftVersion = agent.data?.versions?.find((v) => v.status === "draft");
+  const publishedNotActiveVersion = agent.data?.versions?.find(
+    (v) => v.status === "published",
+  );
+  const isAgentActive = agent.data?.status === "active";
+
+  async function handlePublishAndActivate() {
+    const saved = await handleSaveDraft();
+    let versionId: string | undefined;
+    if (saved?.id) {
+      const published = await publish.mutateAsync(saved.id);
+      versionId = published.id;
+    } else if (publishedNotActiveVersion) {
+      versionId = publishedNotActiveVersion.id;
+    }
+    if (versionId) {
+      await activate.mutateAsync(versionId);
+    }
+  }
+
+  const publishLabel = isAgentActive
+    ? "Republicar"
+    : publishedNotActiveVersion
+      ? "Ativar versão"
+      : "Publicar agente";
+  const publishDisabled =
+    publish.isPending ||
+    activate.isPending ||
+    saveDraft.isPending ||
+    (!draftVersion && !publishedNotActiveVersion && !isAgentActive);
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--line-subtle)] bg-[var(--bg-base)] px-6 py-3">
-        <div className="flex items-center gap-3">
-          <h2 className="text-[15px] font-medium text-[var(--fg-primary)]">
-            Workflow
-          </h2>
-          {activeVersion && (
-            <Badge variant="success">v{activeVersion.version} · ativa</Badge>
-          )}
-          {draftVersion && (
-            <Badge variant="secondary">
-              v{draftVersion.version} · rascunho
-            </Badge>
-          )}
-        </div>
+    <AgentContentLayout
+      icon={Network}
+      title="Workflow"
+      subtitle="Monte o fluxo, publique versões e ative a configuração do agente."
+      actions={
         <div className="flex items-center gap-2">
-          <PermissionGate permission="agent.update">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" disabled={!canEdit}>
-                  <Plus className="size-3.5" />
-                  Adicionar bloco
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuLabel>Tipos de bloco</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {Object.values(BLOCK_TYPES).map((bt) => {
-                  if (bt.key === "input" || bt.key === "output") return null;
-                  const Icon = bt.icon;
-                  return (
-                    <DropdownMenuItem
-                      key={bt.key}
-                      onClick={() => addBlock(bt.key)}
-                    >
-                      <Icon className={`size-3.5 ${bt.tone}`} />
-                      <div className="flex min-w-0 flex-col">
-                        <span className="text-[13px]">{bt.label}</span>
-                        <span className="truncate text-[11px] text-[var(--fg-tertiary)]">
-                          {bt.description}
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </PermissionGate>
           <PermissionGate permission="agent.update">
             <Button
               variant="outline"
@@ -254,48 +270,56 @@ export function AgentWorkflowPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => draftVersion && publish.mutate(draftVersion.id)}
-              disabled={!draftVersion || publish.isPending}
+              disabled={!isAgentActive}
+              title={
+                isAgentActive
+                  ? "Executar teste do fluxo"
+                  : "Publique o agente para liberar o teste"
+              }
             >
-              <Send className="size-3.5" />
-              Publicar versão
+              <Play className="size-3.5" />
+              Executar teste
             </Button>
             <Button
               size="sm"
-              onClick={() => {
-                const target = agent.data?.versions?.find(
-                  (v) => v.status === "published",
-                );
-                if (target) activate.mutate(target.id);
-              }}
-              disabled={activate.isPending}
+              onClick={handlePublishAndActivate}
+              disabled={publishDisabled}
             >
-              <ToggleRight className="size-3.5" />
-              Ativar versão
+              <Rocket className="size-3.5" />
+              {publishLabel}
             </Button>
           </PermissionGate>
         </div>
-      </header>
-
-      <div className="flex min-h-0 flex-1">
-        <div className="min-w-0 flex-1 bg-[var(--bg-sunken)]">
+      }
+      contentClassName="flex min-h-0 flex-1"
+    >
+      <div className="relative flex min-h-0 w-full flex-1">
+        <div className="min-h-0 w-full flex-1 bg-[var(--bg-sunken)]">
           <FlowCanvas
             nodes={nodes}
             edges={edges}
             selectedNodeId={selectedNodeId}
-            onSelectNode={setSelectedNodeId}
+            openMenuNodeId={openMenuNodeId}
+            onOpenMenuNodeChange={setOpenMenuNodeId}
+            onSelectNode={handleSelectNode}
             onNodesChange={(next) => setNodes(next as Node<FlowNodeData>[])}
             onEdgesChange={setEdges}
+            onAddBlock={canEdit ? addBlock : undefined}
+            onDeleteNode={canEdit ? deleteNode : undefined}
+            onDeleteEdge={canEdit ? deleteEdge : undefined}
             readOnly={!canEdit}
           />
         </div>
-        <NodeConfigPanel
+        <WorkflowSidebar
           node={selectedNode}
-          onClose={() => setSelectedNodeId(null)}
+          workflowConfig={workflowConfig}
+          onWorkflowConfigChange={patchWorkflowConfig}
+          onAddBlock={addBlock}
           onChange={patchNode}
           onDelete={deleteNode}
+          onClearSelection={() => setSelectedNodeId(null)}
         />
       </div>
-    </div>
+    </AgentContentLayout>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { type ReactNode, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { type ReactNode, useEffect, useMemo } from "react";
 import { AgentWorkspaceSidebar } from "src/core/modules/agents/components/agent-workspace-sidebar";
 import { useAgentRuns } from "src/core/modules/agents/hooks/use-agent-runs";
 import { useCompanyAgent } from "src/core/modules/agents/hooks/use-agents";
@@ -15,6 +15,7 @@ type Props = {
 export function AgentWorkspaceLayout({ agentId, children }: Props) {
   const { activeOrgId } = useActiveOrganization();
   const orgId = activeOrgId ?? "";
+  const router = useRouter();
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
   const agent = useCompanyAgent(orgId, agentId);
@@ -27,6 +28,12 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
   const hasActiveRun = Boolean(
     runs.data?.some((r) => r.status === "queued" || r.status === "running"),
   );
+
+  useEffect(() => {
+    if (agent.data?.status === "archived") {
+      router.replace("/dashboard/workspace/agents");
+    }
+  }, [agent.data?.status, router]);
 
   if (!activeOrgId || agent.isLoading) {
     return (
@@ -44,6 +51,14 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
     );
   }
 
+  if (agent.data.status === "archived") {
+    return (
+      <div className="flex h-svh items-center justify-center bg-[var(--bg-canvas)] text-[var(--fg-tertiary)]">
+        Redirecionando para a lista de agentes...
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-svh overflow-hidden bg-[var(--bg-canvas)] text-[var(--fg-primary)]">
       <AgentWorkspaceSidebar
@@ -52,8 +67,10 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
         activeThreadId={threadId}
         hasActiveRun={hasActiveRun}
       />
-      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        {children}
+      <main className="flex min-w-0 flex-1 flex-col overflow-hidden p-3 pl-0">
+        <div className="flex min-h-0 w-full flex-1 overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)] shadow-[var(--shadow-sm)]">
+          {children}
+        </div>
       </main>
     </div>
   );

@@ -74,7 +74,7 @@ export function useAgentRuns(
     enabled: Boolean(orgId),
     queryFn: async () => {
       const { data } = await apiClient.get<AgentRun[]>(
-        `/organizations/${orgId}/agents/runs`,
+        `/organizations/${orgId}/agent-runs`,
         { params: filters },
       );
       return data;
@@ -97,7 +97,7 @@ export function useAgentRun(
     enabled: Boolean(orgId && runId),
     queryFn: async () => {
       const { data } = await apiClient.get<AgentRun>(
-        `/organizations/${orgId}/agents/runs/${runId}`,
+        `/organizations/${orgId}/agent-runs/${runId}`,
       );
       return data;
     },

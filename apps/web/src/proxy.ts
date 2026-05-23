@@ -10,6 +10,7 @@ const WORKSPACES_PATH = "/workspaces";
 const INVITE_ACCEPT_PATH = "/invite/accept";
 const APP_PREFIX = "/app";
 const AUTH_API_PREFIX = "/api/auth";
+const SYSTEM_UNAVAILABLE_PATH = "/system/unavailable";
 const ACTIVE_ORG_COOKIE = "company-os-active-org";
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_INTERNAL_API_URL ??
@@ -37,6 +38,11 @@ function redirect(request: NextRequest, pathname: string) {
 function buildLoginRedirectPath(request: NextRequest) {
   const next = `${request.nextUrl.pathname}${request.nextUrl.search}`;
   return `/auth/login?next=${encodeURIComponent(next)}`;
+}
+
+function buildUnavailableRedirectPath(request: NextRequest) {
+  const next = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+  return `${SYSTEM_UNAVAILABLE_PATH}?next=${encodeURIComponent(next)}`;
 }
 
 function withActiveOrgCookie(response: NextResponse, orgId: string | null) {
@@ -175,26 +181,70 @@ function shouldAllowRoute(
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith(AUTH_API_PREFIX)) {
+  if (
+    pathname.startsWith(AUTH_API_PREFIX) ||
+    pathname.startsWith(SYSTEM_UNAVAILABLE_PATH)
+  ) {
     return NextResponse.next();
   }
 
-  const session = await getSession(request);
-  const isAuthenticated = Boolean(session?.session && session?.user);
-  const isAuthRoute = pathname.startsWith(AUTH_PREFIX);
-  const isDashboardRoute = pathname.startsWith(DASHBOARD_PREFIX);
-  const isOnboardingRoute = pathname.startsWith(ONBOARDING_PREFIX);
-  const isWorkspacesRoute = pathname.startsWith(WORKSPACES_PREFIX);
-  const isWorkspaceCreateRoute = pathname.startsWith(WORKSPACE_CREATE_PATH);
-  const isInviteAcceptRoute = pathname.startsWith(INVITE_ACCEPT_PATH);
-  const isAppRoute = pathname.startsWith(APP_PREFIX);
-  const activeOrgId = request.cookies.get(ACTIVE_ORG_COOKIE)?.value ?? null;
+  try {
+    const session = await getSession(request);
+    const isAuthenticated = Boolean(session?.session && session?.user);
+    const isAuthRoute = pathname.startsWith(AUTH_PREFIX);
+    const isDashboardRoute = pathname.startsWith(DASHBOARD_PREFIX);
+    const isOnboardingRoute = pathname.startsWith(ONBOARDING_PREFIX);
+    const isWorkspacesRoute = pathname.startsWith(WORKSPACES_PREFIX);
+    const isWorkspaceCreateRoute = pathname.startsWith(WORKSPACE_CREATE_PATH);
+    const isInviteAcceptRoute = pathname.startsWith(INVITE_ACCEPT_PATH);
+    const isAppRoute = pathname.startsWith(APP_PREFIX);
+    const activeOrgId = request.cookies.get(ACTIVE_ORG_COOKIE)?.value ?? null;
 
-  if (pathname === "/") {
-    return redirect(request, isAuthenticated ? APP_PREFIX : "/auth/login");
-  }
+    if (pathname === "/") {
+      return redirect(request, isAuthenticated ? APP_PREFIX : "/auth/login");
+    }
 
-  if (!isAuthenticated) {
+    if (!isAuthenticated) {
+      if (
+        isDashboardRoute ||
+        isOnboardingRoute ||
+        isWorkspacesRoute ||
+        isWorkspaceCreateRoute ||
+        isAppRoute
+      ) {
+        return redirect(request, buildLoginRedirectPath(request));
+      }
+
+      return isAuthRoute || isInviteAcceptRoute
+        ? NextResponse.next()
+        : redirect(request, "/auth/login");
+    }
+
+    const userId = (session as SessionPayload).user?.id;
+
+    if (!userId) {
+      return redirect(request, "/auth/login");
+    }
+
+    const state = await resolveAuthenticatedState(userId, activeOrgId);
+    const entryState = resolvePostLoginRouting(
+      state.organizations,
+      activeOrgId,
+    );
+    const responseDestination =
+      isAuthRoute || isAppRoute ? entryState.destination : pathname;
+
+    if (isAuthRoute) {
+      return withActiveOrgCookie(
+        redirect(request, entryState.destination),
+        entryState.activeOrgId,
+      );
+    }
+
+    if (isInviteAcceptRoute) {
+      return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
+    }
+
     if (
       isDashboardRoute ||
       isOnboardingRoute ||
@@ -202,68 +252,37 @@ export async function proxy(request: NextRequest) {
       isWorkspaceCreateRoute ||
       isAppRoute
     ) {
-      return redirect(request, buildLoginRedirectPath(request));
+      if (
+        !shouldAllowRoute(
+          pathname,
+          responseDestination,
+          state.onboardingPublished,
+        )
+      ) {
+        return withActiveOrgCookie(
+          redirect(request, responseDestination),
+          isAuthRoute || isAppRoute
+            ? entryState.activeOrgId
+            : state.activeOrgId,
+        );
+      }
+
+      if (isWorkspacesRoute || isWorkspaceCreateRoute) {
+        // Workspace selection and company creation run outside a company context.
+        return withActiveOrgCookie(NextResponse.next(), null);
+      }
+
+      return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
     }
 
-    return isAuthRoute || isInviteAcceptRoute
-      ? NextResponse.next()
-      : redirect(request, "/auth/login");
-  }
-
-  const userId = (session as SessionPayload).user?.id;
-
-  if (!userId) {
-    return redirect(request, "/auth/login");
-  }
-
-  const state = await resolveAuthenticatedState(userId, activeOrgId);
-  const entryState = resolvePostLoginRouting(state.organizations, activeOrgId);
-  const responseDestination =
-    isAuthRoute || isAppRoute ? entryState.destination : pathname;
-
-  if (isAuthRoute) {
     return withActiveOrgCookie(
-      redirect(request, entryState.destination),
-      entryState.activeOrgId,
+      redirect(request, state.destination),
+      state.activeOrgId,
     );
+  } catch (error) {
+    console.error("Proxy failed to resolve request state", error);
+    return redirect(request, buildUnavailableRedirectPath(request));
   }
-
-  if (isInviteAcceptRoute) {
-    return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
-  }
-
-  if (
-    isDashboardRoute ||
-    isOnboardingRoute ||
-    isWorkspacesRoute ||
-    isWorkspaceCreateRoute ||
-    isAppRoute
-  ) {
-    if (
-      !shouldAllowRoute(
-        pathname,
-        responseDestination,
-        state.onboardingPublished,
-      )
-    ) {
-      return withActiveOrgCookie(
-        redirect(request, responseDestination),
-        isAuthRoute || isAppRoute ? entryState.activeOrgId : state.activeOrgId,
-      );
-    }
-
-    if (isWorkspacesRoute || isWorkspaceCreateRoute) {
-      // Workspace selection and company creation run outside a company context.
-      return withActiveOrgCookie(NextResponse.next(), null);
-    }
-
-    return withActiveOrgCookie(NextResponse.next(), state.activeOrgId);
-  }
-
-  return withActiveOrgCookie(
-    redirect(request, state.destination),
-    state.activeOrgId,
-  );
 }
 
 export const config = {

@@ -51,6 +51,7 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
 
 export const agentFlowDefinitionSchema = z.strictObject({
   nodes: z.array(agentFlowNodeSchema).default([]),
+  config: jsonObjectSchema.optional(),
 });
 
 export const saveDraftVersionSchema = z.strictObject({

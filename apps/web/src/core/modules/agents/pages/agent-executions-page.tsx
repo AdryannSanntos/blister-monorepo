@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Eye, History } from "lucide-react";
+import { Bot, Eye, History } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { RunDetailSheet } from "src/core/modules/agents/components/executions/run-detail-sheet";
@@ -12,6 +12,7 @@ import {
 } from "src/core/modules/agents/hooks/use-agent-runs";
 import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
+import { AgentContentLayout } from "src/core/shared/components/ui/agent-content-layout";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -152,29 +153,23 @@ export function AgentExecutionsPage() {
   ];
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="shrink-0 border-b border-[var(--line-subtle)] bg-[var(--bg-base)] px-6 py-3">
-        <h2 className="text-[15px] font-medium text-[var(--fg-primary)]">
-          Execuções
-        </h2>
-        <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
-          Histórico de execuções deste agente.
-        </p>
-      </header>
-
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
-        <DataTable
-          columns={columns}
-          data={runs.data ?? []}
-          filters={filters}
-          emptyState={{
-            icon: History,
-            title: "Sem execuções ainda",
-            description:
-              "Quando este agente executar uma tarefa, ela vai aparecer aqui.",
-          }}
-        />
-      </div>
+    <AgentContentLayout
+      icon={History}
+      title="Execuções"
+      subtitle="Histórico de execuções deste agente."
+      contentClassName="min-h-0 w-full flex-1 overflow-y-auto px-6 py-6"
+    >
+      <DataTable
+        columns={columns}
+        data={runs.data ?? []}
+        filters={filters}
+        emptyState={{
+          icon: History,
+          title: "Sem execuções ainda",
+          description:
+            "Quando este agente executar uma tarefa, ela vai aparecer aqui.",
+        }}
+      />
 
       <RunDetailSheet
         open={Boolean(selectedRunId)}
@@ -182,6 +177,6 @@ export function AgentExecutionsPage() {
         orgId={orgId}
         runId={selectedRunId}
       />
-    </div>
+    </AgentContentLayout>
   );
 }

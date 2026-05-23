@@ -59,8 +59,10 @@ import {
 import { cn } from "src/core/shared/utils";
 
 type Item = {
-  label: string;
+  id?: string;
+  label: React.ReactNode;
   icon: LucideIcon;
+  action?: React.ReactNode;
   badge?: { value: string; tone?: "accent" | "warning" | "neutral" };
   beta?: boolean;
   soon?: boolean;
@@ -77,6 +79,7 @@ type Group = {
   /** Quando false, o label é estático (sem chevron, sem colapsar). Default: true quando há label. */
   collapsible?: boolean;
   items: Item[];
+  emptyState?: React.ReactNode;
 };
 
 const SIDEBAR_OPEN_KEY = "workana-ai:sidebar-open";
@@ -210,7 +213,7 @@ function AppSidebar({
       ...g,
       items: g.items.filter(canShowItem),
     }))
-    .filter((g) => !g.label || g.items.length > 0);
+    .filter((g) => !g.label || g.items.length > 0 || Boolean(g.emptyState));
 
   const labeledGroups = filteredGroups.filter((g) => g.label);
 
@@ -298,9 +301,9 @@ function AppSidebar({
           } as React.CSSProperties
         }
       >
-        <SidebarHeader className="gap-2.5 border-b border-[var(--line-subtle)] p-3">
+        <SidebarHeader className="h-[82px] gap-2.5 border-b border-[var(--line-subtle)] p-3">
           {collapsed ? (
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex h-full flex-col items-center justify-center gap-2">
               {workspaceNode ?? (
                 <Avatar shape="square" className="size-10">
                   <AvatarFallback className="text-[13px]">
@@ -320,12 +323,12 @@ function AppSidebar({
               ) : null}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <div className="min-w-0 flex-1">
+            <div className="flex h-full items-center gap-2">
+              <div className="min-w-0 flex-1 h-full">
                 {workspaceNode ?? (
                   <button
                     type="button"
-                    className="flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
+                    className="flex h-full w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
                   >
                     <Avatar shape="square" className="size-10">
                       <AvatarFallback className="text-[13px]">
@@ -393,105 +396,127 @@ function AppSidebar({
                   ) : null}
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <SidebarGroupContent>
-                      <SidebarMenu
-                        className={cn(
-                          "gap-0.5",
-                          isLabeledGroup &&
-                            !collapsed &&
-                            "ml-2 border-l border-[var(--line-subtle)] pl-2",
-                        )}
-                      >
-                        {group.items.map((item) => {
-                          const Icon = item.icon;
-                          const isActive = item.match
-                            ? item.match(pathname)
-                            : item.href
-                              ? pathname === item.href
-                              : item.active;
-                          const content = (
-                            <>
-                              <span className="relative inline-flex">
-                                <Icon className="size-4 shrink-0" />
-                                {item.dot ? (
-                                  <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
-                                ) : null}
-                              </span>
-                              {!collapsed ? (
-                                <span className="flex-1 truncate text-left">
-                                  {item.label}
-                                </span>
-                              ) : null}
-                            </>
-                          );
-                          const button = (
-                            <SidebarMenuButton
-                              asChild={Boolean(item.href) && !item.soon}
-                              isActive={isActive}
-                              disabled={item.soon}
-                              onClick={!item.soon ? item.onSelect : undefined}
-                              className={cn(
-                                "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
-                                "hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]",
-                                "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
-                                item.soon && "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--fg-secondary)]",
-                                collapsed && "justify-center px-0",
-                              )}
-                            >
-                              {item.href && !item.soon ? (
-                                <Link href={item.href}>{content}</Link>
-                              ) : (
-                                content
-                              )}
-                            </SidebarMenuButton>
-                          );
-                          return (
-                            <SidebarMenuItem
-                              key={item.label}
-                              className="relative"
-                            >
-                              {isActive ? (
-                                <span
-                                  aria-hidden
-                                  className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
-                                />
-                              ) : null}
-                              {collapsed ? (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    {button}
-                                  </TooltipTrigger>
-                                  <TooltipContent side="right">
-                                    {item.label}
-                                    {item.soon ? " · Em breve" : ""}
-                                  </TooltipContent>
-                                </Tooltip>
-                              ) : (
-                                button
-                              )}
-                              {!collapsed && (item.badge || item.soon) ? (
-                                <SidebarMenuBadge className="pointer-events-none">
-                                  {item.soon ? (
-                                    <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
-                                      Em breve
-                                    </span>
-                                  ) : item.badge ? (
-                                    <span className={cn(
-                                      "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
-                                      item.badge.tone === "accent"
-                                        ? "bg-[var(--accent-soft)] text-[var(--accent)]"
-                                        : item.badge.tone === "warning"
-                                          ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
-                                          : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
-                                    )}>
-                                      {item.badge.value}
-                                    </span>
+                      {group.items.length === 0 && group.emptyState && !collapsed ? (
+                        <div
+                          className={cn(
+                            "ml-2 rounded-[var(--r-md)] border border-dashed border-[var(--line-default)] bg-[var(--bg-sunken)] px-3 py-3 text-[12px] text-[var(--fg-tertiary)]",
+                            isLabeledGroup && "ml-2",
+                          )}
+                        >
+                          {group.emptyState}
+                        </div>
+                      ) : (
+                        <SidebarMenu
+                          className={cn(
+                            "gap-0.5",
+                            isLabeledGroup &&
+                              !collapsed &&
+                              "ml-2 border-l border-[var(--line-subtle)] pl-2",
+                          )}
+                        >
+                          {group.items.map((item) => {
+                            const Icon = item.icon;
+                            const isActive =
+                              typeof item.active === "boolean"
+                                ? item.active
+                                : item.match
+                                  ? item.match(pathname)
+                                  : item.href
+                                    ? pathname === item.href
+                                    : false;
+                            const content = (
+                              <>
+                                <span className="relative inline-flex">
+                                  <Icon className="size-4 shrink-0" />
+                                  {item.dot ? (
+                                    <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
                                   ) : null}
-                                </SidebarMenuBadge>
-                              ) : null}
-                            </SidebarMenuItem>
-                          );
-                        })}
-                      </SidebarMenu>
+                                </span>
+                                {!collapsed ? (
+                                  <span className="flex-1 truncate text-left">
+                                    {item.label}
+                                  </span>
+                                ) : null}
+                              </>
+                            );
+                            const button = (
+                              <SidebarMenuButton
+                                asChild={Boolean(item.href) && !item.soon}
+                                isActive={isActive}
+                                disabled={item.soon}
+                                onClick={!item.soon ? item.onSelect : undefined}
+                                className={cn(
+                                  "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
+                                  "hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]",
+                                  "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
+                                  item.soon &&
+                                    "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--fg-secondary)]",
+                                  collapsed && "justify-center px-0",
+                                )}
+                              >
+                                {item.href && !item.soon ? (
+                                  <Link href={item.href}>{content}</Link>
+                                ) : (
+                                  content
+                                )}
+                              </SidebarMenuButton>
+                            );
+                            return (
+                              <SidebarMenuItem
+                                key={item.id ?? item.href ?? (typeof item.label === "string" ? item.label : item.id)}
+                                className="relative"
+                              >
+                                {isActive ? (
+                                  <span
+                                    aria-hidden
+                                    className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
+                                  />
+                                ) : null}
+                                {collapsed ? (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      {button}
+                                    </TooltipTrigger>
+                                    <TooltipContent side="right">
+                                      {item.label}
+                                      {item.soon ? " · Em breve" : ""}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                ) : item.action ? (
+                                  <div className="flex w-full min-w-0 items-center pr-2">
+                                    <div className="min-w-0 flex-1 overflow-hidden">{button}</div>
+                                    <div className="shrink-0 pl-1">{item.action}</div>
+                                  </div>
+                                ) : (
+                                  button
+                                )}
+                                {!collapsed && (item.badge || item.soon) ? (
+                                  <SidebarMenuBadge className="pointer-events-none">
+                                    {item.soon ? (
+                                      <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
+                                        Em breve
+                                      </span>
+                                    ) : item.badge ? (
+                                      <span
+                                        className={cn(
+                                          "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
+                                          item.badge.tone === "accent"
+                                            ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                                            : item.badge.tone === "warning"
+                                              ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
+                                              : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
+                                        )}
+                                      >
+                                        {item.badge.value}
+                                      </span>
+                                    ) : null}
+                                  </SidebarMenuBadge>
+                                ) : null}
+                              </SidebarMenuItem>
+                            );
+                          })}
+                        </SidebarMenu>
+                      )}
                     </SidebarGroupContent>
                   </CollapsibleContent>
                 </SidebarGroup>

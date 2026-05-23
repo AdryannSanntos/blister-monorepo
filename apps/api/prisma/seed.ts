@@ -22,10 +22,10 @@ const SEED_ORG_ID = 'seed_dev_workana_ai_org';
 const SEED_ONBOARDING_DATA = {
   'company-basics': {
     companyName: 'Workana AI',
-    industry: 'SaaS B2B para operacao com freelancers, fornecedores e times remotos',
+    industry: 'Tecnologia / SaaS',
     description:
       'Workana AI organiza contexto, briefing, equipe, permissoes, assets, agentes e integracoes para empresas que coordenam trabalho distribuido com foco em execucao.',
-    website: 'https://www.workana.com',
+    website: 'https://www.workana.com.br',
   },
   positioning: {
     mission:
@@ -38,8 +38,7 @@ const SEED_ONBOARDING_DATA = {
   'products-services': {
     products:
       'Workspace por empresa, onboarding do Brain, gestao de equipe, roles e permissoes, assets de contexto, integracoes e agentes operacionais.',
-    pricing:
-      'Modelo SaaS B2B por empresa, com expansao futura por assentos, uso de agentes e creditos.',
+    pricing: 'Assinatura (SaaS)',
   },
   'target-audience': {
     idealCustomer:
@@ -47,7 +46,7 @@ const SEED_ONBOARDING_DATA = {
     painPoints:
       'Briefings descentralizados, perda de contexto, onboarding lento, baixa previsibilidade, retrabalho e dificuldade para manter padrao entre pessoas e agentes.',
     channels:
-      'Base Workana, indicacao, inside sales, conteudo consultivo e parcerias com operacoes e liderancas de growth, marketing e delivery.',
+      'Base Workana, indicacao, inside sales, conteudo consultivo e parcerias com operacoes e liderancas de growth, marketing e delivery., Orgânico / SEO, Email marketing, Eventos / Webinars, Mídia paga (Ads)',
   },
   'tone-of-voice': {
     tone: 'Direto, consultivo, operacional e confiante.',
@@ -206,6 +205,20 @@ async function main() {
   });
 
   console.log('  Membership: owner');
+
+  await prisma.platformRoleAssignment.upsert({
+    where: {
+      userId_role: { userId: user.id, role: 'platform_admin' },
+    },
+    update: {},
+    create: {
+      userId: user.id,
+      role: 'platform_admin',
+      assignedBy: user.id,
+    },
+  });
+
+  console.log('  Platform role: platform_admin');
 
   for (const provider of AI_PROVIDERS) {
     await prisma.aIProvider.upsert({

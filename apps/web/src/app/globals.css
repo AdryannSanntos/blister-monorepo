@@ -403,12 +403,23 @@ div[data-slot="input-group"]:has([aria-invalid="true"]) {
 }
 
 /* Form field focus — !important needed: border-color is overridden by equal-specificity hover utilities */
-input[data-slot="input"]:focus,
-textarea[data-slot="textarea"]:focus {
+input[data-slot="input"]:not([data-slot="input-group-control"]):focus,
+textarea[data-slot="textarea"]:not([data-slot="input-group-control"]):focus {
   border-color: var(--accent) !important;
   background-color: var(--bg-base);
   box-shadow: 0 0 0 3px var(--accent-soft);
   outline: none;
+}
+
+/* Controls inside InputGroup should never paint their own focus ring — the group does it */
+input[data-slot="input-group-control"]:focus,
+textarea[data-slot="input-group-control"]:focus,
+input[data-slot="input-group-control"]:focus-visible,
+textarea[data-slot="input-group-control"]:focus-visible {
+  border: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 button[data-slot="select-trigger"]:focus {
@@ -435,6 +446,28 @@ div[data-slot="input-group"][aria-invalid="true"]:focus-within,
 div[data-slot="input-group"]:has([aria-invalid="true"]:focus) {
   border-color: var(--danger) !important;
   box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+/* ─── @xyflow/react theme overrides ──────────────────────────────────────── */
+.react-flow {
+  --xy-node-background-color-default: transparent;
+  --xy-node-color-default: var(--fg-primary);
+  --xy-node-border-default: 0;
+  --xy-node-boxshadow-default: none;
+  --xy-edge-stroke-default: var(--accent);
+  --xy-edge-stroke-selected-default: var(--accent);
+  --xy-connectionline-stroke-default: var(--accent);
+  --xy-handle-background-color-default: var(--accent);
+  --xy-handle-border-color-default: var(--bg-raised);
+  --xy-background-pattern-lines-color-default: transparent;
+  --xy-background-pattern-dots-color-default: transparent;
+}
+
+.react-flow__node {
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--fg-primary);
 }
 
 /* ─── markdown prose ──────────────────────────────────────────────────────── */

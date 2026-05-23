@@ -24,6 +24,50 @@ apps/web/src/core/shared/components/ui/  shadcn/ui oficial
 - A UI usa tokens semânticos, não cores raw.
 - Reutilizar componentes existentes antes de criar novos.
 
+## Domínio de agentes
+
+Para qualquer alteração em `apps/web/src/core/modules/agents/**`, `apps/web/src/components/agent-elements/**` ou rotas de agente, **leia `docs/skills/agents-skill.md` antes**. Ele cobre:
+
+- Workspace `/dashboard/workspace/agents/[agentId]/*` (layout, sidebar floating, botão de fechar)
+- `AgentInactiveDialog` em modo `blocking` — sempre que `agent.status !== "active"`
+- Workflow builder (React Flow, overrides obrigatórios em `globals.css`, menu radial de context, edge delete que segue o cursor, single-menu-open por node)
+- Chat (suggestions só em new conversation, execução inline expandable sem drawer, timestamp/menu só em hover, espaçamento 24px entre mensagens / 16px dentro)
+- Ciclo de vida `save → publish → activate` em uma única ação
+- Guard de datas/números do backend (`Number.isNaN`, `?? 0`)
+
+## Espaçamento padronizado
+
+| Contexto | Valor |
+|----------|-------|
+| Entre mensagens de chat | `gap-6` (24px) |
+| Dentro de uma mensagem (bubble → execution → footer) | `gap-4` (16px) |
+| Tools dentro do bubble do agente | `space-y-4` (16px) |
+| Sections de uma página (PageLayout) | `gap-6` |
+| Entre cards/blocos em sidebar | `gap-2`/`gap-3` |
+
+Padrão geral: **16px dentro de um agrupamento, 24px entre agrupamentos**. Não inventar valores soltos via arbitrary classes.
+
+## React Flow no projeto
+
+Para qualquer canvas que use `@xyflow/react`, garantir que `globals.css` tem os overrides:
+
+```css
+.react-flow {
+  --xy-node-background-color-default: transparent;
+  --xy-edge-stroke-default: var(--accent);
+  --xy-handle-background-color-default: var(--accent);
+  --xy-handle-border-color-default: var(--bg-raised);
+  --xy-background-pattern-lines-color-default: transparent;
+}
+.react-flow__node { background: transparent !important; border: 0 !important; }
+```
+
+Sem isso, React Flow injeta `#fff` por trás dos nodes mesmo em dark mode.
+
+## InputGroup — anel único de foco
+
+Toda customização de `InputGroup` precisa garantir que o input interno (`data-slot="input-group-control"`) não pinta seu próprio focus ring. Os overrides globais em `globals.css` cuidam disso — não recriar regras que dêem `box-shadow` no controle interno.
+
 ## Regras de UX para Agentes V1
 
 - Chat geral e editor de workflow devem usar layout full-focus compartilhado (fora do dashboard shell).

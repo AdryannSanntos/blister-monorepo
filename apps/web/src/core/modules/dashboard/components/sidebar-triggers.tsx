@@ -54,7 +54,7 @@ export function WorkspaceTrigger({
           className={
             collapsed
               ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-              : "flex w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
+              : "flex h-full w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
           }
         >
           <Avatar shape="square" className={collapsed ? "size-8" : "size-10"}>

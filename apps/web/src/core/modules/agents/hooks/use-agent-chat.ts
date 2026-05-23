@@ -22,8 +22,20 @@ export type ChatMessageRunSummary = {
     id: string;
     blockType: string;
     status: string;
+    inputPayload: unknown;
+    outputPayload: unknown;
+    errorMessage: string | null;
     createdAt: string;
   }>;
+};
+
+export type ChatAttachment = {
+  id: string;
+  filename: string;
+  contentType: string;
+  size?: number;
+  url?: string;
+  textContent?: string;
 };
 
 export type ChatMessage = {
@@ -59,10 +71,10 @@ export function useAgentThreads(
     queryKey: threadsKey(orgId ?? "", agentId ?? ""),
     enabled: Boolean(orgId && agentId),
     queryFn: async () => {
-      const { data } = await apiClient.get<{ items: ChatThread[] }>(
+      const { data } = await apiClient.get<{ threads: ChatThread[] }>(
         `/organizations/${orgId}/agents/${agentId}/chat/threads`,
       );
-      return data.items ?? [];
+      return data.threads ?? [];
     },
   });
 }
@@ -76,10 +88,10 @@ export function useAgentMessages(
     queryKey: messagesKey(orgId ?? "", agentId ?? "", threadId ?? ""),
     enabled: Boolean(orgId && agentId && threadId),
     queryFn: async () => {
-      const { data } = await apiClient.get<{ items: ChatMessage[] }>(
+      const { data } = await apiClient.get<{ messages: ChatMessage[] }>(
         `/organizations/${orgId}/agents/${agentId}/chat/threads/${threadId}/messages`,
       );
-      return data.items ?? [];
+      return data.messages ?? [];
     },
     refetchInterval: (query) =>
       hasActiveRun(query.state.data as ChatMessage[] | undefined)
@@ -115,17 +127,50 @@ export function useCreateThread(
   });
 }
 
+export function useDeleteThread(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (threadId: string) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      await apiClient.delete(
+        `/organizations/${orgId}/agents/${agentId}/chat/threads/${threadId}`,
+      );
+      return threadId;
+    },
+    onSuccess: (threadId) => {
+      if (orgId && agentId) {
+        queryClient.invalidateQueries({ queryKey: threadsKey(orgId, agentId) });
+        queryClient.removeQueries({
+          queryKey: messagesKey(orgId, agentId, threadId),
+        });
+      }
+      toast.success("Conversa excluida.");
+    },
+    onError: () => toast.error("Erro ao excluir conversa."),
+  });
+}
+
 export function useSendMessage(
   orgId: string | null | undefined,
   agentId: string | null | undefined,
 ) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { threadId: string; content: string }) => {
+    mutationFn: async (input: {
+      threadId: string;
+      content: string;
+      attachments?: ChatAttachment[];
+    }) => {
       if (!orgId || !agentId) throw new Error("orgId and agentId required");
       const { data } = await apiClient.post<ChatMessage>(
         `/organizations/${orgId}/agents/${agentId}/chat/threads/${input.threadId}/messages`,
-        { content: input.content },
+        {
+          content: input.content,
+          attachments: input.attachments ?? [],
+        },
       );
       return data;
     },
@@ -165,6 +210,29 @@ export function useEditAndBranch(
       }
     },
     onError: () => toast.error("Erro ao editar mensagem."),
+  });
+}
+
+export function useRenameThread(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { threadId: string; title: string }) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.patch<{ id: string; title: string }>(
+        `/organizations/${orgId}/agents/${agentId}/chat/threads/${input.threadId}`,
+        { title: input.title },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      if (orgId && agentId) {
+        queryClient.invalidateQueries({ queryKey: threadsKey(orgId, agentId) });
+      }
+    },
+    onError: () => toast.error("Erro ao renomear conversa."),
   });
 }
 

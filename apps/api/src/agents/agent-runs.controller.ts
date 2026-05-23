@@ -18,7 +18,7 @@ import { AgentRunsService } from './agent-runs.service';
 import { executeAgentSchema, getAgentRunSchema, listAgentRunsSchema } from './dto';
 import { z } from 'zod';
 
-@Controller('organizations/:orgId/agents')
+@Controller('organizations/:orgId')
 export class AgentRunsController {
   constructor(private readonly agentRunsService: AgentRunsService) {}
 
@@ -39,7 +39,7 @@ export class AgentRunsController {
     return this.agentRunsService.createQueuedRun(orgId, agentId, currentUser.id, parsed.data);
   }
 
-  @Get('runs')
+  @Get('agent-runs')
   @RequirePermission('agent.run.read')
   async listRuns(@Param('orgId') orgId: string, @Query() query: unknown, @Req() req: Request) {
     const parsed = listAgentRunsSchema.safeParse(query);
@@ -51,7 +51,7 @@ export class AgentRunsController {
     return this.agentRunsService.listRuns(orgId, parsed.data, currentUser.id);
   }
 
-  @Get('runs/:runId')
+  @Get('agent-runs/:runId')
   @RequirePermission('agent.run.read')
   async getRun(
     @Param('orgId') orgId: string,

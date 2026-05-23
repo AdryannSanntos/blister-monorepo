@@ -2,7 +2,14 @@
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Archive, Bot, ExternalLink, MoreHorizontal, Plus } from "lucide-react";
+import {
+  Archive,
+  Bot,
+  ExternalLink,
+  MoreHorizontal,
+  Plus,
+  RotateCcw,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { CreateAgentDialog } from "src/core/modules/agents/components/create-agent-dialog";
@@ -11,6 +18,7 @@ import {
   type AgentStatus,
   useArchiveAgent,
   useCompanyAgents,
+  useReactivateAgent,
 } from "src/core/modules/agents/hooks/use-agents";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
@@ -60,6 +68,7 @@ export function AgentsPage() {
   const orgId = activeOrgId ?? "";
   const agents = useCompanyAgents(orgId);
   const archive = useArchiveAgent(orgId);
+  const reactivate = useReactivateAgent(orgId);
   const [createOpen, setCreateOpen] = useState(false);
   const [agentToArchive, setAgentToArchive] = useState<Agent | null>(null);
 
@@ -70,13 +79,20 @@ export function AgentsPage() {
       header: "Nome",
       meta: { label: "Nome" },
       cell: ({ row }) => (
-        <Link
-          href={`/dashboard/workspace/agents/${row.original.id}/chat`}
-          className="flex items-center gap-2 text-[13px] font-medium text-[var(--fg-primary)] hover:text-[var(--accent)]"
-        >
-          <Bot className="size-4 text-[var(--fg-tertiary)]" />
-          {row.original.name}
-        </Link>
+        row.original.status === "archived" ? (
+          <span className="flex items-center gap-2 text-[13px] font-medium text-[var(--fg-secondary)]">
+            <Bot className="size-4 text-[var(--fg-quaternary)]" />
+            {row.original.name}
+          </span>
+        ) : (
+          <Link
+            href={`/dashboard/workspace/agents/${row.original.id}/chat`}
+            className="flex items-center gap-2 text-[13px] font-medium text-[var(--fg-primary)] hover:text-[var(--accent)]"
+          >
+            <Bot className="size-4 text-[var(--fg-tertiary)]" />
+            {row.original.name}
+          </Link>
+        )
       ),
     },
     {
@@ -126,24 +142,37 @@ export function AgentsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/dashboard/workspace/agents/${row.original.id}/chat`}
-                >
-                  <ExternalLink className="size-3.5" />
-                  Abrir workspace
-                </Link>
-              </DropdownMenuItem>
-              <PermissionGate permission="agent.delete">
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-[var(--danger)]"
-                  onClick={() => setAgentToArchive(row.original)}
-                  disabled={row.original.status === "archived"}
-                >
-                  <Archive className="size-3.5" />
-                  Arquivar
+              {row.original.status !== "archived" ? (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/dashboard/workspace/agents/${row.original.id}/chat`}
+                  >
+                    <ExternalLink className="size-3.5" />
+                    Abrir workspace
+                  </Link>
                 </DropdownMenuItem>
+              ) : null}
+              <PermissionGate permission="agent.delete">
+                {row.original.status === "archived" ? (
+                  <DropdownMenuItem
+                    onClick={() => void reactivate.mutateAsync(row.original.id)}
+                    disabled={reactivate.isPending}
+                  >
+                    <RotateCcw className="size-3.5" />
+                    Reativar
+                  </DropdownMenuItem>
+                ) : (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => setAgentToArchive(row.original)}
+                    >
+                      <Archive className="size-3.5" />
+                      Arquivar
+                    </DropdownMenuItem>
+                  </>
+                )}
               </PermissionGate>
             </DropdownMenuContent>
           </DropdownMenu>

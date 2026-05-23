@@ -59,6 +59,7 @@ export class AgentChatService {
       threadId: input.threadId,
       role: 'user',
       content: input.content,
+      metadata: toJsonValue({ attachments: input.attachments ?? [] }),
       createdByUserId: userId,
     });
     const decision = await this.agentIntentService.classify({ message: input.content });
@@ -78,6 +79,7 @@ export class AgentChatService {
           message: input.content,
           threadId: thread.id,
           messageId: message.id,
+          attachments: input.attachments ?? [],
         },
       },
     );
@@ -111,6 +113,10 @@ export class AgentChatService {
     });
 
     if (!originalThread || originalThread.organizationId !== organizationId) {
+      throw new NotFoundException('Chat thread not found');
+    }
+
+    if (originalThread.createdByUserId !== userId) {
       throw new NotFoundException('Chat thread not found');
     }
 
@@ -322,15 +328,23 @@ export class AgentChatService {
         regeneratedFromMessageId: true,
         createdAt: true,
         agentRun: {
-          select: {
-            id: true,
-            status: true,
-            queuePosition: true,
-            steps: {
-              select: { id: true, blockType: true, status: true, createdAt: true },
-              orderBy: { createdAt: 'asc' },
-            },
-          },
+              select: {
+                id: true,
+                status: true,
+                queuePosition: true,
+                steps: {
+                  select: {
+                    id: true,
+                    blockType: true,
+                    status: true,
+                    inputPayload: true,
+                    outputPayload: true,
+                    errorMessage: true,
+                    createdAt: true,
+                  },
+                  orderBy: { createdAt: 'asc' },
+                },
+              },
         },
       },
     });
@@ -339,6 +353,45 @@ export class AgentChatService {
       messages,
       nextCursor: messages.length === options.limit ? messages[messages.length - 1]?.id : null,
     };
+  }
+
+  async deleteThread(
+    organizationId: string,
+    agentId: string,
+    threadId: string,
+    userId: string,
+  ) {
+    const thread = await this.prisma.agentChatThread.findFirst({
+      where: {
+        id: threadId,
+        organizationId,
+        agentId,
+        scope: 'agent_chat',
+        createdByUserId: userId,
+      },
+      select: { id: true },
+    });
+
+    if (!thread) {
+      throw new NotFoundException('Chat thread not found');
+    }
+
+    await this.ensureThreadHasNoActiveExecution(threadId);
+    await this.prisma.agentChatThread.delete({ where: { id: threadId } });
+
+    return { id: threadId };
+  }
+
+  async renameThread(organizationId: string, threadId: string, userId: string, title: string) {
+    const thread = await this.prisma.agentChatThread.findFirst({
+      where: { id: threadId, organizationId, createdByUserId: userId },
+    });
+    if (!thread) throw new NotFoundException('Chat thread not found');
+    return this.prisma.agentChatThread.update({
+      where: { id: threadId },
+      data: { title },
+      select: { id: true, title: true, updatedAt: true },
+    });
   }
 
   private async ensureThreadExists(threadId: string) {

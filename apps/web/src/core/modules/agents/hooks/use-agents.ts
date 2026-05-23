@@ -47,7 +47,10 @@ export type UpdateAgentInput = {
 };
 
 export type SaveDraftVersionInput = {
-  flowDefinition: { nodes: unknown[] };
+  flowDefinition: {
+    config?: Record<string, unknown>;
+    nodes: unknown[];
+  };
   inputSchema: Record<string, unknown>;
   outputSchema: Record<string, unknown>;
   notes?: string;
@@ -151,6 +154,27 @@ export function useArchiveAgent(orgId: string | null | undefined) {
       toast.success("Agente arquivado.");
     },
     onError: () => toast.error("Erro ao arquivar agente."),
+  });
+}
+
+export function useReactivateAgent(orgId: string | null | undefined) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (agentId: string) => {
+      if (!orgId) throw new Error("orgId required");
+      const { data } = await apiClient.post<Agent>(
+        `/organizations/${orgId}/agents/${agentId}/reactivate`,
+      );
+      return data;
+    },
+    onSuccess: (_data, agentId) => {
+      if (orgId) {
+        queryClient.invalidateQueries({ queryKey: agentsKey(orgId) });
+        queryClient.invalidateQueries({ queryKey: agentKey(orgId, agentId) });
+      }
+      toast.success("Agente reativado.");
+    },
+    onError: () => toast.error("Erro ao reativar agente."),
   });
 }
 

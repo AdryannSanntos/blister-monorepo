@@ -200,4 +200,16 @@ export class AgentsService {
       data: { status: 'archived', updatedByUserId: userId },
     });
   }
+
+  async reactivateAgent(organizationId: string, agentId: string, userId: string) {
+    const agent = await this.getCompanyAgent(organizationId, agentId);
+
+    return this.prisma.companyAgent.update({
+      where: { id: agentId },
+      data: {
+        status: agent.activeVersionId ? 'active' : 'draft',
+        updatedByUserId: userId,
+      },
+    });
+  }
 }

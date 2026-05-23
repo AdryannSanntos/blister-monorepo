@@ -25,6 +25,17 @@ type Props = {
   runId: string | null;
 };
 
+function formatRunDate(value: string | null | undefined): string {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  try {
+    return format(date, "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR });
+  } catch {
+    return "—";
+  }
+}
+
 function statusVariant(
   status: AgentRun["status"],
 ): "success" | "secondary" | "destructive" | "warning" {
@@ -54,15 +65,7 @@ export function RunDetailSheet({ open, onOpenChange, orgId, runId }: Props) {
             Detalhes da execução
           </SheetTitle>
           <SheetDescription className="text-[12px] text-[var(--fg-tertiary)]">
-            {run.data
-              ? format(
-                  new Date(run.data.createdAt),
-                  "dd 'de' MMMM 'de' yyyy 'às' HH:mm",
-                  {
-                    locale: ptBR,
-                  },
-                )
-              : "Carregando..."}
+            {run.data ? formatRunDate(run.data.createdAt) : "Carregando..."}
           </SheetDescription>
         </SheetHeader>
 
@@ -77,9 +80,9 @@ export function RunDetailSheet({ open, onOpenChange, orgId, runId }: Props) {
                 {statusLabel(run.data.status)}
               </Badge>
               <div className="flex items-center gap-3 text-[12px] text-[var(--fg-tertiary)] tabular-nums">
-                <span>{run.data.creditDelta} créditos</span>
+                <span>{run.data.creditDelta ?? 0} créditos</span>
                 <span className="text-[var(--fg-quaternary)]">·</span>
-                <span>R$ {run.data.technicalCost.toFixed(4)}</span>
+                <span>R$ {(run.data.technicalCost ?? 0).toFixed(4)}</span>
               </div>
             </div>
 

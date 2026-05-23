@@ -120,4 +120,15 @@ export class AgentsController {
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentsService.activateVersion(orgId, agentId, versionId, currentUser.id);
   }
+
+  @Post(':agentId/reactivate')
+  @RequirePermission('agent.delete')
+  async reactivateAgent(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Req() req: Request,
+  ) {
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentsService.reactivateAgent(orgId, agentId, currentUser.id);
+  }
 }

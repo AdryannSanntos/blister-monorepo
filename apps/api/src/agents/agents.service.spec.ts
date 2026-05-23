@@ -127,6 +127,76 @@ describe('AgentsService', () => {
     expect(result.activeVersionId).toBe('version-1');
   });
 
+  it('end-to-end: save draft → publish → activate marks agent active', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+    });
+
+    prisma.agentVersion.findFirst.mockResolvedValueOnce(null);
+    prisma.agentVersion.findFirst.mockResolvedValueOnce(null);
+    prisma.agentVersion.create.mockResolvedValue({
+      id: 'v-1',
+      agentId: 'agent-1',
+      status: 'draft',
+      versionNumber: 1,
+    });
+
+    const saved = await service.saveDraftVersion(
+      'org-1',
+      'agent-1',
+      'user-1',
+      {
+        flowDefinition: {
+          config: { name: 'Test' },
+          nodes: [
+            { id: 'input', type: 'input' },
+            { id: 'output', type: 'output' },
+          ],
+        },
+        inputSchema: {},
+        outputSchema: {},
+      },
+    );
+    expect(saved.status).toBe('draft');
+
+    prisma.agentVersion.findFirst.mockResolvedValueOnce({
+      id: 'v-1',
+      agentId: 'agent-1',
+      status: 'draft',
+    });
+    prisma.agentVersion.update.mockResolvedValueOnce({
+      id: 'v-1',
+      status: 'published',
+    });
+    const published = await service.publishVersion(
+      'org-1',
+      'agent-1',
+      'v-1',
+      'user-1',
+    );
+    expect(published.status).toBe('published');
+
+    prisma.agentVersion.findFirst.mockResolvedValueOnce({
+      id: 'v-1',
+      agentId: 'agent-1',
+      status: 'published',
+    });
+    prisma.companyAgent.update.mockResolvedValueOnce({
+      id: 'agent-1',
+      activeVersionId: 'v-1',
+      status: 'active',
+    });
+    const activated = await service.activateVersion(
+      'org-1',
+      'agent-1',
+      'v-1',
+      'user-1',
+    );
+    expect(activated.activeVersionId).toBe('v-1');
+    expect(activated.status).toBe('active');
+  });
+
   it('rejects activation of draft version', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
     prisma.agentVersion.findFirst.mockResolvedValue({
@@ -155,5 +225,99 @@ describe('AgentsService', () => {
     prisma.companyAgent.findFirst.mockResolvedValue(null);
 
     await expect(service.getCompanyAgent('org-1', 'agent-1')).rejects.toThrow(NotFoundException);
+  });
+
+  it('throws NotFoundException when template does not exist', async () => {
+    prisma.agentTemplate.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.createCompanyAgent('org-1', 'user-1', {
+        templateId: 'nonexistent-template',
+        slug: 'agent-x',
+        name: 'Agent X',
+        category: 'analysis',
+      }),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it('throws BadRequestException when trying to set status to active via update', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
+
+    await expect(
+      service.updateCompanyAgent('org-1', 'agent-1', 'user-1', { status: 'active' }),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('throws BadRequestException when publishing a non-draft version', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
+    prisma.agentVersion.findFirst.mockResolvedValue({
+      id: 'version-1',
+      agentId: 'agent-1',
+      status: 'published',
+    });
+
+    await expect(
+      service.publishVersion('org-1', 'agent-1', 'version-1', 'user-1'),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('throws NotFoundException when version does not belong to agent', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
+    prisma.agentVersion.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.publishVersion('org-1', 'agent-1', 'version-other-agent', 'user-1'),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it('creates new draft version when no draft exists', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
+    // findFirst retorna null (sem draft) → findFirst novamente para o último version number
+    prisma.agentVersion.findFirst
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ id: 'version-1', versionNumber: 1 });
+    prisma.agentVersion.create.mockResolvedValue({ id: 'version-2', versionNumber: 2, status: 'draft' });
+
+    await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
+      flowDefinition: { nodes: [] },
+      inputSchema: {},
+      outputSchema: {},
+    });
+
+    expect(prisma.agentVersion.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ versionNumber: 2, status: 'draft' }),
+      }),
+    );
+  });
+
+  it('updates existing draft version when draft exists', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
+    prisma.agentVersion.findFirst.mockResolvedValue({
+      id: 'draft-1',
+      agentId: 'agent-1',
+      status: 'draft',
+      versionNumber: 2,
+    });
+    prisma.agentVersion.update.mockResolvedValue({ id: 'draft-1', status: 'draft' });
+
+    await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
+      flowDefinition: { nodes: [{ id: 'step1' }] },
+      inputSchema: {},
+      outputSchema: {},
+    });
+
+    expect(prisma.agentVersion.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'draft-1' } }),
+    );
+    expect(prisma.agentVersion.create).not.toHaveBeenCalled();
+  });
+
+  it('throws NotFoundException when updating agent from wrong org', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue(null);
+
+    await expect(
+      service.updateCompanyAgent('org-evil', 'agent-1', 'user-1', { name: 'Renamed' }),
+    ).rejects.toThrow(NotFoundException);
   });
 });

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import type { Request } from 'express';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
@@ -138,5 +138,31 @@ export class AgentChatController {
       { ...parsed.data, threadId },
       currentUser.id,
     );
+  }
+
+  @Patch('threads/:threadId')
+  @RequirePermission('agent.execute')
+  async renameThread(
+    @Param('orgId') orgId: string,
+    @Param('threadId') threadId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const parsed = z.object({ title: z.string().min(1).max(200) }).safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentChatService.renameThread(orgId, threadId, currentUser.id, parsed.data.title);
+  }
+
+  @Delete('threads/:threadId')
+  @RequirePermission('agent.execute')
+  async deleteThread(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Param('threadId') threadId: string,
+    @Req() req: Request,
+  ) {
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentChatService.deleteThread(orgId, agentId, threadId, currentUser.id);
   }
 }

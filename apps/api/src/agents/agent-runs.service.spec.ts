@@ -10,7 +10,9 @@ import { AIRuntimeService } from '../ai-runtime/ai-runtime.service';
 import { CreditsService } from '../credits/credits.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentExecutionService } from './agent-execution.service';
+import { AgentQueueService } from './agent-queue.service';
 import { AgentRunsService } from './agent-runs.service';
+import { HtmlPreviewService } from './html-preview.service';
 
 const makeMockPrisma = () => ({
   companyAgent: { findFirst: jest.fn() },
@@ -19,14 +21,20 @@ const makeMockPrisma = () => ({
     findMany: jest.fn(),
     findFirst: jest.fn(),
     update: jest.fn(),
+    count: jest.fn().mockResolvedValue(0),
   },
   agentVersion: { findFirst: jest.fn() },
   agentRunStep: { create: jest.fn() },
 });
 
+const makeMockQueueService = () => ({
+  promoteNextQueuedRun: jest.fn().mockResolvedValue(null),
+});
+
 describe('AgentRunsService', () => {
   let service: AgentRunsService;
   let executionService: { enqueueRun: jest.Mock; processRun: jest.Mock; storeRunError: jest.Mock };
+  let queueService: ReturnType<typeof makeMockQueueService>;
   let prisma: ReturnType<typeof makeMockPrisma>;
 
   beforeEach(async () => {
@@ -36,12 +44,14 @@ describe('AgentRunsService', () => {
       processRun: jest.fn(),
       storeRunError: jest.fn(),
     };
+    queueService = makeMockQueueService();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AgentRunsService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentExecutionService, useValue: executionService },
+        { provide: AgentQueueService, useValue: queueService },
       ],
     }).compile();
 
@@ -71,6 +81,7 @@ describe('AgentRunsService', () => {
       activeVersionId: 'version-1',
     });
     prisma.agentRun.create.mockResolvedValue({ id: 'run-1', status: 'queued' });
+    queueService.promoteNextQueuedRun.mockResolvedValue({ id: 'run-1' });
 
     await service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} });
 
@@ -104,13 +115,100 @@ describe('AgentRunsService', () => {
     );
   });
 
-  it('throws when agent is missing during queued run creation', async () => {
+  it('throws NotFoundException when agent is missing', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue(null);
 
     await expect(service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} })).rejects.toThrow(
       NotFoundException,
     );
   });
+
+  it('throws NotFoundException when agent has no active version', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      activeVersionId: null,
+    });
+
+    await expect(
+      service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} }),
+    ).rejects.toThrow(NotFoundException);
+  });
+
+  it('sets threadId and sourceMessageId from input payload', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      activeVersionId: 'v-1',
+    });
+    prisma.agentRun.create.mockResolvedValue({ id: 'run-1', status: 'queued' });
+
+    await service.createQueuedRun('org-1', 'agent-1', 'user-1', {
+      input: { threadId: 'thread-1', messageId: 'msg-1' },
+    });
+
+    expect(prisma.agentRun.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ threadId: 'thread-1', sourceMessageId: 'msg-1' }),
+    });
+  });
+
+  it('sets threadId to null when input.threadId is empty string', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      activeVersionId: 'v-1',
+    });
+    prisma.agentRun.create.mockResolvedValue({ id: 'run-1', status: 'queued' });
+
+    await service.createQueuedRun('org-1', 'agent-1', 'user-1', {
+      input: { threadId: '', messageId: '' },
+    });
+
+    expect(prisma.agentRun.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ threadId: null, sourceMessageId: null }),
+    });
+  });
+
+  it('resets lease when enqueueRun fails', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      activeVersionId: 'v-1',
+    });
+    prisma.agentRun.create.mockResolvedValue({ id: 'run-1', status: 'queued' });
+    queueService.promoteNextQueuedRun.mockResolvedValue({ id: 'run-1' });
+    executionService.enqueueRun.mockRejectedValue(new Error('trigger.dev offline'));
+    prisma.agentRun.update.mockResolvedValue({ id: 'run-1', status: 'queued' });
+
+    await service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} });
+
+    expect(prisma.agentRun.update).toHaveBeenCalledWith({
+      where: { id: 'run-1' },
+      data: expect.objectContaining({ status: 'queued', processingLeaseId: null, leaseExpiresAt: null }),
+    });
+  });
+
+  it('scopes listRuns to organization (cross-org isolation)', async () => {
+    prisma.agentRun.findMany.mockResolvedValue([]);
+
+    await service.listRuns('org-safe', {}, 'user-1');
+
+    expect(prisma.agentRun.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ organizationId: 'org-safe' }),
+      }),
+    );
+  });
+});
+
+const makeMockExecutionQueueService = () => ({
+  claimProcessingLease: jest.fn().mockResolvedValue(true),
+  createAttemptStep: jest.fn().mockResolvedValue({ id: 'step-1' }),
+  completeAttemptStep: jest.fn().mockResolvedValue(undefined),
+  markRunCompleted: jest.fn().mockResolvedValue(undefined),
+  promoteNextQueuedRun: jest.fn().mockResolvedValue(null),
+  releaseProcessingLease: jest.fn().mockResolvedValue(undefined),
+  promoteRun: jest.fn().mockResolvedValue(null),
 });
 
 describe('AgentExecutionService', () => {
@@ -124,9 +222,11 @@ describe('AgentExecutionService', () => {
     recordTechnicalCost: jest.fn(),
     debitRunCredits: jest.fn(),
   };
+  let execQueueService: ReturnType<typeof makeMockExecutionQueueService>;
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
+    execQueueService = makeMockExecutionQueueService();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -134,6 +234,8 @@ describe('AgentExecutionService', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AIRuntimeService, useValue: aiRuntimeService },
         { provide: CreditsService, useValue: creditsService },
+        { provide: HtmlPreviewService, useValue: { generateHtmlPreview: jest.fn() } },
+        { provide: AgentQueueService, useValue: execQueueService },
       ],
     }).compile();
 
@@ -146,6 +248,8 @@ describe('AgentExecutionService', () => {
       organizationId: 'org-1',
       agentId: 'agent-1',
       agentVersionId: 'version-1',
+      status: 'running',
+      attemptCount: 2, // skip retry logic → goes straight to storeRunError
       inputPayload: {},
       agentVersion: { flowDefinition: { nodes: [{ id: 'step-1', type: 'llm_generate', config: {} }] } },
     });

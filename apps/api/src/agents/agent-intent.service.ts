@@ -1,28 +1,35 @@
 import { Injectable } from '@nestjs/common';
 
-const FINAL_ARTIFACT_PATTERNS = [
-  /\b(pdf|png|ppt|powerpoint|docx?|xlsx?|csv)\b/i,
-  /\b(arquivo|artefato|entrega|versao|versão) final\b/i,
-  /\bexporta(r| isso)?\b/i,
-  /\bgera(r)? (um|uma)?\s*(pdf|png|arquivo|artefato|entrega)\b/i,
+// Mensagens que são claramente apenas conversa curta — sem tarefa implícita.
+// Tudo o que não cair nestes padrões vai para execução, pois o agente precisa
+// responder via run. O caminho conversacional sem run ainda não tem resposta
+// implementada, portanto o default seguro é sempre executar.
+const CONVERSATIONAL_ONLY_PATTERNS = [
+  /^(oi|olá|ola|hey|hi|hello|tudo\s+bem|bom\s+dia|boa\s+tarde|boa\s+noite)[.!?]?\s*$/i,
+  /^(obrigad[ao]|valeu|thanks|thank\s+you)[.!?]?\s*$/i,
+  /^(ok|okay|certo|entendi|entendido|show|beleza)[.!?]?\s*$/i,
 ];
 
 export type AgentIntentDecision = {
   mode: 'execution' | 'conversational';
-  reason: 'final_artifact_requested' | 'conversation_only';
+  reason: 'task_requested' | 'conversation_only';
 };
 
 @Injectable()
 export class AgentIntentService {
   async classify(input: { message: string }): Promise<AgentIntentDecision> {
     const normalizedMessage = input.message.trim();
-    const isFinalArtifactRequest = FINAL_ARTIFACT_PATTERNS.some((pattern) =>
+
+    // Respostas muito curtas e claramente conversacionais não precisam de run.
+    // Para todas as demais mensagens (perguntas, demandas, tarefas, análises,
+    // planos, etc.) criamos um run para que o agente possa responder.
+    const isConversationalOnly = CONVERSATIONAL_ONLY_PATTERNS.some((pattern) =>
       pattern.test(normalizedMessage),
     );
 
     return {
-      mode: isFinalArtifactRequest ? 'execution' : 'conversational',
-      reason: isFinalArtifactRequest ? 'final_artifact_requested' : 'conversation_only',
+      mode: isConversationalOnly ? 'conversational' : 'execution',
+      reason: isConversationalOnly ? 'conversation_only' : 'task_requested',
     };
   }
 }
