@@ -47,10 +47,65 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
   }),
   questionFormBlockSchema.extend({ config: jsonObjectSchema.optional() }),
   htmlValidationBlockSchema.extend({ config: jsonObjectSchema.optional() }),
+  // Phase 1 new block types
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('decision'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('boolean'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('if_else'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('agent_call'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('clarification'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('form'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('validation'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('output_formatter'),
+    config: jsonObjectSchema.default({}),
+  }),
+  z.strictObject({
+    id: z.string().min(1),
+    type: z.literal('finalizer'),
+    config: jsonObjectSchema.default({}),
+  }),
 ]);
+
+const agentFlowEdgeSchema = z.object({
+  id: z.string().min(1),
+  sourceNodeId: z.string().min(1),
+  sourcePortKey: z.string().min(1),
+  targetNodeId: z.string().min(1),
+  targetPortKey: z.string().min(1),
+});
 
 export const agentFlowDefinitionSchema = z.strictObject({
   nodes: z.array(agentFlowNodeSchema).default([]),
+  edges: z.array(agentFlowEdgeSchema).default([]),
   config: jsonObjectSchema.optional(),
 });
 
@@ -64,4 +119,6 @@ export const saveDraftVersionSchema = z.strictObject({
 export const publishVersionSchema = z.strictObject({});
 
 export type SaveDraftVersionDto = z.infer<typeof saveDraftVersionSchema>;
+export type AgentFlowEdge = z.infer<typeof agentFlowEdgeSchema>;
+export type AgentFlowDefinition = z.infer<typeof agentFlowDefinitionSchema>;
 export const validateBlock = (block: unknown) => agentFlowNodeSchema.parse(block);
