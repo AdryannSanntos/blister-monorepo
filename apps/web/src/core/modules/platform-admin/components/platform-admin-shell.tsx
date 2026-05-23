@@ -1,42 +1,43 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bot,
-  ChartColumn,
-  LayoutTemplate,
-  Shield,
-  Sparkles,
-  Workflow,
-} from "lucide-react";
+import { Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { Badge } from "src/core/shared/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "src/core/shared/components/ui/card";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { cn } from "src/core/shared/utils";
+import { PLATFORM_ADMIN_NAV_ITEMS } from "./platform-admin-primitives";
 import { usePlatformRoleAccess } from "../hooks/use-platform-admin";
-
-const NAV_ITEMS = [
-  { label: "Admins", href: "/workspaces/admin/admins", icon: Shield },
-  { label: "Providers", href: "/workspaces/admin/providers", icon: Sparkles },
-  { label: "Models", href: "/workspaces/admin/models", icon: Bot },
-  { label: "Policies", href: "/workspaces/admin/policies", icon: BadgeCheck },
-  {
-    label: "Templates",
-    href: "/workspaces/admin/templates",
-    icon: LayoutTemplate,
-  },
-  { label: "Runs", href: "/workspaces/admin/runs", icon: Workflow },
-  { label: "Costs", href: "/workspaces/admin/costs", icon: ChartColumn },
-] as const;
 
 export function PlatformAdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { canAccessPlatformAdmin, isLoading } = usePlatformRoleAccess();
+  const { canAccessPlatformAdmin, isLoading, roles } = usePlatformRoleAccess();
 
   if (isLoading) {
     return (
-      <div className="h-full animate-pulse rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)]" />
+      <div className="grid gap-6">
+        <div className="h-[168px] animate-pulse rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)]" />
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            "admin-shell-skeleton-1",
+            "admin-shell-skeleton-2",
+            "admin-shell-skeleton-3",
+            "admin-shell-skeleton-4",
+          ].map((key) => (
+            <div
+              key={key}
+              className="h-[112px] animate-pulse rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)]"
+            />
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -53,35 +54,69 @@ export function PlatformAdminShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
-      <aside className="rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)] p-3">
-        <p className="px-2 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-          Plataforma
-        </p>
-        <nav className="mt-2 space-y-1">
-          {NAV_ITEMS.map((item) => {
+    <div className="grid gap-6">
+      <Card className="bg-[var(--bg-base)]">
+        <CardHeader className="gap-4 border-b border-[var(--line-subtle)] pb-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary">Conta</Badge>
+                {roles.map((role) => (
+                  <Badge key={role} variant="outline">
+                    {role}
+                  </Badge>
+                ))}
+              </div>
+              <CardTitle className="mt-3 text-[28px] tracking-[-0.03em]">
+                Admin de plataforma
+              </CardTitle>
+              <p className="mt-2 max-w-[760px] text-[14px] leading-[1.6] text-[var(--fg-tertiary)]">
+                Central unica para governar acessos globais, catalogo de IA,
+                restricoes por empresa, execucoes e custos tecnicos do Workana
+                AI fora do contexto de uma company especifica.
+              </p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="grid gap-3 pt-5 md:grid-cols-2 xl:grid-cols-4">
+          {PLATFORM_ADMIN_NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const active =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+              item.href === "/workspaces/admin"
+                ? pathname === item.href
+                : pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-[var(--r-md)] px-2.5 py-2 text-[13px] transition-colors",
+                  "rounded-[var(--r-lg)] border px-4 py-4 transition-colors duration-[var(--dur-fast)]",
                   active
-                    ? "bg-[var(--accent-soft)] font-medium text-[var(--accent)]"
-                    : "text-[var(--fg-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]",
+                    ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                    : "border-[var(--line-default)] bg-[var(--bg-raised)] hover:border-[var(--line-strong)] hover:bg-[var(--bg-hover)]",
                 )}
               >
-                <Icon className="size-4 shrink-0" />
-                {item.label}
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[13px] font-medium text-[var(--fg-primary)]">
+                      {item.label}
+                    </p>
+                    <p className="mt-1 text-[12px] leading-[1.55] text-[var(--fg-tertiary)]">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-base)] p-2">
+                    <Icon className="size-4 text-[var(--fg-secondary)]" />
+                  </div>
+                </div>
               </Link>
             );
           })}
-        </nav>
-      </aside>
+        </CardContent>
+      </Card>
+
       <div>{children}</div>
     </div>
   );

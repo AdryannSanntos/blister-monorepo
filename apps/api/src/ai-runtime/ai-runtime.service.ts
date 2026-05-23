@@ -222,17 +222,24 @@ export class AIRuntimeService {
   }
 
   private resolveEnvCredential(providerSlug: string): AIRuntimeResolvedCredential | null {
-    if (providerSlug !== 'openrouter') {
-      return null;
-    }
+    const envMap: Record<string, string | undefined> = {
+      openrouter: process.env.OPENROUTER_API_KEY,
+      openai: process.env.OPENAI_API_KEY,
+      anthropic: process.env.ANTHROPIC_API_KEY,
+      gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+    };
 
-    const value = process.env.OPENROUTER_API_KEY?.trim();
+    const value = envMap[providerSlug]?.trim();
     if (!value) {
       return null;
     }
 
+    if (value === 'change-me') {
+      return null;
+    }
+
     return {
-      id: 'env:openrouter',
+      id: `env:${providerSlug}`,
       value,
       scope: 'platform',
     };

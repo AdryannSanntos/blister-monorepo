@@ -1,7 +1,13 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import type { AIRuntimeResolvedCredential, AIProviderAdapter } from '../ai-runtime/adapters/ai-provider.adapter';
+import { AnthropicAdapter } from '../ai-runtime/adapters/anthropic.adapter';
+import { GeminiAdapter } from '../ai-runtime/adapters/gemini.adapter';
+import { OpenAIAdapter } from '../ai-runtime/adapters/openai.adapter';
+import { OpenRouterAdapter } from '../ai-runtime/adapters/openrouter.adapter';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import type {
+  BuilderCatalogQueryDto,
   CreateCredentialDto,
   CreateModelDto,
   CreateProviderDto,
@@ -23,7 +29,13 @@ const toJsonValue = (value: unknown): Prisma.InputJsonValue =>
 
 @Injectable()
 export class AICatalogService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly openRouterAdapter: OpenRouterAdapter,
+    private readonly openAIAdapter: OpenAIAdapter,
+    private readonly anthropicAdapter: AnthropicAdapter,
+    private readonly geminiAdapter: GeminiAdapter,
+  ) {}
 
   async listProviders() {
     const providers = await this.prisma.aIProvider.findMany({
@@ -238,6 +250,178 @@ export class AICatalogService {
     }
   }
 
+  async syncProviderModels(providerId: string, organizationId?: string) {
+    const provider = await this.prisma.aIProvider.findUnique({ where: { id: providerId } });
+
+    if (!provider) {
+      throw new NotFoundException('AI provider not found');
+    }
+
+    const credential = await this.resolveSyncCredential(providerId, provider.slug, organizationId);
+    if (!credential) {
+      return {
+        providerId: provider.id,
+        providerSlug: provider.slug,
+        status: 'skipped' as const,
+        reason: 'No credential available for provider sync',
+      };
+    }
+
+    const adapter = this.resolveAdapter(provider.slug);
+    const remoteModels = await adapter.listModels(credential);
+    let createdCount = 0;
+    let updatedCount = 0;
+
+    for (const model of remoteModels) {
+      const existingModel = await this.prisma.aIModel.findFirst({
+        where: {
+          providerId,
+          OR: [{ externalModelId: model.externalModelId }, { slug: model.slug }],
+        },
+        select: { id: true },
+      });
+
+      if (existingModel) {
+        await this.prisma.aIModel.update({
+          where: { id: existingModel.id },
+          data: {
+            slug: model.slug,
+            name: model.name,
+            description: model.description,
+            externalModelId: model.externalModelId,
+            status: model.status,
+            capabilityMetadata: toJsonValue(model.capabilityMetadata),
+            pricingMetadata: toJsonValue(model.pricingMetadata),
+            limitsMetadata: toJsonValue(model.limitsMetadata),
+            schemaMetadata: toJsonValue(model.schemaMetadata),
+          },
+        });
+        updatedCount += 1;
+        continue;
+      }
+
+      await this.prisma.aIModel.create({
+        data: {
+          providerId,
+          slug: model.slug,
+          name: model.name,
+          description: model.description,
+          externalModelId: model.externalModelId,
+          status: model.status,
+          capabilityMetadata: toJsonValue(model.capabilityMetadata),
+          pricingMetadata: toJsonValue(model.pricingMetadata),
+          limitsMetadata: toJsonValue(model.limitsMetadata),
+          schemaMetadata: toJsonValue(model.schemaMetadata),
+        },
+      });
+      createdCount += 1;
+    }
+
+    return {
+      providerId: provider.id,
+      providerSlug: provider.slug,
+      status: 'synced' as const,
+      syncedCount: remoteModels.length,
+      createdCount,
+      updatedCount,
+    };
+  }
+
+  async syncAllProviderModels(organizationId?: string) {
+    const providers = await this.prisma.aIProvider.findMany({ orderBy: { name: 'asc' } });
+    const results: Array<Record<string, unknown>> = [];
+
+    for (const provider of providers) {
+      try {
+        results.push(await this.syncProviderModels(provider.id, organizationId));
+      } catch (error) {
+        results.push({
+          providerId: provider.id,
+          providerSlug: provider.slug,
+          status: 'error',
+          reason: error instanceof Error ? error.message : 'Provider sync failed',
+        });
+      }
+    }
+
+    return { results };
+  }
+
+  async listBuilderCatalog(organizationId: string, filters: BuilderCatalogQueryDto = {}) {
+    const policies = await this.prisma.aIProviderPolicy.findMany({
+      where: { organizationId },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    const allowedModelIds = Array.from(
+      new Set(policies.flatMap((policy) => policy.allowedModelIds)),
+    );
+
+    const models = await this.prisma.aIModel.findMany({
+      where: {
+        status: 'active',
+        ...(allowedModelIds.length > 0 ? { id: { in: allowedModelIds } } : {}),
+      },
+      include: {
+        provider: true,
+      },
+      orderBy: [{ providerId: 'asc' }, { name: 'asc' }],
+    });
+
+    const filteredModels = models.filter((model) => {
+      const provider = model.provider;
+      if (!provider || provider.status !== 'active') {
+        return false;
+      }
+
+      return this.matchesBuilderCatalogKind(model.capabilityMetadata, filters.kind);
+    });
+
+    const providerIds = new Set(filteredModels.map((model) => model.providerId));
+
+    const providers = await this.prisma.aIProvider.findMany({
+      where: {
+        status: 'active',
+        id: { in: Array.from(providerIds) },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    return {
+      providers: providers.map((provider) => ({
+        id: provider.id,
+        slug: provider.slug,
+        name: provider.name,
+      })),
+      models: filteredModels.map((model) => ({
+        id: model.id,
+        providerId: model.providerId,
+        name: model.name,
+        capabilityMetadata: model.capabilityMetadata,
+      })),
+    };
+  }
+
+  private matchesBuilderCatalogKind(
+    capabilityMetadata: unknown,
+    kind: BuilderCatalogQueryDto['kind'],
+  ) {
+    if (!kind) {
+      return true;
+    }
+
+    const capabilities =
+      capabilityMetadata && typeof capabilityMetadata === 'object' && !Array.isArray(capabilityMetadata)
+        ? (capabilityMetadata as Record<string, unknown>)
+        : {};
+
+    if (kind === 'image') {
+      return capabilities.image === true;
+    }
+
+    return capabilities.text === true || capabilities.image !== true;
+  }
+
   private sanitizeProvider<T extends Record<string, unknown>>(provider: T) {
     const { credentials: _credentials, ...safeProvider } = provider;
     return safeProvider;
@@ -257,6 +441,78 @@ export class AICatalogService {
   private sanitizeCredential<T extends CredentialWithSecret>(credential: T) {
     const { value: _value, ...safeCredential } = credential;
     return safeCredential;
+  }
+
+  private resolveAdapter(providerSlug: string): AIProviderAdapter {
+    switch (providerSlug) {
+      case 'openrouter':
+        return this.openRouterAdapter;
+      case 'openai':
+        return this.openAIAdapter;
+      case 'anthropic':
+        return this.anthropicAdapter;
+      case 'gemini':
+        return this.geminiAdapter;
+      default:
+        throw new NotFoundException(`No adapter available for provider ${providerSlug}`);
+    }
+  }
+
+  private async resolveSyncCredential(
+    providerId: string,
+    providerSlug: string,
+    organizationId?: string,
+  ): Promise<AIRuntimeResolvedCredential | null> {
+    if (organizationId) {
+      const companyCredential = await this.prisma.aICredential.findFirst({
+        where: { organizationId, providerId },
+        orderBy: { updatedAt: 'desc' },
+      });
+
+      if (companyCredential) {
+        return { id: companyCredential.id, value: companyCredential.value, scope: 'company' };
+      }
+    }
+
+    const platformCredential = await this.prisma.aICredential.findFirst({
+      where: { organizationId: null, providerId },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    if (platformCredential) {
+      return { id: platformCredential.id, value: platformCredential.value, scope: 'platform' };
+    }
+
+    return this.resolveEnvCredential(providerSlug);
+  }
+
+  private resolveEnvCredential(providerSlug: string): AIRuntimeResolvedCredential | null {
+    const envMap: Record<string, string | undefined> = {
+      openrouter: process.env.OPENROUTER_API_KEY,
+      openai: process.env.OPENAI_API_KEY,
+      anthropic: process.env.ANTHROPIC_API_KEY,
+      gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+    };
+
+    const value = this.normalizeEnvCredential(envMap[providerSlug]);
+    if (!value) {
+      return null;
+    }
+
+    return {
+      id: `env:${providerSlug}`,
+      value,
+      scope: 'platform',
+    };
+  }
+
+  private normalizeEnvCredential(value: string | undefined) {
+    const normalized = value?.trim();
+    if (!normalized || normalized === 'change-me') {
+      return null;
+    }
+
+    return normalized;
   }
 
   private handleKnownError(error: unknown, resourceLabel: string): never {

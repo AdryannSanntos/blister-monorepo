@@ -282,7 +282,7 @@ export function AgentChatPage() {
       }
       subtitle={threadId && currentThread ? (agent.data?.name ?? "Workana AI") : (agent.data?.description ?? "Workana AI")}
       banner={branchBanner}
-      contentClassName="flex min-h-0 flex-1 flex-col"
+      contentClassName="flex min-h-0 flex-1 flex-col [--chat-content-width:860px]"
     >
       <div
         ref={scrollRef}
@@ -309,7 +309,7 @@ export function AgentChatPage() {
             </div>
           </div>
         ) : (
-          <div className="flex w-full flex-col gap-6 px-6 py-6">
+          <div className="mx-auto flex w-full max-w-[var(--chat-content-width)] flex-col gap-6 px-6 py-6">
             {messages.isLoading ? (
               <div className="flex justify-center py-10">
                 <ToolRowBase
@@ -367,6 +367,7 @@ export function AgentChatPage() {
         />
         <div className="w-full">
           <InputBar
+            className="[--an-max-width:var(--chat-content-width)]"
             status={isRunActive ? "streaming" : "ready"}
             onSend={({ content }) =>
               editingDraft !== undefined

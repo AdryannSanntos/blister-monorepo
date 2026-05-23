@@ -302,7 +302,7 @@ describe('AgentsService', () => {
     prisma.agentVersion.update.mockResolvedValue({ id: 'draft-1', status: 'draft' });
 
     await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
-      flowDefinition: { nodes: [{ id: 'step1' }] },
+      flowDefinition: { nodes: [{ id: 'step1', type: 'input' }] },
       inputSchema: {},
       outputSchema: {},
     });

@@ -8,6 +8,7 @@ import {
   type LucideIcon,
   RefreshCw,
   Sparkles,
+  X,
 } from "lucide-react";
 
 export type BlockTypeKey =
@@ -123,9 +124,12 @@ export const BLOCK_TYPES: Record<BlockTypeKey, BlockTypeDef> = {
 export const STEP_ICONS: Record<string, LucideIcon> = {
   intent_classification: Brain,
   context_retrieval: Database,
+  llm_generate: Sparkles,
   llm_call: Sparkles,
+  image_generate: Image,
   html_validation: FileCode2,
   output_storage: HardDrive,
+  run_error: X,
   attempt: RefreshCw,
 };
 

@@ -1,19 +1,26 @@
 import { Test, type TestingModule } from '@nestjs/testing';
+import { AnthropicAdapter } from '../ai-runtime/adapters/anthropic.adapter';
+import { GeminiAdapter } from '../ai-runtime/adapters/gemini.adapter';
+import { OpenAIAdapter } from '../ai-runtime/adapters/openai.adapter';
+import { OpenRouterAdapter } from '../ai-runtime/adapters/openrouter.adapter';
 import { PrismaService } from '../prisma/prisma.service';
 import { AICatalogService } from './ai-catalog.service';
 
 const makeMockPrisma = () => ({
   aIProvider: {
     findMany: jest.fn(),
+    findUnique: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
   },
   aIModel: {
     findMany: jest.fn(),
+    findFirst: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
   },
   aICredential: {
+    findFirst: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
   },
@@ -28,12 +35,23 @@ type MockPrisma = ReturnType<typeof makeMockPrisma>;
 describe('AICatalogService', () => {
   let service: AICatalogService;
   let prisma: MockPrisma;
+  const openRouterAdapter = { listModels: jest.fn() };
+  const openAIAdapter = { listModels: jest.fn() };
+  const anthropicAdapter = { listModels: jest.fn() };
+  const geminiAdapter = { listModels: jest.fn() };
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AICatalogService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        AICatalogService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: OpenRouterAdapter, useValue: openRouterAdapter },
+        { provide: OpenAIAdapter, useValue: openAIAdapter },
+        { provide: AnthropicAdapter, useValue: anthropicAdapter },
+        { provide: GeminiAdapter, useValue: geminiAdapter },
+      ],
     }).compile();
 
     service = module.get<AICatalogService>(AICatalogService);
@@ -361,5 +379,129 @@ describe('AICatalogService', () => {
       }),
     });
     expect(result.allowedModelIds).toEqual(['model-2']);
+  });
+
+  it('syncs remote models for a provider', async () => {
+    prisma.aIProvider.findUnique.mockResolvedValue({ id: 'provider-1', slug: 'openrouter', name: 'OpenRouter' });
+    prisma.aICredential.findFirst.mockResolvedValue({
+      id: 'credential-1',
+      value: 'secret',
+      providerId: 'provider-1',
+      organizationId: null,
+      updatedAt: new Date(),
+    });
+    prisma.aIModel.findFirst
+      .mockResolvedValueOnce({ id: 'model-1' })
+      .mockResolvedValueOnce(null);
+    openRouterAdapter.listModels.mockResolvedValue([
+      {
+        slug: 'existing-model',
+        name: 'Existing Model',
+        externalModelId: 'provider/existing-model',
+        status: 'active',
+        capabilityMetadata: { text: true },
+        pricingMetadata: {},
+        limitsMetadata: {},
+        schemaMetadata: {},
+      },
+      {
+        slug: 'new-model',
+        name: 'New Model',
+        externalModelId: 'provider/new-model',
+        status: 'active',
+        capabilityMetadata: { image: true },
+        pricingMetadata: {},
+        limitsMetadata: {},
+        schemaMetadata: {},
+      },
+    ]);
+    prisma.aIModel.update.mockResolvedValue({});
+    prisma.aIModel.create.mockResolvedValue({});
+
+    const result = await service.syncProviderModels('provider-1');
+
+    expect(openRouterAdapter.listModels).toHaveBeenCalledWith({
+      id: 'credential-1',
+      value: 'secret',
+      scope: 'platform',
+    });
+    expect(prisma.aIModel.findFirst).toHaveBeenCalledTimes(2);
+    expect(prisma.aIModel.update).toHaveBeenCalledTimes(1);
+    expect(prisma.aIModel.create).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(
+      expect.objectContaining({
+        providerId: 'provider-1',
+        providerSlug: 'openrouter',
+        status: 'synced',
+        createdCount: 1,
+        updatedCount: 1,
+      }),
+    );
+  });
+
+  it('skips sync when no credential exists for provider', async () => {
+    prisma.aIProvider.findUnique.mockResolvedValue({ id: 'provider-1', slug: 'openai', name: 'OpenAI' });
+    prisma.aICredential.findFirst.mockResolvedValue(null);
+
+    const result = await service.syncProviderModels('provider-1');
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        providerId: 'provider-1',
+        providerSlug: 'openai',
+        status: 'skipped',
+      }),
+    );
+  });
+
+  it('lists builder catalog scoped by organization policies and kind', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([
+      {
+        id: 'policy-1',
+        organizationId: 'org-1',
+        providerId: 'provider-1',
+        allowedModelIds: ['model-text', 'model-image'],
+        metadata: {},
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'model-text',
+        providerId: 'provider-1',
+        name: 'Text Model',
+        capabilityMetadata: { text: true },
+        provider: { id: 'provider-1', slug: 'openrouter', name: 'OpenRouter', status: 'active' },
+      },
+      {
+        id: 'model-image',
+        providerId: 'provider-1',
+        name: 'Image Model',
+        capabilityMetadata: { image: true },
+        provider: { id: 'provider-1', slug: 'openrouter', name: 'OpenRouter', status: 'active' },
+      },
+    ]);
+    prisma.aIProvider.findMany.mockResolvedValue([
+      { id: 'provider-1', slug: 'openrouter', name: 'OpenRouter', status: 'active' },
+    ]);
+
+    const result = await service.listBuilderCatalog('org-1', { kind: 'text' });
+
+    expect(prisma.aIProviderPolicy.findMany).toHaveBeenCalledWith({
+      where: { organizationId: 'org-1' },
+      orderBy: { updatedAt: 'desc' },
+    });
+    expect(result.providers).toEqual([
+      { id: 'provider-1', slug: 'openrouter', name: 'OpenRouter' },
+    ]);
+    expect(result.models).toEqual([
+      {
+        id: 'model-text',
+        providerId: 'provider-1',
+        name: 'Text Model',
+        capabilityMetadata: { text: true },
+      },
+    ]);
   });
 });

@@ -332,9 +332,11 @@ export class AgentChatService {
                 id: true,
                 status: true,
                 queuePosition: true,
+                errorMessage: true,
                 steps: {
                   select: {
                     id: true,
+                    blockKey: true,
                     blockType: true,
                     status: true,
                     inputPayload: true,

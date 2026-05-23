@@ -26,6 +26,8 @@ type FlowNodeData = {
   blockType: BlockTypeKey;
   label?: string;
   prompt?: string;
+  providerId?: string;
+  modelId?: string;
 };
 
 const DEFAULT_WORKFLOW_CONFIG: WorkflowConfig = {
@@ -36,11 +38,18 @@ const DEFAULT_WORKFLOW_CONFIG: WorkflowConfig = {
 };
 
 function draftVersionRef(
-  agentData: { versions?: Array<{ status: string }> } | undefined,
+  agentData:
+    | {
+        versions?: Array<{
+          id: string;
+          status: string;
+          updatedAt?: string;
+          flowDefinition?: unknown;
+        }>;
+      }
+    | undefined,
 ) {
-  return agentData?.versions?.find((v) => v.status === "draft") as
-    | { flowDefinition?: unknown }
-    | undefined;
+  return agentData?.versions?.find((v) => v.status === "draft");
 }
 
 const DEFAULT_NODES: Node<FlowNodeData>[] = [
@@ -79,6 +88,8 @@ export function AgentWorkflowPage() {
       agent.data?.versions?.find((v) => v.id === agent.data?.activeVersionId),
     [agent.data],
   );
+  const draftVersion = useMemo(() => draftVersionRef(agent.data), [agent.data]);
+  const displayedVersion = draftVersion ?? activeVersion;
 
   const [nodes, setNodes] = useState<Node<FlowNodeData>[]>(DEFAULT_NODES);
   const [edges, setEdges] = useState<Edge[]>(DEFAULT_EDGES);
@@ -87,17 +98,19 @@ export function AgentWorkflowPage() {
   const [workflowConfig, setWorkflowConfig] = useState<WorkflowConfig>(
     DEFAULT_WORKFLOW_CONFIG,
   );
-  const [hydrated, setHydrated] = useState(false);
 
-  // Hidrata o canvas a partir da versão ativa (ou rascunho mais recente).
+  // Sempre prioriza o rascunho quando ele existe para que o builder reflita a
+  // última versão editável, não apenas a versão atualmente ativa.
   useEffect(() => {
-    if (hydrated) return;
-    const version = activeVersion ?? draftVersionRef(agent.data);
-    if (!version?.flowDefinition) {
-      setHydrated(true);
+    if (!displayedVersion?.flowDefinition) {
+      setWorkflowConfig(DEFAULT_WORKFLOW_CONFIG);
+      setNodes(DEFAULT_NODES);
+      setEdges(DEFAULT_EDGES);
+      setSelectedNodeId(null);
+      setOpenMenuNodeId(null);
       return;
     }
-    const flow = version.flowDefinition as {
+    const flow = displayedVersion.flowDefinition as {
       config?: Partial<WorkflowConfig>;
       nodes?: Array<{
         id: string;
@@ -105,6 +118,8 @@ export function AgentWorkflowPage() {
         config?: {
           label?: string;
           prompt?: string;
+          providerId?: string;
+          modelId?: string;
           position?: { x: number; y: number };
           successors?: string[];
         };
@@ -115,7 +130,10 @@ export function AgentWorkflowPage() {
       ...(flow.config ?? {}),
     });
     if (!flow.nodes || flow.nodes.length === 0) {
-      setHydrated(true);
+      setNodes(DEFAULT_NODES);
+      setEdges(DEFAULT_EDGES);
+      setSelectedNodeId(null);
+      setOpenMenuNodeId(null);
       return;
     }
     setNodes(
@@ -127,6 +145,8 @@ export function AgentWorkflowPage() {
           blockType: n.type,
           label: n.config?.label,
           prompt: n.config?.prompt,
+          providerId: n.config?.providerId,
+          modelId: n.config?.modelId,
         },
       })),
     );
@@ -140,9 +160,10 @@ export function AgentWorkflowPage() {
         });
       }
     }
-    if (restoredEdges.length > 0) setEdges(restoredEdges);
-    setHydrated(true);
-  }, [activeVersion, agent.data, hydrated]);
+    setEdges(restoredEdges.length > 0 ? restoredEdges : DEFAULT_EDGES);
+    setSelectedNodeId(null);
+    setOpenMenuNodeId(null);
+  }, [displayedVersion]);
 
   const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? null;
 
@@ -201,6 +222,8 @@ export function AgentWorkflowPage() {
         config: {
           label: n.data.label,
           prompt: n.data.prompt ?? "",
+          ...(n.data.providerId ? { providerId: n.data.providerId } : {}),
+          ...(n.data.modelId ? { modelId: n.data.modelId } : {}),
           position: n.position,
           successors,
         },
@@ -217,7 +240,6 @@ export function AgentWorkflowPage() {
   }
 
   const canEdit = !cannot("update", "Agent");
-  const draftVersion = agent.data?.versions?.find((v) => v.status === "draft");
   const publishedNotActiveVersion = agent.data?.versions?.find(
     (v) => v.status === "published",
   );
@@ -311,6 +333,7 @@ export function AgentWorkflowPage() {
           />
         </div>
         <WorkflowSidebar
+          orgId={orgId}
           node={selectedNode}
           workflowConfig={workflowConfig}
           onWorkflowConfigChange={patchWorkflowConfig}

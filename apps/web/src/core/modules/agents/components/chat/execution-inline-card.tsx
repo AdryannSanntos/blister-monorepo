@@ -27,7 +27,7 @@ function statusIcon(status: string): { Icon: LucideIcon; tone: string } {
     return { Icon: Clock, tone: "text-[var(--fg-tertiary)]" };
   if (status === "running")
     return { Icon: Loader2, tone: "text-[var(--accent)] animate-spin" };
-  if (status === "completed")
+  if (status === "completed" || status === "success")
     return { Icon: Check, tone: "text-[var(--success)]" };
   if (status === "error") return { Icon: X, tone: "text-[var(--danger)]" };
   return { Icon: Clock, tone: "text-[var(--fg-tertiary)]" };
@@ -37,6 +37,8 @@ function statusLabel(status: string) {
   if (status === "queued") return "Aguardando na fila";
   if (status === "running") return "Executando";
   if (status === "completed") return "Concluído";
+  if (status === "success") return "Concluído";
+  if (status === "awaiting_user_validation") return "Aguardando revisão";
   if (status === "error") return "Erro";
   if (status === "cancelled") return "Cancelado";
   return status;
@@ -48,8 +50,9 @@ function statusLabel(status: string) {
 function adaptSteps(steps: ChatMessageRunSummary["steps"]): RunStep[] {
   return steps.map((s) => ({
     id: s.id,
+    blockKey: s.blockKey,
     blockType: s.blockType,
-    status: s.status as RunStep["status"],
+    status: (s.status === "success" ? "completed" : s.status) as RunStep["status"],
     inputPayload: s.inputPayload,
     outputPayload: s.outputPayload,
     errorMessage: s.errorMessage,
@@ -60,22 +63,86 @@ function adaptSteps(steps: ChatMessageRunSummary["steps"]): RunStep[] {
   }));
 }
 
+function normalizeWorkflowSteps(steps: RunStep[]) {
+  const latestByBlockKey = new Map<string, RunStep>();
+
+  for (const step of steps) {
+    if (step.blockType === "attempt") {
+      continue;
+    }
+
+    latestByBlockKey.set(step.blockKey, step);
+  }
+
+  return Array.from(latestByBlockKey.values());
+}
+
+function ensureFailureStep(
+  steps: RunStep[],
+  runStatus: string,
+  errorMessage?: string | null,
+) {
+  if (runStatus !== "error") {
+    return steps;
+  }
+
+  const hasErrorStep = steps.some((step) => step.status === "error");
+  if (hasErrorStep) {
+    return steps;
+  }
+
+  return [
+    ...steps,
+    {
+      id: "run-error",
+      blockKey: "run-error",
+      blockType: "run_error",
+      status: "error" as const,
+      inputPayload: {},
+      outputPayload: {},
+      errorMessage: errorMessage ?? "A execução falhou.",
+      retryCount: 0,
+      startedAt: null,
+      finishedAt: null,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+}
+
 export function ExecutionInlineCard({ run, orgId }: Props) {
   const [expanded, setExpanded] = useState(false);
   const { Icon, tone } = statusIcon(run.status);
-  const totalSteps = run.steps.length;
-  const completedSteps = run.steps.filter(
-    (s) => s.status === "completed",
+  const normalizedSummarySteps = ensureFailureStep(
+    normalizeWorkflowSteps(adaptSteps(run.steps)),
+    run.status,
+    run.errorMessage,
+  );
+  const totalSteps = normalizedSummarySteps.length;
+  const completedSteps = normalizedSummarySteps.filter(
+    (s) => s.status === "completed" || s.status === "success",
   ).length;
   const progress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
   const isActive = run.status === "queued" || run.status === "running";
 
   const detailedRun = useAgentRun(orgId, expanded ? run.id : null);
   const detailedSteps = detailedRun.data?.steps;
-  const stepsToRender: RunStep[] =
-    detailedSteps && detailedSteps.length > 0
-      ? detailedSteps
-      : adaptSteps(run.steps);
+  const resolvedStatus = detailedRun.data?.status ?? run.status;
+  const resolvedErrorMessage =
+    detailedRun.data?.errorMessage ?? run.errorMessage ?? null;
+  const stepsToRender: RunStep[] = ensureFailureStep(
+    normalizeWorkflowSteps(
+      detailedSteps && detailedSteps.length > 0
+        ? detailedSteps
+        : adaptSteps(run.steps),
+    ),
+    resolvedStatus,
+    resolvedErrorMessage,
+  );
+  const failurePreviewMessage =
+    resolvedErrorMessage ??
+    normalizedSummarySteps.find((step) => step.status === "error")
+      ?.errorMessage ??
+    null;
 
   return (
     <div className="flex w-full flex-col rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-base)] overflow-hidden">
@@ -128,6 +195,25 @@ export function ExecutionInlineCard({ run, orgId }: Props) {
         />
       </button>
 
+      {!expanded && run.status === "error" && (
+        <div className="border-t border-[var(--line-subtle)] px-3 py-2">
+          {normalizedSummarySteps.length > 0 ? (
+            <ExecutionTimeline
+              steps={normalizedSummarySteps}
+              defaultExpanded={false}
+            />
+          ) : failurePreviewMessage ? (
+            <p className="text-[11.5px] leading-[1.55] text-[var(--danger)]">
+              {failurePreviewMessage}
+            </p>
+          ) : (
+            <p className="text-[11.5px] leading-[1.55] text-[var(--danger)]">
+              A execução falhou.
+            </p>
+          )}
+        </div>
+      )}
+
       <div
         className={cn(
           "grid transition-[grid-template-rows] duration-200 ease-out",
@@ -145,11 +231,11 @@ export function ExecutionInlineCard({ run, orgId }: Props) {
                 Sem etapas registradas ainda.
               </p>
             ) : (
-              <ExecutionTimeline steps={stepsToRender} defaultExpanded />
+              <ExecutionTimeline steps={stepsToRender} defaultExpanded={false} />
             )}
-            {detailedRun.data?.errorMessage && (
+            {resolvedErrorMessage && (
               <div className="mt-3 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--danger)_30%,transparent)] bg-[color-mix(in_oklch,var(--danger)_8%,transparent)] p-2.5 text-[11.5px] text-[var(--danger)]">
-                {detailedRun.data.errorMessage}
+                {resolvedErrorMessage}
               </div>
             )}
           </div>

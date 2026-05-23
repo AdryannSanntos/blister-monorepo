@@ -56,7 +56,7 @@ export function ChatMessageBubble({
   const runIsActive =
     message.agentRun?.status === "queued" || message.agentRun?.status === "running";
   const userMessage: UIMessage = toUserUiMessage(message);
-  const toolSections = getMessageToolSections(message);
+  const toolSections = message.agentRun ? [] : getMessageToolSections(message);
 
   async function handleCopy() {
     try {
@@ -74,19 +74,19 @@ export function ChatMessageBubble({
         isUser ? "justify-end" : "justify-start",
       )}
     >
-      <div
-        className={cn(
-          "flex max-w-[min(100%,54rem)] flex-col gap-4",
-          isUser ? "items-end" : "items-start",
-        )}
-      >
+        <div
+          className={cn(
+            "flex max-w-[min(100%,54rem)] flex-col gap-2",
+            isUser ? "items-end" : "items-start",
+          )}
+        >
         {isUser ? (
           <div className="max-w-[80%]">
             <UserMessage message={userMessage} />
           </div>
         ) : (
           <div className="w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] shadow-[0_8px_28px_color-mix(in_oklch,#000_5%,transparent)]">
-            <div className="flex items-center gap-2 border-b border-[var(--line-subtle)] px-4 py-3">
+            <div className="flex items-center gap-2 border-b border-[var(--line-subtle)] px-5 py-3.5">
               <div className="flex size-8 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
                 <Bot className="size-4" />
               </div>
@@ -99,7 +99,7 @@ export function ChatMessageBubble({
                 </p>
               </div>
             </div>
-            <div className="space-y-4 px-4 py-4">
+            <div className="space-y-4 px-5 py-5">
               {message.content ? <Markdown content={message.content} /> : null}
 
               {toolSections.map((section, index) => (
@@ -124,7 +124,7 @@ export function ChatMessageBubble({
           </div>
         )}
 
-        {message.agentRun && (
+        {!isUser && message.agentRun && (
           <div className="w-full max-w-md">
             <ExecutionInlineCard run={message.agentRun} orgId={orgId} />
           </div>
@@ -134,6 +134,15 @@ export function ChatMessageBubble({
           <span className="text-[10.5px] text-[var(--fg-quaternary)] tabular-nums">
             {formatTime(message.createdAt)}
           </span>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Copiar mensagem"
+            className="size-5 text-[var(--fg-tertiary)] hover:text-[var(--fg-primary)]"
+            onClick={handleCopy}
+          >
+            <Copy className="size-3" />
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

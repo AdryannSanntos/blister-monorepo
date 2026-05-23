@@ -18,8 +18,10 @@ export type ChatMessageRunSummary = {
   id: string;
   status: string;
   queuePosition: number | null;
+  errorMessage: string | null;
   steps: Array<{
     id: string;
+    blockKey: string;
     blockType: string;
     status: string;
     inputPayload: unknown;

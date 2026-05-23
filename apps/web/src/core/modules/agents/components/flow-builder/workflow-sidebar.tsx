@@ -15,6 +15,14 @@ import {
 import { Label } from "src/core/shared/components/ui/label";
 import { ScrollArea } from "src/core/shared/components/ui/scroll-area";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "src/core/shared/components/ui/select";
+import { useOrgAIBuilderCatalog } from "src/core/modules/agents/hooks/use-org-ai-builder-catalog";
+import {
   Tabs,
   TabsContent,
   TabsList,
@@ -33,6 +41,8 @@ type WorkflowNodeData = {
   blockType: BlockTypeKey;
   label?: string;
   prompt?: string;
+  providerId?: string;
+  modelId?: string;
 };
 
 export type WorkflowConfig = {
@@ -43,6 +53,7 @@ export type WorkflowConfig = {
 };
 
 type Props = {
+  orgId: string;
   node: Node<WorkflowNodeData> | null;
   workflowConfig: WorkflowConfig;
   onWorkflowConfigChange: (patch: Partial<WorkflowConfig>) => void;
@@ -62,6 +73,7 @@ const CATEGORY_ORDER: BlockCategoryKey[] = [
 export const WORKFLOW_BLOCK_DRAG_TYPE = "application/workflow-block";
 
 export function WorkflowSidebar({
+  orgId,
   node,
   workflowConfig,
   onWorkflowConfigChange,
@@ -286,19 +298,30 @@ export function WorkflowSidebar({
                   </FieldBlock>
 
                   {canConfigurePrompt ? (
-                    <FieldBlock
-                      label="Prompt"
-                      description="Use variáveis como {{chave}} para reaproveitar saídas anteriores."
-                    >
-                      <Textarea
-                        value={node.data.prompt ?? ""}
-                        onChange={(event) =>
-                          onChange(node.id, { prompt: event.target.value })
+                    <>
+                      <GenerationModelFields
+                        orgId={orgId}
+                        blockType={
+                          node.data.blockType as "llm_generate" | "image_generate"
                         }
-                        placeholder="Descreva o que este bloco deve fazer..."
-                        className="min-h-[160px]"
+                        providerId={node.data.providerId}
+                        modelId={node.data.modelId}
+                        onChange={(patch) => onChange(node.id, patch)}
                       />
-                    </FieldBlock>
+                      <FieldBlock
+                        label="Prompt"
+                        description="Use variáveis como {{chave}} para reaproveitar saídas anteriores."
+                      >
+                        <Textarea
+                          value={node.data.prompt ?? ""}
+                          onChange={(event) =>
+                            onChange(node.id, { prompt: event.target.value })
+                          }
+                          placeholder="Descreva o que este bloco deve fazer..."
+                          className="min-h-[160px]"
+                        />
+                      </FieldBlock>
+                    </>
                   ) : null}
 
                   {node.data.blockType !== "input" &&
@@ -383,6 +406,108 @@ export function WorkflowSidebar({
         </TabsContent>
       </Tabs>
     </aside>
+  );
+}
+
+function GenerationModelFields({
+  orgId,
+  blockType,
+  providerId,
+  modelId,
+  onChange,
+}: {
+  orgId: string;
+  blockType: "llm_generate" | "image_generate";
+  providerId?: string;
+  modelId?: string;
+  onChange: (patch: Partial<WorkflowNodeData>) => void;
+}) {
+  const kind = blockType === "image_generate" ? "image" : "text";
+  const catalog = useOrgAIBuilderCatalog(orgId, kind);
+  const providers = catalog.data?.providers ?? [];
+  const modelsForProvider = (catalog.data?.models ?? []).filter(
+    (model) => model.providerId === providerId,
+  );
+
+  const handleProviderChange = (nextProviderId: string) => {
+    const nextModels = (catalog.data?.models ?? []).filter(
+      (model) => model.providerId === nextProviderId,
+    );
+    const keepsModel = nextModels.some((model) => model.id === modelId);
+    onChange({
+      providerId: nextProviderId,
+      modelId: keepsModel ? modelId : undefined,
+    });
+  };
+
+  return (
+    <>
+      <FieldBlock
+        label="Provedor"
+        description="Gateway de IA usado neste bloco."
+      >
+        <Select
+          value={providerId ?? ""}
+          onValueChange={handleProviderChange}
+          disabled={catalog.isLoading || providers.length === 0}
+        >
+          <SelectTrigger aria-label="Selecionar provedor">
+            <SelectValue
+              placeholder={
+                catalog.isLoading
+                  ? "Carregando provedores..."
+                  : "Selecione um provedor"
+              }
+            />
+          </SelectTrigger>
+          <SelectContent>
+            {providers.map((provider) => (
+              <SelectItem key={provider.id} value={provider.id}>
+                {provider.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FieldBlock>
+
+      <FieldBlock
+        label="Modelo"
+        description={
+          blockType === "image_generate"
+            ? "Modelo de geração de imagem."
+            : "Modelo de linguagem para texto."
+        }
+      >
+        <Select
+          value={modelId ?? ""}
+          onValueChange={(nextModelId) => onChange({ modelId: nextModelId })}
+          disabled={
+            !providerId ||
+            catalog.isLoading ||
+            modelsForProvider.length === 0
+          }
+        >
+          <SelectTrigger aria-label="Selecionar modelo">
+            <SelectValue
+              placeholder={
+                !providerId
+                  ? "Escolha um provedor primeiro"
+                  : catalog.isLoading
+                    ? "Carregando modelos..."
+                    : "Selecione um modelo"
+              }
+            />
+          </SelectTrigger>
+          <SelectContent>
+            {modelsForProvider.map((model) => (
+              <SelectItem key={model.id} value={model.id}>
+                {model.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FieldBlock>
+    </>
   );
 }
 

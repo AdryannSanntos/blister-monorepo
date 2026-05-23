@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import type { OpenRouterOptions } from '@openrouter/agent';
 import {
+  type AIProviderListedModel,
   type AIProviderAdapter,
   type AIRuntimeCapability,
+  type AIRuntimeResolvedCredential,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageRequest,
@@ -49,6 +51,78 @@ export class OpenRouterAdapter implements AIProviderAdapter {
 
   supports(capability: AIRuntimeCapability) {
     return this.supportedCapabilities.has(capability);
+  }
+
+  async listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]> {
+    try {
+      const response = await fetch(`${this.resolveBaseUrl()}/models`, {
+        method: 'GET',
+        headers: this.buildRequestHeaders(credential.value),
+      });
+
+      if (!response.ok) {
+        const message = await this.readErrorMessage(response);
+        throw new ProviderExecutionError(
+          this.provider,
+          this.mapErrorCategory(response.status),
+          message,
+          response.status,
+        );
+      }
+
+      const payload = (await response.json()) as {
+        data?: Array<{
+          id?: string;
+          canonical_slug?: string;
+          name?: string;
+          description?: string;
+          context_length?: number | null;
+          supported_parameters?: string[];
+          architecture?: {
+            input_modalities?: string[];
+            output_modalities?: string[];
+          };
+          pricing?: Record<string, unknown>;
+          top_provider?: {
+            context_length?: number | null;
+            max_completion_tokens?: number | null;
+          };
+        }>;
+      };
+
+      return (payload.data ?? [])
+        .filter((model): model is NonNullable<typeof payload.data>[number] & { id: string } => typeof model.id === 'string')
+        .map((model) => {
+          const outputModalities = model.architecture?.output_modalities ?? [];
+          const inputModalities = model.architecture?.input_modalities ?? [];
+          return {
+            slug: this.slugify(model.canonical_slug ?? model.id),
+            name: model.name ?? model.id,
+            externalModelId: model.id,
+            description: model.description,
+            status: 'active' as const,
+            capabilityMetadata: {
+              text: outputModalities.includes('text'),
+              image: outputModalities.includes('image'),
+              audio: outputModalities.includes('audio') || outputModalities.includes('speech'),
+              embeddings: outputModalities.includes('embeddings'),
+              vision: inputModalities.includes('image') || inputModalities.includes('video'),
+              structuredOutput: (model.supported_parameters ?? []).includes('structured_outputs'),
+            },
+            pricingMetadata: model.pricing ?? {},
+            limitsMetadata: {
+              contextLength: model.top_provider?.context_length ?? model.context_length ?? null,
+              maxCompletionTokens: model.top_provider?.max_completion_tokens ?? null,
+            },
+            schemaMetadata: {
+              providerManaged: true,
+              raw: model,
+            },
+          };
+        });
+    } catch (error) {
+      throw this.normalizeError(error);
+    }
   }
 
   async generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult> {
@@ -263,6 +337,10 @@ export class OpenRouterAdapter implements AIProviderAdapter {
     }
 
     return value as Record<string, unknown>;
+  }
+
+  private slugify(value: string) {
+    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
   private mapErrorCategory(statusCode: number): 'auth' | 'rate_limit' | 'validation' | 'unknown' {

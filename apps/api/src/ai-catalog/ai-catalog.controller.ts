@@ -1,5 +1,6 @@
 import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
+import { z } from 'zod';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePlatformRole } from '../platform/decorators/require-platform-role.decorator';
 import { PlatformRoleGuard } from '../platform/guards/platform-role.guard';
@@ -15,6 +16,10 @@ import {
   upsertPolicySchema,
 } from './dto';
 import { AICatalogService } from './ai-catalog.service';
+
+const syncModelsSchema = z.object({
+  organizationId: z.string().min(1).optional(),
+});
 
 function parseBody<T>(
   schema: { safeParse: (value: unknown) => { success: true; data: T } | { success: false; error: unknown } },
@@ -47,6 +52,12 @@ export class AICatalogController {
   @Patch('providers/:providerId')
   async updateProvider(@Param('providerId') providerId: string, @Body() body: unknown) {
     return this.aiCatalogService.updateProvider(providerId, parseBody(updateProviderSchema, body));
+  }
+
+  @Post('providers/:providerId/sync-models')
+  async syncProviderModels(@Param('providerId') providerId: string, @Body() body: unknown) {
+    const parsed = parseBody(syncModelsSchema, body ?? {});
+    return this.aiCatalogService.syncProviderModels(providerId, parsed.organizationId);
   }
 
   @Get('models')
@@ -96,5 +107,11 @@ export class AICatalogController {
   async upsertPolicy(@Body() body: unknown, @Req() req: Request) {
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.aiCatalogService.upsertPolicy(currentUser.id, parseBody(upsertPolicySchema, body));
+  }
+
+  @Post('sync-models')
+  async syncAllModels(@Body() body: unknown) {
+    const parsed = parseBody(syncModelsSchema, body ?? {});
+    return this.aiCatalogService.syncAllProviderModels(parsed.organizationId);
   }
 }

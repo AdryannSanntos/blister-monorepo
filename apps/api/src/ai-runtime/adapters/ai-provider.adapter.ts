@@ -68,6 +68,18 @@ export interface AIRuntimeEmbeddingResult {
   raw?: Record<string, unknown>;
 }
 
+export interface AIProviderListedModel {
+  slug: string;
+  name: string;
+  externalModelId: string;
+  description?: string;
+  status: 'active' | 'draft' | 'disabled';
+  capabilityMetadata: Record<string, unknown>;
+  pricingMetadata: Record<string, unknown>;
+  limitsMetadata: Record<string, unknown>;
+  schemaMetadata: Record<string, unknown>;
+}
+
 export class ProviderNotConfiguredError extends Error {
   constructor(readonly provider: string) {
     super(`${provider} adapter is not configured`);
@@ -90,6 +102,7 @@ export class ProviderExecutionError extends Error {
 export interface AIProviderAdapter {
   readonly provider: string;
   supports(capability: AIRuntimeCapability): boolean;
+  listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]>;
   generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult>;
   generateImage(request: AIRuntimeImageRequest): Promise<AIRuntimeImageResult>;
   createEmbedding(request: AIRuntimeEmbeddingRequest): Promise<AIRuntimeEmbeddingResult>;

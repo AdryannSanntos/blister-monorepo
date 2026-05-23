@@ -176,16 +176,16 @@ function buildStepTool(
 ): ToolPart | null {
   const toolCallId = `run-${runId}:${step.id}`;
   const state = toToolState(step.status);
+  const outputText = extractSafeStepText(step.outputPayload);
 
   switch (step.blockType) {
     case "input": {
-      const content = stringifyPayload(step.outputPayload, "Entrada recebida.");
       return {
         type: "tool-Read",
         toolCallId,
         state,
-        input: { file_path: "entrada-do-usuario.txt" },
-        output: { content },
+        input: {},
+        output: { content: "Entrada recebida." },
       };
     }
     case "llm_generate": {
@@ -193,12 +193,10 @@ function buildStepTool(
         type: "tool-Thinking",
         toolCallId,
         state,
-        input: {
-          thought:
-            extractPrompt(step.inputPayload) ??
-            "Gerando resposta com o modelo configurado.",
-        },
-        output: extractText(step.outputPayload) ?? stringifyPayload(step.outputPayload),
+        input: outputText
+          ? { thought: outputText }
+          : {},
+        output: outputText ?? "Etapa concluída.",
       };
     }
     case "image_generate": {
@@ -206,10 +204,7 @@ function buildStepTool(
         type: "tool-mcp__workana__image_generate",
         toolCallId,
         state,
-        input: {
-          prompt:
-            extractPrompt(step.inputPayload) ?? "Gerando imagem a partir do contexto do workflow.",
-        },
+        input: {},
         output: {
           images: extractImages(step.outputPayload),
         },
@@ -245,34 +240,38 @@ function buildStepTool(
         type: "tool-Edit",
         toolCallId,
         state,
-        input: {
-          file_path: "preview.html",
-          old_string: "",
-          new_string: html,
-        },
+        input: {},
         output: {
-          content: html,
+          content: "Prévia HTML pronta para revisão.",
         },
       };
     }
     case "output": {
-      const content = stringifyPayload(step.outputPayload, "Saída final pronta.");
       return {
         type: "tool-Write",
         toolCallId,
         state,
-        input: {
-          file_path: "resultado-final.md",
-          content,
-        },
+        input: {},
         output: {
-          content,
+          content: outputText ?? "Saída final pronta.",
         },
       };
     }
     default:
       return null;
   }
+}
+
+function extractSafeStepText(payload: unknown) {
+  const text = extractText(payload);
+  if (!text) {
+    return null;
+  }
+
+  const normalized = text.replace(/\s+/g, " ").trim();
+  return normalized.length > 220
+    ? `${normalized.slice(0, 217)}...`
+    : normalized;
 }
 
 function toToolState(status: string): ToolPart["state"] {

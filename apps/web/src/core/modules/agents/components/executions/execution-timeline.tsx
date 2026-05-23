@@ -24,7 +24,7 @@ type Props = {
 function statusIcon(status: string): { Icon: LucideIcon; tone: string } {
   if (status === "running")
     return { Icon: Loader2, tone: "text-[var(--accent)] animate-spin" };
-  if (status === "completed")
+  if (status === "completed" || status === "success")
     return { Icon: Check, tone: "text-[var(--success)]" };
   if (status === "error") return { Icon: X, tone: "text-[var(--danger)]" };
   return { Icon: Loader2, tone: "text-[var(--fg-tertiary)]" };
@@ -42,13 +42,78 @@ function formatDuration(start: string | null, end: string | null) {
 }
 
 function blockTypeLabel(blockType: string) {
+  if (blockType === "run_error") return "Falha na execução";
   if (blockType === "intent_classification") return "Classificação de intenção";
   if (blockType === "context_retrieval") return "Coleta de contexto";
-  if (blockType === "llm_call") return "Chamada de LLM";
+  if (blockType === "llm_generate" || blockType === "llm_call") return "Geração de texto";
+  if (blockType === "image_generate") return "Geração de imagem";
   if (blockType === "html_validation") return "Validação de HTML";
   if (blockType === "output_storage") return "Armazenamento";
   if (blockType === "attempt") return "Tentativa";
   return blockType;
+}
+
+function sanitizeStepSummary(step: RunStep) {
+  if (step.errorMessage) {
+    return step.errorMessage;
+  }
+
+  if (step.blockType === "question_form") {
+    return "Aguardando informações complementares.";
+  }
+
+  if (step.blockType === "html_validation") {
+    return "Revisão da saída gerada necessária.";
+  }
+
+  if (step.blockType === "image_generate") {
+    const imageCount = extractImageCount(step.outputPayload);
+    if (imageCount > 0) {
+      return imageCount === 1
+        ? "1 imagem gerada."
+        : `${imageCount} imagens geradas.`;
+    }
+  }
+
+  const text = extractReadableText(step.outputPayload);
+  if (text) {
+    return text;
+  }
+
+  return "Sem detalhes adicionais.";
+}
+
+function extractReadableText(value: unknown) {
+  if (typeof value === "string") {
+    return value.trim().length > 0 ? truncateText(value) : null;
+  }
+
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const candidate = (value as Record<string, unknown>).text;
+  if (typeof candidate === "string" && candidate.trim().length > 0) {
+    return truncateText(candidate);
+  }
+
+  return null;
+}
+
+function extractImageCount(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return 0;
+  }
+
+  const images = (value as Record<string, unknown>).images;
+  return Array.isArray(images) ? images.length : 0;
+}
+
+function truncateText(value: string) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+  return normalized.length > 180
+    ? `${normalized.slice(0, 177)}...`
+    : normalized;
 }
 
 function StepItem({
@@ -94,20 +159,20 @@ function StepItem({
       </button>
       {expanded && (
         <div className="ml-9 mt-1 mb-2 space-y-2 rounded-[var(--r-md)] border border-[var(--line-subtle)] bg-[var(--bg-sunken)] p-2.5 text-[11.5px]">
-          {step.errorMessage && (
-            <p className="text-[var(--danger)]">{step.errorMessage}</p>
-          )}
-          {step.createdAt && (
-            <p className="text-[var(--fg-tertiary)] tabular-nums">
+          <p
+            className={cn(
+              "leading-[1.55] text-[var(--fg-tertiary)]",
+              step.errorMessage && "text-[var(--danger)]",
+            )}
+          >
+            {sanitizeStepSummary(step)}
+          </p>
+          {step.createdAt && step.errorMessage && (
+            <p className="text-[var(--fg-quaternary)] tabular-nums">
               {format(new Date(step.createdAt), "dd/MM/yyyy HH:mm:ss", {
                 locale: ptBR,
               })}
             </p>
-          )}
-          {typeof step.outputPayload === "object" && step.outputPayload && (
-            <pre className="max-h-40 overflow-auto rounded-[var(--r-sm)] bg-[var(--bg-base)] p-2 text-[10.5px] text-[var(--fg-secondary)]">
-              {JSON.stringify(step.outputPayload, null, 2)}
-            </pre>
           )}
         </div>
       )}

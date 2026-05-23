@@ -85,6 +85,11 @@ export class AgentExecutionService {
         );
 
         if (output.awaitingUserValidation) {
+          await this.persistAssistantMessage(
+            run.threadId,
+            run.id,
+            this.buildAssistantContent(output.result, 'awaiting_user_validation'),
+          );
           await this.agentQueueService.completeAttemptStep(attemptStep.id, 'success');
           await this.prisma.agentRun.update({
             where: { id: run.id },
@@ -154,6 +159,12 @@ export class AgentExecutionService {
           },
         });
 
+        await this.persistAssistantMessage(
+          run.threadId,
+          run.id,
+          this.buildAssistantContent(output.result, 'success'),
+        );
+
         await this.agentQueueService.completeAttemptStep(attemptStep.id, 'success');
         await this.agentQueueService.markRunCompleted(run.id, 'success');
 
@@ -205,6 +216,11 @@ export class AgentExecutionService {
         }
 
         await this.storeRunError(run.id, message);
+        await this.persistAssistantMessage(
+          run.threadId,
+          run.id,
+          this.buildAssistantContent(undefined, 'error', message),
+        );
         await this.agentQueueService.markRunCompleted(run.id, 'error');
 
         const nextRun = await this.agentQueueService.promoteNextQueuedRun(run.organizationId);
@@ -241,6 +257,80 @@ export class AgentExecutionService {
       where: { id: runId },
       data: { status: 'error', errorMessage: message },
     });
+  }
+
+  private async persistAssistantMessage(
+    threadId: string | null | undefined,
+    agentRunId: string,
+    content: string,
+  ) {
+    if (!threadId) {
+      return;
+    }
+
+    await this.prisma.agentChatMessage.create({
+      data: {
+        threadId,
+        agentRunId,
+        role: 'assistant',
+        content,
+        metadata: toJsonValue({}),
+      },
+    });
+  }
+
+  private buildAssistantContent(
+    result: unknown,
+    status: 'success' | 'awaiting_user_validation' | 'error',
+    errorMessage?: string,
+  ) {
+    const text = this.extractTextResult(result);
+    if (text) {
+      return text;
+    }
+
+    const imageCount = this.extractImageCount(result);
+    if (imageCount > 0) {
+      return imageCount === 1
+        ? 'Imagem gerada com sucesso.'
+        : `${imageCount} imagens geradas com sucesso.`;
+    }
+
+    if (status === 'awaiting_user_validation') {
+      return 'Revise a saida gerada para continuar a execucao.';
+    }
+
+    if (status === 'error') {
+      return errorMessage
+        ? `Nao foi possivel concluir a execucao: ${errorMessage}`
+        : 'Nao foi possivel concluir a execucao.';
+    }
+
+    return 'Execucao concluida com sucesso.';
+  }
+
+  private extractTextResult(result: unknown) {
+    if (typeof result === 'string' && result.trim().length > 0) {
+      return result;
+    }
+
+    if (!result || typeof result !== 'object' || Array.isArray(result)) {
+      return null;
+    }
+
+    const candidate = (result as Record<string, unknown>).text;
+    return typeof candidate === 'string' && candidate.trim().length > 0
+      ? candidate
+      : null;
+  }
+
+  private extractImageCount(result: unknown) {
+    if (!result || typeof result !== 'object' || Array.isArray(result)) {
+      return 0;
+    }
+
+    const images = (result as Record<string, unknown>).images;
+    return Array.isArray(images) ? images.length : 0;
   }
 
   private async executeFlow(
@@ -286,72 +376,94 @@ export class AgentExecutionService {
 
       let stepOutput: unknown = previousOutput;
       const stepInput = previousOutput;
-      if (nodeType === 'llm_generate') {
-        const result = await this.aiRuntimeService.generateText({
-          organizationId,
-          providerId: typeof config.providerId === 'string' ? config.providerId : undefined,
-          modelId: typeof config.modelId === 'string' ? config.modelId : undefined,
-          prompt:
-            typeof config.prompt === 'string'
-              ? config.prompt
-              : JSON.stringify(previousOutput ?? {}),
-        });
-        stepOutput = { text: result.text };
-        usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
-      } else if (nodeType === 'image_generate') {
-        const result = await this.aiRuntimeService.generateImage({
-          organizationId,
-          providerId: typeof config.providerId === 'string' ? config.providerId : undefined,
-          modelId: typeof config.modelId === 'string' ? config.modelId : undefined,
-          prompt:
-            typeof config.prompt === 'string'
-              ? config.prompt
-              : JSON.stringify(previousOutput ?? {}),
-          size: typeof config.size === 'string' ? config.size : undefined,
-        });
-        stepOutput = { images: result.images };
-        usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
-      } else if (nodeType === 'question_form') {
-        const questionConfig =
-          currentNode.fields && Array.isArray(currentNode.fields)
-            ? currentNode.fields
-            : currentNode.config &&
-                typeof currentNode.config === 'object' &&
-                Array.isArray((currentNode.config as Record<string, unknown>).fields)
-              ? ((currentNode.config as Record<string, unknown>).fields as unknown[])
-              : [];
+      const stepStartedAt = new Date();
 
-        stepOutput = {
-          status: 'question_required',
-          form: {
-            fields: questionConfig,
-            includeOtherResponse: true,
-          },
-          previousOutput: stepInput,
-        };
-      } else if (nodeType === 'html_validation') {
-        const html = this.resolveHtmlCandidate(previousOutput, config);
-        const previewState = await this.htmlPreviewService.prepareHtmlValidation(runId, html);
+      try {
+        if (nodeType === 'llm_generate') {
+          const result = await this.aiRuntimeService.generateText({
+            organizationId,
+            providerId: typeof config.providerId === 'string' ? config.providerId : undefined,
+            modelId: typeof config.modelId === 'string' ? config.modelId : undefined,
+            prompt:
+              typeof config.prompt === 'string'
+                ? config.prompt
+                : JSON.stringify(previousOutput ?? {}),
+          });
+          stepOutput = { text: result.text };
+          usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
+        } else if (nodeType === 'image_generate') {
+          const result = await this.aiRuntimeService.generateImage({
+            organizationId,
+            providerId: typeof config.providerId === 'string' ? config.providerId : undefined,
+            modelId: typeof config.modelId === 'string' ? config.modelId : undefined,
+            prompt:
+              typeof config.prompt === 'string'
+                ? config.prompt
+                : JSON.stringify(previousOutput ?? {}),
+            size: typeof config.size === 'string' ? config.size : undefined,
+          });
+          stepOutput = { images: result.images };
+          usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
+        } else if (nodeType === 'question_form') {
+          const questionConfig =
+            currentNode.fields && Array.isArray(currentNode.fields)
+              ? currentNode.fields
+              : currentNode.config &&
+                  typeof currentNode.config === 'object' &&
+                  Array.isArray((currentNode.config as Record<string, unknown>).fields)
+                ? ((currentNode.config as Record<string, unknown>).fields as unknown[])
+                : [];
 
-        stepOutput = previewState;
-        previousOutput = stepOutput;
+          stepOutput = {
+            status: 'question_required',
+            form: {
+              fields: questionConfig,
+              includeOtherResponse: true,
+            },
+            previousOutput: stepInput,
+          };
+        } else if (nodeType === 'html_validation') {
+          const html = this.resolveHtmlCandidate(previousOutput, config);
+          const previewState = await this.htmlPreviewService.prepareHtmlValidation(runId, html);
+
+          stepOutput = previewState;
+          previousOutput = stepOutput;
+
+          await this.prisma.agentRunStep.create({
+            data: {
+              runId,
+              blockKey: nodeId,
+              blockType: nodeType,
+              status: 'success',
+              inputPayload: toJsonValue(stepInput ?? {}),
+              outputPayload: toJsonValue(stepOutput ?? {}),
+              startedAt: stepStartedAt,
+              completedAt: new Date(),
+            },
+          });
+
+          return { result: previousOutput, usage, awaitingUserValidation: true };
+        } else if (nodeType === 'output') {
+          stepOutput = previousOutput;
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Agent step failed';
 
         await this.prisma.agentRunStep.create({
           data: {
             runId,
             blockKey: nodeId,
             blockType: nodeType,
-            status: 'success',
+            status: 'error',
             inputPayload: toJsonValue(stepInput ?? {}),
-            outputPayload: toJsonValue(stepOutput ?? {}),
-            startedAt: new Date(),
+            outputPayload: toJsonValue({}),
+            errorMessage: message,
+            startedAt: stepStartedAt,
             completedAt: new Date(),
           },
         });
 
-        return { result: previousOutput, usage, awaitingUserValidation: true };
-      } else if (nodeType === 'output') {
-        stepOutput = previousOutput;
+        throw error;
       }
 
       previousOutput = stepOutput;
@@ -360,14 +472,14 @@ export class AgentExecutionService {
         data: {
           runId,
           blockKey: nodeId,
-          blockType: nodeType,
-          status: 'success',
-          inputPayload: toJsonValue(stepInput ?? {}),
-          outputPayload: toJsonValue(stepOutput ?? {}),
-          startedAt: new Date(),
-          completedAt: new Date(),
-        },
-      });
+            blockType: nodeType,
+            status: 'success',
+            inputPayload: toJsonValue(stepInput ?? {}),
+            outputPayload: toJsonValue(stepOutput ?? {}),
+            startedAt: stepStartedAt,
+            completedAt: new Date(),
+          },
+        });
     }
 
     return { result: previousOutput, usage, awaitingUserValidation: false };

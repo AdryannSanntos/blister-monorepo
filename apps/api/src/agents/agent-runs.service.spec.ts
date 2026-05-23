@@ -16,6 +16,9 @@ import { HtmlPreviewService } from './html-preview.service';
 
 const makeMockPrisma = () => ({
   companyAgent: { findFirst: jest.fn() },
+  agentChatMessage: {
+    create: jest.fn(),
+  },
   agentRun: {
     create: jest.fn(),
     findMany: jest.fn(),
@@ -191,7 +194,7 @@ describe('AgentRunsService', () => {
   it('scopes listRuns to organization (cross-org isolation)', async () => {
     prisma.agentRun.findMany.mockResolvedValue([]);
 
-    await service.listRuns('org-safe', {}, 'user-1');
+    await service.listRuns('org-safe', { onlyOwnRuns: false }, 'user-1');
 
     expect(prisma.agentRun.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -248,6 +251,7 @@ describe('AgentExecutionService', () => {
       organizationId: 'org-1',
       agentId: 'agent-1',
       agentVersionId: 'version-1',
+      threadId: 'thread-1',
       status: 'running',
       attemptCount: 2, // skip retry logic → goes straight to storeRunError
       inputPayload: {},
@@ -268,6 +272,58 @@ describe('AgentExecutionService', () => {
     expect(prisma.agentRun.update).toHaveBeenLastCalledWith({
       where: { id: 'run-1' },
       data: { status: 'error', errorMessage: 'provider down' },
+    });
+    expect(prisma.agentChatMessage.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        threadId: 'thread-1',
+        agentRunId: 'run-1',
+        role: 'assistant',
+      }),
+    });
+  });
+
+  it('persists assistant reply when execution succeeds', async () => {
+    prisma.agentRun.findFirst.mockResolvedValue({
+      id: 'run-1',
+      organizationId: 'org-1',
+      agentId: 'agent-1',
+      agentVersionId: 'version-1',
+      threadId: 'thread-1',
+      status: 'running',
+      attemptCount: 2,
+      inputPayload: { message: 'teste' },
+      agentVersion: {
+        flowDefinition: {
+          nodes: [
+            { id: 'input', type: 'input' },
+            { id: 'step-1', type: 'llm_generate', config: { prompt: 'Escreva' } },
+            { id: 'output', type: 'output' },
+          ],
+        },
+      },
+    });
+    prisma.agentRun.update.mockResolvedValue({ id: 'run-1' });
+    aiRuntimeService.generateText.mockResolvedValue({
+      text: 'Copy final',
+      usage: { totalTokens: 100 },
+      providerId: 'provider-1',
+      modelId: 'model-1',
+    });
+
+    await service.processRun({
+      organizationId: 'org-1',
+      agentRunId: 'run-1',
+      agentId: 'agent-1',
+      agentVersionId: 'version-1',
+    });
+
+    expect(prisma.agentChatMessage.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        threadId: 'thread-1',
+        agentRunId: 'run-1',
+        role: 'assistant',
+        content: 'Copy final',
+      }),
     });
   });
 });

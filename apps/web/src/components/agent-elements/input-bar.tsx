@@ -504,7 +504,7 @@ export const InputBar = memo(function InputBar({
             )}
 
             {/* Text input or typing animation text */}
-            <div className="pt-3 pb-0 pr-3 pl-3.5 min-h-[44px]">
+            <div className="pt-4 pb-1.5 pr-4 pl-4 min-h-[68px]">
               {isTyping ? (
                 <div className="w-full text-[14px] leading-[1.6] text-an-foreground-muted">
                   <span>{displayedText}</span>
@@ -533,7 +533,7 @@ export const InputBar = memo(function InputBar({
             </div>
 
             {/* Toolbar */}
-            <div className="flex items-center justify-between gap-3 px-2 pt-1 pb-2">
+            <div className="flex items-center justify-between gap-3 px-3 pt-1.5 pb-3.5">
               <div className="flex items-center gap-1 min-w-0">
                 {!attachRight && showAttach && onAttach && (
                   <AttachmentButton onClick={onAttach} />

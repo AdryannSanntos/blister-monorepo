@@ -602,6 +602,10 @@ model AgentRun {
 
   @@index([organizationId, status, createdAt])
   @@index([agentId, createdAt])
+  @@index([processingLeaseId])
+  @@index([status, leaseExpiresAt])
+  @@index([organizationId, threadId])
+  @@index([organizationId, createdByUserId, createdAt])
 }
 
 model AgentRunStep {

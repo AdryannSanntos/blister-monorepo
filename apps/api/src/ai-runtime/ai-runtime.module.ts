@@ -13,6 +13,12 @@ import { AIRuntimeService } from './ai-runtime.service';
     AnthropicAdapter,
     GeminiAdapter,
   ],
-  exports: [AIRuntimeService],
+  exports: [
+    AIRuntimeService,
+    OpenRouterAdapter,
+    OpenAIAdapter,
+    AnthropicAdapter,
+    GeminiAdapter,
+  ],
 })
 export class AIRuntimeModule {}

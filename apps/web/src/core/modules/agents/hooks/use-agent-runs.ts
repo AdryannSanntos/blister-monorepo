@@ -8,13 +8,16 @@ export type RunStatus =
   | "queued"
   | "running"
   | "completed"
+  | "success"
+  | "awaiting_user_validation"
   | "error"
   | "cancelled";
 
 export type RunStep = {
   id: string;
+  blockKey: string;
   blockType: string;
-  status: "queued" | "running" | "completed" | "error";
+  status: "queued" | "running" | "completed" | "success" | "error";
   inputPayload: unknown;
   outputPayload: unknown;
   errorMessage: string | null;

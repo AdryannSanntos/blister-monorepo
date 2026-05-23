@@ -73,7 +73,7 @@ export const ToolRenderer = memo(function ToolRenderer({
       );
     }
     case "tool-Thinking":
-      return <ThinkingTool part={part} />;
+      return <ThinkingTool part={part} defaultOpen={false} />;
   }
 
   // MCP tools
@@ -93,7 +93,14 @@ export const ToolRenderer = memo(function ToolRenderer({
         );
       }
     }
-    return <McpTool part={part} mcpInfo={mcpInfo} chatStatus={chatStatus} />;
+    return (
+      <McpTool
+        part={part}
+        mcpInfo={mcpInfo}
+        chatStatus={chatStatus}
+        defaultOpen={false}
+      />
+    );
   }
 
   // Registry-based generic tools (Read, Grep, Glob, WebFetch, etc.)
