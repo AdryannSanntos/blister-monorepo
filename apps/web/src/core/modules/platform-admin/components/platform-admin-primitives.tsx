@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   Bot,
   ChartColumn,
+  Headphones,
   LayoutTemplate,
   Shield,
   Sparkles,
@@ -60,6 +61,12 @@ export const PLATFORM_ADMIN_NAV_ITEMS: PlatformAdminNavItem[] = [
     href: "/workspaces/admin/templates",
     icon: LayoutTemplate,
     description: "Estrutura do catalogo global de agentes base.",
+  },
+  {
+    label: "Suporte",
+    href: "/workspaces/admin/support",
+    icon: Headphones,
+    description: "Sessoes de suporte ativas e historico recente.",
   },
   {
     label: "Runs",

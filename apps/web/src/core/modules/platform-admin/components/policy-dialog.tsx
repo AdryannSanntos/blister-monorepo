@@ -20,16 +20,24 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "src/core/shared/components/ui/select";
 import { z } from "zod";
 import {
   type AIProviderPolicy,
   useAIProviders,
   useUpsertPolicy,
 } from "../hooks/use-ai-catalog";
+import { usePlatformOrganizations } from "../hooks/use-platform-admin";
 
 const schema = z.object({
-  organizationId: z.string().min(1),
-  providerId: z.string().min(1),
+  organizationId: z.string().min(1, "Selecione uma empresa"),
+  providerId: z.string().min(1, "Selecione um provider"),
   allowedModelIds: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -46,6 +54,7 @@ export function PolicyDialog({
   policy?: AIProviderPolicy | null;
 }) {
   const providers = useAIProviders();
+  const organizations = usePlatformOrganizations();
   const upsertPolicy = useUpsertPolicy();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
@@ -94,10 +103,21 @@ export function PolicyDialog({
               name="organizationId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Organization ID</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
+                  <FormLabel required>Empresa</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a empresa" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {(organizations.data ?? []).map((organization) => (
+                        <SelectItem key={organization.id} value={organization.id}>
+                          {organization.name} ({organization.slug})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -108,19 +128,20 @@ export function PolicyDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>Provider</FormLabel>
-                  <FormControl>
-                    <select
-                      className="flex h-10 w-full rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-base)] px-3 text-[14px]"
-                      {...field}
-                    >
-                      <option value="">Selecione</option>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o provider" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
                       {(providers.data ?? []).map((provider) => (
-                        <option key={provider.id} value={provider.id}>
+                        <SelectItem key={provider.id} value={provider.id}>
                           {provider.name}
-                        </option>
+                        </SelectItem>
                       ))}
-                    </select>
-                  </FormControl>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,7 +151,7 @@ export function PolicyDialog({
               name="allowedModelIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Allowed model IDs</FormLabel>
+                  <FormLabel>Modelos permitidos</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="model-a, model-b"

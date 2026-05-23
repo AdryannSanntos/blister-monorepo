@@ -15,6 +15,11 @@ import {
   type RunStep,
   useAgentRun,
 } from "src/core/modules/agents/hooks/use-agent-runs";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "src/core/shared/components/ui/collapsible";
 import { cn } from "src/core/shared/utils";
 
 type Props = {
@@ -44,9 +49,6 @@ function statusLabel(status: string) {
   return status;
 }
 
-/** Promotes the lightweight steps from the chat-message run summary into the
- *  shape ExecutionTimeline expects. Falls back to the full run payload when
- *  the user expands the card. */
 function adaptSteps(steps: ChatMessageRunSummary["steps"]): RunStep[] {
   return steps.map((s) => ({
     id: s.id,
@@ -145,58 +147,63 @@ export function ExecutionInlineCard({ run, orgId }: Props) {
     null;
 
   return (
-    <div className="flex w-full flex-col rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-base)] overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setExpanded((prev) => !prev)}
-        aria-expanded={expanded}
-        className="flex w-full items-center gap-3 p-3 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
-      >
-        <Icon className={cn("size-4 shrink-0", tone)} />
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="truncate text-[12.5px] font-medium text-[var(--fg-primary)]">
-              {statusLabel(run.status)}
-            </p>
-            {run.status === "queued" &&
-              typeof run.queuePosition === "number" && (
-                <span className="shrink-0 text-[11px] text-[var(--fg-tertiary)]">
-                  Posição #{run.queuePosition}
+    <Collapsible
+      open={expanded}
+      onOpenChange={setExpanded}
+      className="flex w-full flex-col overflow-hidden rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-base)]"
+    >
+      <CollapsibleTrigger asChild>
+        <button
+          type="button"
+          aria-expanded={expanded}
+          className="flex w-full items-center gap-3 p-3 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
+        >
+          <Icon className={cn("size-4 shrink-0", tone)} />
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <p className="truncate text-[12.5px] font-medium text-[var(--fg-primary)]">
+                {statusLabel(run.status)}
+              </p>
+              {run.status === "queued" &&
+                typeof run.queuePosition === "number" && (
+                  <span className="shrink-0 text-[11px] text-[var(--fg-tertiary)]">
+                    Posição #{run.queuePosition}
+                  </span>
+                )}
+              {totalSteps > 0 && (
+                <span className="shrink-0 text-[11px] text-[var(--fg-tertiary)] tabular-nums">
+                  {completedSteps} de {totalSteps} etapas
                 </span>
               )}
+            </div>
             {totalSteps > 0 && (
-              <span className="shrink-0 text-[11px] text-[var(--fg-tertiary)] tabular-nums">
-                {completedSteps} de {totalSteps} etapas
-              </span>
+              <div className="h-1 w-full overflow-hidden rounded-[var(--r-full)] bg-[var(--bg-sunken)]">
+                <div
+                  className={cn(
+                    "h-full transition-all duration-[var(--dur-slow)] ease-out",
+                    run.status === "error"
+                      ? "bg-[var(--danger)]"
+                      : "bg-[var(--accent)]",
+                  )}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
             )}
           </div>
-          {totalSteps > 0 && (
-            <div className="h-1 w-full overflow-hidden rounded-[var(--r-full)] bg-[var(--bg-sunken)]">
-              <div
-                className={cn(
-                  "h-full transition-all duration-300",
-                  run.status === "error"
-                    ? "bg-[var(--danger)]"
-                    : "bg-[var(--accent)]",
-                )}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+          {isActive && (
+            <span className="ds-ai-pulse size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
           )}
-        </div>
-        {isActive && (
-          <span className="ds-ai-pulse size-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
-        )}
-        <ChevronDown
-          className={cn(
-            "size-3.5 shrink-0 text-[var(--fg-quaternary)] transition-transform duration-200",
-            expanded && "rotate-180",
-          )}
-        />
-      </button>
+          <ChevronDown
+            className={cn(
+              "size-3.5 shrink-0 text-[var(--fg-quaternary)] transition-transform duration-[var(--dur-base)] ease-out",
+              expanded && "rotate-180",
+            )}
+          />
+        </button>
+      </CollapsibleTrigger>
 
       {!expanded && run.status === "error" && (
-        <div className="border-t border-[var(--line-subtle)] px-3 py-2">
+        <div className="animate-in fade-in-0 slide-in-from-top-1 border-t border-[var(--line-subtle)] px-3 py-2 duration-[var(--dur-base)]">
           {normalizedSummarySteps.length > 0 ? (
             <ExecutionTimeline
               steps={normalizedSummarySteps}
@@ -214,33 +221,26 @@ export function ExecutionInlineCard({ run, orgId }: Props) {
         </div>
       )}
 
-      <div
-        className={cn(
-          "grid transition-[grid-template-rows] duration-200 ease-out",
-          expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-        )}
-      >
-        <div className="overflow-hidden">
-          <div className="border-t border-[var(--line-subtle)] p-3 animate-in fade-in-0 duration-200">
-            {detailedRun.isLoading && !detailedSteps ? (
-              <div className="flex h-12 items-center justify-center">
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
-              </div>
-            ) : stepsToRender.length === 0 ? (
-              <p className="text-[11.5px] text-[var(--fg-tertiary)]">
-                Sem etapas registradas ainda.
-              </p>
-            ) : (
-              <ExecutionTimeline steps={stepsToRender} defaultExpanded={false} />
-            )}
-            {resolvedErrorMessage && (
-              <div className="mt-3 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--danger)_30%,transparent)] bg-[color-mix(in_oklch,var(--danger)_8%,transparent)] p-2.5 text-[11.5px] text-[var(--danger)]">
-                {resolvedErrorMessage}
-              </div>
-            )}
-          </div>
+      <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+        <div className="border-t border-[var(--line-subtle)] p-3">
+          {detailedRun.isLoading && !detailedSteps ? (
+            <div className="flex h-12 items-center justify-center">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+            </div>
+          ) : stepsToRender.length === 0 ? (
+            <p className="text-[11.5px] text-[var(--fg-tertiary)]">
+              Sem etapas registradas ainda.
+            </p>
+          ) : (
+            <ExecutionTimeline steps={stepsToRender} defaultExpanded={false} />
+          )}
+          {resolvedErrorMessage && (
+            <div className="mt-3 animate-in fade-in-0 slide-in-from-bottom-1 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--danger)_30%,transparent)] bg-[color-mix(in_oklch,var(--danger)_8%,transparent)] p-2.5 text-[11.5px] text-[var(--danger)] duration-[var(--dur-base)]">
+              {resolvedErrorMessage}
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

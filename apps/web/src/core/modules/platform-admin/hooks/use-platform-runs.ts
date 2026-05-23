@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
+import { usePlatformQueryEnabled } from "./use-platform-admin";
 
 export type PlatformRun = {
   id: string;
@@ -60,6 +61,8 @@ export type PlatformCostSummary = {
 };
 
 export function usePlatformRuns(filters?: Record<string, string>) {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<PlatformRun[]>({
     queryKey: ["platform-runs", filters],
     queryFn: async () => {
@@ -69,10 +72,13 @@ export function usePlatformRuns(filters?: Record<string, string>) {
       );
       return data;
     },
+    enabled,
   });
 }
 
 export function usePlatformRun(runId: string | null) {
+  const platformEnabled = usePlatformQueryEnabled();
+
   return useQuery<PlatformRunDetail>({
     queryKey: ["platform-run", runId],
     queryFn: async () => {
@@ -81,11 +87,13 @@ export function usePlatformRun(runId: string | null) {
       );
       return data;
     },
-    enabled: Boolean(runId),
+    enabled: platformEnabled && Boolean(runId),
   });
 }
 
 export function usePlatformCosts(filters?: Record<string, string>) {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<PlatformCostSummary>({
     queryKey: ["platform-costs", filters],
     queryFn: async () => {
@@ -95,6 +103,7 @@ export function usePlatformCosts(filters?: Record<string, string>) {
       );
       return data;
     },
+    enabled,
   });
 }
 
@@ -102,6 +111,8 @@ export function usePlatformCostBreakdown(
   kind: "providers" | "models",
   filters?: Record<string, string>,
 ) {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<PlatformCostSummary>({
     queryKey: ["platform-cost-breakdown", kind, filters],
     queryFn: async () => {
@@ -111,5 +122,6 @@ export function usePlatformCostBreakdown(
       );
       return data;
     },
+    enabled,
   });
 }

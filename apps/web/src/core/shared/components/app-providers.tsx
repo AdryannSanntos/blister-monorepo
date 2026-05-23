@@ -19,7 +19,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
           <TooltipProvider delayDuration={240}>{children}</TooltipProvider>
-          <Toaster richColors position="top-right" />
+          <Toaster position="top-right" closeButton />
         </ThemeProvider>
       </QueryClientProvider>
     </NuqsAdapter>

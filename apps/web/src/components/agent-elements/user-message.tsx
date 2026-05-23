@@ -164,7 +164,7 @@ export const UserMessage = memo(function UserMessage({
       )}
       {text && (
         <div className="max-w-[calc(95%-40px)] ms-[70px]">
-          <div className="px-5 py-3 text-sm transition-colors rounded-an-message bg-an-user-message-bg text-an-user-message-text">
+          <div className="px-5 py-3 text-sm transition-colors duration-[var(--dur-base)] rounded-an-message bg-an-user-message-bg text-an-user-message-text">
             <p className="leading-5 whitespace-pre-wrap wrap-break-word">
               {text}
             </p>

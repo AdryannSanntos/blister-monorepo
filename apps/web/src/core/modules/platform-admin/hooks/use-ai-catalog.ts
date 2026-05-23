@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { apiClient } from "src/core/shared/utils/api-client";
+import { usePlatformQueryEnabled } from "./use-platform-admin";
 
 export type AIProvider = {
   id: string;
@@ -55,6 +56,8 @@ function invalidateCatalog(queryClient: ReturnType<typeof useQueryClient>) {
 }
 
 export function useAIProviders() {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<AIProvider[]>({
     queryKey: ["platform-ai-providers"],
     queryFn: async () => {
@@ -63,6 +66,7 @@ export function useAIProviders() {
       );
       return data;
     },
+    enabled,
   });
 }
 
@@ -107,7 +111,44 @@ export function useUpdateProvider() {
   });
 }
 
+export function useSyncProviderModels() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (providerId: string) => {
+      const { data } = await apiClient.post(
+        `/platform/ai/providers/${providerId}/sync-models`,
+        {},
+      );
+      return data;
+    },
+    onSuccess: async () => {
+      await invalidateCatalog(queryClient);
+      toast.success("Modelos sincronizados com sucesso.");
+    },
+    onError: () => toast.error("Erro ao sincronizar modelos."),
+  });
+}
+
+export function useCreatePlatformCredential() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: Record<string, unknown>) => {
+      const { data } = await apiClient.post("/platform/ai/credentials", payload);
+      return data;
+    },
+    onSuccess: async () => {
+      await invalidateCatalog(queryClient);
+      toast.success("Credencial registrada com sucesso.");
+    },
+    onError: () => toast.error("Erro ao registrar credencial."),
+  });
+}
+
 export function useAIModels(filters?: Record<string, string>) {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<AIModel[]>({
     queryKey: ["platform-ai-models", filters],
     queryFn: async () => {
@@ -116,6 +157,7 @@ export function useAIModels(filters?: Record<string, string>) {
       });
       return data;
     },
+    enabled,
   });
 }
 
@@ -161,15 +203,18 @@ export function useUpdateModel() {
 }
 
 export function useAIProviderPolicies(filters?: Record<string, string>) {
+  const enabled = usePlatformQueryEnabled();
+
   return useQuery<AIProviderPolicy[]>({
     queryKey: ["platform-ai-policies", filters],
     queryFn: async () => {
-      const { data } = await apiClient.get<AIProviderPolicy[]>(
+       const { data } = await apiClient.get<AIProviderPolicy[]>(
         "/platform/ai/policies",
         { params: filters },
       );
       return data;
     },
+    enabled,
   });
 }
 

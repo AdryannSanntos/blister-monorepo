@@ -13,6 +13,10 @@ import {
 } from "src/core/modules/agents/components/chat/chat-attachment-utils";
 import { ChatMessageBubble } from "src/core/modules/agents/components/chat/chat-message-bubble";
 import {
+  buildOptimisticAssistantMessage,
+  buildOptimisticUserMessage,
+} from "src/core/modules/agents/components/chat/chat-optimistic";
+import {
   type ChatAttachment,
   type ChatMessage,
   useAgentMessages,
@@ -74,13 +78,20 @@ export function AgentChatPage() {
     content: string;
   } | null>(null);
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
+  const [outbox, setOutbox] = useState<ChatMessage[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const editingDraft = editing?.content;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const messagesList = messages.data ?? [];
-  const lastMessage = messagesList[messagesList.length - 1];
+  const displayMessages = useMemo(() => {
+    if (outbox.length === 0) return messagesList;
+    const serverIds = new Set(messagesList.map((message) => message.id));
+    const pending = outbox.filter((message) => !serverIds.has(message.id));
+    return [...messagesList, ...pending];
+  }, [messagesList, outbox]);
+  const lastMessage = displayMessages[displayMessages.length - 1];
   const lastRun = lastMessage?.agentRun;
   const isRunActive = Boolean(
     lastRun && (lastRun.status === "queued" || lastRun.status === "running"),
@@ -92,27 +103,36 @@ export function AgentChatPage() {
   );
 
   const showWelcome =
-    !threadId || (messagesList.length === 0 && !messages.isLoading);
+    !threadId || (displayMessages.length === 0 && !messages.isLoading && outbox.length === 0);
 
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
-    container.scrollTop = container.scrollHeight;
-  }, [messagesList.length, showWelcome]);
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+  }, [displayMessages.length, showWelcome, outbox.length]);
 
   async function handleSend(content: string) {
-    let activeThreadId = threadId;
-    if (!activeThreadId) {
-      const thread = await createThread.mutateAsync(undefined);
-      activeThreadId = thread.id;
-      void setThreadIdParam(thread.id);
-    }
-    await sendMessage.mutateAsync({
-      threadId: activeThreadId,
-      content,
-      attachments,
-    });
+    const pendingAttachments = attachments;
+    const optimisticUser = buildOptimisticUserMessage(content, pendingAttachments);
+    const optimisticAssistant = buildOptimisticAssistantMessage();
+    setOutbox([optimisticUser, optimisticAssistant]);
     setAttachments([]);
+
+    try {
+      let activeThreadId = threadId;
+      if (!activeThreadId) {
+        const thread = await createThread.mutateAsync(undefined);
+        activeThreadId = thread.id;
+        void setThreadIdParam(thread.id);
+      }
+      await sendMessage.mutateAsync({
+        threadId: activeThreadId,
+        content,
+        attachments: pendingAttachments,
+      });
+    } finally {
+      setOutbox([]);
+    }
   }
 
   function handleEdit(message: ChatMessage) {
@@ -321,11 +341,12 @@ export function AgentChatPage() {
                 />
               </div>
             ) : (
-              messagesList.map((message) => (
+              displayMessages.map((message, index) => (
                 <ChatMessageBubble
                   key={message.id}
                   message={message}
                   orgId={orgId}
+                  index={index}
                   onEdit={handleEdit}
                   onRegenerate={handleRegenerate}
                 />

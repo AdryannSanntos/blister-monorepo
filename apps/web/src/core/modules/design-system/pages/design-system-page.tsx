@@ -48,6 +48,7 @@ import {
 } from "@/core/shared/components/ui/accordion";
 import {
   Alert,
+  AlertAction,
   AlertDescription,
   AlertTitle,
 } from "@/core/shared/components/ui/alert";
@@ -2662,52 +2663,52 @@ export function DesignSystemPage() {
                   Banners & inline
                 </Paragraph>
 
-                <div className="flex items-start gap-3 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--accent)_45%,transparent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] p-3">
-                  <Sparkles className="mt-0.5 size-4 shrink-0 text-[var(--accent)]" />
-                  <p className="flex-1 text-[13px] leading-5 text-[var(--fg-primary)]">
-                    <strong className="font-semibold">Aurora suggests</strong>{" "}
-                    pausing the{" "}
-                    <strong className="font-semibold">Q4 Drip</strong> campaign
-                    — open rate dropped 38% in 6 hours.
-                  </p>
-                  <Button variant="outline" size="sm">
-                    View
-                  </Button>
-                </div>
+                <Alert variant="accent">
+                  <Sparkles />
+                  <AlertTitle>Aurora suggests pausing Q4 Drip</AlertTitle>
+                  <AlertDescription>
+                    Open rate dropped 38% in 6 hours. Review before the next send.
+                  </AlertDescription>
+                  <AlertAction>
+                    <Button variant="outline" size="sm">
+                      View
+                    </Button>
+                  </AlertAction>
+                </Alert>
 
-                <div className="flex items-start gap-3 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--warning)_45%,transparent)] bg-[color-mix(in_oklch,var(--warning)_10%,transparent)] p-3">
-                  <TriangleAlert className="mt-0.5 size-4 shrink-0 text-[var(--warning)]" />
-                  <p className="flex-1 text-[13px] leading-5 text-[var(--fg-primary)]">
+                <Alert variant="warning">
+                  <TriangleAlert />
+                  <AlertTitle className="font-normal">
                     Token budget at 82% · projected to exhaust on day 24.
-                  </p>
-                  <Button variant="outline" size="sm">
-                    Increase
-                  </Button>
-                </div>
+                  </AlertTitle>
+                  <AlertAction>
+                    <Button variant="outline" size="sm">
+                      Increase
+                    </Button>
+                  </AlertAction>
+                </Alert>
 
-                <div className="flex items-start gap-3 rounded-[var(--r-md)] border border-[color-mix(in_oklch,var(--danger)_45%,transparent)] bg-[color-mix(in_oklch,var(--danger)_10%,transparent)] p-3">
-                  <TriangleAlert className="mt-0.5 size-4 shrink-0 text-[var(--danger)]" />
-                  <p className="flex-1 text-[13px] leading-5 text-[var(--fg-primary)]">
-                    <strong className="font-semibold">Integration down</strong>{" "}
-                    · Stripe API auth expired 14 minutes ago.
-                  </p>
-                  <Button variant="destructive" size="sm">
-                    Reconnect
-                  </Button>
-                </div>
+                <Alert variant="destructive">
+                  <TriangleAlert />
+                  <AlertTitle>Integration down</AlertTitle>
+                  <AlertDescription>
+                    Stripe API auth expired 14 minutes ago.
+                  </AlertDescription>
+                  <AlertAction>
+                    <Button variant="destructive" size="sm">
+                      Reconnect
+                    </Button>
+                  </AlertAction>
+                </Alert>
 
-                <div className="flex items-start gap-3 rounded-r-[var(--r-md)] border-l-[3px] border-[var(--info)] bg-[var(--bg-raised)] p-3">
-                  <Info className="mt-0.5 size-4 shrink-0 text-[var(--info)]" />
-                  <div>
-                    <p className="text-[13px] font-medium text-[var(--fg-primary)]">
-                      Inline note
-                    </p>
-                    <p className="text-[12.5px] text-[var(--fg-tertiary)]">
-                      For info that lives next to the thing it describes, not
-                      floating on top of it.
-                    </p>
-                  </div>
-                </div>
+                <Alert variant="info">
+                  <Info />
+                  <AlertTitle>Inline note</AlertTitle>
+                  <AlertDescription>
+                    For info that lives next to the thing it describes, not
+                    floating on top of it.
+                  </AlertDescription>
+                </Alert>
               </div>
             </div>
           </DsSection>

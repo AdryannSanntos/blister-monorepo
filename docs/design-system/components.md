@@ -50,7 +50,8 @@ Todos os componentes base vivem em `apps/web/src/core/shared/components/ui` e de
 
 ### Feedback e Overlays
 
-- `Alert`
+- `Alert` — variantes `default`, `info` (inline note com borda esquerda), `accent`, `success`, `warning`, `destructive` (banners). Compor com `AlertTitle`, `AlertDescription` e `AlertAction` opcional.
+- `Sonner` — toasts com superfície `bg-raised`, ícone em círculo semântico e tipografia p3/p4; não usar `richColors`.
 - `Dialog`
 - `Drawer`
 - `Sheet`

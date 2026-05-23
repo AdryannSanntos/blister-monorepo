@@ -11,6 +11,8 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { isOptimisticMessage } from "src/core/modules/agents/components/chat/chat-optimistic";
+import { ChatThinkingBubble } from "src/core/modules/agents/components/chat/chat-thinking-bubble";
 import { ExecutionInlineCard } from "src/core/modules/agents/components/chat/execution-inline-card";
 import {
   getMessageToolSections,
@@ -27,6 +29,7 @@ import {
 import { cn } from "src/core/shared/utils";
 import { Markdown } from "@/components/agent-elements/markdown";
 import { SpiralLoader } from "@/components/agent-elements/spiral-loader";
+import { TextShimmer } from "@/components/agent-elements/text-shimmer";
 import { ToolRenderer } from "@/components/agent-elements/tools/tool-renderer";
 import { ToolRowBase } from "@/components/agent-elements/tools/tool-row-base";
 import { UserMessage } from "@/components/agent-elements/user-message";
@@ -34,6 +37,7 @@ import { UserMessage } from "@/components/agent-elements/user-message";
 type Props = {
   message: ChatMessage;
   orgId: string;
+  index?: number;
   onEdit?: (message: ChatMessage) => void;
   onRegenerate?: (message: ChatMessage) => void;
 };
@@ -49,14 +53,22 @@ function formatTime(value: string) {
 export function ChatMessageBubble({
   message,
   orgId,
+  index = 0,
   onEdit,
   onRegenerate,
 }: Props) {
   const isUser = message.role === "user";
-  const runIsActive =
-    message.agentRun?.status === "queued" || message.agentRun?.status === "running";
+  const isOptimistic = isOptimisticMessage(message);
   const userMessage: UIMessage = toUserUiMessage(message);
   const toolSections = message.agentRun ? [] : getMessageToolSections(message);
+  const runIsActive =
+    message.agentRun?.status === "queued" || message.agentRun?.status === "running";
+  const showThinking =
+    !isUser &&
+    !message.content &&
+    toolSections.length === 0 &&
+    (runIsActive || isOptimistic);
+  const staggerMs = Math.min(index * 45, 180);
 
   async function handleCopy() {
     try {
@@ -70,45 +82,79 @@ export function ChatMessageBubble({
   return (
     <div
       className={cn(
-        "group flex w-full animate-in fade-in slide-in-from-bottom-1 duration-200",
+        "group flex w-full",
         isUser ? "justify-end" : "justify-start",
+        isUser ? "ds-chat-message-user-in" : "ds-chat-message-agent-in",
       )}
+      style={{ animationDelay: `${staggerMs}ms` }}
     >
-        <div
-          className={cn(
-            "flex max-w-[min(100%,54rem)] flex-col gap-2",
-            isUser ? "items-end" : "items-start",
-          )}
-        >
+      <div
+        className={cn(
+          "flex max-w-[min(100%,54rem)] flex-col gap-4",
+          isUser ? "items-end" : "items-start",
+        )}
+      >
         {isUser ? (
           <div className="max-w-[80%]">
             <UserMessage message={userMessage} />
           </div>
+        ) : showThinking ? (
+          <ChatThinkingBubble />
         ) : (
           <div className="w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] shadow-[0_8px_28px_color-mix(in_oklch,#000_5%,transparent)]">
             <div className="flex items-center gap-2 border-b border-[var(--line-subtle)] px-5 py-3.5">
-              <div className="flex size-8 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+              <div
+                className={cn(
+                  "relative flex size-8 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]",
+                  runIsActive && "ds-ai-pulse",
+                )}
+              >
                 <Bot className="size-4" />
+                {runIsActive ? (
+                  <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-[var(--accent)] ring-2 ring-[var(--bg-raised)]" />
+                ) : null}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[13px] font-medium text-[var(--fg-primary)]">
                   Agente
                 </p>
-                <p className="text-[11.5px] text-[var(--fg-tertiary)]">
-                  {runIsActive ? "Respondendo agora" : "Resposta gerada"}
-                </p>
+                {runIsActive ? (
+                  <TextShimmer
+                    as="p"
+                    className="mt-0.5 text-[11.5px] leading-none text-[var(--fg-tertiary)]"
+                    duration={1.3}
+                  >
+                    Respondendo agora
+                  </TextShimmer>
+                ) : (
+                  <p className="mt-0.5 text-[11.5px] text-[var(--fg-tertiary)]">
+                    Resposta gerada
+                  </p>
+                )}
               </div>
             </div>
             <div className="space-y-4 px-5 py-5">
-              {message.content ? <Markdown content={message.content} /> : null}
+              {message.content ? (
+                <div
+                  key={`${message.id}-${message.content.length}`}
+                  className="ds-chat-content-reveal"
+                >
+                  <Markdown content={message.content} />
+                </div>
+              ) : null}
 
-              {toolSections.map((section, index) => (
-                <ToolRenderer
-                  key={section.part.toolCallId ?? `${message.id}-tool-${index}`}
-                  part={section.part}
-                  nestedTools={section.nestedTools}
-                  chatStatus={runIsActive ? "streaming" : undefined}
-                />
+              {toolSections.map((section, sectionIndex) => (
+                <div
+                  key={section.part.toolCallId ?? `${message.id}-tool-${sectionIndex}`}
+                  className="ds-chat-content-reveal"
+                  style={{ animationDelay: `${sectionIndex * 60}ms` }}
+                >
+                  <ToolRenderer
+                    part={section.part}
+                    nestedTools={section.nestedTools}
+                    chatStatus={runIsActive ? "streaming" : undefined}
+                  />
+                </div>
               ))}
 
               {message.agentRun && runIsActive && toolSections.length === 0 ? (
@@ -124,13 +170,13 @@ export function ChatMessageBubble({
           </div>
         )}
 
-        {!isUser && message.agentRun && (
-          <div className="w-full max-w-md">
+        {!isUser && message.agentRun && !showThinking && (
+          <div className="ds-chat-content-reveal w-full max-w-md">
             <ExecutionInlineCard run={message.agentRun} orgId={orgId} />
           </div>
         )}
 
-        <div className="flex items-center gap-2 px-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100">
+        <div className="flex items-center gap-2 px-1 opacity-0 transition-opacity duration-[var(--dur-base)] group-hover:opacity-100 focus-within:opacity-100">
           <span className="text-[10.5px] text-[var(--fg-quaternary)] tabular-nums">
             {formatTime(message.createdAt)}
           </span>

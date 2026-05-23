@@ -103,7 +103,7 @@ export function ToolRowBase({
       <Collapsible.Panel
         className={cn(
           "overflow-hidden",
-          "h-[var(--collapsible-panel-height)] transition-all duration-150 ease-out",
+          "h-[var(--collapsible-panel-height)] transition-all duration-[var(--dur-base)] ease-out",
           "data-ending-style:h-0 data-starting-style:h-0",
           "[&[hidden]:not([hidden='until-found'])]:hidden",
         )}
