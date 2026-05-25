@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   Param,
@@ -15,7 +16,13 @@ import { RequirePermission } from '../auth/decorators/require-permission.decorat
 import type { CurrentUser } from '../auth/session.service';
 import { AgentContextService } from './agent-context.service';
 import { AgentsService } from './agents.service';
-import { createCompanyAgentSchema, saveDraftVersionSchema, updateCompanyAgentSchema } from './dto';
+import {
+  agentContextFileSchema,
+  agentContextReferenceSchema,
+  createCompanyAgentSchema,
+  saveDraftVersionSchema,
+  updateCompanyAgentSchema,
+} from './dto';
 
 @Controller('organizations/:orgId/agents')
 export class AgentsController {
@@ -156,5 +163,68 @@ export class AgentsController {
     }
 
     return this.agentContextService.updateAgentContext(orgId, agentId, parsed.data);
+  }
+
+  @Get(':agentId/context/files')
+  @RequirePermission('agent.read')
+  async listContextFiles(@Param('orgId') orgId: string, @Param('agentId') agentId: string) {
+    return this.agentContextService.listFiles(orgId, agentId);
+  }
+
+  @Post(':agentId/context/files')
+  @RequirePermission('agent.update')
+  async createContextFile(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = agentContextFileSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.agentContextService.createFile(orgId, agentId, parsed.data);
+  }
+
+  @Delete(':agentId/context/files/:fileId')
+  @RequirePermission('agent.update')
+  async archiveContextFile(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Param('fileId') fileId: string,
+  ) {
+    return this.agentContextService.archiveFile(orgId, agentId, fileId);
+  }
+
+  @Get(':agentId/context/references')
+  @RequirePermission('agent.read')
+  async listContextReferences(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+  ) {
+    return this.agentContextService.listReferences(orgId, agentId);
+  }
+
+  @Post(':agentId/context/references')
+  @RequirePermission('agent.update')
+  async createContextReference(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = agentContextReferenceSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.agentContextService.createReference(orgId, agentId, parsed.data);
+  }
+
+  @Delete(':agentId/context/references/:referenceId')
+  @RequirePermission('agent.update')
+  async removeContextReference(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Param('referenceId') referenceId: string,
+  ) {
+    return this.agentContextService.removeReference(orgId, agentId, referenceId);
   }
 }

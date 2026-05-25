@@ -13,7 +13,12 @@ import {
 import { toast } from "sonner";
 import { isOptimisticMessage } from "src/core/modules/agents/components/chat/chat-optimistic";
 import { ChatThinkingBubble } from "src/core/modules/agents/components/chat/chat-thinking-bubble";
+import { AgentRunSuspensionCards } from "src/core/modules/agents/components/chat/agent-suspension-card";
 import { ExecutionInlineCard } from "src/core/modules/agents/components/chat/execution-inline-card";
+import {
+  parseUiOutputEnvelope,
+  UiOutputRenderer,
+} from "src/core/modules/agents/components/chat/ui-output-renderer";
 import {
   getMessageToolSections,
   toUserUiMessage,
@@ -60,6 +65,7 @@ export function ChatMessageBubble({
   const isUser = message.role === "user";
   const isOptimistic = isOptimisticMessage(message);
   const userMessage: UIMessage = toUserUiMessage(message);
+  const uiOutputEnvelope = !isUser ? parseUiOutputEnvelope(message.metadata) : null;
   const toolSections = message.agentRun ? [] : getMessageToolSections(message);
   const runIsActive =
     message.agentRun?.status === "queued" || message.agentRun?.status === "running";
@@ -134,7 +140,14 @@ export function ChatMessageBubble({
               </div>
             </div>
             <div className="space-y-4 px-5 py-5">
-              {message.content ? (
+              {uiOutputEnvelope ? (
+                <div
+                  key={`${message.id}-ui-output`}
+                  className="ds-chat-content-reveal"
+                >
+                  <UiOutputRenderer envelope={uiOutputEnvelope} />
+                </div>
+              ) : message.content ? (
                 <div
                   key={`${message.id}-${message.content.length}`}
                   className="ds-chat-content-reveal"
@@ -171,8 +184,11 @@ export function ChatMessageBubble({
         )}
 
         {!isUser && message.agentRun && !showThinking && (
-          <div className="ds-chat-content-reveal w-full max-w-md">
+          <div className="ds-chat-content-reveal w-full max-w-md space-y-3">
             <ExecutionInlineCard run={message.agentRun} orgId={orgId} />
+            {message.agentRunId && (
+              <AgentRunSuspensionCards runId={message.agentRunId} orgId={orgId} />
+            )}
           </div>
         )}
 

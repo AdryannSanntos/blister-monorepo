@@ -1,21 +1,28 @@
 import type { BlockExecutorFn } from '../agent-block-executor.registry';
 
-const MAX_DEPTH = Number(process.env.AGENT_CALL_MAX_DEPTH ?? '3');
+const DEFAULT_MAX_DEPTH = Number(process.env.AGENT_CALL_MAX_DEPTH ?? '3');
+
+interface AgentRunsServiceLike {
+  createQueuedRun: (
+    orgId: string,
+    agentId: string,
+    userId: string,
+    input: { input: Record<string, unknown> },
+    parentContext?: { parentRunId: string; parentStepId?: string; depth: number },
+  ) => Promise<{ id: string }>;
+}
+
+interface AgentWorkflowRuntimeLike {
+  awaitRunCompletion: (runId: string) => Promise<{ finalOutput?: unknown }>;
+}
 
 export function createAgentCallExecutor(
-  agentRunsService: {
-    createQueuedRun: (
-      orgId: string,
-      agentId: string,
-      userId: string,
-      input: { input: Record<string, unknown> },
-      parentContext?: { parentRunId: string; parentStepId?: string; depth: number },
-    ) => Promise<{ id: string }>;
-  },
-  agentWorkflowRuntime: {
-    awaitRunCompletion: (runId: string) => Promise<{ finalOutput?: unknown }>;
-  },
+  agentRunsService: AgentRunsServiceLike,
+  agentWorkflowRuntime: AgentWorkflowRuntimeLike,
+  options: { maxDepth?: number } = {},
 ): BlockExecutorFn {
+  const maxDepth = options.maxDepth ?? DEFAULT_MAX_DEPTH;
+
   return async (ctx) => {
     const targetAgentId =
       typeof ctx.blockConfig.targetAgentId === 'string' ? ctx.blockConfig.targetAgentId : null;
@@ -24,27 +31,45 @@ export function createAgentCallExecutor(
       throw new Error('agent_call block requires targetAgentId in config');
     }
 
-    const currentDepth =
-      typeof (ctx.runState as Record<string, unknown>).__depth === 'number'
-        ? ((ctx.runState as Record<string, unknown>).__depth as number)
-        : 0;
+    if (targetAgentId === (ctx.blockConfig.currentAgentId as string | undefined)) {
+      throw new Error('agent_call cannot recursively invoke the same agent');
+    }
 
-    if (currentDepth >= MAX_DEPTH) {
-      throw new Error(`Max subagent depth (${MAX_DEPTH}) exceeded`);
+    const nextDepth = (ctx.depth ?? 0) + 1;
+
+    if (nextDepth > maxDepth) {
+      throw new Error(`Max subagent depth (${maxDepth}) exceeded`);
+    }
+
+    if (!ctx.userId) {
+      throw new Error('agent_call requires the parent run owner userId');
     }
 
     const childRun = await agentRunsService.createQueuedRun(
       ctx.organizationId,
       targetAgentId,
-      ((ctx as unknown as Record<string, unknown>).userId as string) ?? 'system',
-      { input: { ...ctx.inputs, __parentRunId: ctx.runId, __depth: currentDepth + 1 } },
-      { parentRunId: ctx.runId, parentStepId: ctx.stepId, depth: currentDepth + 1 },
+      ctx.userId,
+      {
+        input: {
+          ...ctx.inputs,
+          __parentRunId: ctx.runId,
+          __depth: nextDepth,
+        },
+      },
+      {
+        parentRunId: ctx.runId,
+        parentStepId: ctx.stepId,
+        depth: nextDepth,
+      },
     );
 
     const result = await agentWorkflowRuntime.awaitRunCompletion(childRun.id);
 
     return {
-      outputs: { result: result.finalOutput ?? {} },
+      outputs: {
+        result: result.finalOutput ?? {},
+        childRunId: childRun.id,
+      },
     };
   };
 }

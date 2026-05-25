@@ -69,10 +69,16 @@ export class CompanyChatController {
     }
 
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    const orgContext = (req as unknown as Record<string, unknown>).orgContext as
+      | { permissions?: string[] }
+      | undefined;
+    const permissions = orgContext?.permissions ?? [];
+
     return this.companyChatService.handleMessage(
       orgId,
       currentUser.id,
       parsed.data.content,
+      permissions,
       parsed.data.threadId,
     );
   }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import type { RetrievedContextDocument } from './rag-context.service';
 
 type ContextSourceItem = {
   sourceLabel: string;
@@ -13,7 +12,7 @@ export class ContextRerankerService {
   rerank(input: {
     query: string;
     structured: ContextSourceItem[];
-    rag: RetrievedContextDocument[];
+    rag: ContextSourceItem[];
     limit?: number;
   }) {
     const terms = input.query.toLowerCase().split(/\s+/).filter(Boolean);

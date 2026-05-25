@@ -107,8 +107,8 @@ export function WorkflowSidebar({
   const selectedBlock = node ? BLOCK_TYPES[node.data.blockType] : null;
   const SelectedIcon = selectedBlock?.icon;
   const canConfigurePrompt =
-    node?.data.blockType === "llm_generate" ||
-    node?.data.blockType === "image_generate";
+    node?.data.blockType === "llm_call" ||
+    node?.data.blockType === "clarification";
 
   return (
     <aside className="pointer-events-auto absolute right-3 top-3 bottom-3 z-20 flex w-[20rem] flex-col overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)] shadow-[var(--shadow-lg)] animate-in slide-in-from-right-4 fade-in-0 duration-300">
@@ -302,7 +302,7 @@ export function WorkflowSidebar({
                       <GenerationModelFields
                         orgId={orgId}
                         blockType={
-                          node.data.blockType as "llm_generate" | "image_generate"
+                          node.data.blockType as "llm_call" | "agent_call"
                         }
                         providerId={node.data.providerId}
                         modelId={node.data.modelId}
@@ -417,12 +417,12 @@ function GenerationModelFields({
   onChange,
 }: {
   orgId: string;
-  blockType: "llm_generate" | "image_generate";
+  blockType: "llm_call" | "agent_call";
   providerId?: string;
   modelId?: string;
   onChange: (patch: Partial<WorkflowNodeData>) => void;
 }) {
-  const kind = blockType === "image_generate" ? "image" : "text";
+  const kind = "text" as const;
   const catalog = useOrgAIBuilderCatalog(orgId, kind);
   const providers = catalog.data?.providers ?? [];
   const modelsForProvider = (catalog.data?.models ?? []).filter(
@@ -472,11 +472,7 @@ function GenerationModelFields({
 
       <FieldBlock
         label="Modelo"
-        description={
-          blockType === "image_generate"
-            ? "Modelo de geração de imagem."
-            : "Modelo de linguagem para texto."
-        }
+        description="Modelo de linguagem para este bloco."
       >
         <Select
           value={modelId ?? ""}

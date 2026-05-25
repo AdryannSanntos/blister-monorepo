@@ -519,7 +519,15 @@ exports.Prisma.AgentRunScalarFieldEnum = {
   lastAttemptAt: 'lastAttemptAt',
   createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  rootRunId: 'rootRunId',
+  parentRunId: 'parentRunId',
+  parentStepId: 'parentStepId',
+  depth: 'depth',
+  currentBlockId: 'currentBlockId',
+  currentBlockType: 'currentBlockType',
+  waitingReason: 'waitingReason',
+  resumeStatus: 'resumeStatus'
 };
 
 exports.Prisma.AgentRunStepScalarFieldEnum = {
@@ -534,7 +542,92 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   errorMessage: 'errorMessage',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  sequence: 'sequence',
+  branchKey: 'branchKey',
+  inputType: 'inputType',
+  outputType: 'outputType',
+  statePayload: 'statePayload',
+  uiOutputPayload: 'uiOutputPayload'
+};
+
+exports.Prisma.AgentContextProfileScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  instructions: 'instructions',
+  notes: 'notes',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentContextFileScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  filename: 'filename',
+  objectKey: 'objectKey',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  publicUrl: 'publicUrl',
+  status: 'status',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentContextReferenceScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentRunContextSnapshotScalarFieldEnum = {
+  id: 'id',
+  runId: 'runId',
+  layers: 'layers',
+  resolvedSummary: 'resolvedSummary',
+  metadata: 'metadata',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.AgentRunContextSnapshotItemScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  label: 'label',
+  content: 'content',
+  summary: 'summary',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AgentRunSuspensionScalarFieldEnum = {
+  id: 'id',
+  runId: 'runId',
+  stepId: 'stepId',
+  type: 'type',
+  status: 'status',
+  resolvedPayload: 'resolvedPayload',
+  roundNumber: 'roundNumber',
+  metadata: 'metadata',
+  answeredAt: 'answeredAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentRunSuspensionResponseScalarFieldEnum = {
+  id: 'id',
+  suspensionId: 'suspensionId',
+  answers: 'answers',
+  roundNumber: 'roundNumber',
+  metadata: 'metadata',
+  answeredById: 'answeredById',
+  answeredAt: 'answeredAt'
 };
 
 exports.Prisma.AgentChatThreadScalarFieldEnum = {
@@ -588,6 +681,52 @@ exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
   unit: 'unit',
   metadata: 'metadata',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.RagDocumentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  sourceType: 'sourceType',
+  sourceId: 'sourceId',
+  title: 'title',
+  contentHash: 'contentHash',
+  status: 'status',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RagChunkScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  sequence: 'sequence',
+  content: 'content',
+  tokenCount: 'tokenCount',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RagEmbeddingScalarFieldEnum = {
+  id: 'id',
+  chunkId: 'chunkId',
+  organizationId: 'organizationId',
+  model: 'model',
+  dimensions: 'dimensions',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RagIndexJobScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  documentId: 'documentId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  triggeredByUserId: 'triggeredByUserId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -654,10 +793,21 @@ exports.Prisma.ModelName = {
   AgentVersion: 'AgentVersion',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
+  AgentContextProfile: 'AgentContextProfile',
+  AgentContextFile: 'AgentContextFile',
+  AgentContextReference: 'AgentContextReference',
+  AgentRunContextSnapshot: 'AgentRunContextSnapshot',
+  AgentRunContextSnapshotItem: 'AgentRunContextSnapshotItem',
+  AgentRunSuspension: 'AgentRunSuspension',
+  AgentRunSuspensionResponse: 'AgentRunSuspensionResponse',
   AgentChatThread: 'AgentChatThread',
   AgentChatMessage: 'AgentChatMessage',
   CreditLedgerEntry: 'CreditLedgerEntry',
-  TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry'
+  TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
+  RagDocument: 'RagDocument',
+  RagChunk: 'RagChunk',
+  RagEmbedding: 'RagEmbedding',
+  RagIndexJob: 'RagIndexJob'
 };
 
 /**

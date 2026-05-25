@@ -3,6 +3,10 @@ import { Injectable } from '@nestjs/common';
 export interface BlockExecutionContext {
   runId: string;
   organizationId: string;
+  userId?: string;
+  parentRunId?: string | null;
+  rootRunId?: string | null;
+  depth: number;
   stepId?: string;
   blockId: string;
   blockType: string;

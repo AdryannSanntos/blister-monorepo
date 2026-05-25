@@ -15,19 +15,23 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { AgentInactiveDialog } from "src/core/modules/agents/components/agent-inactive-dialog";
 import {
   useAgentThreads,
   useCreateThread,
   useDeleteThread,
   useRenameThread,
 } from "src/core/modules/agents/hooks/use-agent-chat";
-import { AgentInactiveDialog } from "src/core/modules/agents/components/agent-inactive-dialog";
 import type { Agent } from "src/core/modules/agents/hooks/use-agents";
 import { UserTrigger } from "src/core/modules/dashboard/components/sidebar-triggers";
 import {
   getInitials,
   useDashboardData,
 } from "src/core/modules/dashboard/hooks/use-dashboard-data";
+import {
+  AppSidebar,
+  type SidebarGroupDef,
+} from "src/core/shared/components/ui/app-sidebar";
 import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import {
   DropdownMenu,
@@ -36,24 +40,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
-import {
-  AppSidebar,
-  type SidebarGroupDef,
-} from "src/core/shared/components/ui/app-sidebar";
 
 type Props = {
   orgId: string;
   agent: Agent;
   activeThreadId?: string | null;
-  hasActiveRun?: boolean;
 };
 
-export function AgentWorkspaceSidebar({
-  orgId,
-  agent,
-  activeThreadId,
-  hasActiveRun,
-}: Props) {
+export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
   const router = useRouter();
   const { displayName, activeOrganization, activeRole } = useDashboardData();
   const threads = useAgentThreads(orgId, agent.id);
@@ -122,9 +116,6 @@ export function AgentWorkspaceSidebar({
     onSelect: () => void handleNewThread(),
     permission: "agent.execute" as const,
     match: (p: string) => p.startsWith(`${basePath}/chat`) && !activeThreadId,
-    badge: hasActiveRun
-      ? { value: "•", tone: "warning" as const }
-      : undefined,
   };
 
   const threadItems = (threads.data ?? []).map((thread) => ({
@@ -145,47 +136,54 @@ export function AgentWorkspaceSidebar({
           className="w-full bg-transparent text-[13px] text-[var(--fg-primary)] outline-none"
         />
       ) : (
-        thread.title ?? "Conversa sem título"
+        (thread.title ?? "Conversa sem título")
       ),
     icon: MessageSquare,
-    href: renamingThreadId === thread.id ? undefined : `${basePath}/chat?thread=${thread.id}`,
+    href:
+      renamingThreadId === thread.id
+        ? undefined
+        : `${basePath}/chat?thread=${thread.id}`,
     permission: "agent.execute" as const,
     active: thread.id === activeThreadId,
-    action: renamingThreadId !== thread.id ? (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            aria-label={`Abrir menu da conversa ${thread.title ?? "sem título"}`}
-            className="flex size-6 items-center justify-center rounded-[var(--r-sm)] text-[var(--fg-quaternary)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MoreHorizontal className="size-3" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() => startRename(thread.id, thread.title ?? "")}
-          >
-            <Pencil className="size-3.5" />
-            Renomear
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() =>
-              setThreadToDelete({
-                id: thread.id,
-                title: thread.title ?? "Conversa sem título",
-              })
-            }
-          >
-            <Trash2 className="size-3.5" />
-            Excluir conversa
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ) : null,
+    badge: thread.hasActiveRun
+      ? { value: "•", tone: "warning" as const }
+      : undefined,
+    action:
+      renamingThreadId !== thread.id ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label={`Abrir menu da conversa ${thread.title ?? "sem título"}`}
+              className="flex size-6 items-center justify-center rounded-[var(--r-sm)] text-[var(--fg-quaternary)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MoreHorizontal className="size-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => startRename(thread.id, thread.title ?? "")}
+            >
+              <Pencil className="size-3.5" />
+              Renomear
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() =>
+                setThreadToDelete({
+                  id: thread.id,
+                  title: thread.title ?? "Conversa sem título",
+                })
+              }
+            >
+              <Trash2 className="size-3.5" />
+              Excluir conversa
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null,
   }));
 
   const sidebarGroups: SidebarGroupDef[] = [
@@ -228,6 +226,9 @@ export function AgentWorkspaceSidebar({
           href: `${basePath}/workflow`,
           permission: "agent.update" as const,
           match: (p) => p.startsWith(`${basePath}/workflow`),
+          badge: !isAgentActive
+            ? { value: "!", tone: "warning" as const }
+            : undefined,
         },
         {
           label: "Execuções",

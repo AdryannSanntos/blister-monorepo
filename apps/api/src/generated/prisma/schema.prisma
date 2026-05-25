@@ -1,11 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
 }
 
 // ---------------------------------------------------------------------------
@@ -537,10 +539,11 @@ model CompanyAgent {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  template    AgentTemplate?    @relation(fields: [templateId], references: [id], onDelete: SetNull)
-  chatThreads AgentChatThread[]
-  versions    AgentVersion[]
-  runs        AgentRun[]
+  template       AgentTemplate?       @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  chatThreads    AgentChatThread[]
+  versions       AgentVersion[]
+  runs           AgentRun[]
+  contextProfile AgentContextProfile?
 
   @@unique([organizationId, slug])
   @@index([organizationId, status, updatedAt])
@@ -590,6 +593,14 @@ model AgentRun {
   createdByUserId    String
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  rootRunId          String?
+  parentRunId        String?
+  parentStepId       String?
+  depth              Int       @default(0)
+  currentBlockId     String?
+  currentBlockType   String?
+  waitingReason      String?
+  resumeStatus       String?
 
   agent                CompanyAgent               @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentVersion         AgentVersion               @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
@@ -599,6 +610,13 @@ model AgentRun {
   creditEntries        CreditLedgerEntry[]
   steps                AgentRunStep[]
   technicalCostEntries TechnicalCostLedgerEntry[]
+  contextSnapshot      AgentRunContextSnapshot?
+  suspensions          AgentRunSuspension[]
+  rootRun              AgentRun?                  @relation("AgentRunRootLineage", fields: [rootRunId], references: [id], onDelete: SetNull)
+  rootChildRuns        AgentRun[]                 @relation("AgentRunRootLineage")
+  parentRun            AgentRun?                  @relation("AgentRunParentLineage", fields: [parentRunId], references: [id], onDelete: SetNull)
+  childRuns            AgentRun[]                 @relation("AgentRunParentLineage")
+  parentStep           AgentRunStep?              @relation("AgentRunParentStep", fields: [parentStepId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, status, createdAt])
   @@index([agentId, createdAt])
@@ -606,25 +624,150 @@ model AgentRun {
   @@index([status, leaseExpiresAt])
   @@index([organizationId, threadId])
   @@index([organizationId, createdByUserId, createdAt])
+  @@index([rootRunId])
+  @@index([parentRunId])
+  @@index([parentStepId])
 }
 
 model AgentRunStep {
-  id            String    @id @default(cuid())
-  runId         String
-  blockKey      String
-  blockType     String
-  status        String
-  metadata      Json      @default("{}")
-  inputPayload  Json      @default("{}")
-  outputPayload Json?
-  errorMessage  String?
-  startedAt     DateTime?
-  completedAt   DateTime?
-  createdAt     DateTime  @default(now())
+  id              String    @id @default(cuid())
+  runId           String
+  blockKey        String
+  blockType       String
+  status          String
+  metadata        Json      @default("{}")
+  inputPayload    Json      @default("{}")
+  outputPayload   Json?
+  errorMessage    String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  sequence        Int?
+  branchKey       String?
+  inputType       String?
+  outputType      String?
+  statePayload    Json?
+  uiOutputPayload Json?
 
-  run AgentRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  run            AgentRun             @relation(fields: [runId], references: [id], onDelete: Cascade)
+  suspensions    AgentRunSuspension[]
+  childAgentRuns AgentRun[]           @relation("AgentRunParentStep")
 
   @@index([runId, createdAt])
+  @@index([runId, sequence])
+}
+
+model AgentContextProfile {
+  id           String   @id @default(cuid())
+  agentId      String   @unique
+  instructions String?  @db.Text
+  notes        String?  @db.Text
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  agent      CompanyAgent            @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  files      AgentContextFile[]
+  references AgentContextReference[]
+}
+
+model AgentContextFile {
+  id        String   @id @default(cuid())
+  profileId String
+  filename  String
+  objectKey String
+  mimeType  String
+  sizeBytes Int
+  publicUrl String?
+  status    String   @default("active")
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile AgentContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([profileId, status])
+}
+
+model AgentContextReference {
+  id         String   @id @default(cuid())
+  profileId  String
+  sourceType String
+  sourceId   String
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile AgentContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, sourceType, sourceId])
+  @@index([profileId])
+}
+
+model AgentRunContextSnapshot {
+  id              String   @id @default(cuid())
+  runId           String   @unique
+  layers          Json     @default("{}")
+  resolvedSummary String?  @db.Text
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now())
+
+  run   AgentRun                      @relation(fields: [runId], references: [id], onDelete: Cascade)
+  items AgentRunContextSnapshotItem[]
+}
+
+model AgentRunContextSnapshotItem {
+  id         String   @id @default(cuid())
+  snapshotId String
+  sourceType String
+  sourceId   String?
+  label      String
+  content    String?  @db.Text
+  summary    String?  @db.Text
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  snapshot AgentRunContextSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([snapshotId])
+  @@index([sourceType, sourceId])
+}
+
+model AgentRunSuspension {
+  id              String    @id @default(cuid())
+  runId           String
+  stepId          String?
+  type            String
+  status          String    @default("pending")
+  resolvedPayload Json      @default("{}")
+  roundNumber     Int       @default(1)
+  metadata        Json      @default("{}")
+  answeredAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  run       AgentRun                     @relation(fields: [runId], references: [id], onDelete: Cascade)
+  step      AgentRunStep?                @relation(fields: [stepId], references: [id], onDelete: SetNull)
+  responses AgentRunSuspensionResponse[]
+
+  @@index([runId, status])
+  @@index([stepId])
+}
+
+model AgentRunSuspensionResponse {
+  id           String   @id @default(cuid())
+  suspensionId String
+  answers      Json     @default("{}")
+  roundNumber  Int      @default(1)
+  metadata     Json     @default("{}")
+  answeredById String
+  answeredAt   DateTime @default(now())
+
+  suspension AgentRunSuspension @relation(fields: [suspensionId], references: [id], onDelete: Cascade)
+
+  @@index([suspensionId])
+  @@index([answeredById])
 }
 
 model AgentChatThread {
@@ -715,4 +858,80 @@ model TechnicalCostLedgerEntry {
   @@index([createdAt])
   @@index([providerId, createdAt])
   @@index([modelId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// RAG platform
+// ---------------------------------------------------------------------------
+
+model RagDocument {
+  id             String   @id @default(cuid())
+  organizationId String
+  // "brain_entry" | "asset" | "agent_context_file" | "manual"
+  sourceType     String
+  sourceId       String?
+  title          String?
+  // SHA-256 of the raw content — used to skip reindex when unchanged
+  contentHash    String?
+  // "pending" | "indexed" | "failed" | "archived"
+  status         String   @default("pending")
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  chunks    RagChunk[]
+  indexJobs RagIndexJob[]
+
+  @@unique([organizationId, sourceType, sourceId])
+  @@index([organizationId, status])
+  @@index([organizationId, sourceType])
+}
+
+model RagChunk {
+  id         String   @id @default(cuid())
+  documentId String
+  sequence   Int
+  content    String   @db.Text
+  tokenCount Int?
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  document  RagDocument   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  embedding RagEmbedding?
+
+  @@index([documentId, sequence])
+}
+
+model RagEmbedding {
+  id             String                       @id @default(cuid())
+  chunkId        String                       @unique
+  organizationId String
+  model          String
+  dimensions     Int
+  vector         Unsupported("vector(1536)")?
+  createdAt      DateTime                     @default(now())
+
+  chunk RagChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model RagIndexJob {
+  id                String    @id @default(cuid())
+  organizationId    String
+  documentId        String
+  // "queued" | "running" | "completed" | "failed"
+  status            String    @default("queued")
+  errorMessage      String?
+  triggeredByUserId String?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  metadata          Json      @default("{}")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  document RagDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([documentId, createdAt])
 }

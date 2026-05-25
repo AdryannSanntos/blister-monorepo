@@ -82,7 +82,6 @@ type Group = {
   emptyState?: React.ReactNode;
 };
 
-const SIDEBAR_OPEN_KEY = "workana-ai:sidebar-open";
 const SIDEBAR_GROUPS_KEY = "workana-ai:sidebar-groups-state";
 
 function readStorage<T>(key: string, fallback: T): T {
@@ -124,14 +123,23 @@ const defaultGroups: Group[] = [
     collapsible: false,
     items: [
       { label: "Brain", icon: Brain, href: "/onboarding" },
-      { label: "Contexto", icon: Library, href: "/dashboard/workspace/context", permission: "context.read" },
+      {
+        label: "Contexto",
+        icon: Library,
+        href: "/dashboard/workspace/context",
+        permission: "context.read",
+      },
       {
         label: "Design System",
         icon: FileCode2,
         href: "/dashboard/workspace/design-system",
         permission: "design-system.read",
       },
-      { label: "Integrações", icon: PlugZap, href: "/dashboard/workspace/integrations" },
+      {
+        label: "Integrações",
+        icon: PlugZap,
+        href: "/dashboard/workspace/integrations",
+      },
     ],
   },
   {
@@ -139,8 +147,16 @@ const defaultGroups: Group[] = [
     collapsible: false,
     items: [
       { label: "Equipe", icon: Users, href: "/dashboard/workspace/team" },
-      { label: "Permissões", icon: KeyRound, href: "/dashboard/workspace/permissions" },
-      { label: "Configurações", icon: Settings, href: "/dashboard/workspace/settings" },
+      {
+        label: "Permissões",
+        icon: KeyRound,
+        href: "/dashboard/workspace/permissions",
+      },
+      {
+        label: "Configurações",
+        icon: Settings,
+        href: "/dashboard/workspace/settings",
+      },
       { label: "Admin", icon: Shield },
     ],
   },
@@ -215,8 +231,6 @@ function AppSidebar({
     }))
     .filter((g) => !g.label || g.items.length > 0 || Boolean(g.emptyState));
 
-  const labeledGroups = filteredGroups.filter((g) => g.label);
-
   const isItemActive = React.useCallback(
     (item: Item, path: string): boolean => {
       if (item.match) return item.match(path);
@@ -276,6 +290,41 @@ function AppSidebar({
       : workspaceTrigger;
   const userNode =
     typeof userTrigger === "function" ? userTrigger(collapsed) : userTrigger;
+
+  function getBadgeDotToneClass(
+    tone?: "accent" | "warning" | "neutral",
+  ): string {
+    if (tone === "accent") return "bg-[var(--accent)]";
+    if (tone === "warning") return "bg-[var(--warning)]";
+    return "bg-[var(--fg-quaternary)]";
+  }
+
+  function renderBadge(item: Item) {
+    if (item.soon) {
+      return (
+        <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
+          Em breve
+        </span>
+      );
+    }
+
+    if (!item.badge) return null;
+
+    return (
+      <span
+        className={cn(
+          "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
+          item.badge.tone === "accent"
+            ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+            : item.badge.tone === "warning"
+              ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
+              : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
+        )}
+      >
+        {item.badge.value}
+      </span>
+    );
+  }
 
   return (
     <SidebarProvider
@@ -366,13 +415,19 @@ function AppSidebar({
             const label = group.label;
             const isLabeledGroup = Boolean(label);
             const isCollapsible = group.collapsible !== false && isLabeledGroup;
-            const isGroupOpen = isCollapsible ? (label ? (openGroups[label] ?? true) : true) : true;
+            const isGroupOpen = isCollapsible
+              ? label
+                ? (openGroups[label] ?? true)
+                : true
+              : true;
 
             return (
               <Collapsible
                 key={label ?? `group-${groupIndex}`}
                 open={collapsed || !isLabeledGroup || isGroupOpen}
-                onOpenChange={isCollapsible && label ? () => toggleGroup(label) : undefined}
+                onOpenChange={
+                  isCollapsible && label ? () => toggleGroup(label) : undefined
+                }
               >
                 <SidebarGroup className="gap-0 p-0">
                   {!collapsed && isLabeledGroup ? (
@@ -389,14 +444,16 @@ function AppSidebar({
                         </SidebarGroupLabel>
                       </CollapsibleTrigger>
                     ) : (
-                      <SidebarGroupLabel className="px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)]">
+                      <SidebarGroupLabel className="truncate px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)]">
                         {label}
                       </SidebarGroupLabel>
                     )
                   ) : null}
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <SidebarGroupContent>
-                      {group.items.length === 0 && group.emptyState && !collapsed ? (
+                      {group.items.length === 0 &&
+                      group.emptyState &&
+                      !collapsed ? (
                         <div
                           className={cn(
                             "ml-2 rounded-[var(--r-md)] border border-dashed border-[var(--line-default)] bg-[var(--bg-sunken)] px-3 py-3 text-[12px] text-[var(--fg-tertiary)]",
@@ -431,9 +488,23 @@ function AppSidebar({
                                   {item.dot ? (
                                     <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
                                   ) : null}
+                                  {collapsed && item.badge ? (
+                                    <span
+                                      className={cn(
+                                        "absolute -right-1 -top-1 size-2 rounded-full ring-2 ring-[var(--bg-base)]",
+                                        getBadgeDotToneClass(item.badge.tone),
+                                      )}
+                                    />
+                                  ) : null}
                                 </span>
                                 {!collapsed ? (
-                                  <span className="flex-1 truncate text-left">
+                                  <span
+                                    className={cn(
+                                      "flex-1 truncate text-left",
+                                      (item.badge || item.soon) && "pr-6",
+                                      item.action && "pr-7",
+                                    )}
+                                  >
                                     {item.label}
                                   </span>
                                 ) : null}
@@ -463,7 +534,13 @@ function AppSidebar({
                             );
                             return (
                               <SidebarMenuItem
-                                key={item.id ?? item.href ?? (typeof item.label === "string" ? item.label : item.id)}
+                                key={
+                                  item.id ??
+                                  item.href ??
+                                  (typeof item.label === "string"
+                                    ? item.label
+                                    : item.id)
+                                }
                                 className="relative"
                               >
                                 {isActive ? (
@@ -484,32 +561,26 @@ function AppSidebar({
                                   </Tooltip>
                                 ) : item.action ? (
                                   <div className="flex w-full min-w-0 items-center pr-2">
-                                    <div className="min-w-0 flex-1 overflow-hidden">{button}</div>
-                                    <div className="shrink-0 pl-1">{item.action}</div>
+                                    <div className="min-w-0 flex-1 overflow-hidden">
+                                      {button}
+                                    </div>
+                                    {!collapsed && (item.badge || item.soon) ? (
+                                      <div className="shrink-0 pl-1.5">
+                                        {renderBadge(item)}
+                                      </div>
+                                    ) : null}
+                                    <div className="shrink-0 pl-1">
+                                      {item.action}
+                                    </div>
                                   </div>
                                 ) : (
                                   button
                                 )}
-                                {!collapsed && (item.badge || item.soon) ? (
+                                {!collapsed &&
+                                !item.action &&
+                                (item.badge || item.soon) ? (
                                   <SidebarMenuBadge className="pointer-events-none">
-                                    {item.soon ? (
-                                      <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
-                                        Em breve
-                                      </span>
-                                    ) : item.badge ? (
-                                      <span
-                                        className={cn(
-                                          "rounded-[var(--r-sm)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums",
-                                          item.badge.tone === "accent"
-                                            ? "bg-[var(--accent-soft)] text-[var(--accent)]"
-                                            : item.badge.tone === "warning"
-                                              ? "bg-[color-mix(in_oklch,var(--warning)_18%,transparent)] text-[var(--warning)]"
-                                              : "bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]",
-                                        )}
-                                      >
-                                        {item.badge.value}
-                                      </span>
-                                    ) : null}
+                                    {renderBadge(item)}
                                   </SidebarMenuBadge>
                                 ) : null}
                               </SidebarMenuItem>

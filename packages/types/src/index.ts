@@ -31,3 +31,5 @@ export const createCompanySchema = z.strictObject({
 });
 
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
+
+export * from './rag/index';

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentBlockExecutorRegistry } from './agent-block-executor.registry';
+import { uiOutputEnvelopeSchema } from './dto/ui-output.dto';
 
 const toJsonValue = (v: unknown): Prisma.InputJsonValue => v as Prisma.InputJsonValue;
 
@@ -29,6 +30,7 @@ interface FlowDefinition {
 interface RuntimeResult {
   visitedBlockIds: string[];
   finalOutput?: unknown;
+  uiOutput?: unknown;
   suspended?: boolean;
   suspensionId?: string;
 }
@@ -49,9 +51,48 @@ export class AgentWorkflowRuntimeService {
     const { runId, organizationId = '', inputPayload, flowDefinition } = params;
     const { nodes, edges } = flowDefinition;
 
+    // Load run-level context (owner, lineage) so block executors don't depend on
+    // fragile reads from inputs/runState.
+    const runRecord = await this.prisma.agentRun.findUnique({
+      where: { id: runId },
+      select: {
+        createdByUserId: true,
+        parentRunId: true,
+        rootRunId: true,
+        depth: true,
+      },
+    });
+    const runUserId = runRecord?.createdByUserId ?? undefined;
+    const runDepth = runRecord?.depth ?? 0;
+    const parentRunId = runRecord?.parentRunId ?? null;
+    const rootRunId = runRecord?.rootRunId ?? null;
+
     const nodeMap = new Map<string, FlowNode>(nodes.map((n) => [n.id, n]));
     const visitedBlockIds: string[] = [];
-    const portOutputs = new Map<string, unknown>(); // key: `nodeId:portKey`
+    const portOutputs = new Map<string, unknown>();
+    const visited = new Set<string>();
+    let stepSequence = 0;
+    let lastUiOutput: unknown;
+
+    // Rehydrate state from previously persisted successful steps (resume support)
+    const priorSteps = await this.loadPriorSteps(runId);
+    for (const step of priorSteps) {
+      const outputs = (step.outputPayload as Record<string, unknown> | null) ?? {};
+      for (const [portKey, value] of Object.entries(outputs)) {
+        portOutputs.set(`${step.blockKey}:${portKey}`, value);
+      }
+      if (!outputs.default) {
+        portOutputs.set(`${step.blockKey}:default`, outputs);
+      }
+      visited.add(step.blockKey);
+      visitedBlockIds.push(step.blockKey);
+      if (typeof step.sequence === 'number' && step.sequence > stepSequence) {
+        stepSequence = step.sequence;
+      }
+      if (step.uiOutputPayload) {
+        lastUiOutput = step.uiOutputPayload;
+      }
+    }
 
     const getNodeInputs = (nodeId: string): Record<string, unknown> => {
       const incoming = edges.filter((e) => e.targetNodeId === nodeId);
@@ -71,19 +112,27 @@ export class AgentWorkflowRuntimeService {
       if (strategy === 'any_first') {
         return incoming.some((e) => portOutputs.has(`${e.sourceNodeId}:${e.sourcePortKey}`));
       }
-      // default: all_required
       return incoming.every((e) => portOutputs.has(`${e.sourceNodeId}:${e.sourcePortKey}`));
     };
 
-    // Topological BFS over the graph
-    const visited = new Set<string>();
     const queue: string[] = [];
 
-    // Find start nodes (input type or no incoming edges)
-    for (const node of nodes) {
-      const hasIncoming = edges.some((e) => e.targetNodeId === node.id);
-      if (!hasIncoming || node.type === 'input') {
-        queue.push(node.id);
+    if (visited.size > 0) {
+      // Resuming: enqueue downstream nodes of every visited node
+      for (const visitedId of visited) {
+        const outgoing = edges.filter((e) => e.sourceNodeId === visitedId);
+        for (const edge of outgoing) {
+          if (!visited.has(edge.targetNodeId)) {
+            queue.push(edge.targetNodeId);
+          }
+        }
+      }
+    } else {
+      for (const node of nodes) {
+        const hasIncoming = edges.some((e) => e.targetNodeId === node.id);
+        if (!hasIncoming || node.type === 'input') {
+          queue.push(node.id);
+        }
       }
     }
 
@@ -98,9 +147,12 @@ export class AgentWorkflowRuntimeService {
 
       visited.add(nodeId);
       visitedBlockIds.push(nodeId);
+      stepSequence += 1;
+      const currentSequence = stepSequence;
 
       const inputs = node.type === 'input' ? { payload: inputPayload } : getNodeInputs(nodeId);
       const config = node.config ?? {};
+      const branchKey = typeof config.branchKey === 'string' ? config.branchKey : null;
 
       const stepRecord = await this.prisma.agentRunStep.create({
         data: {
@@ -108,6 +160,9 @@ export class AgentWorkflowRuntimeService {
           blockKey: nodeId,
           blockType: node.type,
           status: 'running',
+          sequence: currentSequence,
+          branchKey: branchKey ?? undefined,
+          inputType: node.type,
           inputPayload: toJsonValue(inputs),
           outputPayload: toJsonValue({}),
           startedAt: new Date(),
@@ -127,6 +182,10 @@ export class AgentWorkflowRuntimeService {
           result = await executor({
             runId,
             organizationId,
+            userId: runUserId,
+            parentRunId,
+            rootRunId,
+            depth: runDepth,
             stepId: stepRecord.id,
             blockId: nodeId,
             blockType: node.type,
@@ -146,30 +205,27 @@ export class AgentWorkflowRuntimeService {
           throw err;
         }
       } else {
-        // Passthrough for unregistered blocks
         result = { outputs: { default: inputs } };
       }
 
-      await this.prisma.agentRunStep.update({
-        where: { id: stepRecord.id },
-        data: {
-          status: 'success',
-          outputPayload: toJsonValue(result.outputs),
-          completedAt: new Date(),
-        },
-      });
-
-      // Store outputs by port key
-      for (const [portKey, value] of Object.entries(result.outputs)) {
-        portOutputs.set(`${nodeId}:${portKey}`, value);
-      }
-
-      // Default 'default' port if no explicit output
-      if (!result.outputs.default) {
-        portOutputs.set(`${nodeId}:default`, result.outputs);
+      // Detect / validate UI output envelope
+      const uiOutputCandidate = result.outputs.ui_output ?? result.outputs.final;
+      const uiOutputPayload = this.extractUiOutputEnvelope(uiOutputCandidate);
+      if (uiOutputPayload) {
+        lastUiOutput = uiOutputPayload;
       }
 
       if (result.suspend) {
+        await this.prisma.agentRunStep.update({
+          where: { id: stepRecord.id },
+          data: {
+            status: 'suspended',
+            outputPayload: toJsonValue({}),
+            statePayload: toJsonValue(Object.fromEntries(portOutputs)),
+            completedAt: new Date(),
+          },
+        });
+
         const suspension = await this.prisma.agentRunSuspension.create({
           data: {
             runId,
@@ -193,11 +249,34 @@ export class AgentWorkflowRuntimeService {
         return { visitedBlockIds, suspended: true, suspensionId: suspension.id };
       }
 
-      if (result.terminate) {
-        return { visitedBlockIds, finalOutput: result.outputs };
+      await this.prisma.agentRunStep.update({
+        where: { id: stepRecord.id },
+        data: {
+          status: 'success',
+          outputPayload: toJsonValue(result.outputs),
+          statePayload: toJsonValue(Object.fromEntries(portOutputs)),
+          uiOutputPayload: uiOutputPayload ? toJsonValue(uiOutputPayload) : undefined,
+          outputType: node.type,
+          completedAt: new Date(),
+        },
+      });
+
+      for (const [portKey, value] of Object.entries(result.outputs)) {
+        portOutputs.set(`${nodeId}:${portKey}`, value);
       }
 
-      // Enqueue downstream nodes
+      if (!result.outputs.default) {
+        portOutputs.set(`${nodeId}:default`, result.outputs);
+      }
+
+      if (result.terminate) {
+        return {
+          visitedBlockIds,
+          finalOutput: result.outputs,
+          uiOutput: uiOutputPayload ?? lastUiOutput,
+        };
+      }
+
       const outgoing = edges.filter((e) => e.sourceNodeId === nodeId);
       for (const edge of outgoing) {
         if (!visited.has(edge.targetNodeId)) {
@@ -206,11 +285,44 @@ export class AgentWorkflowRuntimeService {
       }
     }
 
-    return { visitedBlockIds };
+    return { visitedBlockIds, uiOutput: lastUiOutput };
+  }
+
+  private async loadPriorSteps(runId: string) {
+    return this.prisma.agentRunStep.findMany({
+      where: { runId, status: 'success' },
+      orderBy: [{ sequence: 'asc' }, { createdAt: 'asc' }],
+      select: {
+        blockKey: true,
+        outputPayload: true,
+        sequence: true,
+        uiOutputPayload: true,
+      },
+    });
+  }
+
+  private extractUiOutputEnvelope(candidate: unknown): Record<string, unknown> | null {
+    if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
+      return null;
+    }
+
+    const obj = candidate as Record<string, unknown>;
+    // Tolerate envelope wrapped inside { type: 'ui_output', blocks: [...] }
+    const blocks = Array.isArray(obj.blocks) ? obj.blocks : null;
+    if (!blocks) return null;
+
+    const parsed = uiOutputEnvelopeSchema.safeParse({
+      blocks,
+      metadata: typeof obj.metadata === 'object' && obj.metadata ? obj.metadata : undefined,
+    });
+    if (parsed.success) {
+      return parsed.data as Record<string, unknown>;
+    }
+    // Even if strict validation fails, persist raw blocks payload so frontend can recover.
+    return { blocks, metadata: obj.metadata ?? {} };
   }
 
   async awaitRunCompletion(runId: string): Promise<{ finalOutput?: unknown }> {
-    // Phase 1: poll until run is no longer running/queued (synchronous sub-agent calls)
     const maxWaitMs = 30_000;
     const pollIntervalMs = 500;
     const startTime = Date.now();

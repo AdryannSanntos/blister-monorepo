@@ -1,9 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, useEffect, useMemo } from "react";
+import { type ReactNode, useEffect } from "react";
 import { AgentWorkspaceSidebar } from "src/core/modules/agents/components/agent-workspace-sidebar";
-import { useAgentRuns } from "src/core/modules/agents/hooks/use-agent-runs";
 import { useCompanyAgent } from "src/core/modules/agents/hooks/use-agents";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 
@@ -19,15 +18,6 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
   const agent = useCompanyAgent(orgId, agentId);
-  const runsFilters = useMemo(
-    () => ({ agentId, status: "running" }),
-    [agentId],
-  );
-  const runs = useAgentRuns(orgId, runsFilters, { pollActive: true });
-
-  const hasActiveRun = Boolean(
-    runs.data?.some((r) => r.status === "queued" || r.status === "running"),
-  );
 
   useEffect(() => {
     if (agent.data?.status === "archived") {
@@ -65,7 +55,6 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
         orgId={orgId}
         agent={agent.data}
         activeThreadId={threadId}
-        hasActiveRun={hasActiveRun}
       />
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden p-3 pl-0">
         <div className="flex min-h-0 w-full flex-1 overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)] shadow-[var(--shadow-sm)]">

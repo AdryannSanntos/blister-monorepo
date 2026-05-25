@@ -12,6 +12,11 @@ import { HtmlPreviewService } from './html-preview.service';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
+type FlowResult =
+  | { suspended: true; suspensionId: string | undefined; result: unknown; uiOutput: unknown; usage: never[]; awaitingUserValidation: false }
+  | { suspended?: false; awaitingUserValidation: true; result: unknown; uiOutput: unknown; usage: Array<Record<string, unknown>> }
+  | { suspended?: false; awaitingUserValidation: false; result: unknown; uiOutput: unknown; usage: Array<Record<string, unknown>> };
+
 type FlowNodeLike = {
   id: string;
   type: string;
@@ -196,7 +201,8 @@ export class AgentExecutionService {
         await this.persistAssistantMessage(
           run.threadId,
           run.id,
-          this.buildAssistantContent(output.result, 'success'),
+          this.buildAssistantContent(output.result, 'success', undefined, output.uiOutput),
+          output.uiOutput,
         );
 
         await this.agentQueueService.completeAttemptStep(attemptStep.id, 'success');
@@ -297,9 +303,15 @@ export class AgentExecutionService {
     threadId: string | null | undefined,
     agentRunId: string,
     content: string,
+    uiOutput?: unknown,
   ) {
     if (!threadId) {
       return;
+    }
+
+    const metadata: Record<string, unknown> = {};
+    if (uiOutput && typeof uiOutput === 'object') {
+      metadata.uiOutput = uiOutput;
     }
 
     await this.prisma.agentChatMessage.create({
@@ -308,7 +320,7 @@ export class AgentExecutionService {
         agentRunId,
         role: 'assistant',
         content,
-        metadata: toJsonValue({}),
+        metadata: toJsonValue(metadata),
       },
     });
   }
@@ -317,7 +329,13 @@ export class AgentExecutionService {
     result: unknown,
     status: 'success' | 'awaiting_user_validation' | 'error',
     errorMessage?: string,
+    uiOutput?: unknown,
   ) {
+    const envelopeText = this.extractEnvelopeText(uiOutput);
+    if (envelopeText) {
+      return envelopeText;
+    }
+
     const text = this.extractTextResult(result);
     if (text) {
       return text;
@@ -341,6 +359,28 @@ export class AgentExecutionService {
     }
 
     return 'Execucao concluida com sucesso.';
+  }
+
+  private extractEnvelopeText(uiOutput: unknown): string | null {
+    if (!uiOutput || typeof uiOutput !== 'object') return null;
+    const blocks = (uiOutput as Record<string, unknown>).blocks;
+    if (!Array.isArray(blocks) || blocks.length === 0) return null;
+
+    const parts: string[] = [];
+    for (const block of blocks) {
+      if (!block || typeof block !== 'object') continue;
+      const b = block as Record<string, unknown>;
+      if (b.type === 'text' || b.type === 'markdown') {
+        if (typeof b.value === 'string' && b.value.trim()) parts.push(b.value);
+      } else if (b.type === 'list' && Array.isArray(b.items)) {
+        parts.push(b.items.map((i) => `- ${i}`).join('\n'));
+      } else if (b.type === 'card' && typeof b.title === 'string') {
+        parts.push(typeof b.body === 'string' ? `**${b.title}**\n${b.body}` : `**${b.title}**`);
+      }
+    }
+
+    const joined = parts.filter(Boolean).join('\n\n').trim();
+    return joined.length > 0 ? joined : null;
   }
 
   private extractTextResult(result: unknown) {
@@ -370,7 +410,7 @@ export class AgentExecutionService {
     organizationId: string,
     inputPayload: unknown,
     flowDefinition: unknown,
-  ) {
+  ): Promise<FlowResult> {
     const flow =
       flowDefinition && typeof flowDefinition === 'object' && !Array.isArray(flowDefinition)
         ? (flowDefinition as Record<string, unknown>)
@@ -395,6 +435,7 @@ export class AgentExecutionService {
           suspended: true,
           suspensionId: runtimeResult.suspensionId,
           result: { suspended: true, suspensionId: runtimeResult.suspensionId },
+          uiOutput: runtimeResult.uiOutput,
           usage: [],
           awaitingUserValidation: false,
         };
@@ -402,11 +443,27 @@ export class AgentExecutionService {
 
       return {
         result: runtimeResult.finalOutput ?? {},
+        uiOutput: runtimeResult.uiOutput,
         usage: [],
         awaitingUserValidation: false,
       };
     }
 
+    return this.executeLegacyLinearFlow(runId, organizationId, inputPayload, flow);
+  }
+
+  /**
+   * @deprecated Legacy linear executor for V1 flows without `edges`
+   * (llm_generate/question_form/html_validation/image_generate).
+   * Slated for removal once all agents are migrated to the V2 graph runtime.
+   * Do not extend — new block types must go through AgentWorkflowRuntimeService.
+   */
+  private async executeLegacyLinearFlow(
+    runId: string,
+    organizationId: string,
+    inputPayload: unknown,
+    flow: Record<string, unknown>,
+  ): Promise<FlowResult> {
     const nodes = Array.isArray(flow.nodes) ? flow.nodes : [];
 
     let previousOutput: unknown = inputPayload;
@@ -514,7 +571,7 @@ export class AgentExecutionService {
             },
           });
 
-          return { result: previousOutput, usage, awaitingUserValidation: true };
+          return { result: previousOutput, usage, awaitingUserValidation: true as const, uiOutput: undefined };
         } else if (nodeType === 'output') {
           stepOutput = previousOutput;
         }
@@ -554,7 +611,7 @@ export class AgentExecutionService {
       });
     }
 
-    return { result: previousOutput, usage, awaitingUserValidation: false };
+    return { result: previousOutput, usage, awaitingUserValidation: false as const, uiOutput: undefined };
   }
 
   private resolveHtmlCandidate(previousOutput: unknown, config: Record<string, unknown>) {

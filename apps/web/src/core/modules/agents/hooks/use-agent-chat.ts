@@ -11,6 +11,7 @@ export type ChatThread = {
   parentThreadId: string | null;
   createdAt: string;
   updatedAt: string;
+  hasActiveRun?: boolean;
   _count?: { messages: number };
 };
 
@@ -65,6 +66,10 @@ function hasActiveRun(messages: ChatMessage[] | undefined) {
   return run.status === "queued" || run.status === "running";
 }
 
+function hasActiveThread(threads: ChatThread[] | undefined) {
+  return Boolean(threads?.some((thread) => thread.hasActiveRun));
+}
+
 export function useAgentThreads(
   orgId: string | null | undefined,
   agentId: string | null | undefined,
@@ -78,6 +83,10 @@ export function useAgentThreads(
       );
       return data.threads ?? [];
     },
+    refetchInterval: (query) =>
+      hasActiveThread(query.state.data as ChatThread[] | undefined)
+        ? 2000
+        : false,
   });
 }
 

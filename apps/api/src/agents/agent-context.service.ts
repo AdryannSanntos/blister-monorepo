@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
+import type { AgentContextFileDto, AgentContextReferenceDto } from './dto/agent-context.dto';
 
 const toJsonValue = (v: unknown): Prisma.InputJsonValue => v as Prisma.InputJsonValue;
 
@@ -25,7 +26,10 @@ export class AgentContextService {
       }),
       this.prisma.agentContextProfile.findUnique({
         where: { agentId },
-        include: { files: true, references: true },
+        include: {
+          files: { where: { status: 'active' } },
+          references: true,
+        },
       }),
     ]);
 
@@ -88,10 +92,7 @@ export class AgentContextService {
     agentId: string,
     update: { instructions?: string; notes?: string },
   ) {
-    await this.prisma.companyAgent.findFirstOrThrow({
-      where: { id: agentId, organizationId },
-      select: { id: true },
-    });
+    await this.assertAgent(organizationId, agentId);
 
     return this.prisma.agentContextProfile.upsert({
       where: { agentId },
@@ -108,14 +109,129 @@ export class AgentContextService {
   }
 
   async getAgentContext(organizationId: string, agentId: string) {
-    await this.prisma.companyAgent.findFirstOrThrow({
-      where: { id: agentId, organizationId },
-      select: { id: true },
-    });
+    await this.assertAgent(organizationId, agentId);
 
     return this.prisma.agentContextProfile.findUnique({
       where: { agentId },
-      include: { files: true, references: true },
+      include: {
+        files: { orderBy: { createdAt: 'desc' } },
+        references: { orderBy: { createdAt: 'desc' } },
+      },
+    });
+  }
+
+  async listFiles(organizationId: string, agentId: string) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+    return this.prisma.agentContextFile.findMany({
+      where: { profileId: profile.id },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async createFile(organizationId: string, agentId: string, dto: AgentContextFileDto) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+
+    return this.prisma.agentContextFile.create({
+      data: {
+        profileId: profile.id,
+        filename: dto.filename,
+        objectKey: dto.objectKey,
+        publicUrl: dto.publicUrl,
+        mimeType: dto.mimeType,
+        sizeBytes: dto.sizeBytes,
+        status: dto.status,
+        metadata: toJsonValue(dto.metadata ?? {}),
+      },
+    });
+  }
+
+  async archiveFile(organizationId: string, agentId: string, fileId: string) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+
+    const file = await this.prisma.agentContextFile.findFirst({
+      where: { id: fileId, profileId: profile.id },
+    });
+    if (!file) {
+      throw new NotFoundException('Context file not found');
+    }
+
+    return this.prisma.agentContextFile.update({
+      where: { id: fileId },
+      data: { status: 'archived' },
+    });
+  }
+
+  async listReferences(organizationId: string, agentId: string) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+    return this.prisma.agentContextReference.findMany({
+      where: { profileId: profile.id },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async createReference(
+    organizationId: string,
+    agentId: string,
+    dto: AgentContextReferenceDto,
+  ) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+
+    return this.prisma.agentContextReference.upsert({
+      where: {
+        profileId_sourceType_sourceId: {
+          profileId: profile.id,
+          sourceType: dto.sourceType,
+          sourceId: dto.sourceId,
+        },
+      },
+      create: {
+        profileId: profile.id,
+        sourceType: dto.sourceType,
+        sourceId: dto.sourceId,
+        metadata: toJsonValue(dto.metadata ?? {}),
+      },
+      update: {
+        metadata: toJsonValue(dto.metadata ?? {}),
+      },
+    });
+  }
+
+  async removeReference(organizationId: string, agentId: string, referenceId: string) {
+    await this.assertAgent(organizationId, agentId);
+    const profile = await this.getOrCreateProfile(agentId);
+
+    const reference = await this.prisma.agentContextReference.findFirst({
+      where: { id: referenceId, profileId: profile.id },
+    });
+    if (!reference) {
+      throw new NotFoundException('Context reference not found');
+    }
+
+    await this.prisma.agentContextReference.delete({ where: { id: referenceId } });
+    return { id: referenceId };
+  }
+
+  private async assertAgent(organizationId: string, agentId: string) {
+    const agent = await this.prisma.companyAgent.findFirst({
+      where: { id: agentId, organizationId },
+      select: { id: true },
+    });
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+    return agent;
+  }
+
+  private async getOrCreateProfile(agentId: string) {
+    return this.prisma.agentContextProfile.upsert({
+      where: { agentId },
+      create: { agentId },
+      update: {},
     });
   }
 }

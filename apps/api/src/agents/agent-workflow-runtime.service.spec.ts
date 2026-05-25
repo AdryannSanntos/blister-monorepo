@@ -6,13 +6,21 @@ const createPrismaMock = () => ({
       .fn()
       .mockImplementation(({ data }) => Promise.resolve({ id: `${data.blockKey}-step` })),
     update: jest.fn().mockResolvedValue({}),
+    findMany: jest.fn().mockResolvedValue([]),
   },
   agentRunSuspension: {
     create: jest.fn().mockResolvedValue({ id: 'suspension-1' }),
   },
   agentRun: {
     update: jest.fn().mockResolvedValue({}),
-    findUnique: jest.fn().mockResolvedValue({ status: 'completed', outputPayload: {} }),
+    findUnique: jest.fn().mockResolvedValue({
+      status: 'completed',
+      outputPayload: {},
+      createdByUserId: 'user-1',
+      parentRunId: null,
+      rootRunId: null,
+      depth: 0,
+    }),
   },
 });
 

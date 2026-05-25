@@ -11,7 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
 import { cn } from "src/core/shared/utils";
-import { BLOCK_TYPES, type BlockTypeKey } from "./block-types";
+import {
+  BLOCK_TYPES,
+  type BlockPort,
+  type BlockTypeKey,
+} from "./block-types";
 
 export type FlowBlockNodeData = {
   blockType: BlockTypeKey;
@@ -23,15 +27,59 @@ export type FlowBlockNodeData = {
   onMenuOpenChange?: (open: boolean) => void;
 };
 
-export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
+const HANDLE_CLASS =
+  "!border-2 !border-[var(--bg-raised)] !bg-[var(--accent)] transition-transform duration-150 hover:scale-125";
+
+function computeHandleOffset(index: number, total: number): string {
+  if (total === 1) return "50%";
+  const step = 100 / (total + 1);
+  return `${step * (index + 1)}%`;
+}
+
+function SourceHandles({ ports }: { ports: BlockPort[] }) {
+  return (
+    <>
+      {ports.map((port, i) => (
+        <Handle
+          key={port.id}
+          id={port.id}
+          type="source"
+          position={Position.Right}
+          style={{ top: computeHandleOffset(i, ports.length) }}
+          className={cn("!size-2.5", HANDLE_CLASS)}
+          title={port.label}
+        />
+      ))}
+    </>
+  );
+}
+
+function TargetHandles({ ports }: { ports: BlockPort[] }) {
+  return (
+    <>
+      {ports.map((port, i) => (
+        <Handle
+          key={port.id}
+          id={port.id}
+          type="target"
+          position={Position.Left}
+          style={{ top: computeHandleOffset(i, ports.length) }}
+          className={cn("!size-2.5", HANDLE_CLASS)}
+          title={port.label}
+        />
+      ))}
+    </>
+  );
+}
+
+export function FlowBlockNode({ data, selected, dragging }: NodeProps) {
   const nodeData = data as FlowBlockNodeData;
-  const type = BLOCK_TYPES[nodeData.blockType] ?? BLOCK_TYPES.llm_generate;
+  const blockKey = nodeData.blockType ?? "llm_call";
+  const type = BLOCK_TYPES[blockKey as BlockTypeKey] ?? BLOCK_TYPES.llm_call;
   const Icon = type.icon;
-  const isInput = nodeData.blockType === "input";
-  const isOutput = nodeData.blockType === "output";
+  const isInput = blockKey === "input";
+  const isOutput = blockKey === "output" || blockKey === "finalizer";
   const isTerminal = isInput || isOutput;
-  const showSource = !isOutput;
-  const showTarget = !isInput;
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -53,19 +101,17 @@ export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
           dragging && "scale-[1.04] border-[var(--accent)]/80",
         )}
       >
-        {showTarget && (
-          <Handle
-            type="target"
-            position={Position.Left}
-            className="!size-3 !border-2 !border-[var(--bg-raised)] !bg-[var(--accent)] transition-transform duration-150 hover:scale-125"
-          />
+        {type.targetPorts.length > 0 && (
+          <TargetHandles ports={type.targetPorts} />
         )}
         <div className="flex flex-col items-center gap-1">
           <div
             className={cn(
               "flex size-9 items-center justify-center rounded-full bg-[var(--bg-sunken)]",
-              isInput && "bg-[color-mix(in_oklch,var(--info)_18%,var(--bg-sunken))]",
-              isOutput && "bg-[color-mix(in_oklch,var(--success)_18%,var(--bg-sunken))]",
+              isInput &&
+                "bg-[color-mix(in_oklch,var(--info)_18%,var(--bg-sunken))]",
+              isOutput &&
+                "bg-[color-mix(in_oklch,var(--success)_18%,var(--bg-sunken))]",
             )}
           >
             <Icon className={cn("size-4", type.tone)} />
@@ -74,21 +120,23 @@ export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
             {nodeData.label ?? type.label}
           </p>
         </div>
-        {showSource && (
-          <Handle
-            type="source"
-            position={Position.Right}
-            className="!size-3 !border-2 !border-[var(--bg-raised)] !bg-[var(--accent)] transition-transform duration-150 hover:scale-125"
-          />
+        {type.sourcePorts.length > 0 && (
+          <SourceHandles ports={type.sourcePorts} />
         )}
       </div>
     );
   }
 
+  const hasMultipleSourcePorts = type.sourcePorts.length > 1;
+  const extraHeight = hasMultipleSourcePorts
+    ? `${Math.max(0, (type.sourcePorts.length - 1) * 20)}px`
+    : undefined;
+
   return (
     <div
+      style={extraHeight ? { minHeight: `calc(56px + ${extraHeight})` } : undefined}
       className={cn(
-        "group flex w-56 items-center gap-3 rounded-[var(--r-lg)] border bg-[var(--bg-raised)] p-3 shadow-[var(--shadow-sm)]",
+        "group relative flex w-56 items-center gap-3 rounded-[var(--r-lg)] border bg-[var(--bg-raised)] p-3 shadow-[var(--shadow-sm)]",
         "transition-all duration-200 ease-out",
         !mounted && "opacity-0 scale-95 translate-y-1",
         mounted && "opacity-100 scale-100 translate-y-0",
@@ -99,12 +147,8 @@ export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
           "shadow-[var(--shadow-lg)] scale-[1.03] border-[var(--accent)]/70 ring-2 ring-[var(--accent)]/20",
       )}
     >
-      {showTarget && (
-        <Handle
-          type="target"
-          position={Position.Left}
-          className="!size-2.5 !border-2 !border-[var(--bg-raised)] !bg-[var(--accent)] transition-transform duration-150 hover:scale-125"
-        />
+      {type.targetPorts.length > 0 && (
+        <TargetHandles ports={type.targetPorts} />
       )}
       <div className="flex size-8 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--bg-sunken)] transition-colors duration-150">
         <Icon className={cn("size-4", type.tone)} />
@@ -116,6 +160,18 @@ export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
         <p className="truncate text-[11px] text-[var(--fg-tertiary)]">
           {type.description}
         </p>
+        {hasMultipleSourcePorts && (
+          <div className="mt-1 flex flex-wrap gap-1">
+            {type.sourcePorts.map((p) => (
+              <span
+                key={p.id}
+                className="rounded px-1 py-0.5 text-[9px] font-medium bg-[var(--bg-sunken)] text-[var(--fg-quaternary)]"
+              >
+                {p.label}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <DropdownMenu
         open={nodeData.menuOpen ?? false}
@@ -146,12 +202,8 @@ export function FlowBlockNode({ id, data, selected, dragging }: NodeProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {showSource && (
-        <Handle
-          type="source"
-          position={Position.Right}
-          className="!size-2.5 !border-2 !border-[var(--bg-raised)] !bg-[var(--accent)] transition-transform duration-150 hover:scale-125"
-        />
+      {type.sourcePorts.length > 0 && (
+        <SourceHandles ports={type.sourcePorts} />
       )}
     </div>
   );

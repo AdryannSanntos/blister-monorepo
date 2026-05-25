@@ -279,11 +279,24 @@ export class AgentChatService {
         createdAt: true,
         updatedAt: true,
         _count: { select: { messages: true } },
+        messages: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: {
+            agentRun: {
+              select: { status: true },
+            },
+          },
+        },
       },
     });
 
     return {
-      threads,
+      threads: threads.map(({ messages, ...thread }) => ({
+        ...thread,
+        hasActiveRun:
+          messages[0]?.agentRun?.status === 'queued' || messages[0]?.agentRun?.status === 'running',
+      })),
       nextCursor: threads.length === options.limit ? threads[threads.length - 1]?.id : null,
     };
   }

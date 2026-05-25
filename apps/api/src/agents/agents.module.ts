@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CreditsModule } from '../credits/credits.module';
 import { PlatformModule } from '../platform/platform.module';
+import { RagModule } from '../rag/rag.module';
 import { StorageModule } from '../storage/storage.module';
 import { AgentBlockExecutorRegistry } from './agent-block-executor.registry';
 import { AgentBlockRegistrationService } from './agent-block-registration.service';
@@ -24,12 +25,11 @@ import { CompanyChatController } from './company-chat.controller';
 import { CompanyChatService } from './company-chat.service';
 import { ContextPolicyService } from './context/context-policy.service';
 import { ContextRerankerService } from './context/context-reranker.service';
-import { RagContextService } from './context/rag-context.service';
 import { StructuredContextService } from './context/structured-context.service';
 import { HtmlPreviewService } from './html-preview.service';
 
 @Module({
-  imports: [AIRuntimeModule, CreditsModule, PlatformModule, StorageModule],
+  imports: [AIRuntimeModule, CreditsModule, PlatformModule, StorageModule, RagModule],
   controllers: [
     AgentsController,
     AgentRunsController,
@@ -54,7 +54,6 @@ import { HtmlPreviewService } from './html-preview.service';
     AgentQueueService,
     ContextPolicyService,
     StructuredContextService,
-    RagContextService,
     ContextRerankerService,
     AgentNotificationsService,
   ],
@@ -75,7 +74,6 @@ import { HtmlPreviewService } from './html-preview.service';
     AgentQueueService,
     ContextPolicyService,
     StructuredContextService,
-    RagContextService,
     ContextRerankerService,
     AgentNotificationsService,
   ],

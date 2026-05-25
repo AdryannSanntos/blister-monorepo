@@ -26,7 +26,7 @@ export function NodeConfigPanel({ node, onClose, onChange, onDelete }: Props) {
   const Icon = type.icon;
 
   const canConfigurePrompt =
-    data.blockType === "llm_generate" || data.blockType === "image_generate";
+    data.blockType === "llm_call" || data.blockType === "clarification";
 
   return (
     <aside className="flex w-80 shrink-0 flex-col border-l border-[var(--line-subtle)] bg-[var(--bg-base)]">

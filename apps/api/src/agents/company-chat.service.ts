@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { RagContextAssemblyService } from '../rag/rag-context-assembly.service';
 import { AgentChatService } from './agent-chat.service';
 import { AgentIntentService } from './agent-intent.service';
 import { ContextRerankerService } from './context/context-reranker.service';
-import { RagContextService } from './context/rag-context.service';
 import { StructuredContextService } from './context/structured-context.service';
 
 type CompanyChatResult = {
@@ -25,16 +25,16 @@ export class CompanyChatService {
     private readonly agentIntentService: AgentIntentService,
     private readonly structuredContextService: StructuredContextService,
     private readonly contextRerankerService: ContextRerankerService,
-    private readonly ragContextService: RagContextService,
+    private readonly ragContextAssemblyService: RagContextAssemblyService,
   ) {}
 
   async handleMessage(
     organizationId: string,
     userId: string,
     content: string,
+    permissions: string[] = [],
     threadId?: string,
   ): Promise<CompanyChatResult> {
-    // Ensure or create thread
     let resolvedThreadId = threadId;
     if (!resolvedThreadId) {
       const thread = await this.agentChatService.createThread(organizationId, userId, {
@@ -44,23 +44,24 @@ export class CompanyChatService {
       resolvedThreadId = thread.id;
     }
 
-    // Create the user message
     const result = await this.agentChatService.createUserMessageAndProcess(organizationId, userId, {
       threadId: resolvedThreadId,
       content,
     });
 
-    // Load context for the response
-    const structuredContext = await this.structuredContextService.loadContext({
-      organizationId,
-      permissions: ['brain.read', 'asset.read', 'agent.read', 'member.read'],
-      userId,
-    });
-
-    const ragResults = await this.ragContextService.search({
-      organizationId,
-      limit: 5,
-    });
+    const [structuredContext, ragPack] = await Promise.all([
+      this.structuredContextService.loadContext({
+        organizationId,
+        permissions: permissions.length
+          ? permissions
+          : ['brain.read', 'asset.read', 'agent.read', 'member.read'],
+        userId,
+      }),
+      this.ragContextAssemblyService.assemble(organizationId, content, {
+        limit: 5,
+        permissions,
+      }).catch(() => ({ query: content, chunks: [], totalFound: 0 })),
+    ]);
 
     const structuredItems = Object.entries(structuredContext)
       .filter(([, v]) => v !== null && (!Array.isArray(v) || v.length > 0))
@@ -70,14 +71,21 @@ export class CompanyChatService {
         score: 0,
       }));
 
+    const ragItems = ragPack.chunks.map(
+      (c: { title: string | null; sourceType: string; snippet: string; score: number }) => ({
+        sourceLabel: c.title ?? c.sourceType,
+        snippet: c.snippet,
+        score: c.score,
+      }),
+    );
+
     const reranked = this.contextRerankerService.rerank({
       query: content,
       structured: structuredItems,
-      rag: ragResults,
+      rag: ragItems,
       limit: 8,
     });
 
-    // Check for custom agents to delegate
     const customAgents = await this.prisma.companyAgent.findMany({
       where: { organizationId, status: 'active' },
       select: { id: true, name: true, slug: true },
@@ -90,7 +98,6 @@ export class CompanyChatService {
       cards.push({ type: 'create_agent', metadata: { suggestion: 'No custom agents found' } });
     }
 
-    // If intent is execution and we have agents, delegate
     const decision = await this.agentIntentService.classify({ message: content });
     let delegatedToAgentId: string | undefined;
     let delegatedExecutionId: string | undefined;

@@ -46,10 +46,18 @@ export type UpdateAgentInput = {
   status?: AgentStatus;
 };
 
+export type FlowEdge = {
+  sourceNodeId: string;
+  sourcePortKey: string;
+  targetNodeId: string;
+  targetPortKey: string;
+};
+
 export type SaveDraftVersionInput = {
   flowDefinition: {
     config?: Record<string, unknown>;
     nodes: unknown[];
+    edges?: FlowEdge[];
   };
   inputSchema: Record<string, unknown>;
   outputSchema: Record<string, unknown>;
