@@ -7,19 +7,19 @@ import { useEffect, useMemo, useState } from "react";
 import type { BlockTypeKey } from "src/core/modules/agents/components/flow-builder/block-types";
 import { FlowCanvas } from "src/core/modules/agents/components/flow-builder/flow-canvas";
 import {
-  serializeFlowEdges,
-  serializeFlowNodes,
-  type WorkflowNodeData,
+    type WorkflowNodeData,
+    serializeFlowEdges,
+    serializeFlowNodes,
 } from "src/core/modules/agents/components/flow-builder/serialize-flow-definition";
 import {
-  type WorkflowConfig,
-  WorkflowSidebar,
+    type WorkflowConfig,
+    WorkflowSidebar,
 } from "src/core/modules/agents/components/flow-builder/workflow-sidebar";
 import {
-  useActivateVersion,
-  useCompanyAgent,
-  usePublishVersion,
-  useSaveDraftVersion,
+    useActivateVersion,
+    useCompanyAgent,
+    usePublishVersion,
+    useSaveDraftVersion,
 } from "src/core/modules/agents/hooks/use-agents";
 import { useAbility } from "src/core/modules/organization/hooks/use-ability";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
