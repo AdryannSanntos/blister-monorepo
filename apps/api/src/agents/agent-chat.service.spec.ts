@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
+import { AgentChatOrchestratorService } from './agent-chat-orchestrator.service';
 import { AgentChatService } from './agent-chat.service';
 import { AgentIntentService } from './agent-intent.service';
 import { AgentRunsService } from './agent-runs.service';
@@ -34,6 +35,16 @@ const makeMockPrisma = () => ({
 
 const makeMockIntentService = () => ({
   classify: jest.fn().mockResolvedValue({ mode: 'execution', reason: 'task_requested' }),
+});
+
+const makeMockOrchestratorService = () => ({
+  orchestrateMessage: jest.fn().mockResolvedValue({
+    mode: 'execution',
+    createRun: true,
+    events: [],
+    resolvedContextHints: [],
+    executionReason: 'task_requested',
+  }),
 });
 
 const makeMockRunsService = () => ({
@@ -73,6 +84,7 @@ describe('AgentChatService.createThread', () => {
         AgentChatService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
+        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -91,7 +103,11 @@ describe('AgentChatService.createThread', () => {
     });
 
     expect(prisma.agentChatThread.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ organizationId: 'org-1', agentId: 'agent-1', createdByUserId: 'user-1' }),
+      data: expect.objectContaining({
+        organizationId: 'org-1',
+        agentId: 'agent-1',
+        createdByUserId: 'user-1',
+      }),
     });
     expect(result.id).toBe('thread-1');
   });
@@ -123,11 +139,13 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
   let prisma: ReturnType<typeof makeMockPrisma>;
   let intentService: ReturnType<typeof makeMockIntentService>;
   let runsService: ReturnType<typeof makeMockRunsService>;
+  let orchestratorService: ReturnType<typeof makeMockOrchestratorService>;
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
     intentService = makeMockIntentService();
     runsService = makeMockRunsService();
+    orchestratorService = makeMockOrchestratorService();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -135,6 +153,7 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: intentService },
         { provide: AgentRunsService, useValue: runsService },
+        { provide: AgentChatOrchestratorService, useValue: orchestratorService },
       ],
     }).compile();
     service = module.get(AgentChatService);
@@ -168,7 +187,12 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
   it('saves message but skips run when intent is conversational', async () => {
     prisma.agentChatThread.findUnique.mockResolvedValue(THREAD);
     prisma.agentChatMessage.create.mockResolvedValue(MESSAGE);
-    intentService.classify.mockResolvedValue({ mode: 'conversational', reason: 'conversation_only' });
+    orchestratorService.orchestrateMessage.mockResolvedValue({
+      mode: 'conversation',
+      createRun: false,
+      events: [],
+      resolvedContextHints: [],
+    });
 
     const result = await service.createUserMessageAndProcess('org-1', 'user-1', {
       threadId: 'thread-1',
@@ -240,13 +264,16 @@ describe('AgentChatService.editMessageAndBranch', () => {
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
-    prisma.$transaction.mockImplementation(async (cb: (tx: typeof prisma) => unknown) => cb(prisma));
+    prisma.$transaction.mockImplementation(async (cb: (tx: typeof prisma) => unknown) =>
+      cb(prisma),
+    );
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AgentChatService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
+        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -313,7 +340,10 @@ describe('AgentChatService.editMessageAndBranch', () => {
 
   it('throws NotFoundException when user does not own the thread', async () => {
     prisma.agentChatMessage.findFirst.mockResolvedValue({ ...MESSAGE, role: 'user' });
-    prisma.agentChatThread.findUnique.mockResolvedValue({ ...THREAD, createdByUserId: 'user-other' });
+    prisma.agentChatThread.findUnique.mockResolvedValue({
+      ...THREAD,
+      createdByUserId: 'user-other',
+    });
 
     await expect(
       service.editMessageAndBranch(
@@ -363,6 +393,7 @@ describe('AgentChatService.listMessages', () => {
         AgentChatService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
+        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -372,7 +403,10 @@ describe('AgentChatService.listMessages', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('returns messages for thread owned by user', async () => {
-    prisma.agentChatThread.findFirst.mockResolvedValue({ id: 'thread-1', createdByUserId: 'user-1' });
+    prisma.agentChatThread.findFirst.mockResolvedValue({
+      id: 'thread-1',
+      createdByUserId: 'user-1',
+    });
     prisma.agentChatMessage.findMany.mockResolvedValue([MESSAGE]);
 
     const result = await service.listMessages('org-1', 'thread-1', 'user-1', { limit: 50 });
@@ -389,7 +423,10 @@ describe('AgentChatService.listMessages', () => {
   });
 
   it('throws NotFoundException when user does not own the thread (data isolation)', async () => {
-    prisma.agentChatThread.findFirst.mockResolvedValue({ id: 'thread-1', createdByUserId: 'user-other' });
+    prisma.agentChatThread.findFirst.mockResolvedValue({
+      id: 'thread-1',
+      createdByUserId: 'user-other',
+    });
 
     await expect(
       service.listMessages('org-1', 'thread-1', 'user-1', { limit: 50 }),
@@ -412,6 +449,7 @@ describe('AgentChatService.deleteThread', () => {
         AgentChatService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
+        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -443,9 +481,9 @@ describe('AgentChatService.deleteThread', () => {
     prisma.agentChatThread.findFirst.mockResolvedValue({ id: 'thread-1' });
     prisma.agentRun.findFirst.mockResolvedValue({ id: 'run-active', status: 'running' });
 
-    await expect(
-      service.deleteThread('org-1', 'agent-1', 'thread-1', 'user-1'),
-    ).rejects.toThrow(BadRequestException);
+    await expect(service.deleteThread('org-1', 'agent-1', 'thread-1', 'user-1')).rejects.toThrow(
+      BadRequestException,
+    );
   });
 });
 
@@ -467,6 +505,7 @@ describe('AgentChatService.regenerateMessage', () => {
         AgentChatService,
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
+        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
         { provide: AgentRunsService, useValue: runsService },
       ],
     }).compile();
@@ -476,7 +515,12 @@ describe('AgentChatService.regenerateMessage', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('creates a run to regenerate assistant message', async () => {
-    const assistantMsg = { ...MESSAGE, id: 'asst-1', role: 'assistant', content: 'Resposta anterior' };
+    const assistantMsg = {
+      ...MESSAGE,
+      id: 'asst-1',
+      role: 'assistant',
+      content: 'Resposta anterior',
+    };
     prisma.agentChatMessage.findFirst.mockResolvedValue(assistantMsg);
     prisma.agentChatThread.findUnique.mockResolvedValue(THREAD);
     prisma.agentRun.findFirst.mockResolvedValue(null);
@@ -492,7 +536,9 @@ describe('AgentChatService.regenerateMessage', () => {
       'org-1',
       'agent-1',
       'user-1',
-      expect.objectContaining({ input: expect.objectContaining({ regenerationOfMessageId: 'asst-1' }) }),
+      expect.objectContaining({
+        input: expect.objectContaining({ regenerationOfMessageId: 'asst-1' }),
+      }),
     );
     expect(result.run).not.toBeNull();
   });

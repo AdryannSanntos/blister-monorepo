@@ -36,13 +36,16 @@ describe('AgentIntentService', () => {
   });
 
   it('classifies messages with questions as execution', async () => {
-    const result = await service.classify({ message: 'Qual é a melhor estratégia para este projeto?' });
+    const result = await service.classify({
+      message: 'Qual é a melhor estratégia para este projeto?',
+    });
     expect(result.mode).toBe('execution');
   });
 
   it('classifies long messages as execution', async () => {
     const result = await service.classify({
-      message: 'Preciso que você analise o contexto da empresa e gere um plano detalhado com 5 etapas.',
+      message:
+        'Preciso que você analise o contexto da empresa e gere um plano detalhado com 5 etapas.',
     });
     expect(result.mode).toBe('execution');
   });
@@ -77,7 +80,20 @@ describe('AgentIntentService', () => {
   });
 
   it('classifies acknowledgement messages as conversational', async () => {
-    const cases = ['obrigado', 'obrigada', 'valeu', 'thanks', 'thank you', 'ok', 'okay', 'certo', 'entendi', 'entendido', 'show', 'beleza'];
+    const cases = [
+      'obrigado',
+      'obrigada',
+      'valeu',
+      'thanks',
+      'thank you',
+      'ok',
+      'okay',
+      'certo',
+      'entendi',
+      'entendido',
+      'show',
+      'beleza',
+    ];
 
     for (const message of cases) {
       const result = await service.classify({ message });

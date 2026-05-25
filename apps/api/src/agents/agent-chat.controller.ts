@@ -1,5 +1,17 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import type { Request } from 'express';
+import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
 import { AgentChatService } from './agent-chat.service';
@@ -9,7 +21,6 @@ import {
   editMessageAndBranchSchema,
   regenerateMessageSchema,
 } from './dto';
-import { z } from 'zod';
 
 const listThreadsQuerySchema = z.object({
   cursor: z.string().min(1).optional(),

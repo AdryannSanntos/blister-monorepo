@@ -9,9 +9,11 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { AIRuntimeService } from '../ai-runtime/ai-runtime.service';
 import { CreditsService } from '../credits/credits.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AgentContextService } from './agent-context.service';
 import { AgentExecutionService } from './agent-execution.service';
 import { AgentQueueService } from './agent-queue.service';
 import { AgentRunsService } from './agent-runs.service';
+import { AgentWorkflowRuntimeService } from './agent-workflow-runtime.service';
 import { HtmlPreviewService } from './html-preview.service';
 
 const makeMockPrisma = () => ({
@@ -23,6 +25,7 @@ const makeMockPrisma = () => ({
     create: jest.fn(),
     findMany: jest.fn(),
     findFirst: jest.fn(),
+    findUnique: jest.fn(),
     update: jest.fn(),
     count: jest.fn().mockResolvedValue(0),
   },
@@ -55,6 +58,13 @@ describe('AgentRunsService', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentExecutionService, useValue: executionService },
         { provide: AgentQueueService, useValue: queueService },
+        {
+          provide: AgentContextService,
+          useValue: {
+            resolveForRun: jest.fn().mockResolvedValue({}),
+            persistSnapshot: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     }).compile();
 
@@ -69,7 +79,9 @@ describe('AgentRunsService', () => {
     });
     prisma.agentRun.create.mockResolvedValue({ id: 'run-1', status: 'queued' });
 
-    const result = await service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: { topic: 'ops' } });
+    const result = await service.createQueuedRun('org-1', 'agent-1', 'user-1', {
+      input: { topic: 'ops' },
+    });
 
     expect(prisma.agentRun.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ status: 'queued', agentVersionId: 'version-1' }),
@@ -121,9 +133,9 @@ describe('AgentRunsService', () => {
   it('throws NotFoundException when agent is missing', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue(null);
 
-    await expect(service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} })).rejects.toThrow(
-      NotFoundException,
-    );
+    await expect(
+      service.createQueuedRun('org-1', 'agent-1', 'user-1', { input: {} }),
+    ).rejects.toThrow(NotFoundException);
   });
 
   it('throws NotFoundException when agent has no active version', async () => {
@@ -172,6 +184,33 @@ describe('AgentRunsService', () => {
     });
   });
 
+  it('stores parent run, parent step, depth, and root run for sub-agent runs', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      activeVersionId: 'v-1',
+    });
+    prisma.agentRun.findUnique.mockResolvedValue({ id: 'parent-run-1', rootRunId: 'root-run-1' });
+    prisma.agentRun.create.mockResolvedValue({ id: 'child-run-1', status: 'queued' });
+
+    await service.createQueuedRun(
+      'org-1',
+      'agent-1',
+      'user-1',
+      { input: {} },
+      { parentRunId: 'parent-run-1', parentStepId: 'parent-step-1', depth: 2 },
+    );
+
+    expect(prisma.agentRun.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        parentRunId: 'parent-run-1',
+        parentStepId: 'parent-step-1',
+        rootRunId: 'root-run-1',
+        depth: 2,
+      }),
+    });
+  });
+
   it('resets lease when enqueueRun fails', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue({
       id: 'agent-1',
@@ -187,7 +226,11 @@ describe('AgentRunsService', () => {
 
     expect(prisma.agentRun.update).toHaveBeenCalledWith({
       where: { id: 'run-1' },
-      data: expect.objectContaining({ status: 'queued', processingLeaseId: null, leaseExpiresAt: null }),
+      data: expect.objectContaining({
+        status: 'queued',
+        processingLeaseId: null,
+        leaseExpiresAt: null,
+      }),
     });
   });
 
@@ -239,6 +282,10 @@ describe('AgentExecutionService', () => {
         { provide: CreditsService, useValue: creditsService },
         { provide: HtmlPreviewService, useValue: { generateHtmlPreview: jest.fn() } },
         { provide: AgentQueueService, useValue: execQueueService },
+        {
+          provide: AgentWorkflowRuntimeService,
+          useValue: { run: jest.fn().mockResolvedValue({ visitedBlockIds: [] }) },
+        },
       ],
     }).compile();
 
@@ -255,7 +302,9 @@ describe('AgentExecutionService', () => {
       status: 'running',
       attemptCount: 2, // skip retry logic → goes straight to storeRunError
       inputPayload: {},
-      agentVersion: { flowDefinition: { nodes: [{ id: 'step-1', type: 'llm_generate', config: {} }] } },
+      agentVersion: {
+        flowDefinition: { nodes: [{ id: 'step-1', type: 'llm_generate', config: {} }] },
+      },
     });
     prisma.agentRun.update.mockResolvedValue({ id: 'run-1' });
     aiRuntimeService.generateText.mockRejectedValue(new Error('provider down'));

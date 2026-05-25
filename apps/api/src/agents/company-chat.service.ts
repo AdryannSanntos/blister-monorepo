@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentChatService } from './agent-chat.service';
 import { AgentIntentService } from './agent-intent.service';
-import { StructuredContextService } from './context/structured-context.service';
 import { ContextRerankerService } from './context/context-reranker.service';
 import { RagContextService } from './context/rag-context.service';
+import { StructuredContextService } from './context/structured-context.service';
 
 type CompanyChatResult = {
   threadId: string;
@@ -45,11 +45,10 @@ export class CompanyChatService {
     }
 
     // Create the user message
-    const result = await this.agentChatService.createUserMessageAndProcess(
-      organizationId,
-      userId,
-      { threadId: resolvedThreadId, content },
-    );
+    const result = await this.agentChatService.createUserMessageAndProcess(organizationId, userId, {
+      threadId: resolvedThreadId,
+      content,
+    });
 
     // Load context for the response
     const structuredContext = await this.structuredContextService.loadContext({
@@ -105,7 +104,11 @@ export class CompanyChatService {
 
     return {
       threadId: resolvedThreadId,
-      message: { id: result.message.id, content: result.message.content, role: result.message.role },
+      message: {
+        id: result.message.id,
+        content: result.message.content,
+        role: result.message.role,
+      },
       delegatedToAgentId,
       delegatedExecutionId,
       fallbackMode: customAgents.length === 0 ? 'context_agent' : undefined,
