@@ -42,6 +42,7 @@ const makeMockOrchestratorService = () => ({
   orchestrateMessage: jest.fn().mockResolvedValue({
     mode: 'execution',
     createRun: true,
+    assistantMessage: 'Vou executar o workflow para esta entrega.',
     events: [],
     resolvedContextHints: [],
     executionReason: 'task_requested',
@@ -191,6 +192,7 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
     orchestratorService.orchestrateMessage.mockResolvedValue({
       mode: 'conversation',
       createRun: false,
+      assistantMessage: 'Olá! Como posso ajudar?',
       events: [],
       resolvedContextHints: [],
     });

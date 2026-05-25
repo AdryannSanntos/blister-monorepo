@@ -7,6 +7,11 @@ import { useEffect, useMemo, useState } from "react";
 import type { BlockTypeKey } from "src/core/modules/agents/components/flow-builder/block-types";
 import { FlowCanvas } from "src/core/modules/agents/components/flow-builder/flow-canvas";
 import {
+  serializeFlowEdges,
+  serializeFlowNodes,
+  type WorkflowNodeData,
+} from "src/core/modules/agents/components/flow-builder/serialize-flow-definition";
+import {
   type WorkflowConfig,
   WorkflowSidebar,
 } from "src/core/modules/agents/components/flow-builder/workflow-sidebar";
@@ -22,14 +27,6 @@ import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { AgentContentLayout } from "src/core/shared/components/ui/agent-content-layout";
 import { Button } from "src/core/shared/components/ui/button";
 import { cn } from "src/core/shared/utils";
-
-type FlowNodeData = {
-  blockType: BlockTypeKey;
-  label?: string;
-  prompt?: string;
-  providerId?: string;
-  modelId?: string;
-};
 
 const DEFAULT_WORKFLOW_CONFIG: WorkflowConfig = {
   name: "",
@@ -127,16 +124,19 @@ export function AgentWorkflowPage() {
       nodes?: Array<{
         id: string;
         type: BlockTypeKey;
-        config?: {
-          label?: string;
-          prompt?: string;
-          providerId?: string;
-          modelId?: string;
+        config?: WorkflowNodeData & {
+          title?: string;
+          fields?: WorkflowNodeData["formFields"];
+          generationInstructions?: string;
+          targetAgentId?: string;
+          mode?: "internal" | "human_review";
+          outputBlocks?: WorkflowNodeData["outputBlocks"];
           position?: { x: number; y: number };
           successors?: string[];
         };
       }>;
       edges?: Array<{
+        id?: string;
         sourceNodeId: string;
         sourcePortKey: string;
         targetNodeId: string;
@@ -165,6 +165,12 @@ export function AgentWorkflowPage() {
           prompt: n.config?.prompt,
           providerId: n.config?.providerId,
           modelId: n.config?.modelId,
+          formTitle: n.config?.title,
+          formFields: n.config?.fields,
+          formGenerationInstructions: n.config?.generationInstructions,
+          targetAgentId: n.config?.targetAgentId,
+          validationMode: n.config?.mode,
+          outputBlocks: n.config?.outputBlocks,
         },
       })),
     );
@@ -172,7 +178,9 @@ export function AgentWorkflowPage() {
     let restoredEdges: Edge[] = [];
     if (flow.edges && flow.edges.length > 0) {
       restoredEdges = flow.edges.map((e) => ({
-        id: `${e.sourceNodeId}-${e.sourcePortKey}-${e.targetNodeId}-${e.targetPortKey}`,
+        id:
+          e.id ??
+          `${e.sourceNodeId}-${e.sourcePortKey}-${e.targetNodeId}-${e.targetPortKey}`,
         source: e.sourceNodeId,
         sourceHandle: e.sourcePortKey,
         target: e.targetNodeId,
@@ -204,11 +212,25 @@ export function AgentWorkflowPage() {
   ) {
     const id = `${blockType}-${Date.now()}`;
     const lastX = nodes.reduce((max, n) => Math.max(max, n.position.x), 0);
-    const newNode: Node<FlowNodeData> = {
+    const newNode: Node<WorkflowNodeData> = {
       id,
       type: "block",
       position: position ?? { x: lastX + 300, y: 180 },
-      data: { blockType },
+      data:
+        blockType === "form"
+          ? {
+              blockType,
+              formTitle: "Formulário",
+              formFields: [
+                {
+                  id: "campo_1",
+                  label: "Descreva o que você precisa",
+                  type: "textarea",
+                  required: true,
+                },
+              ],
+            }
+          : { blockType },
     };
     setNodes([...nodes, newNode]);
     setSelectedNodeId(id);
@@ -243,30 +265,11 @@ export function AgentWorkflowPage() {
   }
 
   async function handleSaveDraft() {
-    const flowNodes = nodes.map((n) => ({
-      id: n.id,
-      type: n.data.blockType,
-      config: {
-        label: n.data.label,
-        prompt: n.data.prompt ?? "",
-        ...(n.data.providerId ? { providerId: n.data.providerId } : {}),
-        ...(n.data.modelId ? { modelId: n.data.modelId } : {}),
-        position: n.position,
-      },
-    }));
-
-    const flowEdges = edges.map((e) => ({
-      sourceNodeId: e.source,
-      sourcePortKey: (e.sourceHandle as string | null | undefined) ?? "default",
-      targetNodeId: e.target,
-      targetPortKey: (e.targetHandle as string | null | undefined) ?? "default",
-    }));
-
     return saveDraft.mutateAsync({
       flowDefinition: {
         config: workflowConfig,
-        nodes: flowNodes,
-        edges: flowEdges,
+        nodes: serializeFlowNodes(nodes),
+        edges: serializeFlowEdges(edges),
       },
       inputSchema: {},
       outputSchema: {},

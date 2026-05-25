@@ -41,6 +41,7 @@ const formFieldSchema = z.strictObject({
   ]),
   required: z.boolean().default(false),
   options: z.array(z.string().trim().min(1)).optional(),
+  placeholder: z.string().optional(),
 });
 
 export const agentFlowNodeSchema = z.discriminatedUnion('type', [
@@ -80,6 +81,25 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
   }),
   z.strictObject({
     ...baseNodeSchema,
+    type: z.literal('llm_call'),
+    config: z
+      .object({
+        label: z.string().optional(),
+        prompt: z.string().optional(),
+        providerId: z.string().optional(),
+        modelId: z.string().optional(),
+        inputMappings: inputMappingSchema,
+      })
+      .catchall(z.unknown())
+      .default({}),
+  }),
+  z.strictObject({
+    ...baseNodeSchema,
+    type: z.literal('output'),
+    config: looseConfigSchema.optional(),
+  }),
+  z.strictObject({
+    ...baseNodeSchema,
     type: z.literal('agent_call'),
     config: z
       .object({
@@ -106,12 +126,20 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
     type: z.literal('form'),
     config: z
       .object({
-        title: z.string().min(1),
+        title: z.string().min(1).default('Formulário'),
         generationInstructions: z.string().optional(),
         inputMappings: inputMappingSchema,
-        fields: z.array(formFieldSchema).min(1),
+        fields: z.array(formFieldSchema).min(1).default([
+          { id: 'campo_1', label: 'Descreva o que você precisa', type: 'textarea', required: true },
+        ]),
       })
-      .catchall(z.unknown()),
+      .catchall(z.unknown())
+      .default({
+        title: 'Formulário',
+        fields: [
+          { id: 'campo_1', label: 'Descreva o que você precisa', type: 'textarea', required: true },
+        ],
+      }),
   }),
   z.strictObject({
     ...baseNodeSchema,
@@ -148,6 +176,71 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
 export type AgentFlowEdge = z.infer<typeof agentFlowEdgeSchema>;
 export type AgentFlowNode = z.infer<typeof agentFlowNodeSchema>;
 
+const normalizeFlowEdge = (edge: unknown) => {
+  if (!edge || typeof edge !== 'object') {
+    return edge;
+  }
+
+  const record = edge as Record<string, unknown>;
+  const sourceNodeId = typeof record.sourceNodeId === 'string' ? record.sourceNodeId : '';
+  const targetNodeId = typeof record.targetNodeId === 'string' ? record.targetNodeId : '';
+  const sourcePortKey =
+    typeof record.sourcePortKey === 'string' ? record.sourcePortKey : 'default';
+  const targetPortKey =
+    typeof record.targetPortKey === 'string' ? record.targetPortKey : 'default';
+
+  return {
+    ...record,
+    id:
+      typeof record.id === 'string' && record.id.length > 0
+        ? record.id
+        : `${sourceNodeId}-${sourcePortKey}-${targetNodeId}-${targetPortKey}`,
+    sourceNodeId,
+    sourcePortKey,
+    targetNodeId,
+    targetPortKey,
+  };
+};
+
+const normalizeFlowNode = (node: unknown) => {
+  if (!node || typeof node !== 'object') {
+    return node;
+  }
+
+  const record = node as Record<string, unknown>;
+  if (record.type !== 'form' || !record.config || typeof record.config !== 'object') {
+    return record;
+  }
+
+  const config = { ...(record.config as Record<string, unknown>) };
+  if (typeof config.title !== 'string' || config.title.trim().length === 0) {
+    config.title =
+      typeof config.label === 'string' && config.label.trim().length > 0
+        ? config.label
+        : 'Formulário';
+  }
+
+  if (!Array.isArray(config.fields) || config.fields.length === 0) {
+    config.fields = [
+      { id: 'campo_1', label: 'Descreva o que você precisa', type: 'textarea', required: true },
+    ];
+  }
+
+  return { ...record, config };
+};
+
+const normalizeFlowDefinitionInput = (value: unknown) => {
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  const record = value as Record<string, unknown>;
+  const nodes = Array.isArray(record.nodes) ? record.nodes.map(normalizeFlowNode) : [];
+  const edges = Array.isArray(record.edges) ? record.edges.map(normalizeFlowEdge) : [];
+
+  return { ...record, nodes, edges };
+};
+
 export const agentFlowDefinitionSchema = z.strictObject({
   nodes: z.array(agentFlowNodeSchema).default([]),
   edges: z.array(agentFlowEdgeSchema).default([]),
@@ -155,7 +248,7 @@ export const agentFlowDefinitionSchema = z.strictObject({
 });
 
 export const saveDraftVersionSchema = z.strictObject({
-  flowDefinition: agentFlowDefinitionSchema,
+  flowDefinition: z.preprocess(normalizeFlowDefinitionInput, agentFlowDefinitionSchema),
   inputSchema: jsonObjectSchema,
   outputSchema: jsonObjectSchema,
   notes: z.string().trim().max(1000).optional(),

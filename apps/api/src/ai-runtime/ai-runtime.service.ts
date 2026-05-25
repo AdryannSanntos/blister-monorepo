@@ -161,18 +161,41 @@ export class AIRuntimeService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    const model = candidates.find((candidate) => {
+    const policyAllowedModelIds = Array.from(
+      new Set(
+        policies.flatMap((policyItem) =>
+          Array.isArray(policyItem.allowedModelIds) ? policyItem.allowedModelIds : [],
+        ),
+      ),
+    );
+
+    const eligible = candidates.filter((candidate) => {
       if (!this.modelSupportsCapability(candidate.capabilityMetadata, capability)) {
         return false;
       }
 
-      const policy = policies.find((policyItem) => policyItem.providerId === candidate.providerId);
-      if (!policy || policy.allowedModelIds.length === 0) {
-        return true;
+      if (
+        policyAllowedModelIds.length > 0 &&
+        !policyAllowedModelIds.includes(candidate.id)
+      ) {
+        return false;
       }
 
-      return policy.allowedModelIds.includes(candidate.id);
+      const adapter = this.resolveAdapter(
+        candidate.provider.slug,
+        candidate.provider.schemaMetadata,
+      );
+
+      return adapter.supports(capability);
     });
+
+    eligible.sort(
+      (left, right) => (right.updatedAt?.getTime() ?? 0) - (left.updatedAt?.getTime() ?? 0),
+    );
+
+    const model = request.modelId
+      ? eligible.find((candidate) => candidate.id === request.modelId) ?? eligible[0]
+      : eligible[0];
 
     if (!model) {
       throw new BadRequestException(`No active model supports ${capability}`);

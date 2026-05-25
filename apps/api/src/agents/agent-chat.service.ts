@@ -71,14 +71,14 @@ export class AgentChatService {
       threadId: thread.id,
     });
 
-    if (!orchestration.createRun) {
-      const assistantMessage = await this.createChatMessage({
-        threadId: thread.id,
-        role: 'assistant',
-        content: this.buildOrchestrationResponse(orchestration.mode),
-        metadata: toJsonValue({ orchestration }),
-      });
+    const assistantMessage = await this.createChatMessage({
+      threadId: thread.id,
+      role: 'assistant',
+      content: orchestration.assistantMessage,
+      metadata: toJsonValue({ orchestration }),
+    });
 
+    if (!orchestration.createRun) {
       return { message, assistantMessage, orchestration, run: null };
     }
 
@@ -98,7 +98,7 @@ export class AgentChatService {
       },
     );
 
-    return { message, orchestration, run };
+    return { message, assistantMessage, orchestration, run };
   }
 
   async editMessageAndBranch(
@@ -479,14 +479,6 @@ export class AgentChatService {
     }
 
     return agent;
-  }
-
-  private buildOrchestrationResponse(mode: string) {
-    if (mode === 'context_retrieval') {
-      return 'Vou olhar as referências disponíveis antes de transformar isso em uma entrega.';
-    }
-
-    return 'Entendi. Vou tratar isso como conversa por enquanto; quando você pedir uma entrega final, eu executo o workflow.';
   }
 
   private async ensureRunBelongsToThreadOrganization(organizationId: string, runId: string) {

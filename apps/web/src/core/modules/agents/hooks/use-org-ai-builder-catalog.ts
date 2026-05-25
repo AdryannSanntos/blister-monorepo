@@ -32,7 +32,7 @@ export function useOrgAIBuilderCatalog(
     enabled: Boolean(resolvedOrgId),
     queryFn: async () => {
       const { data } = await apiClient.get<AiBuilderCatalog>(
-        `/organizations/${resolvedOrgId}/ai-catalog`,
+        `/organizations/${resolvedOrgId}/ai/builder-catalog`,
         { params: { kind } },
       );
       return data;

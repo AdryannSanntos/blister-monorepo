@@ -237,6 +237,52 @@ describe('AIRuntimeService', () => {
     await expect(service.generateText({ prompt: 'hello' })).rejects.toThrow(NotFoundException);
   });
 
+  it('uses the modelId explicitly configured in the request', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'configured-model',
+        providerId: 'provider-openrouter',
+        slug: 'nemotron-3-super',
+        externalModelId: 'nvidia/nemotron-3-super-120b-a12b:free',
+        updatedAt: new Date('2026-05-24T12:00:00Z'),
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-openrouter',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+      {
+        id: 'other-model',
+        providerId: 'provider-openrouter',
+        slug: 'other',
+        externalModelId: 'other/model',
+        updatedAt: new Date('2026-05-25T12:00:00Z'),
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-openrouter',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue({ id: 'platform-cred', value: 'platform-key' });
+    openRouterAdapter.generateText.mockResolvedValue({ text: 'Olá! Como posso ajudar?', usage: {} });
+
+    await service.generateText({
+      organizationId: 'org-1',
+      modelId: 'configured-model',
+      prompt: 'olá',
+    });
+
+    expect(openRouterAdapter.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: expect.objectContaining({ id: 'configured-model' }),
+      }),
+    );
+  });
+
   it('falls back to OPENROUTER_API_KEY when no credential exists in the database', async () => {
     process.env.OPENROUTER_API_KEY = 'env-openrouter-key';
 

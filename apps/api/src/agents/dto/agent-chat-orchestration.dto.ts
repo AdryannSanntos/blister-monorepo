@@ -16,9 +16,24 @@ export const orchestrateMessageInputSchema = z.object({
   threadId: z.string().optional(),
 });
 
+export const agentChatTurnDecisionSchema = z.object({
+  createRun: z.boolean(),
+  assistantMessage: z.string().min(1),
+  executionReason: z.string().optional(),
+  events: z
+    .array(
+      z.object({
+        type: orchestrationEventSchema.shape.type,
+        label: z.string().min(1),
+      }),
+    )
+    .min(1),
+});
+
 export const orchestrationResultSchema = z.object({
   mode: orchestrationModeSchema,
   createRun: z.boolean(),
+  assistantMessage: z.string().min(1),
   events: z.array(orchestrationEventSchema),
   resolvedContextHints: z.array(z.string()),
   executionReason: z.string().optional(),
@@ -28,3 +43,4 @@ export type OrchestrateMessageInput = z.infer<typeof orchestrateMessageInputSche
 export type OrchestrationResult = z.infer<typeof orchestrationResultSchema>;
 export type OrchestrationMode = z.infer<typeof orchestrationModeSchema>;
 export type OrchestrationEvent = z.infer<typeof orchestrationEventSchema>;
+export type AgentChatTurnDecision = z.infer<typeof agentChatTurnDecisionSchema>;

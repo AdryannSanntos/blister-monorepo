@@ -86,6 +86,63 @@ describe('saveDraftVersionSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it('accepts llm_call and output nodes used by the workflow builder', () => {
+    const result = saveDraftVersionSchema.safeParse({
+      flowDefinition: {
+        nodes: [
+          { id: 'input_1', type: 'input', config: { label: 'Inicio' } },
+          {
+            id: 'llm_1',
+            type: 'llm_call',
+            config: {
+              label: 'Gerar',
+              prompt: 'Escreva o email',
+              providerId: 'provider-1',
+              modelId: 'model-1',
+            },
+          },
+          { id: 'output_1', type: 'output', config: { label: 'Saida' } },
+        ],
+        edges: [
+          {
+            sourceNodeId: 'input_1',
+            sourcePortKey: 'default',
+            targetNodeId: 'llm_1',
+            targetPortKey: 'default',
+          },
+        ],
+      },
+      inputSchema: {},
+      outputSchema: {},
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.flowDefinition.edges[0]?.id).toContain('input_1');
+    }
+  });
+
+  it('normalizes incomplete form blocks before validating', () => {
+    const result = saveDraftVersionSchema.safeParse({
+      flowDefinition: {
+        nodes: [{ id: 'form_1', type: 'form', config: { label: 'Dados' } }],
+        edges: [],
+      },
+      inputSchema: {},
+      outputSchema: {},
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const formNode = result.data.flowDefinition.nodes.find((node) => node.type === 'form');
+      expect(formNode?.type).toBe('form');
+      if (formNode?.type === 'form') {
+        expect(formNode.config.title).toBe('Dados');
+        expect(formNode.config.fields.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
   it('rejects nodes with invalid block types', () => {
     const result = saveDraftVersionSchema.safeParse({
       flowDefinition: {
