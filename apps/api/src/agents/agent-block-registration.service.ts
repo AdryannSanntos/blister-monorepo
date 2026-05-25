@@ -1,4 +1,5 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
+import { AIRuntimeService } from '../ai-runtime/ai-runtime.service';
 import { AgentBlockExecutorRegistry } from './agent-block-executor.registry';
 import { AgentRunsService } from './agent-runs.service';
 import { AgentWorkflowRuntimeService } from './agent-workflow-runtime.service';
@@ -10,6 +11,7 @@ import { finalizerBlockExecutor } from './blocks/finalizer-block.executor';
 import { formBlockExecutor } from './blocks/form-block.executor';
 import { ifElseBlockExecutor } from './blocks/if-else-block.executor';
 import { inputBlockExecutor } from './blocks/input-block.executor';
+import { createLlmCallExecutor } from './blocks/llm-call-block.executor';
 import { outputFormatterBlockExecutor } from './blocks/output-formatter-block.executor';
 import { validationBlockExecutor } from './blocks/validation-block.executor';
 
@@ -19,6 +21,7 @@ export class AgentBlockRegistrationService implements OnModuleInit {
     private readonly registry: AgentBlockExecutorRegistry,
     private readonly agentRunsService: AgentRunsService,
     private readonly workflowRuntime: AgentWorkflowRuntimeService,
+    private readonly aiRuntimeService: AIRuntimeService,
   ) {}
 
   onModuleInit() {
@@ -26,6 +29,7 @@ export class AgentBlockRegistrationService implements OnModuleInit {
     this.registry.register('decision', decisionBlockExecutor);
     this.registry.register('boolean', booleanBlockExecutor);
     this.registry.register('if_else', ifElseBlockExecutor);
+    this.registry.register('llm_call', createLlmCallExecutor(this.aiRuntimeService));
     this.registry.register(
       'agent_call',
       createAgentCallExecutor(this.agentRunsService, this.workflowRuntime),

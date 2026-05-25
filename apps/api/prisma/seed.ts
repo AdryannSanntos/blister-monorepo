@@ -183,153 +183,199 @@ const AI_MODELS = [
   },
 ] as const;
 
+// V2 agent flowDefinition: usa edges explícitas + tipos de bloco da V2 (llm_call, output_formatter, finalizer)
+// Todos os agentes usam OpenRouter via auto-seleção (só há um modelo ativo de texto: nemotron-3-super)
 const TEST_AGENTS = [
   {
-    slug: 'copy-linkedin-teste',
-    name: 'Copy LinkedIn - Teste',
-    description: 'Gera copy profissional para posts de LinkedIn a partir de um briefing em linguagem natural.',
+    slug: 'redator-linkedin',
+    name: 'Redator de Copy LinkedIn',
+    description: 'Transforma um briefing em um post de LinkedIn profissional com gancho, desenvolvimento e CTA.',
     flowDefinition: {
       config: {
-        name: 'Copy LinkedIn',
-        objective: 'Transformar um briefing em um post de LinkedIn claro, direto e com CTA.',
-        instructions:
-          'Escreva em portugues do Brasil, com tom B2B, objetivo, confiavel e orientado a execucao.',
-        fallbackMessage: 'Nao consegui gerar a copy agora. Tente novamente com mais contexto.',
+        name: 'Redator LinkedIn',
+        objective: 'Gerar post de LinkedIn a partir de um briefing em linguagem natural.',
+        instructions: 'Tom B2B, direto, confiante e orientado a execucao. Portugues do Brasil.',
+        fallbackMessage: 'Nao consegui gerar a copy. Tente com um briefing mais detalhado.',
       },
       nodes: [
         {
-          id: 'input',
+          id: 'input_1',
           type: 'input',
           config: {
             label: 'Briefing',
-            position: { x: 80, y: 180 },
-            successors: ['generate-copy'],
+            position: { x: 80, y: 200 },
           },
         },
         {
-          id: 'generate-copy',
-          type: 'llm_generate',
+          id: 'llm_1',
+          type: 'llm_call',
           config: {
             label: 'Gerar copy',
             prompt:
-              'Voce e um redator senior de marketing B2B. Com base na mensagem do usuario, gere um post de LinkedIn com: 1) gancho inicial, 2) desenvolvimento objetivo, 3) encerramento com CTA curto. Responda apenas com o texto final.',
-            position: { x: 360, y: 180 },
-            successors: ['output'],
+              'Voce e um redator senior de marketing B2B especializado em LinkedIn. ' +
+              'Com base no briefing do usuario, escreva um post de LinkedIn com:\n' +
+              '1) Gancho inicial impactante (1-2 linhas)\n' +
+              '2) Desenvolvimento claro e objetivo (3-5 paragrafos curtos)\n' +
+              '3) Encerramento com CTA direto\n\n' +
+              'Use espacamento com linha em branco entre paragrafos. ' +
+              'Nao use hashtags em excesso (maximo 3). ' +
+              'Escreva apenas o texto final do post, sem explicacoes adicionais.',
+            position: { x: 380, y: 200 },
           },
         },
         {
-          id: 'output',
-          type: 'output',
+          id: 'formatter_1',
+          type: 'output_formatter',
           config: {
-            label: 'Entregar copy',
-            position: { x: 660, y: 180 },
-            successors: [],
+            label: 'Formatar saida',
+            outputBlocks: ['markdown'],
+            position: { x: 680, y: 200 },
           },
         },
+        {
+          id: 'finalizer_1',
+          type: 'finalizer',
+          config: {
+            label: 'Entregar',
+            position: { x: 980, y: 200 },
+          },
+        },
+      ],
+      edges: [
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
+        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
       ],
     },
   },
   {
-    slug: 'gerador-imagem-teste',
-    name: 'Gerador de Imagem - Teste',
-    description: 'Cria imagens para campanhas e posts com base em um prompt ou briefing do usuario.',
+    slug: 'estruturador-briefing',
+    name: 'Estruturador de Briefing',
+    description: 'Recebe uma descricao livre de projeto e entrega um briefing estruturado com escopo, entregaveis e criterios de aceite.',
     flowDefinition: {
       config: {
-        name: 'Gerador de Imagem',
-        objective: 'Transformar uma descricao curta em uma imagem de campanha.',
-        instructions:
-          'Priorize composicoes limpas, contraste alto e linguagem visual de produto B2B.',
-        fallbackMessage: 'Nao consegui gerar a imagem agora. Tente novamente com um prompt mais especifico.',
+        name: 'Estruturador de Briefing',
+        objective: 'Transformar uma descricao solta em um briefing claro e acionavel.',
+        instructions: 'Saida estruturada em Markdown. Portugues do Brasil. Seja especifico e direto.',
+        fallbackMessage: 'Nao consegui estruturar o briefing. Tente descrever melhor o projeto.',
       },
       nodes: [
         {
-          id: 'input',
+          id: 'input_1',
           type: 'input',
           config: {
-            label: 'Briefing visual',
-            position: { x: 80, y: 180 },
-            successors: ['generate-image'],
+            label: 'Descricao do projeto',
+            position: { x: 80, y: 200 },
           },
         },
         {
-          id: 'generate-image',
-          type: 'image_generate',
+          id: 'llm_1',
+          type: 'llm_call',
           config: {
-            label: 'Gerar imagem',
+            label: 'Estruturar briefing',
             prompt:
-              'Crie uma imagem publicitaria moderna e profissional a partir do briefing enviado pelo usuario. Considere contexto B2B, composicao limpa e foco no assunto principal.',
-            size: '1024x1024',
-            position: { x: 360, y: 180 },
-            successors: ['output'],
+              'Voce e um especialista em gestao de projetos e comunicacao operacional. ' +
+              'Receba a descricao de projeto do usuario e entregue um briefing estruturado em Markdown com as seguintes secoes:\n\n' +
+              '## Objetivo\n' +
+              '## Contexto\n' +
+              '## Escopo (o que esta e o que nao esta incluido)\n' +
+              '## Entregaveis esperados\n' +
+              '## Criterios de aceite\n' +
+              '## Prazo sugerido\n' +
+              '## Observacoes\n\n' +
+              'Seja especifico, claro e acionavel. Infira o que nao foi dito quando necessario, mas indique com "(inferido)".',
+            position: { x: 380, y: 200 },
           },
         },
         {
-          id: 'output',
-          type: 'output',
+          id: 'formatter_1',
+          type: 'output_formatter',
           config: {
-            label: 'Entregar imagem',
-            position: { x: 660, y: 180 },
-            successors: [],
+            label: 'Formatar briefing',
+            outputBlocks: ['markdown'],
+            position: { x: 680, y: 200 },
           },
         },
+        {
+          id: 'finalizer_1',
+          type: 'finalizer',
+          config: {
+            label: 'Entregar briefing',
+            position: { x: 980, y: 200 },
+          },
+        },
+      ],
+      edges: [
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
+        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
       ],
     },
   },
   {
-    slug: 'landing-html-teste',
-    name: 'Landing HTML - Teste',
-    description: 'Gera um HTML simples de landing page e para para revisao antes da entrega final.',
+    slug: 'consultor-email-marketing',
+    name: 'Consultor de Email Marketing',
+    description: 'Cria uma campanha de email marketing completa (assunto, pre-header e corpo) a partir de um briefing.',
     flowDefinition: {
       config: {
-        name: 'Landing HTML',
-        objective: 'Gerar uma landing page em HTML pronta para revisao.',
-        instructions:
-          'Entregue HTML completo, sem markdown, com hierarquia clara, CTA visivel e texto em portugues.',
-        fallbackMessage: 'Nao consegui montar o HTML agora. Tente novamente com um briefing mais detalhado.',
+        name: 'Email Marketing',
+        objective: 'Gerar email de campanha pronto para envio a partir de um briefing.',
+        instructions: 'Portugues do Brasil. Tom B2B, claro e com CTA evidente.',
+        fallbackMessage: 'Nao consegui gerar o email. Descreva melhor o objetivo da campanha.',
       },
       nodes: [
         {
-          id: 'input',
+          id: 'input_1',
           type: 'input',
           config: {
-            label: 'Briefing da landing',
-            position: { x: 80, y: 180 },
-            successors: ['generate-html'],
+            label: 'Briefing da campanha',
+            position: { x: 80, y: 200 },
           },
         },
         {
-          id: 'generate-html',
-          type: 'llm_generate',
+          id: 'llm_1',
+          type: 'llm_call',
           config: {
-            label: 'Gerar HTML',
+            label: 'Criar email',
             prompt:
-              'Com base no briefing do usuario, retorne um HTML completo de landing page. Responda apenas com HTML puro, sem markdown e sem comentarios.',
-            position: { x: 340, y: 180 },
-            successors: ['validate-html'],
+              'Voce e um especialista em email marketing B2B. ' +
+              'Com base no briefing do usuario, crie um email de campanha completo em Markdown com o seguinte formato:\n\n' +
+              '**Assunto:** (maximo 60 caracteres, direto e com beneficio claro)\n\n' +
+              '**Pre-header:** (maximo 90 caracteres, complementa o assunto)\n\n' +
+              '---\n\n' +
+              '**Corpo do email:**\n\n' +
+              '[Saudacao personalizada]\n\n' +
+              '[Abertura com contexto e relevancia — 1-2 paragrafos]\n\n' +
+              '[Desenvolvimento: proposta de valor, argumento central — 2-3 paragrafos]\n\n' +
+              '[CTA claro e unico — botao ou link em destaque]\n\n' +
+              '[Fechamento]\n\n' +
+              '---\n\n' +
+              'Mantenha tom B2B, evite jargoes e seja especifico sobre o beneficio para o leitor.',
+            position: { x: 380, y: 200 },
           },
         },
         {
-          id: 'validate-html',
-          type: 'html_validation',
-          htmlField: 'text',
-          requireExplicitConfirmation: true,
+          id: 'formatter_1',
+          type: 'output_formatter',
           config: {
-            label: 'Validar HTML',
-            htmlField: 'text',
-            requireExplicitConfirmation: true,
-            position: { x: 620, y: 180 },
-            successors: ['output'],
+            label: 'Formatar email',
+            outputBlocks: ['markdown'],
+            position: { x: 680, y: 200 },
           },
         },
         {
-          id: 'output',
-          type: 'output',
+          id: 'finalizer_1',
+          type: 'finalizer',
           config: {
-            label: 'Entregar HTML',
-            position: { x: 900, y: 180 },
-            successors: [],
+            label: 'Entregar email',
+            position: { x: 980, y: 200 },
           },
         },
+      ],
+      edges: [
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
+        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
       ],
     },
   },
@@ -493,6 +539,29 @@ async function syncRemoteModels(providerIdsBySlug: Record<string, string>) {
   }
 
   return results;
+}
+
+async function clearOrgAgents(orgId: string) {
+  const agents = await prisma.companyAgent.findMany({
+    where: { organizationId: orgId },
+    select: { id: true },
+  });
+
+  if (agents.length === 0) return;
+
+  const agentIds = agents.map((a) => a.id);
+
+  // Null out activeVersionId to remove circular FK before deleting versions
+  await prisma.companyAgent.updateMany({
+    where: { id: { in: agentIds } },
+    data: { activeVersionId: null },
+  });
+
+  // Delete versions, runs (cascade), threads (cascade), then agents
+  await prisma.agentVersion.deleteMany({ where: { agentId: { in: agentIds } } });
+  await prisma.agentRun.deleteMany({ where: { agentId: { in: agentIds } } });
+  await prisma.agentChatThread.deleteMany({ where: { agentId: { in: agentIds } } });
+  await prisma.companyAgent.deleteMany({ where: { id: { in: agentIds } } });
 }
 
 async function upsertTestAgent(orgId: string, userId: string, agent: (typeof TEST_AGENTS)[number]) {
@@ -715,11 +784,14 @@ async function main() {
 
   console.log('  Brain: configurado e publicado');
 
+  await clearOrgAgents(org.id);
+  console.log('  Agentes anteriores: removidos');
+
   for (const agent of TEST_AGENTS) {
     await upsertTestAgent(org.id, user.id, agent);
   }
 
-  console.log(`  Agentes de teste: ${TEST_AGENTS.map((agent) => agent.slug).join(', ')}`);
+  console.log(`  Agentes: ${TEST_AGENTS.map((agent) => agent.name).join(', ')}`);
   console.log('');
   console.log('Seed concluido.');
   console.log('  Email: cttadryansantoss@gmail.com');
