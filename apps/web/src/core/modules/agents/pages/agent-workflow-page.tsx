@@ -395,36 +395,6 @@ export function AgentWorkflowPage() {
           />
         </div>
 
-        <div
-          aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute inset-0 z-10 overflow-hidden transition-opacity duration-500",
-            showEntrance ? "opacity-100" : "opacity-0",
-          )}
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--accent)_18%,transparent),transparent_38%),linear-gradient(180deg,color-mix(in_oklch,var(--bg-base)_72%,transparent),transparent)]" />
-          <div className="absolute left-6 top-6 flex items-center gap-2 rounded-[var(--r-full)] border border-[color-mix(in_oklch,var(--accent)_24%,transparent)] bg-[color-mix(in_oklch,var(--bg-base)_82%,transparent)] px-3 py-1.5 text-[11px] font-medium text-[var(--fg-secondary)] backdrop-blur animate-in fade-in-0 slide-in-from-top-2 duration-300">
-            <Rocket className="size-3.5 text-[var(--accent)]" />
-            Carregando estrutura do agente
-          </div>
-          <div className="absolute inset-x-6 top-20 bottom-6 grid grid-cols-[minmax(0,1fr)_20rem] gap-6">
-            <div className="relative overflow-hidden rounded-[var(--r-2xl)] border border-[color-mix(in_oklch,var(--line-default)_85%,transparent)] bg-[color-mix(in_oklch,var(--bg-base)_76%,transparent)] shadow-[var(--shadow-lg)] backdrop-blur animate-in fade-in-0 zoom-in-95 duration-500">
-              <div className="absolute left-10 top-12 h-16 w-40 rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[color-mix(in_oklch,var(--bg-raised)_88%,transparent)] animate-pulse" />
-              <div className="absolute left-[28%] top-[38%] h-14 w-36 rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[color-mix(in_oklch,var(--bg-raised)_82%,transparent)] animate-pulse [animation-delay:160ms]" />
-              <div className="absolute right-16 bottom-16 h-16 w-44 rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[color-mix(in_oklch,var(--bg-raised)_88%,transparent)] animate-pulse [animation-delay:280ms]" />
-              <div className="absolute left-28 top-24 h-px w-[24%] bg-[color-mix(in_oklch,var(--accent)_48%,transparent)]" />
-              <div className="absolute left-[42%] top-[42%] h-px w-[22%] bg-[color-mix(in_oklch,var(--accent)_48%,transparent)]" />
-            </div>
-            <div className="rounded-[var(--r-2xl)] border border-[color-mix(in_oklch,var(--line-default)_85%,transparent)] bg-[color-mix(in_oklch,var(--bg-base)_82%,transparent)] p-4 shadow-[var(--shadow-lg)] backdrop-blur animate-in fade-in-0 slide-in-from-right-4 duration-500 delay-150">
-              <div className="h-4 w-28 rounded-full bg-[color-mix(in_oklch,var(--fg-primary)_12%,transparent)] animate-pulse" />
-              <div className="mt-4 space-y-3">
-                <div className="h-10 rounded-[var(--r-lg)] bg-[color-mix(in_oklch,var(--fg-primary)_10%,transparent)] animate-pulse [animation-delay:120ms]" />
-                <div className="h-10 rounded-[var(--r-lg)] bg-[color-mix(in_oklch,var(--fg-primary)_10%,transparent)] animate-pulse [animation-delay:220ms]" />
-                <div className="h-28 rounded-[var(--r-xl)] bg-[color-mix(in_oklch,var(--fg-primary)_8%,transparent)] animate-pulse [animation-delay:320ms]" />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </AgentContentLayout>
   );

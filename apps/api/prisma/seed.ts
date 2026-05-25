@@ -183,27 +183,43 @@ const AI_MODELS = [
   },
 ] as const;
 
-// V2 agent flowDefinition: usa edges explícitas + tipos de bloco da V2 (llm_call, output_formatter, finalizer)
+// V2 agent flowDefinition: usa edges explícitas + tipos de bloco da V2 (llm_call, form, output_formatter, finalizer)
 // Todos os agentes usam OpenRouter via auto-seleção (só há um modelo ativo de texto: nemotron-3-super)
 const TEST_AGENTS = [
   {
     slug: 'redator-linkedin',
     name: 'Redator de Copy LinkedIn',
-    description: 'Transforma um briefing em um post de LinkedIn profissional com gancho, desenvolvimento e CTA.',
+    description: 'Coleta briefing via formulário e gera um post de LinkedIn profissional com gancho, desenvolvimento e CTA.',
     flowDefinition: {
       config: {
         name: 'Redator LinkedIn',
-        objective: 'Gerar post de LinkedIn a partir de um briefing em linguagem natural.',
+        objective: 'Gerar post de LinkedIn a partir de dados coletados em formulário.',
         instructions: 'Tom B2B, direto, confiante e orientado a execucao. Portugues do Brasil.',
-        fallbackMessage: 'Nao consegui gerar a copy. Tente com um briefing mais detalhado.',
+        fallbackMessage: 'Nao consegui gerar a copy. Tente preencher o formulario com mais detalhes.',
       },
       nodes: [
         {
           id: 'input_1',
           type: 'input',
           config: {
-            label: 'Briefing',
+            label: 'Inicio',
             position: { x: 80, y: 200 },
+          },
+        },
+        {
+          id: 'form_1',
+          type: 'form',
+          config: {
+            label: 'Briefing do post',
+            title: 'Dados para o post de LinkedIn',
+            fields: [
+              { id: 'empresa_produto', label: 'Empresa ou produto', type: 'text', placeholder: 'Ex: Workana AI — plataforma de coordenacao de times remotos', required: true },
+              { id: 'publico_alvo', label: 'Público-alvo', type: 'text', placeholder: 'Ex: Gestores de operacao e liderancas de growth em empresas B2B', required: true },
+              { id: 'objetivo_post', label: 'Objetivo do post', type: 'select', options: ['Gerar leads', 'Aumentar autoridade', 'Divulgar produto/feature', 'Engajamento da audiencia', 'Contar historia'], required: true },
+              { id: 'tom_desejado', label: 'Tom desejado', type: 'select', options: ['Direto e executivo', 'Inspiracional', 'Educativo', 'Provocativo', 'Conversacional'], required: true },
+            ],
+            generationInstructions: 'Colete os dados do usuario para gerar o post de LinkedIn.',
+            position: { x: 400, y: 200 },
           },
         },
         {
@@ -212,15 +228,14 @@ const TEST_AGENTS = [
           config: {
             label: 'Gerar copy',
             prompt:
-              'Voce e um redator senior de marketing B2B especializado em LinkedIn. ' +
-              'Com base no briefing do usuario, escreva um post de LinkedIn com:\n' +
-              '1) Gancho inicial impactante (1-2 linhas)\n' +
-              '2) Desenvolvimento claro e objetivo (3-5 paragrafos curtos)\n' +
-              '3) Encerramento com CTA direto\n\n' +
-              'Use espacamento com linha em branco entre paragrafos. ' +
-              'Nao use hashtags em excesso (maximo 3). ' +
-              'Escreva apenas o texto final do post, sem explicacoes adicionais.',
-            position: { x: 380, y: 200 },
+              'Você é um redator senior de marketing B2B especializado em LinkedIn com 10+ anos de experiência.\n' +
+              'Receba os dados preenchidos pelo usuário e escreva um post de LinkedIn com:\n' +
+              '1) Gancho inicial impactante (1-2 linhas que param o scroll)\n' +
+              '2) Desenvolvimento direto e objetivo (3-5 parágrafos curtos, 1-3 linhas cada)\n' +
+              '3) Encerramento com CTA claro e específico\n' +
+              'Use o tom e público informados nos campos. Máximo 3 hashtags relevantes ao final.\n' +
+              'Entregue APENAS o texto final do post, sem explicações ou comentários adicionais.',
+            position: { x: 720, y: 200 },
           },
         },
         {
@@ -229,7 +244,7 @@ const TEST_AGENTS = [
           config: {
             label: 'Formatar saida',
             outputBlocks: ['markdown'],
-            position: { x: 680, y: 200 },
+            position: { x: 1040, y: 200 },
           },
         },
         {
@@ -237,25 +252,26 @@ const TEST_AGENTS = [
           type: 'finalizer',
           config: {
             label: 'Entregar',
-            position: { x: 980, y: 200 },
+            position: { x: 1360, y: 200 },
           },
         },
       ],
       edges: [
-        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
-        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
-        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'default', targetNodeId: 'form_1', targetPortKey: 'default' },
+        { id: 'e2', sourceNodeId: 'form_1', sourcePortKey: 'answers', targetNodeId: 'llm_1', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'llm_1', sourcePortKey: 'default', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e4', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'default' },
       ],
     },
   },
   {
     slug: 'estruturador-briefing',
     name: 'Estruturador de Briefing',
-    description: 'Recebe uma descricao livre de projeto e entrega um briefing estruturado com escopo, entregaveis e criterios de aceite.',
+    description: 'Analisa uma descrição livre de projeto e entrega um briefing executivo completo com escopo, entregáveis e critérios de aceite.',
     flowDefinition: {
       config: {
         name: 'Estruturador de Briefing',
-        objective: 'Transformar uma descricao solta em um briefing claro e acionavel.',
+        objective: 'Transformar uma descricao solta em um briefing executivo claro e acionavel.',
         instructions: 'Saida estruturada em Markdown. Portugues do Brasil. Seja especifico e direto.',
         fallbackMessage: 'Nao consegui estruturar o briefing. Tente descrever melhor o projeto.',
       },
@@ -272,19 +288,39 @@ const TEST_AGENTS = [
           id: 'llm_1',
           type: 'llm_call',
           config: {
+            label: 'Analisar projeto',
+            prompt:
+              'Você é um consultor sênior de gestão de projetos. Analise a descrição enviada pelo usuário e extraia:\n' +
+              '- Objetivo central do projeto (inferido se não explícito)\n' +
+              '- Escopo provável (o que está e o que não está incluído)\n' +
+              '- Stakeholders e beneficiários\n' +
+              '- Complexidade estimada (baixa/média/alta) com justificativa\n' +
+              '- Lacunas de informação que precisam ser preenchidas\n' +
+              '- Riscos iniciais identificados\n' +
+              'Seja analítico e específico. Marque inferências com "(inferido)".',
+            position: { x: 400, y: 200 },
+          },
+        },
+        {
+          id: 'llm_2',
+          type: 'llm_call',
+          config: {
             label: 'Estruturar briefing',
             prompt:
-              'Voce e um especialista em gestao de projetos e comunicacao operacional. ' +
-              'Receba a descricao de projeto do usuario e entregue um briefing estruturado em Markdown com as seguintes secoes:\n\n' +
+              'Você recebe uma análise de projeto e deve transformá-la em um briefing executivo estruturado em Markdown.\n' +
+              'Use exatamente estas seções:\n' +
               '## Objetivo\n' +
-              '## Contexto\n' +
-              '## Escopo (o que esta e o que nao esta incluido)\n' +
-              '## Entregaveis esperados\n' +
-              '## Criterios de aceite\n' +
-              '## Prazo sugerido\n' +
-              '## Observacoes\n\n' +
-              'Seja especifico, claro e acionavel. Infira o que nao foi dito quando necessario, mas indique com "(inferido)".',
-            position: { x: 380, y: 200 },
+              '## Contexto e Justificativa\n' +
+              '## Escopo\n' +
+              '### Incluído\n' +
+              '### Excluído\n' +
+              '## Entregáveis Esperados\n' +
+              '## Critérios de Aceite\n' +
+              '## Cronograma Sugerido\n' +
+              '## Riscos e Mitigações\n' +
+              '## Próximos Passos\n' +
+              'Seja específico, acionável e profissional. Formato Markdown limpo.',
+            position: { x: 720, y: 200 },
           },
         },
         {
@@ -293,7 +329,7 @@ const TEST_AGENTS = [
           config: {
             label: 'Formatar briefing',
             outputBlocks: ['markdown'],
-            position: { x: 680, y: 200 },
+            position: { x: 1040, y: 200 },
           },
         },
         {
@@ -301,35 +337,53 @@ const TEST_AGENTS = [
           type: 'finalizer',
           config: {
             label: 'Entregar briefing',
-            position: { x: 980, y: 200 },
+            position: { x: 1360, y: 200 },
           },
         },
       ],
       edges: [
-        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
-        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
-        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'default', targetNodeId: 'llm_1', targetPortKey: 'default' },
+        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'default', targetNodeId: 'llm_2', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'llm_2', sourcePortKey: 'default', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e4', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'default' },
       ],
     },
   },
   {
     slug: 'consultor-email-marketing',
     name: 'Consultor de Email Marketing',
-    description: 'Cria uma campanha de email marketing completa (assunto, pre-header e corpo) a partir de um briefing.',
+    description: 'Coleta dados da campanha via formulário e cria um email completo com assunto, pré-header e corpo otimizado para conversão.',
     flowDefinition: {
       config: {
         name: 'Email Marketing',
-        objective: 'Gerar email de campanha pronto para envio a partir de um briefing.',
+        objective: 'Gerar email de campanha pronto para envio a partir de dados estruturados.',
         instructions: 'Portugues do Brasil. Tom B2B, claro e com CTA evidente.',
-        fallbackMessage: 'Nao consegui gerar o email. Descreva melhor o objetivo da campanha.',
+        fallbackMessage: 'Nao consegui gerar o email. Preencha os campos com mais detalhes.',
       },
       nodes: [
         {
           id: 'input_1',
           type: 'input',
           config: {
-            label: 'Briefing da campanha',
+            label: 'Inicio',
             position: { x: 80, y: 200 },
+          },
+        },
+        {
+          id: 'form_1',
+          type: 'form',
+          config: {
+            label: 'Dados da campanha',
+            title: 'Configuração do email de campanha',
+            fields: [
+              { id: 'objetivo_campanha', label: 'Objetivo da campanha', type: 'select', options: ['Gerar leads', 'Nutrir leads', 'Anunciar produto/feature', 'Reativar clientes', 'Evento ou webinar'], required: true },
+              { id: 'produto_servico', label: 'Produto ou serviço', type: 'text', placeholder: 'Ex: Workana AI — plataforma de coordenacao de times remotos', required: true },
+              { id: 'publico', label: 'Público da campanha', type: 'text', placeholder: 'Ex: Gestores de operacao em empresas que coordenam freelancers', required: true },
+              { id: 'tom', label: 'Tom do email', type: 'select', options: ['Executivo e direto', 'Consultivo', 'Urgente/promocional', 'Educativo', 'Conversacional'], required: true },
+              { id: 'cta_desejado', label: 'CTA desejado', type: 'text', placeholder: 'Ex: Agendar demo, Acessar plataforma, Baixar material', required: true },
+            ],
+            generationInstructions: 'Colete os dados necessarios para criar o email de campanha.',
+            position: { x: 400, y: 200 },
           },
         },
         {
@@ -338,20 +392,20 @@ const TEST_AGENTS = [
           config: {
             label: 'Criar email',
             prompt:
-              'Voce e um especialista em email marketing B2B. ' +
-              'Com base no briefing do usuario, crie um email de campanha completo em Markdown com o seguinte formato:\n\n' +
-              '**Assunto:** (maximo 60 caracteres, direto e com beneficio claro)\n\n' +
-              '**Pre-header:** (maximo 90 caracteres, complementa o assunto)\n\n' +
+              'Você é um especialista em email marketing B2B com foco em conversão.\n' +
+              'Com base nos dados fornecidos pelo usuário, crie um email de campanha completo em Markdown:\n\n' +
+              '**Assunto:** (máx 60 chars, benefício claro, sem clickbait)\n' +
+              '**Pré-header:** (máx 90 chars, complementa e adiciona curiosidade)\n\n' +
               '---\n\n' +
-              '**Corpo do email:**\n\n' +
-              '[Saudacao personalizada]\n\n' +
-              '[Abertura com contexto e relevancia — 1-2 paragrafos]\n\n' +
-              '[Desenvolvimento: proposta de valor, argumento central — 2-3 paragrafos]\n\n' +
-              '[CTA claro e unico — botao ou link em destaque]\n\n' +
-              '[Fechamento]\n\n' +
-              '---\n\n' +
-              'Mantenha tom B2B, evite jargoes e seja especifico sobre o beneficio para o leitor.',
-            position: { x: 380, y: 200 },
+              '**[Saudação personalizada]**\n\n' +
+              '[Abertura: contexto e relevância para o leitor — 1 parágrafo]\n\n' +
+              '[Proposta de valor: problema → solução → benefício — 2 parágrafos]\n\n' +
+              '[Prova social ou dado concreto — 1 parágrafo]\n\n' +
+              '**[CTA único e claro]**\n\n' +
+              '[Fechamento — 1 linha]\n\n' +
+              '---\n' +
+              'Use o tom informado. Evite jargões. Foque no benefício para o leitor.',
+            position: { x: 720, y: 200 },
           },
         },
         {
@@ -360,7 +414,7 @@ const TEST_AGENTS = [
           config: {
             label: 'Formatar email',
             outputBlocks: ['markdown'],
-            position: { x: 680, y: 200 },
+            position: { x: 1040, y: 200 },
           },
         },
         {
@@ -368,14 +422,15 @@ const TEST_AGENTS = [
           type: 'finalizer',
           config: {
             label: 'Entregar email',
-            position: { x: 980, y: 200 },
+            position: { x: 1360, y: 200 },
           },
         },
       ],
       edges: [
-        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'payload', targetNodeId: 'llm_1', targetPortKey: 'payload' },
-        { id: 'e2', sourceNodeId: 'llm_1', sourcePortKey: 'text', targetNodeId: 'formatter_1', targetPortKey: 'default' },
-        { id: 'e3', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'ui_output' },
+        { id: 'e1', sourceNodeId: 'input_1', sourcePortKey: 'default', targetNodeId: 'form_1', targetPortKey: 'default' },
+        { id: 'e2', sourceNodeId: 'form_1', sourcePortKey: 'answers', targetNodeId: 'llm_1', targetPortKey: 'default' },
+        { id: 'e3', sourceNodeId: 'llm_1', sourcePortKey: 'default', targetNodeId: 'formatter_1', targetPortKey: 'default' },
+        { id: 'e4', sourceNodeId: 'formatter_1', sourcePortKey: 'ui_output', targetNodeId: 'finalizer_1', targetPortKey: 'default' },
       ],
     },
   },
