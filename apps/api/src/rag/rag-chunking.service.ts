@@ -27,22 +27,26 @@ export class RagChunkingService {
   ): Promise<ChunkResult[]> {
     const chunks = this.splitIntoChunks(content);
 
-    // Remove existing chunks for this document before reinserting (reindex path)
-    await this.prisma.ragChunk.deleteMany({ where: { documentId } });
+    if (chunks.length === 0) {
+      return [];
+    }
 
-    const created = await Promise.all(
-      chunks.map((chunk, index) =>
-        this.prisma.ragChunk.create({
-          data: {
-            documentId,
-            sequence: index,
-            content: chunk.content,
-            tokenCount: chunk.tokenCount,
-            metadata: toJsonValue({ ...metadata, chunkIndex: index }),
-          },
-        }),
-      ),
-    );
+    const created = await this.prisma.$transaction(async (tx) => {
+      await tx.ragChunk.deleteMany({ where: { documentId } });
+      return Promise.all(
+        chunks.map((chunk, index) =>
+          tx.ragChunk.create({
+            data: {
+              documentId,
+              sequence: index,
+              content: chunk.content,
+              tokenCount: chunk.tokenCount,
+              metadata: toJsonValue({ ...metadata, chunkIndex: index }),
+            },
+          }),
+        ),
+      );
+    });
 
     return created.map((c, i) => ({
       id: c.id,

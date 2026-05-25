@@ -20,6 +20,7 @@ const makeMockPrisma = () => ({
   },
   agentChatMessage: {
     create: jest.fn(),
+    createMany: jest.fn(),
     findFirst: jest.fn(),
     findMany: jest.fn(),
     update: jest.fn(),
@@ -360,7 +361,8 @@ describe('AgentChatService.editMessageAndBranch', () => {
     prisma.agentChatThread.findUnique.mockResolvedValue(THREAD);
     prisma.agentChatThread.create.mockResolvedValue({ id: 'branch-1', parentThreadId: 'thread-1' });
     prisma.agentChatMessage.findMany.mockResolvedValue([priorMsg]);
-    prisma.agentChatMessage.create.mockResolvedValue({ id: 'copied-1' });
+    prisma.agentChatMessage.createMany.mockResolvedValue({ count: 1 });
+    prisma.agentChatMessage.create.mockResolvedValue({ id: 'new-msg-1' });
 
     await service.editMessageAndBranch(
       'org-1',
@@ -368,13 +370,14 @@ describe('AgentChatService.editMessageAndBranch', () => {
       'user-1',
     );
 
-    // deve ter criado a mensagem copiada + a nova
-    expect(prisma.agentChatMessage.create).toHaveBeenCalledTimes(2);
-    expect(prisma.agentChatMessage.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ content: 'Mensagem anterior', threadId: 'branch-1' }),
-      }),
-    );
+    // prior messages copiadas via createMany em batch
+    expect(prisma.agentChatMessage.createMany).toHaveBeenCalledWith({
+      data: expect.arrayContaining([
+        expect.objectContaining({ content: 'Mensagem anterior', threadId: 'branch-1' }),
+      ]),
+    });
+    // replacement message criada individualmente
+    expect(prisma.agentChatMessage.create).toHaveBeenCalledTimes(1);
   });
 });
 

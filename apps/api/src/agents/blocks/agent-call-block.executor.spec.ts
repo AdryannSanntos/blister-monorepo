@@ -49,7 +49,8 @@ describe('agent_call executor', () => {
     await expect(
       executor(
         buildCtx({
-          blockConfig: { targetAgentId: 'agent-a', currentAgentId: 'agent-a' },
+          agentId: 'agent-a',
+          blockConfig: { targetAgentId: 'agent-a' },
         }),
       ),
     ).rejects.toThrow('agent_call cannot recursively invoke the same agent');

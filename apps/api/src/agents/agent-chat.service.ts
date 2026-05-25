@@ -13,13 +13,6 @@ import type {
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
-const toChatRole = (role: string): 'user' | 'assistant' | 'system' => {
-  if (role === 'assistant' || role === 'system') {
-    return role;
-  }
-
-  return 'user';
-};
 
 @Injectable()
 export class AgentChatService {
@@ -162,17 +155,16 @@ export class AgentChatService {
         orderBy: { createdAt: 'asc' },
       });
 
-      for (const message of previousMessages) {
-        await this.createChatMessage(
-          {
+      if (previousMessages.length > 0) {
+        await tx.agentChatMessage.createMany({
+          data: previousMessages.map((message) => ({
             threadId: branchThread.id,
-            role: toChatRole(message.role),
+            role: message.role,
             content: message.content,
             metadata: toJsonValue(message.metadata ?? {}),
             createdByUserId: message.createdByUserId,
-          },
-          tx,
-        );
+          })),
+        });
       }
 
       const replacementMessage = await this.createChatMessage(

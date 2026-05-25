@@ -44,11 +44,12 @@ export class AgentWorkflowRuntimeService {
 
   async run(params: {
     runId: string;
+    agentId?: string;
     organizationId?: string;
     inputPayload?: unknown;
     flowDefinition: FlowDefinition;
   }): Promise<RuntimeResult> {
-    const { runId, organizationId = '', inputPayload, flowDefinition } = params;
+    const { runId, agentId, organizationId = '', inputPayload, flowDefinition } = params;
     const { nodes, edges } = flowDefinition;
 
     // Load run-level context (owner, lineage) so block executors don't depend on
@@ -181,6 +182,7 @@ export class AgentWorkflowRuntimeService {
         try {
           result = await executor({
             runId,
+            agentId,
             organizationId,
             userId: runUserId,
             parentRunId,

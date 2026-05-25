@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 export interface BlockExecutionContext {
   runId: string;
+  agentId?: string;
   organizationId: string;
   userId?: string;
   parentRunId?: string | null;

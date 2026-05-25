@@ -103,6 +103,7 @@ export class AgentExecutionService {
           run.organizationId,
           run.inputPayload,
           run.agentVersion.flowDefinition,
+          run.agentId,
         );
 
         if (output.suspended) {
@@ -410,6 +411,7 @@ export class AgentExecutionService {
     organizationId: string,
     inputPayload: unknown,
     flowDefinition: unknown,
+    agentId?: string,
   ): Promise<FlowResult> {
     const flow =
       flowDefinition && typeof flowDefinition === 'object' && !Array.isArray(flowDefinition)
@@ -421,6 +423,7 @@ export class AgentExecutionService {
     if (hasEdges) {
       const runtimeResult = await this.workflowRuntime.run({
         runId,
+        agentId,
         organizationId,
         inputPayload,
         flowDefinition: flow as {

@@ -31,7 +31,7 @@ export function createAgentCallExecutor(
       throw new Error('agent_call block requires targetAgentId in config');
     }
 
-    if (targetAgentId === (ctx.blockConfig.currentAgentId as string | undefined)) {
+    if (ctx.agentId && targetAgentId === ctx.agentId) {
       throw new Error('agent_call cannot recursively invoke the same agent');
     }
 

@@ -45,7 +45,8 @@ export class RagRetrievalService {
     if (sourceTypeFilter.length === 0) return [];
 
     const queryVector = await this.embeddingService.embedQuery(organizationId, query);
-    const vectorLiteral = JSON.stringify(queryVector);
+    // Format as pgvector literal: [1.0, 2.0, ...] — parameterized binding casts via ::vector
+    const vectorString = `[${queryVector.join(',')}]`;
 
     const rows = await this.prisma.$queryRaw<RawEmbeddingRow[]>(Prisma.sql`
       SELECT
@@ -56,14 +57,14 @@ export class RagRetrievalService {
         rd.title        AS title,
         rc.content      AS content,
         rc.metadata     AS metadata,
-        1 - (re.vector <=> ${Prisma.raw(`'${vectorLiteral}'::vector`)}::vector) AS score
+        1 - (re.vector <=> ${vectorString}::vector) AS score
       FROM "RagEmbedding" re
       JOIN "RagChunk"    rc ON rc.id = re."chunkId"
       JOIN "RagDocument" rd ON rd.id = rc."documentId"
       WHERE re."organizationId" = ${organizationId}
         AND rd.status = 'indexed'
         AND rd."sourceType" = ANY(${sourceTypeFilter}::text[])
-      ORDER BY re.vector <=> ${Prisma.raw(`'${vectorLiteral}'::vector`)}::vector
+      ORDER BY re.vector <=> ${vectorString}::vector
       LIMIT ${limit}
     `);
 
