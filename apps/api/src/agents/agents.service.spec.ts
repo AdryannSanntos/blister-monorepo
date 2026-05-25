@@ -91,7 +91,7 @@ describe('AgentsService', () => {
     prisma.agentVersion.update.mockResolvedValue({ id: 'version-1', status: 'draft' });
 
     await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
-      flowDefinition: { nodes: [] },
+      flowDefinition: { nodes: [], edges: [] },
       inputSchema: { type: 'object' },
       outputSchema: { type: 'object' },
     });
@@ -142,22 +142,26 @@ describe('AgentsService', () => {
       versionNumber: 1,
     });
 
-    const saved = await service.saveDraftVersion(
-      'org-1',
-      'agent-1',
-      'user-1',
-      {
-        flowDefinition: {
-          config: { name: 'Test' },
-          nodes: [
-            { id: 'input', type: 'input' },
-            { id: 'output', type: 'output' },
-          ],
-        },
-        inputSchema: {},
-        outputSchema: {},
+    const saved = await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
+      flowDefinition: {
+        config: { name: 'Test' },
+        nodes: [
+          { id: 'input', type: 'input' },
+          { id: 'finalizer-1', type: 'finalizer' },
+        ],
+        edges: [
+          {
+            id: 'e1',
+            sourceNodeId: 'input',
+            sourcePortKey: 'payload',
+            targetNodeId: 'finalizer-1',
+            targetPortKey: 'default',
+          },
+        ],
       },
-    );
+      inputSchema: {},
+      outputSchema: {},
+    });
     expect(saved.status).toBe('draft');
 
     prisma.agentVersion.findFirst.mockResolvedValueOnce({
@@ -169,12 +173,7 @@ describe('AgentsService', () => {
       id: 'v-1',
       status: 'published',
     });
-    const published = await service.publishVersion(
-      'org-1',
-      'agent-1',
-      'v-1',
-      'user-1',
-    );
+    const published = await service.publishVersion('org-1', 'agent-1', 'v-1', 'user-1');
     expect(published.status).toBe('published');
 
     prisma.agentVersion.findFirst.mockResolvedValueOnce({
@@ -187,12 +186,7 @@ describe('AgentsService', () => {
       activeVersionId: 'v-1',
       status: 'active',
     });
-    const activated = await service.activateVersion(
-      'org-1',
-      'agent-1',
-      'v-1',
-      'user-1',
-    );
+    const activated = await service.activateVersion('org-1', 'agent-1', 'v-1', 'user-1');
     expect(activated.activeVersionId).toBe('v-1');
     expect(activated.status).toBe('active');
   });
@@ -205,9 +199,9 @@ describe('AgentsService', () => {
       status: 'draft',
     });
 
-    await expect(service.activateVersion('org-1', 'agent-1', 'version-1', 'user-1')).rejects.toThrow(
-      BadRequestException,
-    );
+    await expect(
+      service.activateVersion('org-1', 'agent-1', 'version-1', 'user-1'),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('lists agents scoped by organization', async () => {
@@ -256,9 +250,9 @@ describe('AgentsService', () => {
       status: 'published',
     });
 
-    await expect(
-      service.publishVersion('org-1', 'agent-1', 'version-1', 'user-1'),
-    ).rejects.toThrow(BadRequestException);
+    await expect(service.publishVersion('org-1', 'agent-1', 'version-1', 'user-1')).rejects.toThrow(
+      BadRequestException,
+    );
   });
 
   it('throws NotFoundException when version does not belong to agent', async () => {
@@ -276,10 +270,14 @@ describe('AgentsService', () => {
     prisma.agentVersion.findFirst
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({ id: 'version-1', versionNumber: 1 });
-    prisma.agentVersion.create.mockResolvedValue({ id: 'version-2', versionNumber: 2, status: 'draft' });
+    prisma.agentVersion.create.mockResolvedValue({
+      id: 'version-2',
+      versionNumber: 2,
+      status: 'draft',
+    });
 
     await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
-      flowDefinition: { nodes: [] },
+      flowDefinition: { nodes: [], edges: [] },
       inputSchema: {},
       outputSchema: {},
     });
@@ -302,7 +300,7 @@ describe('AgentsService', () => {
     prisma.agentVersion.update.mockResolvedValue({ id: 'draft-1', status: 'draft' });
 
     await service.saveDraftVersion('org-1', 'agent-1', 'user-1', {
-      flowDefinition: { nodes: [{ id: 'step1', type: 'input' }] },
+      flowDefinition: { nodes: [{ id: 'step1', type: 'input' }], edges: [] },
       inputSchema: {},
       outputSchema: {},
     });

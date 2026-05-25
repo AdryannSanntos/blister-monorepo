@@ -10,17 +10,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
+import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePlatformRole } from '../platform/decorators/require-platform-role.decorator';
 import { PlatformRoleGuard } from '../platform/guards/platform-role.guard';
+import { AgentRunResumeService } from './agent-run-resume.service';
 import { AgentRunsService } from './agent-runs.service';
 import { executeAgentSchema, getAgentRunSchema, listAgentRunsSchema } from './dto';
-import { z } from 'zod';
 
 @Controller('organizations/:orgId')
 export class AgentRunsController {
-  constructor(private readonly agentRunsService: AgentRunsService) {}
+  constructor(
+    private readonly agentRunsService: AgentRunsService,
+    private readonly agentRunResumeService: AgentRunResumeService,
+  ) {}
 
   @Post(':agentId/runs')
   @RequirePermission('agent.execute')
@@ -66,6 +70,39 @@ export class AgentRunsController {
 
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentRunsService.getRun(orgId, runId, currentUser.id, parsed.data.onlyOwnRuns);
+  }
+
+  @Get('agent-runs/:runId/suspensions')
+  @RequirePermission('agent.run.review')
+  async listSuspensions(@Param('orgId') orgId: string, @Param('runId') runId: string) {
+    return this.agentRunResumeService.listSuspensions(orgId, runId);
+  }
+
+  @Post('agent-runs/:runId/suspensions/:suspensionId/respond')
+  @RequirePermission('agent.run.review')
+  async answerSuspension(
+    @Param('orgId') orgId: string,
+    @Param('runId') runId: string,
+    @Param('suspensionId') suspensionId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const answerSchema = z.object({
+      answers: z.record(z.string(), z.unknown()),
+    });
+    const parsed = answerSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentRunResumeService.answerSuspension(
+      orgId,
+      runId,
+      suspensionId,
+      currentUser.id,
+      parsed.data.answers,
+    );
   }
 }
 

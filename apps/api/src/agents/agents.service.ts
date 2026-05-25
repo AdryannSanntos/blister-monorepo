@@ -1,14 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import type {
-  CreateCompanyAgentDto,
-  SaveDraftVersionDto,
-  UpdateCompanyAgentDto,
-} from './dto';
+import type { CreateCompanyAgentDto, SaveDraftVersionDto, UpdateCompanyAgentDto } from './dto';
 
-const toJsonValue = (value: unknown): Prisma.InputJsonValue =>
-  value as Prisma.InputJsonValue;
+const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
 @Injectable()
 export class AgentsService {
@@ -167,7 +162,12 @@ export class AgentsService {
     });
   }
 
-  async activateVersion(organizationId: string, agentId: string, versionId: string, userId: string) {
+  async activateVersion(
+    organizationId: string,
+    agentId: string,
+    versionId: string,
+    userId: string,
+  ) {
     await this.getCompanyAgent(organizationId, agentId);
 
     const version = await this.prisma.agentVersion.findFirst({

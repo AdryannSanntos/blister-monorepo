@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
+import { AgentChatOrchestratorService } from './agent-chat-orchestrator.service';
 import { AgentIntentService } from './agent-intent.service';
 import { AgentRunsService } from './agent-runs.service';
 import type {
@@ -26,6 +27,7 @@ export class AgentChatService {
     private readonly prisma: PrismaService,
     private readonly agentIntentService: AgentIntentService,
     private readonly agentRunsService: AgentRunsService,
+    private readonly agentChatOrchestratorService: AgentChatOrchestratorService,
   ) {}
 
   async createThread(organizationId: string, userId: string, input: CreateThreadDto) {
@@ -62,10 +64,29 @@ export class AgentChatService {
       metadata: toJsonValue({ attachments: input.attachments ?? [] }),
       createdByUserId: userId,
     });
-    const decision = await this.agentIntentService.classify({ message: input.content });
 
-    if (decision.mode !== 'execution' || !thread.agentId) {
+    if (!thread.agentId) {
+      const decision = await this.agentIntentService.classify({ message: input.content });
       return { message, decision, run: null };
+    }
+
+    const orchestration = await this.agentChatOrchestratorService.orchestrateMessage({
+      organizationId,
+      agentId: thread.agentId,
+      userId,
+      message: input.content,
+      threadId: thread.id,
+    });
+
+    if (!orchestration.createRun) {
+      const assistantMessage = await this.createChatMessage({
+        threadId: thread.id,
+        role: 'assistant',
+        content: this.buildOrchestrationResponse(orchestration.mode),
+        metadata: toJsonValue({ orchestration }),
+      });
+
+      return { message, assistantMessage, orchestration, run: null };
     }
 
     await this.ensureThreadHasNoActiveExecution(thread.id);
@@ -84,7 +105,7 @@ export class AgentChatService {
       },
     );
 
-    return { message, decision, run };
+    return { message, orchestration, run };
   }
 
   async editMessageAndBranch(
@@ -328,25 +349,25 @@ export class AgentChatService {
         regeneratedFromMessageId: true,
         createdAt: true,
         agentRun: {
+          select: {
+            id: true,
+            status: true,
+            queuePosition: true,
+            errorMessage: true,
+            steps: {
               select: {
                 id: true,
+                blockKey: true,
+                blockType: true,
                 status: true,
-                queuePosition: true,
+                inputPayload: true,
+                outputPayload: true,
                 errorMessage: true,
-                steps: {
-                  select: {
-                    id: true,
-                    blockKey: true,
-                    blockType: true,
-                    status: true,
-                    inputPayload: true,
-                    outputPayload: true,
-                    errorMessage: true,
-                    createdAt: true,
-                  },
-                  orderBy: { createdAt: 'asc' },
-                },
+                createdAt: true,
               },
+              orderBy: { createdAt: 'asc' },
+            },
+          },
         },
       },
     });
@@ -357,12 +378,7 @@ export class AgentChatService {
     };
   }
 
-  async deleteThread(
-    organizationId: string,
-    agentId: string,
-    threadId: string,
-    userId: string,
-  ) {
+  async deleteThread(organizationId: string, agentId: string, threadId: string, userId: string) {
     const thread = await this.prisma.agentChatThread.findFirst({
       where: {
         id: threadId,
@@ -458,6 +474,14 @@ export class AgentChatService {
     }
 
     return agent;
+  }
+
+  private buildOrchestrationResponse(mode: string) {
+    if (mode === 'context_retrieval') {
+      return 'Vou olhar as referências disponíveis antes de transformar isso em uma entrega.';
+    }
+
+    return 'Entendi. Vou tratar isso como conversa por enquanto; quando você pedir uma entrega final, eu executo o workflow.';
   }
 
   private async ensureRunBelongsToThreadOrganization(organizationId: string, runId: string) {

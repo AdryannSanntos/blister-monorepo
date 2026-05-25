@@ -1,10 +1,19 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import type { Request } from 'express';
+import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
-import { CompanyChatService } from './company-chat.service';
 import { AgentChatService } from './agent-chat.service';
-import { z } from 'zod';
+import { CompanyChatService } from './company-chat.service';
 
 const companyChatMessageSchema = z.strictObject({
   content: z.string().trim().min(1).max(20000),
@@ -30,11 +39,7 @@ export class CompanyChatController {
 
   @Get('threads')
   @RequirePermission('agent.execute')
-  async listThreads(
-    @Param('orgId') orgId: string,
-    @Query() query: unknown,
-    @Req() req: Request,
-  ) {
+  async listThreads(@Param('orgId') orgId: string, @Query() query: unknown, @Req() req: Request) {
     const parsed = listCompanyThreadsQuerySchema.safeParse(query);
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
@@ -57,11 +62,7 @@ export class CompanyChatController {
 
   @Post('messages')
   @RequirePermission('agent.execute')
-  async sendMessage(
-    @Param('orgId') orgId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
+  async sendMessage(@Param('orgId') orgId: string, @Body() body: unknown, @Req() req: Request) {
     const parsed = companyChatMessageSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);

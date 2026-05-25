@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
+import { AgentContextService } from './agent-context.service';
 import { AgentExecutionService } from './agent-execution.service';
 import { AgentQueueService } from './agent-queue.service';
 import type { ExecuteAgentDto, ListAgentRunsDto } from './dto';
@@ -13,6 +14,7 @@ export class AgentRunsService {
     private readonly prisma: PrismaService,
     private readonly agentQueueService: AgentQueueService,
     private readonly agentExecutionService: AgentExecutionService,
+    private readonly agentContextService: AgentContextService,
   ) {}
 
   async createQueuedRun(
@@ -20,6 +22,7 @@ export class AgentRunsService {
     agentId: string,
     userId: string,
     input: ExecuteAgentDto,
+    parentContext?: { parentRunId: string; parentStepId?: string; depth: number },
   ) {
     const agent = await this.prisma.companyAgent.findFirst({
       where: { id: agentId, organizationId },
@@ -36,6 +39,16 @@ export class AgentRunsService {
     const queuedCount = await this.prisma.agentRun.count({
       where: { organizationId, status: 'queued' },
     });
+    const parentRun = parentContext?.parentRunId
+      ? await this.prisma.agentRun.findUnique({
+          where: { id: parentContext.parentRunId },
+          select: { id: true, rootRunId: true },
+        })
+      : null;
+
+    if (parentContext?.parentRunId && !parentRun) {
+      throw new NotFoundException('Parent agent run not found');
+    }
 
     const run = await this.prisma.agentRun.create({
       data: {
@@ -54,8 +67,20 @@ export class AgentRunsService {
         queuePosition: queuedCount + 1,
         inputPayload: toJsonValue(input.input),
         createdByUserId: userId,
+        rootRunId: parentRun ? (parentRun.rootRunId ?? parentRun.id) : undefined,
+        parentRunId: parentContext?.parentRunId,
+        parentStepId: parentContext?.parentStepId,
+        depth: parentContext?.depth ?? 0,
       },
     });
+
+    // Resolve and persist context snapshot
+    try {
+      const snapshot = await this.agentContextService.resolveForRun(organizationId, agentId);
+      await this.agentContextService.persistSnapshot(run.id, snapshot);
+    } catch {
+      // Context snapshot failure should not block run creation
+    }
 
     const promotedRun = await this.agentQueueService.promoteNextQueuedRun(organizationId);
 

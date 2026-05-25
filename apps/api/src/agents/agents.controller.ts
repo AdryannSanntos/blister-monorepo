@@ -10,18 +10,19 @@ import {
   Req,
 } from '@nestjs/common';
 import type { Request } from 'express';
+import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
+import { AgentContextService } from './agent-context.service';
 import { AgentsService } from './agents.service';
-import {
-  createCompanyAgentSchema,
-  saveDraftVersionSchema,
-  updateCompanyAgentSchema,
-} from './dto';
+import { createCompanyAgentSchema, saveDraftVersionSchema, updateCompanyAgentSchema } from './dto';
 
 @Controller('organizations/:orgId/agents')
 export class AgentsController {
-  constructor(private readonly agentsService: AgentsService) {}
+  constructor(
+    private readonly agentsService: AgentsService,
+    private readonly agentContextService: AgentContextService,
+  ) {}
 
   @Get()
   @RequirePermission('agent.read')
@@ -130,5 +131,30 @@ export class AgentsController {
   ) {
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentsService.reactivateAgent(orgId, agentId, currentUser.id);
+  }
+
+  @Get(':agentId/context')
+  @RequirePermission('agent.read')
+  async getAgentContext(@Param('orgId') orgId: string, @Param('agentId') agentId: string) {
+    return this.agentContextService.getAgentContext(orgId, agentId);
+  }
+
+  @Patch(':agentId/context')
+  @RequirePermission('agent.update')
+  async updateAgentContext(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+  ) {
+    const updateContextSchema = z.object({
+      instructions: z.string().trim().optional(),
+      notes: z.string().trim().optional(),
+    });
+    const parsed = updateContextSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+
+    return this.agentContextService.updateAgentContext(orgId, agentId, parsed.data);
   }
 }

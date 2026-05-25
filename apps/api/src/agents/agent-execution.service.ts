@@ -7,9 +7,24 @@ import { CreditsService } from '../credits/credits.service';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentQueueService } from './agent-queue.service';
+import { AgentWorkflowRuntimeService } from './agent-workflow-runtime.service';
 import { HtmlPreviewService } from './html-preview.service';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
+
+type FlowNodeLike = {
+  id: string;
+  type: string;
+  config?: Record<string, unknown>;
+  mergeStrategy?: string;
+};
+type FlowEdgeLike = {
+  id: string;
+  sourceNodeId: string;
+  sourcePortKey: string;
+  targetNodeId: string;
+  targetPortKey: string;
+};
 
 @Injectable()
 export class AgentExecutionService {
@@ -19,6 +34,7 @@ export class AgentExecutionService {
     private readonly creditsService: CreditsService,
     private readonly htmlPreviewService: HtmlPreviewService,
     private readonly agentQueueService: AgentQueueService,
+    private readonly workflowRuntime: AgentWorkflowRuntimeService,
   ) {}
 
   async enqueueRun(payload: AgentRunTaskPayload): Promise<unknown> {
@@ -83,6 +99,24 @@ export class AgentExecutionService {
           run.inputPayload,
           run.agentVersion.flowDefinition,
         );
+
+        if (output.suspended) {
+          await this.agentQueueService.completeAttemptStep(attemptStep.id, 'success');
+          await this.prisma.agentRun.update({
+            where: { id: run.id },
+            data: {
+              status: 'suspended',
+              processingMetadata: toJsonValue({ latestAttemptNumber: currentAttemptNumber }),
+            },
+          });
+          await this.agentQueueService.releaseProcessingLease(run.id);
+
+          return {
+            runId: run.id,
+            status: 'suspended' as const,
+            suspensionId: output.suspensionId,
+          };
+        }
 
         if (output.awaitingUserValidation) {
           await this.persistAssistantMessage(
@@ -319,9 +353,7 @@ export class AgentExecutionService {
     }
 
     const candidate = (result as Record<string, unknown>).text;
-    return typeof candidate === 'string' && candidate.trim().length > 0
-      ? candidate
-      : null;
+    return typeof candidate === 'string' && candidate.trim().length > 0 ? candidate : null;
   }
 
   private extractImageCount(result: unknown) {
@@ -343,6 +375,38 @@ export class AgentExecutionService {
       flowDefinition && typeof flowDefinition === 'object' && !Array.isArray(flowDefinition)
         ? (flowDefinition as Record<string, unknown>)
         : {};
+
+    // Use graph-based runtime when edges are present (new format)
+    const hasEdges = Array.isArray(flow.edges) && (flow.edges as unknown[]).length > 0;
+    if (hasEdges) {
+      const runtimeResult = await this.workflowRuntime.run({
+        runId,
+        organizationId,
+        inputPayload,
+        flowDefinition: flow as {
+          nodes: FlowNodeLike[];
+          edges: FlowEdgeLike[];
+          config?: Record<string, unknown>;
+        },
+      });
+
+      if (runtimeResult.suspended) {
+        return {
+          suspended: true,
+          suspensionId: runtimeResult.suspensionId,
+          result: { suspended: true, suspensionId: runtimeResult.suspensionId },
+          usage: [],
+          awaitingUserValidation: false,
+        };
+      }
+
+      return {
+        result: runtimeResult.finalOutput ?? {},
+        usage: [],
+        awaitingUserValidation: false,
+      };
+    }
+
     const nodes = Array.isArray(flow.nodes) ? flow.nodes : [];
 
     let previousOutput: unknown = inputPayload;
@@ -390,7 +454,11 @@ export class AgentExecutionService {
                 : JSON.stringify(previousOutput ?? {}),
           });
           stepOutput = { text: result.text };
-          usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
+          usage.push({
+            providerId: result.providerId,
+            modelId: result.modelId,
+            usage: result.usage,
+          });
         } else if (nodeType === 'image_generate') {
           const result = await this.aiRuntimeService.generateImage({
             organizationId,
@@ -403,7 +471,11 @@ export class AgentExecutionService {
             size: typeof config.size === 'string' ? config.size : undefined,
           });
           stepOutput = { images: result.images };
-          usage.push({ providerId: result.providerId, modelId: result.modelId, usage: result.usage });
+          usage.push({
+            providerId: result.providerId,
+            modelId: result.modelId,
+            usage: result.usage,
+          });
         } else if (nodeType === 'question_form') {
           const questionConfig =
             currentNode.fields && Array.isArray(currentNode.fields)
@@ -472,14 +544,14 @@ export class AgentExecutionService {
         data: {
           runId,
           blockKey: nodeId,
-            blockType: nodeType,
-            status: 'success',
-            inputPayload: toJsonValue(stepInput ?? {}),
-            outputPayload: toJsonValue(stepOutput ?? {}),
-            startedAt: stepStartedAt,
-            completedAt: new Date(),
-          },
-        });
+          blockType: nodeType,
+          status: 'success',
+          inputPayload: toJsonValue(stepInput ?? {}),
+          outputPayload: toJsonValue(stepOutput ?? {}),
+          startedAt: stepStartedAt,
+          completedAt: new Date(),
+        },
+      });
     }
 
     return { result: previousOutput, usage, awaitingUserValidation: false };
