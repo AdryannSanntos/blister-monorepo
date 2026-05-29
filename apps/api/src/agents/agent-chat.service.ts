@@ -8,11 +8,11 @@ import type {
   CreateMessageDto,
   CreateThreadDto,
   EditMessageAndBranchDto,
+  OrchestrationToolCall,
   RegenerateMessageDto,
 } from './dto';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
-
 
 @Injectable()
 export class AgentChatService {
@@ -75,7 +75,20 @@ export class AgentChatService {
       threadId: thread.id,
       role: 'assistant',
       content: orchestration.assistantMessage,
-      metadata: toJsonValue({ orchestration }),
+      metadata: toJsonValue({
+        orchestration,
+        toolParts: orchestration.toolParts ?? [],
+        citations: orchestration.citations ?? [],
+      }),
+    });
+
+    await this.persistToolCallAudit({
+      organizationId,
+      agentId: thread.agentId,
+      threadId: thread.id,
+      messageId: assistantMessage.id,
+      userId,
+      toolCalls: orchestration.toolCalls ?? [],
     });
 
     if (!orchestration.createRun) {
@@ -465,6 +478,37 @@ export class AgentChatService {
         editedFromMessageId: data.editedFromMessageId,
         regeneratedFromMessageId: data.regeneratedFromMessageId,
       },
+    });
+  }
+
+  /** Persists operational audit rows for each conversational tool call. */
+  private async persistToolCallAudit(params: {
+    organizationId: string;
+    agentId: string | null;
+    threadId: string;
+    messageId: string;
+    userId: string;
+    toolCalls: OrchestrationToolCall[];
+  }) {
+    if (!params.agentId || params.toolCalls.length === 0) {
+      return;
+    }
+
+    await this.prisma.agentChatToolCall.createMany({
+      data: params.toolCalls.map((call) => ({
+        organizationId: params.organizationId,
+        agentId: params.agentId as string,
+        threadId: params.threadId,
+        messageId: params.messageId,
+        toolName: call.toolName,
+        status: call.status,
+        inputPayload: toJsonValue(call.inputPayload),
+        outputPayload:
+          call.outputPayload === null ? Prisma.JsonNull : toJsonValue(call.outputPayload),
+        errorMessage: call.errorMessage,
+        durationMs: call.durationMs,
+        createdByUserId: params.userId,
+      })),
     });
   }
 

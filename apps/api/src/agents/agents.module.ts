@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CreditsModule } from '../credits/credits.module';
+import { OrganizationModule } from '../organization/organization.module';
 import { PlatformModule } from '../platform/platform.module';
 import { RagModule } from '../rag/rag.module';
 import { StorageModule } from '../storage/storage.module';
@@ -18,6 +19,8 @@ import { AgentRunResumeService } from './agent-run-resume.service';
 import { AgentRunsController } from './agent-runs.controller';
 import { PlatformAgentRunsController } from './agent-runs.controller';
 import { AgentRunsService } from './agent-runs.service';
+import { AgentToolPolicyService } from './agent-tool-policy.service';
+import { AgentToolRuntimeService } from './agent-tool-runtime.service';
 import { AgentWorkflowRuntimeService } from './agent-workflow-runtime.service';
 import { AgentsController } from './agents.controller';
 import { AgentsService } from './agents.service';
@@ -27,9 +30,17 @@ import { ContextPolicyService } from './context/context-policy.service';
 import { ContextRerankerService } from './context/context-reranker.service';
 import { StructuredContextService } from './context/structured-context.service';
 import { HtmlPreviewService } from './html-preview.service';
+import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-research.tool';
 
 @Module({
-  imports: [AIRuntimeModule, CreditsModule, PlatformModule, StorageModule, RagModule],
+  imports: [
+    AIRuntimeModule,
+    CreditsModule,
+    OrganizationModule,
+    PlatformModule,
+    StorageModule,
+    RagModule,
+  ],
   controllers: [
     AgentsController,
     AgentRunsController,
@@ -44,6 +55,9 @@ import { HtmlPreviewService } from './html-preview.service';
     AgentChatService,
     AgentChatOrchestratorService,
     AgentContextService,
+    AgentToolPolicyService,
+    AgentToolRuntimeService,
+    { provide: WEB_RESEARCH_GATEWAY, useClass: StubWebResearchGateway },
     AgentBlockExecutorRegistry,
     AgentBlockRegistrationService,
     AgentWorkflowRuntimeService,
@@ -64,6 +78,8 @@ import { HtmlPreviewService } from './html-preview.service';
     AgentChatService,
     AgentChatOrchestratorService,
     AgentContextService,
+    AgentToolPolicyService,
+    AgentToolRuntimeService,
     AgentBlockExecutorRegistry,
     AgentBlockRegistrationService,
     AgentWorkflowRuntimeService,

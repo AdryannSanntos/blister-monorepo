@@ -5,16 +5,26 @@ import type { CreateCompanyAgentDto, SaveDraftVersionDto, UpdateCompanyAgentDto 
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
+const normalizeAllowedTools = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((tool): tool is string => typeof tool === 'string') : [];
+
+const normalizeAgentAllowedTools = <T extends { allowedTools?: unknown }>(agent: T): T & { allowedTools: string[] } => ({
+  ...agent,
+  allowedTools: normalizeAllowedTools(agent.allowedTools),
+});
+
 @Injectable()
 export class AgentsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async listCompanyAgents(organizationId: string) {
-    return this.prisma.companyAgent.findMany({
+    const agents = await this.prisma.companyAgent.findMany({
       where: { organizationId },
       include: { versions: { orderBy: { versionNumber: 'desc' }, take: 1 } },
       orderBy: { updatedAt: 'desc' },
     });
+
+    return agents.map((agent) => normalizeAgentAllowedTools(agent));
   }
 
   async getCompanyAgent(organizationId: string, agentId: string) {
@@ -27,7 +37,7 @@ export class AgentsService {
       throw new NotFoundException('Agent not found');
     }
 
-    return agent;
+    return normalizeAgentAllowedTools(agent);
   }
 
   async createCompanyAgent(organizationId: string, userId: string, input: CreateCompanyAgentDto) {
@@ -47,6 +57,7 @@ export class AgentsService {
           slug: input.slug,
           name: input.name,
           description: input.description,
+          allowedTools: input.allowedTools ?? [],
           status: 'draft',
           createdByUserId: userId,
           updatedByUserId: userId,
@@ -65,7 +76,7 @@ export class AgentsService {
         },
       });
 
-      return agent;
+      return normalizeAgentAllowedTools(agent);
     });
   }
 
@@ -81,16 +92,19 @@ export class AgentsService {
       throw new BadRequestException('Use the activate endpoint to mark an agent as active');
     }
 
-    return this.prisma.companyAgent.update({
-      where: { id: agentId },
-      data: {
-        ...(input.slug ? { slug: input.slug } : {}),
-        ...(input.name ? { name: input.name } : {}),
-        ...(input.description !== undefined ? { description: input.description } : {}),
-        ...(input.status ? { status: input.status } : {}),
-        updatedByUserId: userId,
-      },
-    });
+    return normalizeAgentAllowedTools(
+      await this.prisma.companyAgent.update({
+        where: { id: agentId },
+        data: {
+          ...(input.slug ? { slug: input.slug } : {}),
+          ...(input.name ? { name: input.name } : {}),
+          ...(input.description !== undefined ? { description: input.description } : {}),
+          ...(input.allowedTools !== undefined ? { allowedTools: input.allowedTools } : {}),
+          ...(input.status ? { status: input.status } : {}),
+          updatedByUserId: userId,
+        },
+      }),
+    );
   }
 
   async saveDraftVersion(

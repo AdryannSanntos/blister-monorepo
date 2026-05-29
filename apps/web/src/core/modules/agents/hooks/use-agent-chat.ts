@@ -41,6 +41,27 @@ export type ChatAttachment = {
   textContent?: string;
 };
 
+export type ChatToolPart = {
+  type: string;
+  toolCallId?: string;
+  state?: "input-streaming" | "output-available" | "output-error";
+  input?: Record<string, unknown>;
+  output?: unknown;
+};
+
+export type ChatCitation = {
+  label: string;
+  url?: string;
+  sourceType?: string;
+  sourceId?: string;
+};
+
+export type ChatMessageMetadata = {
+  attachments?: ChatAttachment[];
+  toolParts?: ChatToolPart[];
+  citations?: ChatCitation[];
+};
+
 export type ChatMessage = {
   id: string;
   role: "user" | "assistant" | "system";

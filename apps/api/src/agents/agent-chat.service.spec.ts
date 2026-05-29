@@ -31,6 +31,9 @@ const makeMockPrisma = () => ({
   companyAgent: {
     findFirst: jest.fn(),
   },
+  agentChatToolCall: {
+    createMany: jest.fn(),
+  },
   $transaction: jest.fn(),
 });
 
@@ -204,6 +207,68 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
 
     expect(runsService.createQueuedRun).not.toHaveBeenCalled();
     expect(result.run).toBeNull();
+  });
+
+  it('persists tool parts in metadata and audit rows for read-only tool usage', async () => {
+    prisma.agentChatThread.findUnique.mockResolvedValue(THREAD);
+    prisma.agentChatMessage.create.mockResolvedValue(MESSAGE);
+    orchestratorService.orchestrateMessage.mockResolvedValue({
+      mode: 'context_retrieval',
+      createRun: false,
+      assistantMessage: 'O reembolso acontece em até 7 dias.',
+      events: [],
+      resolvedContextHints: [],
+      toolParts: [
+        {
+          type: 'tool-Search',
+          toolCallId: 'tool-0-rag_search',
+          state: 'output-available',
+          input: { query: 'reembolso', toolName: 'rag_search' },
+          output: { summary: 'Encontrado', results: [], citations: [] },
+        },
+      ],
+      citations: [{ label: 'Reembolsos', sourceType: 'brain_entry' }],
+      toolCalls: [
+        {
+          toolName: 'rag_search',
+          status: 'completed',
+          inputPayload: { query: 'reembolso' },
+          outputPayload: { summary: 'Encontrado', results: [] },
+          errorMessage: null,
+          durationMs: 12,
+        },
+      ],
+    });
+
+    const result = await service.createUserMessageAndProcess('org-1', 'user-1', {
+      threadId: 'thread-1',
+      content: 'qual a política de reembolso?',
+    });
+
+    expect(result.run).toBeNull();
+    expect(runsService.createQueuedRun).not.toHaveBeenCalled();
+
+    const assistantCreateCall = prisma.agentChatMessage.create.mock.calls.find(
+      ([arg]) => arg.data.role === 'assistant',
+    );
+    expect(assistantCreateCall?.[0].data.metadata).toMatchObject({
+      toolParts: expect.arrayContaining([expect.objectContaining({ type: 'tool-Search' })]),
+      citations: expect.arrayContaining([expect.objectContaining({ label: 'Reembolsos' })]),
+    });
+
+    expect(prisma.agentChatToolCall.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          organizationId: 'org-1',
+          agentId: 'agent-1',
+          threadId: 'thread-1',
+          messageId: MESSAGE.id,
+          toolName: 'rag_search',
+          status: 'completed',
+          createdByUserId: 'user-1',
+        }),
+      ],
+    });
   });
 
   it('throws NotFoundException when thread does not exist', async () => {

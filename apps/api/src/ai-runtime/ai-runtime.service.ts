@@ -174,17 +174,19 @@ export class AIRuntimeService {
         return false;
       }
 
-      if (
-        policyAllowedModelIds.length > 0 &&
-        !policyAllowedModelIds.includes(candidate.id)
-      ) {
+      if (policyAllowedModelIds.length > 0 && !policyAllowedModelIds.includes(candidate.id)) {
         return false;
       }
 
-      const adapter = this.resolveAdapter(
-        candidate.provider.slug,
-        candidate.provider.schemaMetadata,
-      );
+      // A provider without a usable adapter (e.g. a model mis-tagged with a
+      // capability it can't serve) must be skipped, never break the whole
+      // selection — otherwise one bad model nukes all generation for the org.
+      let adapter: ReturnType<AIRuntimeService['resolveAdapter']>;
+      try {
+        adapter = this.resolveAdapter(candidate.provider.slug, candidate.provider.schemaMetadata);
+      } catch {
+        return false;
+      }
 
       return adapter.supports(capability);
     });
@@ -194,7 +196,7 @@ export class AIRuntimeService {
     );
 
     const model = request.modelId
-      ? eligible.find((candidate) => candidate.id === request.modelId) ?? eligible[0]
+      ? (eligible.find((candidate) => candidate.id === request.modelId) ?? eligible[0])
       : eligible[0];
 
     if (!model) {

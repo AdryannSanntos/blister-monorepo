@@ -108,6 +108,37 @@ export const toolRegistry: Record<string, ToolMeta> = {
     subtitle: (part) => part.input?.skill || "",
     variant: "simple",
   },
+  // Conversational agent chat tools (rag_search / file_search / web_research).
+  "tool-Search": {
+    icon: Search,
+    title: (part) => {
+      const isPending =
+        part.state !== "output-available" && part.state !== "output-error";
+      const labels: Record<string, { pending: string; done: string }> = {
+        rag_search: {
+          pending: "Consultando contexto",
+          done: "Consultou contexto da empresa",
+        },
+        file_search: {
+          pending: "Pesquisando arquivos",
+          done: "Pesquisou arquivos do contexto",
+        },
+        web_research: {
+          pending: "Pesquisando na web",
+          done: "Pesquisou fontes externas",
+        },
+      };
+      const toolName = part.input?.toolName as string | undefined;
+      const label = toolName ? labels[toolName] : undefined;
+      if (label) return isPending ? label.pending : label.done;
+      return isPending ? "Pesquisando" : "Pesquisa concluída";
+    },
+    subtitle: (part) => {
+      const query = part.input?.query || "";
+      return query.length > 40 ? `${query.slice(0, 37)}...` : query;
+    },
+    variant: "collapsible",
+  },
   "tool-Grep": {
     icon: Search,
     title: (part) => {

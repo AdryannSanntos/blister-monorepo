@@ -14,3 +14,4 @@ packages/*/node_modules/
 packages/*/dist/
 
 coverage/
+.mcp.json

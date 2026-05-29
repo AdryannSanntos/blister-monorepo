@@ -3,26 +3,18 @@
 import type { UIMessage } from "ai";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import {
-  Bot,
-  Copy,
-  MoreHorizontal,
-  Pencil,
-  RefreshCw,
-} from "lucide-react";
+import { Bot, Copy, MoreHorizontal, Pencil, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { AgentRunSuspensionCards } from "src/core/modules/agents/components/chat/agent-suspension-card";
+import { toUserUiMessage } from "src/core/modules/agents/components/chat/chat-message-parts";
 import { isOptimisticMessage } from "src/core/modules/agents/components/chat/chat-optimistic";
 import { ChatThinkingBubble } from "src/core/modules/agents/components/chat/chat-thinking-bubble";
-import { AgentRunSuspensionCards } from "src/core/modules/agents/components/chat/agent-suspension-card";
+import { buildChatToolSections } from "src/core/modules/agents/components/chat/chat-tool-sections";
 import { ExecutionInlineCard } from "src/core/modules/agents/components/chat/execution-inline-card";
 import {
   parseUiOutputEnvelope,
   UiOutputRenderer,
 } from "src/core/modules/agents/components/chat/ui-output-renderer";
-import {
-  getMessageToolSections,
-  toUserUiMessage,
-} from "src/core/modules/agents/components/chat/chat-message-parts";
 import type { ChatMessage } from "src/core/modules/agents/hooks/use-agent-chat";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -65,10 +57,13 @@ export function ChatMessageBubble({
   const isUser = message.role === "user";
   const isOptimistic = isOptimisticMessage(message);
   const userMessage: UIMessage = toUserUiMessage(message);
-  const uiOutputEnvelope = !isUser ? parseUiOutputEnvelope(message.metadata) : null;
-  const toolSections = message.agentRun ? [] : getMessageToolSections(message);
+  const uiOutputEnvelope = !isUser
+    ? parseUiOutputEnvelope(message.metadata)
+    : null;
+  const toolSections = message.agentRun ? [] : buildChatToolSections(message);
   const runIsActive =
-    message.agentRun?.status === "queued" || message.agentRun?.status === "running";
+    message.agentRun?.status === "queued" ||
+    message.agentRun?.status === "running";
   const showThinking =
     !isUser &&
     !message.content &&
@@ -158,7 +153,10 @@ export function ChatMessageBubble({
 
               {toolSections.map((section, sectionIndex) => (
                 <div
-                  key={section.part.toolCallId ?? `${message.id}-tool-${sectionIndex}`}
+                  key={
+                    section.part.toolCallId ??
+                    `${message.id}-tool-${sectionIndex}`
+                  }
                   className="ds-chat-content-reveal"
                   style={{ animationDelay: `${sectionIndex * 60}ms` }}
                 >
@@ -187,7 +185,10 @@ export function ChatMessageBubble({
           <div className="ds-chat-content-reveal w-full max-w-md space-y-3">
             <ExecutionInlineCard run={message.agentRun} orgId={orgId} />
             {message.agentRunId && (
-              <AgentRunSuspensionCards runId={message.agentRunId} orgId={orgId} />
+              <AgentRunSuspensionCards
+                runId={message.agentRunId}
+                orgId={orgId}
+              />
             )}
           </div>
         )}

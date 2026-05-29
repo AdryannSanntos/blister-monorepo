@@ -268,7 +268,10 @@ describe('AIRuntimeService', () => {
       },
     ]);
     prisma.aICredential.findFirst.mockResolvedValue({ id: 'platform-cred', value: 'platform-key' });
-    openRouterAdapter.generateText.mockResolvedValue({ text: 'Olá! Como posso ajudar?', usage: {} });
+    openRouterAdapter.generateText.mockResolvedValue({
+      text: 'Olá! Como posso ajudar?',
+      usage: {},
+    });
 
     await service.generateText({
       organizationId: 'org-1',
@@ -281,6 +284,45 @@ describe('AIRuntimeService', () => {
         model: expect.objectContaining({ id: 'configured-model' }),
       }),
     );
+  });
+
+  it('skips models whose provider has no usable adapter instead of failing selection', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'assemblyai-model',
+        providerId: 'provider-assemblyai',
+        slug: 'assemblyai-claude-opus',
+        externalModelId: 'claude-opus',
+        updatedAt: new Date('2026-05-29T12:00:00Z'),
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-assemblyai',
+          slug: 'assemblyai',
+          schemaMetadata: { adapter: 'assemblyai' },
+        },
+      },
+      {
+        id: 'openrouter-model',
+        providerId: 'provider-openrouter',
+        slug: 'openrouter-gpt-4o-mini',
+        externalModelId: 'openai/gpt-4o-mini',
+        updatedAt: new Date('2026-05-28T12:00:00Z'),
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-openrouter',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue({ id: 'platform-cred', value: 'platform-key' });
+    openRouterAdapter.generateText.mockResolvedValue({ text: 'hello', usage: {} });
+
+    const result = await service.generateText({ prompt: 'hello' });
+
+    expect(result.modelId).toBe('openrouter-model');
+    expect(result.providerSlug).toBe('openrouter');
   });
 
   it('falls back to OPENROUTER_API_KEY when no credential exists in the database', async () => {

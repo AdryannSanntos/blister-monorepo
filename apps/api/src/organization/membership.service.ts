@@ -1,6 +1,7 @@
 import {
   type AppPermissionKey,
   type PermissionOverride,
+  allPermissionKeys,
   defineAbilityForPermissions,
 } from '@company-os/authz';
 import {
@@ -230,5 +231,43 @@ export class MembershipService {
     const isOwner = membership.roles.some((mr) => mr.role.name === 'owner');
 
     return defineAbilityForPermissions([...rolePermissions], overrides, isOwner);
+  }
+
+  /**
+   * Flat list of effective permission keys for a member, applying role grants and
+   * individual overrides. Owners hold every key. Used by the agent tool runtime to
+   * narrow source access to what the user is actually allowed to read.
+   */
+  async getEffectivePermissionKeys(
+    organizationId: string,
+    userId: string,
+  ): Promise<AppPermissionKey[]> {
+    const membership = await this.findByOrgAndUser(organizationId, userId);
+
+    if (!membership) {
+      throw new NotFoundException('Membership not found');
+    }
+
+    if (membership.roles.some((mr) => mr.role.name === 'owner')) {
+      return [...allPermissionKeys];
+    }
+
+    const keys = new Set<AppPermissionKey>();
+    for (const mr of membership.roles) {
+      for (const rp of mr.role.permissions) {
+        keys.add(rp.key as AppPermissionKey);
+      }
+    }
+
+    for (const override of membership.overrides) {
+      const key = override.key as AppPermissionKey;
+      if (override.effect === 'allow') {
+        keys.add(key);
+      } else {
+        keys.delete(key);
+      }
+    }
+
+    return [...keys];
   }
 }

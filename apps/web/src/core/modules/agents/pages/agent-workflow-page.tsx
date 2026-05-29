@@ -50,7 +50,7 @@ function draftVersionRef(
   return agentData?.versions?.find((v) => v.status === "draft");
 }
 
-const DEFAULT_NODES: Node<FlowNodeData>[] = [
+const DEFAULT_NODES: Node<WorkflowNodeData>[] = [
   {
     id: "input",
     type: "block",
@@ -89,7 +89,7 @@ export function AgentWorkflowPage() {
   const draftVersion = useMemo(() => draftVersionRef(agent.data), [agent.data]);
   const displayedVersion = draftVersion ?? activeVersion;
 
-  const [nodes, setNodes] = useState<Node<FlowNodeData>[]>(DEFAULT_NODES);
+  const [nodes, setNodes] = useState<Node<WorkflowNodeData>[]>(DEFAULT_NODES);
   const [edges, setEdges] = useState<Edge[]>(DEFAULT_EDGES);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [openMenuNodeId, setOpenMenuNodeId] = useState<string | null>(null);
@@ -236,7 +236,7 @@ export function AgentWorkflowPage() {
     setSelectedNodeId(id);
   }
 
-  function patchNode(nodeId: string, patch: Partial<FlowNodeData>) {
+  function patchNode(nodeId: string, patch: Partial<WorkflowNodeData>) {
     setNodes((prev) =>
       prev.map((n) =>
         n.id === nodeId ? { ...n, data: { ...n.data, ...patch } } : n,
@@ -372,7 +372,7 @@ export function AgentWorkflowPage() {
             openMenuNodeId={openMenuNodeId}
             onOpenMenuNodeChange={setOpenMenuNodeId}
             onSelectNode={handleSelectNode}
-            onNodesChange={(next) => setNodes(next as Node<FlowNodeData>[])}
+            onNodesChange={(next) => setNodes(next as Node<WorkflowNodeData>[])}
             onEdgesChange={setEdges}
             onAddBlock={canEdit ? addBlock : undefined}
             onDeleteNode={canEdit ? deleteNode : undefined}

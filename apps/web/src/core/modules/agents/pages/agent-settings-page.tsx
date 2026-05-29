@@ -7,16 +7,18 @@ import {
   ChevronDown,
   ExternalLink,
   FileText,
+  Globe,
   Link2,
   Plus,
   Save,
+  Search,
   Settings2,
   Trash2,
+  Wrench,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   useAgentContextFiles,
   useAgentContextProfile,
@@ -28,6 +30,7 @@ import {
   useUpsertAgentContextProfile,
 } from "src/core/modules/agents/hooks/use-agent-context";
 import {
+  type AgentTool,
   useArchiveAgent,
   useCompanyAgent,
   useUpdateAgent,
@@ -66,7 +69,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "src/core/shared/components/ui/select";
+import { Switch } from "src/core/shared/components/ui/switch";
 import { Textarea } from "src/core/shared/components/ui/textarea";
+import { z } from "zod";
 
 // ─── Schemas ─────────────────────────────────────────────────────────────────
 
@@ -361,11 +366,7 @@ function ContextFilesSection({
                   <FormItem>
                     <FormLabel>URL pública</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://..."
-                        type="url"
-                        {...field}
-                      />
+                      <Input placeholder="https://..." type="url" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -520,10 +521,7 @@ function ContextReferencesSection({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>Tipo de fonte</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -560,7 +558,10 @@ function ContextReferencesSection({
                   <FormItem>
                     <FormLabel>Rótulo</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome legível da referência" {...field} />
+                      <Input
+                        placeholder="Nome legível da referência"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -582,6 +583,113 @@ function ContextReferencesSection({
           </Form>
         </DialogContent>
       </Dialog>
+    </section>
+  );
+}
+
+// ─── Tool allowlist ───────────────────────────────────────────────────────────
+
+const AGENT_TOOLS: Array<{
+  value: AgentTool;
+  label: string;
+  description: string;
+  icon: typeof Search;
+}> = [
+  {
+    value: "rag_search",
+    label: "Consulta ao contexto",
+    description:
+      "Busca no material indexado da empresa, respeitando permissões.",
+    icon: BookOpen,
+  },
+  {
+    value: "file_search",
+    label: "Pesquisa em arquivos",
+    description:
+      "Procura nos arquivos de contexto do agente e documentos indexados.",
+    icon: Search,
+  },
+  {
+    value: "web_research",
+    label: "Pesquisa na web",
+    description: "Consulta fontes externas e retorna evidências resumidas.",
+    icon: Globe,
+  },
+];
+
+function ToolAllowlistSection({
+  orgId,
+  agentId,
+  allowedTools,
+}: {
+  orgId: string;
+  agentId: string;
+  allowedTools: AgentTool[];
+}) {
+  const update = useUpdateAgent(orgId, agentId);
+
+  function toggleTool(tool: AgentTool, enabled: boolean) {
+    const next = enabled
+      ? [...new Set([...allowedTools, tool])]
+      : allowedTools.filter((value) => value !== tool);
+    update.mutate({ allowedTools: next });
+  }
+
+  return (
+    <section className="space-y-4 rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)] p-6">
+      <div className="flex items-start gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Wrench className="size-4" />
+        </div>
+        <div>
+          <p className="text-[13.5px] font-semibold text-[var(--fg-primary)]">
+            Ferramentas habilitadas
+          </p>
+          <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
+            Estas ferramentas ficam disponíveis para o agente durante a
+            conversa. Nesta fase, elas não alteram dados nem criam execuções de
+            workflow por conta própria.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {AGENT_TOOLS.map((tool) => {
+          const Icon = tool.icon;
+          const checked = allowedTools.includes(tool.value);
+          return (
+            <div
+              key={tool.value}
+              className="flex items-center justify-between gap-4 rounded-[var(--r-md)] border border-[var(--line-subtle)] bg-[var(--bg-sunken)] px-3 py-2.5"
+            >
+              <div className="flex min-w-0 items-start gap-2.5">
+                <Icon className="mt-0.5 size-4 shrink-0 text-[var(--fg-tertiary)]" />
+                <div className="min-w-0">
+                  <p className="text-[12.5px] font-medium text-[var(--fg-primary)]">
+                    {tool.label}
+                  </p>
+                  <p className="mt-0.5 text-[11.5px] text-[var(--fg-tertiary)]">
+                    {tool.description}
+                  </p>
+                </div>
+              </div>
+              <PermissionGate
+                permission="agent.update"
+                fallback={
+                  <Switch checked={checked} disabled aria-label={tool.label} />
+                }
+              >
+                <Switch
+                  checked={checked}
+                  disabled={update.isPending}
+                  onCheckedChange={(value) => toggleTool(tool.value, value)}
+                  aria-label={tool.label}
+                />
+              </PermissionGate>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
@@ -678,6 +786,13 @@ export function AgentSettingsPage() {
             </PermissionGate>
           </form>
         </Form>
+
+        {/* Tool allowlist */}
+        <ToolAllowlistSection
+          orgId={orgId}
+          agentId={agentId}
+          allowedTools={agent.data?.allowedTools ?? []}
+        />
 
         {/* Persistent context sections */}
         <ContextProfileSection orgId={orgId} agentId={agentId} />

@@ -12,12 +12,19 @@ import { ToolRowBase } from "./tool-row-base";
 
 export type SearchResult = { source: SourceType; title: string; date: string };
 
+export type SearchLabels = {
+  shimmer?: string;
+  complete?: string;
+  header?: string;
+};
+
 export type SearchGroupRichProps = {
   toolSteps: Extract<TimelineStep, { type: "tool-call" }>[];
   stepStates: Record<string, StepState>;
   onStepComplete: (id: string) => void;
   results?: SearchResult[];
   defaultOpen?: boolean;
+  labels?: SearchLabels;
 };
 
 export function SearchGroupRich({
@@ -26,6 +33,7 @@ export function SearchGroupRich({
   onStepComplete,
   results = [],
   defaultOpen,
+  labels,
 }: SearchGroupRichProps) {
   const anyAnimating = toolSteps.some((s) => stepStates[s.id] === "animating");
   const searchQuery =
@@ -54,15 +62,17 @@ export function SearchGroupRich({
         <CompleteTracker key={step.id} step={step} />
       ))}
       <ToolRowBase
-        shimmerLabel="Searching..."
-        completeLabel={`Found ${totalResults} results`}
+        shimmerLabel={labels?.shimmer ?? "Searching..."}
+        completeLabel={labels?.complete ?? `Found ${totalResults} results`}
         isAnimating={anyAnimating}
         expandable={hasExpandableContent}
         defaultOpen={defaultOpen}
       >
         <div className="rounded-an-tool-border-radius overflow-hidden bg-an-tool-background border border-border">
           <div className="flex items-center px-2.5 py-0 border-b border-an-tool-border-color h-7 text-xs gap-1">
-            <span className="text-foreground font-medium">Searched for</span>{" "}
+            <span className="text-foreground font-medium">
+              {labels?.header ?? "Searched for"}
+            </span>{" "}
             <span className="text-muted-foreground truncate">
               &ldquo;{searchQuery}&rdquo;
             </span>
@@ -111,21 +121,53 @@ export type SearchToolProps = {
   defaultOpen?: boolean;
 };
 
+// Phase-1 agent chat tools (rag_search/file_search/web_research) → PT labels.
+const AGENT_TOOL_SEARCH_LABELS: Record<string, SearchLabels> = {
+  rag_search: {
+    shimmer: "Consultando contexto da empresa...",
+    complete: "Consultou contexto da empresa",
+    header: "Consulta ao contexto",
+  },
+  file_search: {
+    shimmer: "Pesquisando arquivos do contexto...",
+    complete: "Pesquisou arquivos do contexto",
+    header: "Arquivos pesquisados",
+  },
+  web_research: {
+    shimmer: "Pesquisando fontes externas...",
+    complete: "Pesquisou fontes externas",
+    header: "Fontes externas",
+  },
+};
+
+function readField(
+  item: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = item[key];
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : undefined;
+}
+
 function normalizeResults(value: unknown): SearchResult[] | undefined {
   if (!Array.isArray(value)) return undefined;
   const parsed = value
     .map((item) => {
       if (!item || typeof item !== "object") return null;
-      const source = (item as { source?: unknown }).source;
-      const title = (item as { title?: unknown }).title;
-      const date = (item as { date?: unknown }).date;
-      if (
-        typeof source !== "string" ||
-        typeof title !== "string" ||
-        typeof date !== "string"
-      ) {
-        return null;
-      }
+      const record = item as Record<string, unknown>;
+      const title =
+        readField(record, "title") ??
+        readField(record, "filename") ??
+        readField(record, "url");
+      if (!title) return null;
+      const source =
+        readField(record, "source") ??
+        readField(record, "sourceType") ??
+        readField(record, "origin") ??
+        "";
+      const date =
+        readField(record, "date") ?? readField(record, "retrievedAt") ?? "";
       return { source: source as SourceType, title, date };
     })
     .filter((item): item is SearchResult => Boolean(item));
@@ -158,6 +200,10 @@ export const SearchTool = memo(function SearchTool({
   const stepStates = { [step.id]: stepState };
   const noop = () => {};
 
+  const toolName =
+    typeof part.input?.toolName === "string" ? part.input.toolName : undefined;
+  const labels = toolName ? AGENT_TOOL_SEARCH_LABELS[toolName] : undefined;
+
   return (
     <SearchGroupRich
       toolSteps={[step]}
@@ -169,6 +215,7 @@ export const SearchTool = memo(function SearchTool({
         normalizeResults(part.result?.results)
       }
       defaultOpen={defaultOpen}
+      labels={labels}
     />
   );
 });

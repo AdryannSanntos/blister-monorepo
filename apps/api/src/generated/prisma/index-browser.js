@@ -475,6 +475,7 @@ exports.Prisma.CompanyAgentScalarFieldEnum = {
   name: 'name',
   description: 'description',
   status: 'status',
+  allowedTools: 'allowedTools',
   activeVersionId: 'activeVersionId',
   createdByUserId: 'createdByUserId',
   updatedByUserId: 'updatedByUserId',
@@ -501,25 +502,25 @@ exports.Prisma.AgentVersionScalarFieldEnum = {
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  threadId: 'threadId',
-  sourceMessageId: 'sourceMessageId',
   agentId: 'agentId',
   agentVersionId: 'agentVersionId',
   status: 'status',
-  queuePosition: 'queuePosition',
-  attemptCount: 'attemptCount',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
-  processingMetadata: 'processingMetadata',
-  processingLeaseId: 'processingLeaseId',
-  leaseExpiresAt: 'leaseExpiresAt',
   errorMessage: 'errorMessage',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  lastAttemptAt: 'lastAttemptAt',
   createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  attemptCount: 'attemptCount',
+  completedAt: 'completedAt',
+  lastAttemptAt: 'lastAttemptAt',
+  leaseExpiresAt: 'leaseExpiresAt',
+  processingLeaseId: 'processingLeaseId',
+  processingMetadata: 'processingMetadata',
+  queuePosition: 'queuePosition',
+  sourceMessageId: 'sourceMessageId',
+  startedAt: 'startedAt',
+  threadId: 'threadId',
   rootRunId: 'rootRunId',
   parentRunId: 'parentRunId',
   parentStepId: 'parentStepId',
@@ -527,7 +528,12 @@ exports.Prisma.AgentRunScalarFieldEnum = {
   currentBlockId: 'currentBlockId',
   currentBlockType: 'currentBlockType',
   waitingReason: 'waitingReason',
-  resumeStatus: 'resumeStatus'
+  resumeStatus: 'resumeStatus',
+  chunkIdsRetrieved: 'chunkIdsRetrieved',
+  durationMs: 'durationMs',
+  intentClassified: 'intentClassified',
+  sourcesSelected: 'sourcesSelected',
+  tokensUsed: 'tokensUsed'
 };
 
 exports.Prisma.AgentRunStepScalarFieldEnum = {
@@ -536,13 +542,13 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   blockKey: 'blockKey',
   blockType: 'blockType',
   status: 'status',
-  metadata: 'metadata',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
+  metadata: 'metadata',
   sequence: 'sequence',
   branchKey: 'branchKey',
   inputType: 'inputType',
@@ -656,31 +662,47 @@ exports.Prisma.AgentChatMessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AgentChatToolCallScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  agentId: 'agentId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  toolName: 'toolName',
+  status: 'status',
+  inputPayload: 'inputPayload',
+  outputPayload: 'outputPayload',
+  errorMessage: 'errorMessage',
+  durationMs: 'durationMs',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   runId: 'runId',
-  idempotencyKey: 'idempotencyKey',
   entryType: 'entryType',
   amount: 'amount',
   balanceAfter: 'balanceAfter',
   metadata: 'metadata',
   createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  idempotencyKey: 'idempotencyKey'
 };
 
 exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   runId: 'runId',
-  idempotencyKey: 'idempotencyKey',
   providerId: 'providerId',
   modelId: 'modelId',
   amount: 'amount',
   currency: 'currency',
   unit: 'unit',
   metadata: 'metadata',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  idempotencyKey: 'idempotencyKey'
 };
 
 exports.Prisma.RagDocumentScalarFieldEnum = {
@@ -725,6 +747,28 @@ exports.Prisma.RagIndexJobScalarFieldEnum = {
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BrainVersionScalarFieldEnum = {
+  id: 'id',
+  brainId: 'brainId',
+  versionNumber: 'versionNumber',
+  status: 'status',
+  data: 'data',
+  notes: 'notes',
+  createdByUserId: 'createdByUserId',
+  publishedByUserId: 'publishedByUserId',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CompanyBrainScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  activeVersionId: 'activeVersionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -802,12 +846,15 @@ exports.Prisma.ModelName = {
   AgentRunSuspensionResponse: 'AgentRunSuspensionResponse',
   AgentChatThread: 'AgentChatThread',
   AgentChatMessage: 'AgentChatMessage',
+  AgentChatToolCall: 'AgentChatToolCall',
   CreditLedgerEntry: 'CreditLedgerEntry',
   TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
   RagDocument: 'RagDocument',
   RagChunk: 'RagChunk',
   RagEmbedding: 'RagEmbedding',
-  RagIndexJob: 'RagIndexJob'
+  RagIndexJob: 'RagIndexJob',
+  BrainVersion: 'BrainVersion',
+  CompanyBrain: 'CompanyBrain'
 };
 
 /**

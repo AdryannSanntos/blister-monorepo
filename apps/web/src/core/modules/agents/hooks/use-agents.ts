@@ -6,6 +6,8 @@ import { apiClient } from "src/core/shared/utils/api-client";
 
 export type AgentStatus = "draft" | "active" | "archived";
 
+export type AgentTool = "rag_search" | "file_search" | "web_research";
+
 export type AgentVersion = {
   id: string;
   version: number;
@@ -27,6 +29,7 @@ export type Agent = {
   category: string;
   templateId: string | null;
   activeVersionId: string | null;
+  allowedTools: AgentTool[];
   createdAt: string;
   updatedAt: string;
   versions?: AgentVersion[];
@@ -37,6 +40,7 @@ export type CreateAgentInput = {
   slug: string;
   description?: string;
   category?: string;
+  allowedTools?: AgentTool[];
 };
 
 export type UpdateAgentInput = {
@@ -44,6 +48,7 @@ export type UpdateAgentInput = {
   description?: string;
   slug?: string;
   status?: AgentStatus;
+  allowedTools?: AgentTool[];
 };
 
 export type FlowEdge = {

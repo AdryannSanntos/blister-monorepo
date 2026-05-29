@@ -80,6 +80,76 @@ describe('AgentsService', () => {
     });
   });
 
+  it('stores allowedTools on create', async () => {
+    prisma.companyAgent.create.mockResolvedValue({
+      id: 'agent-1',
+      allowedTools: ['rag_search', 'file_search'],
+    });
+    prisma.agentVersion.create.mockResolvedValue({ id: 'version-1' });
+
+    const result = await service.createCompanyAgent('org-1', 'user-1', {
+      slug: 'research-agent',
+      name: 'Research Agent',
+      category: 'research',
+      allowedTools: ['rag_search', 'file_search'],
+    });
+
+    expect(prisma.companyAgent.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        allowedTools: ['rag_search', 'file_search'],
+      }),
+    });
+    expect(result.allowedTools).toEqual(['rag_search', 'file_search']);
+  });
+
+  it('updates allowedTools', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      allowedTools: [],
+    });
+    prisma.companyAgent.update.mockResolvedValue({
+      id: 'agent-1',
+      allowedTools: ['web_research'],
+    });
+
+    const result = await service.updateCompanyAgent('org-1', 'agent-1', 'user-1', {
+      allowedTools: ['web_research'],
+    });
+
+    expect(prisma.companyAgent.update).toHaveBeenCalledWith({
+      where: { id: 'agent-1' },
+      data: expect.objectContaining({
+        allowedTools: ['web_research'],
+        updatedByUserId: 'user-1',
+      }),
+    });
+    expect(result.allowedTools).toEqual(['web_research']);
+  });
+
+  it('normalizes invalid allowedTools in getCompanyAgent', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      allowedTools: { bad: true },
+      versions: [],
+    });
+
+    const result = await service.getCompanyAgent('org-1', 'agent-1');
+
+    expect(result.allowedTools).toEqual([]);
+  });
+
+  it('normalizes invalid allowedTools in listCompanyAgents', async () => {
+    prisma.companyAgent.findMany.mockResolvedValue([
+      { id: 'agent-1', organizationId: 'org-1', allowedTools: 'bad', versions: [] },
+    ]);
+
+    const result = await service.listCompanyAgents('org-1');
+
+    expect(result[0]?.allowedTools).toEqual([]);
+  });
+
   it('saves draft version', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue({ id: 'agent-1', organizationId: 'org-1' });
     prisma.agentVersion.findFirst.mockResolvedValueOnce({

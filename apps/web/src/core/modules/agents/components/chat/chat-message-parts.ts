@@ -1,11 +1,11 @@
 import type { UIMessage } from "ai";
-import type { QuestionConfig } from "@/components/agent-elements/question/question-prompt";
 import type {
   ChatAttachment,
   ChatMessage,
 } from "src/core/modules/agents/hooks/use-agent-chat";
+import type { QuestionConfig } from "@/components/agent-elements/question/question-prompt";
 
-type ToolPart = {
+export type ToolPart = {
   type: string;
   toolCallId?: string;
   state?: "input-streaming" | "output-available" | "output-error";
@@ -13,7 +13,7 @@ type ToolPart = {
   output?: unknown;
 };
 
-type ToolSection = {
+export type ToolSection = {
   part: ToolPart;
   nestedTools?: ToolPart[];
 };
@@ -81,15 +81,16 @@ export function toUserUiMessage(message: ChatMessage): UIMessage {
   } as UIMessage;
 }
 
-export function getMessageToolSections(message: ChatMessage): ToolSection[] {
-  const metadataSections = groupToolParts(
-    getStoredToolParts(getChatMetadata(message.metadata).toolParts),
-  );
+/** Stored tool parts persisted in the assistant message metadata. */
+export function getMessageToolParts(message: ChatMessage): ToolPart[] {
+  return getStoredToolParts(getChatMetadata(message.metadata).toolParts);
+}
 
-  if (metadataSections.length > 0) {
-    return metadataSections;
-  }
-
+/**
+ * Legacy workflow-run fallback: projects an `AgentRun`'s steps into a collapsible
+ * Task tool group. Used only for run-backed messages without stored tool parts.
+ */
+export function fallbackWorkflowSections(message: ChatMessage): ToolSection[] {
   if (!message.agentRun) {
     return [];
   }
@@ -131,7 +132,7 @@ function getStoredToolParts(toolParts: unknown): ToolPart[] {
   });
 }
 
-function groupToolParts(parts: ToolPart[]): ToolSection[] {
+export function groupToolParts(parts: ToolPart[]): ToolSection[] {
   if (parts.length === 0) return [];
 
   const taskIds = new Set(
@@ -162,7 +163,10 @@ function groupToolParts(parts: ToolPart[]): ToolSection[] {
       return [];
     }
 
-    if ((part.type === "tool-Task" || part.type === "tool-Agent") && part.toolCallId) {
+    if (
+      (part.type === "tool-Task" || part.type === "tool-Agent") &&
+      part.toolCallId
+    ) {
       return [{ part, nestedTools: nestedByParent.get(part.toolCallId) ?? [] }];
     }
 
@@ -193,9 +197,7 @@ function buildStepTool(
         type: "tool-Thinking",
         toolCallId,
         state,
-        input: outputText
-          ? { thought: outputText }
-          : {},
+        input: outputText ? { thought: outputText } : {},
         output: outputText ?? "Etapa concluída.",
       };
     }
@@ -234,7 +236,8 @@ function buildStepTool(
       };
     }
     case "html_validation": {
-      const html = extractHtml(step.outputPayload) ?? extractHtml(step.inputPayload);
+      const html =
+        extractHtml(step.outputPayload) ?? extractHtml(step.inputPayload);
       if (!html) return null;
       return {
         type: "tool-Edit",
@@ -278,20 +281,6 @@ function toToolState(status: string): ToolPart["state"] {
   if (status === "queued" || status === "running") return "input-streaming";
   if (status === "error") return "output-error";
   return "output-available";
-}
-
-function extractPrompt(payload: unknown): string | undefined {
-  if (!isRecord(payload)) return undefined;
-
-  if (typeof payload.prompt === "string" && payload.prompt.trim().length > 0) {
-    return payload.prompt;
-  }
-
-  if (typeof payload.message === "string" && payload.message.trim().length > 0) {
-    return payload.message;
-  }
-
-  return undefined;
 }
 
 function extractText(payload: unknown): string | undefined {
@@ -370,11 +359,12 @@ function normalizeQuestion(index: number, field: unknown): QuestionConfig {
       : typeof field.kind === "string"
         ? field.kind
         : "text";
-  const kind = rawType === "single" || rawType === "radio" || rawType === "select"
-    ? "single"
-    : rawType === "multi" || rawType === "checkbox"
-      ? "multi"
-      : "text";
+  const kind =
+    rawType === "single" || rawType === "radio" || rawType === "select"
+      ? "single"
+      : rawType === "multi" || rawType === "checkbox"
+        ? "multi"
+        : "text";
 
   return {
     kind,
@@ -402,9 +392,13 @@ function normalizeOptions(options: unknown): QuestionConfig["options"] {
 
       if (!isRecord(option)) return null;
 
-      const id = readString(option.id) ?? readString(option.value) ?? `option-${index}`;
+      const id =
+        readString(option.id) ?? readString(option.value) ?? `option-${index}`;
       const label =
-        readString(option.label) ?? readString(option.name) ?? readString(option.value) ?? id;
+        readString(option.label) ??
+        readString(option.name) ??
+        readString(option.value) ??
+        id;
 
       return {
         id,
@@ -418,16 +412,7 @@ function normalizeOptions(options: unknown): QuestionConfig["options"] {
 }
 
 function readString(value: unknown): string | undefined {
-  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
-}
-
-function stringifyPayload(value: unknown, fallback = ""): string {
-  if (typeof value === "string") return value;
-  if (isRecord(value) && typeof value.text === "string") return value.text;
-
-  try {
-    return JSON.stringify(value, null, 2) || fallback;
-  } catch {
-    return fallback;
-  }
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : undefined;
 }

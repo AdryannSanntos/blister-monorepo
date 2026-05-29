@@ -1,15 +1,23 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AIRuntimeService } from '../ai-runtime/ai-runtime.service';
+import { MembershipService } from '../organization/membership.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RagContextAssemblyService } from '../rag/rag-context-assembly.service';
 import { AgentContextService } from './agent-context.service';
 import { resolveConfiguredTextModel } from './agent-flow-model.util';
+import { AgentToolRuntimeService } from './agent-tool-runtime.service';
 import {
-  agentChatTurnDecisionSchema,
+  type AgentChatToolLoopDecision,
   type OrchestrateMessageInput,
+  type OrchestrationCitation,
   type OrchestrationEvent,
   type OrchestrationResult,
+  type OrchestrationToolCall,
+  type OrchestrationToolPart,
+  agentChatToolLoopDecisionSchema,
+  agentChatTurnDecisionSchema,
 } from './dto/agent-chat-orchestration.dto';
+import type { AgentChatToolName, AgentToolResult } from './dto/agent-chat-tool.dto';
 
 /** strict JSON schema exige todas as keys em `required`. */
 const TURN_DECISION_JSON_SCHEMA = {
@@ -48,10 +56,85 @@ const TURN_DECISION_JSON_SCHEMA = {
   additionalProperties: false,
 } as const;
 
+/** Tool-loop decision schema for structured output. All keys required (strict). */
+const TOOL_LOOP_JSON_SCHEMA = {
+  type: 'object',
+  properties: {
+    action: {
+      type: 'string',
+      enum: ['respond', 'tool_call'],
+      description: 'tool_call para pesquisar antes de responder; respond para responder agora',
+    },
+    assistantMessage: {
+      type: 'string',
+      description: 'Resposta final em português quando action for respond; vazio em tool_call',
+    },
+    createRun: {
+      type: 'boolean',
+      description: 'true apenas quando a resposta exige executar o workflow operacional do agente',
+    },
+    executionReason: {
+      type: 'string',
+      description: 'Motivo curto da execução; vazio quando createRun for false',
+    },
+    toolName: {
+      type: 'string',
+      enum: ['rag_search', 'file_search', 'web_research', 'none'],
+      description: 'Ferramenta a chamar quando action for tool_call; none quando respond',
+    },
+    toolQuery: {
+      type: 'string',
+      description: 'Consulta para a ferramenta quando action for tool_call; vazio em respond',
+    },
+    events: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['intent_classified', 'context_loaded', 'context_read', 'execution_decided'],
+          },
+          label: { type: 'string' },
+        },
+        required: ['type', 'label'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: [
+    'action',
+    'assistantMessage',
+    'createRun',
+    'executionReason',
+    'toolName',
+    'toolQuery',
+    'events',
+  ],
+  additionalProperties: false,
+} as const;
+
 const CHAT_CONTINGENCY_MESSAGE =
   'Estou com uma instabilidade para responder agora. Tente enviar a mensagem de novo em alguns segundos.';
 
 const MAX_HISTORY_MESSAGES = 24;
+/** Hard ceiling on tool calls per turn to prevent runaway loops. */
+const MAX_TOOL_ITERATIONS = 4;
+const TOOL_RESULT_PREVIEW_COUNT = 4;
+const READ_ONLY_TOOL_NAMES: AgentChatToolName[] = ['rag_search', 'file_search', 'web_research'];
+
+const TOOL_LABELS: Record<AgentChatToolName, string> = {
+  rag_search: 'Consultou contexto da empresa',
+  file_search: 'Pesquisou arquivos do contexto',
+  web_research: 'Pesquisou fontes externas',
+};
+
+type AgentChatTurnDecisionLike = {
+  createRun: boolean;
+  assistantMessage: string;
+  events: Array<{ type: OrchestrationEvent['type']; label: string }>;
+  executionReason?: string;
+};
 
 @Injectable()
 export class AgentChatOrchestratorService {
@@ -62,6 +145,8 @@ export class AgentChatOrchestratorService {
     private readonly aiRuntimeService: AIRuntimeService,
     private readonly agentContextService: AgentContextService,
     private readonly ragContextAssemblyService: RagContextAssemblyService,
+    private readonly agentToolRuntime: AgentToolRuntimeService,
+    private readonly membershipService: MembershipService,
   ) {}
 
   async orchestrateMessage(input: OrchestrateMessageInput): Promise<OrchestrationResult> {
@@ -71,12 +156,15 @@ export class AgentChatOrchestratorService {
         id: true,
         name: true,
         activeVersionId: true,
+        allowedTools: true,
       },
     });
 
     if (!agent) {
       throw new NotFoundException('Agent not found');
     }
+
+    const allowedTools = this.normalizeAllowedTools(agent.allowedTools);
 
     const activeVersion = agent.activeVersionId
       ? await this.prisma.agentVersion.findFirst({
@@ -107,28 +195,58 @@ export class AgentChatOrchestratorService {
 
     const canExecuteWorkflow = Boolean(agent.activeVersionId);
     const configuredTextModel = resolveConfiguredTextModel(activeVersion?.flowDefinition);
-    const decision = await this.decideTurnWithAgent({
+
+    const agentInstructions =
+      typeof agentContext.agentProfile.instructions === 'string'
+        ? agentContext.agentProfile.instructions
+        : null;
+    const agentNotes =
+      typeof agentContext.agentProfile.notes === 'string' ? agentContext.agentProfile.notes : null;
+
+    const decisionParams = {
       organizationId: input.organizationId,
       configuredTextModel,
       agentName: agent.name,
       userMessage: input.message.trim(),
       flowConfig,
-      agentInstructions:
-        typeof agentContext.agentProfile.instructions === 'string'
-          ? agentContext.agentProfile.instructions
-          : null,
-      agentNotes:
-        typeof agentContext.agentProfile.notes === 'string' ? agentContext.agentProfile.notes : null,
+      agentInstructions,
+      agentNotes,
       contextPrompt,
       history,
       canExecuteWorkflow,
       workflowObjective: flowConfig.objective,
-    });
+    };
+
+    let toolParts: OrchestrationToolPart[] = [];
+    let citations: OrchestrationCitation[] = [];
+    let toolCalls: OrchestrationToolCall[] = [];
+    let decision: AgentChatTurnDecisionLike;
+
+    if (allowedTools.length > 0) {
+      const userPermissions = await this.resolveUserPermissions(input.organizationId, input.userId);
+      const loop = await this.runToolLoop({
+        ...decisionParams,
+        agentId: input.agentId,
+        userId: input.userId,
+        allowedTools,
+        userPermissions,
+      });
+      decision = loop.decision;
+      toolParts = loop.toolParts;
+      citations = loop.citations;
+      toolCalls = loop.toolCalls;
+    } else {
+      decision = await this.decideTurnWithAgent(decisionParams);
+    }
 
     const events: OrchestrationEvent[] = [
       ...(contextPrompt
         ? [{ type: 'context_read' as const, label: 'Contexto da empresa consultado' }]
         : []),
+      ...toolCalls.map((call) => ({
+        type: 'context_read' as const,
+        label: TOOL_LABELS[call.toolName],
+      })),
       ...decision.events.map((event) => ({
         type: event.type,
         label: event.label,
@@ -145,7 +263,7 @@ export class AgentChatOrchestratorService {
     const createRun = decision.createRun && canExecuteWorkflow;
     const mode = createRun
       ? 'execution'
-      : contextPrompt.length > 0
+      : contextPrompt.length > 0 || toolCalls.length > 0
         ? 'context_retrieval'
         : 'conversation';
 
@@ -156,6 +274,9 @@ export class AgentChatOrchestratorService {
       events,
       resolvedContextHints,
       executionReason: createRun ? decision.executionReason?.trim() : undefined,
+      toolParts,
+      citations,
+      toolCalls,
     };
   }
 
@@ -220,6 +341,351 @@ export class AgentChatOrchestratorService {
       events: [{ type: 'intent_classified' as const, label: 'Resposta de contingência' }],
       executionReason: undefined,
     };
+  }
+
+  private normalizeAllowedTools(value: unknown): AgentChatToolName[] {
+    if (!Array.isArray(value)) return [];
+    return value.filter((tool): tool is AgentChatToolName =>
+      READ_ONLY_TOOL_NAMES.includes(tool as AgentChatToolName),
+    );
+  }
+
+  private async resolveUserPermissions(organizationId: string, userId: string): Promise<string[]> {
+    try {
+      return await this.membershipService.getEffectivePermissionKeys(organizationId, userId);
+    } catch (error) {
+      this.logger.warn(
+        `Failed to resolve user permissions for tool runtime: ${error instanceof Error ? error.message : 'unknown'}`,
+      );
+      return [];
+    }
+  }
+
+  /**
+   * Conversational tool loop. Each iteration the model either calls one allowed
+   * tool or responds. Tool results are folded back into the prompt context until
+   * the model responds or the iteration ceiling is hit. Tool failures degrade the
+   * turn instead of failing it.
+   */
+  private async runToolLoop(params: {
+    organizationId: string;
+    agentId: string;
+    userId: string;
+    configuredTextModel: { providerId?: string; modelId?: string };
+    agentName: string;
+    userMessage: string;
+    flowConfig: { name: string; objective: string; instructions: string; fallbackMessage: string };
+    agentInstructions: string | null;
+    agentNotes: string | null;
+    contextPrompt: string;
+    history: Array<{ role: 'user' | 'assistant'; content: string }>;
+    canExecuteWorkflow: boolean;
+    workflowObjective: string;
+    allowedTools: AgentChatToolName[];
+    userPermissions: string[];
+  }): Promise<{
+    decision: AgentChatTurnDecisionLike;
+    toolParts: OrchestrationToolPart[];
+    citations: OrchestrationCitation[];
+    toolCalls: OrchestrationToolCall[];
+  }> {
+    const toolParts: OrchestrationToolPart[] = [];
+    const citations: OrchestrationCitation[] = [];
+    const toolCalls: OrchestrationToolCall[] = [];
+    const toolContextFrames: string[] = [];
+    const seenCalls = new Set<string>();
+
+    for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration += 1) {
+      const step = await this.decideToolLoopStep({ ...params, toolContextFrames });
+
+      if (!step) {
+        break;
+      }
+
+      if (step.action === 'respond' || step.toolName === 'none') {
+        return {
+          decision: this.toFinalDecision(step),
+          toolParts,
+          citations,
+          toolCalls,
+        };
+      }
+
+      const toolName = step.toolName;
+      if (!params.allowedTools.includes(toolName)) {
+        // Model asked for a disabled tool — stop the loop and answer with what we have.
+        break;
+      }
+
+      const query = step.toolQuery.trim() || params.userMessage;
+      const dedupeKey = `${toolName}:${query.toLowerCase()}`;
+      if (seenCalls.has(dedupeKey)) {
+        break;
+      }
+      seenCalls.add(dedupeKey);
+
+      const index = toolCalls.length;
+      try {
+        const result = await this.agentToolRuntime.run({
+          organizationId: params.organizationId,
+          agentId: params.agentId,
+          userId: params.userId,
+          allowedTools: params.allowedTools,
+          userPermissions: params.userPermissions,
+          toolName,
+          query,
+        });
+
+        toolParts.push(this.buildToolPart(index, toolName, query, result, null));
+        citations.push(...result.citations);
+        toolCalls.push({
+          toolName,
+          status: 'completed',
+          inputPayload: { query },
+          outputPayload: { summary: result.summary, results: result.results },
+          errorMessage: null,
+          durationMs: result.metadata.durationMs,
+        });
+        toolContextFrames.push(this.formatToolResultFrame(toolName, query, result));
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Falha ao executar a ferramenta';
+        this.logger.warn(`Tool ${toolName} failed during chat loop: ${message}`);
+        toolParts.push(this.buildToolPart(index, toolName, query, null, message));
+        toolCalls.push({
+          toolName,
+          status: 'error',
+          inputPayload: { query },
+          outputPayload: null,
+          errorMessage: message,
+          durationMs: null,
+        });
+        toolContextFrames.push(
+          `## Falha em ${toolName} (consulta: "${query}")\nA ferramenta não retornou resultados.`,
+        );
+      }
+    }
+
+    // Loop exhausted or stopped — produce a final answer with the gathered context.
+    const finalDecision = await this.decideTurnWithAgent({
+      organizationId: params.organizationId,
+      configuredTextModel: params.configuredTextModel,
+      agentName: params.agentName,
+      userMessage: params.userMessage,
+      flowConfig: params.flowConfig,
+      agentInstructions: params.agentInstructions,
+      agentNotes: params.agentNotes,
+      contextPrompt: this.mergeContext(params.contextPrompt, toolContextFrames),
+      history: params.history,
+      canExecuteWorkflow: params.canExecuteWorkflow,
+      workflowObjective: params.workflowObjective,
+    });
+
+    return { decision: finalDecision, toolParts, citations, toolCalls };
+  }
+
+  private async decideToolLoopStep(params: {
+    organizationId: string;
+    configuredTextModel: { providerId?: string; modelId?: string };
+    agentName: string;
+    userMessage: string;
+    flowConfig: { name: string; objective: string; instructions: string; fallbackMessage: string };
+    agentInstructions: string | null;
+    agentNotes: string | null;
+    contextPrompt: string;
+    history: Array<{ role: 'user' | 'assistant'; content: string }>;
+    canExecuteWorkflow: boolean;
+    workflowObjective: string;
+    allowedTools: AgentChatToolName[];
+    toolContextFrames: string[];
+  }): Promise<AgentChatToolLoopDecision | null> {
+    const messages = [
+      { role: 'system' as const, content: this.buildToolLoopSystemPrompt(params) },
+      ...params.history.map((entry) => ({ role: entry.role, content: entry.content })),
+      { role: 'user' as const, content: params.userMessage },
+    ];
+
+    try {
+      const result = await this.aiRuntimeService.generateText({
+        organizationId: params.organizationId,
+        providerId: params.configuredTextModel.providerId,
+        modelId: params.configuredTextModel.modelId,
+        messages,
+        temperature: 0.3,
+        maxOutputTokens: 2048,
+        structuredOutputSchema: TOOL_LOOP_JSON_SCHEMA as unknown as Record<string, unknown>,
+      });
+
+      return this.parseToolLoopDecision(result.text, result.structuredOutput);
+    } catch (error) {
+      this.logger.warn(
+        `Tool-loop decision failed: ${error instanceof Error ? error.message : 'unknown'}`,
+      );
+      return null;
+    }
+  }
+
+  private parseToolLoopDecision(
+    text: string,
+    structuredOutput: unknown,
+  ): AgentChatToolLoopDecision | null {
+    const candidates: unknown[] = [];
+    if (structuredOutput && typeof structuredOutput === 'object') {
+      candidates.push(structuredOutput);
+    }
+    const trimmed = text?.trim();
+    if (trimmed) {
+      try {
+        candidates.push(JSON.parse(trimmed));
+      } catch {
+        const match = trimmed.match(/\{[\s\S]*\}/);
+        if (match) {
+          try {
+            candidates.push(JSON.parse(match[0]));
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+
+    for (const candidate of candidates) {
+      const parsed = agentChatToolLoopDecisionSchema.safeParse(candidate);
+      if (parsed.success) {
+        return parsed.data;
+      }
+    }
+
+    return null;
+  }
+
+  private toFinalDecision(step: AgentChatToolLoopDecision): AgentChatTurnDecisionLike {
+    const assistantMessage = step.assistantMessage.trim() || this.flowFallback(step);
+    const events =
+      step.events.length > 0
+        ? step.events
+        : [{ type: 'intent_classified' as const, label: 'Resposta gerada' }];
+    return {
+      createRun: step.createRun,
+      assistantMessage,
+      events,
+      executionReason: step.executionReason?.trim() || undefined,
+    };
+  }
+
+  private flowFallback(step: AgentChatToolLoopDecision): string {
+    return step.createRun
+      ? 'Vou executar o workflow para concluir essa entrega.'
+      : CHAT_CONTINGENCY_MESSAGE;
+  }
+
+  private buildToolPart(
+    index: number,
+    toolName: AgentChatToolName,
+    query: string,
+    result: AgentToolResult | null,
+    errorMessage: string | null,
+  ): OrchestrationToolPart {
+    return {
+      type: 'tool-Search',
+      toolCallId: `tool-${index}-${toolName}`,
+      state: errorMessage ? 'output-error' : 'output-available',
+      input: { query, toolName },
+      output: errorMessage
+        ? { error: errorMessage }
+        : {
+            summary: result?.summary ?? '',
+            results: result?.results ?? [],
+            citations: result?.citations ?? [],
+          },
+    };
+  }
+
+  private formatToolResultFrame(
+    toolName: AgentChatToolName,
+    query: string,
+    result: AgentToolResult,
+  ): string {
+    const previews = result.results.slice(0, TOOL_RESULT_PREVIEW_COUNT).map((row, i) => {
+      const record = row as Record<string, unknown>;
+      const label =
+        (typeof record.title === 'string' && record.title) ||
+        (typeof record.filename === 'string' && record.filename) ||
+        (typeof record.url === 'string' && record.url) ||
+        `Resultado ${i + 1}`;
+      const snippet = typeof record.snippet === 'string' ? record.snippet : '';
+      return `- ${label}${snippet ? `: ${snippet.slice(0, 240)}` : ''}`;
+    });
+
+    return [`## ${toolName} (consulta: "${query}")`, result.summary, ...previews]
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  private mergeContext(contextPrompt: string, toolContextFrames: string[]): string {
+    if (toolContextFrames.length === 0) {
+      return contextPrompt;
+    }
+    const toolBlock = ['## Resultados de ferramentas', ...toolContextFrames].join('\n\n');
+    return contextPrompt.trim() ? `${contextPrompt.trim()}\n\n${toolBlock}` : toolBlock;
+  }
+
+  private buildToolLoopSystemPrompt(params: {
+    agentName: string;
+    flowConfig: { name: string; objective: string; instructions: string; fallbackMessage: string };
+    agentInstructions: string | null;
+    agentNotes: string | null;
+    contextPrompt: string;
+    canExecuteWorkflow: boolean;
+    workflowObjective: string;
+    allowedTools: AgentChatToolName[];
+    toolContextFrames: string[];
+  }): string {
+    const workflowStatus = params.canExecuteWorkflow
+      ? 'O workflow está publicado e pode ser executado quando necessário.'
+      : 'O workflow ainda não está ativo; NUNCA defina createRun como true.';
+
+    const toolDescriptions = params.allowedTools.map((tool) => `- ${tool}: ${TOOL_LABELS[tool]}`);
+
+    const sections = [
+      `Você é o agente "${params.agentName}" do Workana AI.`,
+      'Decida se precisa pesquisar antes de responder ou se já pode responder ao usuário.',
+      '',
+      '## Ferramentas disponíveis',
+      ...toolDescriptions,
+      '',
+      '## Regras',
+      '- Use action="tool_call" com toolName e toolQuery quando precisar de informação que ainda não tem.',
+      '- Não repita a mesma consulta na mesma ferramenta.',
+      '- Quando tiver contexto suficiente, use action="respond" com assistantMessage completa em português.',
+      '- assistantMessage deve ser natural e útil; nunca mencione JSON, ferramentas internas ou limitações técnicas.',
+      '- Defina createRun como true SOMENTE quando o usuário pedir explicitamente uma entrega que depende do workflow operacional.',
+      workflowStatus,
+      '',
+      '## Instruções do agente',
+      params.agentInstructions?.trim() || '(sem instruções específicas)',
+    ];
+
+    if (params.agentNotes?.trim()) {
+      sections.push('', '## Notas do agente', params.agentNotes.trim());
+    }
+
+    sections.push(
+      '',
+      '## Workflow',
+      `Objetivo: ${params.workflowObjective || params.flowConfig.objective || '(não definido)'}`,
+    );
+
+    const mergedContext = this.mergeContext(params.contextPrompt, params.toolContextFrames);
+    if (mergedContext.trim()) {
+      sections.push('', mergedContext.trim());
+    }
+
+    sections.push(
+      '',
+      'Responda APENAS com o JSON do schema (action, assistantMessage, createRun, executionReason, toolName, toolQuery, events).',
+    );
+
+    return sections.join('\n');
   }
 
   private async tryStructuredTurn(
@@ -330,7 +796,9 @@ export class AgentChatOrchestratorService {
         assistantMessage: shouldRun
           ? `${text}\n\nVou executar o workflow para concluir essa entrega.`
           : text,
-        executionReason: shouldRun ? 'Execução inferida após falha do classificador estruturado' : undefined,
+        executionReason: shouldRun
+          ? 'Execução inferida após falha do classificador estruturado'
+          : undefined,
         events: [{ type: 'intent_classified' as const, label: 'Resposta conversacional' }],
       };
     } catch (error) {
@@ -475,23 +943,20 @@ export class AgentChatOrchestratorService {
     const record = candidate as Record<string, unknown>;
     const rawEvents = Array.isArray(record.events) ? record.events : [];
     const mappedEvents = rawEvents.map((event) => {
-        if (!event || typeof event !== 'object') {
-          return { type: 'intent_classified', label: 'Intenção analisada' };
-        }
-        const row = event as Record<string, unknown>;
-        return {
-          type:
-            typeof row.type === 'string' &&
-            [
-              'intent_classified',
-              'context_loaded',
-              'context_read',
-              'execution_decided',
-            ].includes(row.type)
-              ? row.type
-              : 'intent_classified',
-          label: typeof row.label === 'string' ? row.label : 'Intenção analisada',
-        };
+      if (!event || typeof event !== 'object') {
+        return { type: 'intent_classified', label: 'Intenção analisada' };
+      }
+      const row = event as Record<string, unknown>;
+      return {
+        type:
+          typeof row.type === 'string' &&
+          ['intent_classified', 'context_loaded', 'context_read', 'execution_decided'].includes(
+            row.type,
+          )
+            ? row.type
+            : 'intent_classified',
+        label: typeof row.label === 'string' ? row.label : 'Intenção analisada',
+      };
     });
 
     return {
@@ -502,8 +967,7 @@ export class AgentChatOrchestratorService {
           : typeof record.message === 'string'
             ? record.message
             : '',
-      executionReason:
-        typeof record.executionReason === 'string' ? record.executionReason : '',
+      executionReason: typeof record.executionReason === 'string' ? record.executionReason : '',
       events:
         mappedEvents.length > 0
           ? mappedEvents
