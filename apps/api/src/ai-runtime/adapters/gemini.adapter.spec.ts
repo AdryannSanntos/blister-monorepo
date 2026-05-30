@@ -107,6 +107,10 @@ describe('GeminiAdapter', () => {
     expect(result.text).toBe('{"headline":"oi"}');
     expect(result.structuredOutput).toEqual({ headline: 'oi' });
     expect(result.usage.totalTokens).toBe(25);
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/models/gemini-2.0-flash:generateContent?key=test-key'),
+      expect.objectContaining({ method: 'POST' }),
+    );
   });
 
   it('generates image output as data url', async () => {

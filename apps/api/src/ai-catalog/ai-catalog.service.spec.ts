@@ -1,4 +1,6 @@
 import { Test, type TestingModule } from '@nestjs/testing';
+import { AssemblyAIAdapter } from '../ai-runtime/adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from '../ai-runtime/adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from '../ai-runtime/adapters/anthropic.adapter';
 import { GeminiAdapter } from '../ai-runtime/adapters/gemini.adapter';
 import { OpenAIAdapter } from '../ai-runtime/adapters/openai.adapter';
@@ -35,6 +37,8 @@ type MockPrisma = ReturnType<typeof makeMockPrisma>;
 describe('AICatalogService', () => {
   let service: AICatalogService;
   let prisma: MockPrisma;
+  const assemblyAIAdapter = { listModels: jest.fn(), supports: jest.fn() };
+  const assemblyAILlmGatewayAdapter = { listModels: jest.fn(), supports: jest.fn() };
   const openRouterAdapter = { listModels: jest.fn(), supports: jest.fn() };
   const openAIAdapter = { listModels: jest.fn(), supports: jest.fn() };
   const anthropicAdapter = { listModels: jest.fn(), supports: jest.fn() };
@@ -47,6 +51,8 @@ describe('AICatalogService', () => {
       providers: [
         AICatalogService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AssemblyAIAdapter, useValue: assemblyAIAdapter },
+        { provide: AssemblyAILlmGatewayAdapter, useValue: assemblyAILlmGatewayAdapter },
         { provide: OpenRouterAdapter, useValue: openRouterAdapter },
         { provide: OpenAIAdapter, useValue: openAIAdapter },
         { provide: AnthropicAdapter, useValue: anthropicAdapter },
@@ -62,6 +68,8 @@ describe('AICatalogService', () => {
   });
 
   beforeEach(() => {
+    assemblyAIAdapter.supports.mockReturnValue(false);
+    assemblyAILlmGatewayAdapter.supports.mockReturnValue(true);
     openRouterAdapter.supports.mockReturnValue(true);
     openAIAdapter.supports.mockReturnValue(true);
     anthropicAdapter.supports.mockReturnValue(true);

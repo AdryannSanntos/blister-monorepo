@@ -11,6 +11,8 @@ import {
   ProviderExecutionError,
   ProviderNotConfiguredError,
 } from './adapters/ai-provider.adapter';
+import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
@@ -45,6 +47,8 @@ export type CreateEmbeddingInput = BaseRuntimeRequest & {
 export class AIRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly assemblyAIAdapter: AssemblyAIAdapter,
+    private readonly assemblyAILlmGatewayAdapter: AssemblyAILlmGatewayAdapter,
     private readonly openRouterAdapter: OpenRouterAdapter,
     private readonly openAIAdapter: OpenAIAdapter,
     private readonly anthropicAdapter: AnthropicAdapter,
@@ -247,12 +251,14 @@ export class AIRuntimeService {
   }
 
   private resolveEnvCredential(providerSlug: string): AIRuntimeResolvedCredential | null {
-    const envMap: Record<string, string | undefined> = {
-      openrouter: process.env.OPENROUTER_API_KEY,
-      openai: process.env.OPENAI_API_KEY,
-      anthropic: process.env.ANTHROPIC_API_KEY,
-      gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
-    };
+      const envMap: Record<string, string | undefined> = {
+        openrouter: process.env.OPENROUTER_API_KEY,
+        openai: process.env.OPENAI_API_KEY,
+        anthropic: process.env.ANTHROPIC_API_KEY,
+        gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+        assemblyai: process.env.ASSEMBLYAI_API_KEY,
+        'assemblyai-llm-gateway': process.env.ASSEMBLYAI_API_KEY,
+      };
 
     const value = envMap[providerSlug]?.trim();
     if (!value) {
@@ -288,6 +294,11 @@ export class AIRuntimeService {
         return this.anthropicAdapter;
       case 'gemini':
         return this.geminiAdapter;
+      case 'assemblyai':
+      case 'assemblyai-stt':
+        return this.assemblyAIAdapter;
+      case 'assemblyai-llm-gateway':
+        return this.assemblyAILlmGatewayAdapter;
       default:
         throw new ProviderNotConfiguredError(providerSlug);
     }

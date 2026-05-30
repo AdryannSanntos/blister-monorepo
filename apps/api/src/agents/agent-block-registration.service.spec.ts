@@ -8,6 +8,7 @@ describe('AgentBlockRegistrationService', () => {
       registry,
       { createQueuedRun: jest.fn() } as never,
       { awaitRunCompletion: jest.fn() } as never,
+      { generateText: jest.fn() } as never,
     );
 
     service.onModuleInit();

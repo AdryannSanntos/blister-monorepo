@@ -12,7 +12,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import type { Express, Request } from 'express';
+import type { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
@@ -24,6 +24,13 @@ import {
   reviewContextSourceSchema,
   updateContextSourceSchema,
 } from './dto';
+
+type UploadedBinaryFile = {
+  originalname: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+};
 
 function parseBody<T>(
   schema: { safeParse: (v: unknown) => { success: true; data: T } | { success: false; error: unknown } },
@@ -65,7 +72,7 @@ export class ContextController {
   @Post('files')
   @RequirePermission('context.create')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@Param('orgId') orgId: string, @UploadedFile() file?: Express.Multer.File) {
+  async uploadFile(@Param('orgId') orgId: string, @UploadedFile() file?: UploadedBinaryFile) {
     if (!file) throw new BadRequestException('File is required');
 
     return this.contextService.uploadSourceFile(orgId, {

@@ -2,6 +2,8 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProviderExecutionError } from './adapters/ai-provider.adapter';
+import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
@@ -24,15 +26,25 @@ describe('AIRuntimeService', () => {
     generateImage: jest.fn(),
     createEmbedding: jest.fn(),
   };
+  const assemblyAILlmGatewayAdapter = {
+    provider: 'assemblyai-llm-gateway',
+    supports: jest.fn(),
+    generateText: jest.fn(),
+    generateImage: jest.fn(),
+    createEmbedding: jest.fn(),
+  };
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
     openRouterAdapter.supports.mockReturnValue(true);
+    assemblyAILlmGatewayAdapter.supports.mockReturnValue(true);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AIRuntimeService,
         { provide: PrismaService, useValue: prisma },
+        { provide: AssemblyAIAdapter, useValue: { supports: jest.fn() } },
+        { provide: AssemblyAILlmGatewayAdapter, useValue: assemblyAILlmGatewayAdapter },
         { provide: OpenRouterAdapter, useValue: openRouterAdapter },
         { provide: OpenAIAdapter, useValue: { supports: jest.fn() } },
         { provide: AnthropicAdapter, useValue: { supports: jest.fn() } },
@@ -46,6 +58,7 @@ describe('AIRuntimeService', () => {
   afterEach(() => {
     jest.clearAllMocks();
     process.env.OPENROUTER_API_KEY = '';
+    process.env.ASSEMBLYAI_API_KEY = '';
   });
 
   it('resolves OpenRouter model for text request', async () => {
@@ -352,6 +365,38 @@ describe('AIRuntimeService', () => {
     expect(openRouterAdapter.generateText).toHaveBeenCalledWith(
       expect.objectContaining({
         credential: expect.objectContaining({ value: 'env-openrouter-key' }),
+      }),
+    );
+  });
+
+  it('resolves AssemblyAI LLM Gateway models through the dedicated adapter', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'assemblyai-gateway-model',
+        providerId: 'provider-assemblyai-gateway',
+        slug: 'gemini-2-5-flash-lite',
+        externalModelId: 'gemini-2.5-flash-lite',
+        capabilityMetadata: { text: true, structuredOutput: true },
+        updatedAt: new Date('2026-05-29T12:00:00Z'),
+        provider: {
+          id: 'provider-assemblyai-gateway',
+          slug: 'assemblyai-llm-gateway',
+          schemaMetadata: { adapter: 'assemblyai-llm-gateway' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue(null);
+    process.env.ASSEMBLYAI_API_KEY = 'env-assemblyai-key';
+    assemblyAILlmGatewayAdapter.generateText.mockResolvedValue({ text: 'gateway', usage: {} });
+
+    const result = await service.generateText({ prompt: 'hello' });
+
+    expect(result.providerSlug).toBe('assemblyai-llm-gateway');
+    expect(result.credentialId).toBe('env:assemblyai-llm-gateway');
+    expect(assemblyAILlmGatewayAdapter.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        credential: expect.objectContaining({ value: 'env-assemblyai-key' }),
       }),
     );
   });

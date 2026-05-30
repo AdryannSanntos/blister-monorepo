@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defaultSystemRoles, getDefaultRolePermissions } from '@company-os/authz';
 import type { DefaultSystemRole } from '@company-os/authz';
+import { AssemblyAIAdapter } from '../src/ai-runtime/adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from '../src/ai-runtime/adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from '../src/ai-runtime/adapters/anthropic.adapter';
 import { GeminiAdapter } from '../src/ai-runtime/adapters/gemini.adapter';
 import type { AIRuntimeResolvedCredential, AIProviderListedModel } from '../src/ai-runtime/adapters/ai-provider.adapter';
@@ -109,6 +111,235 @@ const SEED_ONBOARDING_DATA = {
   },
 } as const;
 
+const SEED_CONTEXT_SOURCES = [
+  {
+    id: 'seed_ctx_positioning_playbook',
+    title: 'Playbook de posicionamento institucional',
+    description:
+      'Resumo operacional da tese do produto, promessa principal e criterio de linguagem para materiais da empresa.',
+    sourceKind: 'manual',
+    sourceUrl: null,
+    category: 'positioning',
+    tags: ['branding', 'go-to-market', 'mensagem'],
+    extractedContent:
+      'Workana AI e uma camada operacional de inteligencia para empresas que coordenam freelancers, parceiros e times remotos. A proposta central e reduzir retrabalho, acelerar onboarding e manter padrao de execucao com contexto compartilhado entre pessoas e agentes.',
+    normalizedContent:
+      'Mensagem principal: coordenacao operacional com contexto centralizado. Diferenciais: governanca por permissoes, contexto persistido por empresa, agentes orientados a execucao e operacao B2B sem linguagem genérica.',
+    reviewNotes:
+      'Base institucional aprovada para orientar agentes, templates e materiais de apresentacao.',
+  },
+  {
+    id: 'seed_ctx_ideal_customer_profile',
+    title: 'ICP e dores recorrentes',
+    description:
+      'Mapa do perfil de empresa ideal, dores do time gestor e sinais de maturidade operacional.',
+    sourceKind: 'manual',
+    sourceUrl: null,
+    category: 'audience',
+    tags: ['icp', 'sales', 'operacao'],
+    extractedContent:
+      'O cliente ideal e uma empresa B2B ou operacao de servicos que depende de colaboradores externos, freelancers ou squads distribuidos para executar marketing, growth, conteudo, design, produto ou delivery.',
+    normalizedContent:
+      'Dores prioritarias: briefing descentralizado, perda de contexto entre demandas, onboarding inconsistente, dificuldade de cobrar padrao de qualidade e excesso de dependencia de pessoas-chave.',
+    reviewNotes:
+      'Usar estas dores como prioridade em narrativas comerciais, briefs de agentes e criterios de onboarding.',
+  },
+  {
+    id: 'seed_ctx_operating_model',
+    title: 'Modelo operacional da plataforma',
+    description:
+      'Fluxo esperado de uso do produto e regras que preservam governanca por empresa.',
+    sourceKind: 'manual',
+    sourceUrl: null,
+    category: 'operations',
+    tags: ['processo', 'governanca', 'workspace'],
+    extractedContent:
+      'A jornada padrao passa por autenticacao, selecao de workspace, onboarding curto da empresa, organizacao do brain, configuracao de membros e permissoes, depois operacao em dashboard com assets, contexto e agentes.',
+    normalizedContent:
+      'Regras operacionais: toda acao sensivel exige permissao explicita; userId nunca vem do body; company context so existe com organizacao ativa; chat e a interface padrao para geracao e iteracao.',
+    reviewNotes:
+      'Este material deve orientar agentes internos e futuras automacoes para nao quebrar as invariantes do produto.',
+  },
+  {
+    id: 'seed_ctx_public_website_reference',
+    title: 'Referencia publica do website',
+    description:
+      'URL institucional usada como fonte externa aprovada para contexto publico da marca.',
+    sourceKind: 'url',
+    sourceUrl: 'https://www.workana.com.br',
+    category: 'reference',
+    tags: ['site', 'publico', 'referencia'],
+    extractedContent:
+      'Site institucional da Workana usado como referencia publica para linguagem, categoria e contexto de mercado.',
+    normalizedContent:
+      'Fonte externa aprovada para comparacoes de posicionamento e referencia de ecossistema Workana.',
+    reviewNotes:
+      'Referencia publica complementar. Nao substitui o contexto operacional interno da empresa.',
+  },
+] as const;
+
+const SEED_DESIGN_SYSTEM_PROFILE = {
+  brandEssence:
+    'Marca B2B direta, confiavel e orientada a execucao. Deve transmitir inteligencia aplicada ao trabalho operacional, nao futurismo abstrato.',
+  desiredPerception:
+    'Clara, premium, pragmatica e segura para empresas que precisam escalar operacoes com governanca.',
+  visualStyle:
+    'Editorial SaaS com hierarquia forte, superfícies limpas, contraste controlado e acentos frios para reforcar precisao operacional.',
+  antiPatterns:
+    'Evitar visual infantil, excesso de gradientes, neon gratuito, glassmorphism pesado, mascotes, ilustrações caricatas e interfaces que parecam playground de IA.',
+  conceptualReferences:
+    'Dashboards operacionais, software B2B premium, revistas de negocios, sistemas financeiros e produtos com forte senso de ordem e densidade informativa.',
+  aiNotes:
+    'Em outputs gerados por IA, priorizar clareza, composicao util, tipografia firme, espacamento consistente e sensacao de sistema operacional para empresas.',
+} as const;
+
+const SEED_DESIGN_COLOR_GROUPS = [
+  {
+    name: 'Primarias',
+    description: 'Cores centrais da marca e acentos principais da interface.',
+    sortOrder: 0,
+    colors: [
+      {
+        name: 'Workana Blue',
+        value: '#155EEF',
+        displayFormat: 'hex',
+        semanticRole: 'brand-primary',
+        usageNote: 'Usar em CTAs principais, links prioritarios e highlights da marca.',
+        restrictionNote: 'Nao usar como cor de feedback sem reforco semantico.',
+        sortOrder: 0,
+      },
+      {
+        name: 'Deep Navy',
+        value: '#0F172A',
+        displayFormat: 'hex',
+        semanticRole: 'brand-base',
+        usageNote: 'Base para fundos escuros, titulos e superficies com mais densidade.',
+        restrictionNote: 'Evitar combinacao com textos de baixo contraste.',
+        sortOrder: 1,
+      },
+    ],
+  },
+  {
+    name: 'Neutras',
+    description: 'Escala de neutros para superficies, bordas e texto auxiliar.',
+    sortOrder: 1,
+    colors: [
+      {
+        name: 'Slate 900',
+        value: '#101828',
+        displayFormat: 'hex',
+        semanticRole: 'text-primary',
+        usageNote: 'Texto principal e elementos de alta leitura.',
+        restrictionNote: 'Nao usar sobre fundos escuros sem contraste adequado.',
+        sortOrder: 0,
+      },
+      {
+        name: 'Slate 200',
+        value: '#E4E7EC',
+        displayFormat: 'hex',
+        semanticRole: 'border-subtle',
+        usageNote: 'Bordas, divisores e superfícies discretas.',
+        restrictionNote: 'Nao substituir feedback visual por neutro.',
+        sortOrder: 1,
+      },
+      {
+        name: 'Slate 50',
+        value: '#F8FAFC',
+        displayFormat: 'hex',
+        semanticRole: 'surface-soft',
+        usageNote: 'Fundos suaves, areas secundarias e elevação leve.',
+        restrictionNote: 'Evitar em blocos que precisam parecer clicaveis sem outro indicativo.',
+        sortOrder: 2,
+      },
+    ],
+  },
+  {
+    name: 'Semanticas',
+    description: 'Feedbacks e estados funcionais da experiencia.',
+    sortOrder: 2,
+    colors: [
+      {
+        name: 'Success Green',
+        value: '#12B76A',
+        displayFormat: 'hex',
+        semanticRole: 'success',
+        usageNote: 'Estados de sucesso, confirmação e indicadores positivos.',
+        restrictionNote: 'Nao usar como acento primario da marca.',
+        sortOrder: 0,
+      },
+      {
+        name: 'Warning Amber',
+        value: '#F79009',
+        displayFormat: 'hex',
+        semanticRole: 'warning',
+        usageNote: 'Alertas intermediarios e estados que exigem atencao.',
+        restrictionNote: 'Nao usar para erro critico.',
+        sortOrder: 1,
+      },
+      {
+        name: 'Danger Red',
+        value: '#F04438',
+        displayFormat: 'hex',
+        semanticRole: 'danger',
+        usageNote: 'Exclusoes, falhas e erros criticos.',
+        restrictionNote: 'Nao usar como cor decorativa.',
+        sortOrder: 2,
+      },
+    ],
+  },
+] as const;
+
+const SEED_DESIGN_ASSETS = [
+  {
+    id: 'seed_design_asset_logo_primary',
+    primaryRole: 'logo',
+    secondaryTags: ['horizontal', 'principal'],
+    title: 'Logo principal Workana AI',
+    description: 'Versao principal para cabecalhos, apresentações e capas institucionais.',
+    objectKey: 'organizations/seed_dev_workana_ai_org/design-system/assets/logo/workana-ai-logo-primary.svg',
+    publicUrl: null,
+    fileName: 'workana-ai-logo-primary.svg',
+    contentType: 'image/svg+xml',
+    size: 2048,
+  },
+  {
+    id: 'seed_design_asset_logo_mark',
+    primaryRole: 'logo-variation',
+    secondaryTags: ['icon', 'compacta'],
+    title: 'Logo compacta / marca',
+    description: 'Variacao de marca para avatar, favicon e usos de baixa largura.',
+    objectKey: 'organizations/seed_dev_workana_ai_org/design-system/assets/logo-variation/workana-ai-logo-mark.svg',
+    publicUrl: null,
+    fileName: 'workana-ai-logo-mark.svg',
+    contentType: 'image/svg+xml',
+    size: 1536,
+  },
+  {
+    id: 'seed_design_asset_brand_guideline',
+    primaryRole: 'brand-guideline',
+    secondaryTags: ['guia', 'governanca'],
+    title: 'Guia rapido da marca',
+    description: 'Resumo textual das regras visuais para outputs internos e de IA.',
+    objectKey: 'organizations/seed_dev_workana_ai_org/design-system/assets/brand-guideline/workana-ai-brand-guide.pdf',
+    publicUrl: null,
+    fileName: 'workana-ai-brand-guide.pdf',
+    contentType: 'application/pdf',
+    size: 24576,
+  },
+  {
+    id: 'seed_design_asset_visual_reference',
+    primaryRole: 'visual-reference',
+    secondaryTags: ['dashboard', 'b2b', 'editorial'],
+    title: 'Referencia visual do produto',
+    description: 'Material de referencia para dashboards operacionais com cara premium e utilitaria.',
+    objectKey: 'organizations/seed_dev_workana_ai_org/design-system/assets/visual-reference/workana-ai-dashboard-reference.png',
+    publicUrl: null,
+    fileName: 'workana-ai-dashboard-reference.png',
+    contentType: 'image/png',
+    size: 32768,
+  },
+] as const;
+
 const AI_PROVIDERS = [
   {
     slug: 'openrouter',
@@ -156,14 +387,25 @@ const AI_PROVIDERS = [
   },
   {
     slug: 'assemblyai',
-    name: 'AssemblyAI',
-    description: 'Speech-to-text and audio intelligence platform.',
+    name: 'AssemblyAI Speech-to-Text',
+    description: 'Speech-to-text and audio intelligence models.',
     status: 'active',
     iconMetadata: { iconKey: 'assemblyai' },
     capabilityMetadata: { speech_to_text: true, audio_intelligence: true },
     pricingMetadata: {},
     limitsMetadata: {},
-    schemaMetadata: { adapter: 'assemblyai' },
+    schemaMetadata: { adapter: 'assemblyai-stt' },
+  },
+  {
+    slug: 'assemblyai-llm-gateway',
+    name: 'AssemblyAI LLM Gateway',
+    description: 'OpenAI-compatible LLM Gateway from AssemblyAI.',
+    status: 'active',
+    iconMetadata: { iconKey: 'assemblyai' },
+    capabilityMetadata: { text: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'assemblyai-llm-gateway' },
   },
 ] as const;
 
@@ -332,10 +574,10 @@ const AI_MODELS = [
   // ── AssemblyAI — Speech-to-Text ────────────────────────────────────────────
   {
     providerSlug: 'assemblyai',
-    slug: 'assemblyai-best',
-    name: 'AssemblyAI Best',
+    slug: 'universal-3-pro',
+    name: 'Universal-3 Pro',
     description: 'Highest accuracy speech-to-text model.',
-    externalModelId: 'best',
+    externalModelId: 'universal-3-pro',
     status: 'active',
     capabilityMetadata: { speech_to_text: true },
     pricingMetadata: {},
@@ -344,12 +586,36 @@ const AI_MODELS = [
   },
   {
     providerSlug: 'assemblyai',
-    slug: 'assemblyai-nano',
-    name: 'AssemblyAI Nano',
-    description: 'Fastest and most cost-efficient speech-to-text model.',
-    externalModelId: 'nano',
+    slug: 'universal-2',
+    name: 'Universal-2',
+    description: 'Broad-language speech-to-text model.',
+    externalModelId: 'universal-2',
     status: 'active',
     capabilityMetadata: { speech_to_text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'assemblyai-llm-gateway',
+    slug: 'gemini-2-5-flash-lite',
+    name: 'Gemini 2.5 Flash-Lite',
+    description: 'AssemblyAI LLM Gateway fast lightweight Gemini model.',
+    externalModelId: 'gemini-2.5-flash-lite',
+    status: 'active',
+    capabilityMetadata: { text: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'assemblyai-llm-gateway',
+    slug: 'claude-sonnet-4-5-20250929',
+    name: 'Claude Sonnet 4.5',
+    description: 'AssemblyAI LLM Gateway balanced Claude model.',
+    externalModelId: 'claude-sonnet-4-5-20250929',
+    status: 'active',
+    capabilityMetadata: { text: true, structuredOutput: true },
     pricingMetadata: {},
     limitsMetadata: {},
     schemaMetadata: {},
@@ -673,6 +939,7 @@ function resolveProviderEnvCredential(providerSlug: string): AIRuntimeResolvedCr
     anthropic: process.env.ANTHROPIC_API_KEY,
     gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
     assemblyai: process.env.ASSEMBLYAI_API_KEY,
+    'assemblyai-llm-gateway': process.env.ASSEMBLYAI_API_KEY,
   };
 
   const value = normalizeEnvCredential(envMap[providerSlug]);
@@ -693,6 +960,10 @@ function getProviderAdapter(providerSlug: string) {
       return new AnthropicAdapter();
     case 'gemini':
       return new GeminiAdapter();
+    case 'assemblyai':
+      return new AssemblyAIAdapter();
+    case 'assemblyai-llm-gateway':
+      return new AssemblyAILlmGatewayAdapter();
     default:
       return null;
   }
@@ -851,6 +1122,181 @@ async function upsertTestAgent(orgId: string, userId: string, agent: (typeof TES
   });
 }
 
+async function upsertSeedContext(organizationId: string, userId: string) {
+  for (const source of SEED_CONTEXT_SOURCES) {
+    await prisma.contextSource.upsert({
+      where: { id: source.id },
+      update: {
+        organizationId,
+        title: source.title,
+        description: source.description,
+        sourceKind: source.sourceKind,
+        sourceUrl: source.sourceUrl ?? null,
+        fileName: null,
+        mimeType: null,
+        fileSize: null,
+        objectKey: null,
+        publicUrl: null,
+        pipelineStatus: 'approved',
+        pipelineError: null,
+        extractedContent: source.extractedContent,
+        normalizedContent: source.normalizedContent,
+        reviewNotes: source.reviewNotes,
+        reviewedAt: new Date(),
+        reviewedById: userId,
+        tags: [...source.tags],
+        category: source.category,
+      },
+      create: {
+        id: source.id,
+        organizationId,
+        title: source.title,
+        description: source.description,
+        sourceKind: source.sourceKind,
+        sourceUrl: source.sourceUrl ?? null,
+        pipelineStatus: 'approved',
+        extractedContent: source.extractedContent,
+        normalizedContent: source.normalizedContent,
+        reviewNotes: source.reviewNotes,
+        reviewedAt: new Date(),
+        reviewedById: userId,
+        tags: [...source.tags],
+        category: source.category,
+      },
+    });
+  }
+
+  await prisma.contextArtifact.upsert({
+    where: { organizationId },
+    update: {
+      objectKey: 'organizations/seed_dev_workana_ai_org/context/context.md',
+      publicUrl: null,
+      syncStatus: 'synced',
+      syncedAt: new Date(),
+      syncError: null,
+      sourceCount: SEED_CONTEXT_SOURCES.length,
+    },
+    create: {
+      organizationId,
+      objectKey: 'organizations/seed_dev_workana_ai_org/context/context.md',
+      publicUrl: null,
+      syncStatus: 'synced',
+      syncedAt: new Date(),
+      sourceCount: SEED_CONTEXT_SOURCES.length,
+    },
+  });
+}
+
+async function upsertSeedDesignSystem(organizationId: string) {
+  const profile = await prisma.designSystemProfile.upsert({
+    where: { organizationId },
+    update: {
+      ...SEED_DESIGN_SYSTEM_PROFILE,
+      artifactSyncStatus: 'synced',
+      artifactSyncedAt: new Date(),
+      artifactSyncError: null,
+      artifactObjectKey: 'organizations/seed_dev_workana_ai_org/design-system/design-system.md',
+      contextArtifactSyncStatus: 'synced',
+      contextArtifactSyncedAt: new Date(),
+      contextArtifactSyncError: null,
+      contextArtifactObjectKey: 'organizations/seed_dev_workana_ai_org/context/context.md',
+    },
+    create: {
+      organizationId,
+      ...SEED_DESIGN_SYSTEM_PROFILE,
+      artifactSyncStatus: 'synced',
+      artifactSyncedAt: new Date(),
+      artifactObjectKey: 'organizations/seed_dev_workana_ai_org/design-system/design-system.md',
+      contextArtifactSyncStatus: 'synced',
+      contextArtifactSyncedAt: new Date(),
+      contextArtifactObjectKey: 'organizations/seed_dev_workana_ai_org/context/context.md',
+    },
+  });
+
+  for (const group of SEED_DESIGN_COLOR_GROUPS) {
+    const savedGroup = await prisma.designColorGroup.upsert({
+      where: {
+        designSystemId_name: {
+          designSystemId: profile.id,
+          name: group.name,
+        },
+      },
+      update: {
+        description: group.description,
+        sortOrder: group.sortOrder,
+      },
+      create: {
+        designSystemId: profile.id,
+        name: group.name,
+        description: group.description,
+        sortOrder: group.sortOrder,
+      },
+    });
+
+    for (const color of group.colors) {
+      await prisma.designColorToken.upsert({
+        where: {
+          colorGroupId_name: {
+            colorGroupId: savedGroup.id,
+            name: color.name,
+          },
+        },
+        update: {
+          value: color.value,
+          displayFormat: color.displayFormat,
+          semanticRole: color.semanticRole,
+          usageNote: color.usageNote,
+          restrictionNote: color.restrictionNote,
+          sortOrder: color.sortOrder,
+        },
+        create: {
+          colorGroupId: savedGroup.id,
+          name: color.name,
+          value: color.value,
+          displayFormat: color.displayFormat,
+          semanticRole: color.semanticRole,
+          usageNote: color.usageNote,
+          restrictionNote: color.restrictionNote,
+          sortOrder: color.sortOrder,
+        },
+      });
+    }
+  }
+
+  for (const asset of SEED_DESIGN_ASSETS) {
+    await prisma.designAsset.upsert({
+      where: { id: asset.id },
+      update: {
+        designSystemId: profile.id,
+        organizationId,
+        primaryRole: asset.primaryRole,
+        secondaryTags: [...asset.secondaryTags],
+        title: asset.title,
+        description: asset.description,
+        objectKey: asset.objectKey,
+        publicUrl: asset.publicUrl,
+        fileName: asset.fileName,
+        contentType: asset.contentType,
+        size: asset.size,
+      },
+      create: {
+        id: asset.id,
+        designSystemId: profile.id,
+        organizationId,
+        primaryRole: asset.primaryRole,
+        secondaryTags: [...asset.secondaryTags],
+        title: asset.title,
+        description: asset.description,
+        objectKey: asset.objectKey,
+        publicUrl: asset.publicUrl,
+        fileName: asset.fileName,
+        contentType: asset.contentType,
+        size: asset.size,
+      },
+    });
+  }
+}
+
 async function main() {
   console.log('Iniciando seed...');
 
@@ -859,7 +1305,10 @@ async function main() {
 
   const user = await prisma.user.upsert({
     where: { email: 'cttadryansantoss@gmail.com' },
-    update: {},
+    update: {
+      name: 'Adryan Santos',
+      emailVerified: true,
+    },
     create: {
       id: SEED_USER_ID,
       name: 'Adryan Santos',
@@ -885,7 +1334,9 @@ async function main() {
   // 2. Organização
   const org = await prisma.organization.upsert({
     where: { slug: 'workana-ai' },
-    update: {},
+    update: {
+      name: 'Workana AI',
+    },
     create: {
       id: SEED_ORG_ID,
       name: 'Workana AI',
@@ -901,9 +1352,25 @@ async function main() {
   for (const roleName of defaultSystemRoles) {
     const existing = await prisma.role.findFirst({
       where: { organizationId: org.id, name: roleName },
+      include: { permissions: true },
     });
 
     if (existing) {
+      const expectedPermissions = getDefaultRolePermissions(roleName as DefaultSystemRole);
+
+      await prisma.role.update({
+        where: { id: existing.id },
+        data: { isSystem: true },
+      });
+
+      for (const key of expectedPermissions) {
+        if (!existing.permissions.some((permission) => permission.key === key)) {
+          await prisma.rolePermission.create({
+            data: { roleId: existing.id, key },
+          });
+        }
+      }
+
       roleIds[roleName] = existing.id;
     } else {
       const permissions = getDefaultRolePermissions(roleName as DefaultSystemRole);
@@ -924,17 +1391,31 @@ async function main() {
   console.log(`  Roles: ${Object.keys(roleIds).join(', ')}`);
 
   // 4. Membership como owner
-  await prisma.membership.upsert({
+  const membership = await prisma.membership.upsert({
     where: {
       userId_organizationId: { userId: user.id, organizationId: org.id },
     },
-    update: {},
+    update: { active: true },
     create: {
       userId: user.id,
       organizationId: org.id,
       roles: {
         create: { roleId: roleIds.owner },
       },
+    },
+  });
+
+  await prisma.membershipRole.upsert({
+    where: {
+      membershipId_roleId: {
+        membershipId: membership.id,
+        roleId: roleIds.owner,
+      },
+    },
+    update: {},
+    create: {
+      membershipId: membership.id,
+      roleId: roleIds.owner,
     },
   });
 
@@ -1004,6 +1485,14 @@ async function main() {
   });
 
   console.log('  Brain: configurado e publicado');
+
+  await upsertSeedContext(org.id, user.id);
+  console.log(`  Contexto: ${SEED_CONTEXT_SOURCES.length} fontes aprovadas`);
+
+  await upsertSeedDesignSystem(org.id);
+  console.log(
+    `  Design system: ${SEED_DESIGN_COLOR_GROUPS.length} grupos de cor, ${SEED_DESIGN_ASSETS.length} assets`,
+  );
 
   await clearOrgAgents(org.id);
   console.log('  Agentes anteriores: removidos');

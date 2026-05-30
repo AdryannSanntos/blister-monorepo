@@ -10,7 +10,6 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import type { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
@@ -25,6 +24,13 @@ import {
   updateDesignAssetSchema,
   updateDesignIdentitySchema,
 } from './dto';
+
+type UploadedBinaryFile = {
+  originalname: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+};
 
 function parseBody<T>(schema: { safeParse: (value: unknown) => { success: true; data: T } | { success: false; error: unknown } }, body: unknown) {
   const parsed = schema.safeParse(body);
@@ -115,7 +121,7 @@ export class DesignSystemController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadAssetFile(
     @Param('orgId') orgId: string,
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile() file: UploadedBinaryFile | undefined,
     @Body() body: unknown,
   ) {
     if (!file) throw new BadRequestException('File is required');

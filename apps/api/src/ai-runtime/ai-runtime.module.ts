@@ -1,3 +1,5 @@
+import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
 import { Module } from '@nestjs/common';
 import { AnthropicAdapter } from './adapters/anthropic.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
@@ -8,6 +10,8 @@ import { AIRuntimeService } from './ai-runtime.service';
 @Module({
   providers: [
     AIRuntimeService,
+    AssemblyAIAdapter,
+    AssemblyAILlmGatewayAdapter,
     OpenRouterAdapter,
     OpenAIAdapter,
     AnthropicAdapter,
@@ -15,6 +19,8 @@ import { AIRuntimeService } from './ai-runtime.service';
   ],
   exports: [
     AIRuntimeService,
+    AssemblyAIAdapter,
+    AssemblyAILlmGatewayAdapter,
     OpenRouterAdapter,
     OpenAIAdapter,
     AnthropicAdapter,

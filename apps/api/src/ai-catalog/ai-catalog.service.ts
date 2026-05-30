@@ -1,5 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import type { AIRuntimeResolvedCredential, AIProviderAdapter } from '../ai-runtime/adapters/ai-provider.adapter';
+import { AssemblyAIAdapter } from '../ai-runtime/adapters/assemblyai.adapter';
+import { AssemblyAILlmGatewayAdapter } from '../ai-runtime/adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from '../ai-runtime/adapters/anthropic.adapter';
 import { GeminiAdapter } from '../ai-runtime/adapters/gemini.adapter';
 import { OpenAIAdapter } from '../ai-runtime/adapters/openai.adapter';
@@ -31,6 +33,8 @@ const toJsonValue = (value: unknown): Prisma.InputJsonValue =>
 export class AICatalogService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly assemblyAIAdapter: AssemblyAIAdapter,
+    private readonly assemblyAILlmGatewayAdapter: AssemblyAILlmGatewayAdapter,
     private readonly openRouterAdapter: OpenRouterAdapter,
     private readonly openAIAdapter: OpenAIAdapter,
     private readonly anthropicAdapter: AnthropicAdapter,
@@ -481,6 +485,11 @@ export class AICatalogService {
         return this.anthropicAdapter;
       case 'gemini':
         return this.geminiAdapter;
+      case 'assemblyai':
+      case 'assemblyai-stt':
+        return this.assemblyAIAdapter;
+      case 'assemblyai-llm-gateway':
+        return this.assemblyAILlmGatewayAdapter;
       default:
         throw new NotFoundException(`No adapter available for provider ${providerSlug}`);
     }
@@ -520,6 +529,8 @@ export class AICatalogService {
       openai: process.env.OPENAI_API_KEY,
       anthropic: process.env.ANTHROPIC_API_KEY,
       gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+      assemblyai: process.env.ASSEMBLYAI_API_KEY,
+      'assemblyai-llm-gateway': process.env.ASSEMBLYAI_API_KEY,
     };
 
     const value = this.normalizeEnvCredential(envMap[providerSlug]);
