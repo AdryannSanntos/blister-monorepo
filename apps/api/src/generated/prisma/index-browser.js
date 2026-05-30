@@ -477,6 +477,7 @@ exports.Prisma.CompanyAgentScalarFieldEnum = {
   status: 'status',
   allowedTools: 'allowedTools',
   activeVersionId: 'activeVersionId',
+  onboardingCompletedAt: 'onboardingCompletedAt',
   createdByUserId: 'createdByUserId',
   updatedByUserId: 'updatedByUserId',
   createdAt: 'createdAt',

@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { AgentInactiveDialog } from "src/core/modules/agents/components/agent-inactive-dialog";
 import {
   prepareChatAttachments,
   splitComposerAttachments,
@@ -71,8 +70,6 @@ export function AgentChatPage() {
   const renameThread = useRenameThread(orgId, agentId);
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState("");
-  const isAgentActive = agent.data?.status === "active";
-
   const [editing, setEditing] = useState<{
     id: string;
     content: string;
@@ -398,7 +395,6 @@ export function AgentChatPage() {
             onStop={() => undefined}
             disabled={
               !canExecute ||
-              !isAgentActive ||
               isRunActive ||
               sendMessage.isPending ||
               editAndBranch.isPending
@@ -478,13 +474,6 @@ export function AgentChatPage() {
         </div>
       </div>
 
-      <AgentInactiveDialog
-        open={!isAgentActive && Boolean(agent.data)}
-        onOpenChange={() => undefined}
-        agentId={agentId}
-        agentName={agent.data?.name}
-        blocking
-      />
     </AgentContentLayout>
   );
 }

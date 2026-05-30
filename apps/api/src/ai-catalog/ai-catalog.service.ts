@@ -374,7 +374,11 @@ export class AICatalogService {
         return false;
       }
 
-      return this.matchesBuilderCatalogKind(model.capabilityMetadata, filters.kind);
+      if (!this.matchesBuilderCatalogKind(model.capabilityMetadata, filters.kind)) {
+        return false;
+      }
+
+      return this.providerSupportsBuilderCatalogKind(provider.slug, filters.kind);
     });
 
     const providerIds = new Set(filteredModels.map((model) => model.providerId));
@@ -420,6 +424,30 @@ export class AICatalogService {
     }
 
     return capabilities.text === true || capabilities.image !== true;
+  }
+
+  private providerSupportsBuilderCatalogKind(
+    providerSlug: string,
+    kind: BuilderCatalogQueryDto['kind'],
+  ) {
+    try {
+      const adapter = this.resolveAdapter(providerSlug);
+
+      if (kind === 'image') {
+        return adapter.supports('image_generation');
+      }
+
+      if (kind === 'text') {
+        return adapter.supports('text_generation');
+      }
+
+      return (
+        adapter.supports('text_generation') ||
+        adapter.supports('image_generation')
+      );
+    } catch {
+      return false;
+    }
   }
 
   private sanitizeProvider<T extends Record<string, unknown>>(provider: T) {

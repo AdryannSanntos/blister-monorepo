@@ -1,5 +1,10 @@
-import { AgentWorkflowPage } from "src/core/modules/agents/pages/agent-workflow-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <AgentWorkflowPage />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ agentId: string }>;
+}) {
+  const { agentId } = await params;
+  redirect(`/dashboard/workspace/agents/${agentId}/chat`);
 }

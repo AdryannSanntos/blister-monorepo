@@ -295,6 +295,53 @@ body {
   }
 }
 
+/* ── Chat message animations ──────────────────────────────────────────────── */
+
+@keyframes ds-message-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes ds-message-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes ds-content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ds-chat-message-user-in {
+  animation: ds-message-in-right 0.22s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+.ds-chat-message-agent-in {
+  animation: ds-message-in-left 0.22s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+.ds-chat-content-reveal {
+  animation: ds-content-reveal 0.18s cubic-bezier(0, 0, 0.2, 1) both;
+}
+
 @keyframes ds-check-pop {
   from {
     transform: scale(0.8);

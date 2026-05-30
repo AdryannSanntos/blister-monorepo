@@ -1,4 +1,18 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import type { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { DesignSystemService } from './design-system.service';
 import {
@@ -17,6 +31,10 @@ function parseBody<T>(schema: { safeParse: (value: unknown) => { success: true; 
   if (!parsed.success) throw new BadRequestException(parsed.error);
   return parsed.data;
 }
+
+const uploadAssetFileSchema = z.object({
+  primaryRole: createUploadUrlSchema.shape.primaryRole,
+});
 
 @Controller('organizations/:orgId/design-system')
 export class DesignSystemController {
@@ -90,6 +108,26 @@ export class DesignSystemController {
   @RequirePermission('design-system.update')
   async createAssetUploadUrl(@Param('orgId') orgId: string, @Body() body: unknown) {
     return this.designSystemService.createAssetUploadUrl(orgId, parseBody(createUploadUrlSchema, body));
+  }
+
+  @Post('assets/upload')
+  @RequirePermission('design-system.update')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAssetFile(
+    @Param('orgId') orgId: string,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() body: unknown,
+  ) {
+    if (!file) throw new BadRequestException('File is required');
+
+    const parsed = parseBody(uploadAssetFileSchema, body);
+    return this.designSystemService.uploadAssetFile(orgId, {
+      primaryRole: parsed.primaryRole,
+      fileName: file.originalname,
+      contentType: file.mimetype || 'application/octet-stream',
+      size: file.size,
+      body: file.buffer,
+    });
   }
 
   @Post('assets')

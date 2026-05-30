@@ -35,7 +35,13 @@ describe('DesignSystemService', () => {
   let service: DesignSystemService;
   let prisma: ReturnType<typeof makeMockPrisma>;
   let sync: { enqueueDesignSystemSync: jest.Mock };
-  let storage: { buildDesignAssetKey: jest.Mock; buildPublicObjectUrl: jest.Mock; createPresignedUploadUrl: jest.Mock; deleteObject: jest.Mock };
+  let storage: {
+    buildDesignAssetKey: jest.Mock;
+    buildPublicObjectUrl: jest.Mock;
+    createPresignedUploadUrl: jest.Mock;
+    putObject: jest.Mock;
+    deleteObject: jest.Mock;
+  };
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
@@ -44,6 +50,7 @@ describe('DesignSystemService', () => {
       buildDesignAssetKey: jest.fn(() => 'organizations/org-1/design-system/assets/logo/logo.png'),
       buildPublicObjectUrl: jest.fn(() => 'https://assets.test/logo.png'),
       createPresignedUploadUrl: jest.fn().mockResolvedValue({ url: 'https://upload.test/logo.png' }),
+      putObject: jest.fn(),
       deleteObject: jest.fn(),
     };
 
@@ -115,6 +122,27 @@ describe('DesignSystemService', () => {
     expect(result).toEqual({
       key: 'organizations/org-1/design-system/assets/logo/logo.png',
       url: 'https://upload.test/logo.png',
+    });
+  });
+
+  it('uploads a design asset file through the backend storage service', async () => {
+    const result = await service.uploadAssetFile('org-1', {
+      primaryRole: 'logo',
+      fileName: 'logo.png',
+      contentType: 'image/png',
+      size: 1024,
+      body: Buffer.from('png-bytes'),
+    });
+
+    expect(storage.buildDesignAssetKey).toHaveBeenCalledWith('org-1', 'logo', 'logo.png');
+    expect(storage.putObject).toHaveBeenCalledWith({
+      key: 'organizations/org-1/design-system/assets/logo/logo.png',
+      body: Buffer.from('png-bytes'),
+      contentType: 'image/png',
+    });
+    expect(result).toEqual({
+      key: 'organizations/org-1/design-system/assets/logo/logo.png',
+      publicUrl: 'https://assets.test/logo.png',
     });
   });
 

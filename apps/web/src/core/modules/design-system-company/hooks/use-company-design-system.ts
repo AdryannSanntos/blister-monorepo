@@ -227,18 +227,16 @@ export function useCreateDesignAsset(orgId: string | null) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ file, fileName, metadata }: { file: File; fileName: string; metadata: Omit<CreateDesignAssetPayload, 'objectKey' | 'fileName' | 'contentType' | 'size'> }) => {
-      const assetId = crypto.randomUUID();
-      const upload = await apiClient.post<{ key: string; url: string }>(`/organizations/${orgId}/design-system/assets/upload-url`, {
-        assetId,
-        primaryRole: metadata.primaryRole,
-        fileName,
-        contentType: file.type || 'application/octet-stream',
-        size: file.size,
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('primaryRole', metadata.primaryRole);
+      const upload = await apiClient.post<{ key: string; publicUrl?: string }>(`/organizations/${orgId}/design-system/assets/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      await fetch(upload.data.url, { method: 'PUT', body: file, headers: { 'Content-Type': file.type || 'application/octet-stream' } });
       const { data } = await apiClient.post<DesignAsset>(`/organizations/${orgId}/design-system/assets`, {
         ...metadata,
         objectKey: upload.data.key,
+        publicUrl: upload.data.publicUrl,
         fileName,
         contentType: file.type || 'application/octet-stream',
         size: file.size,

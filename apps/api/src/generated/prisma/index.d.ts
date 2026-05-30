@@ -37957,6 +37957,7 @@ export namespace Prisma {
     description: string | null
     status: string | null
     activeVersionId: string | null
+    onboardingCompletedAt: Date | null
     createdByUserId: string | null
     updatedByUserId: string | null
     createdAt: Date | null
@@ -37972,6 +37973,7 @@ export namespace Prisma {
     description: string | null
     status: string | null
     activeVersionId: string | null
+    onboardingCompletedAt: Date | null
     createdByUserId: string | null
     updatedByUserId: string | null
     createdAt: Date | null
@@ -37988,6 +37990,7 @@ export namespace Prisma {
     status: number
     allowedTools: number
     activeVersionId: number
+    onboardingCompletedAt: number
     createdByUserId: number
     updatedByUserId: number
     createdAt: number
@@ -38005,6 +38008,7 @@ export namespace Prisma {
     description?: true
     status?: true
     activeVersionId?: true
+    onboardingCompletedAt?: true
     createdByUserId?: true
     updatedByUserId?: true
     createdAt?: true
@@ -38020,6 +38024,7 @@ export namespace Prisma {
     description?: true
     status?: true
     activeVersionId?: true
+    onboardingCompletedAt?: true
     createdByUserId?: true
     updatedByUserId?: true
     createdAt?: true
@@ -38036,6 +38041,7 @@ export namespace Prisma {
     status?: true
     allowedTools?: true
     activeVersionId?: true
+    onboardingCompletedAt?: true
     createdByUserId?: true
     updatedByUserId?: true
     createdAt?: true
@@ -38125,6 +38131,7 @@ export namespace Prisma {
     status: string
     allowedTools: JsonValue
     activeVersionId: string | null
+    onboardingCompletedAt: Date | null
     createdByUserId: string
     updatedByUserId: string
     createdAt: Date
@@ -38158,6 +38165,7 @@ export namespace Prisma {
     status?: boolean
     allowedTools?: boolean
     activeVersionId?: boolean
+    onboardingCompletedAt?: boolean
     createdByUserId?: boolean
     updatedByUserId?: boolean
     createdAt?: boolean
@@ -38181,6 +38189,7 @@ export namespace Prisma {
     status?: boolean
     allowedTools?: boolean
     activeVersionId?: boolean
+    onboardingCompletedAt?: boolean
     createdByUserId?: boolean
     updatedByUserId?: boolean
     createdAt?: boolean
@@ -38198,6 +38207,7 @@ export namespace Prisma {
     status?: boolean
     allowedTools?: boolean
     activeVersionId?: boolean
+    onboardingCompletedAt?: boolean
     createdByUserId?: boolean
     updatedByUserId?: boolean
     createdAt?: boolean
@@ -38215,13 +38225,14 @@ export namespace Prisma {
     status?: boolean
     allowedTools?: boolean
     activeVersionId?: boolean
+    onboardingCompletedAt?: boolean
     createdByUserId?: boolean
     updatedByUserId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CompanyAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "templateId" | "slug" | "name" | "description" | "status" | "allowedTools" | "activeVersionId" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAgent"]>
+  export type CompanyAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "templateId" | "slug" | "name" | "description" | "status" | "allowedTools" | "activeVersionId" | "onboardingCompletedAt" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAgent"]>
   export type CompanyAgentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chatThreads?: boolean | CompanyAgent$chatThreadsArgs<ExtArgs>
     chatToolCalls?: boolean | CompanyAgent$chatToolCallsArgs<ExtArgs>
@@ -38258,6 +38269,7 @@ export namespace Prisma {
       status: string
       allowedTools: Prisma.JsonValue
       activeVersionId: string | null
+      onboardingCompletedAt: Date | null
       createdByUserId: string
       updatedByUserId: string
       createdAt: Date
@@ -38700,6 +38712,7 @@ export namespace Prisma {
     readonly status: FieldRef<"CompanyAgent", 'String'>
     readonly allowedTools: FieldRef<"CompanyAgent", 'Json'>
     readonly activeVersionId: FieldRef<"CompanyAgent", 'String'>
+    readonly onboardingCompletedAt: FieldRef<"CompanyAgent", 'DateTime'>
     readonly createdByUserId: FieldRef<"CompanyAgent", 'String'>
     readonly updatedByUserId: FieldRef<"CompanyAgent", 'String'>
     readonly createdAt: FieldRef<"CompanyAgent", 'DateTime'>
@@ -64968,6 +64981,7 @@ export namespace Prisma {
     status: 'status',
     allowedTools: 'allowedTools',
     activeVersionId: 'activeVersionId',
+    onboardingCompletedAt: 'onboardingCompletedAt',
     createdByUserId: 'createdByUserId',
     updatedByUserId: 'updatedByUserId',
     createdAt: 'createdAt',
@@ -67710,6 +67724,7 @@ export namespace Prisma {
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
+    onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
     updatedByUserId?: StringFilter<"CompanyAgent"> | string
     createdAt?: DateTimeFilter<"CompanyAgent"> | Date | string
@@ -67732,6 +67747,7 @@ export namespace Prisma {
     status?: SortOrder
     allowedTools?: SortOrder
     activeVersionId?: SortOrderInput | SortOrder
+    onboardingCompletedAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
@@ -67758,6 +67774,7 @@ export namespace Prisma {
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
+    onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
     updatedByUserId?: StringFilter<"CompanyAgent"> | string
     createdAt?: DateTimeFilter<"CompanyAgent"> | Date | string
@@ -67780,6 +67797,7 @@ export namespace Prisma {
     status?: SortOrder
     allowedTools?: SortOrder
     activeVersionId?: SortOrderInput | SortOrder
+    onboardingCompletedAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
@@ -67802,6 +67820,7 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"CompanyAgent"> | string
     allowedTools?: JsonWithAggregatesFilter<"CompanyAgent">
     activeVersionId?: StringNullableWithAggregatesFilter<"CompanyAgent"> | string | null
+    onboardingCompletedAt?: DateTimeNullableWithAggregatesFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringWithAggregatesFilter<"CompanyAgent"> | string
     updatedByUserId?: StringWithAggregatesFilter<"CompanyAgent"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CompanyAgent"> | Date | string
@@ -72232,6 +72251,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -72254,6 +72274,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -72274,6 +72295,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72296,6 +72318,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72317,6 +72340,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -72332,6 +72356,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72348,6 +72373,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76112,6 +76138,7 @@ export namespace Prisma {
     status?: SortOrder
     allowedTools?: SortOrder
     activeVersionId?: SortOrder
+    onboardingCompletedAt?: SortOrder
     createdByUserId?: SortOrder
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
@@ -76127,6 +76154,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     activeVersionId?: SortOrder
+    onboardingCompletedAt?: SortOrder
     createdByUserId?: SortOrder
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
@@ -76142,6 +76170,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     activeVersionId?: SortOrder
+    onboardingCompletedAt?: SortOrder
     createdByUserId?: SortOrder
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
@@ -84236,6 +84265,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -84256,6 +84286,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -84306,6 +84337,7 @@ export namespace Prisma {
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
+    onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
     updatedByUserId?: StringFilter<"CompanyAgent"> | string
     createdAt?: DateTimeFilter<"CompanyAgent"> | Date | string
@@ -84951,6 +84983,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -84972,6 +85005,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -85023,6 +85057,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85044,6 +85079,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85107,6 +85143,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -85128,6 +85165,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -85924,6 +85962,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85945,6 +85984,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86943,6 +86983,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -86964,6 +87005,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -87060,6 +87102,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87081,6 +87124,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88065,6 +88109,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -88086,6 +88131,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -88369,6 +88415,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88390,6 +88437,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89317,6 +89365,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -89338,6 +89387,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -89449,6 +89499,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89470,6 +89521,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91422,6 +91474,7 @@ export namespace Prisma {
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
+    onboardingCompletedAt?: Date | string | null
     createdByUserId: string
     updatedByUserId: string
     createdAt?: Date | string
@@ -91437,6 +91490,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91457,6 +91511,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91477,6 +91532,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -463,25 +463,26 @@ model AgentTemplate {
 }
 
 model CompanyAgent {
-  id              String               @id @default(cuid())
-  organizationId  String
-  templateId      String?
-  slug            String
-  name            String
-  description     String?
-  status          String               @default("draft")
-  allowedTools    Json                 @default("[]")
-  activeVersionId String?
-  createdByUserId String
-  updatedByUserId String
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-  chatThreads     AgentChatThread[]
-  chatToolCalls   AgentChatToolCall[]
-  contextProfile  AgentContextProfile?
-  runs            AgentRun[]
-  versions        AgentVersion[]
-  template        AgentTemplate?       @relation(fields: [templateId], references: [id])
+  id                    String               @id @default(cuid())
+  organizationId        String
+  templateId            String?
+  slug                  String
+  name                  String
+  description           String?
+  status                String               @default("draft")
+  allowedTools          Json                 @default("[]")
+  activeVersionId       String?
+  onboardingCompletedAt DateTime?
+  createdByUserId       String
+  updatedByUserId       String
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  chatThreads           AgentChatThread[]
+  chatToolCalls         AgentChatToolCall[]
+  contextProfile        AgentContextProfile?
+  runs                  AgentRun[]
+  versions              AgentVersion[]
+  template              AgentTemplate?       @relation(fields: [templateId], references: [id])
 
   @@unique([organizationId, slug])
   @@index([organizationId, status, updatedAt])

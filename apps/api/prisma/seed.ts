@@ -154,17 +154,115 @@ const AI_PROVIDERS = [
     limitsMetadata: {},
     schemaMetadata: { adapter: 'gemini' },
   },
+  {
+    slug: 'assemblyai',
+    name: 'AssemblyAI',
+    description: 'Speech-to-text and audio intelligence platform.',
+    status: 'active',
+    iconMetadata: { iconKey: 'assemblyai' },
+    capabilityMetadata: { speech_to_text: true, audio_intelligence: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: { adapter: 'assemblyai' },
+  },
 ] as const;
 
 const AI_MODELS = [
+  // ── Free models (OpenRouter) ────────────────────────────────────────────────
   {
     providerSlug: 'openrouter',
     slug: 'nemotron-3-super',
     name: 'Nemotron 3 Super',
-    description: 'Text generation model for operational writing workflows.',
+    description: 'NVIDIA 120B model — free tier via OpenRouter.',
     externalModelId: 'nvidia/nemotron-3-super-120b-a12b:free',
     status: 'active',
     capabilityMetadata: { text: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'llama-3-1-8b-free',
+    name: 'Llama 3.1 8B (free)',
+    description: 'Meta Llama 3.1 8B Instruct — free tier via OpenRouter.',
+    externalModelId: 'meta-llama/llama-3.1-8b-instruct:free',
+    status: 'active',
+    capabilityMetadata: { text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'mistral-7b-free',
+    name: 'Mistral 7B (free)',
+    description: 'Mistral 7B Instruct — free tier via OpenRouter.',
+    externalModelId: 'mistralai/mistral-7b-instruct:free',
+    status: 'active',
+    capabilityMetadata: { text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'qwen-2-5-7b-free',
+    name: 'Qwen 2.5 7B (free)',
+    description: 'Alibaba Qwen 2.5 7B Instruct — free tier via OpenRouter.',
+    externalModelId: 'qwen/qwen-2.5-7b-instruct:free',
+    status: 'active',
+    capabilityMetadata: { text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  // ── Gemini (via OpenRouter) ─────────────────────────────────────────────────
+  {
+    providerSlug: 'openrouter',
+    slug: 'gemini-2-flash',
+    name: 'Gemini 2.0 Flash',
+    description: 'Google Gemini 2.0 Flash — fast multimodal model.',
+    externalModelId: 'google/gemini-2.0-flash-001',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'gemini-2-5-pro',
+    name: 'Gemini 2.5 Pro',
+    description: 'Google Gemini 2.5 Pro — advanced reasoning model.',
+    externalModelId: 'google/gemini-2.5-pro-preview',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  // ── ChatGPT / OpenAI (via OpenRouter) ──────────────────────────────────────
+  {
+    providerSlug: 'openrouter',
+    slug: 'gpt-4o',
+    name: 'GPT-4o',
+    description: 'OpenAI GPT-4o — flagship multimodal model.',
+    externalModelId: 'openai/gpt-4o',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    description: 'OpenAI GPT-4o Mini — fast and cost-efficient.',
+    externalModelId: 'openai/gpt-4o-mini',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
     pricingMetadata: {},
     limitsMetadata: {},
     schemaMetadata: {},
@@ -177,6 +275,81 @@ const AI_MODELS = [
     externalModelId: 'openai/gpt-image-1',
     status: 'active',
     capabilityMetadata: { image: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  // ── Claude / Anthropic (via OpenRouter) ────────────────────────────────────
+  {
+    providerSlug: 'openrouter',
+    slug: 'claude-sonnet-4-5',
+    name: 'Claude Sonnet 4.5',
+    description: 'Anthropic Claude Sonnet 4.5 — balanced intelligence and speed.',
+    externalModelId: 'anthropic/claude-sonnet-4-5',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'claude-haiku-3-5',
+    name: 'Claude Haiku 3.5',
+    description: 'Anthropic Claude Haiku 3.5 — fastest Claude model.',
+    externalModelId: 'anthropic/claude-3.5-haiku',
+    status: 'active',
+    capabilityMetadata: { text: true, vision: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  // ── Kimi / Moonshot (via OpenRouter) ───────────────────────────────────────
+  {
+    providerSlug: 'openrouter',
+    slug: 'kimi-k2',
+    name: 'Kimi K2',
+    description: 'Moonshot Kimi K2 — strong agentic and coding model.',
+    externalModelId: 'moonshotai/kimi-k2',
+    status: 'active',
+    capabilityMetadata: { text: true, structuredOutput: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'openrouter',
+    slug: 'moonshot-v1-8k',
+    name: 'Moonshot v1 8K',
+    description: 'Moonshot v1 with 8K context window.',
+    externalModelId: 'moonshotai/moonshot-v1-8k',
+    status: 'active',
+    capabilityMetadata: { text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  // ── AssemblyAI — Speech-to-Text ────────────────────────────────────────────
+  {
+    providerSlug: 'assemblyai',
+    slug: 'assemblyai-best',
+    name: 'AssemblyAI Best',
+    description: 'Highest accuracy speech-to-text model.',
+    externalModelId: 'best',
+    status: 'active',
+    capabilityMetadata: { speech_to_text: true },
+    pricingMetadata: {},
+    limitsMetadata: {},
+    schemaMetadata: {},
+  },
+  {
+    providerSlug: 'assemblyai',
+    slug: 'assemblyai-nano',
+    name: 'AssemblyAI Nano',
+    description: 'Fastest and most cost-efficient speech-to-text model.',
+    externalModelId: 'nano',
+    status: 'active',
+    capabilityMetadata: { speech_to_text: true },
     pricingMetadata: {},
     limitsMetadata: {},
     schemaMetadata: {},
@@ -499,6 +672,7 @@ function resolveProviderEnvCredential(providerSlug: string): AIRuntimeResolvedCr
     openai: process.env.OPENAI_API_KEY,
     anthropic: process.env.ANTHROPIC_API_KEY,
     gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+    assemblyai: process.env.ASSEMBLYAI_API_KEY,
   };
 
   const value = normalizeEnvCredential(envMap[providerSlug]);
@@ -540,20 +714,23 @@ async function syncRemoteModels(providerIdsBySlug: Record<string, string>) {
     try {
       const models = await adapter.listModels(credential);
       let synced = 0;
+      let skipped = 0;
 
       for (const model of models) {
-        const existingModel = await prisma.aIModel.findFirst({
-          where: {
-            providerId,
-            OR: [{ externalModelId: model.externalModelId }, { slug: model.slug }],
-          },
-          select: { id: true },
-        });
-
-        if (existingModel) {
-          await prisma.aIModel.update({
-            where: { id: existingModel.id },
-            data: {
+        try {
+          await prisma.aIModel.upsert({
+            where: { providerId_externalModelId: { providerId, externalModelId: model.externalModelId } },
+            update: {
+              name: model.name,
+              description: model.description,
+              status: model.status,
+              capabilityMetadata: toJsonValue(model.capabilityMetadata),
+              pricingMetadata: toJsonValue(model.pricingMetadata),
+              limitsMetadata: toJsonValue(model.limitsMetadata),
+              schemaMetadata: toJsonValue(model.schemaMetadata),
+            },
+            create: {
+              providerId,
               slug: model.slug,
               name: model.name,
               description: model.description,
@@ -566,27 +743,13 @@ async function syncRemoteModels(providerIdsBySlug: Record<string, string>) {
             },
           });
           synced += 1;
-          continue;
+        } catch {
+          skipped += 1;
         }
-
-        await prisma.aIModel.create({
-          data: {
-            providerId,
-            slug: model.slug,
-            name: model.name,
-            description: model.description,
-            externalModelId: model.externalModelId,
-            status: model.status,
-            capabilityMetadata: toJsonValue(model.capabilityMetadata),
-            pricingMetadata: toJsonValue(model.pricingMetadata),
-            limitsMetadata: toJsonValue(model.limitsMetadata),
-            schemaMetadata: toJsonValue(model.schemaMetadata),
-          },
-        });
-        synced += 1;
       }
 
-      results.push(`${provider.slug}: ${synced} modelos sincronizados`);
+      const detail = skipped > 0 ? ` (${skipped} ignorados)` : '';
+      results.push(`${provider.slug}: ${synced} modelos sincronizados${detail}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'sync failed';
       results.push(`${provider.slug}: erro (${message})`);
@@ -631,6 +794,7 @@ async function upsertTestAgent(orgId: string, userId: string, agent: (typeof TES
       name: agent.name,
       description: agent.description,
       status: 'active',
+      onboardingCompletedAt: new Date(),
       updatedByUserId: userId,
     },
     create: {
@@ -639,6 +803,7 @@ async function upsertTestAgent(orgId: string, userId: string, agent: (typeof TES
       name: agent.name,
       description: agent.description,
       status: 'active',
+      onboardingCompletedAt: new Date(),
       createdByUserId: userId,
       updatedByUserId: userId,
     },
@@ -680,6 +845,7 @@ async function upsertTestAgent(orgId: string, userId: string, agent: (typeof TES
     data: {
       activeVersionId: version.id,
       status: 'active',
+      onboardingCompletedAt: new Date(),
       updatedByUserId: userId,
     },
   });
@@ -815,12 +981,12 @@ async function main() {
     providers.map((provider) => [provider.slug, provider.id]),
   );
 
-  await seedModels(providerIdsBySlug);
-
-  console.log(`  AI Models: ${AI_MODELS.map((model) => model.slug).join(', ')}`);
-
   const remoteSyncResults = await syncRemoteModels(providerIdsBySlug);
   console.log(`  Provider sync: ${remoteSyncResults.join(' | ')}`);
+
+  // Static priority models run AFTER remote sync so our slugs/names win.
+  await seedModels(providerIdsBySlug);
+  console.log(`  AI Models: ${AI_MODELS.map((model) => model.slug).join(', ')}`);
 
   await prisma.onboardingDraft.upsert({
     where: { organizationId: org.id },

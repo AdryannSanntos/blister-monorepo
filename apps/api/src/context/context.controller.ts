@@ -1,5 +1,19 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
-import type { Request } from 'express';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import type { Express, Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { ContextService } from './context.service';
@@ -46,6 +60,20 @@ export class ContextController {
   @RequirePermission('context.create')
   async createUploadUrl(@Param('orgId') orgId: string, @Body() body: unknown) {
     return this.contextService.createUploadUrl(orgId, parseBody(createContextUploadUrlSchema, body));
+  }
+
+  @Post('files')
+  @RequirePermission('context.create')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@Param('orgId') orgId: string, @UploadedFile() file?: Express.Multer.File) {
+    if (!file) throw new BadRequestException('File is required');
+
+    return this.contextService.uploadSourceFile(orgId, {
+      fileName: file.originalname,
+      contentType: file.mimetype || 'application/octet-stream',
+      size: file.size,
+      body: file.buffer,
+    });
   }
 
   @Post()

@@ -14,7 +14,6 @@ import {
   ProviderExecutionError,
 } from './ai-provider.adapter';
 
-type OpenRouterAgentModule = typeof import('@openrouter/agent');
 type OpenRouterSdkModule = typeof import('@openrouter/sdk');
 type OpenRouterEmbeddingPayload = {
   data?: Array<{ embedding?: number[] }>;
@@ -25,13 +24,7 @@ const importEsmModule = new Function('specifier', 'return import(specifier)') as
   specifier: string,
 ) => Promise<T>;
 
-let openRouterAgentModulePromise: Promise<OpenRouterAgentModule> | null = null;
 let openRouterSdkModulePromise: Promise<OpenRouterSdkModule> | null = null;
-
-const loadOpenRouterAgentModule = () => {
-  openRouterAgentModulePromise ??= importEsmModule<OpenRouterAgentModule>('@openrouter/agent');
-  return openRouterAgentModulePromise;
-};
 
 const loadOpenRouterSdkModule = () => {
   openRouterSdkModulePromise ??= importEsmModule<OpenRouterSdkModule>('@openrouter/sdk');
@@ -127,40 +120,46 @@ export class OpenRouterAdapter implements AIProviderAdapter {
 
   async generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult> {
     try {
-      const { OpenRouter, fromChatMessages } = await loadOpenRouterAgentModule();
-      const client = new OpenRouter(this.buildClientOptions(request.credential.value));
-      const result = client.callModel({
-        model: request.model.apiModelName,
-        input: request.messages?.length
-          ? fromChatMessages(
-              request.messages.map((message) => ({
-                role: message.role,
-                content: message.content,
-              })),
-            )
-          : (request.prompt ?? ''),
-        temperature: request.temperature,
-        maxOutputTokens: request.maxOutputTokens,
-        text: request.structuredOutputSchema
-          ? {
-              format: {
-                type: 'json_schema',
-                name: 'structured_output',
-                schema: request.structuredOutputSchema,
-                strict: true,
-              },
-            }
-          : undefined,
-      });
+      const messages: Array<{ role: string; content: string }> = request.messages?.length
+        ? request.messages.map((message) => ({ role: message.role, content: message.content }))
+        : [{ role: 'user', content: request.prompt ?? '' }];
 
-      const [text, response] = await Promise.all([result.getText(), result.getResponse()]);
+      const body: Record<string, unknown> = {
+        model: request.model.apiModelName,
+        messages,
+        ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+        ...(request.maxOutputTokens !== undefined ? { max_tokens: request.maxOutputTokens } : {}),
+      };
+
+      if (request.structuredOutputSchema) {
+        body.response_format = {
+          type: 'json_schema',
+          json_schema: {
+            name: 'structured_output',
+            schema: request.structuredOutputSchema,
+            strict: true,
+          },
+        };
+      }
+
+      const response = await this.postJson<{
+        choices?: Array<{ message?: { content?: string | null } }>;
+        usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
+      }>('/chat/completions', body, request.credential.value);
+
+      const text = response.choices?.[0]?.message?.content ?? '';
 
       return {
         text,
         structuredOutput: request.structuredOutputSchema
           ? this.tryParseStructuredOutput(text)
           : undefined,
-        usage: this.mapUsage(response.usage),
+        usage: {
+          promptTokens: response.usage?.prompt_tokens,
+          completionTokens: response.usage?.completion_tokens,
+          totalTokens: response.usage?.total_tokens,
+          raw: this.toRecord(response.usage),
+        },
         raw: this.toRecord(response),
       };
     } catch (error) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { AgentWorkspaceSidebar } from "src/core/modules/agents/components/agent-workspace-sidebar";
 import { useCompanyAgent } from "src/core/modules/agents/hooks/use-agents";
@@ -15,6 +15,7 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
   const { activeOrgId } = useActiveOrganization();
   const orgId = activeOrgId ?? "";
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const threadId = searchParams.get("thread");
   const agent = useCompanyAgent(orgId, agentId);
@@ -24,6 +25,17 @@ export function AgentWorkspaceLayout({ agentId, children }: Props) {
       router.replace("/dashboard/workspace/agents");
     }
   }, [agent.data?.status, router]);
+
+  useEffect(() => {
+    if (!agent.data || agent.isLoading) return;
+    const isOnboarding = pathname.endsWith("/onboarding");
+    if (agent.data.status === "draft" && !isOnboarding) {
+      router.replace(`/dashboard/workspace/agents/${agentId}/onboarding`);
+    }
+    if (agent.data.status !== "draft" && isOnboarding) {
+      router.replace(`/dashboard/workspace/agents/${agentId}/chat`);
+    }
+  }, [agent.data, agent.isLoading, pathname, agentId, router]);
 
   if (!activeOrgId || agent.isLoading) {
     return (

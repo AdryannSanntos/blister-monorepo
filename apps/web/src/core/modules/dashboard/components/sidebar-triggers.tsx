@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Shield,
   Building2,
   ChevronsUpDown,
   LogOut,
@@ -13,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useDashboardData } from "src/core/modules/dashboard/hooks/use-dashboard-data";
+import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use-platform-admin";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import {
   DropdownMenu,
@@ -116,6 +118,7 @@ export function UserTrigger({
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { clearActiveOrg } = useDashboardData();
+  const { canAccessPlatformAdmin } = usePlatformRoleAccess();
 
   async function handleSignOut() {
     const { error } = await authClient.signOut();
@@ -158,6 +161,15 @@ export function UserTrigger({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="end" className="w-56">
+        {canAccessPlatformAdmin ? (
+          <>
+            <DropdownMenuItem onClick={() => router.push("/workspaces/admin")}>
+              <Shield />
+              Admin de plataforma
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         <DropdownMenuItem
           onClick={() => router.push("/dashboard/account/settings")}
         >

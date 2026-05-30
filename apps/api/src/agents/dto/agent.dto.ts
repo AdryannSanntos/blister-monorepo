@@ -32,3 +32,29 @@ export const updateCompanyAgentSchema = z.strictObject({
 
 export type CreateCompanyAgentDto = z.infer<typeof createCompanyAgentSchema>;
 export type UpdateCompanyAgentDto = z.infer<typeof updateCompanyAgentSchema>;
+
+export const completeOnboardingSchema = z.object({
+  description: z.string().trim().max(500).optional(),
+  instructions: z.string().trim().max(10000).optional(),
+  notes: z.string().trim().max(5000).optional(),
+  allowedTools: allowedToolsSchema.optional(),
+  references: z
+    .array(
+      z.object({
+        sourceType: z.enum(['brain_entry', 'asset', 'manual', 'web']),
+        sourceId: z.string().trim().min(1),
+        label: z.string().trim().max(160).optional(),
+      }),
+    )
+    .max(20)
+    .optional(),
+  modelId: z.string().min(1).optional(),
+});
+
+export type CompleteOnboardingDto = z.infer<typeof completeOnboardingSchema>;
+
+export const updateAgentModelSchema = z.object({
+  modelId: z.string().min(1),
+});
+
+export type UpdateAgentModelDto = z.infer<typeof updateAgentModelSchema>;

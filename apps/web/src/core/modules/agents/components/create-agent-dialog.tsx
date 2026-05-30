@@ -67,7 +67,7 @@ export function CreateAgentDialog({ open, onOpenChange, orgId }: Props) {
     });
     onOpenChange(false);
     form.reset();
-    router.push(`/dashboard/workspace/agents/${agent.id}/chat`);
+    router.push(`/dashboard/workspace/agents/${agent.id}/onboarding`);
   }
 
   return (
@@ -76,8 +76,8 @@ export function CreateAgentDialog({ open, onOpenChange, orgId }: Props) {
         <DialogHeader>
           <DialogTitle>Criar agente</DialogTitle>
           <DialogDescription>
-            Dê um nome ao agente. Você poderá configurar workflow, contexto e
-            instruções dentro do workspace dele.
+            Dê um nome ao agente. Em seguida, configure objetivo, instruções e
+            ferramentas.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

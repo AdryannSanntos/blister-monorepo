@@ -65,16 +65,7 @@ function FileForm({
       return;
     }
     const title = (values.displayName?.trim() || file.name).replace(/\.[^.]+$/, '') || file.name;
-    const { uploadUrl, objectKey, publicUrl } = await createUploadUrl.mutateAsync({
-      fileName: file.name,
-      contentType: file.type || 'application/octet-stream',
-      size: file.size,
-    });
-    await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file,
-      headers: { 'Content-Type': file.type || 'application/octet-stream' },
-    });
+    const { objectKey, publicUrl } = await createUploadUrl.mutateAsync(file);
     await createSource.mutateAsync({
       title,
       description: values.description?.trim() || undefined,

@@ -5,6 +5,7 @@ import {
   Archive,
   BookOpen,
   ChevronDown,
+  Cpu,
   ExternalLink,
   FileText,
   Globe,
@@ -17,7 +18,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   useAgentContextFiles,
@@ -35,6 +36,11 @@ import {
   useCompanyAgent,
   useUpdateAgent,
 } from "src/core/modules/agents/hooks/use-agents";
+import {
+  useAgentBuilderCatalog,
+  useUpdateAgentModel,
+} from "src/core/modules/agents/hooks/use-agent-catalog";
+import { ModelPicker } from "src/core/modules/agents/components/model-picker";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { AgentContentLayout } from "src/core/shared/components/ui/agent-content-layout";
@@ -694,6 +700,103 @@ function ToolAllowlistSection({
   );
 }
 
+// ─── Model section ────────────────────────────────────────────────────────────
+
+function ModelSection({
+  orgId,
+  agentId,
+  currentModelId,
+}: {
+  orgId: string;
+  agentId: string;
+  currentModelId?: string;
+}) {
+  const catalog = useAgentBuilderCatalog(orgId);
+  const updateModel = useUpdateAgentModel(orgId, agentId);
+  const [selectedModelId, setSelectedModelId] = useState(currentModelId ?? "");
+
+  useEffect(() => {
+    setSelectedModelId(currentModelId ?? "");
+  }, [currentModelId]);
+
+  async function handleModelChange(nextModelId: string) {
+    if (!nextModelId || nextModelId === selectedModelId) {
+      return;
+    }
+
+    const previousModelId = selectedModelId;
+    setSelectedModelId(nextModelId);
+
+    try {
+      await updateModel.mutateAsync(nextModelId);
+    } catch {
+      setSelectedModelId(previousModelId);
+    }
+  }
+
+  return (
+    <section className="space-y-4 rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)] p-6">
+      <div className="flex items-start gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Cpu className="size-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[13.5px] font-semibold text-[var(--fg-primary)]">
+            Modelo de IA
+          </p>
+          <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
+            Modelo utilizado pelo agente nas conversas. Modelos agrupados por provedor.
+          </p>
+        </div>
+      </div>
+      <PermissionGate
+        permission="agent.update"
+        fallback={
+          <ModelPicker
+            catalog={catalog.data}
+            value={selectedModelId}
+            onChange={() => undefined}
+            disabled
+          />
+        }
+      >
+        <ModelPicker
+          catalog={catalog.data}
+          value={selectedModelId}
+          onChange={handleModelChange}
+          disabled={updateModel.isPending}
+        />
+      </PermissionGate>
+    </section>
+  );
+}
+
+function readConfiguredModelId(flowDefinition: unknown) {
+  if (!flowDefinition || typeof flowDefinition !== "object") {
+    return undefined;
+  }
+
+  const flow = flowDefinition as {
+    config?: Record<string, unknown>;
+    nodes?: Array<{ type?: string; config?: Record<string, unknown> }>;
+  };
+
+  if (typeof flow.config?.modelId === "string" && flow.config.modelId.length > 0) {
+    return flow.config.modelId;
+  }
+
+  const llmNode = flow.nodes?.find(
+    (node) =>
+      node?.type === "llm_call" &&
+      typeof node.config?.modelId === "string" &&
+      node.config.modelId.length > 0,
+  );
+
+  return typeof llmNode?.config?.modelId === "string"
+    ? llmNode.config.modelId
+    : undefined;
+}
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export function AgentSettingsPage() {
@@ -705,6 +808,17 @@ export function AgentSettingsPage() {
   const agent = useCompanyAgent(orgId, agentId);
   const update = useUpdateAgent(orgId, agentId);
   const archive = useArchiveAgent(orgId);
+
+  const currentModelId = useMemo(() => {
+    const data = agent.data;
+    if (!data) return undefined;
+    // Prefer the active version; fall back to the latest draft.
+    const activeVersion = data.activeVersionId
+      ? data.versions?.find((v) => v.id === data.activeVersionId)
+      : undefined;
+    const version = activeVersion ?? data.versions?.[0];
+    return version ? readConfiguredModelId(version.flowDefinition) : undefined;
+  }, [agent.data]);
   const [confirmArchive, setConfirmArchive] = useState(false);
 
   const agentForm = useForm<AgentFormValues>({
@@ -786,6 +900,13 @@ export function AgentSettingsPage() {
             </PermissionGate>
           </form>
         </Form>
+
+        {/* Model */}
+        <ModelSection
+          orgId={orgId}
+          agentId={agentId}
+          currentModelId={currentModelId}
+        />
 
         {/* Tool allowlist */}
         <ToolAllowlistSection

@@ -125,7 +125,31 @@ export class DesignSystemService {
       contentType: dto.contentType,
       size: dto.size,
     });
-    return { key, url };
+    return { key, url }; 
+  }
+
+  async uploadAssetFile(
+    organizationId: string,
+    input: {
+      primaryRole: CreateUploadUrlDto['primaryRole'];
+      fileName: string;
+      contentType: string;
+      size: number;
+      body: Buffer;
+    },
+  ) {
+    const key = this.storage.buildDesignAssetKey(organizationId, input.primaryRole, input.fileName);
+
+    await this.storage.putObject({
+      key,
+      body: input.body,
+      contentType: input.contentType,
+    });
+
+    return {
+      key,
+      publicUrl: this.storage.buildPublicObjectUrl(key),
+    };
   }
 
   async createAsset(organizationId: string, dto: CreateDesignAssetDto) {

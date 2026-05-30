@@ -35,10 +35,10 @@ type MockPrisma = ReturnType<typeof makeMockPrisma>;
 describe('AICatalogService', () => {
   let service: AICatalogService;
   let prisma: MockPrisma;
-  const openRouterAdapter = { listModels: jest.fn() };
-  const openAIAdapter = { listModels: jest.fn() };
-  const anthropicAdapter = { listModels: jest.fn() };
-  const geminiAdapter = { listModels: jest.fn() };
+  const openRouterAdapter = { listModels: jest.fn(), supports: jest.fn() };
+  const openAIAdapter = { listModels: jest.fn(), supports: jest.fn() };
+  const anthropicAdapter = { listModels: jest.fn(), supports: jest.fn() };
+  const geminiAdapter = { listModels: jest.fn(), supports: jest.fn() };
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
@@ -59,6 +59,13 @@ describe('AICatalogService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  beforeEach(() => {
+    openRouterAdapter.supports.mockReturnValue(true);
+    openAIAdapter.supports.mockReturnValue(true);
+    anthropicAdapter.supports.mockReturnValue(true);
+    geminiAdapter.supports.mockReturnValue(false);
   });
 
   it('creates a provider with icon metadata', async () => {
@@ -503,5 +510,53 @@ describe('AICatalogService', () => {
         capabilityMetadata: { text: true },
       },
     ]);
+  });
+
+  it('filters out models from providers unsupported by the runtime', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'model-openrouter',
+        providerId: 'provider-openrouter',
+        name: 'Supported Model',
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-openrouter',
+          slug: 'openrouter',
+          name: 'OpenRouter',
+          status: 'active',
+        },
+      },
+      {
+        id: 'model-gemini',
+        providerId: 'provider-gemini',
+        name: 'Unsupported Gemini',
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-gemini',
+          slug: 'gemini',
+          name: 'Gemini',
+          status: 'active',
+        },
+      },
+    ]);
+    prisma.aIProvider.findMany.mockResolvedValue([
+      { id: 'provider-openrouter', slug: 'openrouter', name: 'OpenRouter', status: 'active' },
+    ]);
+
+    const result = await service.listBuilderCatalog('org-1', { kind: 'text' });
+
+    expect(result.providers).toEqual([
+      { id: 'provider-openrouter', slug: 'openrouter', name: 'OpenRouter' },
+    ]);
+    expect(result.models).toEqual([
+      {
+        id: 'model-openrouter',
+        providerId: 'provider-openrouter',
+        name: 'Supported Model',
+        capabilityMetadata: { text: true },
+      },
+    ]);
+    expect(geminiAdapter.supports).toHaveBeenCalledWith('text_generation');
   });
 });

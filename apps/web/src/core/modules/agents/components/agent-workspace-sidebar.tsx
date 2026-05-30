@@ -2,9 +2,12 @@
 
 import {
   ArrowLeft,
+  BarChart2,
   Bot,
+  ChevronsUpDown,
+  ChevronDown,
+  ChevronUp,
   GitBranch,
-  History,
   MessageSquare,
   MoreHorizontal,
   PanelLeftClose,
@@ -13,7 +16,8 @@ import {
   Settings,
   Trash2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { AgentInactiveDialog } from "src/core/modules/agents/components/agent-inactive-dialog";
 import {
@@ -22,7 +26,10 @@ import {
   useDeleteThread,
   useRenameThread,
 } from "src/core/modules/agents/hooks/use-agent-chat";
-import type { Agent } from "src/core/modules/agents/hooks/use-agents";
+import {
+  type Agent,
+  useCompanyAgents,
+} from "src/core/modules/agents/hooks/use-agents";
 import { UserTrigger } from "src/core/modules/dashboard/components/sidebar-triggers";
 import {
   getInitials,
@@ -37,6 +44,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
@@ -48,8 +56,10 @@ type Props = {
 };
 
 export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
+  const pathname = usePathname();
   const router = useRouter();
   const { displayName, activeOrganization, activeRole } = useDashboardData();
+  const agents = useCompanyAgents(orgId);
   const threads = useAgentThreads(orgId, agent.id);
   const createThread = useCreateThread(orgId, agent.id);
   const deleteThread = useDeleteThread(orgId, agent.id);
@@ -69,6 +79,7 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
   } | null>(null);
   const [inactiveDialogOpen, setInactiveDialogOpen] = useState(false);
   const isAgentActive = agent.status === "active";
+  const [showAllThreads, setShowAllThreads] = useState(false);
   const [renamingThreadId, setRenamingThreadId] = useState<string | null>(null);
   const [renameDraft, setRenameDraft] = useState("");
   const renameInputRef = useRef<HTMLInputElement>(null);
@@ -76,9 +87,21 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
   const basePath = `/dashboard/workspace/agents/${agent.id}`;
   const userInitials = getInitials(displayName);
 
+  function buildAgentHref(targetAgent: Agent) {
+    const match = pathname.match(
+      /\/dashboard\/workspace\/agents\/[^/]+(\/.*)?$/,
+    );
+    const sectionPath = match?.[1] ?? "/chat";
+    return `/dashboard/workspace/agents/${targetAgent.id}${sectionPath}`;
+  }
+
   async function handleNewThread() {
     if (!isAgentActive) {
       setInactiveDialogOpen(true);
+      return;
+    }
+    if (!activeThreadId) {
+      toast.info("Você já está em uma nova conversa.");
       return;
     }
     const thread = await createThread.mutateAsync(undefined);
@@ -186,6 +209,10 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
       ) : null,
   }));
 
+  const visibleThreadItems = showAllThreads
+    ? threadItems
+    : threadItems.slice(0, 3);
+
   const sidebarGroups: SidebarGroupDef[] = [
     {
       items: [
@@ -221,35 +248,45 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
       collapsible: false,
       items: [
         {
-          label: "Workflow",
-          icon: GitBranch,
-          href: `${basePath}/workflow`,
+          label: "Insights",
+          icon: BarChart2,
+          soon: true,
           permission: "agent.update" as const,
-          match: (p) => p.startsWith(`${basePath}/workflow`),
-          badge: !isAgentActive
-            ? { value: "!", tone: "warning" as const }
-            : undefined,
         },
         {
-          label: "Execuções",
-          icon: History,
-          href: `${basePath}/executions`,
-          permission: "agent.run.read" as const,
-          match: (p) => p.startsWith(`${basePath}/executions`),
+          label: "Workflow",
+          icon: GitBranch,
+          soon: true,
+          permission: "agent.update" as const,
         },
         {
           label: "Configurações",
           icon: Settings,
           href: `${basePath}/settings`,
           permission: "agent.update" as const,
-          match: (p) => p.startsWith(`${basePath}/settings`),
+          match: (p: string) => p.startsWith(`${basePath}/settings`),
         },
+        newConversaItem,
       ],
     },
     {
       label: "CONVERSAS",
       collapsible: false,
-      items: [newConversaItem, ...threadItems],
+      items: [
+        ...visibleThreadItems,
+        ...(threadItems.length > 3
+          ? [
+              {
+                id: "show-more-threads",
+                label: showAllThreads
+                  ? "Ver menos"
+                  : `+${threadItems.length - 3} conversas`,
+                icon: showAllThreads ? ChevronUp : ChevronDown,
+                onSelect: () => setShowAllThreads((v) => !v),
+              },
+            ]
+          : []),
+      ],
       emptyState: undefined,
     },
   ];
@@ -285,23 +322,83 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
         }}
         workspaceTrigger={(collapsed) =>
           collapsed ? (
-            <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] text-[var(--fg-primary)]">
-              <Bot className="size-4" />
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] text-[var(--fg-primary)]"
+                  aria-label="Selecionar agente"
+                >
+                  <Bot className="size-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-72">
+                <DropdownMenuLabel>Agentes</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(agents.data ?? [])
+                  .filter((item) => item.status !== "archived")
+                  .map((item) => (
+                    <DropdownMenuItem
+                      key={item.id}
+                      disabled={item.id === agent.id}
+                      onClick={() => router.push(buildAgentHref(item))}
+                    >
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="truncate text-[13px] font-medium">
+                          {item.name}
+                        </span>
+                        <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
+                          {item.description ?? item.category}
+                        </span>
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <div className="flex h-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5">
-              <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
-                <Bot className="size-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
-                  {agent.name}
-                </p>
-                <p className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                  {activeOrganization?.name ?? "Agente"}
-                </p>
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex h-full w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left"
+                >
+                  <div className="flex size-10 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+                    <Bot className="size-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[13px] font-medium text-[var(--fg-primary)]">
+                      {agent.name}
+                    </p>
+                    <p className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
+                      {activeOrganization?.name ?? "Agente"}
+                    </p>
+                  </div>
+                  <ChevronsUpDown className="size-3.5 shrink-0 text-[var(--fg-quaternary)]" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-72">
+                <DropdownMenuLabel>Agentes</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(agents.data ?? [])
+                  .filter((item) => item.status !== "archived")
+                  .map((item) => (
+                    <DropdownMenuItem
+                      key={item.id}
+                      disabled={item.id === agent.id}
+                      onClick={() => router.push(buildAgentHref(item))}
+                    >
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="truncate text-[13px] font-medium">
+                          {item.name}
+                        </span>
+                        <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
+                          {item.description ?? item.category}
+                        </span>
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )
         }
         userTrigger={(collapsed) => (

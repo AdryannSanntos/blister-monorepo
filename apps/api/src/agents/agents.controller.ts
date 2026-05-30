@@ -19,8 +19,10 @@ import { AgentsService } from './agents.service';
 import {
   agentContextFileSchema,
   agentContextReferenceSchema,
+  completeOnboardingSchema,
   createCompanyAgentSchema,
   saveDraftVersionSchema,
+  updateAgentModelSchema,
   updateCompanyAgentSchema,
 } from './dto';
 
@@ -138,6 +140,40 @@ export class AgentsController {
   ) {
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentsService.reactivateAgent(orgId, agentId, currentUser.id);
+  }
+
+  @Post(':agentId/onboarding/complete')
+  @RequirePermission('agent.update')
+  async completeOnboarding(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const parsed = completeOnboardingSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentsService.completeOnboarding(orgId, agentId, currentUser.id, parsed.data);
+  }
+
+  @Patch(':agentId/model')
+  @RequirePermission('agent.update')
+  async updateAgentModel(
+    @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const parsed = updateAgentModelSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentsService.updateAgentModel(orgId, agentId, currentUser.id, parsed.data);
   }
 
   @Get(':agentId/context')

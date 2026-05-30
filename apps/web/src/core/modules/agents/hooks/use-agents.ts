@@ -32,6 +32,7 @@ export type Agent = {
   allowedTools: AgentTool[];
   createdAt: string;
   updatedAt: string;
+  onboardingCompletedAt: string | null;
   versions?: AgentVersion[];
 };
 
@@ -235,6 +236,45 @@ export function usePublishVersion(
       toast.success("Versão publicada.");
     },
     onError: () => toast.error("Erro ao publicar versão."),
+  });
+}
+
+export type CompleteOnboardingInput = {
+  description?: string;
+  instructions?: string;
+  notes?: string;
+  allowedTools?: AgentTool[];
+  references?: Array<{
+    sourceType: "brain_entry" | "asset" | "manual" | "web";
+    sourceId: string;
+    label?: string;
+  }>;
+  modelId?: string;
+};
+
+export function useCompleteAgentOnboarding(
+  orgId: string | null | undefined,
+  agentId: string | null | undefined,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: CompleteOnboardingInput) => {
+      if (!orgId || !agentId) throw new Error("orgId and agentId required");
+      const { data } = await apiClient.post<Agent>(
+        `/organizations/${orgId}/agents/${agentId}/onboarding/complete`,
+        input,
+      );
+      return data;
+    },
+    onSuccess: (_data, _vars) => {
+      if (orgId) {
+        queryClient.invalidateQueries({ queryKey: ["agents", orgId] });
+        if (agentId) {
+          queryClient.invalidateQueries({ queryKey: ["agents", orgId, agentId] });
+        }
+      }
+    },
+    onError: () => toast.error("Erro ao concluir configuração do agente."),
   });
 }
 

@@ -471,7 +471,8 @@ model CompanyAgent {
   description     String?
   status          String               @default("draft")
   allowedTools    Json                 @default("[]")
-  activeVersionId String?
+  activeVersionId       String?
+  onboardingCompletedAt DateTime?
   createdByUserId String
   updatedByUserId String
   createdAt       DateTime             @default(now())

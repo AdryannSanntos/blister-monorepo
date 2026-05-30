@@ -193,7 +193,7 @@ export class AgentChatOrchestratorService {
       : [];
     const history = this.trimDuplicateLatestUserMessage(rawHistory, input.message.trim());
 
-    const canExecuteWorkflow = Boolean(agent.activeVersionId);
+    const canExecuteWorkflow = false; // workflow runs paused
     const configuredTextModel = resolveConfiguredTextModel(activeVersion?.flowDefinition);
 
     const agentInstructions =

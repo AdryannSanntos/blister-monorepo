@@ -32,6 +32,25 @@ export class ContextService {
     return { uploadUrl: url, objectKey: key, publicUrl };
   }
 
+  async uploadSourceFile(
+    organizationId: string,
+    input: { fileName: string; contentType: string; size: number; body: Buffer },
+  ) {
+    const tempId = randomUUID();
+    const objectKey = this.storage.buildContextSourceKey(organizationId, tempId, input.fileName);
+
+    await this.storage.putObject({
+      key: objectKey,
+      body: input.body,
+      contentType: input.contentType,
+    });
+
+    return {
+      objectKey,
+      publicUrl: this.storage.buildPublicObjectUrl(objectKey),
+    };
+  }
+
   async create(organizationId: string, dto: CreateContextSourceDto, userId: string) {
     const source = await this.prisma.contextSource.create({
       data: {

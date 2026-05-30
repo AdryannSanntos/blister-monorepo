@@ -126,12 +126,15 @@ export function useContextArtifact(orgId: string | null) {
 
 export function useCreateContextUploadUrl(orgId: string | null) {
   return useMutation({
-    mutationFn: async (input: { fileName: string; contentType: string; size: number }) => {
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
       const { data } = await apiClient.post<{
-        uploadUrl: string;
         objectKey: string;
         publicUrl?: string;
-      }>(`/organizations/${orgId}/context/upload-url`, input);
+      }>(`/organizations/${orgId}/context/files`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       return data;
     },
   });

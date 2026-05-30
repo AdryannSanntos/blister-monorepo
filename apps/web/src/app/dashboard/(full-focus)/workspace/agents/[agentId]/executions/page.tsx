@@ -1,5 +1,10 @@
-import { AgentExecutionsPage } from "src/core/modules/agents/pages/agent-executions-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <AgentExecutionsPage />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ agentId: string }>;
+}) {
+  const { agentId } = await params;
+  redirect(`/dashboard/workspace/agents/${agentId}/chat`);
 }
