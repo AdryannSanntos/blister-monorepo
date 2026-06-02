@@ -22,9 +22,9 @@ export class AgentToolPolicyService {
   getPermissionsForTool(toolName: AgentChatToolName): string[] {
     switch (toolName) {
       case 'rag_search':
-        return ['context.read', 'brain.read', 'asset.read'];
+        return ['context.read', 'brain.read', 'asset.read', 'design-system.read'];
       case 'file_search':
-        return ['context.read', 'asset.read'];
+        return ['context.read', 'asset.read', 'design-system.read'];
       case 'web_research':
         return [];
       default:

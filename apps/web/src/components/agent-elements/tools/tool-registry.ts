@@ -1,12 +1,18 @@
 import {
+  IconBrain as Brain,
+  IconBuildingSkyscraper as Building,
   IconEye as Eye,
+  IconFile as File,
   IconFileCode as FileCode2,
   IconFilePlus as FilePlus,
+  IconFileText as FileText,
   IconFolderSearch as FolderSearch,
   IconGitBranch as GitBranch,
   IconGlobe as Globe,
   IconChecklist as ListTodo,
   IconLogout as LogOut,
+  IconPalette as Palette,
+  IconPhoto as Photo,
   IconSearch as Search,
   IconSparkles as Sparkles,
   IconTerminal2 as Terminal,
@@ -14,14 +20,43 @@ import {
 } from "@tabler/icons-react";
 import type React from "react";
 
+type IconComponent = React.ComponentType<{ className?: string }>;
+
 export type ToolVariant = "simple" | "collapsible";
 
 export type ToolMeta = {
-  icon: React.ComponentType<{ className?: string }>;
+  /** Static icon, or a resolver when the icon depends on the part (e.g. source type). */
+  icon: IconComponent | ((part: any) => IconComponent);
   title: (part: any) => string;
   subtitle?: (part: any) => string;
   variant: ToolVariant;
 };
+
+/**
+ * Resolves a tool's icon, supporting per-part icon selection. Icon components
+ * are objects (forwardRef), so a `function` icon is always a resolver.
+ */
+export function resolveToolIcon(meta: ToolMeta, part: unknown): IconComponent {
+  return typeof meta.icon === "function"
+    ? (meta.icon as (p: unknown) => IconComponent)(part)
+    : meta.icon;
+}
+
+/**
+ * Per-source-family icon + PT label for agent-chat retrieval rows. An uploaded
+ * file, the company brain, the design system and an external source each read
+ * distinctly instead of all looking like a generic "search".
+ */
+const SOURCE_KIND_META: Record<string, { icon: IconComponent; label: string }> =
+  {
+    file: { icon: FileText, label: "Arquivo" },
+    brain: { icon: Brain, label: "Brain" },
+    design: { icon: Palette, label: "Design system" },
+    asset: { icon: Photo, label: "Asset" },
+    web: { icon: Globe, label: "Fonte externa" },
+    company: { icon: Building, label: "Contexto da empresa" },
+    document: { icon: File, label: "Documento" },
+  };
 
 function getDisplayPath(filePath: string): string {
   if (!filePath) return "";
@@ -68,6 +103,36 @@ function calculateDiffStats(oldString: string, newString: string) {
   return { addedLines, removedLines };
 }
 
+/** PT label for the kind of agent-chat search, used as the search row subtitle. */
+function searchActionLabel(part: {
+  input?: { toolName?: string };
+  state?: string;
+}): string {
+  const isPending =
+    part.state !== "output-available" && part.state !== "output-error";
+  const labels: Record<string, { pending: string; done: string }> = {
+    next_action_analysis: {
+      pending: "Analisando solicitacao",
+      done: "Definiu proxima acao",
+    },
+    rag_search: {
+      pending: "Consultando contexto",
+      done: "Consultou contexto da empresa",
+    },
+    file_search: {
+      pending: "Pesquisando arquivos",
+      done: "Pesquisou arquivos do contexto",
+    },
+    web_research: {
+      pending: "Pesquisando na web",
+      done: "Pesquisou fontes externas",
+    },
+  };
+  const label = part.input?.toolName ? labels[part.input.toolName] : undefined;
+  if (label) return isPending ? label.pending : label.done;
+  return isPending ? "Pesquisando" : "Pesquisa concluída";
+}
+
 export const toolRegistry: Record<string, ToolMeta> = {
   "tool-Task": {
     icon: Sparkles,
@@ -110,30 +175,41 @@ export const toolRegistry: Record<string, ToolMeta> = {
   },
   // Conversational agent chat tools (rag_search / file_search / web_research).
   "tool-Search": {
-    icon: Search,
+    // Each source family (uploaded file, brain, design system, web, …) renders
+    // with its own icon; generic searches fall back to the magnifier.
+    icon: (part: any) => {
+      const kind =
+        typeof part?.input?.sourceKind === "string"
+          ? part.input.sourceKind
+          : "";
+      return SOURCE_KIND_META[kind]?.icon ?? Search;
+    },
+    // The row leads with the concrete file/context that was read, so it is
+    // directed at the source rather than echoing a generic action. The source
+    // family ("Arquivo", "Brain", "Design system", …) drops to the subtitle.
     title: (part) => {
-      const isPending =
-        part.state !== "output-available" && part.state !== "output-error";
-      const labels: Record<string, { pending: string; done: string }> = {
-        rag_search: {
-          pending: "Consultando contexto",
-          done: "Consultou contexto da empresa",
-        },
-        file_search: {
-          pending: "Pesquisando arquivos",
-          done: "Pesquisou arquivos do contexto",
-        },
-        web_research: {
-          pending: "Pesquisando na web",
-          done: "Pesquisou fontes externas",
-        },
-      };
-      const toolName = part.input?.toolName as string | undefined;
-      const label = toolName ? labels[toolName] : undefined;
-      if (label) return isPending ? label.pending : label.done;
-      return isPending ? "Pesquisando" : "Pesquisa concluída";
+      const fileTitle =
+        typeof part.input?.fileTitle === "string" ? part.input.fileTitle : "";
+      if (fileTitle) {
+        return fileTitle.length > 64
+          ? `${fileTitle.slice(0, 61)}...`
+          : fileTitle;
+      }
+      return searchActionLabel(part);
     },
     subtitle: (part) => {
+      const isPending =
+        part.state !== "output-available" && part.state !== "output-error";
+      const fileTitle =
+        typeof part.input?.fileTitle === "string" ? part.input.fileTitle : "";
+      if (fileTitle) {
+        const kind =
+          typeof part.input?.sourceKind === "string"
+            ? part.input.sourceKind
+            : "";
+        return SOURCE_KIND_META[kind]?.label ?? searchActionLabel(part);
+      }
+      if (!isPending) return "Nenhum resultado";
       const query = part.input?.query || "";
       return query.length > 40 ? `${query.slice(0, 37)}...` : query;
     },

@@ -1,10 +1,13 @@
 import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { ConversationSseService } from '../conversation/conversation-sse.service';
+import { ConversationService } from '../conversation/conversation.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentChatOrchestratorService } from './agent-chat-orchestrator.service';
 import { AgentChatService } from './agent-chat.service';
 import { AgentIntentService } from './agent-intent.service';
 import { AgentRunsService } from './agent-runs.service';
+import { SystemAgentsService } from './system-agents/system-agents.service';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -56,6 +59,34 @@ const makeMockRunsService = () => ({
   createQueuedRun: jest.fn().mockResolvedValue({ id: 'run-1', status: 'queued' }),
 });
 
+const makeMockConversationService = () => ({
+  appendEvent: jest.fn().mockResolvedValue({ event: { sequence: 1 }, projection: {} }),
+  getThreadReplay: jest
+    .fn()
+    .mockResolvedValue({ threadId: 'thread-1', lastSequence: 0, messages: [] }),
+});
+
+const makeMockSystemAgentsService = () => ({
+  generateThreadTitle: jest.fn().mockResolvedValue({
+    agentKey: 'thread-title',
+    status: 'failed',
+    data: null,
+    errorMessage: null,
+    startedAt: new Date(0).toISOString(),
+    finishedAt: new Date(0).toISOString(),
+  }),
+  generateInitialMessages: jest.fn().mockResolvedValue({
+    agentKey: 'initial-messages',
+    status: 'failed',
+    data: null,
+    errorMessage: null,
+    startedAt: new Date(0).toISOString(),
+    finishedAt: new Date(0).toISOString(),
+  }),
+});
+
+const makeMockSse = () => ({ writeEvent: jest.fn() });
+
 const THREAD = {
   id: 'thread-1',
   organizationId: 'org-1',
@@ -90,6 +121,9 @@ describe('AgentChatService.createThread', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
         { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
+        { provide: SystemAgentsService, useValue: makeMockSystemAgentsService() },
+        { provide: ConversationService, useValue: makeMockConversationService() },
+        { provide: ConversationSseService, useValue: makeMockSse() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -159,6 +193,9 @@ describe('AgentChatService.createUserMessageAndProcess', () => {
         { provide: AgentIntentService, useValue: intentService },
         { provide: AgentRunsService, useValue: runsService },
         { provide: AgentChatOrchestratorService, useValue: orchestratorService },
+        { provide: SystemAgentsService, useValue: makeMockSystemAgentsService() },
+        { provide: ConversationService, useValue: makeMockConversationService() },
+        { provide: ConversationSseService, useValue: makeMockSse() },
       ],
     }).compile();
     service = module.get(AgentChatService);
@@ -342,6 +379,9 @@ describe('AgentChatService.editMessageAndBranch', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
         { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
+        { provide: SystemAgentsService, useValue: makeMockSystemAgentsService() },
+        { provide: ConversationService, useValue: makeMockConversationService() },
+        { provide: ConversationSseService, useValue: makeMockSse() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -443,8 +483,8 @@ describe('AgentChatService.editMessageAndBranch', () => {
         expect.objectContaining({ content: 'Mensagem anterior', threadId: 'branch-1' }),
       ]),
     });
-    // replacement message criada individualmente
-    expect(prisma.agentChatMessage.create).toHaveBeenCalledTimes(1);
+    // a mensagem editada + resposta são produzidas pelo stream depois, não aqui
+    expect(prisma.agentChatMessage.create).not.toHaveBeenCalled();
   });
 });
 
@@ -464,6 +504,9 @@ describe('AgentChatService.listMessages', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
         { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
+        { provide: SystemAgentsService, useValue: makeMockSystemAgentsService() },
+        { provide: ConversationService, useValue: makeMockConversationService() },
+        { provide: ConversationSseService, useValue: makeMockSse() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -520,6 +563,9 @@ describe('AgentChatService.deleteThread', () => {
         { provide: PrismaService, useValue: prisma },
         { provide: AgentIntentService, useValue: makeMockIntentService() },
         { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
+        { provide: SystemAgentsService, useValue: makeMockSystemAgentsService() },
+        { provide: ConversationService, useValue: makeMockConversationService() },
+        { provide: ConversationSseService, useValue: makeMockSse() },
         { provide: AgentRunsService, useValue: makeMockRunsService() },
       ],
     }).compile();
@@ -558,84 +604,264 @@ describe('AgentChatService.deleteThread', () => {
 });
 
 // ---------------------------------------------------------------------------
-// AgentChatService — regenerateMessage
+// AgentChatService — streamAssistantReply (SSE-first path)
 // ---------------------------------------------------------------------------
 
-describe('AgentChatService.regenerateMessage', () => {
-  let service: AgentChatService;
-  let prisma: ReturnType<typeof makeMockPrisma>;
-  let runsService: ReturnType<typeof makeMockRunsService>;
+async function* fakeTurn() {
+  yield { eventType: 'message_stream_started', payload: {} };
+  yield { eventType: 'message_text_delta', payload: { delta: 'Ola ' } };
+  yield { eventType: 'message_text_delta', payload: { delta: 'mundo' } };
+  yield { eventType: 'message_completed', payload: { text: 'Ola mundo', citations: [] } };
+}
 
-  beforeEach(async () => {
-    prisma = makeMockPrisma();
-    runsService = makeMockRunsService();
+class RecordingSink {
+  chunks: string[] = [];
+  ended = false;
+  write(chunk: string) {
+    this.chunks.push(chunk);
+    return true;
+  }
+  end() {
+    this.ended = true;
+  }
+}
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AgentChatService,
-        { provide: PrismaService, useValue: prisma },
-        { provide: AgentIntentService, useValue: makeMockIntentService() },
-        { provide: AgentChatOrchestratorService, useValue: makeMockOrchestratorService() },
-        { provide: AgentRunsService, useValue: runsService },
-      ],
-    }).compile();
-    service = module.get(AgentChatService);
-  });
+describe('AgentChatService.streamAssistantReply', () => {
+  const buildService = (overrides: { streamTurn?: () => AsyncGenerator<any> } = {}) => {
+    const prisma = makeMockPrisma();
+    prisma.agentChatThread.findUnique.mockResolvedValue({
+      ...THREAD,
+      agentId: 'agent-1',
+      createdByUserId: 'user-1',
+    });
+    let createdCount = 0;
+    prisma.agentChatMessage.create.mockImplementation(() => {
+      createdCount += 1;
+      return Promise.resolve({ id: createdCount === 1 ? 'user-msg' : 'assistant-msg' });
+    });
+    prisma.agentChatMessage.update.mockResolvedValue({ id: 'assistant-msg' });
 
-  afterEach(() => jest.clearAllMocks());
-
-  it('creates a run to regenerate assistant message', async () => {
-    const assistantMsg = {
-      ...MESSAGE,
-      id: 'asst-1',
-      role: 'assistant',
-      content: 'Resposta anterior',
+    const orchestrator = {
+      streamTurn: jest.fn(() => (overrides.streamTurn ?? fakeTurn)()),
     };
-    prisma.agentChatMessage.findFirst.mockResolvedValue(assistantMsg);
-    prisma.agentChatThread.findUnique.mockResolvedValue(THREAD);
-    prisma.agentRun.findFirst.mockResolvedValue(null);
-    prisma.agentChatMessage.create.mockResolvedValue({ id: 'regen-msg-1' });
+    const appendEvent = jest
+      .fn()
+      .mockImplementation((input: any) =>
+        Promise.resolve({ event: { ...input, sequence: 1 }, projection: {} }),
+      );
+    const conversation = { appendEvent, getThreadReplay: jest.fn() };
+    const sse = { writeEvent: jest.fn() };
 
-    const result = await service.regenerateMessage(
+    const service = new AgentChatService(
+      prisma as any,
+      makeMockIntentService() as any,
+      makeMockRunsService() as any,
+      orchestrator as any,
+      makeMockSystemAgentsService() as any,
+      conversation as any,
+      sse as any,
+    );
+    return { service, prisma, orchestrator, conversation, sse };
+  };
+
+  it('persists the user message + assistant container and streams every event', async () => {
+    const { service, prisma, conversation, sse } = buildService();
+    const sink = new RecordingSink();
+
+    await service.streamAssistantReply(
       'org-1',
-      { threadId: 'thread-1', messageId: 'asst-1' },
       'user-1',
+      { agentId: 'agent-1', threadId: 'thread-1', content: 'oi' },
+      sink as any,
     );
 
-    expect(runsService.createQueuedRun).toHaveBeenCalledWith(
-      'org-1',
-      'agent-1',
-      'user-1',
+    // user message + assistant container
+    expect(prisma.agentChatMessage.create).toHaveBeenCalledTimes(2);
+    // message_created + 4 streamed events all appended to the log
+    const appendedTypes = conversation.appendEvent.mock.calls.map((c: any[]) => c[0].eventType);
+    expect(appendedTypes).toEqual([
+      'message_created',
+      'message_stream_started',
+      'message_text_delta',
+      'message_text_delta',
+      'message_completed',
+    ]);
+    // every appended event is written to the client
+    expect(sse.writeEvent).toHaveBeenCalledTimes(5);
+    // final assistant text persisted for durability + legacy listing
+    expect(prisma.agentChatMessage.update).toHaveBeenCalledWith(
       expect.objectContaining({
-        input: expect.objectContaining({ regenerationOfMessageId: 'asst-1' }),
+        where: { id: 'assistant-msg' },
+        data: expect.objectContaining({ content: 'Ola mundo' }),
       }),
     );
-    expect(result.run).not.toBeNull();
+    expect(sink.ended).toBe(true);
   });
 
-  it('throws NotFoundException when message does not exist', async () => {
-    prisma.agentChatMessage.findFirst.mockResolvedValue(null);
+  it('rejects a thread that does not belong to the user', async () => {
+    const { service, prisma } = buildService();
+    prisma.agentChatThread.findUnique.mockResolvedValue({
+      ...THREAD,
+      agentId: 'agent-1',
+      createdByUserId: 'someone-else',
+    });
+    const sink = new RecordingSink();
 
     await expect(
-      service.regenerateMessage('org-1', { threadId: 'thread-1', messageId: 'ghost' }, 'user-1'),
+      service.streamAssistantReply(
+        'org-1',
+        'user-1',
+        { agentId: 'agent-1', threadId: 'thread-1', content: 'oi' },
+        sink as any,
+      ),
     ).rejects.toThrow(NotFoundException);
   });
 
-  it('throws BadRequestException when trying to regenerate a user message', async () => {
-    prisma.agentChatMessage.findFirst.mockResolvedValue({ ...MESSAGE, role: 'user' });
+  it('emits message_failed and still ends the stream when the turn throws', async () => {
+    const { service, conversation, sse } = buildService({
+      // biome-ignore lint/correctness/useYield: generator intentionally throws before yielding to simulate an orchestrator failure
+      streamTurn: async function* () {
+        throw new Error('orchestrator blew up');
+      },
+    });
+    const sink = new RecordingSink();
 
-    await expect(
-      service.regenerateMessage('org-1', { threadId: 'thread-1', messageId: 'msg-1' }, 'user-1'),
-    ).rejects.toThrow(BadRequestException);
+    await service.streamAssistantReply(
+      'org-1',
+      'user-1',
+      { agentId: 'agent-1', threadId: 'thread-1', content: 'oi' },
+      sink as any,
+    );
+
+    const appendedTypes = conversation.appendEvent.mock.calls.map((c: any[]) => c[0].eventType);
+    expect(appendedTypes).toContain('message_failed');
+    expect(sink.ended).toBe(true);
+    expect(sse.writeEvent).toHaveBeenCalled();
   });
 
-  it('throws BadRequestException when thread has no agentId', async () => {
-    prisma.agentChatMessage.findFirst.mockResolvedValue({ ...MESSAGE, role: 'assistant' });
-    prisma.agentChatThread.findUnique.mockResolvedValue({ ...THREAD, agentId: null });
-    prisma.agentRun.findFirst.mockResolvedValue(null);
+  it('stops draining when the client aborts mid-stream', async () => {
+    const { service, conversation } = buildService();
+    const sink = new RecordingSink();
+    let calls = 0;
 
-    await expect(
-      service.regenerateMessage('org-1', { threadId: 'thread-1', messageId: 'msg-1' }, 'user-1'),
-    ).rejects.toThrow(BadRequestException);
+    await service.streamAssistantReply(
+      'org-1',
+      'user-1',
+      { agentId: 'agent-1', threadId: 'thread-1', content: 'oi' },
+      sink as any,
+      {
+        isAborted: () => {
+          calls += 1;
+          return calls > 1; // abort after the first streamed event
+        },
+      },
+    );
+
+    // message_created + at most one streamed event before the abort takes effect
+    expect(conversation.appendEvent.mock.calls.length).toBeLessThan(5);
+  });
+});
+
+describe('AgentChatService.getThreadReplay', () => {
+  it('merges persisted messages with their conversation projections', async () => {
+    const prisma = makeMockPrisma();
+    prisma.agentChatThread.findFirst.mockResolvedValue({
+      id: 'thread-1',
+      createdByUserId: 'user-1',
+    });
+    prisma.agentChatMessage.findMany.mockResolvedValue([
+      {
+        id: 'user-msg',
+        role: 'user',
+        content: 'pergunta',
+        metadata: {},
+        editedFromMessageId: null,
+        regeneratedFromMessageId: null,
+        createdAt: new Date(),
+      },
+      {
+        id: 'assistant-msg',
+        role: 'assistant',
+        content: '',
+        metadata: {},
+        editedFromMessageId: null,
+        regeneratedFromMessageId: null,
+        createdAt: new Date(),
+      },
+    ]);
+    const conversation = {
+      appendEvent: jest.fn(),
+      getThreadReplay: jest.fn().mockResolvedValue({
+        threadId: 'thread-1',
+        lastSequence: 7,
+        messages: [
+          {
+            messageId: 'assistant-msg',
+            status: 'completed',
+            text: 'resposta final',
+            citations: [{ label: 'Brain' }],
+            isStreaming: false,
+            isCompleted: true,
+            isFailed: false,
+            errorMessage: null,
+            lastSequence: 7,
+            toolCalls: [
+              {
+                toolCallId: 't1',
+                toolName: 'rag_search',
+                status: 'completed',
+                groupId: 'tools',
+                inputPayload: {},
+                outputPayload: {},
+                errorMessage: null,
+                durationMs: 10,
+                displayOrder: 0,
+              },
+            ],
+          },
+        ],
+      }),
+    };
+
+    const service = new AgentChatService(
+      prisma as any,
+      makeMockIntentService() as any,
+      makeMockRunsService() as any,
+      makeMockOrchestratorService() as any,
+      makeMockSystemAgentsService() as any,
+      conversation as any,
+      makeMockSse() as any,
+    );
+
+    const replay = await service.getThreadReplay('org-1', 'thread-1', 'user-1');
+
+    expect(replay.lastSequence).toBe(7);
+    const userMsg = replay.messages.find((m) => m.id === 'user-msg');
+    const assistantMsg = replay.messages.find((m) => m.id === 'assistant-msg');
+    expect(userMsg?.content).toBe('pergunta');
+    expect(userMsg?.toolCalls).toEqual([]);
+    expect(assistantMsg?.content).toBe('resposta final');
+    expect(assistantMsg?.toolCalls).toHaveLength(1);
+    expect(assistantMsg?.citations).toEqual([{ label: 'Brain' }]);
+  });
+
+  it('rejects replay for a thread the user does not own', async () => {
+    const prisma = makeMockPrisma();
+    prisma.agentChatThread.findFirst.mockResolvedValue({
+      id: 'thread-1',
+      createdByUserId: 'other',
+    });
+    const service = new AgentChatService(
+      prisma as any,
+      makeMockIntentService() as any,
+      makeMockRunsService() as any,
+      makeMockOrchestratorService() as any,
+      makeMockSystemAgentsService() as any,
+      makeMockConversationService() as any,
+      makeMockSse() as any,
+    );
+    await expect(service.getThreadReplay('org-1', 'thread-1', 'user-1')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

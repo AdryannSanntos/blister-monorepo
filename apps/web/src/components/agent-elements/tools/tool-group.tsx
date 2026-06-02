@@ -2,7 +2,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../utils/cn";
 import { getToolStatus } from "../utils/format-tool";
 import { GenericTool } from "./generic-tool";
-import { toolRegistry } from "./tool-registry";
+import { resolveToolIcon, toolRegistry } from "./tool-registry";
 import { ToolRowBase } from "./tool-row-base";
 
 export type ToolGroupProps = {
@@ -15,6 +15,8 @@ export type ToolGroupProps = {
   maxVisibleTools?: number;
   defaultOpen?: boolean;
   showElapsed?: boolean;
+  /** Overrides the auto-generated count subtitle (e.g. a localized label). */
+  subtitleOverride?: string;
 };
 
 function formatElapsedTime(ms: number): string {
@@ -101,6 +103,7 @@ export const ToolGroup = memo(function ToolGroup({
   maxVisibleTools = 5,
   defaultOpen,
   showElapsed = true,
+  subtitleOverride,
 }: ToolGroupProps) {
   const { isPending, isInterrupted } = getToolStatus(part, chatStatus);
   const description = part.input?.description || "";
@@ -195,6 +198,10 @@ export const ToolGroup = memo(function ToolGroup({
       return streamCounts;
     }
 
+    if (!isPending && subtitleOverride) {
+      return subtitleOverride;
+    }
+
     if (!isPending && hasNestedTools) {
       const summary = summarizeNestedTools(nestedTools);
       if (summary) return summary;
@@ -272,7 +279,7 @@ export const ToolGroup = memo(function ToolGroup({
             return (
               <GenericTool
                 key={idx}
-                icon={nestedMeta.icon}
+                icon={resolveToolIcon(nestedMeta, derivedPart)}
                 title={nestedMeta.title(derivedPart)}
                 subtitle={nestedMeta.subtitle?.(derivedPart)}
                 isPending={nestedIsPending}

@@ -15,14 +15,19 @@ const TEXT_LIKE_EXTENSIONS = new Set([
   "jsx",
 ]);
 
-export async function prepareChatAttachments(files: File[]): Promise<ChatAttachment[]> {
+export async function prepareChatAttachments(
+  files: File[],
+): Promise<ChatAttachment[]> {
   return Promise.all(files.map((file) => prepareChatAttachment(file)));
 }
 
 export function splitComposerAttachments(attachments: ChatAttachment[]) {
   return {
     images: attachments
-      .filter((attachment) => attachment.contentType.startsWith("image/") && attachment.url)
+      .filter(
+        (attachment) =>
+          attachment.contentType.startsWith("image/") && attachment.url,
+      )
       .map((attachment) => ({
         id: attachment.id,
         filename: attachment.filename,
@@ -73,7 +78,8 @@ function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(reader.error ?? new Error("Falha ao ler arquivo."));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Falha ao ler arquivo."));
     reader.readAsDataURL(file);
   });
 }
@@ -82,7 +88,8 @@ function readFileAsText(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(reader.error ?? new Error("Falha ao ler arquivo."));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Falha ao ler arquivo."));
     reader.readAsText(file);
   });
 }

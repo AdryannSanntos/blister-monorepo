@@ -1,17 +1,22 @@
-import { Injectable } from '@nestjs/common';
 import type { RagContextPack, RagRetrievedChunk } from '@company-os/types';
+import { Injectable } from '@nestjs/common';
 import { RagRetrievalService } from './rag-retrieval.service';
+import { RagSourceRegistry } from './rag-source-registry.service';
 
 interface AssemblyOptions {
   limit?: number;
   minScore?: number;
   sourceTypes?: string[];
   permissions?: string[];
+  weights?: Record<string, number>;
 }
 
 @Injectable()
 export class RagContextAssemblyService {
-  constructor(private readonly retrievalService: RagRetrievalService) {}
+  constructor(
+    private readonly retrievalService: RagRetrievalService,
+    private readonly sourceRegistry: RagSourceRegistry,
+  ) {}
 
   async assemble(
     organizationId: string,
@@ -50,12 +55,6 @@ export class RagContextAssemblyService {
 
   private buildSourceLabel(chunk: RagRetrievedChunk): string {
     if (chunk.title) return chunk.title;
-    const typeMap: Record<string, string> = {
-      brain_entry: 'Brain',
-      asset: 'Asset',
-      agent_context_file: 'Arquivo de contexto',
-      manual: 'Documento',
-    };
-    return typeMap[chunk.sourceType] ?? chunk.sourceType;
+    return this.sourceRegistry.label(chunk.sourceType);
   }
 }

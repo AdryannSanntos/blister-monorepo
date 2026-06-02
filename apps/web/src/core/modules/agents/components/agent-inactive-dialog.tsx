@@ -1,6 +1,6 @@
 "use client";
 
-import { GitBranch, Settings, Sparkles } from "lucide-react";
+import { BookOpen, Settings, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -17,7 +17,7 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   agentId: string;
   agentName?: string;
-  /** When true, closing the dialog redirects to /workflow instead of just hiding it. */
+  /** When true, closing the dialog redirects to /onboarding instead of just hiding it. */
   blocking?: boolean;
 };
 
@@ -36,7 +36,7 @@ export function AgentInactiveDialog({
       open={open}
       onOpenChange={(next) => {
         if (!next && blocking) {
-          router.push(`${basePath}/workflow`);
+          router.push(`${basePath}/onboarding`);
           return;
         }
         onOpenChange(next);
@@ -62,9 +62,9 @@ export function AgentInactiveDialog({
             <span className="font-medium text-[var(--fg-primary)]">
               {agentName ?? "este agente"}
             </span>
-            , monte o fluxo de trabalho e publique uma versão. Você precisa
-            também conferir as configurações para garantir que tudo está
-            pronto.
+            , finalize a configuração inicial e revise os parâmetros básicos.
+            Você precisa garantir que o contexto e os dados principais estão
+            prontos antes de abrir novas conversas.
           </DialogDescription>
         </DialogHeader>
 
@@ -72,14 +72,14 @@ export function AgentInactiveDialog({
           <div className="rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-3">
             <div className="flex items-center gap-2">
               <div className="flex size-7 items-center justify-center rounded-[var(--r-md)] bg-[var(--bg-sunken)] text-[var(--accent)]">
-                <GitBranch className="size-3.5" />
+                <BookOpen className="size-3.5" />
               </div>
               <p className="text-[12.5px] font-medium text-[var(--fg-primary)]">
-                Workflow
+                Onboarding
               </p>
             </div>
             <p className="mt-2 text-[11.5px] leading-[1.5] text-[var(--fg-tertiary)]">
-              Conecte os blocos do fluxo e publique uma versão para ativar.
+              Complete a configuração inicial do agente antes de conversar com ele.
             </p>
           </div>
           <div className="rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-3">
@@ -111,11 +111,11 @@ export function AgentInactiveDialog({
           <Button
             onClick={() => {
               onOpenChange(false);
-              router.push(`${basePath}/workflow`);
+              router.push(`${basePath}/onboarding`);
             }}
           >
-            <GitBranch className="size-3.5" />
-            Montar workflow
+            <BookOpen className="size-3.5" />
+            Abrir onboarding
           </Button>
         </DialogFooter>
       </DialogContent>

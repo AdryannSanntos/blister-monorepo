@@ -173,11 +173,7 @@ export class AgentContextService {
     });
   }
 
-  async createReference(
-    organizationId: string,
-    agentId: string,
-    dto: AgentContextReferenceDto,
-  ) {
+  async createReference(organizationId: string, agentId: string, dto: AgentContextReferenceDto) {
     await this.assertAgent(organizationId, agentId);
     const profile = await this.getOrCreateProfile(agentId);
 

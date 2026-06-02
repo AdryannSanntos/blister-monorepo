@@ -110,11 +110,17 @@ export class ContextService {
   }
 
   async update(organizationId: string, sourceId: string, dto: UpdateContextSourceDto) {
-    await this.getById(organizationId, sourceId);
-    return this.prisma.contextSource.update({
+    const source = await this.getById(organizationId, sourceId);
+    const updated = await this.prisma.contextSource.update({
       where: { id: sourceId },
       data: dto,
     });
+
+    if (source.pipelineStatus === 'approved') {
+      await this.syncService.enqueueArtifactSync(organizationId);
+    }
+
+    return updated;
   }
 
   async review(organizationId: string, sourceId: string, dto: ReviewContextSourceDto, userId: string) {
@@ -134,9 +140,7 @@ export class ContextService {
       },
     });
 
-    if (dto.decision === 'approve') {
-      await this.syncService.enqueueArtifactSync(organizationId);
-    }
+    await this.syncService.enqueueArtifactSync(organizationId);
 
     return updated;
   }
@@ -153,6 +157,7 @@ export class ContextService {
     }
 
     await this.prisma.contextSource.delete({ where: { id: sourceId } });
+    await this.syncService.enqueueArtifactSync(organizationId);
     return { deleted: true };
   }
 

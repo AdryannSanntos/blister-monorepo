@@ -57,10 +57,12 @@ export class CompanyChatService {
           : ['brain.read', 'asset.read', 'agent.read', 'member.read'],
         userId,
       }),
-      this.ragContextAssemblyService.assemble(organizationId, content, {
-        limit: 5,
-        permissions,
-      }).catch(() => ({ query: content, chunks: [], totalFound: 0 })),
+      this.ragContextAssemblyService
+        .assemble(organizationId, content, {
+          limit: 5,
+          permissions,
+        })
+        .catch(() => ({ query: content, chunks: [], totalFound: 0 })),
     ]);
 
     const structuredItems = Object.entries(structuredContext)

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import type { OpenRouterOptions } from '@openrouter/agent';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
-  type AIRuntimeResolvedCredential,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageRequest,
   type AIRuntimeImageResult,
+  type AIRuntimeResolvedCredential,
   type AIRuntimeTextRequest,
   type AIRuntimeTextResult,
+  type AIRuntimeTextStreamChunk,
   ProviderExecutionError,
 } from './ai-provider.adapter';
 
@@ -23,6 +24,11 @@ type OpenRouterEmbeddingPayload = {
 const importEsmModule = new Function('specifier', 'return import(specifier)') as <T>(
   specifier: string,
 ) => Promise<T>;
+
+const trimmedIsDone = (line: string): boolean => {
+  const trimmed = line.trim();
+  return trimmed.startsWith('data:') && trimmed.slice('data:'.length).trim() === '[DONE]';
+};
 
 let openRouterSdkModulePromise: Promise<OpenRouterSdkModule> | null = null;
 
@@ -84,7 +90,10 @@ export class OpenRouterAdapter implements AIProviderAdapter {
       };
 
       return (payload.data ?? [])
-        .filter((model): model is NonNullable<typeof payload.data>[number] & { id: string } => typeof model.id === 'string')
+        .filter(
+          (model): model is NonNullable<typeof payload.data>[number] & { id: string } =>
+            typeof model.id === 'string',
+        )
         .map((model) => {
           const outputModalities = model.architecture?.output_modalities ?? [];
           const inputModalities = model.architecture?.input_modalities ?? [];
@@ -164,6 +173,96 @@ export class OpenRouterAdapter implements AIProviderAdapter {
       };
     } catch (error) {
       throw this.normalizeError(error);
+    }
+  }
+
+  /**
+   * Real token streaming over the OpenAI-compatible `/chat/completions` SSE. Each
+   * `data:` line carries a `choices[0].delta.content` chunk; `[DONE]` ends it.
+   */
+  async *streamText(request: AIRuntimeTextRequest): AsyncIterable<AIRuntimeTextStreamChunk> {
+    const messages: Array<{ role: string; content: string }> = request.messages?.length
+      ? request.messages.map((message) => ({ role: message.role, content: message.content }))
+      : [{ role: 'user', content: request.prompt ?? '' }];
+
+    const body: Record<string, unknown> = {
+      model: request.model.apiModelName,
+      messages,
+      stream: true,
+      ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+      ...(request.maxOutputTokens !== undefined ? { max_tokens: request.maxOutputTokens } : {}),
+    };
+
+    const timeoutMs = this.resolveTimeoutMs();
+    let response: Response;
+    try {
+      response = await fetch(`${this.resolveBaseUrl()}/chat/completions`, {
+        method: 'POST',
+        headers: this.buildRequestHeaders(request.credential.value),
+        body: JSON.stringify(body),
+        signal: timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
+      });
+    } catch (error) {
+      throw this.normalizeError(error);
+    }
+
+    if (!response.ok || !response.body) {
+      const message = await this.readErrorMessage(response);
+      throw new ProviderExecutionError(
+        this.provider,
+        this.mapErrorCategory(response.status),
+        message,
+        response.status,
+      );
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    const drainLine = (line: string): AIRuntimeTextStreamChunk | null => {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) return null;
+      const payload = trimmed.slice('data:'.length);
+      if (payload.trim() === '[DONE]') return null;
+      const delta = OpenRouterAdapter.extractStreamDelta(payload);
+      return delta ? { delta } : null;
+    };
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        let newlineIndex: number;
+        // biome-ignore lint/suspicious/noAssignInExpressions: stream line splitting
+        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
+          const line = buffer.slice(0, newlineIndex);
+          buffer = buffer.slice(newlineIndex + 1);
+          if (trimmedIsDone(line)) return;
+          const chunk = drainLine(line);
+          if (chunk) yield chunk;
+        }
+      }
+      const tail = drainLine(buffer);
+      if (tail) yield tail;
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /** Pure extraction of the streamed delta from one SSE `data:` payload. */
+  static extractStreamDelta(dataPayload: string): string | null {
+    const trimmed = dataPayload.trim();
+    if (!trimmed || trimmed === '[DONE]') return null;
+    try {
+      const parsed = JSON.parse(trimmed) as {
+        choices?: Array<{ delta?: { content?: string | null } }>;
+      };
+      const content = parsed.choices?.[0]?.delta?.content;
+      return typeof content === 'string' && content.length > 0 ? content : null;
+    } catch {
+      return null;
     }
   }
 
@@ -339,7 +438,10 @@ export class OpenRouterAdapter implements AIProviderAdapter {
   }
 
   private slugify(value: string) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 
   private mapErrorCategory(statusCode: number): 'auth' | 'rate_limit' | 'validation' | 'unknown' {

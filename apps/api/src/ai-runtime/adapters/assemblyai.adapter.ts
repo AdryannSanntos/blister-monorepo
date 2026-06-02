@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,

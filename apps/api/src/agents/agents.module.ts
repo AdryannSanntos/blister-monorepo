@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
+import { ConversationModule } from '../conversation/conversation.module';
 import { CreditsModule } from '../credits/credits.module';
 import { OrganizationModule } from '../organization/organization.module';
 import { PlatformModule } from '../platform/platform.module';
@@ -30,7 +31,11 @@ import { ContextPolicyService } from './context/context-policy.service';
 import { ContextRerankerService } from './context/context-reranker.service';
 import { StructuredContextService } from './context/structured-context.service';
 import { HtmlPreviewService } from './html-preview.service';
-import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-research.tool';
+import { SystemAgentRunnerService } from './system-agents/system-agent-runner.service';
+import { SystemAgentsAdminController } from './system-agents/system-agents-admin.controller';
+import { SystemAgentsService } from './system-agents/system-agents.service';
+import { AiRuntimeWebResearchGateway } from './tools/ai-web-research.gateway';
+import { WEB_RESEARCH_GATEWAY } from './tools/web-research.tool';
 
 @Module({
   imports: [
@@ -40,6 +45,7 @@ import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-resear
     PlatformModule,
     StorageModule,
     RagModule,
+    ConversationModule,
   ],
   controllers: [
     AgentsController,
@@ -47,6 +53,7 @@ import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-resear
     PlatformAgentRunsController,
     AgentChatController,
     CompanyChatController,
+    SystemAgentsAdminController,
   ],
   providers: [
     AgentsService,
@@ -55,9 +62,12 @@ import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-resear
     AgentChatService,
     AgentChatOrchestratorService,
     AgentContextService,
+    SystemAgentRunnerService,
+    SystemAgentsService,
     AgentToolPolicyService,
     AgentToolRuntimeService,
-    { provide: WEB_RESEARCH_GATEWAY, useClass: StubWebResearchGateway },
+    AiRuntimeWebResearchGateway,
+    { provide: WEB_RESEARCH_GATEWAY, useClass: AiRuntimeWebResearchGateway },
     AgentBlockExecutorRegistry,
     AgentBlockRegistrationService,
     AgentWorkflowRuntimeService,
@@ -78,6 +88,8 @@ import { StubWebResearchGateway, WEB_RESEARCH_GATEWAY } from './tools/web-resear
     AgentChatService,
     AgentChatOrchestratorService,
     AgentContextService,
+    SystemAgentRunnerService,
+    SystemAgentsService,
     AgentToolPolicyService,
     AgentToolRuntimeService,
     AgentBlockExecutorRegistry,

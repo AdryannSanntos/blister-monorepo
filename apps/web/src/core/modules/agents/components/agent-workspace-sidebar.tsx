@@ -4,10 +4,9 @@ import {
   ArrowLeft,
   BarChart2,
   Bot,
-  ChevronsUpDown,
   ChevronDown,
+  ChevronsUpDown,
   ChevronUp,
-  GitBranch,
   MessageSquare,
   MoreHorizontal,
   PanelLeftClose,
@@ -16,13 +15,12 @@ import {
   Settings,
   Trash2,
 } from "lucide-react";
-import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { AgentInactiveDialog } from "src/core/modules/agents/components/agent-inactive-dialog";
 import {
   useAgentThreads,
-  useCreateThread,
   useDeleteThread,
   useRenameThread,
 } from "src/core/modules/agents/hooks/use-agent-chat";
@@ -61,7 +59,6 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
   const { displayName, activeOrganization, activeRole } = useDashboardData();
   const agents = useCompanyAgents(orgId);
   const threads = useAgentThreads(orgId, agent.id);
-  const createThread = useCreateThread(orgId, agent.id);
   const deleteThread = useDeleteThread(orgId, agent.id);
   const renameThread = useRenameThread(orgId, agent.id);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
@@ -95,17 +92,21 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
     return `/dashboard/workspace/agents/${targetAgent.id}${sectionPath}`;
   }
 
-  async function handleNewThread() {
+  function handleNewThread() {
     if (!isAgentActive) {
       setInactiveDialogOpen(true);
       return;
     }
-    if (!activeThreadId) {
+    // Só estamos "em uma nova conversa" quando já na tela de chat vazia (welcome).
+    // Vindo de outra aba (settings, etc.), navegamos para a tela de nova conversa.
+    const isOnEmptyChat =
+      pathname.startsWith(`${basePath}/chat`) && !activeThreadId;
+    if (isOnEmptyChat) {
       toast.info("Você já está em uma nova conversa.");
       return;
     }
-    const thread = await createThread.mutateAsync(undefined);
-    router.push(`${basePath}/chat?thread=${thread.id}`);
+    // A thread é criada de forma lazy ao enviar a primeira mensagem.
+    router.push(`${basePath}/chat`);
   }
 
   async function handleDeleteThread() {
@@ -168,9 +169,6 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
         : `${basePath}/chat?thread=${thread.id}`,
     permission: "agent.execute" as const,
     active: thread.id === activeThreadId,
-    badge: thread.hasActiveRun
-      ? { value: "•", tone: "warning" as const }
-      : undefined,
     action:
       renamingThreadId !== thread.id ? (
         <DropdownMenu>
@@ -250,14 +248,9 @@ export function AgentWorkspaceSidebar({ orgId, agent, activeThreadId }: Props) {
         {
           label: "Insights",
           icon: BarChart2,
-          soon: true,
-          permission: "agent.update" as const,
-        },
-        {
-          label: "Workflow",
-          icon: GitBranch,
-          soon: true,
-          permission: "agent.update" as const,
+          href: `${basePath}/insights`,
+          permission: "agent.read" as const,
+          match: (p: string) => p.startsWith(`${basePath}/insights`),
         },
         {
           label: "Configurações",

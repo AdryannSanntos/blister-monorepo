@@ -18,16 +18,14 @@ interface AIRuntimeServiceLike {
 
 export function createLlmCallExecutor(aiRuntimeService: AIRuntimeServiceLike): BlockExecutorFn {
   return async (ctx) => {
-    const systemPrompt =
-      typeof ctx.blockConfig.prompt === 'string' ? ctx.blockConfig.prompt : '';
+    const systemPrompt = typeof ctx.blockConfig.prompt === 'string' ? ctx.blockConfig.prompt : '';
     const modelId =
       typeof ctx.blockConfig.modelId === 'string' ? ctx.blockConfig.modelId : undefined;
     const providerId =
       typeof ctx.blockConfig.providerId === 'string' ? ctx.blockConfig.providerId : undefined;
 
     const payload = ctx.inputs.payload ?? ctx.inputs.default ?? ctx.inputs;
-    const userMessage =
-      typeof payload === 'string' ? payload : JSON.stringify(payload ?? '');
+    const userMessage = typeof payload === 'string' ? payload : JSON.stringify(payload ?? '');
 
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
     if (systemPrompt) {

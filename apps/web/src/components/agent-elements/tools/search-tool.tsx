@@ -123,6 +123,11 @@ export type SearchToolProps = {
 
 // Phase-1 agent chat tools (rag_search/file_search/web_research) → PT labels.
 const AGENT_TOOL_SEARCH_LABELS: Record<string, SearchLabels> = {
+  next_action_analysis: {
+    shimmer: "Analisando solicitacao...",
+    complete: "Definiu proxima acao",
+    header: "Proxima acao",
+  },
   rag_search: {
     shimmer: "Consultando contexto da empresa...",
     complete: "Consultou contexto da empresa",

@@ -3,7 +3,10 @@ import type { UiOutputBlockDto, UiOutputEnvelopeDto } from '../dto/ui-output.dto
 
 type RawBlockSpec = string | { type: string; source?: string; [key: string]: unknown };
 
-const resolveSourceValue = (inputs: Record<string, unknown>, source: string | undefined): unknown => {
+const resolveSourceValue = (
+  inputs: Record<string, unknown>,
+  source: string | undefined,
+): unknown => {
   if (source && inputs[source] !== undefined) return inputs[source];
   return inputs.default ?? inputs;
 };
@@ -39,7 +42,8 @@ const buildBlock = (
     }
     case 'card': {
       const obj = typeof value === 'object' && value ? (value as Record<string, unknown>) : {};
-      const title = typeof obj.title === 'string' ? obj.title : toText(value).slice(0, 80) || 'Resultado';
+      const title =
+        typeof obj.title === 'string' ? obj.title : toText(value).slice(0, 80) || 'Resultado';
       const body = typeof obj.body === 'string' ? obj.body : undefined;
       return { type: 'card', title, body };
     }

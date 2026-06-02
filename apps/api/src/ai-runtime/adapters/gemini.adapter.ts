@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
-  type AIRuntimeResolvedCredential,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageRequest,
   type AIRuntimeImageResult,
+  type AIRuntimeResolvedCredential,
   type AIRuntimeTextRequest,
   type AIRuntimeTextResult,
   ProviderExecutionError,
@@ -19,12 +19,9 @@ export class GeminiAdapter implements AIProviderAdapter {
   readonly provider = 'gemini';
 
   supports(capability: AIRuntimeCapability) {
-    return [
-      'text_generation',
-      'image_generation',
-      'embeddings',
-      'structured_output',
-    ].includes(capability);
+    return ['text_generation', 'image_generation', 'embeddings', 'structured_output'].includes(
+      capability,
+    );
   }
 
   async listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]> {
@@ -69,7 +66,10 @@ export class GeminiAdapter implements AIProviderAdapter {
     } while (pageToken);
 
     return models
-      .filter((model): model is (typeof models)[number] & { name: string } => typeof model.name === 'string')
+      .filter(
+        (model): model is (typeof models)[number] & { name: string } =>
+          typeof model.name === 'string',
+      )
       .map((model) => {
         const methods = Array.isArray(model.supportedGenerationMethods)
           ? model.supportedGenerationMethods
@@ -109,8 +109,12 @@ export class GeminiAdapter implements AIProviderAdapter {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: this.toGeminiContents(request),
-          ...(this.toSystemInstruction(request) ? { systemInstruction: this.toSystemInstruction(request) } : {}),
-          ...(this.toTextGenerationConfig(request) ? { generationConfig: this.toTextGenerationConfig(request) } : {}),
+          ...(this.toSystemInstruction(request)
+            ? { systemInstruction: this.toSystemInstruction(request) }
+            : {}),
+          ...(this.toTextGenerationConfig(request)
+            ? { generationConfig: this.toTextGenerationConfig(request) }
+            : {}),
         }),
       },
     );
@@ -143,7 +147,9 @@ export class GeminiAdapter implements AIProviderAdapter {
 
     return {
       text,
-      structuredOutput: request.structuredOutputSchema ? this.tryParseStructuredOutput(text) : undefined,
+      structuredOutput: request.structuredOutputSchema
+        ? this.tryParseStructuredOutput(text)
+        : undefined,
       usage: {
         promptTokens: payload.usageMetadata?.promptTokenCount,
         completionTokens: payload.usageMetadata?.candidatesTokenCount,
@@ -188,14 +194,15 @@ export class GeminiAdapter implements AIProviderAdapter {
     };
 
     const images =
-      payload.candidates?.flatMap((candidate) =>
-        candidate.content?.parts?.flatMap((part) => {
-          if (!part.inlineData?.data || !part.inlineData.mimeType) {
-            return [];
-          }
+      payload.candidates?.flatMap(
+        (candidate) =>
+          candidate.content?.parts?.flatMap((part) => {
+            if (!part.inlineData?.data || !part.inlineData.mimeType) {
+              return [];
+            }
 
-          return [{ url: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }];
-        }) ?? [],
+            return [{ url: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }];
+          }) ?? [],
       ) ?? [];
 
     return {
@@ -245,10 +252,16 @@ export class GeminiAdapter implements AIProviderAdapter {
   }
 
   private resolveBaseUrl() {
-    return (process.env.GEMINI_BASE_URL ?? 'https://generativelanguage.googleapis.com/v1beta').replace(/\/$/, '');
+    return (
+      process.env.GEMINI_BASE_URL ?? 'https://generativelanguage.googleapis.com/v1beta'
+    ).replace(/\/$/, '');
   }
 
-  private resolveModelUrl(modelName: string, action: 'generateContent' | 'embedContent', apiKey: string) {
+  private resolveModelUrl(
+    modelName: string,
+    action: 'generateContent' | 'embedContent',
+    apiKey: string,
+  ) {
     const url = new URL(`${this.resolveBaseUrl()}/models/${modelName}:${action}`);
     url.searchParams.set('key', apiKey);
     return url.toString();
@@ -264,7 +277,10 @@ export class GeminiAdapter implements AIProviderAdapter {
   }
 
   private slugify(value: string) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 
   private mapErrorCategory(status: number) {
@@ -310,7 +326,9 @@ export class GeminiAdapter implements AIProviderAdapter {
 
     return {
       ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-      ...(request.maxOutputTokens !== undefined ? { maxOutputTokens: request.maxOutputTokens } : {}),
+      ...(request.maxOutputTokens !== undefined
+        ? { maxOutputTokens: request.maxOutputTokens }
+        : {}),
       ...(request.structuredOutputSchema
         ? {
             responseMimeType: 'application/json',

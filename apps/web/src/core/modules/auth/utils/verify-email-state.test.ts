@@ -1,32 +1,39 @@
-const assert = require("node:assert/strict");
-
-const {
+import { describe, expect, it } from "vitest";
+import {
   buildEmailVerificationCallbackURL,
   getVerifyEmailViewState,
-} = require("./verify-email-state");
+} from "./verify-email-state";
 
-const successState = getVerifyEmailViewState(
-  new URLSearchParams({ status: "success" }),
-);
+describe("getVerifyEmailViewState", () => {
+  it("returns success state for status=success", () => {
+    const state = getVerifyEmailViewState(
+      new URLSearchParams({ status: "success" }),
+    );
+    expect(state.kind).toBe("success");
+    expect(state.title).toBe("Email verificado com sucesso");
+  });
 
-assert.equal(successState.kind, "success");
-assert.equal(successState.title, "Email verificado com sucesso");
+  it("returns error state for an error param", () => {
+    const state = getVerifyEmailViewState(
+      new URLSearchParams({ error: "TOKEN_EXPIRED" }),
+    );
+    expect(state.kind).toBe("error");
+    expect(state.title).toBe("Link de verificação inválido ou expirado");
+  });
 
-const errorState = getVerifyEmailViewState(
-  new URLSearchParams({ error: "TOKEN_EXPIRED" }),
-);
+  it("returns pending state with the email when no status/error is present", () => {
+    const state = getVerifyEmailViewState(
+      new URLSearchParams({ email: "user@example.com" }),
+    );
+    expect(state.kind).toBe("pending");
+    expect(state.email).toBe("user@example.com");
+  });
+});
 
-assert.equal(errorState.kind, "error");
-assert.equal(errorState.title, "Link de verificação inválido ou expirado");
-
-const pendingState = getVerifyEmailViewState(
-  new URLSearchParams({ email: "user@example.com" }),
-);
-
-assert.equal(pendingState.kind, "pending");
-assert.equal(pendingState.email, "user@example.com");
-
-assert.equal(
-  buildEmailVerificationCallbackURL("http://localhost:3000"),
-  "http://localhost:3000/auth/verify-email?status=success",
-);
+describe("buildEmailVerificationCallbackURL", () => {
+  it("builds the success callback URL", () => {
+    expect(buildEmailVerificationCallbackURL("http://localhost:3000")).toBe(
+      "http://localhost:3000/auth/verify-email?status=success",
+    );
+  });
+});

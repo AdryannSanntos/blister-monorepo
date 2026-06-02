@@ -7,6 +7,37 @@ import { AgentQueueService } from './agent-queue.service';
 import type { ExecuteAgentDto, ListAgentRunsDto } from './dto';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
+const AGENT_INSIGHTS_WINDOW_DAYS = 30;
+
+type InsightRunRecord = {
+  id: string;
+  status: string;
+  threadId: string | null;
+  createdAt: Date;
+  startedAt: Date | null;
+  completedAt: Date | null;
+  durationMs: number | null;
+};
+
+function getInsightsWindowStart() {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - (AGENT_INSIGHTS_WINDOW_DAYS - 1));
+  return start;
+}
+
+function resolveRunDurationMs(run: InsightRunRecord) {
+  if (typeof run.durationMs === 'number' && Number.isFinite(run.durationMs)) {
+    return run.durationMs;
+  }
+
+  if (!run.startedAt || !run.completedAt) {
+    return null;
+  }
+
+  const duration = run.completedAt.getTime() - run.startedAt.getTime();
+  return duration >= 0 ? duration : null;
+}
 
 @Injectable()
 export class AgentRunsService {
@@ -324,6 +355,204 @@ export class AgentRunsService {
     });
 
     return { run, costs, creditEntries, auditSummary };
+  }
+
+  async getAgentInsights(organizationId: string, agentId: string) {
+    const windowStart = getInsightsWindowStart();
+    const windowEnd = new Date();
+
+    const agent = await this.prisma.companyAgent.findFirst({
+      where: { id: agentId, organizationId },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        allowedTools: true,
+      },
+    });
+
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+
+    const [recentThreads, recentMessages, recentToolCalls, contextProfile] = await Promise.all([
+      this.prisma.agentChatThread.findMany({
+        where: {
+          organizationId,
+          agentId,
+          scope: 'agent_chat',
+          createdAt: { gte: windowStart },
+        },
+        select: {
+          id: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.prisma.agentChatMessage.findMany({
+        where: {
+          thread: {
+            organizationId,
+            agentId,
+            scope: 'agent_chat',
+          },
+          createdAt: { gte: windowStart },
+        },
+        select: {
+          id: true,
+          role: true,
+          content: true,
+          threadId: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.prisma.agentChatToolCall.findMany({
+        where: {
+          organizationId,
+          agentId,
+          createdAt: { gte: windowStart },
+        },
+        select: {
+          id: true,
+          toolName: true,
+          status: true,
+          threadId: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.prisma.agentContextProfile.findFirst({
+        where: { agentId },
+        select: {
+          _count: {
+            select: {
+              files: true,
+              references: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    const allowedTools = Array.isArray(agent.allowedTools)
+      ? agent.allowedTools.filter((tool): tool is string => typeof tool === 'string')
+      : [];
+
+    const dailyMap = new Map<
+      string,
+      {
+        date: string;
+        threads: number;
+        messages: number;
+        assistantMessages: number;
+      }
+    >();
+
+    for (let index = 0; index < AGENT_INSIGHTS_WINDOW_DAYS; index += 1) {
+      const date = new Date(windowStart);
+      date.setDate(windowStart.getDate() + index);
+      const key = date.toISOString().slice(0, 10);
+      dailyMap.set(key, { date: key, threads: 0, messages: 0, assistantMessages: 0 });
+    }
+
+    const toolStatusMap = new Map<string, number>();
+    const toolNameMap = new Map<string, number>();
+    const activeThreads = new Set<string>();
+    const respondedThreads = new Set<string>();
+    let userMessages = 0;
+    let assistantMessages = 0;
+    let assistantChars = 0;
+
+    for (const thread of recentThreads) {
+      const dateKey = thread.createdAt.toISOString().slice(0, 10);
+      const daily = dailyMap.get(dateKey);
+      if (daily) {
+        daily.threads += 1;
+      }
+    }
+
+    for (const message of recentMessages) {
+      const dateKey = message.createdAt.toISOString().slice(0, 10);
+      const daily = dailyMap.get(dateKey);
+
+      if (daily) {
+        daily.messages += 1;
+        if (message.role === 'assistant') {
+          daily.assistantMessages += 1;
+        }
+      }
+
+      activeThreads.add(message.threadId);
+
+      if (message.role === 'user') {
+        userMessages += 1;
+      }
+
+      if (message.role === 'assistant') {
+        assistantMessages += 1;
+        assistantChars += message.content.trim().length;
+        respondedThreads.add(message.threadId);
+      }
+    }
+
+    for (const toolCall of recentToolCalls) {
+      activeThreads.add(toolCall.threadId);
+      toolStatusMap.set(toolCall.status, (toolStatusMap.get(toolCall.status) ?? 0) + 1);
+      toolNameMap.set(toolCall.toolName, (toolNameMap.get(toolCall.toolName) ?? 0) + 1);
+    }
+
+    const totalToolCalls = recentToolCalls.length;
+    const failedToolCalls = (toolStatusMap.get('error') ?? 0) + (toolStatusMap.get('failed') ?? 0);
+    const averageMessagesPerThread =
+      activeThreads.size > 0 ? Number((recentMessages.length / activeThreads.size).toFixed(1)) : 0;
+    const averageAssistantMessageLength =
+      assistantMessages > 0 ? Math.round(assistantChars / assistantMessages) : 0;
+    const responseCoverageRate =
+      activeThreads.size > 0 ? Math.round((respondedThreads.size / activeThreads.size) * 100) : 0;
+
+    const topTools = Array.from(toolNameMap.entries())
+      .map(([toolName, count]) => ({ toolName, count }))
+      .sort((left, right) => right.count - left.count);
+    const leadingTools = topTools.slice(0, 5);
+    const otherToolsCount = topTools.slice(5).reduce((total, item) => total + item.count, 0);
+    const toolBreakdown =
+      otherToolsCount > 0
+        ? [...leadingTools, { toolName: 'other', count: otherToolsCount }]
+        : leadingTools;
+
+    return {
+      window: {
+        days: AGENT_INSIGHTS_WINDOW_DAYS,
+        from: windowStart.toISOString(),
+        to: windowEnd.toISOString(),
+      },
+      agent: {
+        id: agent.id,
+        name: agent.name,
+        status: agent.status,
+      },
+      summary: {
+        totalThreads: recentThreads.length,
+        activeThreads: activeThreads.size,
+        totalMessages: recentMessages.length,
+        userMessages,
+        assistantMessages,
+        responseCoverageRate,
+        averageMessagesPerThread,
+        averageAssistantMessageLength,
+        totalToolCalls,
+        failedToolCalls,
+        contextFiles: contextProfile?._count.files ?? 0,
+        contextReferences: contextProfile?._count.references ?? 0,
+        enabledTools: allowedTools.length,
+      },
+      dailyActivity: Array.from(dailyMap.values()),
+      toolStatusBreakdown: Array.from(toolStatusMap.entries())
+        .map(([status, count]) => ({ status, count }))
+        .sort((left, right) => right.count - left.count),
+      topTools: toolBreakdown,
+    };
   }
 
   private async attachRunLedgerSummaries<TRun extends { id: string }>(runs: TRun[]) {

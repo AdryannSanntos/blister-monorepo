@@ -1,7 +1,7 @@
+import type { IngestDocumentDto } from '@company-os/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import type { IngestDocumentDto } from '@company-os/types';
 import { RagChunkingService } from './rag-chunking.service';
 import { RagDocumentService } from './rag-document.service';
 import { RagEmbeddingService } from './rag-embedding.service';
@@ -32,10 +32,11 @@ export class RagIndexingService {
     dto: IngestDocumentDto,
     triggeredByUserId?: string,
   ): Promise<IndexResult> {
-    const { id: documentId, isNew, shouldReindex } = await this.documentService.upsertDocument(
-      organizationId,
-      dto,
-    );
+    const {
+      id: documentId,
+      isNew,
+      shouldReindex,
+    } = await this.documentService.upsertDocument(organizationId, dto);
 
     if (!shouldReindex) {
       return {

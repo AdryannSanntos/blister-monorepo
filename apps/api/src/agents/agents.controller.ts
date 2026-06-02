@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
 import { AgentContextService } from './agent-context.service';
+import { AgentRunsService } from './agent-runs.service';
 import { AgentsService } from './agents.service';
 import {
   agentContextFileSchema,
@@ -31,6 +32,7 @@ export class AgentsController {
   constructor(
     private readonly agentsService: AgentsService,
     private readonly agentContextService: AgentContextService,
+    private readonly agentRunsService: AgentRunsService,
   ) {}
 
   @Get()
@@ -43,6 +45,12 @@ export class AgentsController {
   @RequirePermission('agent.read')
   async getCompanyAgent(@Param('orgId') orgId: string, @Param('agentId') agentId: string) {
     return this.agentsService.getCompanyAgent(orgId, agentId);
+  }
+
+  @Get(':agentId/insights')
+  @RequirePermission('agent.read')
+  async getAgentInsights(@Param('orgId') orgId: string, @Param('agentId') agentId: string) {
+    return this.agentRunsService.getAgentInsights(orgId, agentId);
   }
 
   @Post()
@@ -233,10 +241,7 @@ export class AgentsController {
 
   @Get(':agentId/context/references')
   @RequirePermission('agent.read')
-  async listContextReferences(
-    @Param('orgId') orgId: string,
-    @Param('agentId') agentId: string,
-  ) {
+  async listContextReferences(@Param('orgId') orgId: string, @Param('agentId') agentId: string) {
     return this.agentContextService.listReferences(orgId, agentId);
   }
 

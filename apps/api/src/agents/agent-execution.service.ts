@@ -13,9 +13,28 @@ import { HtmlPreviewService } from './html-preview.service';
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
 type FlowResult =
-  | { suspended: true; suspensionId: string | undefined; result: unknown; uiOutput: unknown; usage: never[]; awaitingUserValidation: false }
-  | { suspended?: false; awaitingUserValidation: true; result: unknown; uiOutput: unknown; usage: Array<Record<string, unknown>> }
-  | { suspended?: false; awaitingUserValidation: false; result: unknown; uiOutput: unknown; usage: Array<Record<string, unknown>> };
+  | {
+      suspended: true;
+      suspensionId: string | undefined;
+      result: unknown;
+      uiOutput: unknown;
+      usage: never[];
+      awaitingUserValidation: false;
+    }
+  | {
+      suspended?: false;
+      awaitingUserValidation: true;
+      result: unknown;
+      uiOutput: unknown;
+      usage: Array<Record<string, unknown>>;
+    }
+  | {
+      suspended?: false;
+      awaitingUserValidation: false;
+      result: unknown;
+      uiOutput: unknown;
+      usage: Array<Record<string, unknown>>;
+    };
 
 type FlowNodeLike = {
   id: string;
@@ -574,7 +593,12 @@ export class AgentExecutionService {
             },
           });
 
-          return { result: previousOutput, usage, awaitingUserValidation: true as const, uiOutput: undefined };
+          return {
+            result: previousOutput,
+            usage,
+            awaitingUserValidation: true as const,
+            uiOutput: undefined,
+          };
         } else if (nodeType === 'output') {
           stepOutput = previousOutput;
         }
@@ -614,7 +638,12 @@ export class AgentExecutionService {
       });
     }
 
-    return { result: previousOutput, usage, awaitingUserValidation: false as const, uiOutput: undefined };
+    return {
+      result: previousOutput,
+      usage,
+      awaitingUserValidation: false as const,
+      uiOutput: undefined,
+    };
   }
 
   private resolveHtmlCandidate(previousOutput: unknown, config: Record<string, unknown>) {

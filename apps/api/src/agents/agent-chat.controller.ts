@@ -9,27 +9,20 @@ import {
   Post,
   Query,
   Req,
+  Res,
 } from '@nestjs/common';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
+import { SSE_HEADERS } from '../conversation/conversation-sse.service';
+import { startConversationStreamSchema } from '../conversation/dto/conversation-stream.dto';
 import { AgentChatService } from './agent-chat.service';
-import {
-  createMessageSchema,
-  createThreadSchema,
-  editMessageAndBranchSchema,
-  regenerateMessageSchema,
-} from './dto';
+import { createThreadSchema, editMessageAndBranchSchema } from './dto';
 
 const listThreadsQuerySchema = z.object({
   cursor: z.string().min(1).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(20),
-});
-
-const listMessagesQuerySchema = z.object({
-  cursor: z.string().min(1).optional(),
-  limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 
 @Controller('organizations/:orgId/agents/:agentId/chat')
@@ -48,20 +41,6 @@ export class AgentChatController {
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentChatService.listThreads(orgId, agentId, currentUser.id, parsed.data);
-  }
-
-  @Get('threads/:threadId/messages')
-  @RequirePermission('agent.execute')
-  async listMessages(
-    @Param('orgId') orgId: string,
-    @Param('threadId') threadId: string,
-    @Query() query: unknown,
-    @Req() req: Request,
-  ) {
-    const parsed = listMessagesQuerySchema.safeParse(query);
-    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentChatService.listMessages(orgId, threadId, currentUser.id, parsed.data);
   }
 
   @Post('threads')
@@ -89,24 +68,54 @@ export class AgentChatController {
     });
   }
 
-  @Post('threads/:threadId/messages')
+  @Post('threads/:threadId/messages/stream')
   @RequirePermission('agent.execute')
-  async sendMessage(
+  async streamMessage(
     @Param('orgId') orgId: string,
+    @Param('agentId') agentId: string,
     @Param('threadId') threadId: string,
     @Body() body: unknown,
     @Req() req: Request,
+    @Res() res: Response,
   ) {
-    const parsed = createMessageSchema.safeParse({ ...(body as object), threadId });
+    const parsed = startConversationStreamSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentChatService.createUserMessageAndProcess(orgId, currentUser.id, {
-      ...parsed.data,
-      threadId,
+
+    res.status(200);
+    for (const [key, value] of Object.entries(SSE_HEADERS)) res.setHeader(key, value);
+    res.flushHeaders?.();
+
+    let aborted = false;
+    req.on('close', () => {
+      aborted = true;
     });
+
+    await this.agentChatService.streamAssistantReply(
+      orgId,
+      currentUser.id,
+      {
+        agentId,
+        threadId,
+        content: parsed.data.content,
+        attachments: parsed.data.attachments,
+      },
+      res,
+      { isAborted: () => aborted },
+    );
+  }
+
+  @Get('threads/:threadId/replay')
+  @RequirePermission('agent.execute')
+  async replay(
+    @Param('orgId') orgId: string,
+    @Param('threadId') threadId: string,
+    @Req() req: Request,
+  ) {
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+    return this.agentChatService.getThreadReplay(orgId, threadId, currentUser.id);
   }
 
   @Post('threads/:threadId/branch')
@@ -124,27 +133,6 @@ export class AgentChatController {
 
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
     return this.agentChatService.editMessageAndBranch(
-      orgId,
-      { ...parsed.data, threadId },
-      currentUser.id,
-    );
-  }
-
-  @Post('threads/:threadId/regenerate')
-  @RequirePermission('agent.execute')
-  async regenerate(
-    @Param('orgId') orgId: string,
-    @Param('threadId') threadId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
-    const parsed = regenerateMessageSchema.safeParse({ ...(body as object), threadId });
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentChatService.regenerateMessage(
       orgId,
       { ...parsed.data, threadId },
       currentUser.id,

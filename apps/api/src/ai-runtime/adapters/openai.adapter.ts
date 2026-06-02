@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
-  type AIRuntimeResolvedCredential,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageRequest,
   type AIRuntimeImageResult,
+  type AIRuntimeResolvedCredential,
   type AIRuntimeTextRequest,
   type AIRuntimeTextResult,
   ProviderExecutionError,
@@ -45,7 +45,10 @@ export class OpenAIAdapter implements AIProviderAdapter {
     };
 
     return (payload.data ?? [])
-      .filter((model): model is { id: string; created?: number; owned_by?: string } => typeof model.id === 'string')
+      .filter(
+        (model): model is { id: string; created?: number; owned_by?: string } =>
+          typeof model.id === 'string',
+      )
       .map((model) => ({
         slug: this.slugify(model.id),
         name: model.id,
@@ -88,19 +91,31 @@ export class OpenAIAdapter implements AIProviderAdapter {
   }
 
   private slugify(value: string) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 
   private inferCapabilities(modelId: string) {
     const normalized = modelId.toLowerCase();
 
     return {
-      text: !normalized.includes('embedding') && !normalized.includes('tts') && !normalized.includes('transcribe'),
+      text:
+        !normalized.includes('embedding') &&
+        !normalized.includes('tts') &&
+        !normalized.includes('transcribe'),
       image: normalized.includes('gpt-image') || normalized.includes('dall-e'),
       embeddings: normalized.includes('embedding'),
-      audio: normalized.includes('tts') || normalized.includes('transcribe') || normalized.includes('whisper'),
+      audio:
+        normalized.includes('tts') ||
+        normalized.includes('transcribe') ||
+        normalized.includes('whisper'),
       structuredOutput:
-        normalized.includes('gpt-4') || normalized.includes('gpt-5') || normalized.includes('o1') || normalized.includes('o3'),
+        normalized.includes('gpt-4') ||
+        normalized.includes('gpt-5') ||
+        normalized.includes('o1') ||
+        normalized.includes('o3'),
     };
   }
 }

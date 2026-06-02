@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { AssetsModule } from './assets/assets.module';
 import { CreditsModule } from './credits/credits.module';
 import { ContextModule } from './context/context.module';
+import { ConversationModule } from './conversation/conversation.module';
 import { DesignSystemModule } from './design-system/design-system.module';
 import { EmailModule } from './email';
 import { OnboardingModule } from './onboarding/onboarding.module';
@@ -31,6 +32,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AssetsModule,
     CreditsModule,
     ContextModule,
+    ConversationModule,
     DesignSystemModule,
     PlatformModule,
     AuditModule,

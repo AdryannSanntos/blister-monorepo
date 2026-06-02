@@ -7,6 +7,7 @@ import {
   LayoutTemplate,
   Shield,
   Sparkles,
+  Wand2,
   Workflow,
 } from "lucide-react";
 import { Badge } from "src/core/shared/components/ui/badge";
@@ -55,6 +56,12 @@ export const PLATFORM_ADMIN_NAV_ITEMS: PlatformAdminNavItem[] = [
     href: "/workspaces/admin/policies",
     icon: BadgeCheck,
     description: "Restricoes por empresa, provider e modelos.",
+  },
+  {
+    label: "Agentes de sistema",
+    href: "/workspaces/admin/agents",
+    icon: Wand2,
+    description: "Agentes internos da plataforma: config de IA e testes.",
   },
   {
     label: "Templates",
@@ -110,6 +117,7 @@ export function platformStatusVariant(status?: string | null) {
     case "active":
     case "success":
     case "accepted":
+    case "completed":
       return "success" as const;
     case "running":
     case "queued":

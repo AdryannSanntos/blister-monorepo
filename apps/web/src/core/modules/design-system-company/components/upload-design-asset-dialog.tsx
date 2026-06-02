@@ -39,7 +39,7 @@ export function UploadDesignAssetDialog({ orgId, open, onOpenChange }: { orgId: 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader><DialogTitle>Enviar asset de design</DialogTitle><DialogDescription>Armazene logos, referencias e arquivos visuais oficiais. A IA usara metadados textuais no MVP.</DialogDescription></DialogHeader>
+        <DialogHeader><DialogTitle>Enviar asset de design</DialogTitle><DialogDescription>Armazene logos, referencias e arquivos visuais oficiais. A IA indexa o texto extraivel e os metadados deste asset para consulta.</DialogDescription></DialogHeader>
         <Form {...form}><form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormItem><FormLabel required>Arquivo</FormLabel><FormControl><FileUpload value={file} onChange={handleFileChange} accept="image/*,.pdf,.svg" /></FormControl><FormMessage /></FormItem>
           <FormField control={form.control} name="fileName" render={({ field }) => <FormItem><FormLabel required>Nome do arquivo</FormLabel><FormControl><Input placeholder="logo-primary.png" {...field} /></FormControl><FormMessage /></FormItem>} />

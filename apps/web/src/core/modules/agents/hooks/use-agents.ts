@@ -30,6 +30,7 @@ export type Agent = {
   templateId: string | null;
   activeVersionId: string | null;
   allowedTools: AgentTool[];
+  suggestedMessages?: string[] | null;
   createdAt: string;
   updatedAt: string;
   onboardingCompletedAt: string | null;
@@ -270,7 +271,9 @@ export function useCompleteAgentOnboarding(
       if (orgId) {
         queryClient.invalidateQueries({ queryKey: ["agents", orgId] });
         if (agentId) {
-          queryClient.invalidateQueries({ queryKey: ["agents", orgId, agentId] });
+          queryClient.invalidateQueries({
+            queryKey: ["agents", orgId, agentId],
+          });
         }
       }
     },

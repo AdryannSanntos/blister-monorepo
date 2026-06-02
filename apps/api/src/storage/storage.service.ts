@@ -1,4 +1,5 @@
 import {
+  GetObjectCommand,
   DeleteObjectCommand,
   PutBucketCorsCommand,
   PutObjectCommand,
@@ -155,6 +156,14 @@ export class StorageService {
         ContentType: input.contentType,
       }),
     );
+  }
+
+  async getObjectBuffer(key: string): Promise<Buffer> {
+    const response = await this.client.send(
+      new GetObjectCommand({ Bucket: this.bucket, Key: key }),
+    );
+    const bytes = await response.Body?.transformToByteArray?.();
+    return Buffer.from(bytes ?? []);
   }
 
   async deleteObject(key: string) {

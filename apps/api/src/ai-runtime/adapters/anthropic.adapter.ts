@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
-  type AIRuntimeResolvedCredential,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageRequest,
   type AIRuntimeImageResult,
+  type AIRuntimeResolvedCredential,
   type AIRuntimeTextRequest,
   type AIRuntimeTextResult,
   ProviderExecutionError,
@@ -53,7 +53,10 @@ export class AnthropicAdapter implements AIProviderAdapter {
     };
 
     return (payload.data ?? [])
-      .filter((model): model is NonNullable<typeof payload.data>[number] & { id: string } => typeof model.id === 'string')
+      .filter(
+        (model): model is NonNullable<typeof payload.data>[number] & { id: string } =>
+          typeof model.id === 'string',
+      )
       .map((model) => ({
         slug: this.slugify(model.id),
         name: model.display_name ?? model.id,
@@ -105,6 +108,9 @@ export class AnthropicAdapter implements AIProviderAdapter {
   }
 
   private slugify(value: string) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 }

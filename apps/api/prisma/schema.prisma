@@ -471,6 +471,7 @@ model CompanyAgent {
   description     String?
   status          String               @default("draft")
   allowedTools    Json                 @default("[]")
+  suggestedMessages     Json           @default("[]")
   activeVersionId       String?
   onboardingCompletedAt DateTime?
   createdByUserId String
@@ -486,6 +487,21 @@ model CompanyAgent {
 
   @@unique([organizationId, slug])
   @@index([organizationId, status, updatedAt])
+}
+
+/// Configuração editável (admin) de um agente de sistema. A definição vive em
+/// código (`system-agents/*.agent.ts`); aqui ficam apenas overrides de IA.
+model SystemAgentConfig {
+  id              String   @id @default(cuid())
+  key             String   @unique
+  providerId      String?
+  modelId         String?
+  temperature     Float?
+  maxOutputTokens Int?
+  enabled         Boolean  @default(true)
+  updatedByUserId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model AgentVersion {
@@ -722,6 +738,9 @@ model AgentChatThread {
   parentThread          AgentChatThread?   @relation("AgentChatThreadBranches", fields: [parentThreadId], references: [id])
   branches              AgentChatThread[]  @relation("AgentChatThreadBranches")
   runs                  AgentRun[]
+  conversationEvents    ConversationEvent[]
+  messageProjections    ConversationMessageProjection[]
+  toolCallProjections   ConversationToolCallProjection[]
 
   @@index([organizationId, scope, updatedAt])
   @@index([agentId, updatedAt])
@@ -747,6 +766,9 @@ model AgentChatMessage {
   branches                 AgentChatThread[]  @relation("AgentChatThreadBranchMessage")
   sourceRuns               AgentRun[]         @relation("AgentRunSourceMessage")
   toolCalls                AgentChatToolCall[]
+  conversationEvents       ConversationEvent[]
+  messageProjection        ConversationMessageProjection?
+  toolCallProjections      ConversationToolCallProjection[]
 
   @@index([threadId, createdAt])
   @@index([agentRunId])
@@ -773,6 +795,81 @@ model AgentChatToolCall {
   @@index([organizationId, agentId, createdAt])
   @@index([threadId, createdAt])
   @@index([messageId])
+}
+
+/// Canonical, append-only conversation event log. Source of truth for replay.
+/// `sequence` is monotonic per thread for deterministic ordering. `idempotencyKey`
+/// (when provided) dedupes retried appends — NULLs are distinct in Postgres so
+/// keyless events are never blocked.
+model ConversationEvent {
+  id             String           @id @default(cuid())
+  organizationId String
+  threadId       String
+  messageId      String
+  sequence       Int
+  eventType      String
+  status         String?
+  payload        Json             @default("{}")
+  idempotencyKey String?
+  createdAt      DateTime         @default(now())
+  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, sequence])
+  @@unique([threadId, idempotencyKey])
+  @@index([messageId, sequence])
+  @@index([organizationId, threadId])
+}
+
+/// Materialized projection of the assistant message — rebuilt from the event log.
+/// Lets replay/load skip event folding on read.
+model ConversationMessageProjection {
+  id             String           @id @default(cuid())
+  organizationId String
+  threadId       String
+  messageId      String           @unique
+  status         String           @default("pending")
+  text           String           @default("")
+  citations      Json             @default("[]")
+  isStreaming    Boolean          @default(false)
+  isCompleted    Boolean          @default(false)
+  isFailed       Boolean          @default(false)
+  errorMessage   String?
+  lastSequence   Int              @default(0)
+  metadata       Json             @default("{}")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, threadId])
+  @@index([threadId, updatedAt])
+}
+
+/// Materialized projection of a single tool call within a message — rebuilt from
+/// the event log. `displayOrder` preserves operational narrative order in replay.
+model ConversationToolCallProjection {
+  id             String           @id @default(cuid())
+  organizationId String
+  threadId       String
+  messageId      String
+  toolCallId     String
+  groupId        String?
+  toolName       String
+  status         String           @default("pending")
+  inputPayload   Json             @default("{}")
+  outputPayload  Json?
+  errorMessage   String?
+  durationMs     Int?
+  displayOrder   Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, toolCallId])
+  @@index([organizationId, threadId])
+  @@index([messageId, displayOrder])
 }
 
 model CreditLedgerEntry {

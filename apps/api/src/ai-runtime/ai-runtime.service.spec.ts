@@ -2,9 +2,9 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProviderExecutionError } from './adapters/ai-provider.adapter';
-import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
-import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from './adapters/anthropic.adapter';
+import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
+import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
@@ -61,6 +61,52 @@ describe('AIRuntimeService', () => {
     process.env.ASSEMBLYAI_API_KEY = '';
   });
 
+  const seedTextModel = () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'model-1',
+        providerId: 'provider-1',
+        slug: 'openrouter-gpt-4o-mini',
+        externalModelId: 'openai/gpt-4o-mini',
+        capabilityMetadata: { supportsTextGeneration: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue({ id: 'cred-1', value: 'platform-key' });
+  };
+
+  it('streamText delegates to the adapter real streaming when available', async () => {
+    seedTextModel();
+    (openRouterAdapter as any).streamText = jest.fn(async function* () {
+      yield { delta: 'Ola' };
+      yield { delta: ' mundo' };
+    });
+
+    const deltas: string[] = [];
+    for await (const chunk of service.streamText({ prompt: 'oi' })) deltas.push(chunk.delta);
+
+    expect(deltas).toEqual(['Ola', ' mundo']);
+    expect(openRouterAdapter.generateText).not.toHaveBeenCalled();
+    (openRouterAdapter as any).streamText = undefined;
+  });
+
+  it('streamText falls back to a single full-text delta when the adapter cannot stream', async () => {
+    seedTextModel();
+    (openRouterAdapter as any).streamText = undefined;
+    openRouterAdapter.generateText.mockResolvedValue({ text: 'resposta completa', usage: {} });
+
+    const deltas: string[] = [];
+    for await (const chunk of service.streamText({ prompt: 'oi' })) deltas.push(chunk.delta);
+
+    expect(deltas).toEqual(['resposta completa']);
+    expect(openRouterAdapter.generateText).toHaveBeenCalled();
+  });
+
   it('resolves OpenRouter model for text request', async () => {
     prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
     prisma.aIModel.findMany.mockResolvedValue([
@@ -91,6 +137,117 @@ describe('AIRuntimeService', () => {
     expect(openRouterAdapter.generateText).toHaveBeenCalled();
     expect(result.providerSlug).toBe('openrouter');
     expect(result.modelId).toBe('model-1');
+  });
+
+  it('prefers models with structured output support when a schema is requested', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'text-only-model',
+        providerId: 'provider-1',
+        slug: 'openrouter-gpt-4o-mini',
+        externalModelId: 'openai/gpt-4o-mini',
+        updatedAt: new Date('2026-05-29T12:00:00Z'),
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+      {
+        id: 'structured-model',
+        providerId: 'provider-1',
+        slug: 'openrouter-gpt-4o',
+        externalModelId: 'openai/gpt-4o',
+        updatedAt: new Date('2026-05-28T12:00:00Z'),
+        capabilityMetadata: { text: true, structuredOutput: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue({
+      id: 'cred-1',
+      value: 'platform-key',
+    });
+    openRouterAdapter.generateText.mockResolvedValue({
+      text: '{"title":"Briefing"}',
+      structuredOutput: { title: 'Briefing' },
+      usage: { totalTokens: 42 },
+    });
+
+    const result = await service.generateText({
+      prompt: 'hello',
+      structuredOutputSchema: {
+        type: 'object',
+        properties: { title: { type: 'string' } },
+        required: ['title'],
+        additionalProperties: false,
+      },
+    });
+
+    expect(openRouterAdapter.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: expect.objectContaining({ id: 'structured-model' }),
+      }),
+    );
+    expect(result.modelId).toBe('structured-model');
+  });
+
+  it('widens selection to a zero-cost text model and omits the schema when structured output is not required', async () => {
+    prisma.aIProviderPolicy.findMany.mockResolvedValue([]);
+    prisma.aIModel.findMany.mockResolvedValue([
+      {
+        id: 'paid-structured',
+        providerId: 'provider-1',
+        slug: 'gpt-4o',
+        externalModelId: 'openai/gpt-4o',
+        updatedAt: new Date('2026-05-30T12:00:00Z'),
+        pricingMetadata: { prompt: '0.005', completion: '0.015' },
+        capabilityMetadata: { text: true, structuredOutput: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+      {
+        id: 'free-text',
+        providerId: 'provider-1',
+        slug: 'llama-free',
+        externalModelId: 'meta-llama/llama-3.1-8b-instruct:free',
+        updatedAt: new Date('2026-05-20T12:00:00Z'),
+        pricingMetadata: {},
+        capabilityMetadata: { text: true },
+        provider: {
+          id: 'provider-1',
+          slug: 'openrouter',
+          schemaMetadata: { adapter: 'openrouter' },
+        },
+      },
+    ]);
+    prisma.aICredential.findFirst.mockResolvedValue({ id: 'cred-1', value: 'platform-key' });
+    openRouterAdapter.generateText.mockResolvedValue({ text: '{"title":"Oi"}', usage: {} });
+
+    const result = await service.generateText({
+      prompt: 'hello',
+      structuredOutputSchema: {
+        type: 'object',
+        properties: { title: { type: 'string' } },
+        required: ['title'],
+        additionalProperties: false,
+      },
+      requireStructuredOutput: false,
+      preferLowCost: true,
+    });
+
+    expect(result.modelId).toBe('free-text');
+    expect(openRouterAdapter.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({ structuredOutputSchema: undefined }),
+    );
   });
 
   it('rejects model without required capability', async () => {

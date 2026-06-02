@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
-  type AIProviderListedModel,
   type AIProviderAdapter,
+  type AIProviderListedModel,
   type AIRuntimeCapability,
   type AIRuntimeEmbeddingRequest,
   type AIRuntimeEmbeddingResult,
@@ -24,29 +24,167 @@ type AssemblyAIModelDef = {
 };
 
 const ASSEMBLYAI_LLM_MODELS: AssemblyAIModelDef[] = [
-  { slug: 'claude-opus-4-7', name: 'Claude Opus 4.7', externalModelId: 'claude-opus-4-7', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-opus-4-6', name: 'Claude Opus 4.6', externalModelId: 'claude-opus-4-6', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', externalModelId: 'claude-sonnet-4-6', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-opus-4-5-20251101', name: 'Claude Opus 4.5', externalModelId: 'claude-opus-4-5-20251101', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-sonnet-4-5-20250929', name: 'Claude Sonnet 4.5', externalModelId: 'claude-sonnet-4-5-20250929', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-haiku-4-5-20251001', name: 'Claude Haiku 4.5', externalModelId: 'claude-haiku-4-5-20251001', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-opus-4-20250514', name: 'Claude Opus 4', externalModelId: 'claude-opus-4-20250514', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4', externalModelId: 'claude-sonnet-4-20250514', structuredOutput: true, providerFamily: 'anthropic' },
-  { slug: 'gpt-5.2', name: 'GPT-5.2', externalModelId: 'gpt-5.2', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-5.1', name: 'GPT-5.1', externalModelId: 'gpt-5.1', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-5', name: 'GPT-5', externalModelId: 'gpt-5', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-5-nano', name: 'GPT-5 Nano', externalModelId: 'gpt-5-nano', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-5-mini', name: 'GPT-5 Mini', externalModelId: 'gpt-5-mini', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-4.1', name: 'GPT-4.1', externalModelId: 'gpt-4.1', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-oss-120b', name: 'gpt-oss-120b', externalModelId: 'gpt-oss-120b', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gpt-oss-20b', name: 'gpt-oss-20b', externalModelId: 'gpt-oss-20b', structuredOutput: true, providerFamily: 'openai' },
-  { slug: 'gemini-3-flash-preview', name: 'Gemini 3 Flash Preview', externalModelId: 'gemini-3-flash-preview', structuredOutput: true, providerFamily: 'google' },
-  { slug: 'gemini-2-5-pro', name: 'Gemini 2.5 Pro', externalModelId: 'gemini-2.5-pro', structuredOutput: true, providerFamily: 'google' },
-  { slug: 'gemini-2-5-flash', name: 'Gemini 2.5 Flash', externalModelId: 'gemini-2.5-flash', structuredOutput: true, providerFamily: 'google' },
-  { slug: 'gemini-2-5-flash-lite', name: 'Gemini 2.5 Flash-Lite', externalModelId: 'gemini-2.5-flash-lite', structuredOutput: true, providerFamily: 'google' },
-  { slug: 'qwen3-next-80b-a3b', name: 'Qwen3 Next 80B', externalModelId: 'qwen3-next-80b-a3b', structuredOutput: true, providerFamily: 'qwen' },
-  { slug: 'qwen3-32b', name: 'Qwen3 32B', externalModelId: 'qwen3-32B', structuredOutput: true, providerFamily: 'qwen' },
-  { slug: 'kimi-k2-5', name: 'Kimi K2.5', externalModelId: 'kimi-k2.5', structuredOutput: true, providerFamily: 'moonshot' },
+  {
+    slug: 'claude-opus-4-7',
+    name: 'Claude Opus 4.7',
+    externalModelId: 'claude-opus-4-7',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-opus-4-6',
+    name: 'Claude Opus 4.6',
+    externalModelId: 'claude-opus-4-6',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-sonnet-4-6',
+    name: 'Claude Sonnet 4.6',
+    externalModelId: 'claude-sonnet-4-6',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-opus-4-5-20251101',
+    name: 'Claude Opus 4.5',
+    externalModelId: 'claude-opus-4-5-20251101',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-sonnet-4-5-20250929',
+    name: 'Claude Sonnet 4.5',
+    externalModelId: 'claude-sonnet-4-5-20250929',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-haiku-4-5-20251001',
+    name: 'Claude Haiku 4.5',
+    externalModelId: 'claude-haiku-4-5-20251001',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-opus-4-20250514',
+    name: 'Claude Opus 4',
+    externalModelId: 'claude-opus-4-20250514',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'claude-sonnet-4-20250514',
+    name: 'Claude Sonnet 4',
+    externalModelId: 'claude-sonnet-4-20250514',
+    structuredOutput: true,
+    providerFamily: 'anthropic',
+  },
+  {
+    slug: 'gpt-5.2',
+    name: 'GPT-5.2',
+    externalModelId: 'gpt-5.2',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-5.1',
+    name: 'GPT-5.1',
+    externalModelId: 'gpt-5.1',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-5',
+    name: 'GPT-5',
+    externalModelId: 'gpt-5',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-5-nano',
+    name: 'GPT-5 Nano',
+    externalModelId: 'gpt-5-nano',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-5-mini',
+    name: 'GPT-5 Mini',
+    externalModelId: 'gpt-5-mini',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-4.1',
+    name: 'GPT-4.1',
+    externalModelId: 'gpt-4.1',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-oss-120b',
+    name: 'gpt-oss-120b',
+    externalModelId: 'gpt-oss-120b',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gpt-oss-20b',
+    name: 'gpt-oss-20b',
+    externalModelId: 'gpt-oss-20b',
+    structuredOutput: true,
+    providerFamily: 'openai',
+  },
+  {
+    slug: 'gemini-3-flash-preview',
+    name: 'Gemini 3 Flash Preview',
+    externalModelId: 'gemini-3-flash-preview',
+    structuredOutput: true,
+    providerFamily: 'google',
+  },
+  {
+    slug: 'gemini-2-5-pro',
+    name: 'Gemini 2.5 Pro',
+    externalModelId: 'gemini-2.5-pro',
+    structuredOutput: true,
+    providerFamily: 'google',
+  },
+  {
+    slug: 'gemini-2-5-flash',
+    name: 'Gemini 2.5 Flash',
+    externalModelId: 'gemini-2.5-flash',
+    structuredOutput: true,
+    providerFamily: 'google',
+  },
+  {
+    slug: 'gemini-2-5-flash-lite',
+    name: 'Gemini 2.5 Flash-Lite',
+    externalModelId: 'gemini-2.5-flash-lite',
+    structuredOutput: true,
+    providerFamily: 'google',
+  },
+  {
+    slug: 'qwen3-next-80b-a3b',
+    name: 'Qwen3 Next 80B',
+    externalModelId: 'qwen3-next-80b-a3b',
+    structuredOutput: true,
+    providerFamily: 'qwen',
+  },
+  {
+    slug: 'qwen3-32b',
+    name: 'Qwen3 32B',
+    externalModelId: 'qwen3-32B',
+    structuredOutput: true,
+    providerFamily: 'qwen',
+  },
+  {
+    slug: 'kimi-k2-5',
+    name: 'Kimi K2.5',
+    externalModelId: 'kimi-k2.5',
+    structuredOutput: true,
+    providerFamily: 'moonshot',
+  },
 ];
 
 @Injectable()
@@ -141,7 +279,9 @@ export class AssemblyAILlmGatewayAdapter implements AIProviderAdapter {
 
     return {
       text,
-      structuredOutput: request.structuredOutputSchema ? this.tryParseStructuredOutput(text) : undefined,
+      structuredOutput: request.structuredOutputSchema
+        ? this.tryParseStructuredOutput(text)
+        : undefined,
       usage: {
         promptTokens: payload.usage?.prompt_tokens,
         completionTokens: payload.usage?.completion_tokens,
@@ -168,11 +308,18 @@ export class AssemblyAILlmGatewayAdapter implements AIProviderAdapter {
 
   private async readErrorMessage(response: Response) {
     try {
-      const payload = (await response.json()) as { error?: { message?: string } | string; message?: string };
+      const payload = (await response.json()) as {
+        error?: { message?: string } | string;
+        message?: string;
+      };
       if (typeof payload.error === 'string') {
         return payload.error;
       }
-      return payload.error?.message ?? payload.message ?? `Provider request failed with status ${response.status}`;
+      return (
+        payload.error?.message ??
+        payload.message ??
+        `Provider request failed with status ${response.status}`
+      );
     } catch {
       return `Provider request failed with status ${response.status}`;
     }

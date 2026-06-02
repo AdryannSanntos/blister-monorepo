@@ -2,6 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentsService } from './agents.service';
+import { SystemAgentsService } from './system-agents/system-agents.service';
 
 const makeMockPrisma = () => ({
   agentTemplate: { findUnique: jest.fn() },
@@ -15,6 +16,14 @@ const makeMockPrisma = () => ({
     create: jest.fn(),
     findFirst: jest.fn(),
     update: jest.fn(),
+  },
+  agentContextProfile: {
+    findFirst: jest.fn(),
+    update: jest.fn(),
+    create: jest.fn(),
+  },
+  agentContextReference: {
+    createMany: jest.fn(),
   },
   $transaction: jest.fn(),
 });
@@ -30,7 +39,31 @@ describe('AgentsService', () => {
     );
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AgentsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        AgentsService,
+        { provide: PrismaService, useValue: prisma },
+        {
+          provide: SystemAgentsService,
+          useValue: {
+            generateInitialMessages: jest.fn().mockResolvedValue({
+              agentKey: 'initial-messages',
+              status: 'failed',
+              data: null,
+              errorMessage: null,
+              startedAt: new Date(0).toISOString(),
+              finishedAt: new Date(0).toISOString(),
+            }),
+            generateThreadTitle: jest.fn().mockResolvedValue({
+              agentKey: 'thread-title',
+              status: 'failed',
+              data: null,
+              errorMessage: null,
+              startedAt: new Date(0).toISOString(),
+              finishedAt: new Date(0).toISOString(),
+            }),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get(AgentsService);
@@ -102,6 +135,28 @@ describe('AgentsService', () => {
     expect(result.allowedTools).toEqual(['rag_search', 'file_search']);
   });
 
+  it('defaults new agents to internal retrieval tools when allowedTools is omitted', async () => {
+    prisma.companyAgent.create.mockResolvedValue({
+      id: 'agent-1',
+      status: 'draft',
+      allowedTools: ['rag_search', 'file_search'],
+    });
+    prisma.agentVersion.create.mockResolvedValue({ id: 'version-1' });
+
+    const result = await service.createCompanyAgent('org-1', 'user-1', {
+      slug: 'research-agent',
+      name: 'Research Agent',
+      category: 'research',
+    });
+
+    expect(prisma.companyAgent.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        allowedTools: ['rag_search', 'file_search'],
+      }),
+    });
+    expect(result.allowedTools).toEqual(['rag_search', 'file_search']);
+  });
+
   it('updates allowedTools', async () => {
     prisma.companyAgent.findFirst.mockResolvedValue({
       id: 'agent-1',
@@ -138,6 +193,20 @@ describe('AgentsService', () => {
     const result = await service.getCompanyAgent('org-1', 'agent-1');
 
     expect(result.allowedTools).toEqual([]);
+  });
+
+  it('defaults active agents with an empty allowlist to internal retrieval tools on read', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      status: 'active',
+      allowedTools: [],
+      versions: [],
+    });
+
+    const result = await service.getCompanyAgent('org-1', 'agent-1');
+
+    expect(result.allowedTools).toEqual(['rag_search', 'file_search']);
   });
 
   it('normalizes invalid allowedTools in listCompanyAgents', async () => {
@@ -379,6 +448,35 @@ describe('AgentsService', () => {
       expect.objectContaining({ where: { id: 'draft-1' } }),
     );
     expect(prisma.agentVersion.create).not.toHaveBeenCalled();
+  });
+
+  it('completeOnboarding persists default internal tools when the input omits allowedTools', async () => {
+    prisma.companyAgent.findFirst.mockResolvedValue({
+      id: 'agent-1',
+      organizationId: 'org-1',
+      status: 'draft',
+      allowedTools: [],
+      versions: [],
+    });
+    prisma.agentContextProfile.findFirst.mockResolvedValue(null);
+    prisma.companyAgent.update.mockResolvedValue({
+      id: 'agent-1',
+      status: 'active',
+      allowedTools: ['rag_search', 'file_search'],
+    });
+
+    const result = await service.completeOnboarding('org-1', 'agent-1', 'user-1', {
+      description: 'Agente de suporte',
+    });
+
+    expect(prisma.companyAgent.update).toHaveBeenCalledWith({
+      where: { id: 'agent-1' },
+      data: expect.objectContaining({
+        allowedTools: ['rag_search', 'file_search'],
+        status: 'active',
+      }),
+    });
+    expect(result.allowedTools).toEqual(['rag_search', 'file_search']);
   });
 
   it('throws NotFoundException when updating agent from wrong org', async () => {

@@ -7,7 +7,12 @@ import { z } from 'zod';
 export const ragSourceTypeSchema = z.enum([
   'brain_entry',
   'asset',
+  'design_system',
+  'design_asset',
   'agent_context_file',
+  'agent_context_reference',
+  'context_source',
+  'web_research',
   'manual',
 ]);
 

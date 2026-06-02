@@ -1,15 +1,11 @@
 import { schemaTask } from '@trigger.dev/sdk';
 import { z } from 'zod';
-import { AnthropicAdapter } from '../src/ai-runtime/adapters/anthropic.adapter';
-import { GeminiAdapter } from '../src/ai-runtime/adapters/gemini.adapter';
-import { OpenAIAdapter } from '../src/ai-runtime/adapters/openai.adapter';
-import { OpenRouterAdapter } from '../src/ai-runtime/adapters/openrouter.adapter';
-import { AIRuntimeService } from '../src/ai-runtime/ai-runtime.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { RagChunkingService } from '../src/rag/rag-chunking.service';
 import { RagDocumentService } from '../src/rag/rag-document.service';
 import { RagEmbeddingService } from '../src/rag/rag-embedding.service';
 import { RagIndexingService } from '../src/rag/rag-indexing.service';
+import { createAIRuntimeService } from './shared/ai-runtime';
 
 export const ragIndexDocumentTaskPayloadSchema = z.object({
   organizationId: z.string().min(1),
@@ -29,13 +25,7 @@ export const ragIndexDocumentTask = schemaTask({
     await prisma.onModuleInit();
 
     try {
-      const aiRuntime = new AIRuntimeService(
-        prisma,
-        new OpenRouterAdapter(),
-        new OpenAIAdapter(),
-        new AnthropicAdapter(),
-        new GeminiAdapter(),
-      );
+      const aiRuntime = createAIRuntimeService(prisma);
 
       const documentService = new RagDocumentService(prisma);
       const chunkingService = new RagChunkingService(prisma);
@@ -59,7 +49,10 @@ export const ragIndexDocumentTask = schemaTask({
           sourceType: doc.sourceType as
             | 'brain_entry'
             | 'asset'
+            | 'design_system'
+            | 'design_asset'
             | 'agent_context_file'
+            | 'context_source'
             | 'manual',
           sourceId: doc.sourceId ?? undefined,
           title: doc.title ?? undefined,

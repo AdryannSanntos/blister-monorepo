@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RagContextAssemblyService } from '../rag/rag-context-assembly.service';
+import { WebResearchCacheService } from '../rag/web-research-cache.service';
 import { AgentContextService } from './agent-context.service';
 import { AgentToolPolicyService } from './agent-tool-policy.service';
 import type { AgentChatToolName, AgentToolResult } from './dto/agent-chat-tool.dto';
@@ -38,6 +39,7 @@ export class AgentToolRuntimeService {
     private readonly ragContextAssemblyService: RagContextAssemblyService,
     private readonly agentContextService: AgentContextService,
     @Inject(WEB_RESEARCH_GATEWAY) private readonly webResearchGateway: WebResearchGateway,
+    private readonly webResearchCache: WebResearchCacheService,
   ) {}
 
   async run(input: AgentToolRunInput): Promise<AgentToolResult> {
@@ -71,7 +73,13 @@ export class AgentToolRuntimeService {
           },
         );
       case 'web_research':
-        return runWebResearchTool(this.webResearchGateway, { query: input.query, limit });
+        return runWebResearchTool({
+          gateway: this.webResearchGateway,
+          cache: this.webResearchCache,
+          organizationId: input.organizationId,
+          query: input.query,
+          limit,
+        });
     }
   }
 

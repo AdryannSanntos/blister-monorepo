@@ -2,7 +2,8 @@
 
 import { BookOpen, Bot, ChevronRight, Cpu, Globe, Search, Wrench } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   type AgentTool,
   useCompleteAgentOnboarding,
@@ -56,6 +57,8 @@ const AGENT_TOOLS: Array<{
   },
 ];
 
+const DEFAULT_AGENT_TOOLS: AgentTool[] = ["rag_search", "file_search"];
+
 export function AgentOnboardingPage() {
   const params = useParams<{ agentId: string }>();
   const agentId = params.agentId;
@@ -69,7 +72,7 @@ export function AgentOnboardingPage() {
   const [description, setDescription] = useState("");
   const [instructions, setInstructions] = useState("");
   const [notes, setNotes] = useState("");
-  const [allowedTools, setAllowedTools] = useState<AgentTool[]>([]);
+  const [allowedTools, setAllowedTools] = useState<AgentTool[]>(DEFAULT_AGENT_TOOLS);
   const [references, setReferences] = useState<Reference[]>([]);
   const [refDraft, setRefDraft] = useState({
     sourceType: "manual" as Reference["sourceType"],
@@ -78,6 +81,13 @@ export function AgentOnboardingPage() {
   });
   const catalog = useAgentBuilderCatalog(orgId);
   const [selectedModelId, setSelectedModelId] = useState("");
+
+  useEffect(() => {
+    if (!agent.data) return;
+    if (agent.data.allowedTools.length > 0) {
+      setAllowedTools(agent.data.allowedTools);
+    }
+  }, [agent.data]);
 
   function toggleTool(tool: AgentTool) {
     setAllowedTools((prev) =>
@@ -99,11 +109,16 @@ export function AgentOnboardingPage() {
   }
 
   async function handleComplete() {
+    if (allowedTools.length === 0) {
+      toast.error("Habilite ao menos uma fonte de pesquisa para o agente.");
+      return;
+    }
+
     await complete.mutateAsync({
       description: description.trim() || undefined,
       instructions: instructions.trim() || undefined,
       notes: notes.trim() || undefined,
-      allowedTools: allowedTools.length > 0 ? allowedTools : undefined,
+      allowedTools,
       references: references.length > 0 ? references : undefined,
       modelId: selectedModelId || undefined,
     });

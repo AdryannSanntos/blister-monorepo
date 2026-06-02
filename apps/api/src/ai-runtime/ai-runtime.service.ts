@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import type { AIModel, AIProvider, AIProviderPolicy } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import {
+  type AIProviderAdapter,
   type AIRuntimeCapability,
   type AIRuntimeEmbeddingResult,
   type AIRuntimeImageResult,
@@ -11,9 +12,9 @@ import {
   ProviderExecutionError,
   ProviderNotConfiguredError,
 } from './adapters/ai-provider.adapter';
-import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
-import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
 import { AnthropicAdapter } from './adapters/anthropic.adapter';
+import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
+import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import { OpenAIAdapter } from './adapters/openai.adapter';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
@@ -24,6 +25,8 @@ type BaseRuntimeRequest = {
   organizationId?: string;
   providerId?: string;
   modelId?: string;
+  /** Bias auto-selection toward zero-cost models (see {@link GenerateTextInput}). */
+  preferLowCost?: boolean;
 };
 
 export type GenerateTextInput = BaseRuntimeRequest & {
@@ -32,6 +35,14 @@ export type GenerateTextInput = BaseRuntimeRequest & {
   temperature?: number;
   maxOutputTokens?: number;
   structuredOutputSchema?: Record<string, unknown>;
+  /**
+   * When false, do not require the selected model to *natively* support
+   * structured output. The runtime widens selection to text-capable models
+   * (including credit-free ones) and only hands the JSON schema to providers
+   * that can honor it — secondary paths then parse JSON from plain text.
+   * Defaults to true for backward compatibility.
+   */
+  requireStructuredOutput?: boolean;
 };
 
 export type GenerateImageInput = BaseRuntimeRequest & {
@@ -56,7 +67,27 @@ export class AIRuntimeService {
   ) {}
 
   async generateText(request: GenerateTextInput) {
-    const resolved = await this.resolveExecution(request, 'text_generation');
+    const wantsStructuredOutput = Boolean(request.structuredOutputSchema);
+    const requireStructuredOutput =
+      wantsStructuredOutput && request.requireStructuredOutput !== false;
+
+    const resolved = await this.resolveExecution(
+      request,
+      requireStructuredOutput ? 'structured_output' : 'text_generation',
+    );
+
+    // Only hand the JSON schema to the provider when the resolved model can
+    // honor it natively; otherwise rely on prompt-instructed JSON so that
+    // credit-free, text-only models still produce a parseable response instead
+    // of being rejected for an unsupported `response_format`.
+    const modelSupportsStructuredOutput = this.modelSupportsCapability(
+      resolved.model.capabilityMetadata,
+      'structured_output',
+    );
+    const structuredOutputSchema =
+      wantsStructuredOutput && modelSupportsStructuredOutput
+        ? request.structuredOutputSchema
+        : undefined;
 
     try {
       const result = await resolved.adapter.generateText({
@@ -66,10 +97,48 @@ export class AIRuntimeService {
         messages: request.messages,
         temperature: request.temperature,
         maxOutputTokens: request.maxOutputTokens,
-        structuredOutputSchema: request.structuredOutputSchema,
+        structuredOutputSchema,
       });
 
       return this.attachExecutionMetadata(result, resolved);
+    } catch (error) {
+      throw this.normalizeRuntimeError(error, resolved.model.provider.slug);
+    }
+  }
+
+  /**
+   * Streams generated text as incremental deltas. Uses the provider's real token
+   * streaming when the adapter supports it; otherwise falls back to a single
+   * full-text delta so every consumer works regardless of provider capability.
+   */
+  async *streamText(request: GenerateTextInput): AsyncGenerator<{ delta: string }> {
+    const resolved = await this.resolveExecution(request, 'text_generation');
+    const adapter = resolved.adapter as AIProviderAdapter;
+
+    try {
+      if (typeof adapter.streamText === 'function') {
+        for await (const chunk of adapter.streamText({
+          credential: resolved.credential,
+          model: resolved.modelRef,
+          prompt: request.prompt,
+          messages: request.messages,
+          temperature: request.temperature,
+          maxOutputTokens: request.maxOutputTokens,
+        })) {
+          if (chunk.delta) yield { delta: chunk.delta };
+        }
+        return;
+      }
+
+      const result = await resolved.adapter.generateText({
+        credential: resolved.credential,
+        model: resolved.modelRef,
+        prompt: request.prompt,
+        messages: request.messages,
+        temperature: request.temperature,
+        maxOutputTokens: request.maxOutputTokens,
+      });
+      if (result.text) yield { delta: result.text };
     } catch (error) {
       throw this.normalizeRuntimeError(error, resolved.model.provider.slug);
     }
@@ -199,6 +268,20 @@ export class AIRuntimeService {
       (left, right) => (right.updatedAt?.getTime() ?? 0) - (left.updatedAt?.getTime() ?? 0),
     );
 
+    // Secondary/system paths can opt into a cost-aware bias: zero-cost models
+    // float to the front so auto-selection never burns paid credits when a
+    // free model can do the job. Pinned `modelId` requests are never reordered.
+    if (request.preferLowCost && !request.modelId) {
+      eligible.sort((left, right) => {
+        const leftRank = this.isZeroCostModel(left) ? 0 : 1;
+        const rightRank = this.isZeroCostModel(right) ? 0 : 1;
+        if (leftRank !== rightRank) {
+          return leftRank - rightRank;
+        }
+        return (right.updatedAt?.getTime() ?? 0) - (left.updatedAt?.getTime() ?? 0);
+      });
+    }
+
     const model = request.modelId
       ? (eligible.find((candidate) => candidate.id === request.modelId) ?? eligible[0])
       : eligible[0];
@@ -251,14 +334,14 @@ export class AIRuntimeService {
   }
 
   private resolveEnvCredential(providerSlug: string): AIRuntimeResolvedCredential | null {
-      const envMap: Record<string, string | undefined> = {
-        openrouter: process.env.OPENROUTER_API_KEY,
-        openai: process.env.OPENAI_API_KEY,
-        anthropic: process.env.ANTHROPIC_API_KEY,
-        gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
-        assemblyai: process.env.ASSEMBLYAI_API_KEY,
-        'assemblyai-llm-gateway': process.env.ASSEMBLYAI_API_KEY,
-      };
+    const envMap: Record<string, string | undefined> = {
+      openrouter: process.env.OPENROUTER_API_KEY,
+      openai: process.env.OPENAI_API_KEY,
+      anthropic: process.env.ANTHROPIC_API_KEY,
+      gemini: process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY,
+      assemblyai: process.env.ASSEMBLYAI_API_KEY,
+      'assemblyai-llm-gateway': process.env.ASSEMBLYAI_API_KEY,
+    };
 
     const value = envMap[providerSlug]?.trim();
     if (!value) {
@@ -302,6 +385,30 @@ export class AIRuntimeService {
       default:
         throw new ProviderNotConfiguredError(providerSlug);
     }
+  }
+
+  /**
+   * Heuristic for a credit-free model: flagged `:free` in its external id, or
+   * priced at zero across every known dimension. Unknown pricing is treated as
+   * non-free so the bias never silently routes paid traffic for free.
+   */
+  private isZeroCostModel(model: RuntimeModelRecord): boolean {
+    if (typeof model.externalModelId === 'string' && model.externalModelId.includes(':free')) {
+      return true;
+    }
+
+    const pricing = model.pricingMetadata;
+    if (pricing && typeof pricing === 'object' && !Array.isArray(pricing)) {
+      const record = pricing as Record<string, unknown>;
+      const known = ['prompt', 'completion', 'request', 'image']
+        .map((key) => Number(record[key]))
+        .filter((value) => Number.isFinite(value));
+      if (known.length > 0) {
+        return known.every((value) => value === 0);
+      }
+    }
+
+    return false;
   }
 
   private modelSupportsCapability(metadata: unknown, capability: AIRuntimeCapability) {

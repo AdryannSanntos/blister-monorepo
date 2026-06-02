@@ -1,21 +1,46 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import type { CompleteOnboardingDto, CreateCompanyAgentDto, SaveDraftVersionDto, UpdateAgentModelDto, UpdateCompanyAgentDto } from './dto';
+import type {
+  CompleteOnboardingDto,
+  CreateCompanyAgentDto,
+  SaveDraftVersionDto,
+  UpdateAgentModelDto,
+  UpdateCompanyAgentDto,
+} from './dto';
+import { SystemAgentsService } from './system-agents/system-agents.service';
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
+const DEFAULT_AGENT_ALLOWED_TOOLS = ['rag_search', 'file_search'] as const;
 
 const normalizeAllowedTools = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((tool): tool is string => typeof tool === 'string') : [];
 
-const normalizeAgentAllowedTools = <T extends { allowedTools?: unknown }>(agent: T): T & { allowedTools: string[] } => ({
+const resolveAgentAllowedTools = (value: unknown, status?: unknown): string[] => {
+  const normalized = normalizeAllowedTools(value);
+  if (normalized.length > 0) {
+    return normalized;
+  }
+  return status === 'active' ? [...DEFAULT_AGENT_ALLOWED_TOOLS] : [];
+};
+
+const normalizeAgentWithEffectiveAllowedTools = <
+  T extends { allowedTools?: unknown; status?: unknown },
+>(
+  agent: T,
+): T & { allowedTools: string[] } => ({
   ...agent,
-  allowedTools: normalizeAllowedTools(agent.allowedTools),
+  allowedTools: resolveAgentAllowedTools(agent.allowedTools, agent.status),
 });
 
 @Injectable()
 export class AgentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(AgentsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly systemAgents: SystemAgentsService,
+  ) {}
 
   async listCompanyAgents(organizationId: string) {
     const agents = await this.prisma.companyAgent.findMany({
@@ -24,7 +49,7 @@ export class AgentsService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return agents.map((agent) => normalizeAgentAllowedTools(agent));
+    return agents.map((agent) => normalizeAgentWithEffectiveAllowedTools(agent));
   }
 
   async getCompanyAgent(organizationId: string, agentId: string) {
@@ -37,7 +62,7 @@ export class AgentsService {
       throw new NotFoundException('Agent not found');
     }
 
-    return normalizeAgentAllowedTools(agent);
+    return normalizeAgentWithEffectiveAllowedTools(agent);
   }
 
   async createCompanyAgent(organizationId: string, userId: string, input: CreateCompanyAgentDto) {
@@ -49,15 +74,15 @@ export class AgentsService {
       throw new NotFoundException('Agent template not found');
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      const agent = await tx.companyAgent.create({
+    const agent = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.companyAgent.create({
         data: {
           organizationId,
           templateId: input.templateId,
           slug: input.slug,
           name: input.name,
           description: input.description,
-          allowedTools: input.allowedTools ?? [],
+          allowedTools: input.allowedTools ?? [...DEFAULT_AGENT_ALLOWED_TOOLS],
           status: 'draft',
           createdByUserId: userId,
           updatedByUserId: userId,
@@ -66,7 +91,7 @@ export class AgentsService {
 
       await tx.agentVersion.create({
         data: {
-          agentId: agent.id,
+          agentId: created.id,
           versionNumber: 1,
           status: 'draft',
           flowDefinition: toJsonValue(template?.defaultFlow ?? input.flowDefinition ?? {}),
@@ -76,8 +101,31 @@ export class AgentsService {
         },
       });
 
-      return normalizeAgentAllowedTools(agent);
+      return created;
     });
+
+    // Gera as mensagens de exemplo em background — não pode atrasar nem quebrar
+    // a criação do agente. Persistidas no próprio agente quando prontas.
+    void this.generateAndPersistInitialMessages(organizationId, agent.id);
+
+    return normalizeAgentWithEffectiveAllowedTools(agent);
+  }
+
+  private async generateAndPersistInitialMessages(organizationId: string, agentId: string) {
+    try {
+      const result = await this.systemAgents.generateInitialMessages(organizationId, agentId);
+      if (result.status !== 'completed' || !result.data || result.data.messages.length === 0) {
+        return;
+      }
+      await this.prisma.companyAgent.update({
+        where: { id: agentId },
+        data: { suggestedMessages: toJsonValue(result.data.messages) },
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Failed to persist initial messages for agent ${agentId}: ${error instanceof Error ? error.message : 'unknown'}`,
+      );
+    }
   }
 
   async updateCompanyAgent(
@@ -92,7 +140,7 @@ export class AgentsService {
       throw new BadRequestException('Use the activate endpoint to mark an agent as active');
     }
 
-    return normalizeAgentAllowedTools(
+    return normalizeAgentWithEffectiveAllowedTools(
       await this.prisma.companyAgent.update({
         where: { id: agentId },
         data: {
@@ -243,7 +291,9 @@ export class AgentsService {
           await tx.agentContextProfile.update({
             where: { id: existing.id },
             data: {
-              ...(input.instructions !== undefined ? { instructions: input.instructions || null } : {}),
+              ...(input.instructions !== undefined
+                ? { instructions: input.instructions || null }
+                : {}),
               ...(input.notes !== undefined ? { notes: input.notes || null } : {}),
             },
           });
@@ -281,12 +331,14 @@ export class AgentsService {
           orderBy: { versionNumber: 'desc' },
         });
         if (latestVersion) {
-          const currentFlow = (latestVersion.flowDefinition && typeof latestVersion.flowDefinition === 'object')
-            ? (latestVersion.flowDefinition as Record<string, unknown>)
-            : {};
-          const currentConfig = (currentFlow.config && typeof currentFlow.config === 'object')
-            ? (currentFlow.config as Record<string, unknown>)
-            : {};
+          const currentFlow =
+            latestVersion.flowDefinition && typeof latestVersion.flowDefinition === 'object'
+              ? (latestVersion.flowDefinition as Record<string, unknown>)
+              : {};
+          const currentConfig =
+            currentFlow.config && typeof currentFlow.config === 'object'
+              ? (currentFlow.config as Record<string, unknown>)
+              : {};
           await tx.agentVersion.update({
             where: { id: latestVersion.id },
             data: {
@@ -300,12 +352,12 @@ export class AgentsService {
       }
 
       // Activate agent
-      return normalizeAgentAllowedTools(
+      return normalizeAgentWithEffectiveAllowedTools(
         await tx.companyAgent.update({
           where: { id: agentId },
           data: {
             ...(input.description !== undefined ? { description: input.description || null } : {}),
-            ...(input.allowedTools !== undefined ? { allowedTools: input.allowedTools } : {}),
+            allowedTools: input.allowedTools ?? [...DEFAULT_AGENT_ALLOWED_TOOLS],
             status: 'active',
             onboardingCompletedAt: new Date(),
             updatedByUserId: userId,
@@ -333,12 +385,14 @@ export class AgentsService {
     const patchVersion = async (versionId: string) => {
       const version = await this.prisma.agentVersion.findUnique({ where: { id: versionId } });
       if (!version) return;
-      const currentFlow = (version.flowDefinition && typeof version.flowDefinition === 'object')
-        ? (version.flowDefinition as Record<string, unknown>)
-        : {};
-      const currentConfig = (currentFlow.config && typeof currentFlow.config === 'object')
-        ? (currentFlow.config as Record<string, unknown>)
-        : {};
+      const currentFlow =
+        version.flowDefinition && typeof version.flowDefinition === 'object'
+          ? (version.flowDefinition as Record<string, unknown>)
+          : {};
+      const currentConfig =
+        currentFlow.config && typeof currentFlow.config === 'object'
+          ? (currentFlow.config as Record<string, unknown>)
+          : {};
       await this.prisma.agentVersion.update({
         where: { id: versionId },
         data: {

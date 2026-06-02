@@ -1,6 +1,13 @@
 import { task } from '@trigger.dev/sdk';
 import { z } from 'zod';
 import { PrismaClient } from '../src/generated/prisma';
+import { extractTextFromBuffer } from '../src/rag/file-text-extraction';
+import { StorageService } from '../src/storage/storage.service';
+
+const storage = new StorageService({
+  get: <T = string>(key: string, defaultValue?: T) =>
+    ((process.env[key] as T | undefined) ?? defaultValue) as T,
+} as never);
 
 const ingestPayloadSchema = z.object({
   organizationId: z.string().min(1),
@@ -46,8 +53,27 @@ export const contextSourceIngestTask = task({
       } else if (source.sourceKind === 'manual') {
         extractedContent = source.description ?? null;
       } else if (source.sourceKind === 'file') {
-        // extractedContent will hold the description if provided; actual OCR/parsing not yet implemented
-        extractedContent = source.description ?? null;
+        try {
+          if (source.objectKey) {
+            const buffer = await storage.getObjectBuffer(source.objectKey);
+            extractedContent = await extractTextFromBuffer({
+              buffer,
+              contentType: source.mimeType,
+              fileName: source.fileName,
+            });
+          }
+        } catch {
+          pipelineError = 'Falha ao ler o arquivo enviado.';
+        }
+
+        if (!extractedContent) {
+          extractedContent = source.description ?? null;
+        }
+
+        if (!extractedContent && !pipelineError) {
+          pipelineError =
+            'Nao foi possivel extrair texto do arquivo. O documento ainda pode ser encontrado pelos metadados.';
+        }
       }
 
       await prisma.contextSource.update({

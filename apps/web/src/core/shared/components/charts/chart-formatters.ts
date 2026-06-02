@@ -31,3 +31,24 @@ export function formatChartDate(
 ) {
   return value.toLocaleDateString("pt-BR", options);
 }
+
+export function formatChartDuration(value: number) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return "0s";
+  }
+
+  const totalSeconds = Math.round(value / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}min`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes}min ${seconds}s`;
+  }
+
+  return `${seconds}s`;
+}

@@ -1,26 +1,32 @@
 "use client";
 
-import { SpiralLoader } from "@/components/agent-elements/spiral-loader";
+import React from "react";
 import { TextShimmer } from "@/components/agent-elements/text-shimmer";
-import { Bot } from "lucide-react";
+
+/**
+ * Inner loading indicator (no bubble wrapper). Rendered inside the persistent
+ * message bubble so the loading → content transition never swaps containers,
+ * which is what caused the visible flash.
+ */
+export function ChatThinkingIndicator() {
+  return (
+    <TextShimmer
+      as="p"
+      className="text-sm leading-relaxed text-an-user-message-text"
+      duration={1.3}
+    >
+      Pensando...
+    </TextShimmer>
+  );
+}
 
 export function ChatThinkingBubble() {
   return (
-    <div className="flex items-center gap-3 rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] px-5 py-4 shadow-[0_8px_28px_color-mix(in_oklch,#000_5%,transparent)]">
-      <div className="relative flex size-8 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)] ds-ai-pulse">
-        <Bot className="size-4" />
-        <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-[var(--accent)] ring-2 ring-[var(--bg-raised)]" />
-      </div>
-      <div className="flex items-center gap-2">
-        <SpiralLoader size={12} />
-        <TextShimmer
-          as="p"
-          className="text-[12.5px] text-[var(--fg-tertiary)]"
-          duration={1.3}
-        >
-          Pensando...
-        </TextShimmer>
-      </div>
+    <div
+      data-testid="chat-thinking-bubble"
+      className="space-y-4 rounded-an-message bg-an-user-message-bg px-5 py-3 text-sm text-an-user-message-text"
+    >
+      <ChatThinkingIndicator />
     </div>
   );
 }

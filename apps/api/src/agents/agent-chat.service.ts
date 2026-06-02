@@ -1,4 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConversationSseService, type SseSink } from '../conversation/conversation-sse.service';
+import { ConversationService } from '../conversation/conversation.service';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentChatOrchestratorService } from './agent-chat-orchestrator.service';
@@ -9,8 +11,15 @@ import type {
   CreateThreadDto,
   EditMessageAndBranchDto,
   OrchestrationToolCall,
-  RegenerateMessageDto,
 } from './dto';
+import { SystemAgentsService } from './system-agents/system-agents.service';
+
+export interface StreamAssistantReplyInput {
+  agentId: string;
+  threadId: string;
+  content: string;
+  attachments?: Array<{ kind: 'image' | 'file'; url: string; name?: string; mimeType?: string }>;
+}
 
 const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
 
@@ -21,7 +30,179 @@ export class AgentChatService {
     private readonly agentIntentService: AgentIntentService,
     private readonly agentRunsService: AgentRunsService,
     private readonly agentChatOrchestratorService: AgentChatOrchestratorService,
+    private readonly systemAgentsService: SystemAgentsService,
+    private readonly conversationService: ConversationService,
+    private readonly conversationSse: ConversationSseService,
   ) {}
+
+  /**
+   * SSE-first chat path: persists the user message, opens an assistant message
+   * container, then streams the orchestrator's semantic events. Every event is
+   * appended to the conversation log (assigning a `sequence`) and written to the
+   * client live. Persistence is the source of truth — a dropped client can rebuild
+   * the full narrative via {@link getThreadReplay}.
+   */
+  async streamAssistantReply(
+    organizationId: string,
+    userId: string,
+    input: StreamAssistantReplyInput,
+    sink: SseSink,
+    options: { isAborted?: () => boolean } = {},
+  ): Promise<void> {
+    const thread = await this.ensureThreadExists(input.threadId);
+    if (thread.organizationId !== organizationId || thread.createdByUserId !== userId) {
+      throw new NotFoundException('Chat thread not found in organization');
+    }
+    if (!thread.agentId || thread.agentId !== input.agentId) {
+      throw new NotFoundException('Chat thread not found for agent');
+    }
+
+    await this.createChatMessage({
+      threadId: thread.id,
+      role: 'user',
+      content: input.content,
+      metadata: toJsonValue({ attachments: input.attachments ?? [] }),
+      createdByUserId: userId,
+    });
+
+    const assistantMessage = await this.createChatMessage({
+      threadId: thread.id,
+      role: 'assistant',
+      content: '',
+      metadata: toJsonValue({}),
+    });
+
+    // Primeira mensagem de uma thread ainda sem título → gera um título curto em
+    // paralelo ao turno. O frontend mostra um shimmer até a thread recarregar.
+    const titlePromise =
+      !thread.title && thread.agentId
+        ? this.systemAgentsService
+            .generateThreadTitle(organizationId, thread.agentId, input.content)
+            .then((result) => (result.status === 'completed' ? (result.data?.title ?? null) : null))
+            .catch(() => null)
+        : null;
+
+    const append = async (eventType: string, payload: Record<string, unknown>) => {
+      const { event } = await this.conversationService.appendEvent({
+        organizationId,
+        threadId: thread.id,
+        messageId: assistantMessage.id,
+        eventType,
+        payload,
+      } as Parameters<ConversationService['appendEvent']>[0]);
+      this.conversationSse.writeEvent(sink, event);
+      return event;
+    };
+
+    let finalText = '';
+    let finalCitations: unknown[] = [];
+
+    try {
+      await append('message_created', { role: 'assistant' });
+
+      for await (const emit of this.agentChatOrchestratorService.streamTurn({
+        organizationId,
+        agentId: thread.agentId,
+        userId,
+        message: input.content,
+        threadId: thread.id,
+      })) {
+        if (options.isAborted?.()) break;
+        await append(emit.eventType, emit.payload);
+
+        if (emit.eventType === 'message_completed') {
+          finalText = typeof emit.payload.text === 'string' ? emit.payload.text : finalText;
+          finalCitations = Array.isArray(emit.payload.citations) ? emit.payload.citations : [];
+        } else if (emit.eventType === 'message_text_snapshot' && !finalText) {
+          finalText = typeof emit.payload.text === 'string' ? emit.payload.text : '';
+        }
+      }
+
+      await this.prisma.agentChatMessage.update({
+        where: { id: assistantMessage.id },
+        data: { content: finalText, metadata: toJsonValue({ citations: finalCitations }) },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao gerar a resposta';
+      await append('message_failed', { errorMessage: message }).catch(() => undefined);
+      await this.prisma.agentChatMessage
+        .update({
+          where: { id: assistantMessage.id },
+          data: {
+            content: finalText,
+            metadata: toJsonValue({ failed: true, errorMessage: message }),
+          },
+        })
+        .catch(() => undefined);
+    } finally {
+      if (titlePromise) {
+        const generatedTitle = await titlePromise;
+        if (generatedTitle) {
+          await this.prisma.agentChatThread
+            .update({ where: { id: thread.id }, data: { title: generatedTitle } })
+            .catch(() => undefined);
+        }
+      }
+      sink.end?.();
+    }
+  }
+
+  /**
+   * Replay-friendly thread read: each persisted message enriched with its
+   * conversation projection (streamed text, status, tool calls, citations) so the
+   * frontend renders the same operational narrative seen live.
+   */
+  async getThreadReplay(organizationId: string, threadId: string, userId: string) {
+    const thread = await this.prisma.agentChatThread.findFirst({
+      where: { id: threadId, organizationId },
+      select: { id: true, createdByUserId: true },
+    });
+    if (!thread || thread.createdByUserId !== userId) {
+      throw new NotFoundException('Chat thread not found');
+    }
+
+    const [messages, conversation] = await Promise.all([
+      this.prisma.agentChatMessage.findMany({
+        where: { threadId },
+        orderBy: { createdAt: 'asc' },
+        select: {
+          id: true,
+          role: true,
+          content: true,
+          metadata: true,
+          editedFromMessageId: true,
+          regeneratedFromMessageId: true,
+          createdAt: true,
+        },
+      }),
+      this.conversationService.getThreadReplay(organizationId, threadId),
+    ]);
+
+    const projectionByMessageId = new Map(conversation.messages.map((m) => [m.messageId, m]));
+
+    return {
+      threadId,
+      lastSequence: conversation.lastSequence,
+      messages: messages.map((message) => {
+        const projection = projectionByMessageId.get(message.id);
+        return {
+          id: message.id,
+          role: message.role,
+          content: projection?.text ? projection.text : message.content,
+          status: projection?.status ?? 'completed',
+          isStreaming: projection?.isStreaming ?? false,
+          isFailed: projection?.isFailed ?? false,
+          errorMessage: projection?.errorMessage ?? null,
+          citations: projection?.citations ?? [],
+          toolCalls: projection?.toolCalls ?? [],
+          metadata: message.metadata,
+          editedFromMessageId: message.editedFromMessageId,
+          regeneratedFromMessageId: message.regeneratedFromMessageId,
+          createdAt: message.createdAt,
+        };
+      }),
+    };
+  }
 
   async createThread(organizationId: string, userId: string, input: CreateThreadDto) {
     if (input.agentId) {
@@ -180,81 +361,10 @@ export class AgentChatService {
         });
       }
 
-      const replacementMessage = await this.createChatMessage(
-        {
-          threadId: branchThread.id,
-          role: 'user',
-          content: input.content,
-          metadata: toJsonValue({ branched: true }),
-          editedFromMessageId: originalMessage.id,
-          createdByUserId: userId,
-        },
-        tx,
-      );
-
-      return {
-        branchId: branchThread.id,
-        replacedMessageId: originalMessage.id,
-        messageId: replacementMessage.id,
-      };
+      // The edited user message + its assistant reply are produced by the SSE
+      // stream after the client navigates to the branch — single message path.
+      return { branchId: branchThread.id, replacedMessageId: originalMessage.id };
     });
-  }
-
-  async regenerateMessage(organizationId: string, input: RegenerateMessageDto, userId: string) {
-    const originalMessage = await this.prisma.agentChatMessage.findFirst({
-      where: {
-        id: input.messageId,
-        threadId: input.threadId,
-        thread: { organizationId },
-      },
-    });
-
-    if (!originalMessage) {
-      throw new NotFoundException('Chat message not found');
-    }
-
-    if (originalMessage.role !== 'assistant') {
-      throw new BadRequestException('Only assistant messages can be regenerated');
-    }
-
-    const thread = await this.ensureThreadExists(input.threadId);
-
-    if (thread.organizationId !== organizationId) {
-      throw new NotFoundException('Chat thread not found in organization');
-    }
-
-    if (!thread.agentId) {
-      throw new BadRequestException('Regeneration requires an agent thread');
-    }
-
-    await this.ensureThreadHasNoActiveExecution(thread.id);
-
-    const regenerationRequest = await this.createChatMessage({
-      threadId: thread.id,
-      role: 'user',
-      content: originalMessage.content,
-      metadata: toJsonValue({ regenerationRequested: true }),
-      createdByUserId: userId,
-      regeneratedFromMessageId: originalMessage.id,
-    });
-
-    const decision = await this.agentIntentService.classify({
-      message: `gere uma nova versao final para: ${originalMessage.content}`,
-    });
-    const run = await this.agentRunsService.createQueuedRun(
-      thread.organizationId,
-      thread.agentId,
-      userId,
-      {
-        input: {
-          regenerationOfMessageId: originalMessage.id,
-          threadId: thread.id,
-          messageId: regenerationRequest.id,
-        },
-      },
-    );
-
-    return { message: regenerationRequest, decision, run };
   }
 
   async listThreads(

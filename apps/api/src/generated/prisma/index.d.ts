@@ -159,6 +159,12 @@ export type AgentTemplate = $Result.DefaultSelection<Prisma.$AgentTemplatePayloa
  */
 export type CompanyAgent = $Result.DefaultSelection<Prisma.$CompanyAgentPayload>
 /**
+ * Model SystemAgentConfig
+ * Configuração editável (admin) de um agente de sistema. A definição vive em
+ * código (`system-agents/*.agent.ts`); aqui ficam apenas overrides de IA.
+ */
+export type SystemAgentConfig = $Result.DefaultSelection<Prisma.$SystemAgentConfigPayload>
+/**
  * Model AgentVersion
  * 
  */
@@ -223,6 +229,26 @@ export type AgentChatMessage = $Result.DefaultSelection<Prisma.$AgentChatMessage
  * 
  */
 export type AgentChatToolCall = $Result.DefaultSelection<Prisma.$AgentChatToolCallPayload>
+/**
+ * Model ConversationEvent
+ * Canonical, append-only conversation event log. Source of truth for replay.
+ * `sequence` is monotonic per thread for deterministic ordering. `idempotencyKey`
+ * (when provided) dedupes retried appends — NULLs are distinct in Postgres so
+ * keyless events are never blocked.
+ */
+export type ConversationEvent = $Result.DefaultSelection<Prisma.$ConversationEventPayload>
+/**
+ * Model ConversationMessageProjection
+ * Materialized projection of the assistant message — rebuilt from the event log.
+ * Lets replay/load skip event folding on read.
+ */
+export type ConversationMessageProjection = $Result.DefaultSelection<Prisma.$ConversationMessageProjectionPayload>
+/**
+ * Model ConversationToolCallProjection
+ * Materialized projection of a single tool call within a message — rebuilt from
+ * the event log. `displayOrder` preserves operational narrative order in replay.
+ */
+export type ConversationToolCallProjection = $Result.DefaultSelection<Prisma.$ConversationToolCallProjectionPayload>
 /**
  * Model CreditLedgerEntry
  * 
@@ -673,6 +699,16 @@ export class PrismaClient<
   get companyAgent(): Prisma.CompanyAgentDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.systemAgentConfig`: Exposes CRUD operations for the **SystemAgentConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SystemAgentConfigs
+    * const systemAgentConfigs = await prisma.systemAgentConfig.findMany()
+    * ```
+    */
+  get systemAgentConfig(): Prisma.SystemAgentConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.agentVersion`: Exposes CRUD operations for the **AgentVersion** model.
     * Example usage:
     * ```ts
@@ -801,6 +837,36 @@ export class PrismaClient<
     * ```
     */
   get agentChatToolCall(): Prisma.AgentChatToolCallDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversationEvent`: Exposes CRUD operations for the **ConversationEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversationEvents
+    * const conversationEvents = await prisma.conversationEvent.findMany()
+    * ```
+    */
+  get conversationEvent(): Prisma.ConversationEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversationMessageProjection`: Exposes CRUD operations for the **ConversationMessageProjection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversationMessageProjections
+    * const conversationMessageProjections = await prisma.conversationMessageProjection.findMany()
+    * ```
+    */
+  get conversationMessageProjection(): Prisma.ConversationMessageProjectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversationToolCallProjection`: Exposes CRUD operations for the **ConversationToolCallProjection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversationToolCallProjections
+    * const conversationToolCallProjections = await prisma.conversationToolCallProjection.findMany()
+    * ```
+    */
+  get conversationToolCallProjection(): Prisma.ConversationToolCallProjectionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.creditLedgerEntry`: Exposes CRUD operations for the **CreditLedgerEntry** model.
@@ -1351,6 +1417,7 @@ export namespace Prisma {
     AIProviderPolicy: 'AIProviderPolicy',
     AgentTemplate: 'AgentTemplate',
     CompanyAgent: 'CompanyAgent',
+    SystemAgentConfig: 'SystemAgentConfig',
     AgentVersion: 'AgentVersion',
     AgentRun: 'AgentRun',
     AgentRunStep: 'AgentRunStep',
@@ -1364,6 +1431,9 @@ export namespace Prisma {
     AgentChatThread: 'AgentChatThread',
     AgentChatMessage: 'AgentChatMessage',
     AgentChatToolCall: 'AgentChatToolCall',
+    ConversationEvent: 'ConversationEvent',
+    ConversationMessageProjection: 'ConversationMessageProjection',
+    ConversationToolCallProjection: 'ConversationToolCallProjection',
     CreditLedgerEntry: 'CreditLedgerEntry',
     TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
     RagDocument: 'RagDocument',
@@ -1390,7 +1460,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "agentVersion" | "agentRun" | "agentRunStep" | "agentContextProfile" | "agentContextFile" | "agentContextReference" | "agentRunContextSnapshot" | "agentRunContextSnapshotItem" | "agentRunSuspension" | "agentRunSuspensionResponse" | "agentChatThread" | "agentChatMessage" | "agentChatToolCall" | "creditLedgerEntry" | "technicalCostLedgerEntry" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "brainVersion" | "companyBrain"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "role" | "rolePermission" | "membership" | "membershipRole" | "membershipPermissionOverride" | "invitation" | "onboardingDraft" | "contextSource" | "contextArtifact" | "asset" | "assetRelation" | "designSystemProfile" | "designColorGroup" | "designColorToken" | "designAsset" | "platformRoleAssignment" | "supportSession" | "auditLog" | "aIProvider" | "aIModel" | "aICredential" | "aIProviderPolicy" | "agentTemplate" | "companyAgent" | "systemAgentConfig" | "agentVersion" | "agentRun" | "agentRunStep" | "agentContextProfile" | "agentContextFile" | "agentContextReference" | "agentRunContextSnapshot" | "agentRunContextSnapshotItem" | "agentRunSuspension" | "agentRunSuspensionResponse" | "agentChatThread" | "agentChatMessage" | "agentChatToolCall" | "conversationEvent" | "conversationMessageProjection" | "conversationToolCallProjection" | "creditLedgerEntry" | "technicalCostLedgerEntry" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "brainVersion" | "companyBrain"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3540,6 +3610,80 @@ export namespace Prisma {
           }
         }
       }
+      SystemAgentConfig: {
+        payload: Prisma.$SystemAgentConfigPayload<ExtArgs>
+        fields: Prisma.SystemAgentConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SystemAgentConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SystemAgentConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.SystemAgentConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SystemAgentConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          findMany: {
+            args: Prisma.SystemAgentConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>[]
+          }
+          create: {
+            args: Prisma.SystemAgentConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          createMany: {
+            args: Prisma.SystemAgentConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SystemAgentConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.SystemAgentConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          update: {
+            args: Prisma.SystemAgentConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.SystemAgentConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SystemAgentConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SystemAgentConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.SystemAgentConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAgentConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.SystemAgentConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSystemAgentConfig>
+          }
+          groupBy: {
+            args: Prisma.SystemAgentConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SystemAgentConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SystemAgentConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<SystemAgentConfigCountAggregateOutputType> | number
+          }
+        }
+      }
       AgentVersion: {
         payload: Prisma.$AgentVersionPayload<ExtArgs>
         fields: Prisma.AgentVersionFieldRefs
@@ -4502,6 +4646,228 @@ export namespace Prisma {
           }
         }
       }
+      ConversationEvent: {
+        payload: Prisma.$ConversationEventPayload<ExtArgs>
+        fields: Prisma.ConversationEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          update: {
+            args: Prisma.ConversationEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationEventPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversationEvent>
+          }
+          groupBy: {
+            args: Prisma.ConversationEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationEventCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConversationMessageProjection: {
+        payload: Prisma.$ConversationMessageProjectionPayload<ExtArgs>
+        fields: Prisma.ConversationMessageProjectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationMessageProjectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationMessageProjectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationMessageProjectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationMessageProjectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationMessageProjectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationMessageProjectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationMessageProjectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationMessageProjectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationMessageProjectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          update: {
+            args: Prisma.ConversationMessageProjectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationMessageProjectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationMessageProjectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationMessageProjectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationMessageProjectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationMessageProjectionPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationMessageProjectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversationMessageProjection>
+          }
+          groupBy: {
+            args: Prisma.ConversationMessageProjectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationMessageProjectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationMessageProjectionCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationMessageProjectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConversationToolCallProjection: {
+        payload: Prisma.$ConversationToolCallProjectionPayload<ExtArgs>
+        fields: Prisma.ConversationToolCallProjectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationToolCallProjectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationToolCallProjectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationToolCallProjectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationToolCallProjectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationToolCallProjectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationToolCallProjectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationToolCallProjectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationToolCallProjectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationToolCallProjectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          update: {
+            args: Prisma.ConversationToolCallProjectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationToolCallProjectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationToolCallProjectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationToolCallProjectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationToolCallProjectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationToolCallProjectionPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationToolCallProjectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversationToolCallProjection>
+          }
+          groupBy: {
+            args: Prisma.ConversationToolCallProjectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationToolCallProjectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationToolCallProjectionCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationToolCallProjectionCountAggregateOutputType> | number
+          }
+        }
+      }
       CreditLedgerEntry: {
         payload: Prisma.$CreditLedgerEntryPayload<ExtArgs>
         fields: Prisma.CreditLedgerEntryFieldRefs
@@ -5219,6 +5585,7 @@ export namespace Prisma {
     aIProviderPolicy?: AIProviderPolicyOmit
     agentTemplate?: AgentTemplateOmit
     companyAgent?: CompanyAgentOmit
+    systemAgentConfig?: SystemAgentConfigOmit
     agentVersion?: AgentVersionOmit
     agentRun?: AgentRunOmit
     agentRunStep?: AgentRunStepOmit
@@ -5232,6 +5599,9 @@ export namespace Prisma {
     agentChatThread?: AgentChatThreadOmit
     agentChatMessage?: AgentChatMessageOmit
     agentChatToolCall?: AgentChatToolCallOmit
+    conversationEvent?: ConversationEventOmit
+    conversationMessageProjection?: ConversationMessageProjectionOmit
+    conversationToolCallProjection?: ConversationToolCallProjectionOmit
     creditLedgerEntry?: CreditLedgerEntryOmit
     technicalCostLedgerEntry?: TechnicalCostLedgerEntryOmit
     ragDocument?: RagDocumentOmit
@@ -6027,6 +6397,9 @@ export namespace Prisma {
     toolCalls: number
     branches: number
     runs: number
+    conversationEvents: number
+    messageProjections: number
+    toolCallProjections: number
   }
 
   export type AgentChatThreadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6034,6 +6407,9 @@ export namespace Prisma {
     toolCalls?: boolean | AgentChatThreadCountOutputTypeCountToolCallsArgs
     branches?: boolean | AgentChatThreadCountOutputTypeCountBranchesArgs
     runs?: boolean | AgentChatThreadCountOutputTypeCountRunsArgs
+    conversationEvents?: boolean | AgentChatThreadCountOutputTypeCountConversationEventsArgs
+    messageProjections?: boolean | AgentChatThreadCountOutputTypeCountMessageProjectionsArgs
+    toolCallProjections?: boolean | AgentChatThreadCountOutputTypeCountToolCallProjectionsArgs
   }
 
   // Custom InputTypes
@@ -6075,6 +6451,27 @@ export namespace Prisma {
     where?: AgentRunWhereInput
   }
 
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountConversationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationEventWhereInput
+  }
+
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountMessageProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationMessageProjectionWhereInput
+  }
+
+  /**
+   * AgentChatThreadCountOutputType without action
+   */
+  export type AgentChatThreadCountOutputTypeCountToolCallProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationToolCallProjectionWhereInput
+  }
+
 
   /**
    * Count Type AgentChatMessageCountOutputType
@@ -6086,6 +6483,8 @@ export namespace Prisma {
     branches: number
     sourceRuns: number
     toolCalls: number
+    conversationEvents: number
+    toolCallProjections: number
   }
 
   export type AgentChatMessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6094,6 +6493,8 @@ export namespace Prisma {
     branches?: boolean | AgentChatMessageCountOutputTypeCountBranchesArgs
     sourceRuns?: boolean | AgentChatMessageCountOutputTypeCountSourceRunsArgs
     toolCalls?: boolean | AgentChatMessageCountOutputTypeCountToolCallsArgs
+    conversationEvents?: boolean | AgentChatMessageCountOutputTypeCountConversationEventsArgs
+    toolCallProjections?: boolean | AgentChatMessageCountOutputTypeCountToolCallProjectionsArgs
   }
 
   // Custom InputTypes
@@ -6140,6 +6541,20 @@ export namespace Prisma {
    */
   export type AgentChatMessageCountOutputTypeCountToolCallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentChatToolCallWhereInput
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountConversationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationEventWhereInput
+  }
+
+  /**
+   * AgentChatMessageCountOutputType without action
+   */
+  export type AgentChatMessageCountOutputTypeCountToolCallProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationToolCallProjectionWhereInput
   }
 
 
@@ -37989,6 +38404,7 @@ export namespace Prisma {
     description: number
     status: number
     allowedTools: number
+    suggestedMessages: number
     activeVersionId: number
     onboardingCompletedAt: number
     createdByUserId: number
@@ -38040,6 +38456,7 @@ export namespace Prisma {
     description?: true
     status?: true
     allowedTools?: true
+    suggestedMessages?: true
     activeVersionId?: true
     onboardingCompletedAt?: true
     createdByUserId?: true
@@ -38130,6 +38547,7 @@ export namespace Prisma {
     description: string | null
     status: string
     allowedTools: JsonValue
+    suggestedMessages: JsonValue
     activeVersionId: string | null
     onboardingCompletedAt: Date | null
     createdByUserId: string
@@ -38164,6 +38582,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     allowedTools?: boolean
+    suggestedMessages?: boolean
     activeVersionId?: boolean
     onboardingCompletedAt?: boolean
     createdByUserId?: boolean
@@ -38188,6 +38607,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     allowedTools?: boolean
+    suggestedMessages?: boolean
     activeVersionId?: boolean
     onboardingCompletedAt?: boolean
     createdByUserId?: boolean
@@ -38206,6 +38626,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     allowedTools?: boolean
+    suggestedMessages?: boolean
     activeVersionId?: boolean
     onboardingCompletedAt?: boolean
     createdByUserId?: boolean
@@ -38224,6 +38645,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     allowedTools?: boolean
+    suggestedMessages?: boolean
     activeVersionId?: boolean
     onboardingCompletedAt?: boolean
     createdByUserId?: boolean
@@ -38232,7 +38654,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CompanyAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "templateId" | "slug" | "name" | "description" | "status" | "allowedTools" | "activeVersionId" | "onboardingCompletedAt" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAgent"]>
+  export type CompanyAgentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "templateId" | "slug" | "name" | "description" | "status" | "allowedTools" | "suggestedMessages" | "activeVersionId" | "onboardingCompletedAt" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAgent"]>
   export type CompanyAgentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chatThreads?: boolean | CompanyAgent$chatThreadsArgs<ExtArgs>
     chatToolCalls?: boolean | CompanyAgent$chatToolCallsArgs<ExtArgs>
@@ -38268,6 +38690,7 @@ export namespace Prisma {
       description: string | null
       status: string
       allowedTools: Prisma.JsonValue
+      suggestedMessages: Prisma.JsonValue
       activeVersionId: string | null
       onboardingCompletedAt: Date | null
       createdByUserId: string
@@ -38711,6 +39134,7 @@ export namespace Prisma {
     readonly description: FieldRef<"CompanyAgent", 'String'>
     readonly status: FieldRef<"CompanyAgent", 'String'>
     readonly allowedTools: FieldRef<"CompanyAgent", 'Json'>
+    readonly suggestedMessages: FieldRef<"CompanyAgent", 'Json'>
     readonly activeVersionId: FieldRef<"CompanyAgent", 'String'>
     readonly onboardingCompletedAt: FieldRef<"CompanyAgent", 'DateTime'>
     readonly createdByUserId: FieldRef<"CompanyAgent", 'String'>
@@ -39262,6 +39686,1104 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CompanyAgentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SystemAgentConfig
+   */
+
+  export type AggregateSystemAgentConfig = {
+    _count: SystemAgentConfigCountAggregateOutputType | null
+    _avg: SystemAgentConfigAvgAggregateOutputType | null
+    _sum: SystemAgentConfigSumAggregateOutputType | null
+    _min: SystemAgentConfigMinAggregateOutputType | null
+    _max: SystemAgentConfigMaxAggregateOutputType | null
+  }
+
+  export type SystemAgentConfigAvgAggregateOutputType = {
+    temperature: number | null
+    maxOutputTokens: number | null
+  }
+
+  export type SystemAgentConfigSumAggregateOutputType = {
+    temperature: number | null
+    maxOutputTokens: number | null
+  }
+
+  export type SystemAgentConfigMinAggregateOutputType = {
+    id: string | null
+    key: string | null
+    providerId: string | null
+    modelId: string | null
+    temperature: number | null
+    maxOutputTokens: number | null
+    enabled: boolean | null
+    updatedByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SystemAgentConfigMaxAggregateOutputType = {
+    id: string | null
+    key: string | null
+    providerId: string | null
+    modelId: string | null
+    temperature: number | null
+    maxOutputTokens: number | null
+    enabled: boolean | null
+    updatedByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SystemAgentConfigCountAggregateOutputType = {
+    id: number
+    key: number
+    providerId: number
+    modelId: number
+    temperature: number
+    maxOutputTokens: number
+    enabled: number
+    updatedByUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SystemAgentConfigAvgAggregateInputType = {
+    temperature?: true
+    maxOutputTokens?: true
+  }
+
+  export type SystemAgentConfigSumAggregateInputType = {
+    temperature?: true
+    maxOutputTokens?: true
+  }
+
+  export type SystemAgentConfigMinAggregateInputType = {
+    id?: true
+    key?: true
+    providerId?: true
+    modelId?: true
+    temperature?: true
+    maxOutputTokens?: true
+    enabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SystemAgentConfigMaxAggregateInputType = {
+    id?: true
+    key?: true
+    providerId?: true
+    modelId?: true
+    temperature?: true
+    maxOutputTokens?: true
+    enabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SystemAgentConfigCountAggregateInputType = {
+    id?: true
+    key?: true
+    providerId?: true
+    modelId?: true
+    temperature?: true
+    maxOutputTokens?: true
+    enabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SystemAgentConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemAgentConfig to aggregate.
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAgentConfigs to fetch.
+     */
+    orderBy?: SystemAgentConfigOrderByWithRelationInput | SystemAgentConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SystemAgentConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAgentConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAgentConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SystemAgentConfigs
+    **/
+    _count?: true | SystemAgentConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SystemAgentConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SystemAgentConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SystemAgentConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SystemAgentConfigMaxAggregateInputType
+  }
+
+  export type GetSystemAgentConfigAggregateType<T extends SystemAgentConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateSystemAgentConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSystemAgentConfig[P]>
+      : GetScalarType<T[P], AggregateSystemAgentConfig[P]>
+  }
+
+
+
+
+  export type SystemAgentConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SystemAgentConfigWhereInput
+    orderBy?: SystemAgentConfigOrderByWithAggregationInput | SystemAgentConfigOrderByWithAggregationInput[]
+    by: SystemAgentConfigScalarFieldEnum[] | SystemAgentConfigScalarFieldEnum
+    having?: SystemAgentConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SystemAgentConfigCountAggregateInputType | true
+    _avg?: SystemAgentConfigAvgAggregateInputType
+    _sum?: SystemAgentConfigSumAggregateInputType
+    _min?: SystemAgentConfigMinAggregateInputType
+    _max?: SystemAgentConfigMaxAggregateInputType
+  }
+
+  export type SystemAgentConfigGroupByOutputType = {
+    id: string
+    key: string
+    providerId: string | null
+    modelId: string | null
+    temperature: number | null
+    maxOutputTokens: number | null
+    enabled: boolean
+    updatedByUserId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SystemAgentConfigCountAggregateOutputType | null
+    _avg: SystemAgentConfigAvgAggregateOutputType | null
+    _sum: SystemAgentConfigSumAggregateOutputType | null
+    _min: SystemAgentConfigMinAggregateOutputType | null
+    _max: SystemAgentConfigMaxAggregateOutputType | null
+  }
+
+  type GetSystemAgentConfigGroupByPayload<T extends SystemAgentConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SystemAgentConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SystemAgentConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SystemAgentConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], SystemAgentConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SystemAgentConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    temperature?: boolean
+    maxOutputTokens?: boolean
+    enabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["systemAgentConfig"]>
+
+  export type SystemAgentConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    temperature?: boolean
+    maxOutputTokens?: boolean
+    enabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["systemAgentConfig"]>
+
+  export type SystemAgentConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    temperature?: boolean
+    maxOutputTokens?: boolean
+    enabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["systemAgentConfig"]>
+
+  export type SystemAgentConfigSelectScalar = {
+    id?: boolean
+    key?: boolean
+    providerId?: boolean
+    modelId?: boolean
+    temperature?: boolean
+    maxOutputTokens?: boolean
+    enabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SystemAgentConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "providerId" | "modelId" | "temperature" | "maxOutputTokens" | "enabled" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["systemAgentConfig"]>
+
+  export type $SystemAgentConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SystemAgentConfig"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      key: string
+      providerId: string | null
+      modelId: string | null
+      temperature: number | null
+      maxOutputTokens: number | null
+      enabled: boolean
+      updatedByUserId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["systemAgentConfig"]>
+    composites: {}
+  }
+
+  type SystemAgentConfigGetPayload<S extends boolean | null | undefined | SystemAgentConfigDefaultArgs> = $Result.GetResult<Prisma.$SystemAgentConfigPayload, S>
+
+  type SystemAgentConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SystemAgentConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SystemAgentConfigCountAggregateInputType | true
+    }
+
+  export interface SystemAgentConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SystemAgentConfig'], meta: { name: 'SystemAgentConfig' } }
+    /**
+     * Find zero or one SystemAgentConfig that matches the filter.
+     * @param {SystemAgentConfigFindUniqueArgs} args - Arguments to find a SystemAgentConfig
+     * @example
+     * // Get one SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SystemAgentConfigFindUniqueArgs>(args: SelectSubset<T, SystemAgentConfigFindUniqueArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SystemAgentConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SystemAgentConfigFindUniqueOrThrowArgs} args - Arguments to find a SystemAgentConfig
+     * @example
+     * // Get one SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SystemAgentConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, SystemAgentConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemAgentConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigFindFirstArgs} args - Arguments to find a SystemAgentConfig
+     * @example
+     * // Get one SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SystemAgentConfigFindFirstArgs>(args?: SelectSubset<T, SystemAgentConfigFindFirstArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemAgentConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigFindFirstOrThrowArgs} args - Arguments to find a SystemAgentConfig
+     * @example
+     * // Get one SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SystemAgentConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, SystemAgentConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SystemAgentConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SystemAgentConfigs
+     * const systemAgentConfigs = await prisma.systemAgentConfig.findMany()
+     * 
+     * // Get first 10 SystemAgentConfigs
+     * const systemAgentConfigs = await prisma.systemAgentConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const systemAgentConfigWithIdOnly = await prisma.systemAgentConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SystemAgentConfigFindManyArgs>(args?: SelectSubset<T, SystemAgentConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SystemAgentConfig.
+     * @param {SystemAgentConfigCreateArgs} args - Arguments to create a SystemAgentConfig.
+     * @example
+     * // Create one SystemAgentConfig
+     * const SystemAgentConfig = await prisma.systemAgentConfig.create({
+     *   data: {
+     *     // ... data to create a SystemAgentConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends SystemAgentConfigCreateArgs>(args: SelectSubset<T, SystemAgentConfigCreateArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SystemAgentConfigs.
+     * @param {SystemAgentConfigCreateManyArgs} args - Arguments to create many SystemAgentConfigs.
+     * @example
+     * // Create many SystemAgentConfigs
+     * const systemAgentConfig = await prisma.systemAgentConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SystemAgentConfigCreateManyArgs>(args?: SelectSubset<T, SystemAgentConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SystemAgentConfigs and returns the data saved in the database.
+     * @param {SystemAgentConfigCreateManyAndReturnArgs} args - Arguments to create many SystemAgentConfigs.
+     * @example
+     * // Create many SystemAgentConfigs
+     * const systemAgentConfig = await prisma.systemAgentConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SystemAgentConfigs and only return the `id`
+     * const systemAgentConfigWithIdOnly = await prisma.systemAgentConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SystemAgentConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, SystemAgentConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SystemAgentConfig.
+     * @param {SystemAgentConfigDeleteArgs} args - Arguments to delete one SystemAgentConfig.
+     * @example
+     * // Delete one SystemAgentConfig
+     * const SystemAgentConfig = await prisma.systemAgentConfig.delete({
+     *   where: {
+     *     // ... filter to delete one SystemAgentConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SystemAgentConfigDeleteArgs>(args: SelectSubset<T, SystemAgentConfigDeleteArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SystemAgentConfig.
+     * @param {SystemAgentConfigUpdateArgs} args - Arguments to update one SystemAgentConfig.
+     * @example
+     * // Update one SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SystemAgentConfigUpdateArgs>(args: SelectSubset<T, SystemAgentConfigUpdateArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SystemAgentConfigs.
+     * @param {SystemAgentConfigDeleteManyArgs} args - Arguments to filter SystemAgentConfigs to delete.
+     * @example
+     * // Delete a few SystemAgentConfigs
+     * const { count } = await prisma.systemAgentConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SystemAgentConfigDeleteManyArgs>(args?: SelectSubset<T, SystemAgentConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemAgentConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SystemAgentConfigs
+     * const systemAgentConfig = await prisma.systemAgentConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SystemAgentConfigUpdateManyArgs>(args: SelectSubset<T, SystemAgentConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemAgentConfigs and returns the data updated in the database.
+     * @param {SystemAgentConfigUpdateManyAndReturnArgs} args - Arguments to update many SystemAgentConfigs.
+     * @example
+     * // Update many SystemAgentConfigs
+     * const systemAgentConfig = await prisma.systemAgentConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SystemAgentConfigs and only return the `id`
+     * const systemAgentConfigWithIdOnly = await prisma.systemAgentConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SystemAgentConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, SystemAgentConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SystemAgentConfig.
+     * @param {SystemAgentConfigUpsertArgs} args - Arguments to update or create a SystemAgentConfig.
+     * @example
+     * // Update or create a SystemAgentConfig
+     * const systemAgentConfig = await prisma.systemAgentConfig.upsert({
+     *   create: {
+     *     // ... data to create a SystemAgentConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SystemAgentConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SystemAgentConfigUpsertArgs>(args: SelectSubset<T, SystemAgentConfigUpsertArgs<ExtArgs>>): Prisma__SystemAgentConfigClient<$Result.GetResult<Prisma.$SystemAgentConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SystemAgentConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigCountArgs} args - Arguments to filter SystemAgentConfigs to count.
+     * @example
+     * // Count the number of SystemAgentConfigs
+     * const count = await prisma.systemAgentConfig.count({
+     *   where: {
+     *     // ... the filter for the SystemAgentConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends SystemAgentConfigCountArgs>(
+      args?: Subset<T, SystemAgentConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SystemAgentConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SystemAgentConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SystemAgentConfigAggregateArgs>(args: Subset<T, SystemAgentConfigAggregateArgs>): Prisma.PrismaPromise<GetSystemAgentConfigAggregateType<T>>
+
+    /**
+     * Group by SystemAgentConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAgentConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SystemAgentConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SystemAgentConfigGroupByArgs['orderBy'] }
+        : { orderBy?: SystemAgentConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SystemAgentConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSystemAgentConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SystemAgentConfig model
+   */
+  readonly fields: SystemAgentConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SystemAgentConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SystemAgentConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SystemAgentConfig model
+   */
+  interface SystemAgentConfigFieldRefs {
+    readonly id: FieldRef<"SystemAgentConfig", 'String'>
+    readonly key: FieldRef<"SystemAgentConfig", 'String'>
+    readonly providerId: FieldRef<"SystemAgentConfig", 'String'>
+    readonly modelId: FieldRef<"SystemAgentConfig", 'String'>
+    readonly temperature: FieldRef<"SystemAgentConfig", 'Float'>
+    readonly maxOutputTokens: FieldRef<"SystemAgentConfig", 'Int'>
+    readonly enabled: FieldRef<"SystemAgentConfig", 'Boolean'>
+    readonly updatedByUserId: FieldRef<"SystemAgentConfig", 'String'>
+    readonly createdAt: FieldRef<"SystemAgentConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"SystemAgentConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SystemAgentConfig findUnique
+   */
+  export type SystemAgentConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SystemAgentConfig to fetch.
+     */
+    where: SystemAgentConfigWhereUniqueInput
+  }
+
+  /**
+   * SystemAgentConfig findUniqueOrThrow
+   */
+  export type SystemAgentConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SystemAgentConfig to fetch.
+     */
+    where: SystemAgentConfigWhereUniqueInput
+  }
+
+  /**
+   * SystemAgentConfig findFirst
+   */
+  export type SystemAgentConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SystemAgentConfig to fetch.
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAgentConfigs to fetch.
+     */
+    orderBy?: SystemAgentConfigOrderByWithRelationInput | SystemAgentConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemAgentConfigs.
+     */
+    cursor?: SystemAgentConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAgentConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAgentConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemAgentConfigs.
+     */
+    distinct?: SystemAgentConfigScalarFieldEnum | SystemAgentConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAgentConfig findFirstOrThrow
+   */
+  export type SystemAgentConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SystemAgentConfig to fetch.
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAgentConfigs to fetch.
+     */
+    orderBy?: SystemAgentConfigOrderByWithRelationInput | SystemAgentConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemAgentConfigs.
+     */
+    cursor?: SystemAgentConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAgentConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAgentConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemAgentConfigs.
+     */
+    distinct?: SystemAgentConfigScalarFieldEnum | SystemAgentConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAgentConfig findMany
+   */
+  export type SystemAgentConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SystemAgentConfigs to fetch.
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAgentConfigs to fetch.
+     */
+    orderBy?: SystemAgentConfigOrderByWithRelationInput | SystemAgentConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SystemAgentConfigs.
+     */
+    cursor?: SystemAgentConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAgentConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAgentConfigs.
+     */
+    skip?: number
+    distinct?: SystemAgentConfigScalarFieldEnum | SystemAgentConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAgentConfig create
+   */
+  export type SystemAgentConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SystemAgentConfig.
+     */
+    data: XOR<SystemAgentConfigCreateInput, SystemAgentConfigUncheckedCreateInput>
+  }
+
+  /**
+   * SystemAgentConfig createMany
+   */
+  export type SystemAgentConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SystemAgentConfigs.
+     */
+    data: SystemAgentConfigCreateManyInput | SystemAgentConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemAgentConfig createManyAndReturn
+   */
+  export type SystemAgentConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many SystemAgentConfigs.
+     */
+    data: SystemAgentConfigCreateManyInput | SystemAgentConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemAgentConfig update
+   */
+  export type SystemAgentConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SystemAgentConfig.
+     */
+    data: XOR<SystemAgentConfigUpdateInput, SystemAgentConfigUncheckedUpdateInput>
+    /**
+     * Choose, which SystemAgentConfig to update.
+     */
+    where: SystemAgentConfigWhereUniqueInput
+  }
+
+  /**
+   * SystemAgentConfig updateMany
+   */
+  export type SystemAgentConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SystemAgentConfigs.
+     */
+    data: XOR<SystemAgentConfigUpdateManyMutationInput, SystemAgentConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemAgentConfigs to update
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * Limit how many SystemAgentConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemAgentConfig updateManyAndReturn
+   */
+  export type SystemAgentConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update SystemAgentConfigs.
+     */
+    data: XOR<SystemAgentConfigUpdateManyMutationInput, SystemAgentConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemAgentConfigs to update
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * Limit how many SystemAgentConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemAgentConfig upsert
+   */
+  export type SystemAgentConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SystemAgentConfig to update in case it exists.
+     */
+    where: SystemAgentConfigWhereUniqueInput
+    /**
+     * In case the SystemAgentConfig found by the `where` argument doesn't exist, create a new SystemAgentConfig with this data.
+     */
+    create: XOR<SystemAgentConfigCreateInput, SystemAgentConfigUncheckedCreateInput>
+    /**
+     * In case the SystemAgentConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SystemAgentConfigUpdateInput, SystemAgentConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * SystemAgentConfig delete
+   */
+  export type SystemAgentConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
+    /**
+     * Filter which SystemAgentConfig to delete.
+     */
+    where: SystemAgentConfigWhereUniqueInput
+  }
+
+  /**
+   * SystemAgentConfig deleteMany
+   */
+  export type SystemAgentConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemAgentConfigs to delete
+     */
+    where?: SystemAgentConfigWhereInput
+    /**
+     * Limit how many SystemAgentConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemAgentConfig without action
+   */
+  export type SystemAgentConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAgentConfig
+     */
+    select?: SystemAgentConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAgentConfig
+     */
+    omit?: SystemAgentConfigOmit<ExtArgs> | null
   }
 
 
@@ -51730,6 +53252,9 @@ export namespace Prisma {
     parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
     branches?: boolean | AgentChatThread$branchesArgs<ExtArgs>
     runs?: boolean | AgentChatThread$runsArgs<ExtArgs>
+    conversationEvents?: boolean | AgentChatThread$conversationEventsArgs<ExtArgs>
+    messageProjections?: boolean | AgentChatThread$messageProjectionsArgs<ExtArgs>
+    toolCallProjections?: boolean | AgentChatThread$toolCallProjectionsArgs<ExtArgs>
     _count?: boolean | AgentChatThreadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["agentChatThread"]>
 
@@ -51787,6 +53312,9 @@ export namespace Prisma {
     parentThread?: boolean | AgentChatThread$parentThreadArgs<ExtArgs>
     branches?: boolean | AgentChatThread$branchesArgs<ExtArgs>
     runs?: boolean | AgentChatThread$runsArgs<ExtArgs>
+    conversationEvents?: boolean | AgentChatThread$conversationEventsArgs<ExtArgs>
+    messageProjections?: boolean | AgentChatThread$messageProjectionsArgs<ExtArgs>
+    toolCallProjections?: boolean | AgentChatThread$toolCallProjectionsArgs<ExtArgs>
     _count?: boolean | AgentChatThreadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AgentChatThreadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -51810,6 +53338,9 @@ export namespace Prisma {
       parentThread: Prisma.$AgentChatThreadPayload<ExtArgs> | null
       branches: Prisma.$AgentChatThreadPayload<ExtArgs>[]
       runs: Prisma.$AgentRunPayload<ExtArgs>[]
+      conversationEvents: Prisma.$ConversationEventPayload<ExtArgs>[]
+      messageProjections: Prisma.$ConversationMessageProjectionPayload<ExtArgs>[]
+      toolCallProjections: Prisma.$ConversationToolCallProjectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -52223,6 +53754,9 @@ export namespace Prisma {
     parentThread<T extends AgentChatThread$parentThreadArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$parentThreadArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     branches<T extends AgentChatThread$branchesArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     runs<T extends AgentChatThread$runsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$runsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversationEvents<T extends AgentChatThread$conversationEventsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$conversationEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messageProjections<T extends AgentChatThread$messageProjectionsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$messageProjectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    toolCallProjections<T extends AgentChatThread$toolCallProjectionsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThread$toolCallProjectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -52811,6 +54345,78 @@ export namespace Prisma {
   }
 
   /**
+   * AgentChatThread.conversationEvents
+   */
+  export type AgentChatThread$conversationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    where?: ConversationEventWhereInput
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    cursor?: ConversationEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationEventScalarFieldEnum | ConversationEventScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread.messageProjections
+   */
+  export type AgentChatThread$messageProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    where?: ConversationMessageProjectionWhereInput
+    orderBy?: ConversationMessageProjectionOrderByWithRelationInput | ConversationMessageProjectionOrderByWithRelationInput[]
+    cursor?: ConversationMessageProjectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationMessageProjectionScalarFieldEnum | ConversationMessageProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatThread.toolCallProjections
+   */
+  export type AgentChatThread$toolCallProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    where?: ConversationToolCallProjectionWhereInput
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationToolCallProjectionScalarFieldEnum | ConversationToolCallProjectionScalarFieldEnum[]
+  }
+
+  /**
    * AgentChatThread without action
    */
   export type AgentChatThreadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -53038,6 +54644,9 @@ export namespace Prisma {
     branches?: boolean | AgentChatMessage$branchesArgs<ExtArgs>
     sourceRuns?: boolean | AgentChatMessage$sourceRunsArgs<ExtArgs>
     toolCalls?: boolean | AgentChatMessage$toolCallsArgs<ExtArgs>
+    conversationEvents?: boolean | AgentChatMessage$conversationEventsArgs<ExtArgs>
+    messageProjection?: boolean | AgentChatMessage$messageProjectionArgs<ExtArgs>
+    toolCallProjections?: boolean | AgentChatMessage$toolCallProjectionsArgs<ExtArgs>
     _count?: boolean | AgentChatMessageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["agentChatMessage"]>
 
@@ -53099,6 +54708,9 @@ export namespace Prisma {
     branches?: boolean | AgentChatMessage$branchesArgs<ExtArgs>
     sourceRuns?: boolean | AgentChatMessage$sourceRunsArgs<ExtArgs>
     toolCalls?: boolean | AgentChatMessage$toolCallsArgs<ExtArgs>
+    conversationEvents?: boolean | AgentChatMessage$conversationEventsArgs<ExtArgs>
+    messageProjection?: boolean | AgentChatMessage$messageProjectionArgs<ExtArgs>
+    toolCallProjections?: boolean | AgentChatMessage$toolCallProjectionsArgs<ExtArgs>
     _count?: boolean | AgentChatMessageCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AgentChatMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -53126,6 +54738,9 @@ export namespace Prisma {
       branches: Prisma.$AgentChatThreadPayload<ExtArgs>[]
       sourceRuns: Prisma.$AgentRunPayload<ExtArgs>[]
       toolCalls: Prisma.$AgentChatToolCallPayload<ExtArgs>[]
+      conversationEvents: Prisma.$ConversationEventPayload<ExtArgs>[]
+      messageProjection: Prisma.$ConversationMessageProjectionPayload<ExtArgs> | null
+      toolCallProjections: Prisma.$ConversationToolCallProjectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -53541,6 +55156,9 @@ export namespace Prisma {
     branches<T extends AgentChatMessage$branchesArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sourceRuns<T extends AgentChatMessage$sourceRunsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$sourceRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     toolCalls<T extends AgentChatMessage$toolCallsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$toolCallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentChatToolCallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversationEvents<T extends AgentChatMessage$conversationEventsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$conversationEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messageProjection<T extends AgentChatMessage$messageProjectionArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$messageProjectionArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    toolCallProjections<T extends AgentChatMessage$toolCallProjectionsArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessage$toolCallProjectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -54150,6 +55768,73 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentChatToolCallScalarFieldEnum | AgentChatToolCallScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage.conversationEvents
+   */
+  export type AgentChatMessage$conversationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    where?: ConversationEventWhereInput
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    cursor?: ConversationEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationEventScalarFieldEnum | ConversationEventScalarFieldEnum[]
+  }
+
+  /**
+   * AgentChatMessage.messageProjection
+   */
+  export type AgentChatMessage$messageProjectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    where?: ConversationMessageProjectionWhereInput
+  }
+
+  /**
+   * AgentChatMessage.toolCallProjections
+   */
+  export type AgentChatMessage$toolCallProjectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    where?: ConversationToolCallProjectionWhereInput
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationToolCallProjectionScalarFieldEnum | ConversationToolCallProjectionScalarFieldEnum[]
   }
 
   /**
@@ -55372,6 +57057,3615 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AgentChatToolCallInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConversationEvent
+   */
+
+  export type AggregateConversationEvent = {
+    _count: ConversationEventCountAggregateOutputType | null
+    _avg: ConversationEventAvgAggregateOutputType | null
+    _sum: ConversationEventSumAggregateOutputType | null
+    _min: ConversationEventMinAggregateOutputType | null
+    _max: ConversationEventMaxAggregateOutputType | null
+  }
+
+  export type ConversationEventAvgAggregateOutputType = {
+    sequence: number | null
+  }
+
+  export type ConversationEventSumAggregateOutputType = {
+    sequence: number | null
+  }
+
+  export type ConversationEventMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    sequence: number | null
+    eventType: string | null
+    status: string | null
+    idempotencyKey: string | null
+    createdAt: Date | null
+  }
+
+  export type ConversationEventMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    sequence: number | null
+    eventType: string | null
+    status: string | null
+    idempotencyKey: string | null
+    createdAt: Date | null
+  }
+
+  export type ConversationEventCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    threadId: number
+    messageId: number
+    sequence: number
+    eventType: number
+    status: number
+    payload: number
+    idempotencyKey: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ConversationEventAvgAggregateInputType = {
+    sequence?: true
+  }
+
+  export type ConversationEventSumAggregateInputType = {
+    sequence?: true
+  }
+
+  export type ConversationEventMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    sequence?: true
+    eventType?: true
+    status?: true
+    idempotencyKey?: true
+    createdAt?: true
+  }
+
+  export type ConversationEventMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    sequence?: true
+    eventType?: true
+    status?: true
+    idempotencyKey?: true
+    createdAt?: true
+  }
+
+  export type ConversationEventCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    sequence?: true
+    eventType?: true
+    status?: true
+    payload?: true
+    idempotencyKey?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ConversationEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationEvent to aggregate.
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationEvents to fetch.
+     */
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversationEvents
+    **/
+    _count?: true | ConversationEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConversationEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConversationEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationEventMaxAggregateInputType
+  }
+
+  export type GetConversationEventAggregateType<T extends ConversationEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversationEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversationEvent[P]>
+      : GetScalarType<T[P], AggregateConversationEvent[P]>
+  }
+
+
+
+
+  export type ConversationEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationEventWhereInput
+    orderBy?: ConversationEventOrderByWithAggregationInput | ConversationEventOrderByWithAggregationInput[]
+    by: ConversationEventScalarFieldEnum[] | ConversationEventScalarFieldEnum
+    having?: ConversationEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationEventCountAggregateInputType | true
+    _avg?: ConversationEventAvgAggregateInputType
+    _sum?: ConversationEventSumAggregateInputType
+    _min?: ConversationEventMinAggregateInputType
+    _max?: ConversationEventMaxAggregateInputType
+  }
+
+  export type ConversationEventGroupByOutputType = {
+    id: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    sequence: number
+    eventType: string
+    status: string | null
+    payload: JsonValue
+    idempotencyKey: string | null
+    createdAt: Date
+    _count: ConversationEventCountAggregateOutputType | null
+    _avg: ConversationEventAvgAggregateOutputType | null
+    _sum: ConversationEventSumAggregateOutputType | null
+    _min: ConversationEventMinAggregateOutputType | null
+    _max: ConversationEventMaxAggregateOutputType | null
+  }
+
+  type GetConversationEventGroupByPayload<T extends ConversationEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationEventGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    sequence?: boolean
+    eventType?: boolean
+    status?: boolean
+    payload?: boolean
+    idempotencyKey?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationEvent"]>
+
+  export type ConversationEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    sequence?: boolean
+    eventType?: boolean
+    status?: boolean
+    payload?: boolean
+    idempotencyKey?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationEvent"]>
+
+  export type ConversationEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    sequence?: boolean
+    eventType?: boolean
+    status?: boolean
+    payload?: boolean
+    idempotencyKey?: boolean
+    createdAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationEvent"]>
+
+  export type ConversationEventSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    sequence?: boolean
+    eventType?: boolean
+    status?: boolean
+    payload?: boolean
+    idempotencyKey?: boolean
+    createdAt?: boolean
+  }
+
+  export type ConversationEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "threadId" | "messageId" | "sequence" | "eventType" | "status" | "payload" | "idempotencyKey" | "createdAt", ExtArgs["result"]["conversationEvent"]>
+  export type ConversationEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversationEvent"
+    objects: {
+      thread: Prisma.$AgentChatThreadPayload<ExtArgs>
+      message: Prisma.$AgentChatMessagePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      threadId: string
+      messageId: string
+      sequence: number
+      eventType: string
+      status: string | null
+      payload: Prisma.JsonValue
+      idempotencyKey: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["conversationEvent"]>
+    composites: {}
+  }
+
+  type ConversationEventGetPayload<S extends boolean | null | undefined | ConversationEventDefaultArgs> = $Result.GetResult<Prisma.$ConversationEventPayload, S>
+
+  type ConversationEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationEventCountAggregateInputType | true
+    }
+
+  export interface ConversationEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversationEvent'], meta: { name: 'ConversationEvent' } }
+    /**
+     * Find zero or one ConversationEvent that matches the filter.
+     * @param {ConversationEventFindUniqueArgs} args - Arguments to find a ConversationEvent
+     * @example
+     * // Get one ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationEventFindUniqueArgs>(args: SelectSubset<T, ConversationEventFindUniqueArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversationEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationEventFindUniqueOrThrowArgs} args - Arguments to find a ConversationEvent
+     * @example
+     * // Get one ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationEventFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventFindFirstArgs} args - Arguments to find a ConversationEvent
+     * @example
+     * // Get one ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationEventFindFirstArgs>(args?: SelectSubset<T, ConversationEventFindFirstArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventFindFirstOrThrowArgs} args - Arguments to find a ConversationEvent
+     * @example
+     * // Get one ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationEventFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversationEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversationEvents
+     * const conversationEvents = await prisma.conversationEvent.findMany()
+     * 
+     * // Get first 10 ConversationEvents
+     * const conversationEvents = await prisma.conversationEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationEventWithIdOnly = await prisma.conversationEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationEventFindManyArgs>(args?: SelectSubset<T, ConversationEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversationEvent.
+     * @param {ConversationEventCreateArgs} args - Arguments to create a ConversationEvent.
+     * @example
+     * // Create one ConversationEvent
+     * const ConversationEvent = await prisma.conversationEvent.create({
+     *   data: {
+     *     // ... data to create a ConversationEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationEventCreateArgs>(args: SelectSubset<T, ConversationEventCreateArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversationEvents.
+     * @param {ConversationEventCreateManyArgs} args - Arguments to create many ConversationEvents.
+     * @example
+     * // Create many ConversationEvents
+     * const conversationEvent = await prisma.conversationEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationEventCreateManyArgs>(args?: SelectSubset<T, ConversationEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversationEvents and returns the data saved in the database.
+     * @param {ConversationEventCreateManyAndReturnArgs} args - Arguments to create many ConversationEvents.
+     * @example
+     * // Create many ConversationEvents
+     * const conversationEvent = await prisma.conversationEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversationEvents and only return the `id`
+     * const conversationEventWithIdOnly = await prisma.conversationEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationEventCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversationEvent.
+     * @param {ConversationEventDeleteArgs} args - Arguments to delete one ConversationEvent.
+     * @example
+     * // Delete one ConversationEvent
+     * const ConversationEvent = await prisma.conversationEvent.delete({
+     *   where: {
+     *     // ... filter to delete one ConversationEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationEventDeleteArgs>(args: SelectSubset<T, ConversationEventDeleteArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversationEvent.
+     * @param {ConversationEventUpdateArgs} args - Arguments to update one ConversationEvent.
+     * @example
+     * // Update one ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationEventUpdateArgs>(args: SelectSubset<T, ConversationEventUpdateArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversationEvents.
+     * @param {ConversationEventDeleteManyArgs} args - Arguments to filter ConversationEvents to delete.
+     * @example
+     * // Delete a few ConversationEvents
+     * const { count } = await prisma.conversationEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationEventDeleteManyArgs>(args?: SelectSubset<T, ConversationEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversationEvents
+     * const conversationEvent = await prisma.conversationEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationEventUpdateManyArgs>(args: SelectSubset<T, ConversationEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationEvents and returns the data updated in the database.
+     * @param {ConversationEventUpdateManyAndReturnArgs} args - Arguments to update many ConversationEvents.
+     * @example
+     * // Update many ConversationEvents
+     * const conversationEvent = await prisma.conversationEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversationEvents and only return the `id`
+     * const conversationEventWithIdOnly = await prisma.conversationEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationEventUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversationEvent.
+     * @param {ConversationEventUpsertArgs} args - Arguments to update or create a ConversationEvent.
+     * @example
+     * // Update or create a ConversationEvent
+     * const conversationEvent = await prisma.conversationEvent.upsert({
+     *   create: {
+     *     // ... data to create a ConversationEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversationEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationEventUpsertArgs>(args: SelectSubset<T, ConversationEventUpsertArgs<ExtArgs>>): Prisma__ConversationEventClient<$Result.GetResult<Prisma.$ConversationEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventCountArgs} args - Arguments to filter ConversationEvents to count.
+     * @example
+     * // Count the number of ConversationEvents
+     * const count = await prisma.conversationEvent.count({
+     *   where: {
+     *     // ... the filter for the ConversationEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationEventCountArgs>(
+      args?: Subset<T, ConversationEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationEventAggregateArgs>(args: Subset<T, ConversationEventAggregateArgs>): Prisma.PrismaPromise<GetConversationEventAggregateType<T>>
+
+    /**
+     * Group by ConversationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationEventGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversationEvent model
+   */
+  readonly fields: ConversationEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversationEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends AgentChatThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThreadDefaultArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    message<T extends AgentChatMessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessageDefaultArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversationEvent model
+   */
+  interface ConversationEventFieldRefs {
+    readonly id: FieldRef<"ConversationEvent", 'String'>
+    readonly organizationId: FieldRef<"ConversationEvent", 'String'>
+    readonly threadId: FieldRef<"ConversationEvent", 'String'>
+    readonly messageId: FieldRef<"ConversationEvent", 'String'>
+    readonly sequence: FieldRef<"ConversationEvent", 'Int'>
+    readonly eventType: FieldRef<"ConversationEvent", 'String'>
+    readonly status: FieldRef<"ConversationEvent", 'String'>
+    readonly payload: FieldRef<"ConversationEvent", 'Json'>
+    readonly idempotencyKey: FieldRef<"ConversationEvent", 'String'>
+    readonly createdAt: FieldRef<"ConversationEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversationEvent findUnique
+   */
+  export type ConversationEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationEvent to fetch.
+     */
+    where: ConversationEventWhereUniqueInput
+  }
+
+  /**
+   * ConversationEvent findUniqueOrThrow
+   */
+  export type ConversationEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationEvent to fetch.
+     */
+    where: ConversationEventWhereUniqueInput
+  }
+
+  /**
+   * ConversationEvent findFirst
+   */
+  export type ConversationEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationEvent to fetch.
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationEvents to fetch.
+     */
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationEvents.
+     */
+    cursor?: ConversationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationEvents.
+     */
+    distinct?: ConversationEventScalarFieldEnum | ConversationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationEvent findFirstOrThrow
+   */
+  export type ConversationEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationEvent to fetch.
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationEvents to fetch.
+     */
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationEvents.
+     */
+    cursor?: ConversationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationEvents.
+     */
+    distinct?: ConversationEventScalarFieldEnum | ConversationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationEvent findMany
+   */
+  export type ConversationEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationEvents to fetch.
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationEvents to fetch.
+     */
+    orderBy?: ConversationEventOrderByWithRelationInput | ConversationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversationEvents.
+     */
+    cursor?: ConversationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationEvents.
+     */
+    skip?: number
+    distinct?: ConversationEventScalarFieldEnum | ConversationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationEvent create
+   */
+  export type ConversationEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConversationEvent.
+     */
+    data: XOR<ConversationEventCreateInput, ConversationEventUncheckedCreateInput>
+  }
+
+  /**
+   * ConversationEvent createMany
+   */
+  export type ConversationEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversationEvents.
+     */
+    data: ConversationEventCreateManyInput | ConversationEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationEvent createManyAndReturn
+   */
+  export type ConversationEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversationEvents.
+     */
+    data: ConversationEventCreateManyInput | ConversationEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationEvent update
+   */
+  export type ConversationEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConversationEvent.
+     */
+    data: XOR<ConversationEventUpdateInput, ConversationEventUncheckedUpdateInput>
+    /**
+     * Choose, which ConversationEvent to update.
+     */
+    where: ConversationEventWhereUniqueInput
+  }
+
+  /**
+   * ConversationEvent updateMany
+   */
+  export type ConversationEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversationEvents.
+     */
+    data: XOR<ConversationEventUpdateManyMutationInput, ConversationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationEvents to update
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * Limit how many ConversationEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationEvent updateManyAndReturn
+   */
+  export type ConversationEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversationEvents.
+     */
+    data: XOR<ConversationEventUpdateManyMutationInput, ConversationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationEvents to update
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * Limit how many ConversationEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationEvent upsert
+   */
+  export type ConversationEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConversationEvent to update in case it exists.
+     */
+    where: ConversationEventWhereUniqueInput
+    /**
+     * In case the ConversationEvent found by the `where` argument doesn't exist, create a new ConversationEvent with this data.
+     */
+    create: XOR<ConversationEventCreateInput, ConversationEventUncheckedCreateInput>
+    /**
+     * In case the ConversationEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationEventUpdateInput, ConversationEventUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversationEvent delete
+   */
+  export type ConversationEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+    /**
+     * Filter which ConversationEvent to delete.
+     */
+    where: ConversationEventWhereUniqueInput
+  }
+
+  /**
+   * ConversationEvent deleteMany
+   */
+  export type ConversationEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationEvents to delete
+     */
+    where?: ConversationEventWhereInput
+    /**
+     * Limit how many ConversationEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationEvent without action
+   */
+  export type ConversationEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationEvent
+     */
+    select?: ConversationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationEvent
+     */
+    omit?: ConversationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConversationMessageProjection
+   */
+
+  export type AggregateConversationMessageProjection = {
+    _count: ConversationMessageProjectionCountAggregateOutputType | null
+    _avg: ConversationMessageProjectionAvgAggregateOutputType | null
+    _sum: ConversationMessageProjectionSumAggregateOutputType | null
+    _min: ConversationMessageProjectionMinAggregateOutputType | null
+    _max: ConversationMessageProjectionMaxAggregateOutputType | null
+  }
+
+  export type ConversationMessageProjectionAvgAggregateOutputType = {
+    lastSequence: number | null
+  }
+
+  export type ConversationMessageProjectionSumAggregateOutputType = {
+    lastSequence: number | null
+  }
+
+  export type ConversationMessageProjectionMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    status: string | null
+    text: string | null
+    isStreaming: boolean | null
+    isCompleted: boolean | null
+    isFailed: boolean | null
+    errorMessage: string | null
+    lastSequence: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationMessageProjectionMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    status: string | null
+    text: string | null
+    isStreaming: boolean | null
+    isCompleted: boolean | null
+    isFailed: boolean | null
+    errorMessage: string | null
+    lastSequence: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationMessageProjectionCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    threadId: number
+    messageId: number
+    status: number
+    text: number
+    citations: number
+    isStreaming: number
+    isCompleted: number
+    isFailed: number
+    errorMessage: number
+    lastSequence: number
+    metadata: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConversationMessageProjectionAvgAggregateInputType = {
+    lastSequence?: true
+  }
+
+  export type ConversationMessageProjectionSumAggregateInputType = {
+    lastSequence?: true
+  }
+
+  export type ConversationMessageProjectionMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    status?: true
+    text?: true
+    isStreaming?: true
+    isCompleted?: true
+    isFailed?: true
+    errorMessage?: true
+    lastSequence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationMessageProjectionMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    status?: true
+    text?: true
+    isStreaming?: true
+    isCompleted?: true
+    isFailed?: true
+    errorMessage?: true
+    lastSequence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationMessageProjectionCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    status?: true
+    text?: true
+    citations?: true
+    isStreaming?: true
+    isCompleted?: true
+    isFailed?: true
+    errorMessage?: true
+    lastSequence?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConversationMessageProjectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationMessageProjection to aggregate.
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationMessageProjections to fetch.
+     */
+    orderBy?: ConversationMessageProjectionOrderByWithRelationInput | ConversationMessageProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationMessageProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationMessageProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationMessageProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversationMessageProjections
+    **/
+    _count?: true | ConversationMessageProjectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConversationMessageProjectionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConversationMessageProjectionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationMessageProjectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationMessageProjectionMaxAggregateInputType
+  }
+
+  export type GetConversationMessageProjectionAggregateType<T extends ConversationMessageProjectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversationMessageProjection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversationMessageProjection[P]>
+      : GetScalarType<T[P], AggregateConversationMessageProjection[P]>
+  }
+
+
+
+
+  export type ConversationMessageProjectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationMessageProjectionWhereInput
+    orderBy?: ConversationMessageProjectionOrderByWithAggregationInput | ConversationMessageProjectionOrderByWithAggregationInput[]
+    by: ConversationMessageProjectionScalarFieldEnum[] | ConversationMessageProjectionScalarFieldEnum
+    having?: ConversationMessageProjectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationMessageProjectionCountAggregateInputType | true
+    _avg?: ConversationMessageProjectionAvgAggregateInputType
+    _sum?: ConversationMessageProjectionSumAggregateInputType
+    _min?: ConversationMessageProjectionMinAggregateInputType
+    _max?: ConversationMessageProjectionMaxAggregateInputType
+  }
+
+  export type ConversationMessageProjectionGroupByOutputType = {
+    id: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    status: string
+    text: string
+    citations: JsonValue
+    isStreaming: boolean
+    isCompleted: boolean
+    isFailed: boolean
+    errorMessage: string | null
+    lastSequence: number
+    metadata: JsonValue
+    createdAt: Date
+    updatedAt: Date
+    _count: ConversationMessageProjectionCountAggregateOutputType | null
+    _avg: ConversationMessageProjectionAvgAggregateOutputType | null
+    _sum: ConversationMessageProjectionSumAggregateOutputType | null
+    _min: ConversationMessageProjectionMinAggregateOutputType | null
+    _max: ConversationMessageProjectionMaxAggregateOutputType | null
+  }
+
+  type GetConversationMessageProjectionGroupByPayload<T extends ConversationMessageProjectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationMessageProjectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationMessageProjectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationMessageProjectionGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationMessageProjectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationMessageProjectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    status?: boolean
+    text?: boolean
+    citations?: boolean
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: boolean
+    lastSequence?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationMessageProjection"]>
+
+  export type ConversationMessageProjectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    status?: boolean
+    text?: boolean
+    citations?: boolean
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: boolean
+    lastSequence?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationMessageProjection"]>
+
+  export type ConversationMessageProjectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    status?: boolean
+    text?: boolean
+    citations?: boolean
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: boolean
+    lastSequence?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationMessageProjection"]>
+
+  export type ConversationMessageProjectionSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    status?: boolean
+    text?: boolean
+    citations?: boolean
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: boolean
+    lastSequence?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConversationMessageProjectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "threadId" | "messageId" | "status" | "text" | "citations" | "isStreaming" | "isCompleted" | "isFailed" | "errorMessage" | "lastSequence" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["conversationMessageProjection"]>
+  export type ConversationMessageProjectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationMessageProjectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationMessageProjectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationMessageProjectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversationMessageProjection"
+    objects: {
+      thread: Prisma.$AgentChatThreadPayload<ExtArgs>
+      message: Prisma.$AgentChatMessagePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      threadId: string
+      messageId: string
+      status: string
+      text: string
+      citations: Prisma.JsonValue
+      isStreaming: boolean
+      isCompleted: boolean
+      isFailed: boolean
+      errorMessage: string | null
+      lastSequence: number
+      metadata: Prisma.JsonValue
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["conversationMessageProjection"]>
+    composites: {}
+  }
+
+  type ConversationMessageProjectionGetPayload<S extends boolean | null | undefined | ConversationMessageProjectionDefaultArgs> = $Result.GetResult<Prisma.$ConversationMessageProjectionPayload, S>
+
+  type ConversationMessageProjectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationMessageProjectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationMessageProjectionCountAggregateInputType | true
+    }
+
+  export interface ConversationMessageProjectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversationMessageProjection'], meta: { name: 'ConversationMessageProjection' } }
+    /**
+     * Find zero or one ConversationMessageProjection that matches the filter.
+     * @param {ConversationMessageProjectionFindUniqueArgs} args - Arguments to find a ConversationMessageProjection
+     * @example
+     * // Get one ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationMessageProjectionFindUniqueArgs>(args: SelectSubset<T, ConversationMessageProjectionFindUniqueArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversationMessageProjection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationMessageProjectionFindUniqueOrThrowArgs} args - Arguments to find a ConversationMessageProjection
+     * @example
+     * // Get one ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationMessageProjectionFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationMessageProjectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationMessageProjection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionFindFirstArgs} args - Arguments to find a ConversationMessageProjection
+     * @example
+     * // Get one ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationMessageProjectionFindFirstArgs>(args?: SelectSubset<T, ConversationMessageProjectionFindFirstArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationMessageProjection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionFindFirstOrThrowArgs} args - Arguments to find a ConversationMessageProjection
+     * @example
+     * // Get one ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationMessageProjectionFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationMessageProjectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversationMessageProjections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversationMessageProjections
+     * const conversationMessageProjections = await prisma.conversationMessageProjection.findMany()
+     * 
+     * // Get first 10 ConversationMessageProjections
+     * const conversationMessageProjections = await prisma.conversationMessageProjection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationMessageProjectionWithIdOnly = await prisma.conversationMessageProjection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationMessageProjectionFindManyArgs>(args?: SelectSubset<T, ConversationMessageProjectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversationMessageProjection.
+     * @param {ConversationMessageProjectionCreateArgs} args - Arguments to create a ConversationMessageProjection.
+     * @example
+     * // Create one ConversationMessageProjection
+     * const ConversationMessageProjection = await prisma.conversationMessageProjection.create({
+     *   data: {
+     *     // ... data to create a ConversationMessageProjection
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationMessageProjectionCreateArgs>(args: SelectSubset<T, ConversationMessageProjectionCreateArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversationMessageProjections.
+     * @param {ConversationMessageProjectionCreateManyArgs} args - Arguments to create many ConversationMessageProjections.
+     * @example
+     * // Create many ConversationMessageProjections
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationMessageProjectionCreateManyArgs>(args?: SelectSubset<T, ConversationMessageProjectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversationMessageProjections and returns the data saved in the database.
+     * @param {ConversationMessageProjectionCreateManyAndReturnArgs} args - Arguments to create many ConversationMessageProjections.
+     * @example
+     * // Create many ConversationMessageProjections
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversationMessageProjections and only return the `id`
+     * const conversationMessageProjectionWithIdOnly = await prisma.conversationMessageProjection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationMessageProjectionCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationMessageProjectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversationMessageProjection.
+     * @param {ConversationMessageProjectionDeleteArgs} args - Arguments to delete one ConversationMessageProjection.
+     * @example
+     * // Delete one ConversationMessageProjection
+     * const ConversationMessageProjection = await prisma.conversationMessageProjection.delete({
+     *   where: {
+     *     // ... filter to delete one ConversationMessageProjection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationMessageProjectionDeleteArgs>(args: SelectSubset<T, ConversationMessageProjectionDeleteArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversationMessageProjection.
+     * @param {ConversationMessageProjectionUpdateArgs} args - Arguments to update one ConversationMessageProjection.
+     * @example
+     * // Update one ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationMessageProjectionUpdateArgs>(args: SelectSubset<T, ConversationMessageProjectionUpdateArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversationMessageProjections.
+     * @param {ConversationMessageProjectionDeleteManyArgs} args - Arguments to filter ConversationMessageProjections to delete.
+     * @example
+     * // Delete a few ConversationMessageProjections
+     * const { count } = await prisma.conversationMessageProjection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationMessageProjectionDeleteManyArgs>(args?: SelectSubset<T, ConversationMessageProjectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationMessageProjections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversationMessageProjections
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationMessageProjectionUpdateManyArgs>(args: SelectSubset<T, ConversationMessageProjectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationMessageProjections and returns the data updated in the database.
+     * @param {ConversationMessageProjectionUpdateManyAndReturnArgs} args - Arguments to update many ConversationMessageProjections.
+     * @example
+     * // Update many ConversationMessageProjections
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversationMessageProjections and only return the `id`
+     * const conversationMessageProjectionWithIdOnly = await prisma.conversationMessageProjection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationMessageProjectionUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationMessageProjectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversationMessageProjection.
+     * @param {ConversationMessageProjectionUpsertArgs} args - Arguments to update or create a ConversationMessageProjection.
+     * @example
+     * // Update or create a ConversationMessageProjection
+     * const conversationMessageProjection = await prisma.conversationMessageProjection.upsert({
+     *   create: {
+     *     // ... data to create a ConversationMessageProjection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversationMessageProjection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationMessageProjectionUpsertArgs>(args: SelectSubset<T, ConversationMessageProjectionUpsertArgs<ExtArgs>>): Prisma__ConversationMessageProjectionClient<$Result.GetResult<Prisma.$ConversationMessageProjectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversationMessageProjections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionCountArgs} args - Arguments to filter ConversationMessageProjections to count.
+     * @example
+     * // Count the number of ConversationMessageProjections
+     * const count = await prisma.conversationMessageProjection.count({
+     *   where: {
+     *     // ... the filter for the ConversationMessageProjections we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationMessageProjectionCountArgs>(
+      args?: Subset<T, ConversationMessageProjectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationMessageProjectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversationMessageProjection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationMessageProjectionAggregateArgs>(args: Subset<T, ConversationMessageProjectionAggregateArgs>): Prisma.PrismaPromise<GetConversationMessageProjectionAggregateType<T>>
+
+    /**
+     * Group by ConversationMessageProjection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationMessageProjectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationMessageProjectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationMessageProjectionGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationMessageProjectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationMessageProjectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationMessageProjectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversationMessageProjection model
+   */
+  readonly fields: ConversationMessageProjectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversationMessageProjection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationMessageProjectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends AgentChatThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThreadDefaultArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    message<T extends AgentChatMessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessageDefaultArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversationMessageProjection model
+   */
+  interface ConversationMessageProjectionFieldRefs {
+    readonly id: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly organizationId: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly threadId: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly messageId: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly status: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly text: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly citations: FieldRef<"ConversationMessageProjection", 'Json'>
+    readonly isStreaming: FieldRef<"ConversationMessageProjection", 'Boolean'>
+    readonly isCompleted: FieldRef<"ConversationMessageProjection", 'Boolean'>
+    readonly isFailed: FieldRef<"ConversationMessageProjection", 'Boolean'>
+    readonly errorMessage: FieldRef<"ConversationMessageProjection", 'String'>
+    readonly lastSequence: FieldRef<"ConversationMessageProjection", 'Int'>
+    readonly metadata: FieldRef<"ConversationMessageProjection", 'Json'>
+    readonly createdAt: FieldRef<"ConversationMessageProjection", 'DateTime'>
+    readonly updatedAt: FieldRef<"ConversationMessageProjection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversationMessageProjection findUnique
+   */
+  export type ConversationMessageProjectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationMessageProjection to fetch.
+     */
+    where: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationMessageProjection findUniqueOrThrow
+   */
+  export type ConversationMessageProjectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationMessageProjection to fetch.
+     */
+    where: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationMessageProjection findFirst
+   */
+  export type ConversationMessageProjectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationMessageProjection to fetch.
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationMessageProjections to fetch.
+     */
+    orderBy?: ConversationMessageProjectionOrderByWithRelationInput | ConversationMessageProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationMessageProjections.
+     */
+    cursor?: ConversationMessageProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationMessageProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationMessageProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationMessageProjections.
+     */
+    distinct?: ConversationMessageProjectionScalarFieldEnum | ConversationMessageProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationMessageProjection findFirstOrThrow
+   */
+  export type ConversationMessageProjectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationMessageProjection to fetch.
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationMessageProjections to fetch.
+     */
+    orderBy?: ConversationMessageProjectionOrderByWithRelationInput | ConversationMessageProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationMessageProjections.
+     */
+    cursor?: ConversationMessageProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationMessageProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationMessageProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationMessageProjections.
+     */
+    distinct?: ConversationMessageProjectionScalarFieldEnum | ConversationMessageProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationMessageProjection findMany
+   */
+  export type ConversationMessageProjectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationMessageProjections to fetch.
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationMessageProjections to fetch.
+     */
+    orderBy?: ConversationMessageProjectionOrderByWithRelationInput | ConversationMessageProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversationMessageProjections.
+     */
+    cursor?: ConversationMessageProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationMessageProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationMessageProjections.
+     */
+    skip?: number
+    distinct?: ConversationMessageProjectionScalarFieldEnum | ConversationMessageProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationMessageProjection create
+   */
+  export type ConversationMessageProjectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConversationMessageProjection.
+     */
+    data: XOR<ConversationMessageProjectionCreateInput, ConversationMessageProjectionUncheckedCreateInput>
+  }
+
+  /**
+   * ConversationMessageProjection createMany
+   */
+  export type ConversationMessageProjectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversationMessageProjections.
+     */
+    data: ConversationMessageProjectionCreateManyInput | ConversationMessageProjectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationMessageProjection createManyAndReturn
+   */
+  export type ConversationMessageProjectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversationMessageProjections.
+     */
+    data: ConversationMessageProjectionCreateManyInput | ConversationMessageProjectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationMessageProjection update
+   */
+  export type ConversationMessageProjectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConversationMessageProjection.
+     */
+    data: XOR<ConversationMessageProjectionUpdateInput, ConversationMessageProjectionUncheckedUpdateInput>
+    /**
+     * Choose, which ConversationMessageProjection to update.
+     */
+    where: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationMessageProjection updateMany
+   */
+  export type ConversationMessageProjectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversationMessageProjections.
+     */
+    data: XOR<ConversationMessageProjectionUpdateManyMutationInput, ConversationMessageProjectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationMessageProjections to update
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * Limit how many ConversationMessageProjections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationMessageProjection updateManyAndReturn
+   */
+  export type ConversationMessageProjectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversationMessageProjections.
+     */
+    data: XOR<ConversationMessageProjectionUpdateManyMutationInput, ConversationMessageProjectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationMessageProjections to update
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * Limit how many ConversationMessageProjections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationMessageProjection upsert
+   */
+  export type ConversationMessageProjectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConversationMessageProjection to update in case it exists.
+     */
+    where: ConversationMessageProjectionWhereUniqueInput
+    /**
+     * In case the ConversationMessageProjection found by the `where` argument doesn't exist, create a new ConversationMessageProjection with this data.
+     */
+    create: XOR<ConversationMessageProjectionCreateInput, ConversationMessageProjectionUncheckedCreateInput>
+    /**
+     * In case the ConversationMessageProjection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationMessageProjectionUpdateInput, ConversationMessageProjectionUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversationMessageProjection delete
+   */
+  export type ConversationMessageProjectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+    /**
+     * Filter which ConversationMessageProjection to delete.
+     */
+    where: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationMessageProjection deleteMany
+   */
+  export type ConversationMessageProjectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationMessageProjections to delete
+     */
+    where?: ConversationMessageProjectionWhereInput
+    /**
+     * Limit how many ConversationMessageProjections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationMessageProjection without action
+   */
+  export type ConversationMessageProjectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationMessageProjection
+     */
+    select?: ConversationMessageProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationMessageProjection
+     */
+    omit?: ConversationMessageProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationMessageProjectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConversationToolCallProjection
+   */
+
+  export type AggregateConversationToolCallProjection = {
+    _count: ConversationToolCallProjectionCountAggregateOutputType | null
+    _avg: ConversationToolCallProjectionAvgAggregateOutputType | null
+    _sum: ConversationToolCallProjectionSumAggregateOutputType | null
+    _min: ConversationToolCallProjectionMinAggregateOutputType | null
+    _max: ConversationToolCallProjectionMaxAggregateOutputType | null
+  }
+
+  export type ConversationToolCallProjectionAvgAggregateOutputType = {
+    durationMs: number | null
+    displayOrder: number | null
+  }
+
+  export type ConversationToolCallProjectionSumAggregateOutputType = {
+    durationMs: number | null
+    displayOrder: number | null
+  }
+
+  export type ConversationToolCallProjectionMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    toolCallId: string | null
+    groupId: string | null
+    toolName: string | null
+    status: string | null
+    errorMessage: string | null
+    durationMs: number | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationToolCallProjectionMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    threadId: string | null
+    messageId: string | null
+    toolCallId: string | null
+    groupId: string | null
+    toolName: string | null
+    status: string | null
+    errorMessage: string | null
+    durationMs: number | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationToolCallProjectionCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    threadId: number
+    messageId: number
+    toolCallId: number
+    groupId: number
+    toolName: number
+    status: number
+    inputPayload: number
+    outputPayload: number
+    errorMessage: number
+    durationMs: number
+    displayOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConversationToolCallProjectionAvgAggregateInputType = {
+    durationMs?: true
+    displayOrder?: true
+  }
+
+  export type ConversationToolCallProjectionSumAggregateInputType = {
+    durationMs?: true
+    displayOrder?: true
+  }
+
+  export type ConversationToolCallProjectionMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    toolCallId?: true
+    groupId?: true
+    toolName?: true
+    status?: true
+    errorMessage?: true
+    durationMs?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationToolCallProjectionMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    toolCallId?: true
+    groupId?: true
+    toolName?: true
+    status?: true
+    errorMessage?: true
+    durationMs?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationToolCallProjectionCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    threadId?: true
+    messageId?: true
+    toolCallId?: true
+    groupId?: true
+    toolName?: true
+    status?: true
+    inputPayload?: true
+    outputPayload?: true
+    errorMessage?: true
+    durationMs?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConversationToolCallProjectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationToolCallProjection to aggregate.
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationToolCallProjections to fetch.
+     */
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationToolCallProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationToolCallProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversationToolCallProjections
+    **/
+    _count?: true | ConversationToolCallProjectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConversationToolCallProjectionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConversationToolCallProjectionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationToolCallProjectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationToolCallProjectionMaxAggregateInputType
+  }
+
+  export type GetConversationToolCallProjectionAggregateType<T extends ConversationToolCallProjectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversationToolCallProjection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversationToolCallProjection[P]>
+      : GetScalarType<T[P], AggregateConversationToolCallProjection[P]>
+  }
+
+
+
+
+  export type ConversationToolCallProjectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationToolCallProjectionWhereInput
+    orderBy?: ConversationToolCallProjectionOrderByWithAggregationInput | ConversationToolCallProjectionOrderByWithAggregationInput[]
+    by: ConversationToolCallProjectionScalarFieldEnum[] | ConversationToolCallProjectionScalarFieldEnum
+    having?: ConversationToolCallProjectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationToolCallProjectionCountAggregateInputType | true
+    _avg?: ConversationToolCallProjectionAvgAggregateInputType
+    _sum?: ConversationToolCallProjectionSumAggregateInputType
+    _min?: ConversationToolCallProjectionMinAggregateInputType
+    _max?: ConversationToolCallProjectionMaxAggregateInputType
+  }
+
+  export type ConversationToolCallProjectionGroupByOutputType = {
+    id: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    toolCallId: string
+    groupId: string | null
+    toolName: string
+    status: string
+    inputPayload: JsonValue
+    outputPayload: JsonValue | null
+    errorMessage: string | null
+    durationMs: number | null
+    displayOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ConversationToolCallProjectionCountAggregateOutputType | null
+    _avg: ConversationToolCallProjectionAvgAggregateOutputType | null
+    _sum: ConversationToolCallProjectionSumAggregateOutputType | null
+    _min: ConversationToolCallProjectionMinAggregateOutputType | null
+    _max: ConversationToolCallProjectionMaxAggregateOutputType | null
+  }
+
+  type GetConversationToolCallProjectionGroupByPayload<T extends ConversationToolCallProjectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationToolCallProjectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationToolCallProjectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationToolCallProjectionGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationToolCallProjectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationToolCallProjectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    toolCallId?: boolean
+    groupId?: boolean
+    toolName?: boolean
+    status?: boolean
+    inputPayload?: boolean
+    outputPayload?: boolean
+    errorMessage?: boolean
+    durationMs?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationToolCallProjection"]>
+
+  export type ConversationToolCallProjectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    toolCallId?: boolean
+    groupId?: boolean
+    toolName?: boolean
+    status?: boolean
+    inputPayload?: boolean
+    outputPayload?: boolean
+    errorMessage?: boolean
+    durationMs?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationToolCallProjection"]>
+
+  export type ConversationToolCallProjectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    toolCallId?: boolean
+    groupId?: boolean
+    toolName?: boolean
+    status?: boolean
+    inputPayload?: boolean
+    outputPayload?: boolean
+    errorMessage?: boolean
+    durationMs?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversationToolCallProjection"]>
+
+  export type ConversationToolCallProjectionSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    threadId?: boolean
+    messageId?: boolean
+    toolCallId?: boolean
+    groupId?: boolean
+    toolName?: boolean
+    status?: boolean
+    inputPayload?: boolean
+    outputPayload?: boolean
+    errorMessage?: boolean
+    durationMs?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConversationToolCallProjectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "threadId" | "messageId" | "toolCallId" | "groupId" | "toolName" | "status" | "inputPayload" | "outputPayload" | "errorMessage" | "durationMs" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["conversationToolCallProjection"]>
+  export type ConversationToolCallProjectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationToolCallProjectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+  export type ConversationToolCallProjectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | AgentChatThreadDefaultArgs<ExtArgs>
+    message?: boolean | AgentChatMessageDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationToolCallProjectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversationToolCallProjection"
+    objects: {
+      thread: Prisma.$AgentChatThreadPayload<ExtArgs>
+      message: Prisma.$AgentChatMessagePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      threadId: string
+      messageId: string
+      toolCallId: string
+      groupId: string | null
+      toolName: string
+      status: string
+      inputPayload: Prisma.JsonValue
+      outputPayload: Prisma.JsonValue | null
+      errorMessage: string | null
+      durationMs: number | null
+      displayOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["conversationToolCallProjection"]>
+    composites: {}
+  }
+
+  type ConversationToolCallProjectionGetPayload<S extends boolean | null | undefined | ConversationToolCallProjectionDefaultArgs> = $Result.GetResult<Prisma.$ConversationToolCallProjectionPayload, S>
+
+  type ConversationToolCallProjectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationToolCallProjectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationToolCallProjectionCountAggregateInputType | true
+    }
+
+  export interface ConversationToolCallProjectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversationToolCallProjection'], meta: { name: 'ConversationToolCallProjection' } }
+    /**
+     * Find zero or one ConversationToolCallProjection that matches the filter.
+     * @param {ConversationToolCallProjectionFindUniqueArgs} args - Arguments to find a ConversationToolCallProjection
+     * @example
+     * // Get one ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationToolCallProjectionFindUniqueArgs>(args: SelectSubset<T, ConversationToolCallProjectionFindUniqueArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversationToolCallProjection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationToolCallProjectionFindUniqueOrThrowArgs} args - Arguments to find a ConversationToolCallProjection
+     * @example
+     * // Get one ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationToolCallProjectionFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationToolCallProjectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationToolCallProjection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionFindFirstArgs} args - Arguments to find a ConversationToolCallProjection
+     * @example
+     * // Get one ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationToolCallProjectionFindFirstArgs>(args?: SelectSubset<T, ConversationToolCallProjectionFindFirstArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationToolCallProjection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionFindFirstOrThrowArgs} args - Arguments to find a ConversationToolCallProjection
+     * @example
+     * // Get one ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationToolCallProjectionFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationToolCallProjectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversationToolCallProjections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversationToolCallProjections
+     * const conversationToolCallProjections = await prisma.conversationToolCallProjection.findMany()
+     * 
+     * // Get first 10 ConversationToolCallProjections
+     * const conversationToolCallProjections = await prisma.conversationToolCallProjection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationToolCallProjectionWithIdOnly = await prisma.conversationToolCallProjection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationToolCallProjectionFindManyArgs>(args?: SelectSubset<T, ConversationToolCallProjectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversationToolCallProjection.
+     * @param {ConversationToolCallProjectionCreateArgs} args - Arguments to create a ConversationToolCallProjection.
+     * @example
+     * // Create one ConversationToolCallProjection
+     * const ConversationToolCallProjection = await prisma.conversationToolCallProjection.create({
+     *   data: {
+     *     // ... data to create a ConversationToolCallProjection
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationToolCallProjectionCreateArgs>(args: SelectSubset<T, ConversationToolCallProjectionCreateArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversationToolCallProjections.
+     * @param {ConversationToolCallProjectionCreateManyArgs} args - Arguments to create many ConversationToolCallProjections.
+     * @example
+     * // Create many ConversationToolCallProjections
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationToolCallProjectionCreateManyArgs>(args?: SelectSubset<T, ConversationToolCallProjectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversationToolCallProjections and returns the data saved in the database.
+     * @param {ConversationToolCallProjectionCreateManyAndReturnArgs} args - Arguments to create many ConversationToolCallProjections.
+     * @example
+     * // Create many ConversationToolCallProjections
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversationToolCallProjections and only return the `id`
+     * const conversationToolCallProjectionWithIdOnly = await prisma.conversationToolCallProjection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationToolCallProjectionCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationToolCallProjectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversationToolCallProjection.
+     * @param {ConversationToolCallProjectionDeleteArgs} args - Arguments to delete one ConversationToolCallProjection.
+     * @example
+     * // Delete one ConversationToolCallProjection
+     * const ConversationToolCallProjection = await prisma.conversationToolCallProjection.delete({
+     *   where: {
+     *     // ... filter to delete one ConversationToolCallProjection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationToolCallProjectionDeleteArgs>(args: SelectSubset<T, ConversationToolCallProjectionDeleteArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversationToolCallProjection.
+     * @param {ConversationToolCallProjectionUpdateArgs} args - Arguments to update one ConversationToolCallProjection.
+     * @example
+     * // Update one ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationToolCallProjectionUpdateArgs>(args: SelectSubset<T, ConversationToolCallProjectionUpdateArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversationToolCallProjections.
+     * @param {ConversationToolCallProjectionDeleteManyArgs} args - Arguments to filter ConversationToolCallProjections to delete.
+     * @example
+     * // Delete a few ConversationToolCallProjections
+     * const { count } = await prisma.conversationToolCallProjection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationToolCallProjectionDeleteManyArgs>(args?: SelectSubset<T, ConversationToolCallProjectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationToolCallProjections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversationToolCallProjections
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationToolCallProjectionUpdateManyArgs>(args: SelectSubset<T, ConversationToolCallProjectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationToolCallProjections and returns the data updated in the database.
+     * @param {ConversationToolCallProjectionUpdateManyAndReturnArgs} args - Arguments to update many ConversationToolCallProjections.
+     * @example
+     * // Update many ConversationToolCallProjections
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversationToolCallProjections and only return the `id`
+     * const conversationToolCallProjectionWithIdOnly = await prisma.conversationToolCallProjection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationToolCallProjectionUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationToolCallProjectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversationToolCallProjection.
+     * @param {ConversationToolCallProjectionUpsertArgs} args - Arguments to update or create a ConversationToolCallProjection.
+     * @example
+     * // Update or create a ConversationToolCallProjection
+     * const conversationToolCallProjection = await prisma.conversationToolCallProjection.upsert({
+     *   create: {
+     *     // ... data to create a ConversationToolCallProjection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversationToolCallProjection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationToolCallProjectionUpsertArgs>(args: SelectSubset<T, ConversationToolCallProjectionUpsertArgs<ExtArgs>>): Prisma__ConversationToolCallProjectionClient<$Result.GetResult<Prisma.$ConversationToolCallProjectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversationToolCallProjections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionCountArgs} args - Arguments to filter ConversationToolCallProjections to count.
+     * @example
+     * // Count the number of ConversationToolCallProjections
+     * const count = await prisma.conversationToolCallProjection.count({
+     *   where: {
+     *     // ... the filter for the ConversationToolCallProjections we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationToolCallProjectionCountArgs>(
+      args?: Subset<T, ConversationToolCallProjectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationToolCallProjectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversationToolCallProjection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationToolCallProjectionAggregateArgs>(args: Subset<T, ConversationToolCallProjectionAggregateArgs>): Prisma.PrismaPromise<GetConversationToolCallProjectionAggregateType<T>>
+
+    /**
+     * Group by ConversationToolCallProjection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationToolCallProjectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationToolCallProjectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationToolCallProjectionGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationToolCallProjectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationToolCallProjectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationToolCallProjectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversationToolCallProjection model
+   */
+  readonly fields: ConversationToolCallProjectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversationToolCallProjection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationToolCallProjectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends AgentChatThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatThreadDefaultArgs<ExtArgs>>): Prisma__AgentChatThreadClient<$Result.GetResult<Prisma.$AgentChatThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    message<T extends AgentChatMessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentChatMessageDefaultArgs<ExtArgs>>): Prisma__AgentChatMessageClient<$Result.GetResult<Prisma.$AgentChatMessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversationToolCallProjection model
+   */
+  interface ConversationToolCallProjectionFieldRefs {
+    readonly id: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly organizationId: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly threadId: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly messageId: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly toolCallId: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly groupId: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly toolName: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly status: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly inputPayload: FieldRef<"ConversationToolCallProjection", 'Json'>
+    readonly outputPayload: FieldRef<"ConversationToolCallProjection", 'Json'>
+    readonly errorMessage: FieldRef<"ConversationToolCallProjection", 'String'>
+    readonly durationMs: FieldRef<"ConversationToolCallProjection", 'Int'>
+    readonly displayOrder: FieldRef<"ConversationToolCallProjection", 'Int'>
+    readonly createdAt: FieldRef<"ConversationToolCallProjection", 'DateTime'>
+    readonly updatedAt: FieldRef<"ConversationToolCallProjection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversationToolCallProjection findUnique
+   */
+  export type ConversationToolCallProjectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationToolCallProjection to fetch.
+     */
+    where: ConversationToolCallProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationToolCallProjection findUniqueOrThrow
+   */
+  export type ConversationToolCallProjectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationToolCallProjection to fetch.
+     */
+    where: ConversationToolCallProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationToolCallProjection findFirst
+   */
+  export type ConversationToolCallProjectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationToolCallProjection to fetch.
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationToolCallProjections to fetch.
+     */
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationToolCallProjections.
+     */
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationToolCallProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationToolCallProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationToolCallProjections.
+     */
+    distinct?: ConversationToolCallProjectionScalarFieldEnum | ConversationToolCallProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationToolCallProjection findFirstOrThrow
+   */
+  export type ConversationToolCallProjectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationToolCallProjection to fetch.
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationToolCallProjections to fetch.
+     */
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationToolCallProjections.
+     */
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationToolCallProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationToolCallProjections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationToolCallProjections.
+     */
+    distinct?: ConversationToolCallProjectionScalarFieldEnum | ConversationToolCallProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationToolCallProjection findMany
+   */
+  export type ConversationToolCallProjectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter, which ConversationToolCallProjections to fetch.
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationToolCallProjections to fetch.
+     */
+    orderBy?: ConversationToolCallProjectionOrderByWithRelationInput | ConversationToolCallProjectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversationToolCallProjections.
+     */
+    cursor?: ConversationToolCallProjectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationToolCallProjections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationToolCallProjections.
+     */
+    skip?: number
+    distinct?: ConversationToolCallProjectionScalarFieldEnum | ConversationToolCallProjectionScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationToolCallProjection create
+   */
+  export type ConversationToolCallProjectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConversationToolCallProjection.
+     */
+    data: XOR<ConversationToolCallProjectionCreateInput, ConversationToolCallProjectionUncheckedCreateInput>
+  }
+
+  /**
+   * ConversationToolCallProjection createMany
+   */
+  export type ConversationToolCallProjectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversationToolCallProjections.
+     */
+    data: ConversationToolCallProjectionCreateManyInput | ConversationToolCallProjectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationToolCallProjection createManyAndReturn
+   */
+  export type ConversationToolCallProjectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversationToolCallProjections.
+     */
+    data: ConversationToolCallProjectionCreateManyInput | ConversationToolCallProjectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationToolCallProjection update
+   */
+  export type ConversationToolCallProjectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConversationToolCallProjection.
+     */
+    data: XOR<ConversationToolCallProjectionUpdateInput, ConversationToolCallProjectionUncheckedUpdateInput>
+    /**
+     * Choose, which ConversationToolCallProjection to update.
+     */
+    where: ConversationToolCallProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationToolCallProjection updateMany
+   */
+  export type ConversationToolCallProjectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversationToolCallProjections.
+     */
+    data: XOR<ConversationToolCallProjectionUpdateManyMutationInput, ConversationToolCallProjectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationToolCallProjections to update
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * Limit how many ConversationToolCallProjections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationToolCallProjection updateManyAndReturn
+   */
+  export type ConversationToolCallProjectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversationToolCallProjections.
+     */
+    data: XOR<ConversationToolCallProjectionUpdateManyMutationInput, ConversationToolCallProjectionUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationToolCallProjections to update
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * Limit how many ConversationToolCallProjections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ConversationToolCallProjection upsert
+   */
+  export type ConversationToolCallProjectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConversationToolCallProjection to update in case it exists.
+     */
+    where: ConversationToolCallProjectionWhereUniqueInput
+    /**
+     * In case the ConversationToolCallProjection found by the `where` argument doesn't exist, create a new ConversationToolCallProjection with this data.
+     */
+    create: XOR<ConversationToolCallProjectionCreateInput, ConversationToolCallProjectionUncheckedCreateInput>
+    /**
+     * In case the ConversationToolCallProjection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationToolCallProjectionUpdateInput, ConversationToolCallProjectionUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversationToolCallProjection delete
+   */
+  export type ConversationToolCallProjectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
+    /**
+     * Filter which ConversationToolCallProjection to delete.
+     */
+    where: ConversationToolCallProjectionWhereUniqueInput
+  }
+
+  /**
+   * ConversationToolCallProjection deleteMany
+   */
+  export type ConversationToolCallProjectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationToolCallProjections to delete
+     */
+    where?: ConversationToolCallProjectionWhereInput
+    /**
+     * Limit how many ConversationToolCallProjections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationToolCallProjection without action
+   */
+  export type ConversationToolCallProjectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationToolCallProjection
+     */
+    select?: ConversationToolCallProjectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationToolCallProjection
+     */
+    omit?: ConversationToolCallProjectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationToolCallProjectionInclude<ExtArgs> | null
   }
 
 
@@ -64980,6 +70274,7 @@ export namespace Prisma {
     description: 'description',
     status: 'status',
     allowedTools: 'allowedTools',
+    suggestedMessages: 'suggestedMessages',
     activeVersionId: 'activeVersionId',
     onboardingCompletedAt: 'onboardingCompletedAt',
     createdByUserId: 'createdByUserId',
@@ -64989,6 +70284,22 @@ export namespace Prisma {
   };
 
   export type CompanyAgentScalarFieldEnum = (typeof CompanyAgentScalarFieldEnum)[keyof typeof CompanyAgentScalarFieldEnum]
+
+
+  export const SystemAgentConfigScalarFieldEnum: {
+    id: 'id',
+    key: 'key',
+    providerId: 'providerId',
+    modelId: 'modelId',
+    temperature: 'temperature',
+    maxOutputTokens: 'maxOutputTokens',
+    enabled: 'enabled',
+    updatedByUserId: 'updatedByUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SystemAgentConfigScalarFieldEnum = (typeof SystemAgentConfigScalarFieldEnum)[keyof typeof SystemAgentConfigScalarFieldEnum]
 
 
   export const AgentVersionScalarFieldEnum: {
@@ -65223,6 +70534,64 @@ export namespace Prisma {
   };
 
   export type AgentChatToolCallScalarFieldEnum = (typeof AgentChatToolCallScalarFieldEnum)[keyof typeof AgentChatToolCallScalarFieldEnum]
+
+
+  export const ConversationEventScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    threadId: 'threadId',
+    messageId: 'messageId',
+    sequence: 'sequence',
+    eventType: 'eventType',
+    status: 'status',
+    payload: 'payload',
+    idempotencyKey: 'idempotencyKey',
+    createdAt: 'createdAt'
+  };
+
+  export type ConversationEventScalarFieldEnum = (typeof ConversationEventScalarFieldEnum)[keyof typeof ConversationEventScalarFieldEnum]
+
+
+  export const ConversationMessageProjectionScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    threadId: 'threadId',
+    messageId: 'messageId',
+    status: 'status',
+    text: 'text',
+    citations: 'citations',
+    isStreaming: 'isStreaming',
+    isCompleted: 'isCompleted',
+    isFailed: 'isFailed',
+    errorMessage: 'errorMessage',
+    lastSequence: 'lastSequence',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConversationMessageProjectionScalarFieldEnum = (typeof ConversationMessageProjectionScalarFieldEnum)[keyof typeof ConversationMessageProjectionScalarFieldEnum]
+
+
+  export const ConversationToolCallProjectionScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    threadId: 'threadId',
+    messageId: 'messageId',
+    toolCallId: 'toolCallId',
+    groupId: 'groupId',
+    toolName: 'toolName',
+    status: 'status',
+    inputPayload: 'inputPayload',
+    outputPayload: 'outputPayload',
+    errorMessage: 'errorMessage',
+    durationMs: 'durationMs',
+    displayOrder: 'displayOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConversationToolCallProjectionScalarFieldEnum = (typeof ConversationToolCallProjectionScalarFieldEnum)[keyof typeof ConversationToolCallProjectionScalarFieldEnum]
 
 
   export const CreditLedgerEntryScalarFieldEnum: {
@@ -67723,6 +73092,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CompanyAgent"> | string | null
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
+    suggestedMessages?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
     onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
@@ -67746,6 +73116,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     allowedTools?: SortOrder
+    suggestedMessages?: SortOrder
     activeVersionId?: SortOrderInput | SortOrder
     onboardingCompletedAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
@@ -67773,6 +73144,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CompanyAgent"> | string | null
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
+    suggestedMessages?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
     onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
@@ -67796,6 +73168,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     allowedTools?: SortOrder
+    suggestedMessages?: SortOrder
     activeVersionId?: SortOrderInput | SortOrder
     onboardingCompletedAt?: SortOrderInput | SortOrder
     createdByUserId?: SortOrder
@@ -67819,12 +73192,92 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"CompanyAgent"> | string | null
     status?: StringWithAggregatesFilter<"CompanyAgent"> | string
     allowedTools?: JsonWithAggregatesFilter<"CompanyAgent">
+    suggestedMessages?: JsonWithAggregatesFilter<"CompanyAgent">
     activeVersionId?: StringNullableWithAggregatesFilter<"CompanyAgent"> | string | null
     onboardingCompletedAt?: DateTimeNullableWithAggregatesFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringWithAggregatesFilter<"CompanyAgent"> | string
     updatedByUserId?: StringWithAggregatesFilter<"CompanyAgent"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CompanyAgent"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CompanyAgent"> | Date | string
+  }
+
+  export type SystemAgentConfigWhereInput = {
+    AND?: SystemAgentConfigWhereInput | SystemAgentConfigWhereInput[]
+    OR?: SystemAgentConfigWhereInput[]
+    NOT?: SystemAgentConfigWhereInput | SystemAgentConfigWhereInput[]
+    id?: StringFilter<"SystemAgentConfig"> | string
+    key?: StringFilter<"SystemAgentConfig"> | string
+    providerId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    modelId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    temperature?: FloatNullableFilter<"SystemAgentConfig"> | number | null
+    maxOutputTokens?: IntNullableFilter<"SystemAgentConfig"> | number | null
+    enabled?: BoolFilter<"SystemAgentConfig"> | boolean
+    updatedByUserId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    createdAt?: DateTimeFilter<"SystemAgentConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"SystemAgentConfig"> | Date | string
+  }
+
+  export type SystemAgentConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    providerId?: SortOrderInput | SortOrder
+    modelId?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    maxOutputTokens?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemAgentConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    key?: string
+    AND?: SystemAgentConfigWhereInput | SystemAgentConfigWhereInput[]
+    OR?: SystemAgentConfigWhereInput[]
+    NOT?: SystemAgentConfigWhereInput | SystemAgentConfigWhereInput[]
+    providerId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    modelId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    temperature?: FloatNullableFilter<"SystemAgentConfig"> | number | null
+    maxOutputTokens?: IntNullableFilter<"SystemAgentConfig"> | number | null
+    enabled?: BoolFilter<"SystemAgentConfig"> | boolean
+    updatedByUserId?: StringNullableFilter<"SystemAgentConfig"> | string | null
+    createdAt?: DateTimeFilter<"SystemAgentConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"SystemAgentConfig"> | Date | string
+  }, "id" | "key">
+
+  export type SystemAgentConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    providerId?: SortOrderInput | SortOrder
+    modelId?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    maxOutputTokens?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SystemAgentConfigCountOrderByAggregateInput
+    _avg?: SystemAgentConfigAvgOrderByAggregateInput
+    _max?: SystemAgentConfigMaxOrderByAggregateInput
+    _min?: SystemAgentConfigMinOrderByAggregateInput
+    _sum?: SystemAgentConfigSumOrderByAggregateInput
+  }
+
+  export type SystemAgentConfigScalarWhereWithAggregatesInput = {
+    AND?: SystemAgentConfigScalarWhereWithAggregatesInput | SystemAgentConfigScalarWhereWithAggregatesInput[]
+    OR?: SystemAgentConfigScalarWhereWithAggregatesInput[]
+    NOT?: SystemAgentConfigScalarWhereWithAggregatesInput | SystemAgentConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SystemAgentConfig"> | string
+    key?: StringWithAggregatesFilter<"SystemAgentConfig"> | string
+    providerId?: StringNullableWithAggregatesFilter<"SystemAgentConfig"> | string | null
+    modelId?: StringNullableWithAggregatesFilter<"SystemAgentConfig"> | string | null
+    temperature?: FloatNullableWithAggregatesFilter<"SystemAgentConfig"> | number | null
+    maxOutputTokens?: IntNullableWithAggregatesFilter<"SystemAgentConfig"> | number | null
+    enabled?: BoolWithAggregatesFilter<"SystemAgentConfig"> | boolean
+    updatedByUserId?: StringNullableWithAggregatesFilter<"SystemAgentConfig"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SystemAgentConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SystemAgentConfig"> | Date | string
   }
 
   export type AgentVersionWhereInput = {
@@ -68843,6 +74296,9 @@ export namespace Prisma {
     parentThread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
     branches?: AgentChatThreadListRelationFilter
     runs?: AgentRunListRelationFilter
+    conversationEvents?: ConversationEventListRelationFilter
+    messageProjections?: ConversationMessageProjectionListRelationFilter
+    toolCallProjections?: ConversationToolCallProjectionListRelationFilter
   }
 
   export type AgentChatThreadOrderByWithRelationInput = {
@@ -68863,6 +74319,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadOrderByWithRelationInput
     branches?: AgentChatThreadOrderByRelationAggregateInput
     runs?: AgentRunOrderByRelationAggregateInput
+    conversationEvents?: ConversationEventOrderByRelationAggregateInput
+    messageProjections?: ConversationMessageProjectionOrderByRelationAggregateInput
+    toolCallProjections?: ConversationToolCallProjectionOrderByRelationAggregateInput
   }
 
   export type AgentChatThreadWhereUniqueInput = Prisma.AtLeast<{
@@ -68886,6 +74345,9 @@ export namespace Prisma {
     parentThread?: XOR<AgentChatThreadNullableScalarRelationFilter, AgentChatThreadWhereInput> | null
     branches?: AgentChatThreadListRelationFilter
     runs?: AgentRunListRelationFilter
+    conversationEvents?: ConversationEventListRelationFilter
+    messageProjections?: ConversationMessageProjectionListRelationFilter
+    toolCallProjections?: ConversationToolCallProjectionListRelationFilter
   }, "id">
 
   export type AgentChatThreadOrderByWithAggregationInput = {
@@ -68943,6 +74405,9 @@ export namespace Prisma {
     branches?: AgentChatThreadListRelationFilter
     sourceRuns?: AgentRunListRelationFilter
     toolCalls?: AgentChatToolCallListRelationFilter
+    conversationEvents?: ConversationEventListRelationFilter
+    messageProjection?: XOR<ConversationMessageProjectionNullableScalarRelationFilter, ConversationMessageProjectionWhereInput> | null
+    toolCallProjections?: ConversationToolCallProjectionListRelationFilter
   }
 
   export type AgentChatMessageOrderByWithRelationInput = {
@@ -68965,6 +74430,9 @@ export namespace Prisma {
     branches?: AgentChatThreadOrderByRelationAggregateInput
     sourceRuns?: AgentRunOrderByRelationAggregateInput
     toolCalls?: AgentChatToolCallOrderByRelationAggregateInput
+    conversationEvents?: ConversationEventOrderByRelationAggregateInput
+    messageProjection?: ConversationMessageProjectionOrderByWithRelationInput
+    toolCallProjections?: ConversationToolCallProjectionOrderByRelationAggregateInput
   }
 
   export type AgentChatMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -68990,6 +74458,9 @@ export namespace Prisma {
     branches?: AgentChatThreadListRelationFilter
     sourceRuns?: AgentRunListRelationFilter
     toolCalls?: AgentChatToolCallListRelationFilter
+    conversationEvents?: ConversationEventListRelationFilter
+    messageProjection?: XOR<ConversationMessageProjectionNullableScalarRelationFilter, ConversationMessageProjectionWhereInput> | null
+    toolCallProjections?: ConversationToolCallProjectionListRelationFilter
   }, "id">
 
   export type AgentChatMessageOrderByWithAggregationInput = {
@@ -69125,6 +74596,314 @@ export namespace Prisma {
     durationMs?: IntNullableWithAggregatesFilter<"AgentChatToolCall"> | number | null
     createdByUserId?: StringNullableWithAggregatesFilter<"AgentChatToolCall"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AgentChatToolCall"> | Date | string
+  }
+
+  export type ConversationEventWhereInput = {
+    AND?: ConversationEventWhereInput | ConversationEventWhereInput[]
+    OR?: ConversationEventWhereInput[]
+    NOT?: ConversationEventWhereInput | ConversationEventWhereInput[]
+    id?: StringFilter<"ConversationEvent"> | string
+    organizationId?: StringFilter<"ConversationEvent"> | string
+    threadId?: StringFilter<"ConversationEvent"> | string
+    messageId?: StringFilter<"ConversationEvent"> | string
+    sequence?: IntFilter<"ConversationEvent"> | number
+    eventType?: StringFilter<"ConversationEvent"> | string
+    status?: StringNullableFilter<"ConversationEvent"> | string | null
+    payload?: JsonFilter<"ConversationEvent">
+    idempotencyKey?: StringNullableFilter<"ConversationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ConversationEvent"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }
+
+  export type ConversationEventOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    sequence?: SortOrder
+    eventType?: SortOrder
+    status?: SortOrderInput | SortOrder
+    payload?: SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    thread?: AgentChatThreadOrderByWithRelationInput
+    message?: AgentChatMessageOrderByWithRelationInput
+  }
+
+  export type ConversationEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    threadId_sequence?: ConversationEventThreadIdSequenceCompoundUniqueInput
+    threadId_idempotencyKey?: ConversationEventThreadIdIdempotencyKeyCompoundUniqueInput
+    AND?: ConversationEventWhereInput | ConversationEventWhereInput[]
+    OR?: ConversationEventWhereInput[]
+    NOT?: ConversationEventWhereInput | ConversationEventWhereInput[]
+    organizationId?: StringFilter<"ConversationEvent"> | string
+    threadId?: StringFilter<"ConversationEvent"> | string
+    messageId?: StringFilter<"ConversationEvent"> | string
+    sequence?: IntFilter<"ConversationEvent"> | number
+    eventType?: StringFilter<"ConversationEvent"> | string
+    status?: StringNullableFilter<"ConversationEvent"> | string | null
+    payload?: JsonFilter<"ConversationEvent">
+    idempotencyKey?: StringNullableFilter<"ConversationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ConversationEvent"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }, "id" | "threadId_sequence" | "threadId_idempotencyKey">
+
+  export type ConversationEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    sequence?: SortOrder
+    eventType?: SortOrder
+    status?: SortOrderInput | SortOrder
+    payload?: SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ConversationEventCountOrderByAggregateInput
+    _avg?: ConversationEventAvgOrderByAggregateInput
+    _max?: ConversationEventMaxOrderByAggregateInput
+    _min?: ConversationEventMinOrderByAggregateInput
+    _sum?: ConversationEventSumOrderByAggregateInput
+  }
+
+  export type ConversationEventScalarWhereWithAggregatesInput = {
+    AND?: ConversationEventScalarWhereWithAggregatesInput | ConversationEventScalarWhereWithAggregatesInput[]
+    OR?: ConversationEventScalarWhereWithAggregatesInput[]
+    NOT?: ConversationEventScalarWhereWithAggregatesInput | ConversationEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConversationEvent"> | string
+    organizationId?: StringWithAggregatesFilter<"ConversationEvent"> | string
+    threadId?: StringWithAggregatesFilter<"ConversationEvent"> | string
+    messageId?: StringWithAggregatesFilter<"ConversationEvent"> | string
+    sequence?: IntWithAggregatesFilter<"ConversationEvent"> | number
+    eventType?: StringWithAggregatesFilter<"ConversationEvent"> | string
+    status?: StringNullableWithAggregatesFilter<"ConversationEvent"> | string | null
+    payload?: JsonWithAggregatesFilter<"ConversationEvent">
+    idempotencyKey?: StringNullableWithAggregatesFilter<"ConversationEvent"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ConversationEvent"> | Date | string
+  }
+
+  export type ConversationMessageProjectionWhereInput = {
+    AND?: ConversationMessageProjectionWhereInput | ConversationMessageProjectionWhereInput[]
+    OR?: ConversationMessageProjectionWhereInput[]
+    NOT?: ConversationMessageProjectionWhereInput | ConversationMessageProjectionWhereInput[]
+    id?: StringFilter<"ConversationMessageProjection"> | string
+    organizationId?: StringFilter<"ConversationMessageProjection"> | string
+    threadId?: StringFilter<"ConversationMessageProjection"> | string
+    messageId?: StringFilter<"ConversationMessageProjection"> | string
+    status?: StringFilter<"ConversationMessageProjection"> | string
+    text?: StringFilter<"ConversationMessageProjection"> | string
+    citations?: JsonFilter<"ConversationMessageProjection">
+    isStreaming?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isCompleted?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isFailed?: BoolFilter<"ConversationMessageProjection"> | boolean
+    errorMessage?: StringNullableFilter<"ConversationMessageProjection"> | string | null
+    lastSequence?: IntFilter<"ConversationMessageProjection"> | number
+    metadata?: JsonFilter<"ConversationMessageProjection">
+    createdAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }
+
+  export type ConversationMessageProjectionOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    status?: SortOrder
+    text?: SortOrder
+    citations?: SortOrder
+    isStreaming?: SortOrder
+    isCompleted?: SortOrder
+    isFailed?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    lastSequence?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    thread?: AgentChatThreadOrderByWithRelationInput
+    message?: AgentChatMessageOrderByWithRelationInput
+  }
+
+  export type ConversationMessageProjectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    messageId?: string
+    AND?: ConversationMessageProjectionWhereInput | ConversationMessageProjectionWhereInput[]
+    OR?: ConversationMessageProjectionWhereInput[]
+    NOT?: ConversationMessageProjectionWhereInput | ConversationMessageProjectionWhereInput[]
+    organizationId?: StringFilter<"ConversationMessageProjection"> | string
+    threadId?: StringFilter<"ConversationMessageProjection"> | string
+    status?: StringFilter<"ConversationMessageProjection"> | string
+    text?: StringFilter<"ConversationMessageProjection"> | string
+    citations?: JsonFilter<"ConversationMessageProjection">
+    isStreaming?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isCompleted?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isFailed?: BoolFilter<"ConversationMessageProjection"> | boolean
+    errorMessage?: StringNullableFilter<"ConversationMessageProjection"> | string | null
+    lastSequence?: IntFilter<"ConversationMessageProjection"> | number
+    metadata?: JsonFilter<"ConversationMessageProjection">
+    createdAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }, "id" | "messageId">
+
+  export type ConversationMessageProjectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    status?: SortOrder
+    text?: SortOrder
+    citations?: SortOrder
+    isStreaming?: SortOrder
+    isCompleted?: SortOrder
+    isFailed?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    lastSequence?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ConversationMessageProjectionCountOrderByAggregateInput
+    _avg?: ConversationMessageProjectionAvgOrderByAggregateInput
+    _max?: ConversationMessageProjectionMaxOrderByAggregateInput
+    _min?: ConversationMessageProjectionMinOrderByAggregateInput
+    _sum?: ConversationMessageProjectionSumOrderByAggregateInput
+  }
+
+  export type ConversationMessageProjectionScalarWhereWithAggregatesInput = {
+    AND?: ConversationMessageProjectionScalarWhereWithAggregatesInput | ConversationMessageProjectionScalarWhereWithAggregatesInput[]
+    OR?: ConversationMessageProjectionScalarWhereWithAggregatesInput[]
+    NOT?: ConversationMessageProjectionScalarWhereWithAggregatesInput | ConversationMessageProjectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    organizationId?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    threadId?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    messageId?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    status?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    text?: StringWithAggregatesFilter<"ConversationMessageProjection"> | string
+    citations?: JsonWithAggregatesFilter<"ConversationMessageProjection">
+    isStreaming?: BoolWithAggregatesFilter<"ConversationMessageProjection"> | boolean
+    isCompleted?: BoolWithAggregatesFilter<"ConversationMessageProjection"> | boolean
+    isFailed?: BoolWithAggregatesFilter<"ConversationMessageProjection"> | boolean
+    errorMessage?: StringNullableWithAggregatesFilter<"ConversationMessageProjection"> | string | null
+    lastSequence?: IntWithAggregatesFilter<"ConversationMessageProjection"> | number
+    metadata?: JsonWithAggregatesFilter<"ConversationMessageProjection">
+    createdAt?: DateTimeWithAggregatesFilter<"ConversationMessageProjection"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ConversationMessageProjection"> | Date | string
+  }
+
+  export type ConversationToolCallProjectionWhereInput = {
+    AND?: ConversationToolCallProjectionWhereInput | ConversationToolCallProjectionWhereInput[]
+    OR?: ConversationToolCallProjectionWhereInput[]
+    NOT?: ConversationToolCallProjectionWhereInput | ConversationToolCallProjectionWhereInput[]
+    id?: StringFilter<"ConversationToolCallProjection"> | string
+    organizationId?: StringFilter<"ConversationToolCallProjection"> | string
+    threadId?: StringFilter<"ConversationToolCallProjection"> | string
+    messageId?: StringFilter<"ConversationToolCallProjection"> | string
+    toolCallId?: StringFilter<"ConversationToolCallProjection"> | string
+    groupId?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    toolName?: StringFilter<"ConversationToolCallProjection"> | string
+    status?: StringFilter<"ConversationToolCallProjection"> | string
+    inputPayload?: JsonFilter<"ConversationToolCallProjection">
+    outputPayload?: JsonNullableFilter<"ConversationToolCallProjection">
+    errorMessage?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    durationMs?: IntNullableFilter<"ConversationToolCallProjection"> | number | null
+    displayOrder?: IntFilter<"ConversationToolCallProjection"> | number
+    createdAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }
+
+  export type ConversationToolCallProjectionOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    toolCallId?: SortOrder
+    groupId?: SortOrderInput | SortOrder
+    toolName?: SortOrder
+    status?: SortOrder
+    inputPayload?: SortOrder
+    outputPayload?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    thread?: AgentChatThreadOrderByWithRelationInput
+    message?: AgentChatMessageOrderByWithRelationInput
+  }
+
+  export type ConversationToolCallProjectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    messageId_toolCallId?: ConversationToolCallProjectionMessageIdToolCallIdCompoundUniqueInput
+    AND?: ConversationToolCallProjectionWhereInput | ConversationToolCallProjectionWhereInput[]
+    OR?: ConversationToolCallProjectionWhereInput[]
+    NOT?: ConversationToolCallProjectionWhereInput | ConversationToolCallProjectionWhereInput[]
+    organizationId?: StringFilter<"ConversationToolCallProjection"> | string
+    threadId?: StringFilter<"ConversationToolCallProjection"> | string
+    messageId?: StringFilter<"ConversationToolCallProjection"> | string
+    toolCallId?: StringFilter<"ConversationToolCallProjection"> | string
+    groupId?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    toolName?: StringFilter<"ConversationToolCallProjection"> | string
+    status?: StringFilter<"ConversationToolCallProjection"> | string
+    inputPayload?: JsonFilter<"ConversationToolCallProjection">
+    outputPayload?: JsonNullableFilter<"ConversationToolCallProjection">
+    errorMessage?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    durationMs?: IntNullableFilter<"ConversationToolCallProjection"> | number | null
+    displayOrder?: IntFilter<"ConversationToolCallProjection"> | number
+    createdAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
+    thread?: XOR<AgentChatThreadScalarRelationFilter, AgentChatThreadWhereInput>
+    message?: XOR<AgentChatMessageScalarRelationFilter, AgentChatMessageWhereInput>
+  }, "id" | "messageId_toolCallId">
+
+  export type ConversationToolCallProjectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    toolCallId?: SortOrder
+    groupId?: SortOrderInput | SortOrder
+    toolName?: SortOrder
+    status?: SortOrder
+    inputPayload?: SortOrder
+    outputPayload?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ConversationToolCallProjectionCountOrderByAggregateInput
+    _avg?: ConversationToolCallProjectionAvgOrderByAggregateInput
+    _max?: ConversationToolCallProjectionMaxOrderByAggregateInput
+    _min?: ConversationToolCallProjectionMinOrderByAggregateInput
+    _sum?: ConversationToolCallProjectionSumOrderByAggregateInput
+  }
+
+  export type ConversationToolCallProjectionScalarWhereWithAggregatesInput = {
+    AND?: ConversationToolCallProjectionScalarWhereWithAggregatesInput | ConversationToolCallProjectionScalarWhereWithAggregatesInput[]
+    OR?: ConversationToolCallProjectionScalarWhereWithAggregatesInput[]
+    NOT?: ConversationToolCallProjectionScalarWhereWithAggregatesInput | ConversationToolCallProjectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    organizationId?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    threadId?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    messageId?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    toolCallId?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    groupId?: StringNullableWithAggregatesFilter<"ConversationToolCallProjection"> | string | null
+    toolName?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    status?: StringWithAggregatesFilter<"ConversationToolCallProjection"> | string
+    inputPayload?: JsonWithAggregatesFilter<"ConversationToolCallProjection">
+    outputPayload?: JsonNullableWithAggregatesFilter<"ConversationToolCallProjection">
+    errorMessage?: StringNullableWithAggregatesFilter<"ConversationToolCallProjection"> | string | null
+    durationMs?: IntNullableWithAggregatesFilter<"ConversationToolCallProjection"> | number | null
+    displayOrder?: IntWithAggregatesFilter<"ConversationToolCallProjection"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ConversationToolCallProjection"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ConversationToolCallProjection"> | Date | string
   }
 
   export type CreditLedgerEntryWhereInput = {
@@ -72250,6 +78029,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -72273,6 +78053,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -72294,6 +78075,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -72317,6 +78099,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -72339,6 +78122,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -72355,6 +78139,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -72372,10 +78157,102 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
     updatedByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemAgentConfigCreateInput = {
+    id?: string
+    key: string
+    providerId?: string | null
+    modelId?: string | null
+    temperature?: number | null
+    maxOutputTokens?: number | null
+    enabled?: boolean
+    updatedByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemAgentConfigUncheckedCreateInput = {
+    id?: string
+    key: string
+    providerId?: string | null
+    modelId?: string | null
+    temperature?: number | null
+    maxOutputTokens?: number | null
+    enabled?: boolean
+    updatedByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemAgentConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOutputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemAgentConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOutputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemAgentConfigCreateManyInput = {
+    id?: string
+    key: string
+    providerId?: string | null
+    modelId?: string | null
+    temperature?: number | null
+    maxOutputTokens?: number | null
+    enabled?: boolean
+    updatedByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemAgentConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOutputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemAgentConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    modelId?: NullableStringFieldUpdateOperationsInput | string | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxOutputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -73509,6 +79386,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateInput = {
@@ -73526,6 +79406,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUpdateInput = {
@@ -73543,6 +79426,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateInput = {
@@ -73560,6 +79446,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadCreateManyInput = {
@@ -73614,6 +79503,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateInput = {
@@ -73632,6 +79524,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUpdateInput = {
@@ -73650,6 +79545,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateInput = {
@@ -73668,6 +79566,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageCreateManyInput = {
@@ -73812,6 +79713,343 @@ export namespace Prisma {
     durationMs?: NullableIntFieldUpdateOperationsInput | number | null
     createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventCreateInput = {
+    id?: string
+    organizationId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutConversationEventsInput
+    message: AgentChatMessageCreateNestedOneWithoutConversationEventsInput
+  }
+
+  export type ConversationEventUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutConversationEventsNestedInput
+    message?: AgentChatMessageUpdateOneRequiredWithoutConversationEventsNestedInput
+  }
+
+  export type ConversationEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventCreateManyInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationMessageProjectionCreateInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessageProjectionsInput
+    message: AgentChatMessageCreateNestedOneWithoutMessageProjectionInput
+  }
+
+  export type ConversationMessageProjectionUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationMessageProjectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessageProjectionsNestedInput
+    message?: AgentChatMessageUpdateOneRequiredWithoutMessageProjectionNestedInput
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationMessageProjectionCreateManyInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationMessageProjectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateInput = {
+    id?: string
+    organizationId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutToolCallProjectionsInput
+    message: AgentChatMessageCreateNestedOneWithoutToolCallProjectionsInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutToolCallProjectionsNestedInput
+    message?: AgentChatMessageUpdateOneRequiredWithoutToolCallProjectionsNestedInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateManyInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    messageId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CreditLedgerEntryCreateInput = {
@@ -76137,6 +82375,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     allowedTools?: SortOrder
+    suggestedMessages?: SortOrder
     activeVersionId?: SortOrder
     onboardingCompletedAt?: SortOrder
     createdByUserId?: SortOrder
@@ -76175,6 +82414,82 @@ export namespace Prisma {
     updatedByUserId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SystemAgentConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    temperature?: SortOrder
+    maxOutputTokens?: SortOrder
+    enabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemAgentConfigAvgOrderByAggregateInput = {
+    temperature?: SortOrder
+    maxOutputTokens?: SortOrder
+  }
+
+  export type SystemAgentConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    temperature?: SortOrder
+    maxOutputTokens?: SortOrder
+    enabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemAgentConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    providerId?: SortOrder
+    modelId?: SortOrder
+    temperature?: SortOrder
+    maxOutputTokens?: SortOrder
+    enabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemAgentConfigSumOrderByAggregateInput = {
+    temperature?: SortOrder
+    maxOutputTokens?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type CompanyAgentScalarRelationFilter = {
@@ -76856,6 +83171,36 @@ export namespace Prisma {
     isNot?: CompanyAgentWhereInput | null
   }
 
+  export type ConversationEventListRelationFilter = {
+    every?: ConversationEventWhereInput
+    some?: ConversationEventWhereInput
+    none?: ConversationEventWhereInput
+  }
+
+  export type ConversationMessageProjectionListRelationFilter = {
+    every?: ConversationMessageProjectionWhereInput
+    some?: ConversationMessageProjectionWhereInput
+    none?: ConversationMessageProjectionWhereInput
+  }
+
+  export type ConversationToolCallProjectionListRelationFilter = {
+    every?: ConversationToolCallProjectionWhereInput
+    some?: ConversationToolCallProjectionWhereInput
+    none?: ConversationToolCallProjectionWhereInput
+  }
+
+  export type ConversationEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationMessageProjectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type AgentChatThreadCountOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
@@ -76898,6 +83243,11 @@ export namespace Prisma {
   export type AgentChatThreadScalarRelationFilter = {
     is?: AgentChatThreadWhereInput
     isNot?: AgentChatThreadWhereInput
+  }
+
+  export type ConversationMessageProjectionNullableScalarRelationFilter = {
+    is?: ConversationMessageProjectionWhereInput | null
+    isNot?: ConversationMessageProjectionWhereInput | null
   }
 
   export type AgentChatMessageCountOrderByAggregateInput = {
@@ -76992,6 +83342,184 @@ export namespace Prisma {
 
   export type AgentChatToolCallSumOrderByAggregateInput = {
     durationMs?: SortOrder
+  }
+
+  export type ConversationEventThreadIdSequenceCompoundUniqueInput = {
+    threadId: string
+    sequence: number
+  }
+
+  export type ConversationEventThreadIdIdempotencyKeyCompoundUniqueInput = {
+    threadId: string
+    idempotencyKey: string
+  }
+
+  export type ConversationEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    sequence?: SortOrder
+    eventType?: SortOrder
+    status?: SortOrder
+    payload?: SortOrder
+    idempotencyKey?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversationEventAvgOrderByAggregateInput = {
+    sequence?: SortOrder
+  }
+
+  export type ConversationEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    sequence?: SortOrder
+    eventType?: SortOrder
+    status?: SortOrder
+    idempotencyKey?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversationEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    sequence?: SortOrder
+    eventType?: SortOrder
+    status?: SortOrder
+    idempotencyKey?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ConversationEventSumOrderByAggregateInput = {
+    sequence?: SortOrder
+  }
+
+  export type ConversationMessageProjectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    status?: SortOrder
+    text?: SortOrder
+    citations?: SortOrder
+    isStreaming?: SortOrder
+    isCompleted?: SortOrder
+    isFailed?: SortOrder
+    errorMessage?: SortOrder
+    lastSequence?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMessageProjectionAvgOrderByAggregateInput = {
+    lastSequence?: SortOrder
+  }
+
+  export type ConversationMessageProjectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    status?: SortOrder
+    text?: SortOrder
+    isStreaming?: SortOrder
+    isCompleted?: SortOrder
+    isFailed?: SortOrder
+    errorMessage?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMessageProjectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    status?: SortOrder
+    text?: SortOrder
+    isStreaming?: SortOrder
+    isCompleted?: SortOrder
+    isFailed?: SortOrder
+    errorMessage?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMessageProjectionSumOrderByAggregateInput = {
+    lastSequence?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionMessageIdToolCallIdCompoundUniqueInput = {
+    messageId: string
+    toolCallId: string
+  }
+
+  export type ConversationToolCallProjectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    toolCallId?: SortOrder
+    groupId?: SortOrder
+    toolName?: SortOrder
+    status?: SortOrder
+    inputPayload?: SortOrder
+    outputPayload?: SortOrder
+    errorMessage?: SortOrder
+    durationMs?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionAvgOrderByAggregateInput = {
+    durationMs?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    toolCallId?: SortOrder
+    groupId?: SortOrder
+    toolName?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    durationMs?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    threadId?: SortOrder
+    messageId?: SortOrder
+    toolCallId?: SortOrder
+    groupId?: SortOrder
+    toolName?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    durationMs?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationToolCallProjectionSumOrderByAggregateInput = {
+    durationMs?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type CreditLedgerEntryCountOrderByAggregateInput = {
@@ -79028,6 +85556,14 @@ export namespace Prisma {
     deleteMany?: AgentVersionScalarWhereInput | AgentVersionScalarWhereInput[]
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type AgentRunCreateNestedManyWithoutAgentVersionInput = {
     create?: XOR<AgentRunCreateWithoutAgentVersionInput, AgentRunUncheckedCreateWithoutAgentVersionInput> | AgentRunCreateWithoutAgentVersionInput[] | AgentRunUncheckedCreateWithoutAgentVersionInput[]
     connectOrCreate?: AgentRunCreateOrConnectWithoutAgentVersionInput | AgentRunCreateOrConnectWithoutAgentVersionInput[]
@@ -79962,6 +86498,27 @@ export namespace Prisma {
     connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
   }
 
+  export type ConversationEventCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput> | ConversationEventCreateWithoutThreadInput[] | ConversationEventUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutThreadInput | ConversationEventCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationEventCreateManyThreadInputEnvelope
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+  }
+
+  export type ConversationMessageProjectionCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput> | ConversationMessageProjectionCreateWithoutThreadInput[] | ConversationMessageProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutThreadInput | ConversationMessageProjectionCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationMessageProjectionCreateManyThreadInputEnvelope
+    connect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+  }
+
+  export type ConversationToolCallProjectionCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput> | ConversationToolCallProjectionCreateWithoutThreadInput[] | ConversationToolCallProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutThreadInput | ConversationToolCallProjectionCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationToolCallProjectionCreateManyThreadInputEnvelope
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+  }
+
   export type AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput = {
     create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
     connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
@@ -79988,6 +86545,27 @@ export namespace Prisma {
     connectOrCreate?: AgentRunCreateOrConnectWithoutThreadInput | AgentRunCreateOrConnectWithoutThreadInput[]
     createMany?: AgentRunCreateManyThreadInputEnvelope
     connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
+  export type ConversationEventUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput> | ConversationEventCreateWithoutThreadInput[] | ConversationEventUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutThreadInput | ConversationEventCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationEventCreateManyThreadInputEnvelope
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+  }
+
+  export type ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput> | ConversationMessageProjectionCreateWithoutThreadInput[] | ConversationMessageProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutThreadInput | ConversationMessageProjectionCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationMessageProjectionCreateManyThreadInputEnvelope
+    connect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+  }
+
+  export type ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput> | ConversationToolCallProjectionCreateWithoutThreadInput[] | ConversationToolCallProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutThreadInput | ConversationToolCallProjectionCreateOrConnectWithoutThreadInput[]
+    createMany?: ConversationToolCallProjectionCreateManyThreadInputEnvelope
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
   }
 
   export type AgentChatMessageUpdateManyWithoutThreadNestedInput = {
@@ -80076,6 +86654,48 @@ export namespace Prisma {
     deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
   }
 
+  export type ConversationEventUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput> | ConversationEventCreateWithoutThreadInput[] | ConversationEventUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutThreadInput | ConversationEventCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationEventUpsertWithWhereUniqueWithoutThreadInput | ConversationEventUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationEventCreateManyThreadInputEnvelope
+    set?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    disconnect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    delete?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    update?: ConversationEventUpdateWithWhereUniqueWithoutThreadInput | ConversationEventUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationEventUpdateManyWithWhereWithoutThreadInput | ConversationEventUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+  }
+
+  export type ConversationMessageProjectionUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput> | ConversationMessageProjectionCreateWithoutThreadInput[] | ConversationMessageProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutThreadInput | ConversationMessageProjectionCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationMessageProjectionUpsertWithWhereUniqueWithoutThreadInput | ConversationMessageProjectionUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationMessageProjectionCreateManyThreadInputEnvelope
+    set?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    disconnect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    delete?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    connect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    update?: ConversationMessageProjectionUpdateWithWhereUniqueWithoutThreadInput | ConversationMessageProjectionUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationMessageProjectionUpdateManyWithWhereWithoutThreadInput | ConversationMessageProjectionUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationMessageProjectionScalarWhereInput | ConversationMessageProjectionScalarWhereInput[]
+  }
+
+  export type ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput> | ConversationToolCallProjectionCreateWithoutThreadInput[] | ConversationToolCallProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutThreadInput | ConversationToolCallProjectionCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationToolCallProjectionUpsertWithWhereUniqueWithoutThreadInput | ConversationToolCallProjectionUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationToolCallProjectionCreateManyThreadInputEnvelope
+    set?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    disconnect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    delete?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    update?: ConversationToolCallProjectionUpdateWithWhereUniqueWithoutThreadInput | ConversationToolCallProjectionUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationToolCallProjectionUpdateManyWithWhereWithoutThreadInput | ConversationToolCallProjectionUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
+  }
+
   export type AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput = {
     create?: XOR<AgentChatMessageCreateWithoutThreadInput, AgentChatMessageUncheckedCreateWithoutThreadInput> | AgentChatMessageCreateWithoutThreadInput[] | AgentChatMessageUncheckedCreateWithoutThreadInput[]
     connectOrCreate?: AgentChatMessageCreateOrConnectWithoutThreadInput | AgentChatMessageCreateOrConnectWithoutThreadInput[]
@@ -80130,6 +86750,48 @@ export namespace Prisma {
     update?: AgentRunUpdateWithWhereUniqueWithoutThreadInput | AgentRunUpdateWithWhereUniqueWithoutThreadInput[]
     updateMany?: AgentRunUpdateManyWithWhereWithoutThreadInput | AgentRunUpdateManyWithWhereWithoutThreadInput[]
     deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
+  export type ConversationEventUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput> | ConversationEventCreateWithoutThreadInput[] | ConversationEventUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutThreadInput | ConversationEventCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationEventUpsertWithWhereUniqueWithoutThreadInput | ConversationEventUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationEventCreateManyThreadInputEnvelope
+    set?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    disconnect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    delete?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    update?: ConversationEventUpdateWithWhereUniqueWithoutThreadInput | ConversationEventUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationEventUpdateManyWithWhereWithoutThreadInput | ConversationEventUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput> | ConversationMessageProjectionCreateWithoutThreadInput[] | ConversationMessageProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutThreadInput | ConversationMessageProjectionCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationMessageProjectionUpsertWithWhereUniqueWithoutThreadInput | ConversationMessageProjectionUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationMessageProjectionCreateManyThreadInputEnvelope
+    set?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    disconnect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    delete?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    connect?: ConversationMessageProjectionWhereUniqueInput | ConversationMessageProjectionWhereUniqueInput[]
+    update?: ConversationMessageProjectionUpdateWithWhereUniqueWithoutThreadInput | ConversationMessageProjectionUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationMessageProjectionUpdateManyWithWhereWithoutThreadInput | ConversationMessageProjectionUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationMessageProjectionScalarWhereInput | ConversationMessageProjectionScalarWhereInput[]
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput> | ConversationToolCallProjectionCreateWithoutThreadInput[] | ConversationToolCallProjectionUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutThreadInput | ConversationToolCallProjectionCreateOrConnectWithoutThreadInput[]
+    upsert?: ConversationToolCallProjectionUpsertWithWhereUniqueWithoutThreadInput | ConversationToolCallProjectionUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ConversationToolCallProjectionCreateManyThreadInputEnvelope
+    set?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    disconnect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    delete?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    update?: ConversationToolCallProjectionUpdateWithWhereUniqueWithoutThreadInput | ConversationToolCallProjectionUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ConversationToolCallProjectionUpdateManyWithWhereWithoutThreadInput | ConversationToolCallProjectionUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
   }
 
   export type AgentRunCreateNestedOneWithoutChatMessagesInput = {
@@ -80191,6 +86853,26 @@ export namespace Prisma {
     connect?: AgentChatToolCallWhereUniqueInput | AgentChatToolCallWhereUniqueInput[]
   }
 
+  export type ConversationEventCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput> | ConversationEventCreateWithoutMessageInput[] | ConversationEventUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutMessageInput | ConversationEventCreateOrConnectWithoutMessageInput[]
+    createMany?: ConversationEventCreateManyMessageInputEnvelope
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+  }
+
+  export type ConversationMessageProjectionCreateNestedOneWithoutMessageInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutMessageInput
+    connect?: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  export type ConversationToolCallProjectionCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput> | ConversationToolCallProjectionCreateWithoutMessageInput[] | ConversationToolCallProjectionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutMessageInput | ConversationToolCallProjectionCreateOrConnectWithoutMessageInput[]
+    createMany?: ConversationToolCallProjectionCreateManyMessageInputEnvelope
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+  }
+
   export type AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput = {
     create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
     connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
@@ -80224,6 +86906,26 @@ export namespace Prisma {
     connectOrCreate?: AgentChatToolCallCreateOrConnectWithoutMessageInput | AgentChatToolCallCreateOrConnectWithoutMessageInput[]
     createMany?: AgentChatToolCallCreateManyMessageInputEnvelope
     connect?: AgentChatToolCallWhereUniqueInput | AgentChatToolCallWhereUniqueInput[]
+  }
+
+  export type ConversationEventUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput> | ConversationEventCreateWithoutMessageInput[] | ConversationEventUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutMessageInput | ConversationEventCreateOrConnectWithoutMessageInput[]
+    createMany?: ConversationEventCreateManyMessageInputEnvelope
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+  }
+
+  export type ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutMessageInput
+    connect?: ConversationMessageProjectionWhereUniqueInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput> | ConversationToolCallProjectionCreateWithoutMessageInput[] | ConversationToolCallProjectionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutMessageInput | ConversationToolCallProjectionCreateOrConnectWithoutMessageInput[]
+    createMany?: ConversationToolCallProjectionCreateManyMessageInputEnvelope
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
   }
 
   export type AgentRunUpdateOneWithoutChatMessagesNestedInput = {
@@ -80334,6 +87036,44 @@ export namespace Prisma {
     deleteMany?: AgentChatToolCallScalarWhereInput | AgentChatToolCallScalarWhereInput[]
   }
 
+  export type ConversationEventUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput> | ConversationEventCreateWithoutMessageInput[] | ConversationEventUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutMessageInput | ConversationEventCreateOrConnectWithoutMessageInput[]
+    upsert?: ConversationEventUpsertWithWhereUniqueWithoutMessageInput | ConversationEventUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ConversationEventCreateManyMessageInputEnvelope
+    set?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    disconnect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    delete?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    update?: ConversationEventUpdateWithWhereUniqueWithoutMessageInput | ConversationEventUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ConversationEventUpdateManyWithWhereWithoutMessageInput | ConversationEventUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+  }
+
+  export type ConversationMessageProjectionUpdateOneWithoutMessageNestedInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutMessageInput
+    upsert?: ConversationMessageProjectionUpsertWithoutMessageInput
+    disconnect?: ConversationMessageProjectionWhereInput | boolean
+    delete?: ConversationMessageProjectionWhereInput | boolean
+    connect?: ConversationMessageProjectionWhereUniqueInput
+    update?: XOR<XOR<ConversationMessageProjectionUpdateToOneWithWhereWithoutMessageInput, ConversationMessageProjectionUpdateWithoutMessageInput>, ConversationMessageProjectionUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput> | ConversationToolCallProjectionCreateWithoutMessageInput[] | ConversationToolCallProjectionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutMessageInput | ConversationToolCallProjectionCreateOrConnectWithoutMessageInput[]
+    upsert?: ConversationToolCallProjectionUpsertWithWhereUniqueWithoutMessageInput | ConversationToolCallProjectionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ConversationToolCallProjectionCreateManyMessageInputEnvelope
+    set?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    disconnect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    delete?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    update?: ConversationToolCallProjectionUpdateWithWhereUniqueWithoutMessageInput | ConversationToolCallProjectionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ConversationToolCallProjectionUpdateManyWithWhereWithoutMessageInput | ConversationToolCallProjectionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
+  }
+
   export type AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput = {
     create?: XOR<AgentChatMessageCreateWithoutEditedFromMessageInput, AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput> | AgentChatMessageCreateWithoutEditedFromMessageInput[] | AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput[]
     connectOrCreate?: AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput | AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput[]
@@ -80404,6 +87144,44 @@ export namespace Prisma {
     deleteMany?: AgentChatToolCallScalarWhereInput | AgentChatToolCallScalarWhereInput[]
   }
 
+  export type ConversationEventUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput> | ConversationEventCreateWithoutMessageInput[] | ConversationEventUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationEventCreateOrConnectWithoutMessageInput | ConversationEventCreateOrConnectWithoutMessageInput[]
+    upsert?: ConversationEventUpsertWithWhereUniqueWithoutMessageInput | ConversationEventUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ConversationEventCreateManyMessageInputEnvelope
+    set?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    disconnect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    delete?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    connect?: ConversationEventWhereUniqueInput | ConversationEventWhereUniqueInput[]
+    update?: ConversationEventUpdateWithWhereUniqueWithoutMessageInput | ConversationEventUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ConversationEventUpdateManyWithWhereWithoutMessageInput | ConversationEventUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput = {
+    create?: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+    connectOrCreate?: ConversationMessageProjectionCreateOrConnectWithoutMessageInput
+    upsert?: ConversationMessageProjectionUpsertWithoutMessageInput
+    disconnect?: ConversationMessageProjectionWhereInput | boolean
+    delete?: ConversationMessageProjectionWhereInput | boolean
+    connect?: ConversationMessageProjectionWhereUniqueInput
+    update?: XOR<XOR<ConversationMessageProjectionUpdateToOneWithWhereWithoutMessageInput, ConversationMessageProjectionUpdateWithoutMessageInput>, ConversationMessageProjectionUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput> | ConversationToolCallProjectionCreateWithoutMessageInput[] | ConversationToolCallProjectionUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: ConversationToolCallProjectionCreateOrConnectWithoutMessageInput | ConversationToolCallProjectionCreateOrConnectWithoutMessageInput[]
+    upsert?: ConversationToolCallProjectionUpsertWithWhereUniqueWithoutMessageInput | ConversationToolCallProjectionUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: ConversationToolCallProjectionCreateManyMessageInputEnvelope
+    set?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    disconnect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    delete?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    connect?: ConversationToolCallProjectionWhereUniqueInput | ConversationToolCallProjectionWhereUniqueInput[]
+    update?: ConversationToolCallProjectionUpdateWithWhereUniqueWithoutMessageInput | ConversationToolCallProjectionUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: ConversationToolCallProjectionUpdateManyWithWhereWithoutMessageInput | ConversationToolCallProjectionUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
+  }
+
   export type CompanyAgentCreateNestedOneWithoutChatToolCallsInput = {
     create?: XOR<CompanyAgentCreateWithoutChatToolCallsInput, CompanyAgentUncheckedCreateWithoutChatToolCallsInput>
     connectOrCreate?: CompanyAgentCreateOrConnectWithoutChatToolCallsInput
@@ -80444,6 +87222,90 @@ export namespace Prisma {
     upsert?: AgentChatMessageUpsertWithoutToolCallsInput
     connect?: AgentChatMessageWhereUniqueInput
     update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutToolCallsInput, AgentChatMessageUpdateWithoutToolCallsInput>, AgentChatMessageUncheckedUpdateWithoutToolCallsInput>
+  }
+
+  export type AgentChatThreadCreateNestedOneWithoutConversationEventsInput = {
+    create?: XOR<AgentChatThreadCreateWithoutConversationEventsInput, AgentChatThreadUncheckedCreateWithoutConversationEventsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutConversationEventsInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutConversationEventsInput = {
+    create?: XOR<AgentChatMessageCreateWithoutConversationEventsInput, AgentChatMessageUncheckedCreateWithoutConversationEventsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutConversationEventsInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatThreadUpdateOneRequiredWithoutConversationEventsNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutConversationEventsInput, AgentChatThreadUncheckedCreateWithoutConversationEventsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutConversationEventsInput
+    upsert?: AgentChatThreadUpsertWithoutConversationEventsInput
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutConversationEventsInput, AgentChatThreadUpdateWithoutConversationEventsInput>, AgentChatThreadUncheckedUpdateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatMessageUpdateOneRequiredWithoutConversationEventsNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutConversationEventsInput, AgentChatMessageUncheckedCreateWithoutConversationEventsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutConversationEventsInput
+    upsert?: AgentChatMessageUpsertWithoutConversationEventsInput
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutConversationEventsInput, AgentChatMessageUpdateWithoutConversationEventsInput>, AgentChatMessageUncheckedUpdateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatThreadCreateNestedOneWithoutMessageProjectionsInput = {
+    create?: XOR<AgentChatThreadCreateWithoutMessageProjectionsInput, AgentChatThreadUncheckedCreateWithoutMessageProjectionsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutMessageProjectionsInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutMessageProjectionInput = {
+    create?: XOR<AgentChatMessageCreateWithoutMessageProjectionInput, AgentChatMessageUncheckedCreateWithoutMessageProjectionInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutMessageProjectionInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatThreadUpdateOneRequiredWithoutMessageProjectionsNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutMessageProjectionsInput, AgentChatThreadUncheckedCreateWithoutMessageProjectionsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutMessageProjectionsInput
+    upsert?: AgentChatThreadUpsertWithoutMessageProjectionsInput
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutMessageProjectionsInput, AgentChatThreadUpdateWithoutMessageProjectionsInput>, AgentChatThreadUncheckedUpdateWithoutMessageProjectionsInput>
+  }
+
+  export type AgentChatMessageUpdateOneRequiredWithoutMessageProjectionNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutMessageProjectionInput, AgentChatMessageUncheckedCreateWithoutMessageProjectionInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutMessageProjectionInput
+    upsert?: AgentChatMessageUpsertWithoutMessageProjectionInput
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutMessageProjectionInput, AgentChatMessageUpdateWithoutMessageProjectionInput>, AgentChatMessageUncheckedUpdateWithoutMessageProjectionInput>
+  }
+
+  export type AgentChatThreadCreateNestedOneWithoutToolCallProjectionsInput = {
+    create?: XOR<AgentChatThreadCreateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedCreateWithoutToolCallProjectionsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutToolCallProjectionsInput
+    connect?: AgentChatThreadWhereUniqueInput
+  }
+
+  export type AgentChatMessageCreateNestedOneWithoutToolCallProjectionsInput = {
+    create?: XOR<AgentChatMessageCreateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedCreateWithoutToolCallProjectionsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutToolCallProjectionsInput
+    connect?: AgentChatMessageWhereUniqueInput
+  }
+
+  export type AgentChatThreadUpdateOneRequiredWithoutToolCallProjectionsNestedInput = {
+    create?: XOR<AgentChatThreadCreateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedCreateWithoutToolCallProjectionsInput>
+    connectOrCreate?: AgentChatThreadCreateOrConnectWithoutToolCallProjectionsInput
+    upsert?: AgentChatThreadUpsertWithoutToolCallProjectionsInput
+    connect?: AgentChatThreadWhereUniqueInput
+    update?: XOR<XOR<AgentChatThreadUpdateToOneWithWhereWithoutToolCallProjectionsInput, AgentChatThreadUpdateWithoutToolCallProjectionsInput>, AgentChatThreadUncheckedUpdateWithoutToolCallProjectionsInput>
+  }
+
+  export type AgentChatMessageUpdateOneRequiredWithoutToolCallProjectionsNestedInput = {
+    create?: XOR<AgentChatMessageCreateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedCreateWithoutToolCallProjectionsInput>
+    connectOrCreate?: AgentChatMessageCreateOrConnectWithoutToolCallProjectionsInput
+    upsert?: AgentChatMessageUpsertWithoutToolCallProjectionsInput
+    connect?: AgentChatMessageWhereUniqueInput
+    update?: XOR<XOR<AgentChatMessageUpdateToOneWithWhereWithoutToolCallProjectionsInput, AgentChatMessageUpdateWithoutToolCallProjectionsInput>, AgentChatMessageUncheckedUpdateWithoutToolCallProjectionsInput>
   }
 
   export type AgentRunCreateNestedOneWithoutCreditEntriesInput = {
@@ -80936,6 +87798,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -84264,6 +91142,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -84285,6 +91164,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -84336,6 +91216,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CompanyAgent"> | string | null
     status?: StringFilter<"CompanyAgent"> | string
     allowedTools?: JsonFilter<"CompanyAgent">
+    suggestedMessages?: JsonFilter<"CompanyAgent">
     activeVersionId?: StringNullableFilter<"CompanyAgent"> | string | null
     onboardingCompletedAt?: DateTimeNullableFilter<"CompanyAgent"> | Date | string | null
     createdByUserId?: StringFilter<"CompanyAgent"> | string
@@ -84358,6 +91239,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutAgentInput = {
@@ -84374,6 +91258,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutAgentInput = {
@@ -84982,6 +91869,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -85004,6 +91892,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -85056,6 +91945,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -85078,6 +91968,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -85105,6 +91996,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutAgentRunInput = {
@@ -85122,6 +92016,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutAgentRunInput = {
@@ -85142,6 +92039,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -85164,6 +92062,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -85664,6 +92563,9 @@ export namespace Prisma {
     thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutSourceRunsInput = {
@@ -85681,6 +92583,9 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutSourceRunsInput = {
@@ -85702,6 +92607,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutRunsInput = {
@@ -85718,6 +92626,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutRunsInput = {
@@ -85961,6 +92872,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -85983,6 +92895,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -86349,6 +93262,9 @@ export namespace Prisma {
     thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutSourceRunsInput = {
@@ -86366,6 +93282,9 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatThreadUpsertWithoutRunsInput = {
@@ -86393,6 +93312,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutRunsInput = {
@@ -86409,6 +93331,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentRunContextSnapshotUpsertWithoutRunInput = {
@@ -86982,6 +93907,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -87004,6 +93930,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -87101,6 +94028,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -87123,6 +94051,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -88031,6 +94960,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutThreadInput = {
@@ -88048,6 +94980,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutThreadInput = {
@@ -88108,6 +95043,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -88130,6 +95066,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -88162,6 +95099,9 @@ export namespace Prisma {
     thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutBranchesInput = {
@@ -88179,6 +95119,9 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutBranchesInput = {
@@ -88200,6 +95143,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutBranchesInput = {
@@ -88216,6 +95162,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutBranchesInput = {
@@ -88237,6 +95186,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutParentThreadInput = {
@@ -88253,6 +95205,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutParentThreadInput = {
@@ -88363,6 +95318,128 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationEventCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+    message: AgentChatMessageCreateNestedOneWithoutConversationEventsInput
+  }
+
+  export type ConversationEventUncheckedCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationEventCreateOrConnectWithoutThreadInput = {
+    where: ConversationEventWhereUniqueInput
+    create: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationEventCreateManyThreadInputEnvelope = {
+    data: ConversationEventCreateManyThreadInput | ConversationEventCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationMessageProjectionCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    message: AgentChatMessageCreateNestedOneWithoutMessageProjectionInput
+  }
+
+  export type ConversationMessageProjectionUncheckedCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationMessageProjectionCreateOrConnectWithoutThreadInput = {
+    where: ConversationMessageProjectionWhereUniqueInput
+    create: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationMessageProjectionCreateManyThreadInputEnvelope = {
+    data: ConversationMessageProjectionCreateManyThreadInput | ConversationMessageProjectionCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationToolCallProjectionCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    message: AgentChatMessageCreateNestedOneWithoutToolCallProjectionsInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedCreateWithoutThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateOrConnectWithoutThreadInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    create: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationToolCallProjectionCreateManyThreadInputEnvelope = {
+    data: ConversationToolCallProjectionCreateManyThreadInput | ConversationToolCallProjectionCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AgentChatMessageUpsertWithWhereUniqueWithoutThreadInput = {
     where: AgentChatMessageWhereUniqueInput
     update: XOR<AgentChatMessageUpdateWithoutThreadInput, AgentChatMessageUncheckedUpdateWithoutThreadInput>
@@ -88414,6 +95491,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -88436,6 +95514,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -88474,6 +95553,9 @@ export namespace Prisma {
     thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutBranchesInput = {
@@ -88491,6 +95573,9 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatThreadUpsertWithoutBranchesInput = {
@@ -88518,6 +95603,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutBranchesInput = {
@@ -88534,6 +95622,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUpsertWithWhereUniqueWithoutParentThreadInput = {
@@ -88566,6 +95657,112 @@ export namespace Prisma {
   export type AgentRunUpdateManyWithWhereWithoutThreadInput = {
     where: AgentRunScalarWhereInput
     data: XOR<AgentRunUpdateManyMutationInput, AgentRunUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ConversationEventUpsertWithWhereUniqueWithoutThreadInput = {
+    where: ConversationEventWhereUniqueInput
+    update: XOR<ConversationEventUpdateWithoutThreadInput, ConversationEventUncheckedUpdateWithoutThreadInput>
+    create: XOR<ConversationEventCreateWithoutThreadInput, ConversationEventUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationEventUpdateWithWhereUniqueWithoutThreadInput = {
+    where: ConversationEventWhereUniqueInput
+    data: XOR<ConversationEventUpdateWithoutThreadInput, ConversationEventUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type ConversationEventUpdateManyWithWhereWithoutThreadInput = {
+    where: ConversationEventScalarWhereInput
+    data: XOR<ConversationEventUpdateManyMutationInput, ConversationEventUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ConversationEventScalarWhereInput = {
+    AND?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+    OR?: ConversationEventScalarWhereInput[]
+    NOT?: ConversationEventScalarWhereInput | ConversationEventScalarWhereInput[]
+    id?: StringFilter<"ConversationEvent"> | string
+    organizationId?: StringFilter<"ConversationEvent"> | string
+    threadId?: StringFilter<"ConversationEvent"> | string
+    messageId?: StringFilter<"ConversationEvent"> | string
+    sequence?: IntFilter<"ConversationEvent"> | number
+    eventType?: StringFilter<"ConversationEvent"> | string
+    status?: StringNullableFilter<"ConversationEvent"> | string | null
+    payload?: JsonFilter<"ConversationEvent">
+    idempotencyKey?: StringNullableFilter<"ConversationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ConversationEvent"> | Date | string
+  }
+
+  export type ConversationMessageProjectionUpsertWithWhereUniqueWithoutThreadInput = {
+    where: ConversationMessageProjectionWhereUniqueInput
+    update: XOR<ConversationMessageProjectionUpdateWithoutThreadInput, ConversationMessageProjectionUncheckedUpdateWithoutThreadInput>
+    create: XOR<ConversationMessageProjectionCreateWithoutThreadInput, ConversationMessageProjectionUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationMessageProjectionUpdateWithWhereUniqueWithoutThreadInput = {
+    where: ConversationMessageProjectionWhereUniqueInput
+    data: XOR<ConversationMessageProjectionUpdateWithoutThreadInput, ConversationMessageProjectionUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type ConversationMessageProjectionUpdateManyWithWhereWithoutThreadInput = {
+    where: ConversationMessageProjectionScalarWhereInput
+    data: XOR<ConversationMessageProjectionUpdateManyMutationInput, ConversationMessageProjectionUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ConversationMessageProjectionScalarWhereInput = {
+    AND?: ConversationMessageProjectionScalarWhereInput | ConversationMessageProjectionScalarWhereInput[]
+    OR?: ConversationMessageProjectionScalarWhereInput[]
+    NOT?: ConversationMessageProjectionScalarWhereInput | ConversationMessageProjectionScalarWhereInput[]
+    id?: StringFilter<"ConversationMessageProjection"> | string
+    organizationId?: StringFilter<"ConversationMessageProjection"> | string
+    threadId?: StringFilter<"ConversationMessageProjection"> | string
+    messageId?: StringFilter<"ConversationMessageProjection"> | string
+    status?: StringFilter<"ConversationMessageProjection"> | string
+    text?: StringFilter<"ConversationMessageProjection"> | string
+    citations?: JsonFilter<"ConversationMessageProjection">
+    isStreaming?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isCompleted?: BoolFilter<"ConversationMessageProjection"> | boolean
+    isFailed?: BoolFilter<"ConversationMessageProjection"> | boolean
+    errorMessage?: StringNullableFilter<"ConversationMessageProjection"> | string | null
+    lastSequence?: IntFilter<"ConversationMessageProjection"> | number
+    metadata?: JsonFilter<"ConversationMessageProjection">
+    createdAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationMessageProjection"> | Date | string
+  }
+
+  export type ConversationToolCallProjectionUpsertWithWhereUniqueWithoutThreadInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    update: XOR<ConversationToolCallProjectionUpdateWithoutThreadInput, ConversationToolCallProjectionUncheckedUpdateWithoutThreadInput>
+    create: XOR<ConversationToolCallProjectionCreateWithoutThreadInput, ConversationToolCallProjectionUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ConversationToolCallProjectionUpdateWithWhereUniqueWithoutThreadInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    data: XOR<ConversationToolCallProjectionUpdateWithoutThreadInput, ConversationToolCallProjectionUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type ConversationToolCallProjectionUpdateManyWithWhereWithoutThreadInput = {
+    where: ConversationToolCallProjectionScalarWhereInput
+    data: XOR<ConversationToolCallProjectionUpdateManyMutationInput, ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ConversationToolCallProjectionScalarWhereInput = {
+    AND?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
+    OR?: ConversationToolCallProjectionScalarWhereInput[]
+    NOT?: ConversationToolCallProjectionScalarWhereInput | ConversationToolCallProjectionScalarWhereInput[]
+    id?: StringFilter<"ConversationToolCallProjection"> | string
+    organizationId?: StringFilter<"ConversationToolCallProjection"> | string
+    threadId?: StringFilter<"ConversationToolCallProjection"> | string
+    messageId?: StringFilter<"ConversationToolCallProjection"> | string
+    toolCallId?: StringFilter<"ConversationToolCallProjection"> | string
+    groupId?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    toolName?: StringFilter<"ConversationToolCallProjection"> | string
+    status?: StringFilter<"ConversationToolCallProjection"> | string
+    inputPayload?: JsonFilter<"ConversationToolCallProjection">
+    outputPayload?: JsonNullableFilter<"ConversationToolCallProjection">
+    errorMessage?: StringNullableFilter<"ConversationToolCallProjection"> | string | null
+    durationMs?: IntNullableFilter<"ConversationToolCallProjection"> | number | null
+    displayOrder?: IntFilter<"ConversationToolCallProjection"> | number
+    createdAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
+    updatedAt?: DateTimeFilter<"ConversationToolCallProjection"> | Date | string
   }
 
   export type AgentRunCreateWithoutChatMessagesInput = {
@@ -88676,6 +95873,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutEditedVariantsInput = {
@@ -88693,6 +95893,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutEditedVariantsInput = {
@@ -88715,6 +95918,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutEditedFromMessageInput = {
@@ -88732,6 +95938,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutEditedFromMessageInput = {
@@ -88759,6 +95968,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutRegenerationsInput = {
@@ -88776,6 +95988,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutRegenerationsInput = {
@@ -88798,6 +96013,9 @@ export namespace Prisma {
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutRegeneratedFromMessageInput = {
@@ -88815,6 +96033,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutRegeneratedFromMessageInput = {
@@ -88841,6 +96062,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutMessagesInput = {
@@ -88857,6 +96081,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutMessagesInput = {
@@ -88878,6 +96105,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutBranchedFromMessageInput = {
@@ -88894,6 +96124,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutBranchedFromMessageInput = {
@@ -89044,6 +96277,123 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationEventCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutConversationEventsInput
+  }
+
+  export type ConversationEventUncheckedCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationEventCreateOrConnectWithoutMessageInput = {
+    where: ConversationEventWhereUniqueInput
+    create: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ConversationEventCreateManyMessageInputEnvelope = {
+    data: ConversationEventCreateManyMessageInput | ConversationEventCreateManyMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationMessageProjectionCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutMessageProjectionsInput
+  }
+
+  export type ConversationMessageProjectionUncheckedCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationMessageProjectionCreateOrConnectWithoutMessageInput = {
+    where: ConversationMessageProjectionWhereUniqueInput
+    create: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    thread: AgentChatThreadCreateNestedOneWithoutToolCallProjectionsInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedCreateWithoutMessageInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateOrConnectWithoutMessageInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    create: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionCreateManyMessageInputEnvelope = {
+    data: ConversationToolCallProjectionCreateManyMessageInput | ConversationToolCallProjectionCreateManyMessageInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AgentRunUpsertWithoutChatMessagesInput = {
     update: XOR<AgentRunUpdateWithoutChatMessagesInput, AgentRunUncheckedUpdateWithoutChatMessagesInput>
     create: XOR<AgentRunCreateWithoutChatMessagesInput, AgentRunUncheckedCreateWithoutChatMessagesInput>
@@ -89169,6 +96519,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutEditedVariantsInput = {
@@ -89186,6 +96539,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUpsertWithWhereUniqueWithoutEditedFromMessageInput = {
@@ -89230,6 +96586,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutRegenerationsInput = {
@@ -89247,6 +96606,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUpsertWithWhereUniqueWithoutRegeneratedFromMessageInput = {
@@ -89290,6 +96652,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutMessagesInput = {
@@ -89306,6 +96671,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUpsertWithWhereUniqueWithoutBranchedFromMessageInput = {
@@ -89356,6 +96724,83 @@ export namespace Prisma {
     data: XOR<AgentChatToolCallUpdateManyMutationInput, AgentChatToolCallUncheckedUpdateManyWithoutMessageInput>
   }
 
+  export type ConversationEventUpsertWithWhereUniqueWithoutMessageInput = {
+    where: ConversationEventWhereUniqueInput
+    update: XOR<ConversationEventUpdateWithoutMessageInput, ConversationEventUncheckedUpdateWithoutMessageInput>
+    create: XOR<ConversationEventCreateWithoutMessageInput, ConversationEventUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ConversationEventUpdateWithWhereUniqueWithoutMessageInput = {
+    where: ConversationEventWhereUniqueInput
+    data: XOR<ConversationEventUpdateWithoutMessageInput, ConversationEventUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ConversationEventUpdateManyWithWhereWithoutMessageInput = {
+    where: ConversationEventScalarWhereInput
+    data: XOR<ConversationEventUpdateManyMutationInput, ConversationEventUncheckedUpdateManyWithoutMessageInput>
+  }
+
+  export type ConversationMessageProjectionUpsertWithoutMessageInput = {
+    update: XOR<ConversationMessageProjectionUpdateWithoutMessageInput, ConversationMessageProjectionUncheckedUpdateWithoutMessageInput>
+    create: XOR<ConversationMessageProjectionCreateWithoutMessageInput, ConversationMessageProjectionUncheckedCreateWithoutMessageInput>
+    where?: ConversationMessageProjectionWhereInput
+  }
+
+  export type ConversationMessageProjectionUpdateToOneWithWhereWithoutMessageInput = {
+    where?: ConversationMessageProjectionWhereInput
+    data: XOR<ConversationMessageProjectionUpdateWithoutMessageInput, ConversationMessageProjectionUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ConversationMessageProjectionUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessageProjectionsNestedInput
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUpsertWithWhereUniqueWithoutMessageInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    update: XOR<ConversationToolCallProjectionUpdateWithoutMessageInput, ConversationToolCallProjectionUncheckedUpdateWithoutMessageInput>
+    create: XOR<ConversationToolCallProjectionCreateWithoutMessageInput, ConversationToolCallProjectionUncheckedCreateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionUpdateWithWhereUniqueWithoutMessageInput = {
+    where: ConversationToolCallProjectionWhereUniqueInput
+    data: XOR<ConversationToolCallProjectionUpdateWithoutMessageInput, ConversationToolCallProjectionUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type ConversationToolCallProjectionUpdateManyWithWhereWithoutMessageInput = {
+    where: ConversationToolCallProjectionScalarWhereInput
+    data: XOR<ConversationToolCallProjectionUpdateManyMutationInput, ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageInput>
+  }
+
   export type CompanyAgentCreateWithoutChatToolCallsInput = {
     id?: string
     organizationId: string
@@ -89364,6 +96809,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -89386,6 +96832,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -89417,6 +96864,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
     branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadUncheckedCreateWithoutToolCallsInput = {
@@ -89433,6 +96883,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
     runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type AgentChatThreadCreateOrConnectWithoutToolCallsInput = {
@@ -89455,6 +96908,9 @@ export namespace Prisma {
     thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
     branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageUncheckedCreateWithoutToolCallsInput = {
@@ -89472,6 +96928,9 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
     branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
     sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type AgentChatMessageCreateOrConnectWithoutToolCallsInput = {
@@ -89498,6 +96957,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -89520,6 +96980,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -89557,6 +97018,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutToolCallsInput = {
@@ -89573,6 +97037,9 @@ export namespace Prisma {
     messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatMessageUpsertWithoutToolCallsInput = {
@@ -89601,6 +97068,9 @@ export namespace Prisma {
     thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutToolCallsInput = {
@@ -89618,6 +97088,573 @@ export namespace Prisma {
     regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type AgentChatThreadCreateWithoutConversationEventsInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutThreadInput
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutConversationEventsInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutConversationEventsInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutConversationEventsInput, AgentChatThreadUncheckedCreateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutConversationEventsInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutConversationEventsInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutConversationEventsInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutConversationEventsInput, AgentChatMessageUncheckedCreateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatThreadUpsertWithoutConversationEventsInput = {
+    update: XOR<AgentChatThreadUpdateWithoutConversationEventsInput, AgentChatThreadUncheckedUpdateWithoutConversationEventsInput>
+    create: XOR<AgentChatThreadCreateWithoutConversationEventsInput, AgentChatThreadUncheckedCreateWithoutConversationEventsInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutConversationEventsInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutConversationEventsInput, AgentChatThreadUncheckedUpdateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutConversationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutThreadNestedInput
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutConversationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithoutConversationEventsInput = {
+    update: XOR<AgentChatMessageUpdateWithoutConversationEventsInput, AgentChatMessageUncheckedUpdateWithoutConversationEventsInput>
+    create: XOR<AgentChatMessageCreateWithoutConversationEventsInput, AgentChatMessageUncheckedCreateWithoutConversationEventsInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutConversationEventsInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutConversationEventsInput, AgentChatMessageUncheckedUpdateWithoutConversationEventsInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutConversationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutConversationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type AgentChatThreadCreateWithoutMessageProjectionsInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutThreadInput
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutMessageProjectionsInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutMessageProjectionsInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutMessageProjectionsInput, AgentChatThreadUncheckedCreateWithoutMessageProjectionsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutMessageProjectionInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionCreateNestedManyWithoutMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutMessageProjectionInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutMessageProjectionInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutMessageProjectionInput, AgentChatMessageUncheckedCreateWithoutMessageProjectionInput>
+  }
+
+  export type AgentChatThreadUpsertWithoutMessageProjectionsInput = {
+    update: XOR<AgentChatThreadUpdateWithoutMessageProjectionsInput, AgentChatThreadUncheckedUpdateWithoutMessageProjectionsInput>
+    create: XOR<AgentChatThreadCreateWithoutMessageProjectionsInput, AgentChatThreadUncheckedCreateWithoutMessageProjectionsInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutMessageProjectionsInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutMessageProjectionsInput, AgentChatThreadUncheckedUpdateWithoutMessageProjectionsInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutMessageProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutThreadNestedInput
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutMessageProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithoutMessageProjectionInput = {
+    update: XOR<AgentChatMessageUpdateWithoutMessageProjectionInput, AgentChatMessageUncheckedUpdateWithoutMessageProjectionInput>
+    create: XOR<AgentChatMessageCreateWithoutMessageProjectionInput, AgentChatMessageUncheckedCreateWithoutMessageProjectionInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutMessageProjectionInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutMessageProjectionInput, AgentChatMessageUncheckedUpdateWithoutMessageProjectionInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutMessageProjectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutMessageProjectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type AgentChatThreadCreateWithoutToolCallProjectionsInput = {
+    id?: string
+    organizationId: string
+    scope: string
+    title?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutThreadInput
+    agent?: CompanyAgentCreateNestedOneWithoutChatThreadsInput
+    branchedFromMessage?: AgentChatMessageCreateNestedOneWithoutBranchesInput
+    parentThread?: AgentChatThreadCreateNestedOneWithoutBranchesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadUncheckedCreateWithoutToolCallProjectionsInput = {
+    id?: string
+    organizationId: string
+    agentId?: string | null
+    scope: string
+    title?: string | null
+    parentThreadId?: string | null
+    branchedFromMessageId?: string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: AgentChatMessageUncheckedCreateNestedManyWithoutThreadInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutThreadInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutParentThreadInput
+    runs?: AgentRunUncheckedCreateNestedManyWithoutThreadInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutThreadInput
+    messageProjections?: ConversationMessageProjectionUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type AgentChatThreadCreateOrConnectWithoutToolCallProjectionsInput = {
+    where: AgentChatThreadWhereUniqueInput
+    create: XOR<AgentChatThreadCreateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedCreateWithoutToolCallProjectionsInput>
+  }
+
+  export type AgentChatMessageCreateWithoutToolCallProjectionsInput = {
+    id?: string
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    agentRun?: AgentRunCreateNestedOneWithoutChatMessagesInput
+    editedFromMessage?: AgentChatMessageCreateNestedOneWithoutEditedVariantsInput
+    editedVariants?: AgentChatMessageCreateNestedManyWithoutEditedFromMessageInput
+    regeneratedFromMessage?: AgentChatMessageCreateNestedOneWithoutRegenerationsInput
+    regenerations?: AgentChatMessageCreateNestedManyWithoutRegeneratedFromMessageInput
+    thread: AgentChatThreadCreateNestedOneWithoutMessagesInput
+    branches?: AgentChatThreadCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionCreateNestedOneWithoutMessageInput
+  }
+
+  export type AgentChatMessageUncheckedCreateWithoutToolCallProjectionsInput = {
+    id?: string
+    threadId: string
+    agentRunId?: string | null
+    role: string
+    content: string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: string | null
+    regeneratedFromMessageId?: string | null
+    createdByUserId?: string | null
+    createdAt?: Date | string
+    editedVariants?: AgentChatMessageUncheckedCreateNestedManyWithoutEditedFromMessageInput
+    regenerations?: AgentChatMessageUncheckedCreateNestedManyWithoutRegeneratedFromMessageInput
+    branches?: AgentChatThreadUncheckedCreateNestedManyWithoutBranchedFromMessageInput
+    sourceRuns?: AgentRunUncheckedCreateNestedManyWithoutSourceMessageInput
+    toolCalls?: AgentChatToolCallUncheckedCreateNestedManyWithoutMessageInput
+    conversationEvents?: ConversationEventUncheckedCreateNestedManyWithoutMessageInput
+    messageProjection?: ConversationMessageProjectionUncheckedCreateNestedOneWithoutMessageInput
+  }
+
+  export type AgentChatMessageCreateOrConnectWithoutToolCallProjectionsInput = {
+    where: AgentChatMessageWhereUniqueInput
+    create: XOR<AgentChatMessageCreateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedCreateWithoutToolCallProjectionsInput>
+  }
+
+  export type AgentChatThreadUpsertWithoutToolCallProjectionsInput = {
+    update: XOR<AgentChatThreadUpdateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedUpdateWithoutToolCallProjectionsInput>
+    create: XOR<AgentChatThreadCreateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedCreateWithoutToolCallProjectionsInput>
+    where?: AgentChatThreadWhereInput
+  }
+
+  export type AgentChatThreadUpdateToOneWithWhereWithoutToolCallProjectionsInput = {
+    where?: AgentChatThreadWhereInput
+    data: XOR<AgentChatThreadUpdateWithoutToolCallProjectionsInput, AgentChatThreadUncheckedUpdateWithoutToolCallProjectionsInput>
+  }
+
+  export type AgentChatThreadUpdateWithoutToolCallProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutThreadNestedInput
+    agent?: CompanyAgentUpdateOneWithoutChatThreadsNestedInput
+    branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
+    parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatThreadUncheckedUpdateWithoutToolCallProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    parentThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: AgentChatMessageUncheckedUpdateManyWithoutThreadNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
+    runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type AgentChatMessageUpsertWithoutToolCallProjectionsInput = {
+    update: XOR<AgentChatMessageUpdateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedUpdateWithoutToolCallProjectionsInput>
+    create: XOR<AgentChatMessageCreateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedCreateWithoutToolCallProjectionsInput>
+    where?: AgentChatMessageWhereInput
+  }
+
+  export type AgentChatMessageUpdateToOneWithWhereWithoutToolCallProjectionsInput = {
+    where?: AgentChatMessageWhereInput
+    data: XOR<AgentChatMessageUpdateWithoutToolCallProjectionsInput, AgentChatMessageUncheckedUpdateWithoutToolCallProjectionsInput>
+  }
+
+  export type AgentChatMessageUpdateWithoutToolCallProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentRun?: AgentRunUpdateOneWithoutChatMessagesNestedInput
+    editedFromMessage?: AgentChatMessageUpdateOneWithoutEditedVariantsNestedInput
+    editedVariants?: AgentChatMessageUpdateManyWithoutEditedFromMessageNestedInput
+    regeneratedFromMessage?: AgentChatMessageUpdateOneWithoutRegenerationsNestedInput
+    regenerations?: AgentChatMessageUpdateManyWithoutRegeneratedFromMessageNestedInput
+    thread?: AgentChatThreadUpdateOneRequiredWithoutMessagesNestedInput
+    branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+  }
+
+  export type AgentChatMessageUncheckedUpdateWithoutToolCallProjectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    agentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    metadata?: JsonNullValueInput | InputJsonValue
+    editedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    regeneratedFromMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    editedVariants?: AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageNestedInput
+    regenerations?: AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageNestedInput
+    branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
+    sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
+    toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
   }
 
   export type AgentRunCreateWithoutCreditEntriesInput = {
@@ -91473,6 +99510,7 @@ export namespace Prisma {
     description?: string | null
     status?: string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: string | null
     onboardingCompletedAt?: Date | string | null
     createdByUserId: string
@@ -91489,6 +99527,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -91510,6 +99549,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -91531,6 +99571,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     allowedTools?: JsonNullValueInput | InputJsonValue
+    suggestedMessages?: JsonNullValueInput | InputJsonValue
     activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdByUserId?: StringFieldUpdateOperationsInput | string
@@ -91631,6 +99672,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutAgentInput = {
@@ -91647,6 +99691,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateManyWithoutAgentInput = {
@@ -92194,6 +100241,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutAgentRunInput = {
@@ -92211,6 +100261,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateManyWithoutAgentRunInput = {
@@ -93110,6 +101163,52 @@ export namespace Prisma {
     tokensUsed?: number | null
   }
 
+  export type ConversationEventCreateManyThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationMessageProjectionCreateManyThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    status?: string
+    text?: string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: boolean
+    isCompleted?: boolean
+    isFailed?: boolean
+    errorMessage?: string | null
+    lastSequence?: number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateManyThreadInput = {
+    id?: string
+    organizationId: string
+    messageId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type AgentChatMessageUpdateWithoutThreadInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
@@ -93125,6 +101224,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutThreadInput = {
@@ -93142,6 +101244,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateManyWithoutThreadInput = {
@@ -93215,6 +101320,9 @@ export namespace Prisma {
     branchedFromMessage?: AgentChatMessageUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutParentThreadInput = {
@@ -93231,6 +101339,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateManyWithoutParentThreadInput = {
@@ -93369,6 +101480,144 @@ export namespace Prisma {
     tokensUsed?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type ConversationEventUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: AgentChatMessageUpdateOneRequiredWithoutConversationEventsNestedInput
+  }
+
+  export type ConversationEventUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationMessageProjectionUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: AgentChatMessageUpdateOneRequiredWithoutMessageProjectionNestedInput
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationMessageProjectionUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    citations?: JsonNullValueInput | InputJsonValue
+    isStreaming?: BoolFieldUpdateOperationsInput | boolean
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    isFailed?: BoolFieldUpdateOperationsInput | boolean
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    metadata?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: AgentChatMessageUpdateOneRequiredWithoutToolCallProjectionsNestedInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AgentChatMessageCreateManyEditedFromMessageInput = {
     id?: string
     threadId: string
@@ -93456,6 +101705,35 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ConversationEventCreateManyMessageInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    sequence: number
+    eventType: string
+    status?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ConversationToolCallProjectionCreateManyMessageInput = {
+    id?: string
+    organizationId: string
+    threadId: string
+    toolCallId: string
+    groupId?: string | null
+    toolName: string
+    status?: string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    durationMs?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type AgentChatMessageUpdateWithoutEditedFromMessageInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
@@ -93471,6 +101749,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutEditedFromMessageInput = {
@@ -93488,6 +101769,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateManyWithoutEditedFromMessageInput = {
@@ -93517,6 +101801,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateWithoutRegeneratedFromMessageInput = {
@@ -93534,6 +101821,9 @@ export namespace Prisma {
     branches?: AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageNestedInput
     sourceRuns?: AgentRunUncheckedUpdateManyWithoutSourceMessageNestedInput
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutMessageNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutMessageNestedInput
+    messageProjection?: ConversationMessageProjectionUncheckedUpdateOneWithoutMessageNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type AgentChatMessageUncheckedUpdateManyWithoutRegeneratedFromMessageInput = {
@@ -93562,6 +101852,9 @@ export namespace Prisma {
     parentThread?: AgentChatThreadUpdateOneWithoutBranchesNestedInput
     branches?: AgentChatThreadUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateWithoutBranchedFromMessageInput = {
@@ -93578,6 +101871,9 @@ export namespace Prisma {
     toolCalls?: AgentChatToolCallUncheckedUpdateManyWithoutThreadNestedInput
     branches?: AgentChatThreadUncheckedUpdateManyWithoutParentThreadNestedInput
     runs?: AgentRunUncheckedUpdateManyWithoutThreadNestedInput
+    conversationEvents?: ConversationEventUncheckedUpdateManyWithoutThreadNestedInput
+    messageProjections?: ConversationMessageProjectionUncheckedUpdateManyWithoutThreadNestedInput
+    toolCallProjections?: ConversationToolCallProjectionUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type AgentChatThreadUncheckedUpdateManyWithoutBranchedFromMessageInput = {
@@ -93759,6 +102055,93 @@ export namespace Prisma {
     durationMs?: NullableIntFieldUpdateOperationsInput | number | null
     createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutConversationEventsNestedInput
+  }
+
+  export type ConversationEventUncheckedUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationEventUncheckedUpdateManyWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    sequence?: IntFieldUpdateOperationsInput | number
+    eventType?: StringFieldUpdateOperationsInput | string
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    thread?: AgentChatThreadUpdateOneRequiredWithoutToolCallProjectionsNestedInput
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationToolCallProjectionUncheckedUpdateManyWithoutMessageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    toolCallId?: StringFieldUpdateOperationsInput | string
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    toolName?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: NullableJsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RagChunkCreateManyDocumentInput = {

@@ -11,6 +11,8 @@ type AgentContentLayoutProps = {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  /** Oculta o header com ícone/nome do agente (ex.: tela inicial do chat). */
+  hideHeader?: boolean;
 };
 
 export function AgentContentLayout({
@@ -22,11 +24,13 @@ export function AgentContentLayout({
   children,
   className,
   contentClassName,
+  hideHeader = false,
 }: AgentContentLayoutProps) {
   return (
     <div className={cn("flex h-full min-w-0 w-full flex-col", className)}>
       {banner}
 
+      {!hideHeader ? (
       <header className="flex h-[82px] shrink-0 items-center border-b border-[var(--line-subtle)] px-6">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="flex size-12 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
@@ -48,6 +52,7 @@ export function AgentContentLayout({
           <div className="ml-4 flex shrink-0 items-center gap-2">{actions}</div>
         ) : null}
       </header>
+      ) : null}
 
       <div className={cn("min-h-0 w-full flex-1", contentClassName)}>
         {children}

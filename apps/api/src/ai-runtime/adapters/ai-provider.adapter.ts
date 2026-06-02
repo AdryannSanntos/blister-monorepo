@@ -56,6 +56,11 @@ export interface AIRuntimeTextResult {
   raw?: Record<string, unknown>;
 }
 
+/** One incremental text chunk emitted while streaming a generation. */
+export interface AIRuntimeTextStreamChunk {
+  delta: string;
+}
+
 export interface AIRuntimeImageResult {
   images: Array<{ url: string }>;
   usage: AIRuntimeUsage;
@@ -106,4 +111,9 @@ export interface AIProviderAdapter {
   generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult>;
   generateImage(request: AIRuntimeImageRequest): Promise<AIRuntimeImageResult>;
   createEmbedding(request: AIRuntimeEmbeddingRequest): Promise<AIRuntimeEmbeddingResult>;
+  /**
+   * Optional real token streaming. When absent, {@link AIRuntimeService.streamText}
+   * degrades gracefully to a single full-text chunk via {@link generateText}.
+   */
+  streamText?(request: AIRuntimeTextRequest): AsyncIterable<AIRuntimeTextStreamChunk>;
 }

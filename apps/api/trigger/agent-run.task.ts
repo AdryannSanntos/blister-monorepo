@@ -1,10 +1,5 @@
 import { schemaTask } from '@trigger.dev/sdk';
 import { ConfigService } from '@nestjs/config';
-import { AnthropicAdapter } from '../src/ai-runtime/adapters/anthropic.adapter';
-import { GeminiAdapter } from '../src/ai-runtime/adapters/gemini.adapter';
-import { OpenAIAdapter } from '../src/ai-runtime/adapters/openai.adapter';
-import { OpenRouterAdapter } from '../src/ai-runtime/adapters/openrouter.adapter';
-import { AIRuntimeService } from '../src/ai-runtime/ai-runtime.service';
 import { AgentBlockExecutorRegistry } from '../src/agents/agent-block-executor.registry';
 import { AgentBlockRegistrationService } from '../src/agents/agent-block-registration.service';
 import { AgentContextService } from '../src/agents/agent-context.service';
@@ -16,6 +11,7 @@ import { HtmlPreviewService } from '../src/agents/html-preview.service';
 import { CreditsService } from '../src/credits/credits.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { StorageService } from '../src/storage/storage.service';
+import { createAIRuntimeService } from './shared/ai-runtime';
 import { agentRunTaskPayloadSchema } from './shared/agent-runtime-payloads';
 
 export const agentRunTask = schemaTask({
@@ -28,13 +24,7 @@ export const agentRunTask = schemaTask({
 
     try {
       const config = new ConfigService();
-      const aiRuntime = new AIRuntimeService(
-        prisma,
-        new OpenRouterAdapter(),
-        new OpenAIAdapter(),
-        new AnthropicAdapter(),
-        new GeminiAdapter(),
-      );
+      const aiRuntime = createAIRuntimeService(prisma);
       const queueService = new AgentQueueService(prisma);
       const storageService = new StorageService(config);
       const htmlPreviewService = new HtmlPreviewService(prisma, storageService);

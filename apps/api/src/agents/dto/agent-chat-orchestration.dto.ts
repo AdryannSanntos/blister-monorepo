@@ -1,5 +1,16 @@
 import { z } from 'zod';
+import type { ConversationEventType } from '../../conversation/dto/conversation-event.dto';
 import { agentChatToolNameSchema, agentChatToolStatusSchema } from './agent-chat-tool.dto';
+
+/**
+ * One semantic event emitted by the streaming orchestrator. The consumer (agent
+ * chat stream handler) persists each emit via the conversation event log — which
+ * assigns the canonical `sequence` — and writes the matching SSE frame.
+ */
+export interface OrchestrationEmit {
+  eventType: ConversationEventType;
+  payload: Record<string, unknown>;
+}
 
 export const orchestrationModeSchema = z.enum(['conversation', 'context_retrieval', 'execution']);
 
@@ -39,6 +50,7 @@ export const agentChatTurnDecisionSchema = z.object({
 export const agentChatToolLoopDecisionSchema = z.object({
   action: z.enum(['respond', 'tool_call']),
   assistantMessage: z.string(),
+  decisionReason: z.string(),
   createRun: z.boolean(),
   executionReason: z.string(),
   toolName: z.enum(['rag_search', 'file_search', 'web_research', 'none']),

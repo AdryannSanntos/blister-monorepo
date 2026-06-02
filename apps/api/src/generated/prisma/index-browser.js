@@ -476,9 +476,23 @@ exports.Prisma.CompanyAgentScalarFieldEnum = {
   description: 'description',
   status: 'status',
   allowedTools: 'allowedTools',
+  suggestedMessages: 'suggestedMessages',
   activeVersionId: 'activeVersionId',
   onboardingCompletedAt: 'onboardingCompletedAt',
   createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SystemAgentConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  providerId: 'providerId',
+  modelId: 'modelId',
+  temperature: 'temperature',
+  maxOutputTokens: 'maxOutputTokens',
+  enabled: 'enabled',
   updatedByUserId: 'updatedByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -679,6 +693,55 @@ exports.Prisma.AgentChatToolCallScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ConversationEventScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  sequence: 'sequence',
+  eventType: 'eventType',
+  status: 'status',
+  payload: 'payload',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ConversationMessageProjectionScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  status: 'status',
+  text: 'text',
+  citations: 'citations',
+  isStreaming: 'isStreaming',
+  isCompleted: 'isCompleted',
+  isFailed: 'isFailed',
+  errorMessage: 'errorMessage',
+  lastSequence: 'lastSequence',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationToolCallProjectionScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  toolCallId: 'toolCallId',
+  groupId: 'groupId',
+  toolName: 'toolName',
+  status: 'status',
+  inputPayload: 'inputPayload',
+  outputPayload: 'outputPayload',
+  errorMessage: 'errorMessage',
+  durationMs: 'durationMs',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -835,6 +898,7 @@ exports.Prisma.ModelName = {
   AIProviderPolicy: 'AIProviderPolicy',
   AgentTemplate: 'AgentTemplate',
   CompanyAgent: 'CompanyAgent',
+  SystemAgentConfig: 'SystemAgentConfig',
   AgentVersion: 'AgentVersion',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
@@ -848,6 +912,9 @@ exports.Prisma.ModelName = {
   AgentChatThread: 'AgentChatThread',
   AgentChatMessage: 'AgentChatMessage',
   AgentChatToolCall: 'AgentChatToolCall',
+  ConversationEvent: 'ConversationEvent',
+  ConversationMessageProjection: 'ConversationMessageProjection',
+  ConversationToolCallProjection: 'ConversationToolCallProjection',
   CreditLedgerEntry: 'CreditLedgerEntry',
   TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
   RagDocument: 'RagDocument',

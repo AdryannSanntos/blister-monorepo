@@ -11,25 +11,7 @@ export type ChatThread = {
   parentThreadId: string | null;
   createdAt: string;
   updatedAt: string;
-  hasActiveRun?: boolean;
   _count?: { messages: number };
-};
-
-export type ChatMessageRunSummary = {
-  id: string;
-  status: string;
-  queuePosition: number | null;
-  errorMessage: string | null;
-  steps: Array<{
-    id: string;
-    blockKey: string;
-    blockType: string;
-    status: string;
-    inputPayload: unknown;
-    outputPayload: unknown;
-    errorMessage: string | null;
-    createdAt: string;
-  }>;
 };
 
 export type ChatAttachment = {
@@ -41,55 +23,10 @@ export type ChatAttachment = {
   textContent?: string;
 };
 
-export type ChatToolPart = {
-  type: string;
-  toolCallId?: string;
-  state?: "input-streaming" | "output-available" | "output-error";
-  input?: Record<string, unknown>;
-  output?: unknown;
-};
-
-export type ChatCitation = {
-  label: string;
-  url?: string;
-  sourceType?: string;
-  sourceId?: string;
-};
-
-export type ChatMessageMetadata = {
-  attachments?: ChatAttachment[];
-  toolParts?: ChatToolPart[];
-  citations?: ChatCitation[];
-};
-
-export type ChatMessage = {
-  id: string;
-  role: "user" | "assistant" | "system";
-  content: string;
-  metadata: unknown;
-  agentRunId: string | null;
-  editedFromMessageId: string | null;
-  regeneratedFromMessageId: string | null;
-  createdAt: string;
-  agentRun?: ChatMessageRunSummary | null;
-};
-
 const threadsKey = (orgId: string, agentId: string) =>
   ["agent-chat", orgId, agentId, "threads"] as const;
-const messagesKey = (orgId: string, agentId: string, threadId: string) =>
-  ["agent-chat", orgId, agentId, "messages", threadId] as const;
-
-function hasActiveRun(messages: ChatMessage[] | undefined) {
-  if (!messages || messages.length === 0) return false;
-  const last = messages[messages.length - 1];
-  const run = last.agentRun;
-  if (!run) return false;
-  return run.status === "queued" || run.status === "running";
-}
-
-function hasActiveThread(threads: ChatThread[] | undefined) {
-  return Boolean(threads?.some((thread) => thread.hasActiveRun));
-}
+const replayKey = (orgId: string, agentId: string, threadId: string) =>
+  ["agent-chat", orgId, agentId, "replay", threadId] as const;
 
 export function useAgentThreads(
   orgId: string | null | undefined,
@@ -104,31 +41,6 @@ export function useAgentThreads(
       );
       return data.threads ?? [];
     },
-    refetchInterval: (query) =>
-      hasActiveThread(query.state.data as ChatThread[] | undefined)
-        ? 2000
-        : false,
-  });
-}
-
-export function useAgentMessages(
-  orgId: string | null | undefined,
-  agentId: string | null | undefined,
-  threadId: string | null | undefined,
-) {
-  return useQuery({
-    queryKey: messagesKey(orgId ?? "", agentId ?? "", threadId ?? ""),
-    enabled: Boolean(orgId && agentId && threadId),
-    queryFn: async () => {
-      const { data } = await apiClient.get<{ messages: ChatMessage[] }>(
-        `/organizations/${orgId}/agents/${agentId}/chat/threads/${threadId}/messages`,
-      );
-      return data.messages ?? [];
-    },
-    refetchInterval: (query) =>
-      hasActiveRun(query.state.data as ChatMessage[] | undefined)
-        ? 2000
-        : false,
   });
 }
 
@@ -142,11 +54,7 @@ export function useCreateThread(
       if (!orgId || !agentId) throw new Error("orgId and agentId required");
       const { data } = await apiClient.post<ChatThread>(
         `/organizations/${orgId}/agents/${agentId}/chat/threads`,
-        {
-          scope: "agent_chat",
-          agentId,
-          ...(title ? { title } : {}),
-        },
+        { scope: "agent_chat", agentId, ...(title ? { title } : {}) },
       );
       return data;
     },
@@ -176,45 +84,12 @@ export function useDeleteThread(
       if (orgId && agentId) {
         queryClient.invalidateQueries({ queryKey: threadsKey(orgId, agentId) });
         queryClient.removeQueries({
-          queryKey: messagesKey(orgId, agentId, threadId),
+          queryKey: replayKey(orgId, agentId, threadId),
         });
       }
       toast.success("Conversa excluida.");
     },
     onError: () => toast.error("Erro ao excluir conversa."),
-  });
-}
-
-export function useSendMessage(
-  orgId: string | null | undefined,
-  agentId: string | null | undefined,
-) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: {
-      threadId: string;
-      content: string;
-      attachments?: ChatAttachment[];
-    }) => {
-      if (!orgId || !agentId) throw new Error("orgId and agentId required");
-      const { data } = await apiClient.post<ChatMessage>(
-        `/organizations/${orgId}/agents/${agentId}/chat/threads/${input.threadId}/messages`,
-        {
-          content: input.content,
-          attachments: input.attachments ?? [],
-        },
-      );
-      return data;
-    },
-    onSuccess: (_data, input) => {
-      if (orgId && agentId) {
-        queryClient.invalidateQueries({
-          queryKey: messagesKey(orgId, agentId, input.threadId),
-        });
-        queryClient.invalidateQueries({ queryKey: threadsKey(orgId, agentId) });
-      }
-    },
-    onError: () => toast.error("Erro ao enviar mensagem."),
   });
 }
 
@@ -230,7 +105,7 @@ export function useEditAndBranch(
       content: string;
     }) => {
       if (!orgId || !agentId) throw new Error("orgId and agentId required");
-      const { data } = await apiClient.post<ChatThread>(
+      const { data } = await apiClient.post<{ branchId: string }>(
         `/organizations/${orgId}/agents/${agentId}/chat/threads/${input.threadId}/branch`,
         { messageId: input.messageId, content: input.content },
       );
@@ -265,30 +140,5 @@ export function useRenameThread(
       }
     },
     onError: () => toast.error("Erro ao renomear conversa."),
-  });
-}
-
-export function useRegenerateMessage(
-  orgId: string | null | undefined,
-  agentId: string | null | undefined,
-) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: { threadId: string; messageId: string }) => {
-      if (!orgId || !agentId) throw new Error("orgId and agentId required");
-      const { data } = await apiClient.post<ChatMessage>(
-        `/organizations/${orgId}/agents/${agentId}/chat/threads/${input.threadId}/regenerate`,
-        { messageId: input.messageId },
-      );
-      return data;
-    },
-    onSuccess: (_data, input) => {
-      if (orgId && agentId) {
-        queryClient.invalidateQueries({
-          queryKey: messagesKey(orgId, agentId, input.threadId),
-        });
-      }
-    },
-    onError: () => toast.error("Erro ao regenerar resposta."),
   });
 }

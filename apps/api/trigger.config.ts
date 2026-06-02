@@ -14,6 +14,12 @@ export default defineConfig({
       "class-validator",
       "class-transformer",
       "cache-manager",
+      // pdf-parse pulls in pdfjs-dist (needs DOM globals) and the native
+      // @napi-rs/canvas binary. Bundling it breaks the canvas polyfill, so
+      // pdfjs throws "DOMMatrix is not defined" at import. Keep pdf-parse
+      // external so it loads from node_modules at runtime and resolves its
+      // own nested pdfjs-dist + @napi-rs/canvas (with the polyfill intact).
+      "pdf-parse",
     ],
   },
 });

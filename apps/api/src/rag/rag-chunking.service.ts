@@ -60,33 +60,37 @@ export class RagChunkingService {
     const targetChars = RagChunkingService.TARGET_TOKENS * RagChunkingService.CHARS_PER_TOKEN;
     const overlapChars = RagChunkingService.OVERLAP_TOKENS * RagChunkingService.CHARS_PER_TOKEN;
 
-    const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
-    const chunks: Array<{ content: string; tokenCount: number }> = [];
+    // Flatten the document into segments that are each guaranteed to fit inside
+    // a chunk. Extracted PDF/DOCX text often arrives as one whitespace-collapsed
+    // blob with no paragraph breaks, so without this step the whole document
+    // would collapse into a single oversized chunk whose embedding is too
+    // diluted to retrieve specific facts.
+    const segments = this.toBoundedSegments(text, targetChars);
+    if (segments.length === 0) {
+      return [this.buildChunk(text)];
+    }
 
+    const chunks: Array<{ content: string; tokenCount: number }> = [];
     let current = '';
 
-    for (const paragraph of paragraphs) {
-      if (current.length + paragraph.length + 2 <= targetChars) {
-        current = current ? `${current}\n\n${paragraph}` : paragraph;
+    for (const segment of segments) {
+      if (current.length + segment.length + 2 <= targetChars) {
+        current = current ? `${current}\n\n${segment}` : segment;
         continue;
       }
 
       if (current) {
         chunks.push(this.buildChunk(current));
-        // Overlap: carry tail of current chunk
+        // Carry an overlap tail so context isn't severed at the boundary — but
+        // only when it still fits, otherwise a max-sized segment would push the
+        // next chunk over the target.
         const tail = current.slice(-overlapChars);
-        current = tail ? `${tail}\n\n${paragraph}` : paragraph;
+        current =
+          tail && tail.length + segment.length + 2 <= targetChars
+            ? `${tail}\n\n${segment}`
+            : segment;
       } else {
-        // Single paragraph larger than target — hard-split by sentence
-        const sentences = paragraph.split(/(?<=[.!?])\s+/);
-        for (const sentence of sentences) {
-          if (current.length + sentence.length + 1 <= targetChars) {
-            current = current ? `${current} ${sentence}` : sentence;
-          } else {
-            if (current) chunks.push(this.buildChunk(current));
-            current = sentence;
-          }
-        }
+        current = segment;
       }
     }
 
@@ -95,6 +99,43 @@ export class RagChunkingService {
     }
 
     return chunks.length ? chunks : [this.buildChunk(text)];
+  }
+
+  /**
+   * Breaks text into a flat list of segments, each no larger than `targetChars`.
+   * Paragraphs are split by sentence when oversized, and any sentence still too
+   * large (e.g. a long bullet run with no terminal punctuation) is hard-sliced.
+   */
+  private toBoundedSegments(text: string, targetChars: number): string[] {
+    const segments: string[] = [];
+
+    const paragraphs = text
+      .split(/\n{2,}/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    for (const paragraph of paragraphs) {
+      if (paragraph.length <= targetChars) {
+        segments.push(paragraph);
+        continue;
+      }
+
+      for (const sentence of paragraph.split(/(?<=[.!?])\s+/)) {
+        const trimmed = sentence.trim();
+        if (!trimmed) continue;
+
+        if (trimmed.length <= targetChars) {
+          segments.push(trimmed);
+          continue;
+        }
+
+        for (let i = 0; i < trimmed.length; i += targetChars) {
+          segments.push(trimmed.slice(i, i + targetChars));
+        }
+      }
+    }
+
+    return segments;
   }
 
   private buildChunk(content: string): { content: string; tokenCount: number } {

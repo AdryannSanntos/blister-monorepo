@@ -45,12 +45,17 @@ describe('AgentToolRuntimeService', () => {
       }),
     };
     webResearchGateway = { searchAndFetch: jest.fn().mockResolvedValue([]) };
+    const webResearchCache = {
+      getCached: jest.fn().mockResolvedValue([]),
+      store: jest.fn().mockResolvedValue(undefined),
+    };
 
     runtime = new AgentToolRuntimeService(
       new AgentToolPolicyService(),
       ragContextAssemblyService as never,
       agentContextService as never,
       webResearchGateway,
+      webResearchCache as never,
     );
   });
 

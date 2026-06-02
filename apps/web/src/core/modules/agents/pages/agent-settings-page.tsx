@@ -20,6 +20,12 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { ModelPicker } from "src/core/modules/agents/components/model-picker";
+import {
+  useAgentBuilderCatalog,
+  useUpdateAgentModel,
+} from "src/core/modules/agents/hooks/use-agent-catalog";
 import {
   useAgentContextFiles,
   useAgentContextProfile,
@@ -36,11 +42,6 @@ import {
   useCompanyAgent,
   useUpdateAgent,
 } from "src/core/modules/agents/hooks/use-agents";
-import {
-  useAgentBuilderCatalog,
-  useUpdateAgentModel,
-} from "src/core/modules/agents/hooks/use-agent-catalog";
-import { ModelPicker } from "src/core/modules/agents/components/model-picker";
 import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
 import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { AgentContentLayout } from "src/core/shared/components/ui/agent-content-layout";
@@ -76,6 +77,12 @@ import {
   SelectValue,
 } from "src/core/shared/components/ui/select";
 import { Switch } from "src/core/shared/components/ui/switch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "src/core/shared/components/ui/tabs";
 import { Textarea } from "src/core/shared/components/ui/textarea";
 import { z } from "zod";
 
@@ -635,6 +642,13 @@ function ToolAllowlistSection({
   const update = useUpdateAgent(orgId, agentId);
 
   function toggleTool(tool: AgentTool, enabled: boolean) {
+    if (!enabled && allowedTools.length === 1 && allowedTools.includes(tool)) {
+      toast.error(
+        "O agente precisa ter ao menos uma fonte de pesquisa habilitada.",
+      );
+      return;
+    }
+
     const next = enabled
       ? [...new Set([...allowedTools, tool])]
       : allowedTools.filter((value) => value !== tool);
@@ -653,8 +667,8 @@ function ToolAllowlistSection({
           </p>
           <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
             Estas ferramentas ficam disponíveis para o agente durante a
-            conversa. Nesta fase, elas não alteram dados nem criam execuções de
-            workflow por conta própria.
+            conversa. Nesta fase, elas não alteram dados nem disparam automações
+            por conta própria.
           </p>
         </div>
       </div>
@@ -745,7 +759,8 @@ function ModelSection({
             Modelo de IA
           </p>
           <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
-            Modelo utilizado pelo agente nas conversas. Modelos agrupados por provedor.
+            Modelo utilizado pelo agente nas conversas. Modelos agrupados por
+            provedor.
           </p>
         </div>
       </div>
@@ -781,7 +796,10 @@ function readConfiguredModelId(flowDefinition: unknown) {
     nodes?: Array<{ type?: string; config?: Record<string, unknown> }>;
   };
 
-  if (typeof flow.config?.modelId === "string" && flow.config.modelId.length > 0) {
+  if (
+    typeof flow.config?.modelId === "string" &&
+    flow.config.modelId.length > 0
+  ) {
     return flow.config.modelId;
   }
 
@@ -850,114 +868,130 @@ export function AgentSettingsPage() {
       subtitle="Ajuste o nome, descrição, contexto e estado do agente."
       contentClassName="min-h-0 w-full flex-1 overflow-y-auto px-6 py-6"
     >
-      <div className="w-full space-y-6">
-        {/* Agent identity */}
-        <Form {...agentForm}>
-          <form
-            onSubmit={agentForm.handleSubmit(onAgentSubmit)}
-            className="w-full space-y-4 rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)] p-6"
-          >
-            <FormField
-              control={agentForm.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Nome</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={agentForm.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      rows={3}
-                      placeholder="O que este agente faz, em uma linha..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Aparece para os usuários antes de iniciar uma conversa.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <PermissionGate permission="agent.update">
-              <div className="flex justify-end">
-                <Button type="submit" disabled={update.isPending} size="sm">
-                  <Save className="size-3.5" />
-                  {update.isPending ? "Salvando..." : "Salvar"}
-                </Button>
-              </div>
-            </PermissionGate>
-          </form>
-        </Form>
+      <Tabs defaultValue="general" className="w-full space-y-6">
+        <div className="overflow-x-auto overflow-y-hidden pb-px">
+          <TabsList variant="underline" className="min-w-max">
+            <TabsTrigger value="general">Geral</TabsTrigger>
+            <TabsTrigger value="tools">Ferramentas</TabsTrigger>
+            <TabsTrigger value="context">Contexto</TabsTrigger>
+            <TabsTrigger value="files">Arquivos</TabsTrigger>
+            <TabsTrigger value="danger">Segurança</TabsTrigger>
+          </TabsList>
+        </div>
 
-        {/* Model */}
-        <ModelSection
-          orgId={orgId}
-          agentId={agentId}
-          currentModelId={currentModelId}
-        />
-
-        {/* Tool allowlist */}
-        <ToolAllowlistSection
-          orgId={orgId}
-          agentId={agentId}
-          allowedTools={agent.data?.allowedTools ?? []}
-        />
-
-        {/* Persistent context sections */}
-        <ContextProfileSection orgId={orgId} agentId={agentId} />
-        <ContextFilesSection orgId={orgId} agentId={agentId} />
-        <ContextReferencesSection orgId={orgId} agentId={agentId} />
-
-        {/* Danger zone */}
-        <PermissionGate permission="agent.delete">
-          <Collapsible className="rounded-[var(--r-lg)] border border-[color-mix(in_oklch,var(--danger)_25%,transparent)] bg-[var(--bg-base)]">
-            <CollapsibleTrigger asChild>
-              <button
-                type="button"
-                className="flex w-full items-center justify-between px-6 py-4 text-left"
-              >
-                <div>
-                  <p className="text-[13px] font-medium text-[var(--danger)]">
-                    Zona de perigo
-                  </p>
-                  <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
-                    Ações irreversíveis sobre o agente.
-                  </p>
+        <TabsContent value="general" className="space-y-6">
+          <Form {...agentForm}>
+            <form
+              onSubmit={agentForm.handleSubmit(onAgentSubmit)}
+              className="w-full space-y-4 rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)] p-6"
+            >
+              <FormField
+                control={agentForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Nome</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={agentForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descrição</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={3}
+                        placeholder="O que este agente faz, em uma linha..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Aparece para os usuários antes de iniciar uma conversa.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <PermissionGate permission="agent.update">
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={update.isPending} size="sm">
+                    <Save className="size-3.5" />
+                    {update.isPending ? "Salvando..." : "Salvar"}
+                  </Button>
                 </div>
-                <ChevronDown className="size-4 text-[var(--fg-tertiary)] transition-transform [[data-state=open]_&]:rotate-180" />
-              </button>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="space-y-3 border-t border-[var(--line-subtle)] px-6 py-4">
-                <p className="text-[12.5px] text-[var(--fg-tertiary)]">
-                  Arquivar o agente remove ele da lista ativa e impede novas
-                  execuções. Você poderá restaurar depois.
-                </p>
-                <Button
-                  variant="destructive"
-                  disabled={agent.data?.status === "archived"}
-                  onClick={() => setConfirmArchive(true)}
+              </PermissionGate>
+            </form>
+          </Form>
+
+          <ModelSection
+            orgId={orgId}
+            agentId={agentId}
+            currentModelId={currentModelId}
+          />
+        </TabsContent>
+
+        <TabsContent value="tools" className="space-y-6">
+          <ToolAllowlistSection
+            orgId={orgId}
+            agentId={agentId}
+            allowedTools={agent.data?.allowedTools ?? []}
+          />
+        </TabsContent>
+
+        <TabsContent value="context" className="space-y-6">
+          <ContextProfileSection orgId={orgId} agentId={agentId} />
+          <ContextReferencesSection orgId={orgId} agentId={agentId} />
+        </TabsContent>
+
+        <TabsContent value="files" className="space-y-6">
+          <ContextFilesSection orgId={orgId} agentId={agentId} />
+        </TabsContent>
+
+        <TabsContent value="danger" className="space-y-6">
+          <PermissionGate permission="agent.delete">
+            <Collapsible className="rounded-[var(--r-lg)] border border-[color-mix(in_oklch,var(--danger)_25%,transparent)] bg-[var(--bg-base)]">
+              <CollapsibleTrigger asChild>
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between px-6 py-4 text-left"
                 >
-                  <Archive className="size-3.5" />
-                  Arquivar agente
-                </Button>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </PermissionGate>
-      </div>
+                  <div>
+                    <p className="text-[13px] font-medium text-[var(--danger)]">
+                      Zona de perigo
+                    </p>
+                    <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">
+                      Ações irreversíveis sobre o agente.
+                    </p>
+                  </div>
+                  <ChevronDown className="size-4 text-[var(--fg-tertiary)] transition-transform [[data-state=open]_&]:rotate-180" />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-3 border-t border-[var(--line-subtle)] px-6 py-4">
+                  <p className="text-[12.5px] text-[var(--fg-tertiary)]">
+                    Arquivar o agente remove ele da lista ativa e impede novas
+                    execuções. Você poderá restaurar depois.
+                  </p>
+                  <Button
+                    variant="destructive"
+                    disabled={agent.data?.status === "archived"}
+                    onClick={() => setConfirmArchive(true)}
+                  >
+                    <Archive className="size-3.5" />
+                    Arquivar agente
+                  </Button>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </PermissionGate>
+        </TabsContent>
+      </Tabs>
 
       <ConfirmationDialog
         open={confirmArchive}

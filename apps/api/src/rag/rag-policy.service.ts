@@ -1,29 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { RagSourceRegistry } from './rag-source-registry.service';
 
 const SECRET_KEY_PATTERN = /(token|secret|password|credential|api[-_]?key|authorization|cookie)/i;
 
 @Injectable()
 export class RagPolicyService {
+  constructor(private readonly sourceRegistry: RagSourceRegistry) {}
+
   /**
-   * Returns source types the given permission set may read.
-   * Guards retrieval results before surfacing to the caller.
+   * Returns source types the given permission set may read. Delegates to the source
+   * registry so the permission gate has a single definition shared with retrieval.
    */
   getAllowedSourceTypes(permissions: string[]): string[] {
-    const allowed: string[] = [];
-
-    if (permissions.includes('brain.read')) {
-      allowed.push('brain_entry');
-    }
-    if (permissions.includes('asset.read')) {
-      allowed.push('asset');
-    }
-    if (permissions.includes('agent.read')) {
-      allowed.push('agent_context_file');
-    }
-    // manual documents are readable by any authenticated member
-    allowed.push('manual');
-
-    return allowed;
+    return this.sourceRegistry.allowedSourceTypes(permissions);
   }
 
   sanitizeMetadata<T>(metadata: T): T {

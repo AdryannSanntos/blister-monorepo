@@ -120,6 +120,7 @@ export type InputBarProps = {
   leftActions?: React.ReactNode;
   /** Content rendered on the right of the toolbar, before the send button. */
   rightActions?: React.ReactNode;
+  outerInset?: "default" | "flush";
 };
 
 export const InputBar = memo(function InputBar({
@@ -146,6 +147,7 @@ export const InputBar = memo(function InputBar({
   questionBar,
   leftActions,
   rightActions,
+  outerInset = "default",
 }: InputBarProps) {
   const [internalInput, setInternalInput] = useState("");
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(true);
@@ -419,7 +421,13 @@ export const InputBar = memo(function InputBar({
     : suggestions?.itemClassName;
 
   return (
-    <div className={cn("shrink-0 p-3", className)}>
+    <div
+      className={cn(
+        "shrink-0",
+        outerInset === "default" ? "p-3" : "p-0",
+        className,
+      )}
+    >
       <div className="mx-auto max-w-an">
         <div
           className={cn(
@@ -434,7 +442,7 @@ export const InputBar = memo(function InputBar({
               items={suggestionItems}
               onSelect={handleSuggestionSelect}
               disabled={disabled || isStreaming}
-              className={cn("mb-4 px-3", suggestionsClassName)}
+              className={cn("mb-4", suggestionsClassName)}
               itemClassName={suggestionItemClassName}
             />
           )}

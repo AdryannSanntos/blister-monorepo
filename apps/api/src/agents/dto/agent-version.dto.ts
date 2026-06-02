@@ -129,9 +129,17 @@ export const agentFlowNodeSchema = z.discriminatedUnion('type', [
         title: z.string().min(1).default('Formulário'),
         generationInstructions: z.string().optional(),
         inputMappings: inputMappingSchema,
-        fields: z.array(formFieldSchema).min(1).default([
-          { id: 'campo_1', label: 'Descreva o que você precisa', type: 'textarea', required: true },
-        ]),
+        fields: z
+          .array(formFieldSchema)
+          .min(1)
+          .default([
+            {
+              id: 'campo_1',
+              label: 'Descreva o que você precisa',
+              type: 'textarea',
+              required: true,
+            },
+          ]),
       })
       .catchall(z.unknown())
       .default({
@@ -184,10 +192,8 @@ const normalizeFlowEdge = (edge: unknown) => {
   const record = edge as Record<string, unknown>;
   const sourceNodeId = typeof record.sourceNodeId === 'string' ? record.sourceNodeId : '';
   const targetNodeId = typeof record.targetNodeId === 'string' ? record.targetNodeId : '';
-  const sourcePortKey =
-    typeof record.sourcePortKey === 'string' ? record.sourcePortKey : 'default';
-  const targetPortKey =
-    typeof record.targetPortKey === 'string' ? record.targetPortKey : 'default';
+  const sourcePortKey = typeof record.sourcePortKey === 'string' ? record.sourcePortKey : 'default';
+  const targetPortKey = typeof record.targetPortKey === 'string' ? record.targetPortKey : 'default';
 
   return {
     ...record,

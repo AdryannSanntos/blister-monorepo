@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '../generated/prisma';
 import { AIRuntimeService } from '../ai-runtime/ai-runtime.service';
+import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
 
 const toJsonValue = (v: unknown): Prisma.InputJsonValue => v as Prisma.InputJsonValue;

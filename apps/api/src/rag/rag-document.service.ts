@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { createHash } from 'node:crypto';
+import type { IngestDocumentDto } from '@company-os/types';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../prisma/prisma.service';
-import type { IngestDocumentDto } from '@company-os/types';
 
 const toJsonValue = (v: unknown): Prisma.InputJsonValue => v as Prisma.InputJsonValue;
 
