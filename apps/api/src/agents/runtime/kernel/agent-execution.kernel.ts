@@ -1,39 +1,56 @@
+import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
 import { Prisma, type PrismaClient } from '../../../generated/prisma';
-import type {
-  AgentDefinition,
-  ContextPack,
-  RunResult,
-  StepExecutionContext,
-  StepResult,
-} from './types';
 import { loadAgentDefinition } from './agent-loader';
-import { buildStepContext, type ContextPackBuilder } from './step-context.builder';
 import { debitStepCredits, getPlatformSettings } from './credit-debit.helper';
+import { customStepExecutors } from './custom-steps';
 import {
+  type EventPublisher,
+  createOutputChunkEvent,
   createRunCompletedEvent,
   createRunFailedEvent,
   createRunPausedEvent,
   createRunStartedEvent,
   createStepCompletedEvent,
   createStepStartedEvent,
-  type EventPublisher,
 } from './run-event.publisher';
+import { type ContextPackBuilder, buildStepContext } from './step-context.builder';
+import type {
+  AgentDefinition,
+  AssetResolver,
+  ContextPack,
+  RunResult,
+  StepExecutionContext,
+  StepResult,
+} from './types';
+
+export interface LlmCompletion {
+  content: string;
+  model: string;
+  tokensInput: number;
+  tokensOutput: number;
+  costUsd: number;
+  structuredOutput?: Record<string, unknown>;
+}
+
+export interface LlmCompletionParams {
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+  agentId: string;
+  maxTokens?: number;
+  temperature?: number;
+  structuredOutputSchema?: Record<string, unknown>;
+}
 
 export interface LlmProvider {
-  complete(params: {
-    messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
-    agentId: string;
-    maxTokens?: number;
-    temperature?: number;
-    structuredOutputSchema?: Record<string, unknown>;
-  }): Promise<{
-    content: string;
-    model: string;
-    tokensInput: number;
-    tokensOutput: number;
-    costUsd: number;
-    structuredOutput?: Record<string, unknown>;
-  }>;
+  complete(params: LlmCompletionParams): Promise<LlmCompletion>;
+  /**
+   * Optional streaming variant. When present, the kernel uses it for llm_call
+   * steps so the UI can render the answer token-by-token. `onChunk` receives
+   * incremental text deltas as they arrive from the model.
+   */
+  completeStream?(
+    params: LlmCompletionParams,
+    onChunk: (delta: string) => void,
+  ): Promise<LlmCompletion>;
 }
 
 export interface ImageProvider {
@@ -53,8 +70,33 @@ export interface ExecutionDependencies {
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
   eventPublisher: EventPublisher;
+  /** Resolves brand asset storage keys to signed URLs (optional). */
+  assetResolver?: AssetResolver | null;
   stubMode?: boolean;
 }
+
+/**
+ * Providers handed to a custom (agent-specific) step executor. This is the
+ * subset of {@link ExecutionDependencies} a step needs to do real work, without
+ * exposing the orchestration plumbing (prisma, event publisher).
+ */
+export interface StepExecutorDeps {
+  llmProvider: LlmProvider | null;
+  imageProvider: ImageProvider | null;
+  assetResolver: AssetResolver | null;
+}
+
+/**
+ * An agent-specific step implementation. Registered in `custom-steps.ts` under
+ * the key `"<agentId>:<stepKey>"`. When present, the kernel calls it instead of
+ * the generic step handler for that step type, giving the agent full control
+ * over prompt construction, pausing for user input, and output shaping.
+ */
+export type CustomStepExecutor = (
+  context: StepExecutionContext,
+  deps: StepExecutorDeps,
+  onChunk?: (delta: string) => void,
+) => Promise<StepResult>;
 
 export interface ExecuteRunParams {
   runId: string;
@@ -95,6 +137,22 @@ export async function executeRun(
     throw new Error(`Agent definition not found: ${run.agentId}`);
   }
 
+  // On resume, persist the answers into inputPayload so multi-step onboarding
+  // (one question per pause) accumulates state across pauses. Without this, the
+  // formData only lives in-memory for the current resume and earlier answers
+  // would be lost on the next pause.
+  if (params.formData && Object.keys(params.formData).length > 0) {
+    const mergedInput = {
+      ...(run.inputPayload as Record<string, unknown>),
+      ...params.formData,
+    };
+    await prisma.agentRun.update({
+      where: { id: run.id },
+      data: { inputPayload: JSON.parse(JSON.stringify(mergedInput)) },
+    });
+    run.inputPayload = mergedInput as typeof run.inputPayload;
+  }
+
   await prisma.agentRun.update({
     where: { id: run.id },
     data: {
@@ -103,9 +161,7 @@ export async function executeRun(
     },
   });
 
-  await eventPublisher.publish(
-    createRunStartedEvent(run.id, run.agentId, run.companyId),
-  );
+  await eventPublisher.publish(createRunStartedEvent(run.id, run.agentId, run.companyId));
 
   const platformSettings = await getPlatformSettings(prisma);
 
@@ -156,15 +212,22 @@ export async function executeRun(
         stepKey: stepDef.key,
         stepIndex: i,
         inputPayload: {
-          ...run.inputPayload as Record<string, unknown>,
+          ...(run.inputPayload as Record<string, unknown>),
           ...currentOutput,
           ...(params.formData ?? {}),
         },
       });
 
+      const onChunk = (delta: string): void => {
+        if (!delta) return;
+        void eventPublisher.publish(
+          createOutputChunkEvent(run.id, run.agentId, run.companyId, delta),
+        );
+      };
+
       const stepResult = stubMode
         ? await executeStepStub(stepDef.key, run.agentId)
-        : await executeStep(deps, agentDefinition, stepDef.key, stepContext);
+        : await executeStep(deps, agentDefinition, stepDef.key, stepContext, onChunk);
 
       let stepCreditCost = 0;
       if (stepResult.creditCost && stepResult.creditCost > 0) {
@@ -198,7 +261,12 @@ export async function executeRun(
           });
 
           await eventPublisher.publish(
-            createRunFailedEvent(run.id, run.agentId, run.companyId, debitResult.error ?? 'Unknown'),
+            createRunFailedEvent(
+              run.id,
+              run.agentId,
+              run.companyId,
+              debitResult.error ?? 'Unknown',
+            ),
           );
 
           return {
@@ -260,6 +328,7 @@ export async function executeRun(
             run.companyId,
             stepResult.pauseReason ?? 'Unknown',
             stepResult.pauseFormSchema,
+            run.inputPayload as Record<string, unknown>,
           ),
         );
 
@@ -351,10 +420,26 @@ async function executeStep(
   agentDef: AgentDefinition,
   stepKey: string,
   context: StepExecutionContext,
+  onChunk?: (delta: string) => void,
 ): Promise<StepResult> {
   const stepDef = agentDef.steps.find((s) => s.key === stepKey);
   if (!stepDef) {
     return { type: 'FAILED', error: `Step not found: ${stepKey}` };
+  }
+
+  // Agent-specific override: when an agent registers a custom executor for this
+  // step, it takes precedence over the generic per-type handler below.
+  const customExecutor = customStepExecutors[`${agentDef.agentId}:${stepKey}`];
+  if (customExecutor) {
+    return customExecutor(
+      context,
+      {
+        llmProvider: deps.llmProvider,
+        imageProvider: deps.imageProvider,
+        assetResolver: deps.assetResolver ?? null,
+      },
+      onChunk,
+    );
   }
 
   switch (stepDef.type) {
@@ -367,15 +452,28 @@ async function executeStep(
         },
       };
 
+    case 'clarification':
+      // A clarification step with no registered custom executor cannot know what
+      // to ask, so it is a no-op that lets the run continue.
+      return { type: 'CONTINUE', output: {} };
+
     case 'llm_call':
       if (!deps.llmProvider) {
-        return { type: 'FAILED', error: 'LLM provider not configured' };
+        return {
+          type: 'FAILED',
+          error:
+            'Nenhum provedor de texto está configurado. Adicione OPENROUTER_API_KEY ou GEMINI_API_KEY no servidor.',
+        };
       }
-      return executeLlmStep(deps.llmProvider, agentDef, context);
+      return executeLlmStep(deps.llmProvider, agentDef, context, onChunk);
 
     case 'image_generation':
       if (!deps.imageProvider) {
-        return { type: 'FAILED', error: 'Image provider not configured' };
+        return {
+          type: 'FAILED',
+          error:
+            'Geração de imagem indisponível. Configure GEMINI_API_KEY e o modelo de imagem do agente.',
+        };
       }
       return executeImageStep(deps.imageProvider, context);
 
@@ -396,27 +494,55 @@ async function executeStep(
   }
 }
 
+function parseLlmOutput(response: {
+  structuredOutput?: Record<string, unknown>;
+  content: string;
+}): Record<string, unknown> {
+  if (response.structuredOutput) return response.structuredOutput;
+
+  const content = response.content.trim();
+  try {
+    return JSON.parse(content) as Record<string, unknown>;
+  } catch {
+    // Streaming responses can wrap JSON in markdown fences or stray prose.
+    const match = content.match(/\{[\s\S]*\}/);
+    if (match) {
+      try {
+        return JSON.parse(match[0]) as Record<string, unknown>;
+      } catch {
+        // fall through
+      }
+    }
+    return { text: content };
+  }
+}
+
 async function executeLlmStep(
   llmProvider: LlmProvider,
   agentDef: AgentDefinition,
   context: StepExecutionContext,
+  onChunk?: (delta: string) => void,
 ): Promise<StepResult> {
   try {
     const systemPrompt = buildSystemPrompt(agentDef, context);
     const userPrompt = buildUserPrompt(context);
-
-    const response = await llmProvider.complete({
+    const params = {
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
+        { role: 'system' as const, content: systemPrompt },
+        { role: 'user' as const, content: userPrompt },
       ],
       agentId: context.agentId,
       structuredOutputSchema: agentDef.outputSchema,
-    });
+    };
+
+    const response =
+      onChunk && llmProvider.completeStream
+        ? await llmProvider.completeStream(params, onChunk)
+        : await llmProvider.complete(params);
 
     return {
       type: 'CONTINUE',
-      output: response.structuredOutput ?? JSON.parse(response.content),
+      output: parseLlmOutput(response),
       llmModel: response.model,
       tokensInput: response.tokensInput,
       tokensOutput: response.tokensOutput,
@@ -425,7 +551,7 @@ async function executeLlmStep(
   } catch (error) {
     return {
       type: 'FAILED',
-      error: error instanceof Error ? error.message : 'LLM call failed',
+      error: toUserFacingProviderError(error),
     };
   }
 }
@@ -456,7 +582,7 @@ async function executeImageStep(
   } catch (error) {
     return {
       type: 'FAILED',
-      error: error instanceof Error ? error.message : 'Image generation failed',
+      error: toUserFacingProviderError(error),
     };
   }
 }
@@ -485,13 +611,73 @@ function buildSystemPrompt(agentDef: AgentDefinition, context: StepExecutionCont
     }
   }
 
-  prompt += `Responda sempre em formato JSON seguindo o schema de saída do agente.`;
+  prompt += describeOutputContract(agentDef.outputSchema);
 
   return prompt;
 }
 
+/**
+ * Some providers ignore the `response_format` JSON schema, so we also spell the
+ * expected shape out in the prompt. This is what keeps the model from inventing
+ * field names like `copy`/`cta` instead of the schema's `caption`/`tone`.
+ */
+function describeOutputContract(schema: Record<string, unknown>): string {
+  const properties =
+    schema && typeof schema === 'object'
+      ? (schema.properties as Record<string, { type?: string; description?: string }> | undefined)
+      : undefined;
+
+  if (!properties || Object.keys(properties).length === 0) {
+    return `Responda SEMPRE com um único objeto JSON válido, sem texto fora do JSON.`;
+  }
+
+  const required = Array.isArray((schema as { required?: unknown }).required)
+    ? ((schema as { required?: string[] }).required ?? [])
+    : [];
+
+  const fieldLines = Object.entries(properties)
+    .map(([key, def]) => {
+      const type = def?.type ?? 'string';
+      const req = required.includes(key) ? ' (obrigatório)' : '';
+      const desc = def?.description ? ` — ${def.description}` : '';
+      return `- "${key}": ${type}${req}${desc}`;
+    })
+    .join('\n');
+
+  return [
+    `## Formato de saída (OBRIGATÓRIO)`,
+    `Responda com UM único objeto JSON válido, sem markdown, sem comentários e sem texto fora do JSON.`,
+    `Use EXATAMENTE estes campos (não invente outros nomes como "copy" ou "cta"):`,
+    fieldLines,
+  ].join('\n');
+}
+
 function buildUserPrompt(context: StepExecutionContext): string {
-  return (context.inputPayload as { userInput?: string }).userInput ?? '';
+  const payload = context.inputPayload as {
+    userInput?: string;
+    metadata?: {
+      conversationHistory?: Array<{
+        userInput: string;
+        assistantSummary: string;
+      }>;
+    };
+  };
+
+  const userInput = payload.userInput ?? '';
+  const history = payload.metadata?.conversationHistory ?? [];
+
+  if (history.length === 0) {
+    return userInput;
+  }
+
+  const priorTurns = history
+    .map(
+      (turn, index) =>
+        `### Turn ${index + 1}\nUser: ${turn.userInput}\nAssistant: ${turn.assistantSummary}`,
+    )
+    .join('\n\n');
+
+  return `## Previous conversation\n${priorTurns}\n\n## New message\n${userInput}`;
 }
 
 async function executeStepStub(stepKey: string, agentId: string): Promise<StepResult> {
@@ -505,7 +691,11 @@ async function executeStepStub(stepKey: string, agentId: string): Promise<StepRe
     },
     strategist: {
       topics: [
-        { title: 'Lançamento', description: 'Post de divulgação', suggestedDate: new Date().toISOString() },
+        {
+          title: 'Lançamento',
+          description: 'Post de divulgação',
+          suggestedDate: new Date().toISOString(),
+        },
       ],
       calendar: { weeklyPosts: 3, bestTimes: ['09:00', '18:00'] },
       recommendations: 'Focus on visual content.',

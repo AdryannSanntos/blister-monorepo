@@ -160,7 +160,87 @@
     "toggleTheme": "Toggle theme",
     "signOutError": "Error signing out.",
     "collapseSidebar": "Collapse sidebar",
-    "expandSidebar": "Expand sidebar"
+    "expandSidebar": "Expand sidebar",
+    "homePage": {
+      "greeting": "Hello, {name}",
+      "greetingFallback": "Welcome to Blister",
+      "subtitle": "Track your marketing, creations, and brand progress.",
+      "primaryAction": "Create post",
+      "kpi": {
+        "credits": {
+          "label": "Credits",
+          "hint": "Available balance for generating content.",
+          "lowHint": "Low balance. Consider topping up before new creations."
+        },
+        "creations": {
+          "label": "Creations",
+          "hint": "{count, plural, =0 {No creations this week} one {# creation this week} other {# creations this week}}"
+        },
+        "pendingReview": {
+          "label": "Pending approval",
+          "hint": "Items ready for you to review and approve."
+        },
+        "campaigns": {
+          "label": "Active campaigns",
+          "hint": "Workspaces with context for your creations."
+        }
+      },
+      "brandMemory": {
+        "brandTitle": "Brand Brain",
+        "brandDescription": "The more complete it is, the better AI understands your identity.",
+        "brandEmpty": "Set up your brand identity to personalize creations.",
+        "completeBrand": "Complete Brand Brain",
+        "memoryTitle": "Brand memory",
+        "memoryDescription": "Knowledge base used in generations.",
+        "ragSynced": "Synced",
+        "ragStale": "{count, plural, one {# outdated source} other {# outdated sources}}",
+        "ragPending": "Pending",
+        "sourcesIndexed": "{count, plural, =0 {No indexed sources} one {# indexed source} other {# indexed sources}}",
+        "memoryReadyHint": "Your brand is indexed and ready to enrich new creations.",
+        "memoryPendingHint": "Complete the Brand Brain to improve generation quality."
+      },
+      "quickActions": {
+        "title": "Get started",
+        "description": "Shortcuts to the main creation surfaces.",
+        "viewCampaigns": "View campaigns",
+        "viewBrandBrain": "Brand Brain"
+      },
+      "recentActivity": {
+        "title": "Recent activity",
+        "description": "Your latest creations in one place.",
+        "emptyTitle": "No creations yet",
+        "emptyDescription": "Start by creating a post, copy, or image for your brand.",
+        "untitledRun": "Untitled creation",
+        "open": "Open",
+        "viewAll": "View full history"
+      },
+      "charts": {
+        "activity": {
+          "title": "Creation activity",
+          "description": "Volume and credit usage in the selected period.",
+          "totalCreations": "Creations in period",
+          "totalCost": "Credits used",
+          "dailyAverage": "Daily average",
+          "legendCreations": "Creations",
+          "legendCost": "Credits",
+          "empty": "No creations were recorded in this period."
+        },
+        "status": {
+          "title": "Creation status",
+          "description": "Distribution between completed, in progress, and pending.",
+          "total": "Total",
+          "completionRate": "Completion rate",
+          "legend": "Creations",
+          "empty": "Your creations will appear here once you get started.",
+          "labels": {
+            "completed": "Completed",
+            "active": "In progress",
+            "failed": "Failed",
+            "pendingReview": "Pending approval"
+          }
+        }
+      }
+    }
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -661,12 +741,19 @@
     "designerSuggestion1": "Artwork for a weekend promotion",
     "designerSuggestion2": "Brand visual with logo and palette",
     "designerSuggestion3": "Image to announce a seasonal menu",
-    "post": "Create full post",
-    "postDescription": "Generate image, caption, and hashtags in one flow.",
-    "postPlaceholder": "E.g.: Full post about carrot cake launch with a promo",
-    "postSuggestion1": "Full post for a product launch",
-    "postSuggestion2": "Visual + copy package for a promotion",
-    "postSuggestion3": "Holiday post with brand identity",
+    "post": "Create post",
+    "postDescription": "Create HTML+CSS social posts using your brand identity.",
+    "postPlaceholder": "E.g.: Post about carrot cake launch with a promo",
+    "postSuggestion1": "Product launch carousel",
+    "postSuggestion2": "Single promo post with brand identity",
+    "postSuggestion3": "Educational carousel about the service",
+    "postPreview": {
+      "copyHtml": "Copy HTML",
+      "copied": "Copied!",
+      "slideCounter": "Slide {current} of {total}",
+      "previousSlide": "Previous slide",
+      "nextSlide": "Next slide"
+    },
     "status": {
       "queued": "Queued",
       "running": "Generating",
@@ -887,8 +974,8 @@
       "aiCatalogDescription": "AI providers and models available on the platform.",
       "agents": "Agents",
       "agentsDescription": "Enable agents, set AI models, and configure run costs.",
-      "rag": "RAG",
-      "ragDescription": "Global indexing and retrieval parameters.",
+      "rag": "RAG & AI",
+      "ragDescription": "System AI models and indexing parameters.",
       "credits": "Credits",
       "creditsDescription": "Credit settings and company balances."
     },
@@ -901,8 +988,8 @@
       "description": "Manage AI providers and models available on the platform."
     },
     "ragPage": {
-      "title": "RAG",
-      "description": "Set the global indexing and retrieval parameters."
+      "title": "RAG & system AI",
+      "description": "Configure platform AI models and global indexing and retrieval parameters."
     },
     "creditsPage": {
       "title": "Credits",
@@ -967,14 +1054,25 @@
       "outputCostColumn": "Output cost"
     },
     "ragTab": {
+      "systemAiTitle": "System AI",
+      "systemAiDescription": "Models used by the platform outside agents — brand memory indexing, file captions, and context retrieval.",
+      "embeddingModelLabel": "Embedding model",
+      "embeddingModelPlaceholder": "Select an embedding model",
+      "embeddingModelDescription": "Generates vectors for Brand Brain and semantic RAG search.",
+      "captionModelLabel": "Caption model (optional)",
+      "captionModelPlaceholder": "Select a text model",
+      "captionModelDescription": "Describes uploaded images and files to enrich indexing. Leave empty to disable.",
+      "clearModelButton": "Clear",
+      "retrievalTitle": "Indexing & retrieval",
+      "retrievalDescription": "Chunking parameters, result count, and search reranking.",
       "chunkSizeLabel": "Chunk Size (tokens)",
       "chunkOverlapLabel": "Chunk Overlap (tokens)",
       "topKLabel": "Top-K",
       "rerankEnabledLabel": "Reranking enabled",
-      "saveSuccess": "RAG settings saved",
+      "saveSuccess": "Settings saved",
       "saveError": "Error saving settings",
       "saving": "Saving...",
-      "submitButton": "Save RAG settings"
+      "submitButton": "Save settings"
     },
     "agentsTab": {
       "nameColumn": "Agent",
@@ -997,6 +1095,8 @@
       "stepsTitle": "Workflow steps",
       "modelLabel": "AI model",
       "modelPlaceholder": "Select a model",
+      "modelSearchPlaceholder": "Search by model or provider...",
+      "modelSearchEmpty": "No models found.",
       "markupLabel": "Markup (e.g. 1.2 = 20%)",
       "minCostLabel": "Minimum cost per run (US$)",
       "sortOrderLabel": "Sidebar order",

@@ -6,6 +6,7 @@ import { CreditsModule } from '../credits/credits.module';
 import { RagModule } from '../rag/rag.module';
 import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CompanyModule } from '../company/company.module';
+import { StorageModule } from '../storage/storage.module';
 
 import { AgentRegistryService } from './runtime/agent-registry.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
@@ -29,6 +30,7 @@ import { InternalEventsController } from './internal-events.controller';
     RagModule,
     AiRuntimeModule,
     CompanyModule,
+    StorageModule,
   ],
   controllers: [
     AgentCatalogController,

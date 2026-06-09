@@ -262,8 +262,18 @@ export class GeminiAdapter implements AiProviderAdapter {
 
       yield { content: '', isLast: true };
 
+      let structuredOutput: Record<string, unknown> | undefined;
+      if (request.structuredOutputSchema && fullContent.trim()) {
+        try {
+          structuredOutput = JSON.parse(fullContent) as Record<string, unknown>;
+        } catch {
+          this.logger.warn('Failed to parse Gemini streamed structured output as JSON');
+        }
+      }
+
       return {
         content: fullContent,
+        structuredOutput,
         usage: {
           promptTokens,
           completionTokens,

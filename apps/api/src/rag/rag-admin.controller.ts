@@ -43,6 +43,7 @@ export class RagAdminController {
     private readonly ingestionService: IngestionService,
     private readonly retrievalService: RetrievalService,
     private readonly contextPackService: ContextPackService,
+    private readonly companyRagSync: CompanyRagSyncService,
   ) {}
 
   @Get('companies/:companyId/documents')
@@ -134,10 +135,22 @@ export class RagAdminController {
     };
   }
 
+  @Get('companies/:companyId/sync-status')
+  @RequirePermission('company.read')
+  async getCompanySyncStatus(
+    @Param('companyId') companyId: string,
+    @Query('campaignId') campaignId?: string,
+  ) {
+    return this.companyRagSync.getSyncStatus(companyId, campaignId);
+  }
+
   @Post('companies/:companyId/reindex')
   @RequirePermission('company.update')
-  async reindexCompany(@Param('companyId') companyId: string) {
-    const jobId = await this.ingestionService.createIndexJob(companyId);
+  async reindexCompany(
+    @Param('companyId') companyId: string,
+    @Query('campaignId') campaignId?: string,
+  ) {
+    const jobId = await this.companyRagSync.queueSync(companyId, { campaignId });
     return { jobId, status: 'queued' };
   }
 

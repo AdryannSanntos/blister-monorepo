@@ -47,9 +47,15 @@ export type QuestionPromptProps = {
   nextLabel?: string;
   skipLabel?: string;
   allowSkip?: boolean;
+  /** Label for the cancel action (default "Cancelar"). */
+  cancelLabel?: string;
   onSubmit: (answer: QuestionAnswer) => void;
   onSkip?: () => void;
+  /** When provided, renders a Cancel action that dismisses the form. */
+  onCancel?: () => void;
   className?: string;
+  /** `embedded` drops the outer card chrome — for use inside the chat stream. */
+  variant?: "card" | "embedded";
 };
 
 export function QuestionPrompt({
@@ -62,11 +68,15 @@ export function QuestionPrompt({
   nextLabel = "Next",
   skipLabel = "Skip",
   allowSkip = true,
+  cancelLabel = "Cancelar",
   initialAnswer,
   onSubmit,
   onSkip,
+  onCancel,
   className,
+  variant = "card",
 }: QuestionPromptProps) {
+  const isEmbedded = variant === "embedded";
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [customText, setCustomText] = useState("");
   const [textValue, setTextValue] = useState("");
@@ -194,23 +204,50 @@ export function QuestionPrompt({
 
   if (!activeQuestion) return null;
 
+  const fieldClass =
+    "w-full rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-3 text-[13.5px] text-[var(--fg-primary)] placeholder:text-[var(--fg-quaternary)] outline-none transition-[border-color,box-shadow,background-color] duration-[var(--dur-fast)] focus:border-[var(--accent)] focus:bg-[var(--bg-base)] focus:ring-[3px] focus:ring-[var(--accent-soft)]";
+
+  const badgeClass = (active: boolean) =>
+    cn(
+      "inline-flex h-5 min-w-5 items-center justify-center rounded-[var(--r-sm)] border px-1 text-xs font-semibold transition-colors duration-[var(--dur-fast)]",
+      active
+        ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--fg-on-accent,#fff)]"
+        : "border-[var(--line-default)] bg-transparent text-[var(--fg-tertiary)]",
+    );
+
   return (
-    <div className={cn("px-3 py-2 space-y-2 bg-background", className)}>
+    <div
+      className={cn(
+        "space-y-3 animate-in fade-in slide-in-from-bottom-1 duration-[var(--dur-base)]",
+        isEmbedded
+          ? "py-1"
+          : "rounded-[var(--r-lg)] border border-[var(--line-subtle)] bg-[var(--bg-base)] p-3",
+        className,
+      )}
+    >
       <div
-        className="flex items-center justify-between gap-px"
+        className="flex items-center gap-2"
         data-total-questions={resolvedTotal}
       >
-        <div className="flex items-center gap-2 text-sm text-an-tool-color">
-          <span className="h-5 min-w-5 px-1 rounded-[4px] inline-flex items-center justify-center text-sm font-medium text-an-tool-color-muted">
+        {resolvedTotal > 1 ? (
+          <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-[var(--r-sm)] bg-[var(--accent-soft)] px-1 text-xs font-semibold text-[var(--accent)]">
             {clampedIndex}
           </span>
-          <span>{activeQuestion.title}</span>
-        </div>
+        ) : null}
+        <span className="text-sm font-medium text-[var(--fg-primary)]">
+          {activeQuestion.title}
+        </span>
       </div>
+
+      {activeQuestion.description ? (
+        <p className="text-[12.5px] leading-snug text-[var(--fg-tertiary)]">
+          {activeQuestion.description}
+        </p>
+      ) : null}
 
       {activeQuestion.kind !== "text" &&
         (activeQuestion.options?.length ?? 0) > 0 && (
-          <div className="space-y-px">
+          <div className="space-y-1">
             {activeQuestion.options!.map((option, idx) => {
               const checked = selectedIds.includes(option.id);
               return (
@@ -225,22 +262,20 @@ export function QuestionPrompt({
                       toggleMulti(option.id);
                     }
                   }}
-                  className="w-full text-left rounded-md px-2 py-1.5 flex items-center gap-2 hover:bg-an-background-secondary -mx-2"
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-[var(--r-md)] border px-2.5 py-2 text-left transition-colors duration-[var(--dur-fast)]",
+                    checked
+                      ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                      : "border-transparent hover:bg-[var(--bg-hover)]",
+                  )}
                 >
-                  <span
-                    className={cn(
-                      "h-5 min-w-5 px-1 rounded-[4px] inline-flex items-center justify-center text-sm font-medium border",
-                      checked
-                        ? "bg-an-primary-color text-an-send-button-color border-an-primary-color"
-                        : "bg-transparent text-an-tool-color-muted border-border",
-                    )}
-                  >
+                  <span className={badgeClass(checked)}>
                     {optionBadge(idx)}
                   </span>
-                  <span className="text-sm text-an-tool-color">
+                  <span className="text-sm text-[var(--fg-secondary)]">
                     {option.label}
                     {option.description && (
-                      <span className="text-an-tool-color-muted">
+                      <span className="text-[var(--fg-quaternary)]">
                         {" "}
                         {option.description}
                       </span>
@@ -251,15 +286,8 @@ export function QuestionPrompt({
             })}
 
             {customEnabled && (
-              <div className="pt-1 flex items-center gap-2">
-                <span
-                  className={cn(
-                    "h-5 min-w-5 px-1 rounded-[4px] inline-flex items-center justify-center text-sm font-medium border",
-                    selectedIds.includes(QUESTION_CUSTOM_ID)
-                      ? "bg-an-primary-color text-an-send-button-color border-an-primary-color"
-                      : "bg-transparent text-an-tool-color-muted border-border",
-                  )}
-                >
+              <div className="flex items-center gap-2 pt-1">
+                <span className={badgeClass(selectedIds.includes(QUESTION_CUSTOM_ID))}>
                   {optionBadge(activeQuestion.options!.length)}
                 </span>
                 <input
@@ -268,9 +296,9 @@ export function QuestionPrompt({
                     handleCustomTextChange(event.target.value)
                   }
                   placeholder={
-                    activeQuestion.customPlaceholder ?? "Type your answer"
+                    activeQuestion.customPlaceholder ?? "Digite sua resposta"
                   }
-                  className="w-full h-7 rounded-md border border-border bg-background px-2 text-sm text-an-tool-color"
+                  className={cn(fieldClass, "h-[var(--field-h-md,34px)]")}
                 />
               </div>
             )}
@@ -281,9 +309,12 @@ export function QuestionPrompt({
         <textarea
           value={textValue}
           onChange={(event) => setTextValue(event.target.value)}
-          placeholder={activeQuestion.placeholder ?? "Type your answer"}
+          placeholder={activeQuestion.placeholder ?? "Digite sua resposta"}
           rows={3}
-          className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm text-an-tool-color resize-y"
+          className={cn(
+            fieldClass,
+            "max-h-[200px] min-h-[80px] resize-y overflow-y-auto py-2 leading-relaxed",
+          )}
         />
       )}
 
@@ -294,15 +325,15 @@ export function QuestionPrompt({
         )}
       >
         {showNav && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             {onPreviousQuestion && (
               <button
                 type="button"
                 onClick={onPreviousQuestion}
                 disabled={!canGoPrev}
-                className="h-6 px-2 rounded-[4px] text-sm text-muted-foreground hover:text-an-tool-color disabled:opacity-60"
+                className="h-8 rounded-[var(--r-md)] px-2.5 text-[13px] font-medium text-[var(--fg-tertiary)] transition-colors duration-[var(--dur-fast)] hover:text-[var(--fg-secondary)] disabled:opacity-50"
               >
-                Previous
+                Anterior
               </button>
             )}
             {onNextQuestion && (
@@ -310,19 +341,28 @@ export function QuestionPrompt({
                 type="button"
                 onClick={onNextQuestion}
                 disabled={!canGoNext}
-                className="h-6 px-2 rounded-[4px] text-sm text-muted-foreground hover:text-an-tool-color disabled:opacity-60"
+                className="h-8 rounded-[var(--r-md)] px-2.5 text-[13px] font-medium text-[var(--fg-tertiary)] transition-colors duration-[var(--dur-fast)] hover:text-[var(--fg-secondary)] disabled:opacity-50"
               >
-                Next
+                Próxima
               </button>
             )}
           </div>
         )}
         <div className="flex items-center justify-end gap-1.5">
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="h-8 rounded-[var(--r-md)] px-3 text-[13px] font-medium text-[var(--fg-tertiary)] transition-[background-color,color,transform] duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-secondary)] active:translate-y-px"
+            >
+              {cancelLabel}
+            </button>
+          )}
           {allowSkip && (
             <button
               type="button"
               onClick={handleSkip}
-              className="h-6 px-2 rounded-[4px] text-sm text-muted-foreground hover:text-an-tool-color hover:bg-muted/50 active:scale-[0.98] transition-[background-color,color,transform] duration-150"
+              className="h-8 rounded-[var(--r-md)] px-3 text-[13px] font-medium text-[var(--fg-tertiary)] transition-[background-color,color,transform] duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-secondary)] active:translate-y-px"
             >
               {skipLabel}
             </button>
@@ -331,7 +371,7 @@ export function QuestionPrompt({
             type="button"
             onClick={handleSubmit}
             disabled={!canSubmit}
-            className="h-6 px-2.5 rounded-[4px] text-sm font-medium bg-an-primary-color text-an-send-button-color hover:bg-an-primary-color/90 active:scale-[0.98] transition-[background-color,transform] duration-150 disabled:opacity-60 disabled:hover:bg-an-primary-color disabled:active:scale-100"
+            className="h-8 rounded-[var(--r-md)] bg-[var(--accent)] px-4 text-[13px] font-semibold text-[var(--fg-on-accent,#fff)] transition-[background-color,opacity,transform] duration-[var(--dur-fast)] hover:opacity-90 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
           >
             {primaryLabel}
           </button>

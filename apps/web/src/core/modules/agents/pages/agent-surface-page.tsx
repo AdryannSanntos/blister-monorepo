@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 
-import { SpiralLoader } from "@/components/agent-elements/spiral-loader";
 import { Button } from "@/core/shared/components/ui/button";
 import {
   Card,
@@ -47,10 +46,8 @@ export function AgentSurfacePage({ agentId }: AgentSurfacePageProps) {
     messages,
     status,
     suggestions,
-    isLoadingRun,
     handleSend,
     handleStop,
-    handleQuestionAnswer,
     openRun,
     startNewRun,
   } = useAgentChatController(agentId);
@@ -115,31 +112,19 @@ export function AgentSurfacePage({ agentId }: AgentSurfacePageProps) {
             className="mt-0 animate-in fade-in duration-200 focus-visible:outline-none"
           >
             <Card className="overflow-hidden border-[var(--line-default)] bg-[var(--bg-base)]">
-              <div className="h-[min(680px,calc(100svh-22rem))] min-h-[480px]">
-                {isLoadingRun && runId ? (
-                  <div className="flex h-full items-center justify-center bg-[var(--bg-canvas)]">
-                    <SpiralLoader size={40} />
-                  </div>
-                ) : (
-                  <BlisterAgentChat
-                    config={config}
-                    placeholder={placeholder}
-                    messages={messages}
-                    status={status}
-                    suggestions={suggestions}
-                    onSend={handleSend}
-                    onStop={handleStop}
-                    toolRenderers={BLISTER_TOOL_RENDERERS}
-                    showCopyToolbar
-                    questionTool={{
-                      submitLabel: t("clarification.continue"),
-                      skipLabel: t("clarification.cancel"),
-                      allowSkip: false,
-                      onAnswer: handleQuestionAnswer,
-                    }}
-                    className="h-full"
-                  />
-                )}
+              <div className="h-[calc(100svh-19rem)] min-h-[480px]">
+                <BlisterAgentChat
+                  config={config}
+                  placeholder={placeholder}
+                  messages={messages}
+                  status={status}
+                  suggestions={suggestions}
+                  onSend={handleSend}
+                  onStop={handleStop}
+                  toolRenderers={BLISTER_TOOL_RENDERERS}
+                  showCopyToolbar
+                  className="h-full"
+                />
               </div>
             </Card>
           </TabsContent>

@@ -1,19 +1,13 @@
 import type { Prisma } from '../../../generated/prisma';
 
-export type AgentRunStatus =
-  | 'QUEUED'
-  | 'RUNNING'
-  | 'PAUSED'
-  | 'COMPLETED'
-  | 'FAILED'
-  | 'CANCELLED';
+export type AgentRunStatus = 'QUEUED' | 'RUNNING' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 
 export type StepResultType = 'CONTINUE' | 'PAUSED' | 'FAILED' | 'COMPLETE';
 
 export interface StepDefinition {
   key: string;
   label: string;
-  type: 'preparation' | 'llm_call' | 'validation' | 'output' | 'image_generation';
+  type: 'preparation' | 'clarification' | 'llm_call' | 'validation' | 'output' | 'image_generation';
   config?: Record<string, unknown>;
 }
 
@@ -25,6 +19,8 @@ export interface AgentDefinition {
   outputSchema: Record<string, unknown>;
   steps: StepDefinition[];
   capabilities: string[];
+  /** Skill folder ids under `agents/<agentId>/skills/<id>/`. */
+  skills?: string[];
 }
 
 export interface ContextChunk {
@@ -57,7 +53,21 @@ export interface BrandProfile {
   palette: Prisma.JsonValue;
   typography: string | null;
   socialNetworks: string[];
+  /** S3 key of the legacy single logo. */
+  logoStorageKey: string | null;
+  /** Map of logo variants (primary/horizontal/icon/monochrome) → S3 key. */
+  logoVariants: Prisma.JsonValue;
+  /** Array of brand assets ({ id, name, storageKey, mimeType, createdAt }). */
+  brandAssets: Prisma.JsonValue;
 }
+
+/**
+ * Resolves a list of S3 storage keys into temporary, signed download URLs.
+ * Returns a map keyed by the original storage key. Keys that fail to resolve
+ * are simply omitted from the result. Optional dependency — when absent, steps
+ * that rely on brand assets degrade gracefully (no `<img>` references emitted).
+ */
+export type AssetResolver = (storageKeys: string[]) => Promise<Record<string, string>>;
 
 export interface StepExecutionContext {
   runId: string;
@@ -97,7 +107,15 @@ export interface RunEventPayload {
   runId: string;
   agentId: string;
   companyId: string;
-  type: 'run_started' | 'step_started' | 'step_completed' | 'run_completed' | 'run_failed' | 'run_paused';
+  type:
+    | 'run_started'
+    | 'step_started'
+    | 'step_completed'
+    | 'step_failed'
+    | 'run_completed'
+    | 'run_failed'
+    | 'run_paused'
+    | 'output_chunk';
   data: Record<string, unknown>;
   timestamp: Date;
 }

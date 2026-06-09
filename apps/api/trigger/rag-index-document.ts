@@ -1,10 +1,11 @@
 import { task, logger } from "@trigger.dev/sdk";
 import { PrismaClient, type RagSourceType } from "../src/generated/prisma";
+import { embedTextsForPlatform } from "../src/ai-runtime/platform-ai.client";
+import { RAG_EMBEDDING_DIMENSIONS } from "../src/ai-runtime/platform-model-resolver";
 import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-const DIMENSIONS = 1536;
 const DEFAULT_CHUNK_SIZE = 512;
 const DEFAULT_CHUNK_OVERLAP = 64;
 
@@ -119,43 +120,55 @@ export const ragIndexDocument = task({
               chunkIndex: index,
               content: chunk.content,
               tokenCount: chunk.tokenCount,
-              metadata: (validated.metadata ?? {}) as Record<string, string | number | boolean | null>,
+              metadata: (validated.metadata ?? {}) as Record<
+                string,
+                string | number | boolean | null
+              >,
             },
-          })
-        )
+          }),
+        ),
       );
 
       logger.info("Created chunks", { count: createdChunks.length });
 
-      const openRouterApiKey = process.env.OPENROUTER_API_KEY;
-      if (!openRouterApiKey) {
-        throw new Error("OPENROUTER_API_KEY is required");
+      const contents = createdChunks.map((chunk) => chunk.content);
+      const embeddingResult = await embedTextsForPlatform(prisma, contents);
+
+      if (embeddingResult.dimensions !== RAG_EMBEDDING_DIMENSIONS) {
+        throw new Error(
+          `Embedding model returned ${embeddingResult.dimensions} dimensions; expected ${RAG_EMBEDDING_DIMENSIONS}.`,
+        );
       }
 
-      const contents = createdChunks.map((c) => c.content);
-      const embeddings = await generateEmbeddings(contents, openRouterApiKey);
+      const storageModel = embeddingResult.modelLabel.includes("/")
+        ? embeddingResult.modelLabel.split("/").slice(1).join("/")
+        : embeddingResult.modelLabel;
 
       for (let i = 0; i < createdChunks.length; i++) {
         const chunk = createdChunks[i];
-        const embedding = embeddings[i];
+        const embedding = embeddingResult.embeddings[i];
 
         await prisma.$executeRaw`
           INSERT INTO "RagEmbedding" ("id", "chunkId", "embeddingModel", "dimensions", "embedding", "createdAt")
           VALUES (
             gen_random_uuid()::text,
             ${chunk.id},
-            'text-embedding-3-small',
-            ${DIMENSIONS},
+            ${storageModel},
+            ${embeddingResult.dimensions},
             ${embedding}::vector,
             NOW()
           )
           ON CONFLICT ("chunkId") DO UPDATE SET
             "embedding" = ${embedding}::vector,
-            "embeddingModel" = 'text-embedding-3-small'
+            "embeddingModel" = ${storageModel},
+            "dimensions" = ${embeddingResult.dimensions}
         `;
       }
 
-      logger.info("Created embeddings", { count: createdChunks.length });
+      logger.info("Created embeddings", {
+        count: createdChunks.length,
+        model: embeddingResult.modelLabel,
+      });
 
       await prisma.ragDocument.update({
         where: { id: document.id },
@@ -194,7 +207,7 @@ interface ChunkData {
 function splitIntoChunks(
   text: string,
   chunkSize: number,
-  overlap: number
+  overlap: number,
 ): ChunkData[] {
   const chunks: ChunkData[] = [];
   const sentences = text.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 0);
@@ -230,35 +243,4 @@ function splitIntoChunks(
   }
 
   return chunks;
-}
-
-async function generateEmbeddings(
-  texts: string[],
-  apiKey: string
-): Promise<number[][]> {
-  const response = await fetch("https://openrouter.ai/api/v1/embeddings", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": process.env.APP_URL ?? "https://blister.app",
-      "X-Title": "Blister",
-    },
-    body: JSON.stringify({
-      model: "openai/text-embedding-3-small",
-      input: texts,
-      dimensions: DIMENSIONS,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Embedding API error: ${response.status} - ${error}`);
-  }
-
-  const data = (await response.json()) as {
-    data: Array<{ embedding: number[] }>;
-  };
-
-  return data.data.map((item) => item.embedding);
 }

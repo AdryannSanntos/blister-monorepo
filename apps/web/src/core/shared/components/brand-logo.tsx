@@ -1,6 +1,8 @@
 import * as React from "react";
+import { BrandLogoWhite } from "src/core/shared/components/brand-logo-white";
+import { cn } from "src/core/shared/utils";
 
-export const BrandLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
+const BrandLogoDefault: React.FC<React.SVGProps<SVGSVGElement>> = ({
   className,
   ...props
 }) => (
@@ -8,8 +10,7 @@ export const BrandLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
     xmlns="http://www.w3.org/2000/svg"
     viewBox="320 240 1580 480"
     className={className}
-    aria-label="Blister"
-    role="img"
+    aria-hidden
     {...props}
   >
     <path
@@ -50,4 +51,18 @@ export const BrandLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
       d="M615.036 257.292c9.834-.505 21.421 2.911 23.368 13.416 2.85 15.377-14.526 39.004-22.268 51.897-6.379 8.298-14.336 8.461-18.013-2.127-2.265-6.523-1.853-15.372-1.718-22.356.329-16.997-.803-34.838 18.631-40.83"
     />
   </svg>
+);
+
+export const BrandLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  className,
+  ...props
+}) => (
+  <span
+    className={cn("inline-flex shrink-0", className)}
+    aria-label="Blister"
+    role="img"
+  >
+    <BrandLogoDefault className="h-full w-auto dark:hidden" {...props} />
+    <BrandLogoWhite className="hidden h-full w-auto dark:block" {...props} />
+  </span>
 );

@@ -215,6 +215,12 @@ export class CompanyService {
       resourceId: company.id,
     });
 
+    try {
+      await this.companyRagSync.queueSync(company.id);
+    } catch (error) {
+      console.error('Failed to queue initial company RAG sync', error);
+    }
+
     return this.prisma.company.findUniqueOrThrow({
       where: { id: company.id },
     });

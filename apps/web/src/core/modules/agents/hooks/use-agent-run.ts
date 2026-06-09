@@ -4,11 +4,14 @@ import type { AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-import { isRunActive } from "../utils/agent-run-helpers";
-
 export type AgentRunWithSteps = {
   run: AgentRunStatusDto;
   steps: AgentRunStepDto[];
+  /**
+   * Accumulated text streamed via `output_chunk` SSE events while the run is
+   * active. Transient client-only state — not persisted on the server.
+   */
+  streamingText?: string;
 };
 
 export function useAgentRun(runId: string | null) {
@@ -21,9 +24,7 @@ export function useAgentRun(runId: string | null) {
       return data;
     },
     enabled: Boolean(runId),
-    refetchInterval: (query) => {
-      const status = query.state.data?.run.status;
-      return status && isRunActive(status) ? 2000 : false;
-    },
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 }

@@ -5,12 +5,14 @@ import { AiRuntimeService } from './ai-runtime.service';
 import { EmbeddingService } from './embedding.service';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
+import { AssemblyAiAdapter } from './adapters/assemblyai.adapter';
 
 @Module({
   imports: [ConfigModule, PrismaModule],
   providers: [
     OpenRouterAdapter,
     GeminiAdapter,
+    AssemblyAiAdapter,
     AiRuntimeService,
     EmbeddingService,
   ],
@@ -19,6 +21,7 @@ import { GeminiAdapter } from './adapters/gemini.adapter';
     EmbeddingService,
     OpenRouterAdapter,
     GeminiAdapter,
+    AssemblyAiAdapter,
   ],
 })
 export class AiRuntimeModule {}

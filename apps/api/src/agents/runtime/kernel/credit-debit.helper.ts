@@ -1,17 +1,13 @@
 import { Prisma, type PrismaClient } from '../../../generated/prisma';
 import type { CreditDebitResult, PlatformSettings } from './types';
 
-export async function getPlatformSettings(
-  prisma: PrismaClient,
-): Promise<PlatformSettings> {
+export async function getPlatformSettings(prisma: PrismaClient): Promise<PlatformSettings> {
   const settings = await prisma.platformCreditSettings.findUnique({
     where: { id: 'default' },
   });
 
   return {
-    markupDefault: settings?.markupDefault
-      ? Number(settings.markupDefault)
-      : 1.2,
+    markupDefault: settings?.markupDefault ? Number(settings.markupDefault) : 1.2,
     minRunCost: settings?.minRunCost ? Number(settings.minRunCost) : 0.01,
   };
 }

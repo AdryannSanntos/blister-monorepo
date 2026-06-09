@@ -141,19 +141,53 @@ export function createRunFailedEvent(
   };
 }
 
+export function createStepFailedEvent(
+  runId: string,
+  agentId: string,
+  companyId: string,
+  stepKey: string,
+  error: string,
+): RunEventPayload {
+  return {
+    runId,
+    agentId,
+    companyId,
+    type: 'step_failed',
+    data: { stepKey, error },
+    timestamp: new Date(),
+  };
+}
+
+export function createOutputChunkEvent(
+  runId: string,
+  agentId: string,
+  companyId: string,
+  chunk: string,
+): RunEventPayload {
+  return {
+    runId,
+    agentId,
+    companyId,
+    type: 'output_chunk',
+    data: { chunk },
+    timestamp: new Date(),
+  };
+}
+
 export function createRunPausedEvent(
   runId: string,
   agentId: string,
   companyId: string,
   pauseReason: string,
   pauseFormSchema?: Record<string, unknown>,
+  inputPayload?: Record<string, unknown>,
 ): RunEventPayload {
   return {
     runId,
     agentId,
     companyId,
     type: 'run_paused',
-    data: { pauseReason, pauseFormSchema },
+    data: { pauseReason, pauseFormSchema, inputPayload },
     timestamp: new Date(),
   };
 }

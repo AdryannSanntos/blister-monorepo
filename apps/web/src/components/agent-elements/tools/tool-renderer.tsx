@@ -74,7 +74,7 @@ export const ToolRenderer = memo(function ToolRenderer({
       );
     }
     case "tool-Thinking":
-      return <ThinkingTool part={part} defaultOpen={false} />;
+      return <ThinkingTool part={part} />;
   }
 
   // MCP tools

@@ -4,29 +4,26 @@ import type { AgentRunStatusDto } from "@company-os/types";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-import { isRunActive } from "../utils/agent-run-helpers";
-
 type AgentRunsResponse = {
   runs: AgentRunStatusDto[];
   total: number;
 };
 
 export function useAgentRuns(agentId: string, options?: { limit?: number }) {
+  const limit = options?.limit ?? 20;
+
   return useQuery<AgentRunsResponse>({
-    queryKey: ["agent-runs", agentId, options?.limit ?? 20],
+    queryKey: ["agent-runs", agentId, limit],
     queryFn: async () => {
       const { data } = await apiClient.get<AgentRunsResponse>(
         `/agents/${agentId}/runs`,
-        { params: { limit: options?.limit ?? 20, offset: 0 } },
+        { params: { limit, offset: 0 } },
       );
       return data;
     },
     enabled: Boolean(agentId),
-    refetchInterval: (query) => {
-      const runs = query.state.data?.runs ?? [];
-      const hasActive = runs.some((run) => isRunActive(run.status));
-      return hasActive ? 3000 : false;
-    },
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -53,5 +50,6 @@ export function useAllAgentRuns(agentIds: string[]) {
     },
     enabled: agentIds.length > 0,
     staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 }

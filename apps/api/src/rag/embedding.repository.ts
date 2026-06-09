@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmbeddingService } from '../ai-runtime/embedding.service';
-import type { RagEmbedding } from '../generated/prisma';
+import { Prisma, type RagEmbedding } from '../generated/prisma';
 
 export interface VectorSearchResult {
   chunkId: string;
@@ -42,20 +42,37 @@ export class EmbeddingRepository {
     private readonly embeddingService: EmbeddingService,
   ) {}
 
-  async createEmbedding(chunkId: string, embedding: number[]): Promise<RagEmbedding> {
+  async createEmbedding(
+    chunkId: string,
+    embedding: number[],
+    model = 'text-embedding-3-small',
+    dimensions = DIMENSIONS,
+  ): Promise<RagEmbedding> {
+    if (embedding.length !== dimensions) {
+      throw new Error(
+        `Embedding dimension mismatch for chunk ${chunkId}: expected ${dimensions}, got ${embedding.length}. ` +
+          `The configured embedding model must produce ${dimensions}-dim vectors to match the RagEmbedding column.`,
+      );
+    }
+
+    const storageModel = model.includes('/')
+      ? model.split('/').slice(1).join('/')
+      : model;
+
     await this.prisma.$executeRaw`
       INSERT INTO "RagEmbedding" ("id", "chunkId", "embeddingModel", "dimensions", "embedding", "createdAt")
       VALUES (
         gen_random_uuid()::text,
         ${chunkId},
-        'text-embedding-3-small',
-        ${DIMENSIONS},
+        ${storageModel},
+        ${dimensions},
         ${embedding}::vector,
         NOW()
       )
       ON CONFLICT ("chunkId") DO UPDATE SET
         "embedding" = ${embedding}::vector,
-        "embeddingModel" = 'text-embedding-3-small'
+        "embeddingModel" = ${storageModel},
+        "dimensions" = ${dimensions}
     `;
 
     const result = await this.prisma.ragEmbedding.findUnique({
@@ -80,7 +97,12 @@ export class EmbeddingRepository {
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       const embedding = response.embeddings[i];
-      await this.createEmbedding(chunk.id, embedding);
+      await this.createEmbedding(
+        chunk.id,
+        embedding,
+        response.model,
+        response.dimensions,
+      );
     }
 
     this.logger.debug(`Created ${chunks.length} embeddings`);
@@ -92,32 +114,42 @@ export class EmbeddingRepository {
     const limit = options.limit ?? 10;
     const minScore = options.minScore ?? DEFAULT_MIN_SCORE;
 
-    let sourceTypeFilter = '';
+    // All dynamic filters use parameterized Prisma.sql fragments — never string
+    // interpolation — so user-supplied values (campaignId, agentId, sourceTypes)
+    // cannot break out of the query (SQL injection) or bypass tenant scoping.
+    const conditions: Prisma.Sql[] = [
+      Prisma.sql`c."companyId" = ${options.companyId}`,
+      Prisma.sql`d.status = 'INDEXED'`,
+    ];
+
     if (options.sourceTypes && options.sourceTypes.length > 0) {
-      const types = options.sourceTypes.map((t) => `'${t}'`).join(',');
-      sourceTypeFilter = `AND d."sourceType" IN (${types})`;
+      conditions.push(
+        Prisma.sql`d."sourceType" IN (${Prisma.join(options.sourceTypes)})`,
+      );
     }
 
-    let campaignFilter = '';
     if (options.campaignId) {
-      campaignFilter = `AND (c."campaignId" = '${options.campaignId}' OR c."campaignId" IS NULL)`;
+      conditions.push(
+        Prisma.sql`(c."campaignId" = ${options.campaignId} OR c."campaignId" IS NULL)`,
+      );
     }
 
-    let agentFilter = '';
     if (options.agentId) {
-      agentFilter = `AND (c."agentId" = '${options.agentId}' OR c."agentId" IS NULL)`;
+      conditions.push(
+        Prisma.sql`(c."agentId" = ${options.agentId} OR c."agentId" IS NULL)`,
+      );
     }
 
     const boostAgentClause = options.boostAgentId
-      ? `CASE WHEN c."agentId" = '${options.boostAgentId}' THEN 0.1 ELSE 0 END`
-      : '0';
+      ? Prisma.sql`CASE WHEN c."agentId" = ${options.boostAgentId} THEN 0.1 ELSE 0 END`
+      : Prisma.sql`0`;
 
     const boostCampaignClause = options.boostCampaignId
-      ? `CASE WHEN c."campaignId" = '${options.boostCampaignId}' THEN 0.05 ELSE 0 END`
-      : '0';
+      ? Prisma.sql`CASE WHEN c."campaignId" = ${options.boostCampaignId} THEN 0.05 ELSE 0 END`
+      : Prisma.sql`0`;
 
-    const results = await this.prisma.$queryRaw<VectorSearchResult[]>`
-      SELECT 
+    const results = await this.prisma.$queryRaw<VectorSearchResult[]>(Prisma.sql`
+      SELECT
         c.id as "chunkId",
         c."documentId",
         c.content,
@@ -133,14 +165,10 @@ export class EmbeddingRepository {
       FROM "RagChunk" c
       JOIN "RagEmbedding" e ON e."chunkId" = c.id
       JOIN "RagDocument" d ON d.id = c."documentId"
-      WHERE c."companyId" = ${options.companyId}
-        AND d.status = 'INDEXED'
-        ${sourceTypeFilter ? this.prisma.$queryRawUnsafe(sourceTypeFilter) : this.prisma.$queryRawUnsafe('')}
-        ${campaignFilter ? this.prisma.$queryRawUnsafe(campaignFilter) : this.prisma.$queryRawUnsafe('')}
-        ${agentFilter ? this.prisma.$queryRawUnsafe(agentFilter) : this.prisma.$queryRawUnsafe('')}
+      WHERE ${Prisma.join(conditions, ' AND ')}
       ORDER BY score DESC
       LIMIT ${limit}
-    `;
+    `);
 
     return results.filter((r) => r.score >= minScore);
   }

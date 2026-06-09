@@ -46,9 +46,8 @@ export function useResumeAgentRun(runId: string | null, agentId: string) {
       return data;
     },
     onSuccess: () => {
-      if (runId) {
-        queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
-      }
+      // Do not invalidate ["agent-run", runId] here — it races with the SSE
+      // stream and can overwrite live step/status updates with a stale snapshot.
       queryClient.invalidateQueries({ queryKey: ["agent-runs", agentId] });
     },
   });

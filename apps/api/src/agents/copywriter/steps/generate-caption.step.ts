@@ -1,5 +1,6 @@
 import type { StepExecutionContext, StepResult } from '../../runtime/kernel/types';
 import type { LlmProvider } from '../../runtime/kernel/agent-execution.kernel';
+import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
 import { buildCopywriterSystemPrompt, buildCopywriterUserPrompt } from '../prompts/caption.system';
 import { copywriterOutputSchema } from '../schemas/output.schema';
 
@@ -66,7 +67,7 @@ export async function executeGenerateCaptionStep(
   } catch (error) {
     return {
       type: 'FAILED',
-      error: error instanceof Error ? error.message : 'LLM call failed',
+      error: toUserFacingProviderError(error),
     };
   }
 }

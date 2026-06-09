@@ -1,6 +1,6 @@
+import type { AgentCapability, AgentCatalogItem, AgentDefinition } from '@company-os/types';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { z } from 'zod';
-import type { AgentDefinition, AgentCapability, AgentCatalogItem } from '@company-os/types';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface RegisteredAgent {
@@ -20,7 +20,15 @@ export interface RegisteredAgent {
 export interface AgentStepDefinition {
   key: string;
   label: string;
-  type: 'llm_call' | 'validation' | 'form' | 'decision' | 'output';
+  type:
+    | 'preparation'
+    | 'clarification'
+    | 'llm_call'
+    | 'validation'
+    | 'form'
+    | 'decision'
+    | 'output'
+    | 'image_generation';
   config?: Record<string, unknown>;
   executor?: StepExecutor;
 }
@@ -192,11 +200,15 @@ export class AgentRegistryService implements OnModuleInit {
       outputSchema: z.object({
         plan: z.string(),
         angles: z.array(z.string()),
-        suggestedCalendar: z.array(z.object({
-          date: z.string(),
-          topic: z.string(),
-          format: z.string(),
-        })).optional(),
+        suggestedCalendar: z
+          .array(
+            z.object({
+              date: z.string(),
+              topic: z.string(),
+              format: z.string(),
+            }),
+          )
+          .optional(),
         summary: z.string(),
       }),
       reviewSchema: z.object({
@@ -228,10 +240,14 @@ export class AgentRegistryService implements OnModuleInit {
       outputSchema: z.object({
         caption: z.string(),
         hashtags: z.array(z.string()),
-        variations: z.array(z.object({
-          caption: z.string(),
-          tone: z.string(),
-        })).optional(),
+        variations: z
+          .array(
+            z.object({
+              caption: z.string(),
+              tone: z.string(),
+            }),
+          )
+          .optional(),
         callToAction: z.string().optional(),
       }),
       reviewSchema: z.object({
@@ -274,40 +290,43 @@ export class AgentRegistryService implements OnModuleInit {
         { key: 'output', label: 'Formatar saída', type: 'output' },
       ],
       isEnabled: true,
-      estimatedCreditCost: 0.10,
+      estimatedCreditCost: 0.1,
     };
   }
 
   private createPostAgent(): RegisteredAgent {
     return {
       agentId: 'post',
-      label: 'Criar post completo',
-      description: 'Gera pacote completo com imagem, legenda e hashtags',
+      label: 'Criar post',
+      description: 'Cria posts para redes sociais em HTML+CSS usando a identidade da marca',
       icon: 'package',
-      capabilities: ['text_generation', 'image_generation'],
+      capabilities: ['text_generation'],
       inputSchema: z.object({
         userInput: z.string().min(1).max(10000),
-        format: z.enum(['square', 'portrait', 'landscape']).optional(),
-        platform: z.enum(['instagram', 'facebook', 'linkedin', 'twitter']).optional(),
       }),
       outputSchema: z.object({
+        platform: z.string(),
+        format: z.enum(['single', 'carousel']),
+        width: z.number(),
+        height: z.number(),
+        slidesCount: z.number().optional(),
+        slides: z.array(z.object({ html: z.string() })),
         caption: z.string(),
         hashtags: z.array(z.string()),
-        imageStorageKey: z.string(),
-        imagePrompt: z.string(),
       }),
       reviewSchema: z.object({
         caption: z.string(),
         hashtags: z.array(z.string()),
       }),
       steps: [
-        { key: 'analyze', label: 'Analisar briefing', type: 'llm_call' },
-        { key: 'generate_copy', label: 'Gerar texto', type: 'llm_call' },
-        { key: 'generate_image', label: 'Gerar imagem', type: 'llm_call' },
-        { key: 'output', label: 'Formatar saída', type: 'output' },
+        { key: 'retrieve_context', label: 'Buscar contexto', type: 'preparation' },
+        { key: 'collect_brief', label: 'Entender o pedido', type: 'clarification' },
+        { key: 'plan_design', label: 'Planejar o design', type: 'llm_call' },
+        { key: 'generate_post', label: 'Montar o post', type: 'llm_call' },
+        { key: 'validate_output', label: 'Validar saída', type: 'validation' },
       ],
       isEnabled: true,
-      estimatedCreditCost: 0.15,
+      estimatedCreditCost: 0.22,
     };
   }
 }

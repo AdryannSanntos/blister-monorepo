@@ -5,6 +5,7 @@ import {
   serializeCampaign,
   serializeCampaignFile,
 } from "../src/rag/brand-brain.serializer";
+import { enrichCampaignFilesForRag } from "./enrich-campaign-files";
 import { ragIndexDocument } from "./rag-index-document";
 
 const prisma = new PrismaClient();
@@ -24,7 +25,7 @@ export const companyRagSync = task({
     maxTimeoutInMs: 30000,
   },
   run: async (payload: CompanyRagSyncPayload) => {
-    logger.info("Starting company RAG sync", payload);
+    logger.info("Starting company RAG sync", { ...payload });
 
     const company = await prisma.company.findUnique({
       where: { id: payload.companyId },
@@ -81,8 +82,12 @@ export const companyRagSync = task({
     }
 
     const campaignIds = new Set(company.campaigns.map((campaign) => campaign.id));
-    for (const file of company.campaignFiles) {
-      if (!campaignIds.has(file.campaignId)) continue;
+    const eligibleFiles = company.campaignFiles.filter((file) =>
+      campaignIds.has(file.campaignId),
+    );
+    const enrichedFiles = await enrichCampaignFilesForRag(prisma, eligibleFiles);
+
+    for (const file of enrichedFiles) {
       const content = serializeCampaignFile(file);
       if (!content) continue;
 

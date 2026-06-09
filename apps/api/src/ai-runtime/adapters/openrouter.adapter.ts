@@ -134,17 +134,32 @@ export class OpenRouterAdapter implements AiProviderAdapter {
       throw new ProviderNotConfiguredError(this.provider);
     }
 
+    const body: Record<string, unknown> = {
+      model: request.model,
+      messages: request.messages,
+      max_tokens: request.maxTokens ?? 4096,
+      temperature: request.temperature ?? 0.7,
+      stream: true,
+      // Ask OpenRouter to include token usage in the final stream chunk so we
+      // can still bill credits for streamed completions.
+      stream_options: { include_usage: true },
+    };
+
+    if (request.structuredOutputSchema) {
+      body.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: 'structured_response',
+          schema: request.structuredOutputSchema,
+        },
+      };
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: this.getHeaders(),
-        body: JSON.stringify({
-          model: request.model,
-          messages: request.messages,
-          max_tokens: request.maxTokens ?? 4096,
-          temperature: request.temperature ?? 0.7,
-          stream: true,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -205,8 +220,18 @@ export class OpenRouterAdapter implements AiProviderAdapter {
 
       yield { content: '', isLast: true };
 
+      let structuredOutput: Record<string, unknown> | undefined;
+      if (request.structuredOutputSchema && fullContent.trim()) {
+        try {
+          structuredOutput = JSON.parse(fullContent) as Record<string, unknown>;
+        } catch {
+          this.logger.warn('Failed to parse streamed structured output as JSON');
+        }
+      }
+
       return {
         content: fullContent,
+        structuredOutput,
         usage: {
           promptTokens,
           completionTokens,
@@ -305,6 +330,7 @@ export class OpenRouterAdapter implements AiProviderAdapter {
     status: number,
   ): 'auth' | 'rate_limit' | 'validation' | 'unknown' {
     if (status === 401 || status === 403) return 'auth';
+    if (status === 402) return 'validation';
     if (status === 429) return 'rate_limit';
     if (status >= 400 && status < 500) return 'validation';
     return 'unknown';

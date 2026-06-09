@@ -72,6 +72,9 @@ async function getBrandProfile(
     palette: profile.palette,
     typography: profile.typography,
     socialNetworks: (profile.socialNetworks as string[]) ?? [],
+    logoStorageKey: profile.logoStorageKey,
+    logoVariants: profile.logoVariants,
+    brandAssets: profile.brandAssets,
   };
 }
 
@@ -152,9 +155,7 @@ export function formatContextPackForPrompt(contextPack: ContextPack): string {
   }
 
   if (campaignChunks.length > 0) {
-    sections.push(
-      '## Contexto da Campanha\n' + campaignChunks.map((c) => c.content).join('\n\n'),
-    );
+    sections.push('## Contexto da Campanha\n' + campaignChunks.map((c) => c.content).join('\n\n'));
   }
 
   return sections.join('\n\n');

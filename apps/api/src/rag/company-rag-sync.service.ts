@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from './document.service';
 import { IngestionService } from './ingestion.service';
 import { RagEventsService } from './rag-events.service';
+import { CaptionService } from './caption.service';
 import {
   hashRagContent,
   serializeBrandProfile,
@@ -52,6 +53,7 @@ export class CompanyRagSyncService {
     private readonly documentService: DocumentService,
     private readonly ingestionService: IngestionService,
     private readonly ragEvents: RagEventsService,
+    private readonly captionService: CaptionService,
   ) {}
 
   async getSyncStatus(
@@ -282,8 +284,12 @@ export class CompanyRagSyncService {
     }
 
     const campaignIds = new Set(company.campaigns.map((campaign) => campaign.id));
-    for (const file of company.campaignFiles) {
-      if (!campaignIds.has(file.campaignId)) continue;
+    const eligibleFiles = company.campaignFiles.filter((file) =>
+      campaignIds.has(file.campaignId),
+    );
+    const enrichedFiles = await this.captionService.enrichCampaignFiles(eligibleFiles);
+
+    for (const file of enrichedFiles) {
       const content = serializeCampaignFile(file);
       if (!content) continue;
 

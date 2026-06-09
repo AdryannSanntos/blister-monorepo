@@ -160,7 +160,87 @@
     "toggleTheme": "Alternar tema",
     "signOutError": "Erro ao sair da conta.",
     "collapseSidebar": "Recolher sidebar",
-    "expandSidebar": "Expandir sidebar"
+    "expandSidebar": "Expandir sidebar",
+    "homePage": {
+      "greeting": "Olá, {name}",
+      "greetingFallback": "Bem-vindo à Blister",
+      "subtitle": "Acompanhe seu marketing, criações e o progresso da sua marca.",
+      "primaryAction": "Criar post",
+      "kpi": {
+        "credits": {
+          "label": "Créditos",
+          "hint": "Saldo disponível para gerar conteúdo.",
+          "lowHint": "Saldo baixo. Considere recarregar antes de novas criações."
+        },
+        "creations": {
+          "label": "Criações",
+          "hint": "{count, plural, =0 {Nenhuma criação nesta semana} one {# criação nesta semana} other {# criações nesta semana}}"
+        },
+        "pendingReview": {
+          "label": "Aguardando aprovação",
+          "hint": "Itens prontos para você revisar e aprovar."
+        },
+        "campaigns": {
+          "label": "Campanhas ativas",
+          "hint": "Workspaces com contexto para suas criações."
+        }
+      },
+      "brandMemory": {
+        "brandTitle": "Cérebro da Marca",
+        "brandDescription": "Quanto mais completo, melhor a IA entende sua identidade.",
+        "brandEmpty": "Configure a identidade da sua marca para personalizar as criações.",
+        "completeBrand": "Completar Cérebro",
+        "memoryTitle": "Memória da marca",
+        "memoryDescription": "Base de conhecimento usada nas gerações.",
+        "ragSynced": "Sincronizada",
+        "ragStale": "{count, plural, one {# fonte desatualizada} other {# fontes desatualizadas}}",
+        "ragPending": "Pendente",
+        "sourcesIndexed": "{count, plural, =0 {Nenhuma fonte indexada} one {# fonte indexada} other {# fontes indexadas}}",
+        "memoryReadyHint": "Sua marca está indexada e pronta para enriquecer novas criações.",
+        "memoryPendingHint": "Complete o Cérebro da Marca para melhorar a qualidade das gerações."
+      },
+      "quickActions": {
+        "title": "Começar agora",
+        "description": "Atalhos para as principais superfícies de criação.",
+        "viewCampaigns": "Ver campanhas",
+        "viewBrandBrain": "Cérebro da Marca"
+      },
+      "recentActivity": {
+        "title": "Atividade recente",
+        "description": "Suas últimas criações em um só lugar.",
+        "emptyTitle": "Nenhuma criação ainda",
+        "emptyDescription": "Comece criando um post, texto ou imagem para sua marca.",
+        "untitledRun": "Criação sem título",
+        "open": "Abrir",
+        "viewAll": "Ver histórico completo"
+      },
+      "charts": {
+        "activity": {
+          "title": "Atividade de criação",
+          "description": "Volume e consumo de créditos no período selecionado.",
+          "totalCreations": "Criações no período",
+          "totalCost": "Créditos consumidos",
+          "dailyAverage": "Média diária",
+          "legendCreations": "Criações",
+          "legendCost": "Créditos",
+          "empty": "Nenhuma criação foi registrada neste período."
+        },
+        "status": {
+          "title": "Status das criações",
+          "description": "Distribuição entre concluídas, em andamento e pendentes.",
+          "total": "Total",
+          "completionRate": "Taxa de conclusão",
+          "legend": "Criações",
+          "empty": "Suas criações aparecerão aqui assim que você começar.",
+          "labels": {
+            "completed": "Concluídas",
+            "active": "Em andamento",
+            "failed": "Com falha",
+            "pendingReview": "Aguardando aprovação"
+          }
+        }
+      }
+    }
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -661,12 +741,19 @@
     "designerSuggestion1": "Arte para promoção de fim de semana",
     "designerSuggestion2": "Visual institucional com logo e cores da marca",
     "designerSuggestion3": "Imagem para anunciar cardápio sazonal",
-    "post": "Criar post completo",
-    "postDescription": "Gere imagem, legenda e hashtags em um único fluxo.",
-    "postPlaceholder": "Ex.: Post completo sobre lançamento do bolo de cenoura com promoção",
-    "postSuggestion1": "Post completo para lançamento de produto",
-    "postSuggestion2": "Pacote visual + texto para promoção",
-    "postSuggestion3": "Post de datas comemorativas com identidade da marca",
+    "post": "Criar post",
+    "postDescription": "Crie posts em HTML+CSS para redes sociais com a identidade da marca.",
+    "postPlaceholder": "Ex.: Post sobre lançamento do bolo de cenoura com promoção",
+    "postSuggestion1": "Carrossel de lançamento de produto",
+    "postSuggestion2": "Post único de promoção com a identidade da marca",
+    "postSuggestion3": "Carrossel educativo sobre o serviço",
+    "postPreview": {
+      "copyHtml": "Copiar HTML",
+      "copied": "Copiado!",
+      "slideCounter": "Slide {current} de {total}",
+      "previousSlide": "Slide anterior",
+      "nextSlide": "Próximo slide"
+    },
     "status": {
       "queued": "Na fila",
       "running": "Gerando",
@@ -887,8 +974,8 @@
       "aiCatalogDescription": "Providers e modelos de IA disponíveis na plataforma.",
       "agents": "Agentes",
       "agentsDescription": "Habilite agentes, defina modelos de IA e custos por execução.",
-      "rag": "RAG",
-      "ragDescription": "Parâmetros globais de indexação e recuperação.",
+      "rag": "RAG e IA",
+      "ragDescription": "Modelos de IA do sistema e parâmetros de indexação.",
       "credits": "Créditos",
       "creditsDescription": "Configurações de crédito e saldo das empresas."
     },
@@ -901,8 +988,8 @@
       "description": "Gerencie providers e modelos de IA disponíveis na plataforma."
     },
     "ragPage": {
-      "title": "RAG",
-      "description": "Defina os parâmetros globais de indexação e recuperação."
+      "title": "RAG e IA do sistema",
+      "description": "Configure os modelos de IA da plataforma e os parâmetros de indexação e recuperação."
     },
     "creditsPage": {
       "title": "Créditos",
@@ -967,14 +1054,25 @@
       "outputCostColumn": "Custo saída"
     },
     "ragTab": {
+      "systemAiTitle": "IA do sistema",
+      "systemAiDescription": "Modelos usados pela plataforma fora dos agentes — indexação da memória da marca, legendas de arquivos e recuperação de contexto.",
+      "embeddingModelLabel": "Modelo de embedding",
+      "embeddingModelPlaceholder": "Selecione o modelo de embedding",
+      "embeddingModelDescription": "Gera os vetores usados no Cérebro da Marca e na busca semântica do RAG.",
+      "captionModelLabel": "Modelo de legenda (opcional)",
+      "captionModelPlaceholder": "Selecione um modelo de texto",
+      "captionModelDescription": "Descreve imagens e arquivos enviados para enriquecer a indexação. Deixe vazio para desativar.",
+      "clearModelButton": "Remover",
+      "retrievalTitle": "Indexação e recuperação",
+      "retrievalDescription": "Parâmetros de chunking, quantidade de resultados e reranking na busca.",
       "chunkSizeLabel": "Chunk Size (tokens)",
       "chunkOverlapLabel": "Chunk Overlap (tokens)",
       "topKLabel": "Top-K",
       "rerankEnabledLabel": "Reranking habilitado",
-      "saveSuccess": "Configurações RAG salvas",
+      "saveSuccess": "Configurações salvas",
       "saveError": "Erro ao salvar configurações",
       "saving": "Salvando...",
-      "submitButton": "Salvar configurações RAG"
+      "submitButton": "Salvar configurações"
     },
     "agentsTab": {
       "nameColumn": "Agente",
@@ -997,6 +1095,8 @@
       "stepsTitle": "Etapas do fluxo",
       "modelLabel": "Modelo de IA",
       "modelPlaceholder": "Selecione um modelo",
+      "modelSearchPlaceholder": "Buscar por modelo ou provedor...",
+      "modelSearchEmpty": "Nenhum modelo encontrado.",
       "markupLabel": "Markup (ex: 1.2 = 20%)",
       "minCostLabel": "Custo mínimo por execução (US$)",
       "sortOrderLabel": "Ordem na sidebar",

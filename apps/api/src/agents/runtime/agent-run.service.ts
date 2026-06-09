@@ -163,7 +163,9 @@ export class AgentRunService {
     startedAt: Date | null;
     completedAt: Date | null;
   }): AgentRunStatusDto {
-    const metadata = (run.outputPayload as { reviewStatus?: string })?.reviewStatus ?? null;
+    const rawReviewStatus =
+      (run.outputPayload as { reviewStatus?: string })?.reviewStatus ?? null;
+    const reviewStatus = this.normalizeReviewStatus(rawReviewStatus);
 
     return {
       id: run.id,
@@ -177,12 +179,28 @@ export class AgentRunService {
       errorMessage: run.errorMessage,
       pauseReason: run.pauseReason,
       pauseFormSchema: run.pauseFormSchema,
-      reviewStatus: metadata as 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'EDITED' | null,
+      reviewStatus,
       creditCost: run.creditCost ? Number(run.creditCost) : null,
       createdAt: run.createdAt.toISOString(),
       startedAt: run.startedAt?.toISOString() ?? null,
       completedAt: run.completedAt?.toISOString() ?? null,
     };
+  }
+
+  private normalizeReviewStatus(
+    status: string | null,
+  ): 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'EDITED' | null {
+    if (!status) return null;
+    if (status === 'PENDING') return 'PENDING_REVIEW';
+    if (
+      status === 'PENDING_REVIEW' ||
+      status === 'APPROVED' ||
+      status === 'REJECTED' ||
+      status === 'EDITED'
+    ) {
+      return status;
+    }
+    return null;
   }
 
   private mapStepToDto(step: {

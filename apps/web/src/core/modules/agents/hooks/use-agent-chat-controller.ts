@@ -1,16 +1,16 @@
 "use client";
 
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import type { ChatStatus } from "ai";
 import { useTranslations } from "next-intl";
 import { parseAsString, useQueryState } from "nuqs";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
+import { apiClient } from "src/core/shared/utils/api-client";
 import type { SuggestionItem } from "@/components/agent-elements/input/suggestions";
 import type { QuestionAnswer } from "@/components/agent-elements/question/question-prompt";
-
 import { AGENT_UI_CONFIG, type AgentUiId } from "../config/agent-ui-config";
-import { useAgentRun } from "../hooks/use-agent-run";
+import { type AgentRunWithSteps, useAgentRun } from "../hooks/use-agent-run";
 import {
   useApproveAgentRun,
   useCancelAgentRun,
@@ -20,32 +20,145 @@ import {
   useResumeAgentRun,
   useStartAgentRun,
 } from "../hooks/use-agent-run-mutations";
-import { useAgentRunStream } from "../hooks/use-agent-run-stream";
+import {
+  shouldKeepRunStreamOpen,
+  useAgentRunStream,
+} from "../hooks/use-agent-run-stream";
 import { useCampaigns } from "../hooks/use-campaigns";
 import {
-  buildAgentMessages,
-  resolveChatStatus,
-} from "../utils/build-agent-messages";
-import {
+  getRunUserInput,
   parseCopywriterOutput,
   parsePostOutput,
 } from "../utils/agent-run-helpers";
+import {
+  buildThreadMessages,
+  resolveChatStatus,
+} from "../utils/build-agent-messages";
+import { formatAgentOutputMarkdown } from "../utils/format-agent-output-markdown";
+import {
+  createChatId,
+  findChatIdByRunId,
+  migrateLegacySession,
+  useAgentChatSession,
+} from "./use-agent-chat-session";
 
 type PendingFlow = null | "reject" | "regenerate" | "edit";
+
+const createQueuedRunPlaceholder = (
+  runId: string,
+  agentId: AgentUiId,
+  userInput: string,
+  campaignId?: string | null,
+): AgentRunWithSteps => {
+  const now = new Date().toISOString();
+
+  return {
+    run: {
+      id: runId,
+      agentId,
+      companyId: "",
+      campaignId: campaignId ?? null,
+      status: "QUEUED",
+      currentStepKey: null,
+      inputPayload: { userInput },
+      outputPayload: {},
+      errorMessage: null,
+      pauseReason: null,
+      pauseFormSchema: null,
+      reviewStatus: null,
+      creditCost: null,
+      createdAt: now,
+      startedAt: null,
+      completedAt: null,
+    },
+    steps: [],
+  };
+};
 
 export function useAgentChatController(agentId: AgentUiId) {
   const t = useTranslations("agents.surface");
   const tReview = useTranslations("agents.review");
   const tAgent = useTranslations("agents");
   const config = AGENT_UI_CONFIG[agentId];
+  const queryClient = useQueryClient();
 
   const [runId, setRunId] = useQueryState("runId", parseAsString);
+  const [chatId, setChatId] = useQueryState("chatId", parseAsString);
   const [campaignId] = useQueryState("campaignId", parseAsString);
   const [pendingFlow, setPendingFlow] = useState<PendingFlow>(null);
+  const [optimisticUserInput, setOptimisticUserInput] = useState<string | null>(
+    null,
+  );
+
+  const {
+    sessionRunIds,
+    appendRun,
+    resetSession,
+    initChat,
+    setSessionRunIds,
+  } = useAgentChatSession(agentId, chatId);
+
+  useEffect(() => {
+    if (chatId || !runId) return;
+    const existingChatId = findChatIdByRunId(agentId, runId);
+    if (existingChatId) {
+      void setChatId(existingChatId);
+      return;
+    }
+    const migratedChatId = migrateLegacySession(agentId, runId);
+    void setChatId(migratedChatId ?? createChatId());
+  }, [agentId, chatId, runId, setChatId]);
 
   useCampaigns();
 
-  const { data: runData, isLoading: isLoadingRun } = useAgentRun(runId);
+  const { data: runData } = useAgentRun(runId);
+
+  const sessionQueries = useQueries({
+    queries: sessionRunIds.map((sessionRunId) => ({
+      queryKey: ["agent-run", sessionRunId],
+      queryFn: async () => {
+        const { data } = await apiClient.get<AgentRunWithSteps>(
+          `/agents/runs/${sessionRunId}`,
+        );
+        return data;
+      },
+      enabled: Boolean(sessionRunId),
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    })),
+  });
+
+  const sessionRuns = useMemo(
+    () =>
+      sessionRunIds
+        .map((sessionRunId) => {
+          const fromQuery = sessionQueries.find(
+            (query) => query.data?.run.id === sessionRunId,
+          )?.data;
+          if (fromQuery) return fromQuery;
+
+          const fromCache = queryClient.getQueryData<AgentRunWithSteps>([
+            "agent-run",
+            sessionRunId,
+          ]);
+          if (fromCache) return fromCache;
+
+          if (sessionRunId === runId && runData) return runData;
+
+          return null;
+        })
+        .filter((entry): entry is AgentRunWithSteps => Boolean(entry)),
+    [queryClient, runData, runId, sessionQueries, sessionRunIds],
+  );
+
+  useEffect(() => {
+    if (!chatId || !runId) return;
+    if (!sessionRunIds.includes(runId)) {
+      setSessionRunIds((previous) =>
+        previous.length === 0 ? [runId] : [...previous, runId],
+      );
+    }
+  }, [chatId, runId, sessionRunIds, setSessionRunIds]);
 
   const startRunMutation = useStartAgentRun(agentId);
   const resumeRunMutation = useResumeAgentRun(runId, agentId);
@@ -58,11 +171,7 @@ export function useAgentChatController(agentId: AgentUiId) {
   const activeRun = runData?.run ?? null;
   const steps = runData?.steps ?? [];
 
-  const streamEnabled = Boolean(
-    runId &&
-      activeRun &&
-      ["QUEUED", "RUNNING", "PAUSED"].includes(activeRun.status),
-  );
+  const streamEnabled = Boolean(runId && shouldKeepRunStreamOpen(activeRun));
   useAgentRunStream(runId, agentId, streamEnabled);
 
   const suggestions = useMemo<SuggestionItem[]>(
@@ -124,30 +233,172 @@ export function useAgentChatController(agentId: AgentUiId) {
     return output.caption ?? "";
   }, [activeRun, agentId, pendingFlow]);
 
-  const messages = useMemo(
+  const threadRuns = useMemo(() => {
+    if (sessionRuns.length > 0) {
+      return sessionRuns.map((entry) => ({
+        run: entry.run,
+        steps: entry.steps,
+        streamingText: entry.streamingText,
+      }));
+    }
+
+    if (activeRun) {
+      return [{ run: activeRun, steps, streamingText: runData?.streamingText }];
+    }
+
+    return [];
+  }, [activeRun, runData?.streamingText, sessionRuns, steps]);
+
+  const submitPausedFormAnswer = useCallback(
+    async (answer: QuestionAnswer) => {
+      if (!runId || !activeRun || activeRun.status !== "PAUSED") return;
+
+      const schema = activeRun.pauseFormSchema as {
+        fields?: Array<{ name: string }>;
+      } | null;
+      const field = schema?.fields?.[0];
+      const formData: Record<string, unknown> = {};
+
+      if (field) {
+        if (answer.kind === "skip") {
+          formData[field.name] = "";
+        } else if (answer.kind === "text") {
+          formData[field.name] = answer.text ?? "";
+        } else if (answer.kind === "single") {
+          formData[field.name] = answer.selectedIds?.[0] ?? answer.text ?? "";
+        } else {
+          const ids = answer.selectedIds ?? [];
+          formData[field.name] = answer.text ? [...ids, answer.text] : ids;
+        }
+      } else if (answer.kind === "text") {
+        formData.confirmed = answer.text ?? true;
+      } else {
+        formData.confirmed = true;
+      }
+
+      queryClient.setQueryData<AgentRunWithSteps>(
+        ["agent-run", runId],
+        (current) => {
+          if (!current) return current;
+          const mergedInput = {
+            ...(current.run.inputPayload as Record<string, unknown>),
+            ...formData,
+          };
+          return {
+            ...current,
+            run: {
+              ...current.run,
+              status: "QUEUED",
+              inputPayload: mergedInput,
+              pauseReason: null,
+              pauseFormSchema: null,
+            },
+          };
+        },
+      );
+
+      try {
+        await resumeRunMutation.mutateAsync({ formData });
+        toast.success(t("resumeSuccess"));
+      } catch {
+        queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
+        toast.error(t("resumeError"));
+      }
+    },
+    [activeRun, queryClient, resumeRunMutation, runId, t],
+  );
+
+  const clarificationCallbacks = useMemo(
     () =>
-      buildAgentMessages({
-        agentId,
-        run: activeRun,
-        steps,
-        reviewCallbacks,
-        rejectQuestion: pendingFlow === "reject",
-        regenerateQuestion: pendingFlow === "regenerate",
-        editQuestion: editCaption ? { caption: editCaption } : null,
-      }),
-    [
-      activeRun,
-      agentId,
-      editCaption,
-      pendingFlow,
-      reviewCallbacks,
-      steps,
-    ],
+      activeRun?.status === "PAUSED"
+        ? {
+            onAnswer: (answer: QuestionAnswer) => {
+              void submitPausedFormAnswer(answer);
+            },
+            submitLabel: tAgent("clarification.continue"),
+          }
+        : null,
+    [activeRun?.status, submitPausedFormAnswer, tAgent],
   );
 
   const status: ChatStatus = resolveChatStatus(
     activeRun,
     startRunMutation.isPending,
+    optimisticUserInput,
+  );
+
+  const buildConversationHistory = useCallback(() => {
+    return sessionRuns
+      .filter(
+        (entry) =>
+          entry.run.status === "COMPLETED" || entry.run.status === "FAILED",
+      )
+      .map((entry) => ({
+        userInput: getRunUserInput(entry.run),
+        assistantSummary: formatAgentOutputMarkdown(
+          agentId,
+          entry.run.outputPayload,
+        ).slice(0, 2000),
+      }))
+      .filter((turn) => turn.userInput.trim().length > 0);
+  }, [agentId, sessionRuns]);
+
+  const ensureChatId = useCallback(async (): Promise<string> => {
+    if (chatId) return chatId;
+    const nextChatId = createChatId();
+    await setChatId(nextChatId);
+    return nextChatId;
+  }, [chatId, setChatId]);
+
+  const startRunWithInput = useCallback(
+    async (trimmed: string, options?: { continueSession?: boolean }) => {
+      setOptimisticUserInput(trimmed);
+
+      const conversationHistory =
+        options?.continueSession === true ? buildConversationHistory() : [];
+
+      try {
+        await ensureChatId();
+
+        const result = await startRunMutation.mutateAsync({
+          userInput: trimmed,
+          campaignId: campaignId ?? undefined,
+          metadata:
+            conversationHistory.length > 0
+              ? { conversationHistory }
+              : undefined,
+        });
+
+        queryClient.setQueryData<AgentRunWithSteps>(
+          ["agent-run", result.runId],
+          createQueuedRunPlaceholder(
+            result.runId,
+            agentId,
+            trimmed,
+            campaignId ?? null,
+          ),
+        );
+
+        appendRun(result.runId);
+        setRunId(result.runId);
+        setPendingFlow(null);
+        setOptimisticUserInput(null);
+      } catch {
+        setOptimisticUserInput(null);
+        toast.error(t("startError"));
+      }
+    },
+    [
+      agentId,
+      appendRun,
+      buildConversationHistory,
+      campaignId,
+      ensureChatId,
+      queryClient,
+      setRunId,
+      startRunMutation,
+      t,
+    ],
   );
 
   const handleSend = useCallback(
@@ -156,17 +407,7 @@ export function useAgentChatController(agentId: AgentUiId) {
       if (!trimmed) return;
 
       if (!runId || !activeRun) {
-        try {
-          const result = await startRunMutation.mutateAsync({
-            userInput: trimmed,
-            campaignId: campaignId ?? undefined,
-          });
-          setRunId(result.runId);
-          setPendingFlow(null);
-          toast.success(t("startSuccess"));
-        } catch {
-          toast.error(t("startError"));
-        }
+        await startRunWithInput(trimmed);
         return;
       }
 
@@ -183,20 +424,10 @@ export function useAgentChatController(agentId: AgentUiId) {
         activeRun.status === "FAILED" ||
         activeRun.status === "CANCELLED"
       ) {
-        try {
-          const result = await startRunMutation.mutateAsync({
-            userInput: trimmed,
-            campaignId: activeRun.campaignId ?? campaignId ?? undefined,
-          });
-          setRunId(result.runId);
-          setPendingFlow(null);
-          toast.success(t("startSuccess"));
-        } catch {
-          toast.error(t("startError"));
-        }
+        await startRunWithInput(trimmed, { continueSession: true });
       }
     },
-    [activeRun, campaignId, runId, setRunId, startRunMutation, t],
+    [activeRun, runId, startRunWithInput],
   );
 
   const handleStop = useCallback(async () => {
@@ -219,28 +450,7 @@ export function useAgentChatController(agentId: AgentUiId) {
       if (!runId || !activeRun) return;
 
       if (toolCallId?.startsWith("clarify-") || activeRun.status === "PAUSED") {
-        const schema = activeRun.pauseFormSchema as {
-          fields?: Array<{ name: string }>;
-        } | null;
-        const fields = schema?.fields ?? [];
-        const formData: Record<string, unknown> = {};
-
-        if (fields.length > 0 && answer.kind === "text") {
-          fields.forEach((field, index) => {
-            if (index === 0) formData[field.name] = answer.text ?? "";
-          });
-        } else if (answer.kind === "skip") {
-          formData.confirmed = true;
-        } else if (answer.kind === "text") {
-          formData.confirmed = answer.text ?? true;
-        }
-
-        try {
-          await resumeRunMutation.mutateAsync({ formData });
-          toast.success(t("resumeSuccess"));
-        } catch {
-          toast.error(t("resumeError"));
-        }
+        await submitPausedFormAnswer(answer);
         return;
       }
 
@@ -262,6 +472,17 @@ export function useAgentChatController(agentId: AgentUiId) {
           answer.kind === "text" ? answer.text?.trim() : undefined;
         try {
           const result = await regenerateMutation.mutateAsync({ instruction });
+          queryClient.setQueryData<AgentRunWithSteps>(
+            ["agent-run", result.runId],
+            createQueuedRunPlaceholder(
+              result.runId,
+              agentId,
+              getRunUserInput(activeRun),
+              activeRun.campaignId,
+            ),
+          );
+          await ensureChatId();
+          appendRun(result.runId);
           setRunId(result.runId);
           setPendingFlow(null);
           toast.success(tReview("regenerateSuccess"));
@@ -272,8 +493,7 @@ export function useAgentChatController(agentId: AgentUiId) {
       }
 
       if (toolCallId?.startsWith("edit-")) {
-        const editedCaption =
-          answer.kind === "text" ? answer.text?.trim() : "";
+        const editedCaption = answer.kind === "text" ? answer.text?.trim() : "";
         if (!editedCaption) return;
 
         const baseOutput =
@@ -298,29 +518,79 @@ export function useAgentChatController(agentId: AgentUiId) {
     [
       activeRun,
       agentId,
+      appendRun,
       editMutation,
+      ensureChatId,
+      queryClient,
       regenerateMutation,
       rejectMutation,
-      resumeRunMutation,
       runId,
       setRunId,
-      t,
+      submitPausedFormAnswer,
       tReview,
+    ],
+  );
+
+  const questionAnswerHandler = useCallback(
+    (payload: {
+      toolCallId?: string;
+      answer: QuestionAnswer;
+    }) => {
+      void handleQuestionAnswer({
+        toolCallId: payload.toolCallId,
+        question: { title: "" },
+        answer: payload.answer,
+      });
+    },
+    [handleQuestionAnswer],
+  );
+
+  const messages = useMemo(
+    () =>
+      buildThreadMessages({
+        agentId,
+        runs: threadRuns,
+        activeRunId: runId,
+        optimisticUserInput,
+        reviewCallbacks,
+        clarificationCallbacks,
+        questionAnswerHandler,
+        rejectQuestion: pendingFlow === "reject",
+        regenerateQuestion: pendingFlow === "regenerate",
+        editQuestion: editCaption ? { caption: editCaption } : null,
+      }),
+    [
+      agentId,
+      clarificationCallbacks,
+      editCaption,
+      optimisticUserInput,
+      pendingFlow,
+      questionAnswerHandler,
+      reviewCallbacks,
+      runId,
+      threadRuns,
     ],
   );
 
   const openRun = useCallback(
     (nextRunId: string) => {
+      const nextChatId = createChatId();
+      void setChatId(nextChatId);
+      initChat(nextChatId, [nextRunId]);
       setRunId(nextRunId);
       setPendingFlow(null);
+      setOptimisticUserInput(null);
     },
-    [setRunId],
+    [initChat, setChatId, setRunId],
   );
 
   const startNewRun = useCallback(() => {
+    resetSession();
+    setChatId(null);
     setRunId(null);
     setPendingFlow(null);
-  }, [setRunId]);
+    setOptimisticUserInput(null);
+  }, [resetSession, setChatId, setRunId]);
 
   return {
     config,
@@ -329,11 +599,9 @@ export function useAgentChatController(agentId: AgentUiId) {
     messages,
     status,
     suggestions,
-    isLoadingRun,
     pendingFlow,
     handleSend,
     handleStop,
-    handleQuestionAnswer,
     openRun,
     startNewRun,
   };

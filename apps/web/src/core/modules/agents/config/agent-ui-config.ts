@@ -76,7 +76,7 @@ export const AGENT_UI_CONFIG: Record<AgentUiId, AgentUiConfig> = {
       "postSuggestion2",
       "postSuggestion3",
     ],
-    estimatedCredits: 0.15,
+    estimatedCredits: 0.22,
   },
 };
 

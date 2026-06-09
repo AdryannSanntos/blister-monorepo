@@ -24,21 +24,29 @@ export function ThinkingCollapsed({
   expanded,
   onToggleExpand,
 }: ThinkingCollapsedProps) {
-  useToolComplete(state === "animating", step.duration, onComplete);
+  const isRunning = state === "animating";
+
+  useToolComplete(isRunning, step.duration, onComplete);
+
+  const statusLabel = step.thoughtContent?.split("\n")[0]?.trim();
+  const previewBody = step.thoughtContent?.includes("\n")
+    ? step.thoughtContent.split("\n").slice(1).join("\n").trim()
+    : "";
+  const hasExpandableBody = Boolean(previewBody || (isRunning && step.thoughtContent));
 
   return (
     <ToolRowBase
-      shimmerLabel="Thinking"
-      completeLabel="Thought"
-      isAnimating={state === "animating"}
-      expandable={!!step.thoughtContent}
+      shimmerLabel={statusLabel || "Thinking"}
+      completeLabel={statusLabel || "Thought"}
+      isAnimating={isRunning}
+      expandable={hasExpandableBody}
       defaultOpen={defaultOpen}
-      expanded={expanded}
-      onToggleExpand={onToggleExpand}
+      expanded={isRunning ? true : expanded}
+      onToggleExpand={isRunning ? undefined : onToggleExpand}
     >
       <div className="max-h-[175px] overflow-y-auto">
         <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-          {step.thoughtContent}
+          {previewBody || step.thoughtContent}
         </p>
       </div>
     </ToolRowBase>

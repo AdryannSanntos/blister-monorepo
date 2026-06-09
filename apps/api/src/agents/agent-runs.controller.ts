@@ -12,7 +12,15 @@ import {
   MessageEvent,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, map, takeUntil, Subject, finalize } from 'rxjs';
+import {
+  Observable,
+  from,
+  map,
+  switchMap,
+  takeUntil,
+  Subject,
+  finalize,
+} from 'rxjs';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
 import { CompanyService } from '../company/company.service';
@@ -141,16 +149,20 @@ export class AgentRunsController {
       disconnect$.complete();
     });
 
-    return this.runService.findByIdOrThrow(runId).then((run) =>
-      this.sseService.subscribe(runId, run.companyId).pipe(
-        takeUntil(disconnect$),
-        map((event) => ({
-          data: JSON.stringify(event),
-          type: event.type,
-          id: `${runId}-${Date.now()}`,
-        })),
-        finalize(() => disconnect$.complete()),
-      ),
-    ) as unknown as Observable<MessageEvent>;
+    // NestJS @Sse requires an Observable. The previous implementation returned
+    // a Promise<Observable> cast to Observable, which Nest never subscribed to —
+    // so the stream never emitted anything. We resolve the run (for its
+    // companyId / tenant scoping) inside the Observable via switchMap instead.
+    let counter = 0;
+    return from(this.runService.findByIdOrThrow(runId)).pipe(
+      switchMap((run) => this.sseService.subscribe(runId, run.companyId)),
+      takeUntil(disconnect$),
+      map((event) => ({
+        data: JSON.stringify(event),
+        type: event.type,
+        id: `${runId}-${counter++}`,
+      })),
+      finalize(() => disconnect$.complete()),
+    );
   }
 }

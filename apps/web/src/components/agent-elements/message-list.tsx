@@ -699,12 +699,14 @@ function AssistantParts({
           elems.push(
             <div
               key={`${msg.id}-text-${i}`}
-              className="group/assistant-text text-[14px]"
+              className="group/assistant-text flex animate-in fade-in slide-in-from-bottom-1 duration-[var(--dur-base)]"
             >
-              <Markdown
-                content={text}
-                className="leading-relaxed [&_p]:leading-relaxed"
-              />
+              <div className="max-w-[88%] rounded-an-message border border-[var(--line-subtle)] bg-[var(--bg-base)] px-5 py-3 text-[14px] text-[var(--fg-primary)]">
+                <Markdown
+                  content={text}
+                  className="leading-relaxed [&_p]:leading-relaxed"
+                />
+              </div>
             </div>,
           );
         }

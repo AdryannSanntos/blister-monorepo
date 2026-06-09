@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
+import { StorageModule } from '../storage/storage.module';
 import { DocumentService } from './document.service';
 import { ChunkService } from './chunk.service';
 import { EmbeddingRepository } from './embedding.repository';
@@ -9,10 +10,11 @@ import { RetrievalService } from './retrieval.service';
 import { ContextPackService } from './context-pack.service';
 import { RagEventsService } from './rag-events.service';
 import { CompanyRagSyncService } from './company-rag-sync.service';
+import { CaptionService } from './caption.service';
 import { RagAdminController } from './rag-admin.controller';
 
 @Module({
-  imports: [PrismaModule, AiRuntimeModule],
+  imports: [PrismaModule, AiRuntimeModule, StorageModule],
   controllers: [RagAdminController],
   providers: [
     DocumentService,
@@ -23,6 +25,7 @@ import { RagAdminController } from './rag-admin.controller';
     ContextPackService,
     RagEventsService,
     CompanyRagSyncService,
+    CaptionService,
   ],
   exports: [
     IngestionService,

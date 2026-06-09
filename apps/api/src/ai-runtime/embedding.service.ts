@@ -4,6 +4,10 @@ import { OpenRouterAdapter } from './adapters/openrouter.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
 import type { AiProviderAdapter } from './adapters/ai-provider.adapter';
 import { ProviderExecutionError } from './adapters/ai-provider.adapter';
+import {
+  RAG_EMBEDDING_DIMENSIONS,
+  resolvePlatformEmbeddingModel,
+} from './platform-model-resolver';
 
 export interface EmbeddingRequest {
   texts: string[];
@@ -22,8 +26,6 @@ export interface EmbeddingResponse {
 export class EmbeddingService {
   private readonly logger = new Logger(EmbeddingService.name);
   private readonly adapters: Map<string, AiProviderAdapter>;
-  private readonly defaultEmbeddingModel = 'openrouter/openai/text-embedding-3-small';
-  private readonly defaultDimensions = 1536;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -78,6 +80,15 @@ export class EmbeddingService {
         `Unknown embedding provider: ${providerSlug}`,
       );
     }
+
+    if (!adapter.supports('embeddings')) {
+      throw new ProviderExecutionError(
+        providerSlug,
+        'validation',
+        `Provider "${providerSlug}" does not support embeddings`,
+      );
+    }
+
     return adapter;
   }
 
@@ -93,35 +104,17 @@ export class EmbeddingService {
         model: requestedModel,
         providerSlug,
         externalModel,
-        dimensions: this.defaultDimensions,
+        dimensions: RAG_EMBEDDING_DIMENSIONS,
       };
     }
 
-    const settings = await this.prisma.ragPlatformSettings.findUnique({
-      where: { id: 'default' },
-      include: { embeddingModel: { include: { provider: true } } },
-    });
+    const resolved = await resolvePlatformEmbeddingModel(this.prisma);
 
-    if (settings?.embeddingModel?.provider) {
-      const providerSlug = settings.embeddingModel.provider.slug;
-      const externalModel = settings.embeddingModel.externalId;
-      const model = `${providerSlug}/${externalModel}`;
-      return {
-        model,
-        providerSlug,
-        externalModel,
-        dimensions: this.defaultDimensions,
-      };
-    }
-
-    const { providerSlug, externalModel } = this.parseModelString(
-      this.defaultEmbeddingModel,
-    );
     return {
-      model: this.defaultEmbeddingModel,
-      providerSlug,
-      externalModel,
-      dimensions: this.defaultDimensions,
+      model: resolved.modelLabel,
+      providerSlug: resolved.providerSlug,
+      externalModel: resolved.externalModelId,
+      dimensions: RAG_EMBEDDING_DIMENSIONS,
     };
   }
 

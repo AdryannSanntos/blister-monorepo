@@ -69,4 +69,20 @@ export class StorageService {
       }),
     );
   }
+
+  async getObjectBuffer(key: string): Promise<Buffer> {
+    const response = await this.client.send(
+      new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }),
+    );
+
+    if (!response.Body) {
+      throw new Error(`Object not found: ${key}`);
+    }
+
+    const bytes = await response.Body.transformToByteArray();
+    return Buffer.from(bytes);
+  }
 }

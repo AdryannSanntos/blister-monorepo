@@ -109,6 +109,7 @@ export class InternalEventsController {
           runId,
           companyId,
           (data?.outputPayload as Record<string, unknown>) ?? {},
+          typeof data?.totalCreditCost === 'number' ? data.totalCreditCost : undefined,
         );
         break;
       case 'run_failed':
@@ -120,6 +121,9 @@ export class InternalEventsController {
           companyId,
           (data?.pauseReason as string) ?? '',
           data?.pauseFormSchema,
+          typeof data?.inputPayload === 'object' && data?.inputPayload !== null
+            ? (data.inputPayload as Record<string, unknown>)
+            : undefined,
         );
         break;
       case 'output_chunk':

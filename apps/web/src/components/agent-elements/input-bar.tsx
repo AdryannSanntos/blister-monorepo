@@ -112,8 +112,10 @@ export type InputBarProps = {
     submitLabel?: string;
     skipLabel?: string;
     allowSkip?: boolean;
+    cancelLabel?: string;
     onSubmit: (answer: QuestionAnswer) => void;
     onSkip?: () => void;
+    onCancel?: () => void;
   };
 
   /** Content rendered on the left of the toolbar, next to the attachment button. */
@@ -311,45 +313,38 @@ export const InputBar = memo(function InputBar({
 
   const questionBarNode =
     shouldShowQuestionBar && activeQuestion ? (
-      <div
-        className={cn(
-          "border-t border-x border-border max-w-[calc(100%-24px)] w-full mx-auto",
-          !shouldShowInfoBar || infoBarPosition === "bottom"
-            ? "rounded-t-an-input-border-radius"
-            : null,
-        )}
-      >
-        <div className="h-7 border-b border-border px-3 flex items-center justify-between text-xs text-an-tool-color-muted">
-          <div className="inline-flex items-center gap-1.5">
-            <IconMessageCircleQuestion className="w-3.5 h-3.5" />
-            Question
-          </div>
-          {showQuestionNavigation && (
+      <div className="mb-3 w-full space-y-2">
+        {showQuestionNavigation && (
+          <div className="flex items-center justify-between px-1 text-xs text-[var(--fg-tertiary)]">
+            <span className="inline-flex items-center gap-1.5 font-medium">
+              <IconMessageCircleQuestion className="size-3.5 text-[var(--accent)]" />
+              Pergunta
+            </span>
             <div className="inline-flex items-center gap-1">
               <button
                 type="button"
                 onClick={handleQuestionPrevious}
                 disabled={!canGoPrev}
-                className="size-5 inline-flex items-center justify-center rounded-[4px] hover:bg-an-background-secondary disabled:opacity-40"
-                aria-label="Previous question"
+                className="inline-flex size-6 items-center justify-center rounded-[var(--r-sm)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] disabled:opacity-40"
+                aria-label="Pergunta anterior"
               >
-                <IconChevronUp className="w-3.5 h-3.5" />
+                <IconChevronUp className="size-3.5" />
               </button>
-              <span>
-                {clampedQuestionIndex} of {totalQuestions}
+              <span className="tabular-nums">
+                {clampedQuestionIndex} de {totalQuestions}
               </span>
               <button
                 type="button"
                 onClick={handleQuestionNext}
                 disabled={!canGoNext}
-                className="size-5 inline-flex items-center justify-center rounded-[4px] hover:bg-an-background-secondary disabled:opacity-40"
-                aria-label="Next question"
+                className="inline-flex size-6 items-center justify-center rounded-[var(--r-sm)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] disabled:opacity-40"
+                aria-label="Próxima pergunta"
               >
-                <IconChevronDown className="w-3.5 h-3.5" />
+                <IconChevronDown className="size-3.5" />
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
         <QuestionPrompt
           key={`${clampedQuestionIndex}-${activeQuestion?.title ?? "question"}`}
           questions={questionSet}
@@ -358,6 +353,7 @@ export const InputBar = memo(function InputBar({
           submitLabel={questionBarData!.submitLabel}
           skipLabel={questionBarData!.skipLabel}
           allowSkip={questionBarData!.allowSkip}
+          cancelLabel={questionBarData!.cancelLabel}
           onSubmit={(answer) => {
             questionBarData!.onSubmit(answer);
             setDismissedQuestionId(questionBarData!.id);
@@ -365,6 +361,14 @@ export const InputBar = memo(function InputBar({
           onSkip={() => {
             questionBarData!.onSkip?.();
           }}
+          onCancel={
+            questionBarData!.onCancel
+              ? () => {
+                  questionBarData!.onCancel?.();
+                  setDismissedQuestionId(questionBarData!.id);
+                }
+              : undefined
+          }
         />
       </div>
     ) : null;

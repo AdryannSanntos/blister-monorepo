@@ -25,21 +25,16 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "src/core/shared/components/ui/select";
 import { Switch } from "src/core/shared/components/ui/switch";
 import { z } from "zod";
 
 import {
   useAiModels,
+  useAiProviders,
   useUpdateAgentPolicy,
   useUpdatePipeline,
 } from "../hooks/use-ai-catalog";
+import { AgentModelSelect } from "./agent-model-select";
 
 const schema = z.object({
   modelId: z.string().min(1),
@@ -89,6 +84,7 @@ export function AgentConfigDialog({
 }: AgentConfigDialogProps) {
   const t = useTranslations("platformAdmin.agentsTab");
   const { data: models = [] } = useAiModels();
+  const { data: providers = [] } = useAiProviders();
   const { mutateAsync: updatePolicy, isPending: isSavingPolicy } =
     useUpdateAgentPolicy(agent?.agentId ?? "");
   const { mutateAsync: updatePipeline, isPending: isSavingPipeline } =
@@ -219,20 +215,18 @@ export function AgentConfigDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("modelLabel")}</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("modelPlaceholder")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {compatibleModels.map((model) => (
-                        <SelectItem key={model.id} value={model.id}>
-                          {model.name} ({model.externalId})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <AgentModelSelect
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      models={compatibleModels}
+                      providers={providers}
+                      placeholder={t("modelPlaceholder")}
+                      searchPlaceholder={t("modelSearchPlaceholder")}
+                      emptyLabel={t("modelSearchEmpty")}
+                      aria-invalid={Boolean(form.formState.errors.modelId)}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

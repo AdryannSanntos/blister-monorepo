@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
 import { GeminiAdapter } from './adapters/gemini.adapter';
+import { AssemblyAiAdapter } from './adapters/assemblyai.adapter';
 import type {
   AiProviderAdapter,
   AiRuntimeStreamChunk,
@@ -51,10 +52,12 @@ export class AiRuntimeService {
     private readonly prisma: PrismaService,
     private readonly openRouterAdapter: OpenRouterAdapter,
     private readonly geminiAdapter: GeminiAdapter,
+    private readonly assemblyAiAdapter: AssemblyAiAdapter,
   ) {
     this.adapters = new Map<string, AiProviderAdapter>([
       ['openrouter', this.openRouterAdapter],
       ['gemini', this.geminiAdapter],
+      ['assemblyai', this.assemblyAiAdapter],
     ]);
   }
 

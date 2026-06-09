@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from './document.service';
 import { IngestionService } from './ingestion.service';
 import { RagEventsService } from './rag-events.service';
+import { CaptionService } from './caption.service';
 import { CompanyRagSyncService } from './company-rag-sync.service';
 import { hashRagContent, serializeBrandProfile } from './brand-brain.serializer';
 
@@ -18,7 +19,7 @@ const makeBrandProfile = () => ({
   differentiators: 'Fresh ingredients',
   visualStyle: 'Warm',
   typography: 'Sans',
-  marketingObjective: 'AWARENESS' as const,
+  marketingObjective: 'STRENGTHEN_BRAND' as const,
   socialNetworks: ['instagram'],
   palette: {},
   logoVariants: {},
@@ -36,6 +37,7 @@ describe('CompanyRagSyncService', () => {
   let documentService: { findBySource: jest.Mock };
   let ingestionService: { ingest: jest.Mock };
   let ragEvents: { triggerCompanySync: jest.Mock };
+  let captionService: { enrichCampaignFiles: jest.Mock };
 
   beforeEach(async () => {
     prisma = {
@@ -44,6 +46,9 @@ describe('CompanyRagSyncService', () => {
     documentService = { findBySource: jest.fn() };
     ingestionService = { ingest: jest.fn() };
     ragEvents = { triggerCompanySync: jest.fn() };
+    captionService = {
+      enrichCampaignFiles: jest.fn(async (files: unknown[]) => files),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -52,6 +57,7 @@ describe('CompanyRagSyncService', () => {
         { provide: DocumentService, useValue: documentService },
         { provide: IngestionService, useValue: ingestionService },
         { provide: RagEventsService, useValue: ragEvents },
+        { provide: CaptionService, useValue: captionService },
       ],
     }).compile();
 

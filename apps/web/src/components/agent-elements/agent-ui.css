@@ -1,6 +1,6 @@
-/* Workana AI — agent-elements bridge.
+/* Blister — agent-elements bridge.
    All --an-* tokens are remapped to project design tokens so components
-   inherit Workana AI identity automatically and resolve light/dark via tokens. */
+   inherit Blister identity automatically and resolve light/dark via tokens. */
 :root {
   /* Geometry — keep numeric values but align with project radius scale */
   --an-border-radius: var(--r-lg, 12px);

@@ -5,10 +5,10 @@ import {
   executeRun,
   HttpEventPublisher,
   NoOpEventPublisher,
+  createTriggerAssetResolver,
+  createTriggerImageProvider,
+  createTriggerLlmProvider,
   type ExecutionDependencies,
-  type LlmProvider,
-  type ImageProvider,
-  type ContextPackBuilder,
 } from '../src/agents/runtime/kernel';
 
 const prisma = new PrismaClient();
@@ -38,121 +38,8 @@ function getExecutionMode(): 'inline-stub' | 'inline-live' | 'trigger' {
   return 'trigger';
 }
 
-function createLlmProvider(): LlmProvider | null {
-  const openRouterKey = process.env.OPENROUTER_API_KEY;
-  if (!openRouterKey) return null;
-
-  return {
-    async complete(params) {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${openRouterKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': process.env.APP_URL ?? 'https://blister.app',
-          'X-Title': 'Blister',
-        },
-        body: JSON.stringify({
-          model: 'openai/gpt-4o-mini',
-          messages: params.messages,
-          max_tokens: params.maxTokens ?? 4096,
-          temperature: params.temperature ?? 0.7,
-          ...(params.structuredOutputSchema
-            ? {
-                response_format: {
-                  type: 'json_schema',
-                  json_schema: {
-                    name: 'response',
-                    schema: params.structuredOutputSchema,
-                  },
-                },
-              }
-            : {}),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`LLM call failed: ${response.status}`);
-      }
-
-      const data = (await response.json()) as {
-        choices: Array<{ message?: { content: string } }>;
-        usage?: { prompt_tokens?: number; completion_tokens?: number };
-      };
-
-      const content = data.choices[0]?.message?.content ?? '';
-      const tokensInput = data.usage?.prompt_tokens ?? 0;
-      const tokensOutput = data.usage?.completion_tokens ?? 0;
-
-      let structuredOutput: Record<string, unknown> | undefined;
-      if (params.structuredOutputSchema) {
-        try {
-          structuredOutput = JSON.parse(content) as Record<string, unknown>;
-        } catch {
-          // Ignore parse errors
-        }
-      }
-
-      const costUsd =
-        (tokensInput / 1000) * 0.00015 + (tokensOutput / 1000) * 0.0006;
-
-      return {
-        content,
-        model: 'openrouter/openai/gpt-4o-mini',
-        tokensInput,
-        tokensOutput,
-        costUsd,
-        structuredOutput,
-      };
-    },
-  };
-}
-
-function createImageProvider(): ImageProvider | null {
-  const geminiKey = process.env.GEMINI_API_KEY;
-  if (!geminiKey) return null;
-
-  return {
-    async generateImage(params) {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text: params.prompt }] }],
-            generationConfig: { responseModalities: ['IMAGE'] },
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(`Image generation failed: ${response.status}`);
-      }
-
-      const data = (await response.json()) as {
-        candidates?: Array<{
-          content?: {
-            parts?: Array<{ inlineData?: { data?: string; mimeType?: string } }>;
-          };
-        }>;
-      };
-
-      const imageData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
-      if (!imageData?.data) {
-        throw new Error('No image data in response');
-      }
-
-      return {
-        base64: imageData.data,
-        imageUrl: `data:${imageData.mimeType};base64,${imageData.data}`,
-      };
-    },
-  };
-}
-
-function createContextPackBuilder(): ContextPackBuilder | null {
-  return null;
+function hasAnyLlmProviderConfigured(): boolean {
+  return Boolean(process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY);
 }
 
 function createEventPublisher() {
@@ -182,13 +69,18 @@ export const agentRunExecute = task({
     logger.info('Starting agent run execution', {
       runId: validated.runId,
       mode,
+      hasOpenRouterKey: Boolean(process.env.OPENROUTER_API_KEY),
+      hasGeminiKey: Boolean(process.env.GEMINI_API_KEY),
     });
+
+    const useLiveProviders = mode !== 'inline-stub' && hasAnyLlmProviderConfigured();
 
     const deps: ExecutionDependencies = {
       prisma,
-      contextPackBuilder: createContextPackBuilder(),
-      llmProvider: mode === 'inline-stub' ? null : createLlmProvider(),
-      imageProvider: mode === 'inline-stub' ? null : createImageProvider(),
+      contextPackBuilder: null,
+      llmProvider: useLiveProviders ? createTriggerLlmProvider(prisma) : null,
+      imageProvider: useLiveProviders ? createTriggerImageProvider(prisma) : null,
+      assetResolver: useLiveProviders ? createTriggerAssetResolver() : null,
       eventPublisher: createEventPublisher(),
       stubMode: mode === 'inline-stub',
     };
@@ -203,6 +95,7 @@ export const agentRunExecute = task({
       runId: result.runId,
       status: result.status,
       creditCost: result.creditCost,
+      errorMessage: result.errorMessage,
     });
 
     return {

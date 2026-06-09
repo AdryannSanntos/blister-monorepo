@@ -138,7 +138,7 @@ export class IngestionService {
     objective: string,
     context?: string | null,
   ): Promise<IngestResult> {
-    const textContent = serializeCampaign({ name, objective, context });
+    const textContent = serializeCampaign({ name, objective, context: context ?? null });
 
     return this.ingest({
       companyId,
