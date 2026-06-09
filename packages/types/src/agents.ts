@@ -217,14 +217,74 @@ export const agentCatalogSchema = z.object({
 
 export const agentRunEventTypeSchema = z.enum([
   'run_started',
-  'step_started',
-  'step_completed',
-  'step_failed',
   'run_paused',
   'run_completed',
   'run_failed',
+  // legacy (no longer consumed by the chat UI; kept for compatibility)
+  'step_started',
+  'step_completed',
+  'step_failed',
   'output_chunk',
+  // block protocol
+  'message_start',
+  'block_start',
+  'block_delta',
+  'block_end',
+  'message_end',
 ]);
+
+export const blockTypeSchema = z.enum([
+  'thinking',
+  'searching_context',
+  'planning',
+  'working',
+  'text',
+  'form_question',
+  'output',
+  'error',
+]);
+
+export const agentRunBlockRoleSchema = z.enum(['user', 'assistant']);
+export const agentRunBlockStatusSchema = z.enum(['streaming', 'complete', 'error']);
+
+export const messageStartEventDataSchema = z.object({
+  messageId: z.string(),
+  role: agentRunBlockRoleSchema,
+});
+export const blockStartEventDataSchema = z.object({
+  messageId: z.string(),
+  blockId: z.string(),
+  blockType: blockTypeSchema,
+  index: z.number().int().nonnegative(),
+  label: z.string().optional(),
+  stepKey: z.string().optional(),
+});
+export const blockDeltaEventDataSchema = z.object({
+  messageId: z.string(),
+  blockId: z.string(),
+  delta: z.string(),
+});
+export const blockEndEventDataSchema = z.object({
+  messageId: z.string(),
+  blockId: z.string(),
+  status: agentRunBlockStatusSchema,
+  payload: z.record(z.string(), z.unknown()).optional(),
+});
+export const messageEndEventDataSchema = z.object({ messageId: z.string() });
+
+export const agentRunBlockDtoSchema = z.object({
+  id: z.string(),
+  messageId: z.string(),
+  role: agentRunBlockRoleSchema,
+  blockType: blockTypeSchema,
+  index: z.number().int(),
+  label: z.string().nullable(),
+  text: z.string().nullable(),
+  payload: z.record(z.string(), z.unknown()),
+  stepKey: z.string().nullable(),
+  status: agentRunBlockStatusSchema,
+  createdAt: z.string(),
+});
 
 export const agentRunEventSchema = z.object({
   type: agentRunEventTypeSchema,
@@ -257,4 +317,13 @@ export type StepResult = z.infer<typeof stepResultSchema>;
 export type AgentCatalogItem = z.infer<typeof agentCatalogItemSchema>;
 export type AgentCatalog = z.infer<typeof agentCatalogSchema>;
 export type AgentRunEventType = z.infer<typeof agentRunEventTypeSchema>;
+export type BlockType = z.infer<typeof blockTypeSchema>;
+export type AgentRunBlockRole = z.infer<typeof agentRunBlockRoleSchema>;
+export type AgentRunBlockStatus = z.infer<typeof agentRunBlockStatusSchema>;
+export type AgentRunBlockDto = z.infer<typeof agentRunBlockDtoSchema>;
+export type MessageStartEventData = z.infer<typeof messageStartEventDataSchema>;
+export type BlockStartEventData = z.infer<typeof blockStartEventDataSchema>;
+export type BlockDeltaEventData = z.infer<typeof blockDeltaEventDataSchema>;
+export type BlockEndEventData = z.infer<typeof blockEndEventDataSchema>;
+export type MessageEndEventData = z.infer<typeof messageEndEventDataSchema>;
 export type AgentRunEvent = z.infer<typeof agentRunEventSchema>;
