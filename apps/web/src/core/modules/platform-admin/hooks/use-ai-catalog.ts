@@ -1,67 +1,27 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import type {
+  AgentPolicy,
+  AiModel,
+  AiProvider,
+  CreateAiModelDto,
+  CreateAiProviderDto,
+  PipelineAgentConfig,
+  UpdatePipelineDto,
+} from "@company-os/types";
+
 import { apiClient } from "src/core/shared/utils/api-client";
+
 import { usePlatformQueryEnabled } from "./use-platform-admin";
 
-export type AIProvider = {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-  status: "draft" | "active" | "disabled";
-  iconMetadata: Record<string, unknown>;
-  capabilityMetadata: Record<string, unknown>;
-  pricingMetadata: Record<string, unknown>;
-  limitsMetadata: Record<string, unknown>;
-  schemaMetadata: Record<string, unknown>;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type AIModel = {
-  id: string;
-  providerId: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-  externalModelId: string;
-  status: "draft" | "active" | "deprecated" | "disabled";
-  capabilityMetadata: Record<string, unknown>;
-  pricingMetadata: Record<string, unknown>;
-  limitsMetadata: Record<string, unknown>;
-  schemaMetadata: Record<string, unknown>;
-  provider?: AIProvider;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type AIProviderPolicy = {
-  id: string;
-  organizationId: string;
-  providerId: string;
-  allowedModelIds: string[];
-  metadata: Record<string, unknown>;
-  createdAt: string;
-  updatedAt: string;
-};
-
-function invalidateCatalog(queryClient: ReturnType<typeof useQueryClient>) {
-  return Promise.all([
-    queryClient.invalidateQueries({ queryKey: ["platform-ai-providers"] }),
-    queryClient.invalidateQueries({ queryKey: ["platform-ai-models"] }),
-    queryClient.invalidateQueries({ queryKey: ["platform-ai-policies"] }),
-  ]);
-}
-
-export function useAIProviders() {
+export function useAiProviders() {
   const enabled = usePlatformQueryEnabled();
 
-  return useQuery<AIProvider[]>({
-    queryKey: ["platform-ai-providers"],
+  return useQuery<AiProvider[]>({
+    queryKey: ["platform", "ai", "providers"],
     queryFn: async () => {
-      const { data } = await apiClient.get<AIProvider[]>(
+      const { data } = await apiClient.get<AiProvider[]>(
         "/platform/ai/providers",
       );
       return data;
@@ -73,88 +33,26 @@ export function useAIProviders() {
 export function useCreateProvider() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post<AIProvider>(
+  return useMutation<AiProvider, Error, CreateAiProviderDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.post<AiProvider>(
         "/platform/ai/providers",
-        payload,
+        dto,
       );
       return data;
     },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Provider criado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao criar provider."),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["platform", "ai", "providers"] }),
   });
 }
 
-export function useUpdateProvider() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      providerId,
-      ...payload
-    }: Record<string, unknown> & { providerId: string }) => {
-      const { data } = await apiClient.patch<AIProvider>(
-        `/platform/ai/providers/${providerId}`,
-        payload,
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Provider atualizado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao atualizar provider."),
-  });
-}
-
-export function useSyncProviderModels() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (providerId: string) => {
-      const { data } = await apiClient.post(
-        `/platform/ai/providers/${providerId}/sync-models`,
-        {},
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Modelos sincronizados com sucesso.");
-    },
-    onError: () => toast.error("Erro ao sincronizar modelos."),
-  });
-}
-
-export function useCreatePlatformCredential() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post("/platform/ai/credentials", payload);
-      return data;
-    },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Credencial registrada com sucesso.");
-    },
-    onError: () => toast.error("Erro ao registrar credencial."),
-  });
-}
-
-export function useAIModels(filters?: Record<string, string>) {
+export function useAiModels() {
   const enabled = usePlatformQueryEnabled();
 
-  return useQuery<AIModel[]>({
-    queryKey: ["platform-ai-models", filters],
+  return useQuery<AiModel[]>({
+    queryKey: ["platform", "ai", "models"],
     queryFn: async () => {
-      const { data } = await apiClient.get<AIModel[]>("/platform/ai/models", {
-        params: filters,
-      });
+      const { data } = await apiClient.get<AiModel[]>("/platform/ai/models");
       return data;
     },
     enabled,
@@ -164,53 +62,27 @@ export function useAIModels(filters?: Record<string, string>) {
 export function useCreateModel() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.post<AIModel>(
+  return useMutation<AiModel, Error, CreateAiModelDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.post<AiModel>(
         "/platform/ai/models",
-        payload,
+        dto,
       );
       return data;
     },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Modelo criado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao criar modelo."),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["platform", "ai", "models"] }),
   });
 }
 
-export function useUpdateModel() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      modelId,
-      ...payload
-    }: Record<string, unknown> & { modelId: string }) => {
-      const { data } = await apiClient.patch<AIModel>(
-        `/platform/ai/models/${modelId}`,
-        payload,
-      );
-      return data;
-    },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Modelo atualizado com sucesso.");
-    },
-    onError: () => toast.error("Erro ao atualizar modelo."),
-  });
-}
-
-export function useAIProviderPolicies(filters?: Record<string, string>) {
+export function useAgentPolicies() {
   const enabled = usePlatformQueryEnabled();
 
-  return useQuery<AIProviderPolicy[]>({
-    queryKey: ["platform-ai-policies", filters],
+  return useQuery<AgentPolicy[]>({
+    queryKey: ["platform", "agents", "policies"],
     queryFn: async () => {
-       const { data } = await apiClient.get<AIProviderPolicy[]>(
-        "/platform/ai/policies",
-        { params: filters },
+      const { data } = await apiClient.get<AgentPolicy[]>(
+        "/platform/agents/policies",
       );
       return data;
     },
@@ -218,21 +90,35 @@ export function useAIProviderPolicies(filters?: Record<string, string>) {
   });
 }
 
-export function useUpsertPolicy() {
-  const queryClient = useQueryClient();
+export function usePipelineConfig() {
+  const enabled = usePlatformQueryEnabled();
 
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await apiClient.put<AIProviderPolicy>(
-        "/platform/ai/policies",
-        payload,
+  return useQuery<PipelineAgentConfig[]>({
+    queryKey: ["platform", "agents", "pipeline"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<PipelineAgentConfig[]>(
+        "/platform/agents/pipeline",
       );
       return data;
     },
-    onSuccess: async () => {
-      await invalidateCatalog(queryClient);
-      toast.success("Política atualizada com sucesso.");
+    enabled,
+  });
+}
+
+export function useUpdatePipeline() {
+  const queryClient = useQueryClient();
+
+  return useMutation<PipelineAgentConfig[], Error, UpdatePipelineDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.patch<PipelineAgentConfig[]>(
+        "/platform/agents/pipeline",
+        dto,
+      );
+      return data;
     },
-    onError: () => toast.error("Erro ao atualizar política."),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "pipeline"],
+      }),
   });
 }

@@ -1,117 +1,180 @@
-import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import type { Request } from 'express';
-import { z } from 'zod';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePlatformRole } from '../platform/decorators/require-platform-role.decorator';
 import { PlatformRoleGuard } from '../platform/guards/platform-role.guard';
 import {
-  createCredentialSchema,
+  addCredentialSchema,
+  adjustCompanyCreditSchema,
   createModelSchema,
   createProviderSchema,
-  listModelsSchema,
-  listPoliciesSchema,
-  updateCredentialSchema,
+  platformCompaniesQuerySchema,
+  updateAgentPolicySchema,
+  updateCreditSettingsSchema,
   updateModelSchema,
+  updatePipelineSchema,
   updateProviderSchema,
-  upsertPolicySchema,
-} from './dto';
-import { AICatalogService } from './ai-catalog.service';
+  updateRagSettingsSchema,
+} from './dto/ai-catalog.dto';
+import { ModelsService } from './models.service';
+import { PlatformCompaniesService } from './platform-companies.service';
+import { PlatformSettingsService } from './platform-settings.service';
+import { PoliciesService } from './policies.service';
+import { ProvidersService } from './providers.service';
 
-const syncModelsSchema = z.object({
-  organizationId: z.string().min(1).optional(),
-});
-
-function parseBody<T>(
-  schema: { safeParse: (value: unknown) => { success: true; data: T } | { success: false; error: unknown } },
-  value: unknown,
-): T {
-  const parsed = schema.safeParse(value);
-  if (!parsed.success) {
-    throw new BadRequestException(parsed.error);
-  }
-
-  return parsed.data;
-}
-
-@Controller('platform/ai')
+@Controller('platform')
 @UseGuards(PlatformRoleGuard)
 @RequirePlatformRole('platform_admin')
-export class AICatalogController {
-  constructor(private readonly aiCatalogService: AICatalogService) {}
+export class AiCatalogController {
+  constructor(
+    private readonly providers: ProvidersService,
+    private readonly models: ModelsService,
+    private readonly policies: PoliciesService,
+    private readonly settings: PlatformSettingsService,
+    private readonly companies: PlatformCompaniesService,
+  ) {}
 
-  @Get('providers')
-  async listProviders() {
-    return this.aiCatalogService.listProviders();
+  // ── Providers ──────────────────────────────────────────────────────────────
+  @Get('ai/providers')
+  listProviders() {
+    return this.providers.findAll();
   }
 
-  @Post('providers')
-  async createProvider(@Body() body: unknown) {
-    return this.aiCatalogService.createProvider(parseBody(createProviderSchema, body));
+  @Post('ai/providers')
+  createProvider(@Body() body: unknown) {
+    const parsed = createProviderSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.providers.create(parsed.data);
   }
 
-  @Patch('providers/:providerId')
-  async updateProvider(@Param('providerId') providerId: string, @Body() body: unknown) {
-    return this.aiCatalogService.updateProvider(providerId, parseBody(updateProviderSchema, body));
+  @Patch('ai/providers/:id')
+  updateProvider(@Param('id') id: string, @Body() body: unknown) {
+    const parsed = updateProviderSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.providers.update(id, parsed.data);
   }
 
-  @Post('providers/:providerId/sync-models')
-  async syncProviderModels(@Param('providerId') providerId: string, @Body() body: unknown) {
-    const parsed = parseBody(syncModelsSchema, body ?? {});
-    return this.aiCatalogService.syncProviderModels(providerId, parsed.organizationId);
+  @Post('ai/providers/:id/credentials')
+  addCredential(@Param('id') providerId: string, @Body() body: unknown) {
+    const parsed = addCredentialSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.providers.addCredential(providerId, parsed.data);
   }
 
-  @Get('models')
-  async listModels(@Query() query: unknown) {
-    return this.aiCatalogService.listModels(parseBody(listModelsSchema, query));
+  @Delete('ai/providers/:id/credentials/:credId')
+  deleteCredential(@Param('credId') credId: string) {
+    return this.providers.deleteCredential(credId);
   }
 
-  @Post('models')
-  async createModel(@Body() body: unknown) {
-    return this.aiCatalogService.createModel(parseBody(createModelSchema, body));
+  // ── Models ─────────────────────────────────────────────────────────────────
+  @Get('ai/models')
+  listModels() {
+    return this.models.findAll();
   }
 
-  @Patch('models/:modelId')
-  async updateModel(@Param('modelId') modelId: string, @Body() body: unknown) {
-    return this.aiCatalogService.updateModel(modelId, parseBody(updateModelSchema, body));
+  @Post('ai/models')
+  createModel(@Body() body: unknown) {
+    const parsed = createModelSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.models.create(parsed.data);
   }
 
-  @Post('credentials')
-  async createCredential(@Body() body: unknown, @Req() req: Request) {
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.aiCatalogService.createCredential(
-      currentUser.id,
-      parseBody(createCredentialSchema, body),
-    );
+  @Patch('ai/models/:id')
+  updateModel(@Param('id') id: string, @Body() body: unknown) {
+    const parsed = updateModelSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.models.update(id, parsed.data);
   }
 
-  @Patch('credentials/:credentialId')
-  async updateCredential(
-    @Param('credentialId') credentialId: string,
-    @Body() body: unknown,
+  @Delete('ai/models/:id')
+  deleteModel(@Param('id') id: string) {
+    return this.models.delete(id);
+  }
+
+  // ── Policies ───────────────────────────────────────────────────────────────
+  @Get('agents/policies')
+  listPolicies() {
+    return this.policies.findAllPolicies();
+  }
+
+  @Patch('agents/policies/:agentId')
+  updatePolicy(@Param('agentId') agentId: string, @Body() body: unknown) {
+    const parsed = updateAgentPolicySchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.policies.updatePolicy(agentId, parsed.data);
+  }
+
+  // ── Pipeline ───────────────────────────────────────────────────────────────
+  @Get('agents/pipeline')
+  getPipeline() {
+    return this.policies.getPipeline();
+  }
+
+  @Patch('agents/pipeline')
+  updatePipeline(@Body() body: unknown) {
+    const parsed = updatePipelineSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.policies.updatePipeline(parsed.data);
+  }
+
+  // ── Platform settings ──────────────────────────────────────────────────────
+  @Get('settings')
+  getSettings() {
+    return this.settings.getSettings();
+  }
+
+  @Patch('settings/credits')
+  @RequirePlatformRole('platform_owner')
+  updateCreditSettings(@Req() req: Request, @Body() body: unknown) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const parsed = updateCreditSettingsSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.settings.updateCreditSettings(user.id, parsed.data);
+  }
+
+  @Patch('settings/rag')
+  updateRagSettings(@Req() req: Request, @Body() body: unknown) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const parsed = updateRagSettingsSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.settings.updateRagSettings(user.id, parsed.data);
+  }
+
+  // ── Companies ──────────────────────────────────────────────────────────────
+  @Get('companies')
+  listCompanies(@Query() query: unknown) {
+    const parsed = platformCompaniesQuerySchema.safeParse(query);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.companies.findAll(parsed.data);
+  }
+
+  @Get('companies/:id')
+  getCompany(@Param('id') id: string) {
+    return this.companies.findById(id);
+  }
+
+  @Post('companies/:id/credits/adjust')
+  @RequirePlatformRole('platform_owner')
+  adjustCredits(
     @Req() req: Request,
+    @Param('id') companyId: string,
+    @Body() body: unknown,
   ) {
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.aiCatalogService.updateCredential(
-      currentUser.id,
-      credentialId,
-      parseBody(updateCredentialSchema, body),
-    );
-  }
-
-  @Get('policies')
-  async listPolicies(@Query() query: unknown) {
-    return this.aiCatalogService.listPolicies(parseBody(listPoliciesSchema, query));
-  }
-
-  @Put('policies')
-  async upsertPolicy(@Body() body: unknown, @Req() req: Request) {
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.aiCatalogService.upsertPolicy(currentUser.id, parseBody(upsertPolicySchema, body));
-  }
-
-  @Post('sync-models')
-  async syncAllModels(@Body() body: unknown) {
-    const parsed = parseBody(syncModelsSchema, body ?? {});
-    return this.aiCatalogService.syncAllProviderModels(parsed.organizationId);
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const parsed = adjustCompanyCreditSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.companies.adjustCredits(companyId, user.id, parsed.data);
   }
 }

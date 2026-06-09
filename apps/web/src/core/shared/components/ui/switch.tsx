@@ -17,7 +17,7 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        "peer group/switch inline-flex shrink-0 items-center rounded-full border border-[var(--line-default)] bg-[var(--bg-active)] shadow-none outline-none transition-[background,border-color,box-shadow] duration-[var(--dur-fast)] ease-[var(--ease-out)] focus-visible:border-[var(--accent)] focus-visible:ring-[3px] focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-[18px] data-[size=default]:w-[30px] data-[size=sm]:h-3.5 data-[size=sm]:w-6 data-[state=checked]:border-[var(--accent)] data-[state=checked]:bg-[var(--accent)]",
+        "peer group/switch inline-flex shrink-0 items-center rounded-full border-[1.5px] border-transparent bg-[var(--bg-active)] p-0.5 shadow-none outline-none transition-[background,border-color,box-shadow] duration-[var(--dur-base)] ease-[var(--ease-out)] focus-visible:border-[var(--primary-700)] focus-visible:ring-[3px] focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-[26px] data-[size=default]:w-[46px] data-[size=sm]:h-[20px] data-[size=sm]:w-[36px] data-[state=checked]:bg-[var(--primary-600)]",
         className,
       )}
       {...props}
@@ -25,7 +25,7 @@ function Switch({
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          "pointer-events-none ml-px block rounded-full bg-[var(--fg-secondary)] ring-0 transition-[background,transform] duration-[var(--dur-base)] ease-[var(--ease-spring)] group-data-[size=default]/switch:size-3.5 group-data-[size=sm]/switch:size-3 data-[state=checked]:translate-x-3 data-[state=checked]:bg-[var(--fg-on-accent)] data-[state=unchecked]:translate-x-0",
+          "pointer-events-none block rounded-full bg-white shadow-[var(--shadow-sm)] ring-0 transition-[background,transform] duration-[var(--dur-base)] ease-[var(--ease-spring)] group-data-[size=default]/switch:size-[22px] group-data-[size=sm]/switch:size-4 data-[state=checked]:bg-white data-[state=unchecked]:translate-x-0 group-data-[size=default]/switch:data-[state=checked]:translate-x-5 group-data-[size=sm]/switch:data-[state=checked]:translate-x-4",
         )}
       />
     </SwitchPrimitive.Root>

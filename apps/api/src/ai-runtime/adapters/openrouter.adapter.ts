@@ -1,507 +1,312 @@
-import { Injectable } from '@nestjs/common';
-import type { OpenRouterOptions } from '@openrouter/agent';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type {
+  AiProviderAdapter,
+  AiRuntimeCapability,
+  AiRuntimeEmbeddingRequest,
+  AiRuntimeEmbeddingResult,
+  AiRuntimeImageRequest,
+  AiRuntimeImageResult,
+  AiRuntimeStreamChunk,
+  AiRuntimeTextRequest,
+  AiRuntimeTextResult,
+} from './ai-provider.adapter';
 import {
-  type AIProviderAdapter,
-  type AIProviderListedModel,
-  type AIRuntimeCapability,
-  type AIRuntimeEmbeddingRequest,
-  type AIRuntimeEmbeddingResult,
-  type AIRuntimeImageRequest,
-  type AIRuntimeImageResult,
-  type AIRuntimeResolvedCredential,
-  type AIRuntimeTextRequest,
-  type AIRuntimeTextResult,
-  type AIRuntimeTextStreamChunk,
   ProviderExecutionError,
+  ProviderNotConfiguredError,
 } from './ai-provider.adapter';
 
-type OpenRouterSdkModule = typeof import('@openrouter/sdk');
-type OpenRouterEmbeddingPayload = {
-  data?: Array<{ embedding?: number[] }>;
-  usage?: { totalTokens?: number };
-};
+interface OpenRouterResponse {
+  id: string;
+  choices: Array<{
+    message?: { content: string };
+    delta?: { content?: string };
+    finish_reason?: string;
+  }>;
+  usage?: {
+    prompt_tokens?: number;
+    completion_tokens?: number;
+  };
+}
 
-const importEsmModule = new Function('specifier', 'return import(specifier)') as <T>(
-  specifier: string,
-) => Promise<T>;
-
-const trimmedIsDone = (line: string): boolean => {
-  const trimmed = line.trim();
-  return trimmed.startsWith('data:') && trimmed.slice('data:'.length).trim() === '[DONE]';
-};
-
-let openRouterSdkModulePromise: Promise<OpenRouterSdkModule> | null = null;
-
-const loadOpenRouterSdkModule = () => {
-  openRouterSdkModulePromise ??= importEsmModule<OpenRouterSdkModule>('@openrouter/sdk');
-  return openRouterSdkModulePromise;
-};
+interface OpenRouterEmbeddingResponse {
+  data: Array<{ embedding: number[] }>;
+  usage?: { total_tokens?: number };
+}
 
 @Injectable()
-export class OpenRouterAdapter implements AIProviderAdapter {
+export class OpenRouterAdapter implements AiProviderAdapter {
   readonly provider = 'openrouter';
+  private readonly logger = new Logger(OpenRouterAdapter.name);
+  private readonly apiKey: string;
+  private readonly baseUrl = 'https://openrouter.ai/api/v1';
 
-  private readonly supportedCapabilities = new Set<AIRuntimeCapability>([
-    'text_generation',
-    'image_generation',
-    'embeddings',
-    'structured_output',
-  ]);
-
-  supports(capability: AIRuntimeCapability) {
-    return this.supportedCapabilities.has(capability);
+  constructor(private readonly config: ConfigService) {
+    this.apiKey = this.config.get<string>('OPENROUTER_API_KEY') ?? '';
   }
 
-  async listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]> {
+  supports(capability: AiRuntimeCapability): boolean {
+    return ['text_generation', 'embeddings', 'structured_output'].includes(
+      capability,
+    );
+  }
+
+  async generateText(request: AiRuntimeTextRequest): Promise<AiRuntimeTextResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
+
+    const body: Record<string, unknown> = {
+      model: request.model,
+      messages: request.messages,
+      max_tokens: request.maxTokens ?? 4096,
+      temperature: request.temperature ?? 0.7,
+    };
+
+    if (request.structuredOutputSchema) {
+      body.response_format = {
+        type: 'json_schema',
+        json_schema: {
+          name: 'structured_response',
+          schema: request.structuredOutputSchema,
+        },
+      };
+    }
+
     try {
-      const response = await fetch(`${this.resolveBaseUrl()}/models`, {
-        method: 'GET',
-        headers: this.buildRequestHeaders(credential.value),
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        const message = await this.readErrorMessage(response);
+        const error = await response.text();
+        this.logger.error(`OpenRouter completion failed: ${error}`);
         throw new ProviderExecutionError(
           this.provider,
           this.mapErrorCategory(response.status),
-          message,
+          error,
           response.status,
         );
       }
 
-      const payload = (await response.json()) as {
-        data?: Array<{
-          id?: string;
-          canonical_slug?: string;
-          name?: string;
-          description?: string;
-          context_length?: number | null;
-          supported_parameters?: string[];
-          architecture?: {
-            input_modalities?: string[];
-            output_modalities?: string[];
-          };
-          pricing?: Record<string, unknown>;
-          top_provider?: {
-            context_length?: number | null;
-            max_completion_tokens?: number | null;
-          };
-        }>;
-      };
+      const data = (await response.json()) as OpenRouterResponse;
 
-      return (payload.data ?? [])
-        .filter(
-          (model): model is NonNullable<typeof payload.data>[number] & { id: string } =>
-            typeof model.id === 'string',
-        )
-        .map((model) => {
-          const outputModalities = model.architecture?.output_modalities ?? [];
-          const inputModalities = model.architecture?.input_modalities ?? [];
-          return {
-            slug: this.slugify(model.canonical_slug ?? model.id),
-            name: model.name ?? model.id,
-            externalModelId: model.id,
-            description: model.description,
-            status: 'active' as const,
-            capabilityMetadata: {
-              text: outputModalities.includes('text'),
-              image: outputModalities.includes('image'),
-              audio: outputModalities.includes('audio') || outputModalities.includes('speech'),
-              embeddings: outputModalities.includes('embeddings'),
-              vision: inputModalities.includes('image') || inputModalities.includes('video'),
-              structuredOutput: (model.supported_parameters ?? []).includes('structured_outputs'),
-            },
-            pricingMetadata: model.pricing ?? {},
-            limitsMetadata: {
-              contextLength: model.top_provider?.context_length ?? model.context_length ?? null,
-              maxCompletionTokens: model.top_provider?.max_completion_tokens ?? null,
-            },
-            schemaMetadata: {
-              providerManaged: true,
-              raw: model,
-            },
-          };
-        });
-    } catch (error) {
-      throw this.normalizeError(error);
-    }
-  }
+      const content = data.choices[0]?.message?.content ?? '';
+      const promptTokens = data.usage?.prompt_tokens ?? 0;
+      const completionTokens = data.usage?.completion_tokens ?? 0;
 
-  async generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult> {
-    try {
-      const messages: Array<{ role: string; content: string }> = request.messages?.length
-        ? request.messages.map((message) => ({ role: message.role, content: message.content }))
-        : [{ role: 'user', content: request.prompt ?? '' }];
-
-      const body: Record<string, unknown> = {
-        model: request.model.apiModelName,
-        messages,
-        ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-        ...(request.maxOutputTokens !== undefined ? { max_tokens: request.maxOutputTokens } : {}),
-      };
-
+      let structuredOutput: Record<string, unknown> | undefined;
       if (request.structuredOutputSchema) {
-        body.response_format = {
-          type: 'json_schema',
-          json_schema: {
-            name: 'structured_output',
-            schema: request.structuredOutputSchema,
-            strict: true,
-          },
-        };
+        try {
+          structuredOutput = JSON.parse(content) as Record<string, unknown>;
+        } catch {
+          this.logger.warn('Failed to parse structured output as JSON');
+        }
       }
 
-      const response = await this.postJson<{
-        choices?: Array<{ message?: { content?: string | null } }>;
-        usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
-      }>('/chat/completions', body, request.credential.value);
-
-      const text = response.choices?.[0]?.message?.content ?? '';
-
       return {
-        text,
-        structuredOutput: request.structuredOutputSchema
-          ? this.tryParseStructuredOutput(text)
-          : undefined,
+        content,
+        structuredOutput,
         usage: {
-          promptTokens: response.usage?.prompt_tokens,
-          completionTokens: response.usage?.completion_tokens,
-          totalTokens: response.usage?.total_tokens,
-          raw: this.toRecord(response.usage),
+          promptTokens,
+          completionTokens,
+          totalTokens: promptTokens + completionTokens,
         },
-        raw: this.toRecord(response),
+        finishReason: data.choices[0]?.finish_reason ?? 'stop',
       };
     } catch (error) {
-      throw this.normalizeError(error);
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('OpenRouter completion failed', error);
+      throw new ProviderExecutionError(
+        this.provider,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     }
   }
 
-  /**
-   * Real token streaming over the OpenAI-compatible `/chat/completions` SSE. Each
-   * `data:` line carries a `choices[0].delta.content` chunk; `[DONE]` ends it.
-   */
-  async *streamText(request: AIRuntimeTextRequest): AsyncIterable<AIRuntimeTextStreamChunk> {
-    const messages: Array<{ role: string; content: string }> = request.messages?.length
-      ? request.messages.map((message) => ({ role: message.role, content: message.content }))
-      : [{ role: 'user', content: request.prompt ?? '' }];
+  async *streamText(
+    request: AiRuntimeTextRequest,
+  ): AsyncGenerator<AiRuntimeStreamChunk, AiRuntimeTextResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
 
-    const body: Record<string, unknown> = {
-      model: request.model.apiModelName,
-      messages,
-      stream: true,
-      ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-      ...(request.maxOutputTokens !== undefined ? { max_tokens: request.maxOutputTokens } : {}),
-    };
-
-    const timeoutMs = this.resolveTimeoutMs();
-    let response: Response;
     try {
-      response = await fetch(`${this.resolveBaseUrl()}/chat/completions`, {
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: this.buildRequestHeaders(request.credential.value),
-        body: JSON.stringify(body),
-        signal: timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
+        headers: this.getHeaders(),
+        body: JSON.stringify({
+          model: request.model,
+          messages: request.messages,
+          max_tokens: request.maxTokens ?? 4096,
+          temperature: request.temperature ?? 0.7,
+          stream: true,
+        }),
       });
-    } catch (error) {
-      throw this.normalizeError(error);
-    }
 
-    if (!response.ok || !response.body) {
-      const message = await this.readErrorMessage(response);
-      throw new ProviderExecutionError(
-        this.provider,
-        this.mapErrorCategory(response.status),
-        message,
-        response.status,
-      );
-    }
+      if (!response.ok) {
+        const error = await response.text();
+        throw new ProviderExecutionError(
+          this.provider,
+          this.mapErrorCategory(response.status),
+          error,
+          response.status,
+        );
+      }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
+      let fullContent = '';
+      let promptTokens = 0;
+      let completionTokens = 0;
+      let finishReason = 'stop';
 
-    const drainLine = (line: string): AIRuntimeTextStreamChunk | null => {
-      const trimmed = line.trim();
-      if (!trimmed.startsWith('data:')) return null;
-      const payload = trimmed.slice('data:'.length);
-      if (payload.trim() === '[DONE]') return null;
-      const delta = OpenRouterAdapter.extractStreamDelta(payload);
-      return delta ? { delta } : null;
-    };
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
 
-    try {
+      const decoder = new TextDecoder();
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        let newlineIndex: number;
-        // biome-ignore lint/suspicious/noAssignInExpressions: stream line splitting
-        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
-          const line = buffer.slice(0, newlineIndex);
-          buffer = buffer.slice(newlineIndex + 1);
-          if (trimmedIsDone(line)) return;
-          const chunk = drainLine(line);
-          if (chunk) yield chunk;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n').filter((line) => line.startsWith('data: '));
+
+        for (const line of lines) {
+          const data = line.slice(6);
+          if (data === '[DONE]') continue;
+
+          try {
+            const parsed = JSON.parse(data) as OpenRouterResponse;
+            const content = parsed.choices[0]?.delta?.content ?? '';
+
+            if (content) {
+              fullContent += content;
+              yield { content, isLast: false };
+            }
+
+            if (parsed.choices[0]?.finish_reason) {
+              finishReason = parsed.choices[0].finish_reason;
+            }
+
+            if (parsed.usage) {
+              promptTokens = parsed.usage.prompt_tokens ?? 0;
+              completionTokens = parsed.usage.completion_tokens ?? 0;
+            }
+          } catch {
+            continue;
+          }
         }
       }
-      const tail = drainLine(buffer);
-      if (tail) yield tail;
-    } finally {
-      reader.releaseLock();
-    }
-  }
 
-  /** Pure extraction of the streamed delta from one SSE `data:` payload. */
-  static extractStreamDelta(dataPayload: string): string | null {
-    const trimmed = dataPayload.trim();
-    if (!trimmed || trimmed === '[DONE]') return null;
-    try {
-      const parsed = JSON.parse(trimmed) as {
-        choices?: Array<{ delta?: { content?: string | null } }>;
-      };
-      const content = parsed.choices?.[0]?.delta?.content;
-      return typeof content === 'string' && content.length > 0 ? content : null;
-    } catch {
-      return null;
-    }
-  }
-
-  async generateImage(request: AIRuntimeImageRequest): Promise<AIRuntimeImageResult> {
-    try {
-      const response = await this.postJson<{
-        data?: Array<{ url?: string }>;
-        usage?: Record<string, unknown>;
-      }>(
-        '/images/generations',
-        {
-          model: request.model.apiModelName,
-          prompt: request.prompt,
-          size: request.size,
-        },
-        request.credential.value,
-      );
+      yield { content: '', isLast: true };
 
       return {
-        images: (response.data ?? []).map((image) => ({
-          url: image.url ?? '',
-        })),
+        content: fullContent,
         usage: {
-          imageCount: Array.isArray(response.data) ? response.data.length : 0,
-          raw: response.usage,
+          promptTokens,
+          completionTokens,
+          totalTokens: promptTokens + completionTokens,
         },
-        raw: this.toRecord(response),
+        finishReason,
       };
     } catch (error) {
-      throw this.normalizeError(error);
-    }
-  }
-
-  async createEmbedding(request: AIRuntimeEmbeddingRequest): Promise<AIRuntimeEmbeddingResult> {
-    try {
-      const { OpenRouter } = await loadOpenRouterSdkModule();
-      const client = new OpenRouter(this.buildClientOptions(request.credential.value));
-      const response = await client.embeddings.generate({
-        requestBody: {
-          model: request.model.apiModelName,
-          input: request.input,
-        },
-      });
-      const payload = this.normalizeEmbeddingResponse(response);
-
-      return {
-        embedding: payload.data?.[0]?.embedding ?? [],
-        usage: {
-          totalTokens: payload.usage?.totalTokens,
-          embeddingCount: Array.isArray(payload.data) ? payload.data.length : 0,
-          raw: this.toRecord(payload.usage),
-        },
-        raw: this.toRecord(payload),
-      };
-    } catch (error) {
-      throw this.normalizeError(error);
-    }
-  }
-
-  private buildClientOptions(apiKey: string): OpenRouterOptions {
-    const timeoutMs = this.resolveTimeoutMs();
-
-    return {
-      apiKey,
-      serverURL: process.env.OPENROUTER_BASE_URL,
-      httpReferer: process.env.OPENROUTER_HTTP_REFERER ?? process.env.APP_URL,
-      appTitle: process.env.OPENROUTER_APP_TITLE ?? 'Workana AI',
-      ...(timeoutMs ? { timeoutMs } : {}),
-    };
-  }
-
-  private resolveTimeoutMs() {
-    const rawValue = process.env.OPENROUTER_TIMEOUT_MS;
-    if (!rawValue) {
-      return undefined;
-    }
-
-    const value = Number(rawValue);
-    return Number.isFinite(value) && value > 0 ? value : undefined;
-  }
-
-  private buildRequestHeaders(apiKey: string) {
-    return {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      ...((process.env.OPENROUTER_HTTP_REFERER ?? process.env.APP_URL)
-        ? { 'HTTP-Referer': process.env.OPENROUTER_HTTP_REFERER ?? process.env.APP_URL ?? '' }
-        : {}),
-      ...(process.env.OPENROUTER_APP_TITLE ? { 'X-Title': process.env.OPENROUTER_APP_TITLE } : {}),
-    };
-  }
-
-  private resolveBaseUrl() {
-    return (process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1').replace(/\/$/, '');
-  }
-
-  private async postJson<T>(
-    path: string,
-    body: Record<string, unknown>,
-    apiKey: string,
-  ): Promise<T> {
-    const timeoutMs = this.resolveTimeoutMs();
-    const response = await fetch(`${this.resolveBaseUrl()}${path}`, {
-      method: 'POST',
-      headers: this.buildRequestHeaders(apiKey),
-      body: JSON.stringify(body),
-      signal: timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined,
-    });
-
-    if (!response.ok) {
-      const message = await this.readErrorMessage(response);
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('OpenRouter stream failed', error);
       throw new ProviderExecutionError(
         this.provider,
-        this.mapErrorCategory(response.status),
-        message,
-        response.status,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
       );
     }
-
-    return (await response.json()) as T;
   }
 
-  private async readErrorMessage(response: Response) {
+  async createEmbedding(
+    request: AiRuntimeEmbeddingRequest,
+  ): Promise<AiRuntimeEmbeddingResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
+
+    const inputs = Array.isArray(request.input) ? request.input : [request.input];
+
     try {
-      const data = (await response.json()) as { error?: { message?: string } };
-      return data.error?.message ?? `Provider request failed with status ${response.status}`;
-    } catch {
-      return `Provider request failed with status ${response.status}`;
+      const response = await fetch(`${this.baseUrl}/embeddings`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify({
+          model: request.model,
+          input: inputs,
+          dimensions: request.dimensions,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        this.logger.error(`OpenRouter embedding failed: ${error}`);
+        throw new ProviderExecutionError(
+          this.provider,
+          this.mapErrorCategory(response.status),
+          error,
+          response.status,
+        );
+      }
+
+      const data = (await response.json()) as OpenRouterEmbeddingResponse;
+
+      const embeddings = data.data.map((item) => item.embedding);
+      const totalTokens = data.usage?.total_tokens ?? 0;
+      const dimensions = embeddings[0]?.length ?? request.dimensions ?? 1536;
+
+      return {
+        embeddings,
+        usage: {
+          promptTokens: totalTokens,
+          completionTokens: 0,
+          totalTokens,
+        },
+        dimensions,
+      };
+    } catch (error) {
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('OpenRouter embedding failed', error);
+      throw new ProviderExecutionError(
+        this.provider,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     }
   }
 
-  private normalizeEmbeddingResponse(response: unknown): OpenRouterEmbeddingPayload {
-    if (typeof response === 'string') {
-      return JSON.parse(response) as OpenRouterEmbeddingPayload;
-    }
-
-    return response as OpenRouterEmbeddingPayload;
+  async generateImage(
+    _request: AiRuntimeImageRequest,
+  ): Promise<AiRuntimeImageResult> {
+    throw new ProviderExecutionError(
+      this.provider,
+      'validation',
+      'OpenRouter does not support direct image generation',
+    );
   }
 
-  private tryParseStructuredOutput(text: string) {
-    try {
-      return JSON.parse(text) as Record<string, unknown>;
-    } catch {
-      return undefined;
-    }
-  }
-
-  private mapUsage(
-    usage:
-      | {
-          inputTokens?: number;
-          outputTokens?: number;
-          totalTokens?: number;
-          cost?: number | null;
-        }
-      | null
-      | undefined,
-  ) {
+  private getHeaders(): Record<string, string> {
     return {
-      promptTokens: usage?.inputTokens,
-      completionTokens: usage?.outputTokens,
-      totalTokens: usage?.totalTokens,
-      raw: this.toRecord(usage),
+      Authorization: `Bearer ${this.apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': this.config.get('APP_URL', 'https://blister.app'),
+      'X-Title': 'Blister',
     };
   }
 
-  private toRecord(value: unknown): Record<string, unknown> | undefined {
-    if (!value || typeof value !== 'object' || Array.isArray(value)) {
-      return undefined;
-    }
-
-    return value as Record<string, unknown>;
-  }
-
-  private slugify(value: string) {
-    return value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  }
-
-  private mapErrorCategory(statusCode: number): 'auth' | 'rate_limit' | 'validation' | 'unknown' {
-    if (statusCode === 401 || statusCode === 403 || statusCode === 402) {
-      return 'auth';
-    }
-
-    if (statusCode === 400 || statusCode === 404 || statusCode === 422) {
-      return 'validation';
-    }
-
-    if (statusCode === 429) {
-      return 'rate_limit';
-    }
-
+  private mapErrorCategory(
+    status: number,
+  ): 'auth' | 'rate_limit' | 'validation' | 'unknown' {
+    if (status === 401 || status === 403) return 'auth';
+    if (status === 429) return 'rate_limit';
+    if (status >= 400 && status < 500) return 'validation';
     return 'unknown';
-  }
-
-  private normalizeError(error: unknown) {
-    const statusCode =
-      typeof error === 'object' && error
-        ? 'statusCode' in error
-          ? (error as { statusCode?: number }).statusCode
-          : 'response' in error
-            ? (error as { response?: { status?: number } }).response?.status
-            : undefined
-        : undefined;
-
-    if (error instanceof ProviderExecutionError) {
-      return error;
-    }
-
-    if (statusCode === 401 || statusCode === 403 || statusCode === 402) {
-      return new ProviderExecutionError(
-        this.provider,
-        'auth',
-        'Provider authentication failed',
-        statusCode,
-      );
-    }
-
-    if (statusCode === 400 || statusCode === 404 || statusCode === 422) {
-      return new ProviderExecutionError(
-        this.provider,
-        'validation',
-        'Provider rejected the request',
-        statusCode,
-      );
-    }
-
-    if (statusCode === 429) {
-      return new ProviderExecutionError(
-        this.provider,
-        'rate_limit',
-        'Provider rate limit exceeded',
-        statusCode,
-      );
-    }
-
-    const message = error instanceof Error ? error.message : 'Provider request failed';
-    return new ProviderExecutionError(this.provider, 'unknown', message, statusCode);
   }
 }

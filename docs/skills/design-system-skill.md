@@ -1,8 +1,10 @@
-# Design System Skill — Workana AI
+# Design System Skill — Blister
+
+> Tokens e componentes compartilhados — produto Blister marketing IA. Ver [`docs/design-system/`](../design-system/).
 
 ## Objetivo
 
-Guiar UI, tokens, componentes e rota `/design-system` do Workana AI.
+Guiar UI, tokens, componentes e rota `/design-system`.
 
 ## Direção Visual
 

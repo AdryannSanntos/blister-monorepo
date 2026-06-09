@@ -1,6 +1,7 @@
-# Skill de Design System — Workana AI
+# Skill de Design System — Blister
 
 Aplique as regras abaixo ao implementar ou revisar qualquer UI neste projeto.
+Referência completa em `docs/design-system/` e regras de UI no `CLAUDE.md` (Regras 8–11).
 
 ---
 

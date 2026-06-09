@@ -1,10 +1,14 @@
-# Workana AI — Monorepo
+# Blister — Monorepo
 
 ## O que é este projeto
 
-Workana AI é uma camada de inteligência para empresas que contratam, coordenam e escalam trabalho com freelancers, fornecedores e times remotos. O produto organiza contexto, briefings, demandas, agentes de IA, créditos, equipe, permissões e integrações dentro de um workspace por empresa.
+Blister é uma ferramenta de **marketing com IA** para MEIs, pequenos negócios e autônomos no Brasil. O usuário descreve o que precisa (*"post sobre lançamento do bolo de cenoura"*) e recebe pacote completo: imagem, legenda e hashtags — com a identidade da marca aplicada.
 
-**Fase atual:** fundação técnica implementada. Auth, organizações, memberships, roles, permissões, convites, onboarding inicial, dashboard shell, assets e tela base de integrações existem. Brain persistido, agentes, créditos e histórico de execuções ainda precisam evoluir como domínios próprios.
+O moat não é o LLM — é **Memória da Marca** + **RAG** + **auto-melhoramento por agente**.
+
+**Profiles:** `BUSINESS` (owner), `ADMIN` (platform). No org/tenants — 1 company per user in MVP.
+
+**Fase atual:** fundação + empresa/marca/créditos/admin parcial ✅. Próximo: RAG + workflow engine (agentes isolados). Ver [`docs/project/current-state.md`](docs/project/current-state.md).
 
 ---
 
@@ -12,12 +16,12 @@ Workana AI é uma camada de inteligência para empresas que contratam, coordenam
 
 ```
 apps/
-  web/    Next.js 16 + React 19 — frontend principal
-  api/    NestJS 11 — API REST, auth, Prisma, CASL
+  web/    Next.js 16 + React 19
+  api/    NestJS 11 + Prisma + pgvector
 packages/
-  authz/  Catálogo de permissões CASL, roles padrão, mapa de permissões
-  types/  Schemas e tipos Zod compartilhados
-  configs/ Presets TypeScript compartilhados
+  authz/  Permissões CASL
+  types/  Zod compartilhado
+  configs/ TypeScript presets
 ```
 
 ---
@@ -26,193 +30,138 @@ packages/
 
 ### 1. Toda ação tem permissão
 
-**Backend:** todo endpoint de mutação ou dado sensível deve ter `@RequirePermission(key)`.
-**Frontend:** toda UI com ação de escrita, exclusão ou dado restrito deve ter `<PermissionGate permission="key">` ou verificação via `useAbility()`.
-
-Não existe entrega de feature sem guards e checks de UI implementados.
+Backend: `@RequirePermission(key)`. Frontend: `<PermissionGate>` ou `useAbility()`.
 
 ### 2. userId nunca vem do body
 
-`userId` vem sempre de `req.currentUser.id`.
-`orgId` vem de `req.params` — nunca do body.
+`req.currentUser.id` sempre. IDs de recurso de `req.params`.
 
 ### 3. Novos endpoints com guard ou @Public explícito
 
-`AuthGuard` é global. Sem `@Public()`, todo endpoint requer autenticação automaticamente.
-Endpoints intencionalmente públicos devem ter `@Public()` explícito.
+AuthGuard é global.
 
-### 4. Nova permissão: packages/authz primeiro
+### 4. Nova permissão → packages/authz primeiro
 
-1. Declarar em `packages/authz/src/index.ts` (`AppPermissionKey`, `allPermissionKeys`, `permissionMap`, roles padrão)
-2. Rodar seed de roles padrão quando aplicável
-3. Usar `@RequirePermission('nova.chave')` no controller
-4. Usar `<PermissionGate permission="nova.chave">` no frontend
+Declarar chave, map, roles, seed → controller → frontend.
 
 ### 5. Prisma é o único cliente de banco
 
-Sem SQL raw avulso, sem outro ORM, sem acesso direto fora do `PrismaService`.
 Nunca editar `apps/api/src/generated/prisma` manualmente.
 
-### 6. better-auth trata apenas auth e sessão
+### 6. better-auth só trata auth/sessão
 
-`better-auth` cuida de login, signup, verificação de email, reset de senha e sessão.
-Organização ativa, convites, memberships, roles, permissões, créditos e brain pertencem ao domínio da aplicação.
-`useActiveOrganization()` — nunca assumir org a partir da sessão better-auth.
+Perfil, marca, campanhas, créditos = domínio da aplicação.
 
-### 7. Roles de sistema são imutáveis
+### 7. Roles de sistema imutáveis
 
-`owner`, `admin` e `member` não podem ser renomeados nem deletados.
-Não é possível remover o último owner de uma organização.
-Um membro pode ter múltiplas roles simultâneas.
+`owner`, `admin`, `member` — não renomear nem deletar.
 
 ### 8. Dados em tabela por padrão
 
-Coleções de entidades de dados (membros, roles, convites, permissões, execuções, créditos, logs, integrações, assets, agentes) devem ser renderizadas em tabela usando o componente `<DataTable>` de `src/core/shared/components/ui/data-table.tsx`.
+`<DataTable>` com sort, filtros, seleção, export, floating footer.
 
-Exceções aceitas: pickers, controles de formulário, onboarding, showcases visuais e cards com hierarquia visual intrínseca.
+### 9. Simplicidade radical
 
-**Toda tabela operacional deve nascer com os controles abaixo — não são opcionais:**
+Máx. 2–3 campos para iniciar tarefa. Campanha = nome + objetivo. Geração rápida = 1 frase.
 
-- **Sort:** ativar `enableSorting: true` (ou omitir — padrão é `true`) na `ColumnDef` de toda coluna com ordenação útil. Omitir apenas em colunas visuais, `actions` e `select`.
-- **Configuração de colunas:** automático quando a coluna não tem `enableHiding: false`; o icon button `Columns3` aparece na toolbar direita sem configuração adicional.
-- **Seleção:** passar `bulkActions` ou `exportOptions` em `<DataTable>` habilita automaticamente `enableRowSelection`, coluna de checkbox e select-all no header — os checkboxes ficam verticalmente alinhados (coluna `w-px` centrada).
-- **Filtros:** passar a prop `filters` com `DataTableFilter[]`; cada filtro define `id`, `label` e `options` com predicados específicos do fluxo. O icon button `SlidersHorizontal` aparece na toolbar esquerda automaticamente.
-- **Floating footer de seleção:** aparece automaticamente quando há linhas selecionadas e `footerActions` (bulk actions + export). É sticky na área de conteúdo (`sticky bottom-4`), não na viewport. Ações padrão: exportar CSV e exportar PDF (via `exportOptions`). Ações extras via `bulkActions` — sempre incluir excluir quando a permissão existir.
+### 10. Animações sempre presentes
 
-### 9. Simplicidade radical — a IA trabalha, o usuário guia
+`tw-animate-css` em overlays e interativos.
 
-**Esta é uma regra crítica e inviolável de produto.**
+### 11. Espaçamento padronizado
 
-O sistema deve ser operável por qualquer pessoa, inclusive quem nunca usou IA. Antes de criar qualquer fluxo ou tela, pergunte: *"a pessoa consegue usar isso sem ler um tutorial?"*
+`gap-6` entre seções, `gap-4` dentro de agrupamentos.
 
-**Princípios obrigatórios:**
+### 12. Rotas
 
-- **Zero formulários desnecessários.** Se a IA pode inferir a informação pelo contexto ou por conversa, não peça upfront. Formulários com mais de 2–3 campos para iniciar uma tarefa são um sinal vermelho.
-- **Chat como interface padrão para qualquer geração.** Geração de imagem, copy, e-mail, briefing, post — tudo começa com o usuário escrevendo em linguagem natural. A IA faz perguntas se precisar de mais contexto. O resultado aparece direto no chat. O usuário refina por conversa.
-- **Iteração no chat, não em formulários.** Após a IA gerar algo (imagem, texto, PDF), o usuário pede ajustes escrevendo. Nunca redirecionar para um formulário de edição.
-- **Inputs só quando estritamente necessários.** Se um campo pode ser evitado (inferido, sugerido pela IA, ou perguntado no chat), ele não deve existir na UI.
-- **Ações em 1 clique sempre que possível.** O usuário não deve navegar por múltiplas telas para completar uma tarefa rotineira.
-- **A IA assume defaults inteligentes.** Ao criar um agente, iniciar uma execução ou configurar algo, a IA preenche o que sabe e expõe apenas o que é realmente decisão do usuário.
+`/dashboard/*` autenticado · `/auth/*` público · proxy via `apps/web/src/proxy.ts`
 
-**Exemplo correto:** fluxo de gerar imagem = campo de texto livre ("descreva a imagem") + botão enviar → imagem aparece no chat → usuário pede ajustes no mesmo chat.
+### 13. Agentes plugáveis e isolados
 
-**Exemplo errado:** formulário com campos de estilo, resolução, formato, tom, referência de cor, etc. antes de gerar qualquer coisa.
+1 pasta = 1 agente. Registry, não switch. Workflow multi-step **dentro de cada agente**. **Sem pipeline automático** entre agentes. Usuário dispara `POST /api/agents/:agentId/run`. Output em `AgentRun.outputPayload`. `learning/feedback-handler.ts` **obrigatório** em todo agente. Ver [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](docs/decisions/2026-06-09-agents-isolated-architecture.md).
 
-Violar esta regra em qualquer nova tela ou componente é equivalente a violar a regra de permissões — bloqueia a entrega.
+### 14. RAG + learning
 
-### 10. Animações são parte da experiência — nunca omitir
+Retrieval filtered by `companyId`. User feedback indexed in RAG. No cross-tenant.
 
-Todo componente interativo deve ter suas animações padrão funcionando: modals, selects, dropdowns, drawers, toasts, accordions, etc.
+### 15. Créditos
 
-**Stack de animação:**
-- Tailwind CSS v4 usa o pacote `tw-animate-css` (importado via `@import "tw-animate-css"` em `globals.css` — é CSS puro, não plugin JS)
-- Utilities necessárias: `animate-in`, `animate-out`, `fade-in-*`, `fade-out-*`, `zoom-in-*`, `zoom-out-*`, `slide-in-from-*`, `slide-out-to-*`
-- Animações de accordion/collapsible: definidas como `@keyframes` em `globals.css` e expostas como `--animate-*` CSS vars
+Agentes só rodam com saldo. Free tier US$ 20 único (config admin). Débito por step LLM.
 
-Ao instalar ou recriar componentes shadcn/ui, verificar que `tw-animate-css` está presente e o `@plugin` está declarado. Sem o plugin, todas as animações de entrada/saída de overlays ficam silenciosamente desabilitadas.
+### 16. Linguagem UI
 
-### 11. Agentes só executam com versão ativa
+Zero jargão de IA. Usar verbos operacionais por superfície: **Campanha**, **Cérebro da Marca**, **Criar texto**, **Gerar imagem**, **Planejar conteúdo**, **Aprovar**. Evitar: "peça", "agente", "prompt", "LLM". Post completo = **um agente entre vários**, não entidade central do produto.
 
-Toda execução de agente (`/messages` → run → steps) depende de `agent.activeVersionId`. O ciclo é `draft → publish → activate` e isso deve acontecer em uma única ação UI — o botão "Publicar agente" no workflow builder faz save+publish+activate juntos. Nunca exponha publish e activate como botões separados; o usuário não precisa entender essa diferença interna.
+### 17. Campanha e revisão
 
-Quando `agent.status !== "active"`, `AgentInactiveDialog` em modo `blocking` deve cobrir qualquer página que dependa do agente. O modal não pode ser fechado por Esc/clique fora; tentar fechar redireciona para `/workflow`. O input do chat também precisa ficar `disabled={!isAgentActive}`.
+**Campanha** = workspace (contexto + arquivos + runs de agentes) — não dispara agentes em cadeia. **Revisão** (aprovar/negar/editar) na superfície de **cada agente**, via endpoints da `AgentRun` — não módulo global `/pecas`.
 
-Backend `agent-version.dto.ts` aceita `flowDefinition.config` (workflow-level) e `node.config` (com label/prompt/position/successors). Nunca expandir a UI para mandar campos fora desse contrato sem antes ajustar o schema Zod.
+### 18. Regras de codificação
 
-Leia `docs/skills/agents-skill.md` antes de qualquer mudança em `apps/web/src/core/modules/agents/**`, `apps/web/src/components/agent-elements/**` ou `apps/api/src/agents/**`.
+**Validação e contratos**
+- **Zod sempre** — DTOs backend, formulários frontend, schemas compartilhados em `packages/types`, outputs de IA quando aplicável.
+- **Validação em toda fronteira** — body, params, query, respostas externas e payloads de agente antes de persistir ou renderizar.
 
-### 12. Espaçamento padronizado de UI
+**Frontend**
+- **TanStack Query sempre** para estado de servidor — `useQuery`/`useMutation` via hooks de domínio; nunca fetch direto em page/component.
+- **react-hook-form (RHF) sempre** em formulários — com `zodResolver` e `mode: 'onBlur'`.
+- **nuqs sempre** para filtros, tabs, paginação e qualquer estado sincronizado com URL.
+- **Server Components por padrão** — `"use client"` só quando houver interatividade, hooks ou browser APIs; preferir Server Actions para mutações simples quando couber.
+- **Componentes no módulo** — nunca criar componente solto; todo componente de feature vive em `core/modules/<modulo>/components/`. Shared só em `core/shared/`.
+- **Zustand** para estado global de UI quando necessário (wizard, seleção persistente, preferências locais) — não substituir React Query para dados de servidor.
 
-Padrão geral: **24px entre agrupamentos, 16px dentro de um agrupamento.**
+**Backend**
+- Zod nos DTOs antes do service; validar invariantes de negócio no service.
 
-| Contexto | Valor |
-|----------|-------|
-| Entre mensagens de chat | `gap-6` (24px) |
-| Dentro de uma mensagem (bubble → execução → footer) | `gap-4` (16px) |
-| Tools dentro do bubble do agente | `space-y-4` (16px) |
-| Sections de página | `gap-6` |
-| Cards/blocos em sidebar | `gap-2`/`gap-3` |
-
-Não inventar valores soltos via arbitrary classes.
-
-### 13. Convenção de rotas: workspace vs. dashboard
-
-```
-/workspace/*  →  fora de qualquer empresa  (selecionar/criar workspace)
-/dashboard/*  →  dentro de uma empresa     (requer org ativa)
-/onboarding/* →  dentro de uma empresa     (requer org ativa)
-/auth/*       →  autenticação              (redireciona se já tem sessão)
-```
-
-O proxy (`apps/web/src/proxy.ts`) aplica essas regras automaticamente via cookies:
-- `better-auth.session_token` — presença indica sessão ativa
-- `company-os-active-org` — presença indica empresa selecionada
-- Ao entrar em `/workspace/*`, o proxy limpa a empresa ativa para garantir contexto fora de qualquer company
-
-Regras de redirect:
-- `/dashboard/*` ou `/onboarding/*` sem sessão → `/auth/login?next=<path>`
-- `/dashboard/*` ou `/onboarding/*` com sessão mas sem org → `/workspace/select`
-- `/workspace/*` sem sessão → `/auth/login?next=<path>`
-- `/workspace/*` com sessão → navegação fora de company, sem `activeOrgId` persistido
-- `/auth/*` com sessão → `/app` (que resolve org e redireciona)
-
-Nunca usar `DashboardShell` em rotas `/workspace/*`, nem `WorkspaceShell` em rotas `/dashboard/*`.
+**Qualidade e UX**
+- **Playwright** para validar fluxos críticos, design e UX — experiência do usuário é essencial; novas telas/fluxos devem ter cobertura e2e quando aplicável.
 
 ---
 
 ## Produto e linguagem
 
-- Nome do produto: **Workana AI**
-- Foco: empresas que coordenam trabalho com freelancers, fornecedores e times remotos
-- Termos internos de UI: Workspace, Company, Brain, Agentes, Créditos, Integrações
-- Evitar linguagem genérica de chatbot; o produto é operacional, B2B e orientado a execução
-- A camada interna de IA nunca deve expor ranking, confiança, metadados ocultos ou contexto derivado sem decisão explícita
+- Nome: **Blister**
+- Foco: marketing operacional para pequenos negócios
+- Termos: Campanha, Cérebro da Marca, Créditos, labels por agente (criar texto, gerar imagem, planejar…)
+- Não expor "agente", "prompt", "LLM", "peça" ao usuário final
 
 ---
 
 ## Stack resumida
 
-### Frontend
-- Next.js 16, React 19, App Router
-- Tailwind CSS v4 com tokens em `globals.css`
-- shadcn/ui em `core/shared/components/ui/`
-- react-hook-form + Zod
-- TanStack Query e TanStack Table
-- Recharts, nuqs, zustand, axios, lucide-react
-- next-themes com light default e dark disponível
+Frontend: Next.js 16, React 19, Tailwind v4, shadcn/ui, TanStack Query/Table, RHF+Zod, nuqs, zustand, Playwright, axios, next-themes
 
-### Backend
-- NestJS 11
-- Prisma + PostgreSQL
-- better-auth para auth/sessão
-- CASL via `packages/authz`
-- Zod para DTOs
-- Resend para emails transacionais
-- socket.io e S3-compatible previstos para evolução
+Backend: NestJS 11, Prisma, PostgreSQL+pgvector, better-auth, CASL, Zod, Resend, S3, Satori
 
 ---
 
-## Catálogo de permissões atual
+## Documentação
 
-`company.read/update/delete` · `member.read/invite/update/remove` · `role.read/create/update/delete` · `permission.read` · `onboarding.publish` · `brain.read/update` · `asset.read/create/update/archive/context.review` · `skill.read/execute` · `integration.read` · `output.read/review`
+| Prioridade | Documento |
+|------------|-----------|
+| 1 | [`docs/prd/blister-master-prd.md`](docs/prd/blister-master-prd.md) |
+| 2 | Este `CLAUDE.md` |
+| 3 | [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](docs/decisions/2026-06-09-agents-isolated-architecture.md) |
+| 4 | [`docs/decisions/2026-06-08-product-pivot-ai-marketing.md`](docs/decisions/2026-06-08-product-pivot-ai-marketing.md) |
+| 5 | [`docs/project/`](docs/project/) |
+| 6 | [`docs/agents/`](docs/agents/) |
+
+`docs/archive/` = legado — não usar como contrato.
 
 ---
 
 ## Ordem de execução do produto
 
-1. Auth
-2. Criação/seleção de workspace
-3. Convites
-4. Onboarding curto da empresa
-5. Brain inicial
-6. Dashboard operacional
-7. Equipe, roles e permissões
-8. Assets e fontes do brain
-9. Créditos por empresa
-10. Agentes default
-11. Histórico de execuções
-12. Integrações
-13. Templates de briefing
-14. Automações e analytics
+1. Auth ✅
+2. Empresa + Cérebro da Marca + onboarding ✅
+3. Créditos + admin settings ✅ (parcial)
+4. RAG platform ← **atual**
+5. Workflow engine + execução isolada por agente
+6. Agentes MVP (strategist, copywriter, designer, …)
+7. Campanhas + workspace
+8. Revisão por agente + auto-melhoramento
+9. UI por agente + campanha
+10. Recarga créditos (Fase 2)
+11. Publicação direct post (Fase 3)
 
-**Estado atual:** Auth, workspace, convites, roles/permissões, onboarding draft, dashboard shell, assets e shell de integrações já existem. Brain persistido, créditos, agentes e histórico real ainda faltam.
+**Estado atual:** ver [`docs/project/current-state.md`](docs/project/current-state.md).

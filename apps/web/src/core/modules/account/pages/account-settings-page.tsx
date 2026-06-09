@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { User } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,6 +14,7 @@ import {
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "src/core/shared/components/ui/card";
@@ -27,7 +30,17 @@ import {
 import { Input } from "src/core/shared/components/ui/input";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "src/core/shared/components/ui/select";
+import { LocaleFlagIcon } from "src/core/shared/components/flags/locale-flag-icon";
 import { authClient } from "src/core/shared/utils/auth-client";
+
+import { usePathname, useRouter, type AppLocale } from "@/i18n/routing";
 
 function getInitials(name: string | null | undefined, email: string): string {
   if (name) {
@@ -40,15 +53,24 @@ function getInitials(name: string | null | undefined, email: string): string {
   return email.slice(0, 2).toUpperCase();
 }
 
-const profileSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(120),
-});
-
-type ProfileFormValues = z.infer<typeof profileSchema>;
+type ProfileFormValues = {
+  name: string;
+};
 
 function ProfileCard() {
   const { data: session } = authClient.useSession();
   const updateProfile = useUpdateProfile();
+  const t = useTranslations("account.profile");
+  const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
+
+  const profileSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().min(2, tValidation("nameMin")).max(120),
+      }),
+    [tValidation],
+  );
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -73,7 +95,7 @@ function ProfileCard() {
     <Card className="border-[var(--line-default)] bg-[var(--bg-base)]">
       <CardHeader className="p-6">
         <CardTitle className="text-[16px] font-medium text-[var(--fg-primary)]">
-          Perfil
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6 pt-0">
@@ -98,9 +120,9 @@ function ProfileCard() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome completo</FormLabel>
+                  <FormLabel>{t("fullName")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Seu nome" {...field} />
+                    <Input placeholder={t("namePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,20 +130,20 @@ function ProfileCard() {
             />
             <div>
               <p className="mb-1.5 text-[13px] font-medium text-[var(--fg-secondary)]">
-                Email
+                {tCommon("email")}
               </p>
               <p className="text-[13px] text-[var(--fg-tertiary)]">
                 {user?.email}
               </p>
               <p className="mt-1 text-[12px] text-[var(--fg-quaternary)]">
-                O email não pode ser alterado.
+                {t("emailReadonly")}
               </p>
             </div>
             <Button
               type="submit"
               disabled={updateProfile.isPending || !form.formState.isDirty}
             >
-              {updateProfile.isPending ? "Salvando..." : "Salvar alterações"}
+              {updateProfile.isPending ? t("saving") : t("save")}
             </Button>
           </form>
         </Form>
@@ -130,23 +152,89 @@ function ProfileCard() {
   );
 }
 
-const passwordSchema = z
-  .object({
-    currentPassword: z.string().min(1, "Informe a senha atual"),
-    newPassword: z
-      .string()
-      .min(8, "Nova senha deve ter pelo menos 8 caracteres"),
-    confirmPassword: z.string().min(1, "Confirme a nova senha"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
+type PasswordFormValues = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+const localeOptions: { value: AppLocale; labelKey: "ptBR" | "en" }[] = [
+  { value: "pt-BR", labelKey: "ptBR" },
+  { value: "en", labelKey: "en" },
+];
+
+function LanguageCard() {
+  const locale = useLocale() as AppLocale;
+  const pathname = usePathname();
+  const router = useRouter();
+  const t = useTranslations("account.language");
+
+  const handleLocaleChange = (nextLocale: string) => {
+    router.replace(pathname, { locale: nextLocale as AppLocale });
+  };
+
+  return (
+    <Card className="border-[var(--line-default)] bg-[var(--bg-base)]">
+      <CardHeader className="p-6">
+        <CardTitle className="text-[16px] font-medium text-[var(--fg-primary)]">
+          {t("title")}
+        </CardTitle>
+        <CardDescription className="text-[13px] text-[var(--fg-tertiary)]">
+          {t("description")}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="px-6 pb-6 pt-0">
+        <div className="space-y-2">
+          <label
+            htmlFor="language-select"
+            className="text-[13px] font-medium text-[var(--fg-secondary)]"
+          >
+            {t("label")}
+          </label>
+          <Select value={locale} onValueChange={handleLocaleChange}>
+            <SelectTrigger id="language-select" className="w-full max-w-xs">
+              <SelectValue>
+                <LocaleFlagIcon locale={locale} className="size-4 rounded-[2px]" />
+                {t(localeOptions.find((o) => o.value === locale)?.labelKey ?? "ptBR")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {localeOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  <LocaleFlagIcon
+                    locale={option.value}
+                    className="size-4 rounded-[2px]"
+                  />
+                  {t(option.labelKey)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 function PasswordCard() {
   const changePassword = useChangePassword();
+  const t = useTranslations("account.password");
+  const tValidation = useTranslations("validation");
+
+  const passwordSchema = useMemo(
+    () =>
+      z
+        .object({
+          currentPassword: z.string().min(1, tValidation("currentPasswordRequired")),
+          newPassword: z.string().min(8, tValidation("newPasswordMin8")),
+          confirmPassword: z.string().min(1, tValidation("confirmPasswordRequired")),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+          message: tValidation("passwordMismatch"),
+          path: ["confirmPassword"],
+        }),
+    [tValidation],
+  );
 
   const form = useForm<PasswordFormValues>({
     resolver: zodResolver(passwordSchema),
@@ -170,7 +258,7 @@ function PasswordCard() {
     <Card className="border-[var(--line-default)] bg-[var(--bg-base)]">
       <CardHeader className="p-6">
         <CardTitle className="text-[16px] font-medium text-[var(--fg-primary)]">
-          Alterar senha
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6 pt-0">
@@ -181,7 +269,7 @@ function PasswordCard() {
               name="currentPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha atual</FormLabel>
+                  <FormLabel>{t("current")}</FormLabel>
                   <FormControl>
                     <Input type="password" autoComplete="current-password" {...field} />
                   </FormControl>
@@ -194,7 +282,7 @@ function PasswordCard() {
               name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nova senha</FormLabel>
+                  <FormLabel>{t("new")}</FormLabel>
                   <FormControl>
                     <Input type="password" autoComplete="new-password" {...field} />
                   </FormControl>
@@ -207,7 +295,7 @@ function PasswordCard() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirmar nova senha</FormLabel>
+                  <FormLabel>{t("confirm")}</FormLabel>
                   <FormControl>
                     <Input type="password" autoComplete="new-password" {...field} />
                   </FormControl>
@@ -216,7 +304,7 @@ function PasswordCard() {
               )}
             />
             <Button type="submit" disabled={changePassword.isPending}>
-              {changePassword.isPending ? "Alterando..." : "Alterar senha"}
+              {changePassword.isPending ? t("submitting") : t("submit")}
             </Button>
           </form>
         </Form>
@@ -226,13 +314,12 @@ function PasswordCard() {
 }
 
 export function AccountSettingsPage() {
+  const t = useTranslations("account");
+
   return (
-    <PageLayout
-      eyebrow="Conta"
-      title="Configurações da conta"
-      description="Gerencie seu perfil pessoal e credenciais de acesso. Estas configurações são independentes do workspace."
-    >
+    <PageLayout icon={User} title={t("title")} description={t("description")}>
       <ProfileCard />
+      <LanguageCard />
       <PasswordCard />
     </PageLayout>
   );

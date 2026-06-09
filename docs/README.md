@@ -1,35 +1,38 @@
-# Workana AI Docs
+# Blister Docs
 
-Esta pasta concentra a documentação viva do Workana AI e substitui referências genéricas por contexto real do produto, da stack e do estado atual da implementação.
+Documentação viva do **Blister** — marketing com IA para MEIs e pequenos negócios.
 
-## Fonte de Verdade
+## Fonte de verdade (ordem)
 
-1. `docs/prd/workana-ai-master.md` — documento mestre de produto, escopo, UX e identidade
-2. `CLAUDE.md` — regras operacionais obrigatórias do monorepo
-3. `docs/decisions/2026-05-22-agents-v1-contract.md` — contrato vigente de Agentes V1
-4. `docs/decisions/stack-decisions.md` — decisões técnicas aprovadas
-5. `docs/decisions/execution-order.md` — ordem de execução do produto
-6. `docs/design-system/README.md` — sistema visual e tokens oficiais
-7. `docs/skills/README.md` — skills operacionais para agentes
+1. [`docs/prd/blister-master-prd.md`](prd/blister-master-prd.md) — PRD mestre
+2. [`CLAUDE.md`](../CLAUDE.md) — regras operacionais
+3. [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](decisions/2026-06-09-agents-isolated-architecture.md)
+4. [`docs/decisions/2026-06-08-product-pivot-ai-marketing.md`](decisions/2026-06-08-product-pivot-ai-marketing.md)
+5. [`docs/project/`](project/) — arquitetura, fluxos, estado atual
+6. [`docs/agents/`](agents/) — agentes e workflow engine
 
 ## Estrutura
 
-- `context/`: estado atual do projeto e limites técnicos
-- `prd/`: visão de produto, documento mestre e análises de aderência
-- `plans/`: planos aprovados de implementação
-- `decisions/`: decisões arquiteturais e padrões obrigatórios da stack
-- `design-system/`: tokens, componentes, padrões visuais e mapa da rota `/design-system`
-- `examples/`: referências de código e exemplos preservados para consulta
-- `setup/`: setup local, deploy e observações operacionais
-- `skills/`: instruções para IA trabalhar no projeto com contexto correto
-- `superpowers/`: specs e planos históricos de execução; não são fonte de verdade atual quando divergirem dos arquivos acima
+```
+docs/
+├── project/     ← como o produto funciona
+├── prd/         ← requisitos e épicos
+├── agents/      ← documentação por agente
+├── decisions/   ← decisões arquiteturais
+├── archive/     ← LEGADO (Workana, TikTok) — não usar como verdade
+├── design-system/
+├── setup/
+└── skills/
+```
 
 ## Produto
 
-Workana AI é uma camada de inteligência para empresas que coordenam trabalho com freelancers, fornecedores e times remotos. O produto organiza contexto, briefings, demandas, agentes de IA, créditos, equipe, permissões e integrações dentro de um workspace por empresa.
+Blister oferece **vários agentes** de marketing (estratégia, texto, visual, post completo, …) que rodam **isolados**, com campanha como workspace opcional. RAG + auto-melhoramento por agente.
 
-Termos oficiais de UI: Workspace, Company, Brain, Agentes, Créditos, Integrações.
+Termos UI: **Campanha**, **Cérebro da Marca**, labels por agente, **Aprovar**. Evitar "peça" e jargão de IA.
 
-## Regra Geral
+## Regra geral
 
-Quando houver divergência entre documentação histórica e código atual, a fonte de verdade é: código implementado, `CLAUDE.md`, documento mestre e decisões atuais. Planos antigos devem ser lidos como registro histórico, não como contrato vigente.
+Se docs históricas divergirem do PRD ou código, prevalecem: **código implementado**, **CLAUDE.md**, **blister-master-prd.md**.
+
+`docs/archive/` e `docs/superpowers/` (até migrar) = referência histórica apenas.

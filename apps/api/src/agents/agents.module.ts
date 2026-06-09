@@ -1,109 +1,56 @@
 import { Module } from '@nestjs/common';
-import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
-import { ConversationModule } from '../conversation/conversation.module';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from '../prisma/prisma.module';
+import { AuditModule } from '../audit/audit.module';
 import { CreditsModule } from '../credits/credits.module';
-import { OrganizationModule } from '../organization/organization.module';
-import { PlatformModule } from '../platform/platform.module';
 import { RagModule } from '../rag/rag.module';
-import { StorageModule } from '../storage/storage.module';
-import { AgentBlockExecutorRegistry } from './agent-block-executor.registry';
-import { AgentBlockRegistrationService } from './agent-block-registration.service';
-import { AgentChatOrchestratorService } from './agent-chat-orchestrator.service';
-import { AgentChatController } from './agent-chat.controller';
-import { AgentChatService } from './agent-chat.service';
-import { AgentContextService } from './agent-context.service';
-import { AgentExecutionService } from './agent-execution.service';
-import { AgentIntentService } from './agent-intent.service';
-import { AgentNotificationsService } from './agent-notifications.service';
-import { AgentQueueService } from './agent-queue.service';
-import { AgentRunResumeService } from './agent-run-resume.service';
-import { AgentRunsController } from './agent-runs.controller';
-import { PlatformAgentRunsController } from './agent-runs.controller';
-import { AgentRunsService } from './agent-runs.service';
-import { AgentToolPolicyService } from './agent-tool-policy.service';
-import { AgentToolRuntimeService } from './agent-tool-runtime.service';
-import { AgentWorkflowRuntimeService } from './agent-workflow-runtime.service';
+import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
+import { CompanyModule } from '../company/company.module';
+
+import { AgentRegistryService } from './runtime/agent-registry.service';
+import { WorkflowEngineService } from './runtime/workflow-engine.service';
+import { AgentRunService } from './runtime/agent-run.service';
+import { AgentRunReviewService } from './runtime/agent-run-review.service';
+import { StepContextFactory } from './runtime/step-context.factory';
+import { CreditStepInterceptor } from './runtime/credit-step.interceptor';
+import { AgentSseService } from './runtime/agent-sse.service';
+
 import { AgentsController } from './agents.controller';
-import { AgentsService } from './agents.service';
-import { CompanyChatController } from './company-chat.controller';
-import { CompanyChatService } from './company-chat.service';
-import { ContextPolicyService } from './context/context-policy.service';
-import { ContextRerankerService } from './context/context-reranker.service';
-import { StructuredContextService } from './context/structured-context.service';
-import { HtmlPreviewService } from './html-preview.service';
-import { SystemAgentRunnerService } from './system-agents/system-agent-runner.service';
-import { SystemAgentsAdminController } from './system-agents/system-agents-admin.controller';
-import { SystemAgentsService } from './system-agents/system-agents.service';
-import { AiRuntimeWebResearchGateway } from './tools/ai-web-research.gateway';
-import { WEB_RESEARCH_GATEWAY } from './tools/web-research.tool';
+import { AgentRunsController } from './agent-runs.controller';
+import { AgentCatalogController } from './agent-catalog.controller';
+import { InternalEventsController } from './internal-events.controller';
 
 @Module({
   imports: [
-    AIRuntimeModule,
+    ConfigModule,
+    PrismaModule,
+    AuditModule,
     CreditsModule,
-    OrganizationModule,
-    PlatformModule,
-    StorageModule,
     RagModule,
-    ConversationModule,
+    AiRuntimeModule,
+    CompanyModule,
   ],
   controllers: [
     AgentsController,
     AgentRunsController,
-    PlatformAgentRunsController,
-    AgentChatController,
-    CompanyChatController,
-    SystemAgentsAdminController,
+    AgentCatalogController,
+    InternalEventsController,
   ],
   providers: [
-    AgentsService,
-    AgentRunsService,
-    AgentExecutionService,
-    AgentChatService,
-    AgentChatOrchestratorService,
-    AgentContextService,
-    SystemAgentRunnerService,
-    SystemAgentsService,
-    AgentToolPolicyService,
-    AgentToolRuntimeService,
-    AiRuntimeWebResearchGateway,
-    { provide: WEB_RESEARCH_GATEWAY, useClass: AiRuntimeWebResearchGateway },
-    AgentBlockExecutorRegistry,
-    AgentBlockRegistrationService,
-    AgentWorkflowRuntimeService,
-    AgentRunResumeService,
-    CompanyChatService,
-    HtmlPreviewService,
-    AgentIntentService,
-    AgentQueueService,
-    ContextPolicyService,
-    StructuredContextService,
-    ContextRerankerService,
-    AgentNotificationsService,
+    AgentRegistryService,
+    WorkflowEngineService,
+    AgentRunService,
+    AgentRunReviewService,
+    StepContextFactory,
+    CreditStepInterceptor,
+    AgentSseService,
   ],
   exports: [
-    AgentsService,
-    AgentRunsService,
-    AgentExecutionService,
-    AgentChatService,
-    AgentChatOrchestratorService,
-    AgentContextService,
-    SystemAgentRunnerService,
-    SystemAgentsService,
-    AgentToolPolicyService,
-    AgentToolRuntimeService,
-    AgentBlockExecutorRegistry,
-    AgentBlockRegistrationService,
-    AgentWorkflowRuntimeService,
-    AgentRunResumeService,
-    CompanyChatService,
-    HtmlPreviewService,
-    AgentIntentService,
-    AgentQueueService,
-    ContextPolicyService,
-    StructuredContextService,
-    ContextRerankerService,
-    AgentNotificationsService,
+    AgentRegistryService,
+    WorkflowEngineService,
+    AgentRunService,
+    AgentRunReviewService,
+    AgentSseService,
   ],
 })
 export class AgentsModule {}

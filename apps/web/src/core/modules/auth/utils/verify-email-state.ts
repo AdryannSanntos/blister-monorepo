@@ -1,33 +1,17 @@
 const VERIFY_EMAIL_SUCCESS_PATH = "/auth/verify-email?status=success";
 
-export type VerifyEmailViewState =
-  | {
-      kind: "pending";
-      title: string;
-      description: string;
-      email: string;
-      redirect: string | null;
-    }
-  | {
-      kind: "success";
-      title: string;
-      description: string;
-      email: string;
-      redirect: string | null;
-    }
-  | {
-      kind: "error";
-      title: string;
-      description: string;
-      email: string;
-      redirect: string | null;
-    };
+export type VerifyEmailViewState = {
+  kind: "pending" | "success" | "error";
+  email: string;
+  redirect: string | null;
+};
 
 export function buildEmailVerificationCallbackURL(
   origin: string,
   redirectPath?: string | null,
+  verifySuccessPath = VERIFY_EMAIL_SUCCESS_PATH,
 ): string {
-  const base = new URL(VERIFY_EMAIL_SUCCESS_PATH, origin);
+  const base = new URL(verifySuccessPath, origin);
   if (redirectPath) base.searchParams.set("redirect", redirectPath);
   return base.toString();
 }
@@ -41,31 +25,12 @@ export function getVerifyEmailViewState(
   const status = searchParams.get("status");
 
   if (error || status === "error") {
-    return {
-      kind: "error",
-      title: "Link de verificação inválido ou expirado",
-      description:
-        "Esse link não é mais válido. Solicite um novo email de verificação para continuar.",
-      email,
-      redirect,
-    };
+    return { kind: "error", email, redirect };
   }
 
   if (status === "success") {
-    return {
-      kind: "success",
-      title: "Email verificado com sucesso",
-      description: "Sua conta foi ativada. Agora você já pode entrar.",
-      email,
-      redirect,
-    };
+    return { kind: "success", email, redirect };
   }
 
-  return {
-    kind: "pending",
-    title: "Verifique seu email",
-    description: "Acesse o link enviado para confirmar sua conta",
-    email,
-    redirect,
-  };
+  return { kind: "pending", email, redirect };
 }

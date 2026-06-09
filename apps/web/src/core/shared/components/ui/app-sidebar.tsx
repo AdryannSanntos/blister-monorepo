@@ -3,33 +3,19 @@
 import type { AppPermissionKey } from "@company-os/authz";
 import { permissionMap } from "@company-os/authz";
 import {
-  ArrowLeftRight,
-  Bot,
-  Brain,
   ChevronRight,
   ChevronsUpDown,
-  Coins,
-  FileCode2,
-  History,
-  Home,
-  Image,
-  KeyRound,
-  Library,
   type LucideIcon,
-  Mail,
   PanelLeftClose,
   PanelLeftOpen,
-  PenLine,
-  PlugZap,
   Settings,
-  Share2,
-  Shield,
-  Users,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import * as React from "react";
-import { useAbility } from "src/core/modules/organization/hooks/use-ability";
+
+import { Link, usePathname } from "@/i18n/routing";
+import { useDashboardNavGroups } from "src/core/modules/dashboard/hooks/use-dashboard-nav-groups";
+import { useAbility } from "src/core/shared/hooks/use-ability";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -67,6 +53,7 @@ type Item = {
   beta?: boolean;
   soon?: boolean;
   dot?: boolean;
+  statusTone?: "success" | "warning" | "danger";
   active?: boolean;
   href?: string;
   onSelect?: () => void;
@@ -82,7 +69,9 @@ type Group = {
   emptyState?: React.ReactNode;
 };
 
-const SIDEBAR_GROUPS_KEY = "workana-ai:sidebar-groups-state";
+const SIDEBAR_GROUPS_KEY = "blister:sidebar-groups-state";
+const SIDEBAR_WIDTH_EXPANDED = "18rem";
+const SIDEBAR_WIDTH_COLLAPSED = "4.25rem";
 
 function readStorage<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -100,67 +89,9 @@ function writeStorage(key: string, value: unknown) {
   } catch {}
 }
 
-const defaultGroups: Group[] = [
-  {
-    items: [{ label: "Dashboard", icon: Home, href: "/dashboard" }],
-  },
-  {
-    label: "Agentes",
-    collapsible: false,
-    items: [
-      { label: "Meus agentes", icon: Bot },
-      { label: "Gerar copy", icon: PenLine },
-      { label: "Gerar imagem", icon: Image },
-      { label: "Criar post", icon: Share2 },
-      { label: "Adaptar conteúdo", icon: ArrowLeftRight },
-      { label: "Criar email", icon: Mail },
-      { label: "Histórico", icon: History },
-      { label: "Créditos", icon: Coins },
-    ],
-  },
-  {
-    label: "Empresa",
-    collapsible: false,
-    items: [
-      { label: "Brain", icon: Brain, href: "/onboarding" },
-      {
-        label: "Contexto",
-        icon: Library,
-        href: "/dashboard/workspace/context",
-        permission: "context.read",
-      },
-      {
-        label: "Design System",
-        icon: FileCode2,
-        href: "/dashboard/workspace/design-system",
-        permission: "design-system.read",
-      },
-      {
-        label: "Integrações",
-        icon: PlugZap,
-        href: "/dashboard/workspace/integrations",
-      },
-    ],
-  },
-  {
-    label: "Workspace",
-    collapsible: false,
-    items: [
-      { label: "Equipe", icon: Users, href: "/dashboard/workspace/team" },
-      {
-        label: "Permissões",
-        icon: KeyRound,
-        href: "/dashboard/workspace/permissions",
-      },
-      {
-        label: "Configurações",
-        icon: Settings,
-        href: "/dashboard/workspace/settings",
-      },
-      { label: "Admin", icon: Shield },
-    ],
-  },
-];
+function useDefaultSidebarGroups(): Group[] {
+  return useDashboardNavGroups();
+}
 
 type WorkspaceInfo = { name: string; meta: string; initials: string };
 type UserInfo = { name: string; email: string; role: string; initials: string };
@@ -197,12 +128,17 @@ function AppSidebar({
     role: "Owner",
     initials: "AS",
   },
-  groups = defaultGroups,
+  groups: groupsProp,
   className,
   fullHeight = false,
   workspaceTrigger,
   userTrigger,
 }: AppSidebarProps) {
+  const t = useTranslations("common");
+  const tSidebar = useTranslations("sidebar");
+  const tDashboard = useTranslations("dashboard");
+  const defaultGroupsFromHook = useDefaultSidebarGroups();
+  const groups = groupsProp ?? defaultGroupsFromHook;
   const pathname = usePathname();
   const { can: canDo, isLoading: abilityLoading } = useAbility();
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
@@ -299,11 +235,17 @@ function AppSidebar({
     return "bg-[var(--fg-quaternary)]";
   }
 
+  function getStatusToneClass(tone: "success" | "warning" | "danger"): string {
+    if (tone === "success") return "bg-[var(--success-600)]";
+    if (tone === "warning") return "bg-[var(--warning-600)]";
+    return "bg-[var(--error-500)]";
+  }
+
   function renderBadge(item: Item) {
     if (item.soon) {
       return (
         <span className="rounded-[var(--r-sm)] bg-[var(--bg-sunken)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--fg-quaternary)]">
-          Em breve
+          {t("soon")}
         </span>
       );
     }
@@ -332,29 +274,28 @@ function AppSidebar({
       open
       onOpenChange={setOpen}
       className={cn(
-        "w-auto",
+        "w-auto overflow-clip rounded-r-xl",
         fullHeight ? "h-svh min-h-0" : "!min-h-0",
         className,
       )}
+      style={
+        {
+          "--sidebar-width": collapsed
+            ? SIDEBAR_WIDTH_COLLAPSED
+            : SIDEBAR_WIDTH_EXPANDED,
+        } as React.CSSProperties
+      }
     >
       <Sidebar
         collapsible="none"
         variant="sidebar"
-        className={cn(
-          "h-full rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)] shadow-[var(--shadow-sm)] transition-[width] duration-[var(--dur-base)] ease-[var(--ease-out)]",
-          collapsed ? "w-[68px]" : "w-[268px]",
-        )}
-        style={
-          {
-            "--sidebar-width": collapsed ? "68px" : "268px",
-          } as React.CSSProperties
-        }
+        className="h-full overflow-clip rounded-r-xl border-r border-[var(--line-subtle)] bg-[var(--bg-canvas)] transition-[width] duration-[var(--dur-base)] ease-[var(--ease-out)]"
       >
-        <SidebarHeader className="h-[82px] gap-2.5 border-b border-[var(--line-subtle)] p-3">
+        <SidebarHeader className="h-20 gap-2.5 p-3">
           {collapsed ? (
             <div className="flex h-full flex-col items-center justify-center gap-2">
               {workspaceNode ?? (
-                <Avatar shape="square" className="size-10">
+                <Avatar className="size-10">
                   <AvatarFallback className="text-[13px]">
                     {workspace.initials}
                   </AvatarFallback>
@@ -364,7 +305,7 @@ function AppSidebar({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Expand sidebar"
+                  aria-label={tDashboard("expandSidebar")}
                   onClick={() => setOpen(true)}
                 >
                   <PanelLeftOpen className="size-4" />
@@ -379,7 +320,7 @@ function AppSidebar({
                     type="button"
                     className="flex h-full w-full items-center gap-3 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2.5 text-left transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)]"
                   >
-                    <Avatar shape="square" className="size-10">
+                    <Avatar className="size-10">
                       <AvatarFallback className="text-[13px]">
                         {workspace.initials}
                       </AvatarFallback>
@@ -400,7 +341,7 @@ function AppSidebar({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Collapse sidebar"
+                  aria-label={tDashboard("collapseSidebar")}
                   onClick={() => setOpen(false)}
                 >
                   <PanelLeftClose className="size-4" />
@@ -410,7 +351,7 @@ function AppSidebar({
           )}
         </SidebarHeader>
 
-        <SidebarContent className="gap-1 px-2 py-2">
+        <SidebarContent className="gap-1 overflow-x-clip px-2 py-2">
           {filteredGroups.map((group, groupIndex) => {
             const label = group.label;
             const isLabeledGroup = Boolean(label);
@@ -466,9 +407,7 @@ function AppSidebar({
                         <SidebarMenu
                           className={cn(
                             "gap-0.5",
-                            isLabeledGroup &&
-                              !collapsed &&
-                              "ml-2 border-l border-[var(--line-subtle)] pl-2",
+                            isLabeledGroup && !collapsed && "pl-3",
                           )}
                         >
                           {group.items.map((item) => {
@@ -485,7 +424,17 @@ function AppSidebar({
                               <>
                                 <span className="relative inline-flex">
                                   <Icon className="size-4 shrink-0" />
-                                  {item.dot ? (
+                                  {item.statusTone ? (
+                                    collapsed ? (
+                                      <span
+                                        className={cn(
+                                          "ds-ai-pulse absolute -right-0.5 -top-0.5 size-2 rounded-full ring-2 ring-[var(--bg-canvas)]",
+                                          getStatusToneClass(item.statusTone),
+                                        )}
+                                        aria-hidden
+                                      />
+                                    ) : null
+                                  ) : item.dot ? (
                                     <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
                                   ) : null}
                                   {collapsed && item.badge ? (
@@ -503,10 +452,20 @@ function AppSidebar({
                                       "flex-1 truncate text-left",
                                       (item.badge || item.soon) && "pr-6",
                                       item.action && "pr-7",
+                                      item.statusTone && !item.badge && !item.soon && "pr-2",
                                     )}
                                   >
                                     {item.label}
                                   </span>
+                                ) : null}
+                                {!collapsed && item.statusTone ? (
+                                  <span
+                                    className={cn(
+                                      "ds-ai-pulse size-2 shrink-0 rounded-full",
+                                      getStatusToneClass(item.statusTone),
+                                    )}
+                                    aria-hidden
+                                  />
                                 ) : null}
                               </>
                             );
@@ -517,9 +476,9 @@ function AppSidebar({
                                 disabled={item.soon}
                                 onClick={!item.soon ? item.onSelect : undefined}
                                 className={cn(
-                                  "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
+                                  "h-9 gap-2.5 rounded-[var(--r-md)] text-[13px] font-medium text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)]",
                                   "hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]",
-                                  "data-[active=true]:bg-[var(--bg-hover)] data-[active=true]:text-[var(--fg-primary)]",
+                                  "data-[active=true]:bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] data-[active=true]:font-medium data-[active=true]:text-[var(--primary)]",
                                   item.soon &&
                                     "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--fg-secondary)]",
                                   collapsed && "justify-center px-0",
@@ -543,12 +502,6 @@ function AppSidebar({
                                 }
                                 className="relative"
                               >
-                                {isActive ? (
-                                  <span
-                                    aria-hidden
-                                    className="pointer-events-none absolute left-0 top-1/2 z-10 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--accent)]"
-                                  />
-                                ) : null}
                                 {collapsed ? (
                                   <Tooltip>
                                     <TooltipTrigger asChild>
@@ -556,7 +509,7 @@ function AppSidebar({
                                     </TooltipTrigger>
                                     <TooltipContent side="right">
                                       {item.label}
-                                      {item.soon ? " · Em breve" : ""}
+                                      {item.soon ? t("soonTooltip") : ""}
                                     </TooltipContent>
                                   </Tooltip>
                                 ) : item.action ? (
@@ -626,7 +579,7 @@ function AppSidebar({
               </div>
               <button
                 type="button"
-                aria-label="Settings"
+                aria-label={tSidebar("settingsAria")}
                 className="flex size-7 shrink-0 items-center justify-center rounded-[var(--r-sm)] text-[var(--fg-quaternary)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-primary)]"
               >
                 <Settings className="size-3.5" />
@@ -641,7 +594,7 @@ function AppSidebar({
 
 export {
   AppSidebar,
-  defaultGroups,
+  useDefaultSidebarGroups,
   type Group as SidebarGroupDef,
   type Item as SidebarItemDef,
 };

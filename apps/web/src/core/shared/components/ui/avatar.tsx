@@ -8,19 +8,16 @@ import { cn } from "src/core/shared/utils";
 function Avatar({
   className,
   size = "default",
-  shape = "circle",
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root> & {
   size?: "default" | "sm" | "lg";
-  shape?: "circle" | "square";
 }) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       data-size={size}
-      data-shape={shape}
       className={cn(
-        "group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[shape=square]:rounded-[var(--r-md)] data-[size=lg]:size-10 data-[size=sm]:size-6",
+        "group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-[var(--r-md)] select-none data-[size=lg]:size-10 data-[size=sm]:size-6",
         className,
       )}
       {...props}
@@ -94,7 +91,7 @@ function AvatarGroupCount({
     <div
       data-slot="avatar-group-count"
       className={cn(
-        "relative flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--accent-soft-hi)] bg-[color-mix(in_oklch,var(--accent)_12%,transparent)] text-sm font-medium text-[var(--accent)] ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
+        "relative flex size-8 shrink-0 items-center justify-center rounded-[var(--r-md)] border border-[var(--accent-soft-hi)] bg-[color-mix(in_oklch,var(--accent)_12%,transparent)] text-sm font-medium text-[var(--accent)] ring-2 ring-background group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&>svg]:size-4 group-has-data-[size=lg]/avatar-group:[&>svg]:size-5 group-has-data-[size=sm]/avatar-group:[&>svg]:size-3",
         className,
       )}
       {...props}

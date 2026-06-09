@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
-import { PlatformAdminHeader } from "./platform-admin-header";
-import { PlatformAdminTabs } from "./platform-admin-tabs";
+
+import { useRouter } from "@/i18n/routing";
+
 import { usePlatformRoleAccess } from "../hooks/use-platform-admin";
 
 export function PlatformAdminShell({ children }: { children: ReactNode }) {
@@ -19,9 +19,9 @@ export function PlatformAdminShell({ children }: { children: ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-28 w-full" />
-        <Skeleton className="h-12 w-full max-w-3xl" />
+      <div className="space-y-6 p-6">
+        <Skeleton className="h-16 w-full max-w-xl" />
+        <Skeleton className="h-10 w-full max-w-3xl" />
         <Skeleton className="h-96 w-full" />
       </div>
     );
@@ -31,11 +31,5 @@ export function PlatformAdminShell({ children }: { children: ReactNode }) {
     return null;
   }
 
-  return (
-    <div className="space-y-6">
-      <PlatformAdminHeader />
-      <PlatformAdminTabs />
-      {children}
-    </div>
-  );
+  return children;
 }

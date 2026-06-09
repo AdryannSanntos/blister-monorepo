@@ -1,25 +1,23 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { AiCatalogModule } from './ai-catalog/ai-catalog.module';
+import { AiRuntimeModule } from './ai-runtime/ai-runtime.module';
 import { AgentsModule } from './agents/agents.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AICatalogModule } from './ai-catalog/ai-catalog.module';
-import { AIRuntimeModule } from './ai-runtime/ai-runtime.module';
 import { AuditModule } from './audit/audit.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
-import { AssetsModule } from './assets/assets.module';
+import { CompanyModule } from './company/company.module';
 import { CreditsModule } from './credits/credits.module';
-import { ContextModule } from './context/context.module';
-import { ConversationModule } from './conversation/conversation.module';
-import { DesignSystemModule } from './design-system/design-system.module';
 import { EmailModule } from './email';
-import { OnboardingModule } from './onboarding/onboarding.module';
-import { PermissionGuard } from './organization/guards/permission.guard';
-import { OrganizationModule } from './organization/organization.module';
 import { PlatformModule } from './platform/platform.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { RagModule } from './rag/rag.module';
+import { StorageModule } from './storage/storage.module';
+import { UsersModule } from './users/users.module';
+import { PermissionGuard } from './users/guards/permission.guard';
 
 @Module({
   imports: [
@@ -27,17 +25,15 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
     AuthModule,
     EmailModule,
-    OrganizationModule,
-    OnboardingModule,
-    AssetsModule,
-    CreditsModule,
-    ContextModule,
-    ConversationModule,
-    DesignSystemModule,
+    UsersModule,
     PlatformModule,
     AuditModule,
-    AICatalogModule,
-    AIRuntimeModule,
+    StorageModule,
+    CompanyModule,
+    CreditsModule,
+    AiCatalogModule,
+    AiRuntimeModule,
+    RagModule,
     AgentsModule,
   ],
   controllers: [AppController],

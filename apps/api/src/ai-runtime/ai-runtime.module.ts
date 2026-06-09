@@ -1,30 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AnthropicAdapter } from './adapters/anthropic.adapter';
-import { AssemblyAILlmGatewayAdapter } from './adapters/assemblyai-llm-gateway.adapter';
-import { AssemblyAIAdapter } from './adapters/assemblyai.adapter';
-import { GeminiAdapter } from './adapters/gemini.adapter';
-import { OpenAIAdapter } from './adapters/openai.adapter';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from '../prisma/prisma.module';
+import { AiRuntimeService } from './ai-runtime.service';
+import { EmbeddingService } from './embedding.service';
 import { OpenRouterAdapter } from './adapters/openrouter.adapter';
-import { AIRuntimeService } from './ai-runtime.service';
+import { GeminiAdapter } from './adapters/gemini.adapter';
 
 @Module({
+  imports: [ConfigModule, PrismaModule],
   providers: [
-    AIRuntimeService,
-    AssemblyAIAdapter,
-    AssemblyAILlmGatewayAdapter,
     OpenRouterAdapter,
-    OpenAIAdapter,
-    AnthropicAdapter,
     GeminiAdapter,
+    AiRuntimeService,
+    EmbeddingService,
   ],
   exports: [
-    AIRuntimeService,
-    AssemblyAIAdapter,
-    AssemblyAILlmGatewayAdapter,
+    AiRuntimeService,
+    EmbeddingService,
     OpenRouterAdapter,
-    OpenAIAdapter,
-    AnthropicAdapter,
     GeminiAdapter,
   ],
 })
-export class AIRuntimeModule {}
+export class AiRuntimeModule {}

@@ -46,7 +46,6 @@ describe('AuditService', () => {
       expect(prisma.auditLog.create).toHaveBeenCalledWith({
         data: {
           actorUserId: 'actor-1',
-          targetOrganizationId: null,
           targetUserId: null,
           action: 'assign_platform_role',
           resourceType: 'PlatformRoleAssignment',
@@ -57,10 +56,10 @@ describe('AuditService', () => {
       expect(result).toEqual(log);
     });
 
-    it('creates audit log with targetOrganizationId when provided', async () => {
+    it('creates audit log with targetUserId when provided', async () => {
       const input: WriteAuditLogInput = {
         actorUserId: 'actor-1',
-        targetOrganizationId: 'org-1',
+        targetUserId: 'user-1',
         action: 'start_support_session',
         resourceType: 'SupportSession',
         resourceId: 'sess-1',
@@ -70,7 +69,7 @@ describe('AuditService', () => {
       await service.write(input);
 
       const callArg = prisma.auditLog.create.mock.calls[0][0];
-      expect(callArg.data.targetOrganizationId).toBe('org-1');
+      expect(callArg.data.targetUserId).toBe('user-1');
       expect(callArg.data.metadata).toEqual({});
     });
 
@@ -108,20 +107,6 @@ describe('AuditService', () => {
       const result = await service.findByActor('nobody');
 
       expect(result).toEqual([]);
-    });
-  });
-
-  describe('findByOrganization', () => {
-    it('returns audit logs for a given organization', async () => {
-      const logs = [{ id: 'log-1', targetOrganizationId: 'org-1' }];
-      prisma.auditLog.findMany.mockResolvedValue(logs);
-
-      const result = await service.findByOrganization('org-1');
-
-      expect(prisma.auditLog.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { targetOrganizationId: 'org-1' } }),
-      );
-      expect(result).toEqual(logs);
     });
   });
 });

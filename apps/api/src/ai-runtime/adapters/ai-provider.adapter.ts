@@ -1,88 +1,57 @@
-export type AIRuntimeCapability =
+export type AiRuntimeCapability =
   | 'text_generation'
   | 'image_generation'
   | 'embeddings'
   | 'structured_output';
 
-export interface AIRuntimeUsage {
-  promptTokens?: number;
-  completionTokens?: number;
-  totalTokens?: number;
-  imageCount?: number;
-  embeddingCount?: number;
-  raw?: Record<string, unknown>;
+export interface AiRuntimeUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
 }
 
-export interface AIRuntimeResolvedCredential {
-  id: string;
-  value: string;
-  scope: 'company' | 'platform';
-}
-
-export interface AIRuntimeResolvedModel {
-  id: string;
-  slug: string;
-  apiModelName: string;
-  providerSlug: string;
-}
-
-export interface AIRuntimeTextRequest {
-  credential: AIRuntimeResolvedCredential;
-  model: AIRuntimeResolvedModel;
-  prompt?: string;
-  messages?: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+export interface AiRuntimeTextRequest {
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+  model: string;
+  maxTokens?: number;
   temperature?: number;
-  maxOutputTokens?: number;
   structuredOutputSchema?: Record<string, unknown>;
 }
 
-export interface AIRuntimeImageRequest {
-  credential: AIRuntimeResolvedCredential;
-  model: AIRuntimeResolvedModel;
-  prompt: string;
-  size?: string;
-}
-
-export interface AIRuntimeEmbeddingRequest {
-  credential: AIRuntimeResolvedCredential;
-  model: AIRuntimeResolvedModel;
-  input: string;
-}
-
-export interface AIRuntimeTextResult {
-  text: string;
+export interface AiRuntimeTextResult {
+  content: string;
   structuredOutput?: Record<string, unknown>;
-  usage: AIRuntimeUsage;
-  raw?: Record<string, unknown>;
+  usage: AiRuntimeUsage;
+  finishReason: string;
 }
 
-/** One incremental text chunk emitted while streaming a generation. */
-export interface AIRuntimeTextStreamChunk {
-  delta: string;
+export interface AiRuntimeStreamChunk {
+  content: string;
+  isLast: boolean;
 }
 
-export interface AIRuntimeImageResult {
-  images: Array<{ url: string }>;
-  usage: AIRuntimeUsage;
-  raw?: Record<string, unknown>;
+export interface AiRuntimeEmbeddingRequest {
+  input: string | string[];
+  model: string;
+  dimensions?: number;
 }
 
-export interface AIRuntimeEmbeddingResult {
-  embedding: number[];
-  usage: AIRuntimeUsage;
-  raw?: Record<string, unknown>;
+export interface AiRuntimeEmbeddingResult {
+  embeddings: number[][];
+  usage: AiRuntimeUsage;
+  dimensions: number;
 }
 
-export interface AIProviderListedModel {
-  slug: string;
-  name: string;
-  externalModelId: string;
-  description?: string;
-  status: 'active' | 'draft' | 'disabled';
-  capabilityMetadata: Record<string, unknown>;
-  pricingMetadata: Record<string, unknown>;
-  limitsMetadata: Record<string, unknown>;
-  schemaMetadata: Record<string, unknown>;
+export interface AiRuntimeImageRequest {
+  prompt: string;
+  model: string;
+  size?: string;
+  style?: string;
+}
+
+export interface AiRuntimeImageResult {
+  images: Array<{ url?: string; base64?: string }>;
+  usage: AiRuntimeUsage;
 }
 
 export class ProviderNotConfiguredError extends Error {
@@ -104,16 +73,20 @@ export class ProviderExecutionError extends Error {
   }
 }
 
-export interface AIProviderAdapter {
+export interface AiProviderAdapter {
   readonly provider: string;
-  supports(capability: AIRuntimeCapability): boolean;
-  listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]>;
-  generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult>;
-  generateImage(request: AIRuntimeImageRequest): Promise<AIRuntimeImageResult>;
-  createEmbedding(request: AIRuntimeEmbeddingRequest): Promise<AIRuntimeEmbeddingResult>;
-  /**
-   * Optional real token streaming. When absent, {@link AIRuntimeService.streamText}
-   * degrades gracefully to a single full-text chunk via {@link generateText}.
-   */
-  streamText?(request: AIRuntimeTextRequest): AsyncIterable<AIRuntimeTextStreamChunk>;
+
+  supports(capability: AiRuntimeCapability): boolean;
+
+  generateText(request: AiRuntimeTextRequest): Promise<AiRuntimeTextResult>;
+
+  streamText?(
+    request: AiRuntimeTextRequest,
+  ): AsyncGenerator<AiRuntimeStreamChunk, AiRuntimeTextResult>;
+
+  createEmbedding(
+    request: AiRuntimeEmbeddingRequest,
+  ): Promise<AiRuntimeEmbeddingResult>;
+
+  generateImage?(request: AiRuntimeImageRequest): Promise<AiRuntimeImageResult>;
 }

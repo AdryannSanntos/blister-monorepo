@@ -1,355 +1,479 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type {
+  AiProviderAdapter,
+  AiRuntimeCapability,
+  AiRuntimeEmbeddingRequest,
+  AiRuntimeEmbeddingResult,
+  AiRuntimeImageRequest,
+  AiRuntimeImageResult,
+  AiRuntimeStreamChunk,
+  AiRuntimeTextRequest,
+  AiRuntimeTextResult,
+} from './ai-provider.adapter';
 import {
-  type AIProviderAdapter,
-  type AIProviderListedModel,
-  type AIRuntimeCapability,
-  type AIRuntimeEmbeddingRequest,
-  type AIRuntimeEmbeddingResult,
-  type AIRuntimeImageRequest,
-  type AIRuntimeImageResult,
-  type AIRuntimeResolvedCredential,
-  type AIRuntimeTextRequest,
-  type AIRuntimeTextResult,
   ProviderExecutionError,
   ProviderNotConfiguredError,
 } from './ai-provider.adapter';
 
-@Injectable()
-export class GeminiAdapter implements AIProviderAdapter {
-  readonly provider = 'gemini';
+interface GeminiContent {
+  role: 'user' | 'model';
+  parts: Array<{ text: string }>;
+}
 
-  supports(capability: AIRuntimeCapability) {
-    return ['text_generation', 'image_generation', 'embeddings', 'structured_output'].includes(
-      capability,
-    );
+interface GeminiGenerateResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string;
+        inlineData?: { mimeType?: string; data?: string };
+      }>;
+    };
+    finishReason?: string;
+  }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+    totalTokenCount?: number;
+  };
+}
+
+interface GeminiEmbedResponse {
+  embedding?: {
+    values?: number[];
+  };
+}
+
+@Injectable()
+export class GeminiAdapter implements AiProviderAdapter {
+  readonly provider = 'gemini';
+  private readonly logger = new Logger(GeminiAdapter.name);
+  private readonly apiKey: string;
+  private readonly baseUrl: string;
+
+  constructor(private readonly config: ConfigService) {
+    this.apiKey = this.config.get<string>('GEMINI_API_KEY') ?? '';
+    this.baseUrl =
+      this.config.get<string>('GEMINI_BASE_URL') ??
+      'https://generativelanguage.googleapis.com/v1beta';
   }
 
-  async listModels(credential: AIRuntimeResolvedCredential): Promise<AIProviderListedModel[]> {
-    const models: Array<{
-      name?: string;
-      displayName?: string;
-      description?: string;
-      inputTokenLimit?: number;
-      outputTokenLimit?: number;
-      supportedGenerationMethods?: string[];
-    }> = [];
-    let pageToken: string | undefined;
+  supports(capability: AiRuntimeCapability): boolean {
+    return [
+      'text_generation',
+      'embeddings',
+      'structured_output',
+      'image_generation',
+    ].includes(capability);
+  }
 
-    do {
-      const url = new URL(`${this.resolveBaseUrl()}/models`);
-      url.searchParams.set('key', credential.value);
-      if (pageToken) {
-        url.searchParams.set('pageToken', pageToken);
-      }
+  async generateText(request: AiRuntimeTextRequest): Promise<AiRuntimeTextResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
 
+    const { contents, systemInstruction } = this.convertMessages(request.messages);
+
+    const body: Record<string, unknown> = {
+      contents,
+    };
+
+    if (systemInstruction) {
+      body.systemInstruction = systemInstruction;
+    }
+
+    const generationConfig: Record<string, unknown> = {};
+
+    if (request.temperature !== undefined) {
+      generationConfig.temperature = request.temperature;
+    }
+
+    if (request.maxTokens !== undefined) {
+      generationConfig.maxOutputTokens = request.maxTokens;
+    }
+
+    if (request.structuredOutputSchema) {
+      generationConfig.responseMimeType = 'application/json';
+      generationConfig.responseSchema = request.structuredOutputSchema;
+    }
+
+    if (Object.keys(generationConfig).length > 0) {
+      body.generationConfig = generationConfig;
+    }
+
+    try {
+      const url = this.buildUrl(request.model, 'generateContent');
       const response = await fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
+        const error = await this.readErrorMessage(response);
+        this.logger.error(`Gemini completion failed: ${error}`);
         throw new ProviderExecutionError(
           this.provider,
-          response.status === 401 || response.status === 403 ? 'auth' : 'unknown',
-          await this.readErrorMessage(response),
+          this.mapErrorCategory(response.status),
+          error,
           response.status,
         );
       }
 
-      const payload = (await response.json()) as {
-        models?: typeof models;
-        nextPageToken?: string;
+      const data = (await response.json()) as GeminiGenerateResponse;
+
+      const content =
+        data.candidates?.[0]?.content?.parts
+          ?.map((p) => p.text)
+          .filter(Boolean)
+          .join('') ?? '';
+
+      const promptTokens = data.usageMetadata?.promptTokenCount ?? 0;
+      const completionTokens = data.usageMetadata?.candidatesTokenCount ?? 0;
+
+      let structuredOutput: Record<string, unknown> | undefined;
+      if (request.structuredOutputSchema) {
+        try {
+          structuredOutput = JSON.parse(content) as Record<string, unknown>;
+        } catch {
+          this.logger.warn('Failed to parse Gemini structured output as JSON');
+        }
+      }
+
+      return {
+        content,
+        structuredOutput,
+        usage: {
+          promptTokens,
+          completionTokens,
+          totalTokens: promptTokens + completionTokens,
+        },
+        finishReason: data.candidates?.[0]?.finishReason ?? 'STOP',
       };
+    } catch (error) {
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('Gemini completion failed', error);
+      throw new ProviderExecutionError(
+        this.provider,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  }
 
-      models.push(...(payload.models ?? []));
-      pageToken = payload.nextPageToken;
-    } while (pageToken);
+  async *streamText(
+    request: AiRuntimeTextRequest,
+  ): AsyncGenerator<AiRuntimeStreamChunk, AiRuntimeTextResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
 
-    return models
-      .filter(
-        (model): model is (typeof models)[number] & { name: string } =>
-          typeof model.name === 'string',
-      )
-      .map((model) => {
-        const methods = Array.isArray(model.supportedGenerationMethods)
-          ? model.supportedGenerationMethods
-          : [];
-        const normalizedName = model.name.replace(/^models\//, '');
+    const { contents, systemInstruction } = this.convertMessages(request.messages);
 
-        return {
-          slug: this.slugify(normalizedName),
-          name: model.displayName ?? normalizedName,
-          externalModelId: normalizedName,
-          description: model.description,
-          status: 'active' as const,
-          capabilityMetadata: {
-            text: methods.includes('generateContent'),
-            embeddings: methods.includes('embedContent') || methods.includes('batchEmbedContents'),
-            image: normalizedName.toLowerCase().includes('imagen'),
-            vision: methods.includes('generateContent'),
-          },
-          pricingMetadata: {},
-          limitsMetadata: {
-            maxInputTokens: model.inputTokenLimit ?? null,
-            maxOutputTokens: model.outputTokenLimit ?? null,
-          },
-          schemaMetadata: {
-            providerManaged: true,
-            raw: model,
-          },
-        };
+    const body: Record<string, unknown> = {
+      contents,
+    };
+
+    if (systemInstruction) {
+      body.systemInstruction = systemInstruction;
+    }
+
+    const generationConfig: Record<string, unknown> = {};
+
+    if (request.temperature !== undefined) {
+      generationConfig.temperature = request.temperature;
+    }
+
+    if (request.maxTokens !== undefined) {
+      generationConfig.maxOutputTokens = request.maxTokens;
+    }
+
+    if (Object.keys(generationConfig).length > 0) {
+      body.generationConfig = generationConfig;
+    }
+
+    try {
+      const url = this.buildUrl(request.model, 'streamGenerateContent') + '&alt=sse';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(body),
       });
-  }
 
-  async generateText(request: AIRuntimeTextRequest): Promise<AIRuntimeTextResult> {
-    const response = await fetch(
-      this.resolveModelUrl(request.model.apiModelName, 'generateContent', request.credential.value),
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: this.toGeminiContents(request),
-          ...(this.toSystemInstruction(request)
-            ? { systemInstruction: this.toSystemInstruction(request) }
-            : {}),
-          ...(this.toTextGenerationConfig(request)
-            ? { generationConfig: this.toTextGenerationConfig(request) }
-            : {}),
-        }),
-      },
-    );
+      if (!response.ok) {
+        const error = await this.readErrorMessage(response);
+        throw new ProviderExecutionError(
+          this.provider,
+          this.mapErrorCategory(response.status),
+          error,
+          response.status,
+        );
+      }
 
-    if (!response.ok) {
-      throw new ProviderExecutionError(
-        this.provider,
-        this.mapErrorCategory(response.status),
-        await this.readErrorMessage(response),
-        response.status,
-      );
-    }
+      let fullContent = '';
+      let promptTokens = 0;
+      let completionTokens = 0;
+      let finishReason = 'STOP';
 
-    const payload = (await response.json()) as {
-      candidates?: Array<{
-        content?: { parts?: Array<{ text?: string }> };
-      }>;
-      usageMetadata?: {
-        promptTokenCount?: number;
-        candidatesTokenCount?: number;
-        totalTokenCount?: number;
-      };
-    };
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
 
-    const text =
-      payload.candidates?.[0]?.content?.parts
-        ?.map((part) => part.text)
-        .filter((value): value is string => typeof value === 'string')
-        .join('') ?? '';
+      const decoder = new TextDecoder();
 
-    return {
-      text,
-      structuredOutput: request.structuredOutputSchema
-        ? this.tryParseStructuredOutput(text)
-        : undefined,
-      usage: {
-        promptTokens: payload.usageMetadata?.promptTokenCount,
-        completionTokens: payload.usageMetadata?.candidatesTokenCount,
-        totalTokens: payload.usageMetadata?.totalTokenCount,
-        raw: this.toRecord(payload.usageMetadata),
-      },
-      raw: this.toRecord(payload),
-    };
-  }
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-  async generateImage(request: AIRuntimeImageRequest): Promise<AIRuntimeImageResult> {
-    const prompt = request.size
-      ? `${request.prompt}\n\nPreferred image size: ${request.size}.`
-      : request.prompt;
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n').filter((line) => line.startsWith('data: '));
 
-    const response = await fetch(
-      this.resolveModelUrl(request.model.apiModelName, 'generateContent', request.credential.value),
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        }),
-      },
-    );
+        for (const line of lines) {
+          const data = line.slice(6);
+          if (!data || data === '[DONE]') continue;
 
-    if (!response.ok) {
-      throw new ProviderExecutionError(
-        this.provider,
-        this.mapErrorCategory(response.status),
-        await this.readErrorMessage(response),
-        response.status,
-      );
-    }
+          try {
+            const parsed = JSON.parse(data) as GeminiGenerateResponse;
+            const content =
+              parsed.candidates?.[0]?.content?.parts
+                ?.map((p) => p.text)
+                .filter(Boolean)
+                .join('') ?? '';
 
-    const payload = (await response.json()) as {
-      candidates?: Array<{
-        content?: {
-          parts?: Array<{ inlineData?: { mimeType?: string; data?: string } }>;
-        };
-      }>;
-    };
-
-    const images =
-      payload.candidates?.flatMap(
-        (candidate) =>
-          candidate.content?.parts?.flatMap((part) => {
-            if (!part.inlineData?.data || !part.inlineData.mimeType) {
-              return [];
+            if (content) {
+              fullContent += content;
+              yield { content, isLast: false };
             }
 
-            return [{ url: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }];
-          }) ?? [],
-      ) ?? [];
+            if (parsed.candidates?.[0]?.finishReason) {
+              finishReason = parsed.candidates[0].finishReason;
+            }
 
-    return {
-      images,
-      usage: { imageCount: images.length },
-      raw: this.toRecord(payload),
-    };
-  }
+            if (parsed.usageMetadata) {
+              promptTokens = parsed.usageMetadata.promptTokenCount ?? 0;
+              completionTokens = parsed.usageMetadata.candidatesTokenCount ?? 0;
+            }
+          } catch {
+            continue;
+          }
+        }
+      }
 
-  async createEmbedding(request: AIRuntimeEmbeddingRequest): Promise<AIRuntimeEmbeddingResult> {
-    const response = await fetch(
-      this.resolveModelUrl(request.model.apiModelName, 'embedContent', request.credential.value),
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: {
-            parts: [{ text: request.input }],
-          },
-          taskType: 'RETRIEVAL_DOCUMENT',
-        }),
-      },
-    );
+      yield { content: '', isLast: true };
 
-    if (!response.ok) {
+      return {
+        content: fullContent,
+        usage: {
+          promptTokens,
+          completionTokens,
+          totalTokens: promptTokens + completionTokens,
+        },
+        finishReason,
+      };
+    } catch (error) {
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('Gemini stream failed', error);
       throw new ProviderExecutionError(
         this.provider,
-        this.mapErrorCategory(response.status),
-        await this.readErrorMessage(response),
-        response.status,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
       );
     }
+  }
 
-    const payload = (await response.json()) as {
-      embedding?: {
-        values?: number[];
-      };
-    };
+  async createEmbedding(
+    request: AiRuntimeEmbeddingRequest,
+  ): Promise<AiRuntimeEmbeddingResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
 
-    const embedding = Array.isArray(payload.embedding?.values) ? payload.embedding.values : [];
+    const inputs = Array.isArray(request.input) ? request.input : [request.input];
+    const embeddings: number[][] = [];
+    let totalTokens = 0;
+
+    for (const text of inputs) {
+      try {
+        const url = this.buildUrl(request.model, 'embedContent');
+        const body: Record<string, unknown> = {
+          content: {
+            parts: [{ text }],
+          },
+          taskType: 'RETRIEVAL_DOCUMENT',
+        };
+
+        if (request.dimensions) {
+          body.outputDimensionality = request.dimensions;
+        }
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: this.getHeaders(),
+          body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+          const error = await this.readErrorMessage(response);
+          this.logger.error(`Gemini embedding failed: ${error}`);
+          throw new ProviderExecutionError(
+            this.provider,
+            this.mapErrorCategory(response.status),
+            error,
+            response.status,
+          );
+        }
+
+        const data = (await response.json()) as GeminiEmbedResponse;
+
+        if (data.embedding?.values) {
+          embeddings.push(data.embedding.values);
+          totalTokens += Math.ceil(text.length / 4);
+        }
+      } catch (error) {
+        if (error instanceof ProviderExecutionError) throw error;
+        this.logger.error('Gemini embedding failed', error);
+        throw new ProviderExecutionError(
+          this.provider,
+          'unknown',
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+      }
+    }
+
+    const dimensions = embeddings[0]?.length ?? request.dimensions ?? 768;
 
     return {
-      embedding,
-      usage: { embeddingCount: embedding.length > 0 ? 1 : 0 },
-      raw: this.toRecord(payload),
+      embeddings,
+      usage: {
+        promptTokens: totalTokens,
+        completionTokens: 0,
+        totalTokens,
+      },
+      dimensions,
     };
   }
 
-  private resolveBaseUrl() {
-    return (
-      process.env.GEMINI_BASE_URL ?? 'https://generativelanguage.googleapis.com/v1beta'
-    ).replace(/\/$/, '');
+  async generateImage(request: AiRuntimeImageRequest): Promise<AiRuntimeImageResult> {
+    if (!this.apiKey) {
+      throw new ProviderNotConfiguredError(this.provider);
+    }
+
+    const body: Record<string, unknown> = {
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: request.prompt }],
+        },
+      ],
+      generationConfig: {
+        responseModalities: ['IMAGE'],
+      },
+    };
+
+    try {
+      const url = this.buildUrl(request.model, 'generateContent');
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        const error = await this.readErrorMessage(response);
+        this.logger.error(`Gemini image generation failed: ${error}`);
+        throw new ProviderExecutionError(
+          this.provider,
+          this.mapErrorCategory(response.status),
+          error,
+          response.status,
+        );
+      }
+
+      const data = (await response.json()) as GeminiGenerateResponse;
+
+      const images: Array<{ url?: string; base64?: string }> = [];
+
+      for (const candidate of data.candidates ?? []) {
+        for (const part of candidate.content?.parts ?? []) {
+          if (part.inlineData?.data && part.inlineData.mimeType) {
+            images.push({
+              base64: part.inlineData.data,
+              url: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
+            });
+          }
+        }
+      }
+
+      return {
+        images,
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+        },
+      };
+    } catch (error) {
+      if (error instanceof ProviderExecutionError) throw error;
+      this.logger.error('Gemini image generation failed', error);
+      throw new ProviderExecutionError(
+        this.provider,
+        'unknown',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
   }
 
-  private resolveModelUrl(
-    modelName: string,
-    action: 'generateContent' | 'embedContent',
-    apiKey: string,
-  ) {
-    const url = new URL(`${this.resolveBaseUrl()}/models/${modelName}:${action}`);
-    url.searchParams.set('key', apiKey);
+  private convertMessages(
+    messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
+  ): { contents: GeminiContent[]; systemInstruction?: { parts: Array<{ text: string }> } } {
+    const systemMessages = messages.filter((m) => m.role === 'system');
+    const nonSystemMessages = messages.filter((m) => m.role !== 'system');
+
+    const systemInstruction =
+      systemMessages.length > 0
+        ? {
+            parts: systemMessages.map((m) => ({ text: m.content })),
+          }
+        : undefined;
+
+    const contents: GeminiContent[] = nonSystemMessages.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+
+    return { contents, systemInstruction };
+  }
+
+  private buildUrl(model: string, action: string): string {
+    const url = new URL(`${this.baseUrl}/models/${model}:${action}`);
+    url.searchParams.set('key', this.apiKey);
     return url.toString();
   }
 
-  private async readErrorMessage(response: Response) {
+  private getHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+    };
+  }
+
+  private async readErrorMessage(response: Response): Promise<string> {
     try {
       const payload = (await response.json()) as { error?: { message?: string } };
-      return payload.error?.message ?? `Provider request failed with status ${response.status}`;
+      return (
+        payload.error?.message ?? `Provider request failed with status ${response.status}`
+      );
     } catch {
       return `Provider request failed with status ${response.status}`;
     }
   }
 
-  private slugify(value: string) {
-    return value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  }
-
-  private mapErrorCategory(status: number) {
-    if (status === 401 || status === 403) return 'auth' as const;
-    if (status === 429) return 'rate_limit' as const;
-    if (status >= 400 && status < 500) return 'validation' as const;
-    return 'unknown' as const;
-  }
-
-  private toSystemInstruction(request: AIRuntimeTextRequest) {
-    const systemText = request.messages
-      ?.filter((message) => message.role === 'system')
-      .map((message) => message.content.trim())
-      .filter(Boolean)
-      .join('\n\n');
-
-    return systemText
-      ? {
-          parts: [{ text: systemText }],
-        }
-      : undefined;
-  }
-
-  private toGeminiContents(request: AIRuntimeTextRequest) {
-    const messages = request.messages?.length
-      ? request.messages.filter((message) => message.role !== 'system')
-      : [{ role: 'user' as const, content: request.prompt ?? '' }];
-
-    return messages.map((message) => ({
-      role: message.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: message.content }],
-    }));
-  }
-
-  private toTextGenerationConfig(request: AIRuntimeTextRequest) {
-    if (
-      request.temperature === undefined &&
-      request.maxOutputTokens === undefined &&
-      !request.structuredOutputSchema
-    ) {
-      return undefined;
-    }
-
-    return {
-      ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
-      ...(request.maxOutputTokens !== undefined
-        ? { maxOutputTokens: request.maxOutputTokens }
-        : {}),
-      ...(request.structuredOutputSchema
-        ? {
-            responseMimeType: 'application/json',
-            responseSchema: request.structuredOutputSchema,
-          }
-        : {}),
-    };
-  }
-
-  private tryParseStructuredOutput(text: string) {
-    try {
-      const parsed = JSON.parse(text) as Record<string, unknown>;
-      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : undefined;
-    } catch {
-      return undefined;
-    }
-  }
-
-  private toRecord(value: unknown) {
-    return value && typeof value === 'object' && !Array.isArray(value)
-      ? (value as Record<string, unknown>)
-      : undefined;
+  private mapErrorCategory(
+    status: number,
+  ): 'auth' | 'rate_limit' | 'validation' | 'unknown' {
+    if (status === 401 || status === 403) return 'auth';
+    if (status === 429) return 'rate_limit';
+    if (status >= 400 && status < 500) return 'validation';
+    return 'unknown';
   }
 }

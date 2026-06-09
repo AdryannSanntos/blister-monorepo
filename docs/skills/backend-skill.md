@@ -1,69 +1,65 @@
-# Backend Skill — Workana AI
+# Backend Skill — Blister
 
-## Objetivo
+> Source of truth: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`docs/project/architecture.md`](../project/architecture.md)
 
-Guiar implementação, refatoração ou revisão em `apps/api`.
+## Objective
 
-## Estrutura de Módulo
+Guide implementation, refactoring, or review in `apps/api`.
 
-```
-apps/api/src/<dominio>/
-  <dominio>.module.ts
-  <dominio>.controller.ts
-  <dominio>.service.ts
-  <dominio>.service.spec.ts
-  dto/
-```
-
-## Regras Críticas
-
-- Mutação ou leitura sensível sempre tem `@RequirePermission(key)`.
-- Endpoint público sempre tem `@Public()` explícito.
-- `userId` vem de `req.currentUser.id`, nunca do body.
-- `orgId` vem de `req.params.orgId` ou `req.params.id`.
-- DTOs são validados com Zod antes de chegar no service.
-- Prisma é o único acesso a banco.
-- `better-auth` não gerencia organização, roles, permissões, créditos ou brain.
-- A API não expõe metadados internos da IA sem decisão documentada.
-
-## Regras de Agentes V1
-
-- Classificacao de mensagem decide conversa vs execucao; pedido de artefato final deve forcar execucao.
-- Execucoes por empresa limitadas a 3 simultaneas, com fila FIFO para excedente.
-- Retry automatico maximo de 1 tentativa e timeline de tentativas no mesmo run.
-- Retrieval de contexto em camadas: conversa atual -> memoria do mesmo agente -> estruturado -> vetorial (pgvector) -> rerank.
-- Retrieval deve respeitar permissao do solicitante e bloquear segredos/credenciais.
-- Delegacao do chat geral para agente especializado deve manter resposta no chat geral e rastrear run delegado.
-- Arquivos gerados devem ir para storage S3-compativel; `AgentRun` guarda referencias/metadados, nao binarios.
-
-## Guards
+## Module structure
 
 ```
-AuthGuard global -> req.currentUser
-PermissionGuard global -> @RequirePermission -> CASL ability por membership
+apps/api/src/<domain>/
+  <domain>.module.ts
+  <domain>.controller.ts
+  <domain>.service.ts
+  <domain>.service.spec.ts
+  dto/                  ← Zod schemas required
 ```
 
-## Domínios Atuais
+## Validation (Zod always)
 
-- Auth/sessão via better-auth
-- Organization, Membership, Role, Permission, Invitation
-- OnboardingDraft
-- Asset e AssetRelation
+- Every body, query, and parsed params pass through Zod in the controller.
+- Agent/LLM outputs validated with Zod before persist or return.
+- Shared schemas live in `packages/types`.
+- Service validates business invariants: `companyId`, status, credit balance.
 
-## Próximos Domínios
+```typescript
+const parsed = createCampaignSchema.safeParse(body);
+if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+return this.service.create(currentUser.id, parsed.data);
+```
 
-- CompanyBrain/BrainVersion
-- CreditLedger
-- Agent
-- AgentRun
-- Integration real
-- AuditLog
+## Existing modules
+
+`auth`, `users`, `platform`, `audit`, `email`, `prisma`
+
+## Target domains (MVP)
+
+| Module | Responsibility |
+|--------|----------------|
+| `company/` | Brand Brain, business profile |
+| `campaigns/` | Optional campaigns + context files |
+| `agents/` | Pluggable registry, workflow engine, 3 MVP agents |
+| `rag/` | Ingestion, pgvector embeddings, rerank, learning |
+| `credits/` | Balance, debit per run, free tier |
+| `ai-catalog/` | Models, providers, markup (admin) |
+
+## Critical rules
+
+- Sensitive reads/mutations always use `@RequirePermission(key)`.
+- Public endpoints always use `@Public()`.
+- `userId` from `req.currentUser.id`, never from body.
+- Resource IDs from `req.params`, never from body.
+- **Zod on every boundary** — no `unknown` in services.
+- Prisma is the only database access.
+- Scope by `companyId` — validate ownership on every mutation.
 
 ## Checklist
 
-- [ ] Guard de permissão em mutações
-- [ ] Zod em DTOs
-- [ ] `req.currentUser.id`, não body
-- [ ] Service contém lógica de negócio
-- [ ] Controller apenas parseia, delega e retorna
-- [ ] Testes cobrem caminho feliz e erros críticos
+- [ ] Zod on every DTO and AI output
+- [ ] Business validation in service
+- [ ] `@RequirePermission` on mutations
+- [ ] New permission in `packages/authz` first
+- [ ] `companyId` scope validated
+- [ ] Critical mutations in `AuditLog`

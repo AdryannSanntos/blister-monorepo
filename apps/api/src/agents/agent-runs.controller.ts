@@ -1,141 +1,156 @@
 import {
-  BadRequestException,
-  Body,
   Controller,
-  Get,
-  Param,
   Post,
-  Query,
+  Get,
+  Patch,
+  Param,
+  Body,
   Req,
-  UseGuards,
+  Sse,
+  HttpCode,
+  HttpStatus,
+  MessageEvent,
 } from '@nestjs/common';
-import type { Request } from 'express';
-import { z } from 'zod';
+import { Request } from 'express';
+import { Observable, map, takeUntil, Subject, finalize } from 'rxjs';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
-import { RequirePlatformRole } from '../platform/decorators/require-platform-role.decorator';
-import { PlatformRoleGuard } from '../platform/guards/platform-role.guard';
-import { AgentRunResumeService } from './agent-run-resume.service';
-import { AgentRunsService } from './agent-runs.service';
-import { executeAgentSchema, getAgentRunSchema, listAgentRunsSchema } from './dto';
+import { CompanyService } from '../company/company.service';
+import { WorkflowEngineService } from './runtime/workflow-engine.service';
+import { AgentRunService } from './runtime/agent-run.service';
+import { AgentRunReviewService } from './runtime/agent-run-review.service';
+import { AgentSseService } from './runtime/agent-sse.service';
+import {
+  resumeAgentRequestSchema,
+  approveAgentRunSchema,
+  rejectAgentRunSchema,
+  editAgentRunOutputSchema,
+  regenerateAgentRunSchema,
+} from '@company-os/types';
 
-@Controller('organizations/:orgId')
+@Controller('api/agents/runs')
 export class AgentRunsController {
   constructor(
-    private readonly agentRunsService: AgentRunsService,
-    private readonly agentRunResumeService: AgentRunResumeService,
+    private readonly companyService: CompanyService,
+    private readonly workflowEngine: WorkflowEngineService,
+    private readonly runService: AgentRunService,
+    private readonly reviewService: AgentRunReviewService,
+    private readonly sseService: AgentSseService,
   ) {}
 
-  @Post(':agentId/runs')
-  @RequirePermission('agent.execute')
-  async createRun(
-    @Param('orgId') orgId: string,
-    @Param('agentId') agentId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
-    const parsed = executeAgentSchema.safeParse(body);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentRunsService.createQueuedRun(orgId, agentId, currentUser.id, parsed.data);
-  }
-
-  @Get('agent-runs')
-  @RequirePermission('agent.run.read')
-  async listRuns(@Param('orgId') orgId: string, @Query() query: unknown, @Req() req: Request) {
-    const parsed = listAgentRunsSchema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentRunsService.listRuns(orgId, parsed.data, currentUser.id);
-  }
-
-  @Get('agent-runs/:runId')
-  @RequirePermission('agent.run.read')
-  async getRun(
-    @Param('orgId') orgId: string,
-    @Param('runId') runId: string,
-    @Query() query: unknown,
-    @Req() req: Request,
-  ) {
-    const parsed = getAgentRunSchema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentRunsService.getRun(orgId, runId, currentUser.id, parsed.data.onlyOwnRuns);
-  }
-
-  @Get('agent-runs/:runId/suspensions')
-  @RequirePermission('agent.run.review')
-  async listSuspensions(@Param('orgId') orgId: string, @Param('runId') runId: string) {
-    return this.agentRunResumeService.listSuspensions(orgId, runId);
-  }
-
-  @Post('agent-runs/:runId/suspensions/:suspensionId/respond')
-  @RequirePermission('agent.run.review')
-  async answerSuspension(
-    @Param('orgId') orgId: string,
-    @Param('runId') runId: string,
-    @Param('suspensionId') suspensionId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
-    const answerSchema = z.object({
-      answers: z.record(z.string(), z.unknown()),
-    });
-    const parsed = answerSchema.safeParse(body);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    return this.agentRunResumeService.answerSuspension(
-      orgId,
-      runId,
-      suspensionId,
-      currentUser.id,
-      parsed.data.answers,
-    );
-  }
-}
-
-const listPlatformRunsSchema = z.object({
-  providerId: z.string().min(1).optional(),
-  modelId: z.string().min(1).optional(),
-  organizationId: z.string().min(1).optional(),
-  agentTemplateId: z.string().min(1).optional(),
-  status: z.string().min(1).optional(),
-  dateFrom: z.string().min(1).optional(),
-  dateTo: z.string().min(1).optional(),
-  minCost: z.coerce.number().optional(),
-  maxCost: z.coerce.number().optional(),
-});
-
-@Controller('platform/agents/runs')
-@UseGuards(PlatformRoleGuard)
-@RequirePlatformRole('platform_admin')
-export class PlatformAgentRunsController {
-  constructor(private readonly agentRunsService: AgentRunsService) {}
-
-  @Get()
-  async listRuns(@Query() query: unknown) {
-    const parsed = listPlatformRunsSchema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
-    return this.agentRunsService.listPlatformRuns(parsed.data);
-  }
-
   @Get(':runId')
-  async getRun(@Param('runId') runId: string) {
-    return this.agentRunsService.getPlatformRun(runId);
+  @RequirePermission('generation.create')
+  async getRunStatus(@Param('runId') runId: string) {
+    return this.runService.findWithSteps(runId);
+  }
+
+  @Post(':runId/resume')
+  @RequirePermission('generation.create')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async resumeRun(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+  ) {
+    const dto = resumeAgentRequestSchema.parse(body);
+
+    const result = await this.workflowEngine.resumeRun({
+      runId,
+      formData: dto.formData,
+    });
+
+    return {
+      runId: result.runId,
+      status: result.status,
+    };
+  }
+
+  @Post(':runId/cancel')
+  @RequirePermission('generation.create')
+  @HttpCode(HttpStatus.OK)
+  async cancelRun(@Param('runId') runId: string) {
+    const result = await this.workflowEngine.cancelRun(runId);
+    return { runId: result.runId, status: result.status };
+  }
+
+  @Post(':runId/approve')
+  @RequirePermission('generation.create')
+  @HttpCode(HttpStatus.OK)
+  async approveRun(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const dto = approveAgentRunSchema.parse(body);
+
+    return this.reviewService.approve(runId, user.id, dto);
+  }
+
+  @Post(':runId/reject')
+  @RequirePermission('generation.create')
+  @HttpCode(HttpStatus.OK)
+  async rejectRun(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const dto = rejectAgentRunSchema.parse(body);
+
+    return this.reviewService.reject(runId, user.id, dto);
+  }
+
+  @Patch(':runId/output')
+  @RequirePermission('generation.create')
+  async editRunOutput(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const dto = editAgentRunOutputSchema.parse(body);
+
+    return this.reviewService.editOutput(runId, user.id, dto);
+  }
+
+  @Post(':runId/regenerate')
+  @RequirePermission('generation.create')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async regenerateRun(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+  ) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const dto = regenerateAgentRunSchema.parse(body);
+
+    return this.reviewService.regenerate(runId, user.id, dto);
+  }
+
+  @Sse(':runId/stream')
+  @RequirePermission('generation.create')
+  streamRun(
+    @Param('runId') runId: string,
+    @Req() req: Request,
+  ): Observable<MessageEvent> {
+    const _user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const disconnect$ = new Subject<void>();
+
+    req.on('close', () => {
+      disconnect$.next();
+      disconnect$.complete();
+    });
+
+    return this.runService.findByIdOrThrow(runId).then((run) =>
+      this.sseService.subscribe(runId, run.companyId).pipe(
+        takeUntil(disconnect$),
+        map((event) => ({
+          data: JSON.stringify(event),
+          type: event.type,
+          id: `${runId}-${Date.now()}`,
+        })),
+        finalize(() => disconnect$.complete()),
+      ),
+    ) as unknown as Observable<MessageEvent>;
   }
 }

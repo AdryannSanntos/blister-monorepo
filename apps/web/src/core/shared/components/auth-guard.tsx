@@ -1,8 +1,9 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { authClient } from "src/core/shared/utils/auth-client";
+
+import { usePathname, useRouter } from "@/i18n/routing";
 
 type AuthGuardProps = {
   children: React.ReactNode;

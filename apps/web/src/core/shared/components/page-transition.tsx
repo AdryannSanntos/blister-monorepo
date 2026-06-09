@@ -1,15 +1,22 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import { type ReactNode } from 'react';
+import { type ReactNode } from "react";
 
-export function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
+import { usePathname } from "@/i18n/routing";
+
+export function PageTransition({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   const pathname = usePathname();
   return (
     <div
       key={pathname}
       className={className}
-      style={{ animation: 'page-enter 0.3s ease-out both' }}
+      style={{ animation: "page-enter 0.3s ease-out both" }}
     >
       {children}
     </div>

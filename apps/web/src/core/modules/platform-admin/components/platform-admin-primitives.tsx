@@ -1,15 +1,16 @@
+"use client";
+
 import type { LucideIcon } from "lucide-react";
 import {
-  BadgeCheck,
-  Bot,
   ChartColumn,
+  Coins,
+  Cpu,
+  Database,
   Headphones,
-  LayoutTemplate,
   Shield,
-  Sparkles,
-  Wand2,
-  Workflow,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import { Badge } from "src/core/shared/components/ui/badge";
 import {
   Card,
@@ -19,83 +20,85 @@ import {
   CardTitle,
 } from "src/core/shared/components/ui/card";
 
+import type { PlatformAdminTabValue } from "../hooks/use-platform-admin-tab";
+
 export type PlatformAdminNavItem = {
+  value: PlatformAdminTabValue;
   label: string;
-  href: string;
   icon: LucideIcon;
   description: string;
+  titleKey: string;
+  descriptionKey: string;
 };
 
-export const PLATFORM_ADMIN_NAV_ITEMS: PlatformAdminNavItem[] = [
-  {
-    label: "Visao geral",
-    href: "/workspaces/admin",
-    icon: ChartColumn,
-    description: "Panorama operacional da camada global de IA.",
-  },
-  {
-    label: "Admins",
-    href: "/workspaces/admin/admins",
-    icon: Shield,
-    description: "Acessos globais de plataforma e governanca.",
-  },
-  {
-    label: "Providers",
-    href: "/workspaces/admin/providers",
-    icon: Sparkles,
-    description: "Catalogo de vendors e gateways suportados.",
-  },
-  {
-    label: "Models",
-    href: "/workspaces/admin/models",
-    icon: Bot,
-    description: "Modelos habilitados para runtime e custos.",
-  },
-  {
-    label: "Policies",
-    href: "/workspaces/admin/policies",
-    icon: BadgeCheck,
-    description: "Restricoes por empresa, provider e modelos.",
-  },
-  {
-    label: "Agentes de sistema",
-    href: "/workspaces/admin/agents",
-    icon: Wand2,
-    description: "Agentes internos da plataforma: config de IA e testes.",
-  },
-  {
-    label: "Templates",
-    href: "/workspaces/admin/templates",
-    icon: LayoutTemplate,
-    description: "Estrutura do catalogo global de agentes base.",
-  },
-  {
-    label: "Suporte",
-    href: "/workspaces/admin/support",
-    icon: Headphones,
-    description: "Sessoes de suporte ativas e historico recente.",
-  },
-  {
-    label: "Runs",
-    href: "/workspaces/admin/runs",
-    icon: Workflow,
-    description: "Observabilidade das execucoes da plataforma.",
-  },
-  {
-    label: "Costs",
-    href: "/workspaces/admin/costs",
-    icon: ChartColumn,
-    description: "Custos tecnicos agregados por provider e modelo.",
-  },
-];
+export function usePlatformAdminNavItems(): PlatformAdminNavItem[] {
+  const t = useTranslations("platformAdmin.nav");
 
-export function formatPlatformDate(value?: string | null) {
+  return useMemo(
+    () => [
+      {
+        value: "overview",
+        label: t("overview"),
+        icon: ChartColumn,
+        description: t("overviewDescription"),
+        titleKey: "title",
+        descriptionKey: "description",
+      },
+      {
+        value: "admins",
+        label: t("admins"),
+        icon: Shield,
+        description: t("adminsDescription"),
+        titleKey: "adminsPage.title",
+        descriptionKey: "adminsPage.description",
+      },
+      {
+        value: "support",
+        label: t("support"),
+        icon: Headphones,
+        description: t("supportDescription"),
+        titleKey: "supportCard.title",
+        descriptionKey: "supportCard.description",
+      },
+      {
+        value: "ai-catalog",
+        label: t("aiCatalog"),
+        icon: Cpu,
+        description: t("aiCatalogDescription"),
+        titleKey: "aiCatalogPage.title",
+        descriptionKey: "aiCatalogPage.description",
+      },
+      {
+        value: "rag",
+        label: t("rag"),
+        icon: Database,
+        description: t("ragDescription"),
+        titleKey: "ragPage.title",
+        descriptionKey: "ragPage.description",
+      },
+      {
+        value: "credits",
+        label: t("credits"),
+        icon: Coins,
+        description: t("creditsDescription"),
+        titleKey: "creditsPage.title",
+        descriptionKey: "creditsPage.description",
+      },
+    ],
+    [t],
+  );
+}
+
+export function formatPlatformDate(
+  value?: string | null,
+  locale: string = "pt-BR",
+) {
   if (!value) return "-";
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "-";
 
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "short",
     timeStyle: "short",
   }).format(date);

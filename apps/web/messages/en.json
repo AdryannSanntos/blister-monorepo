@@ -1,0 +1,990 @@
+{
+  "metadata": {
+    "title": "Blister",
+    "description": "AI marketing for small businesses."
+  },
+  "common": {
+    "localeSwitcher": {
+      "label": "Change language"
+    },
+    "or": "or",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "password": "Password",
+    "cancel": "Cancel",
+    "backToLogin": "Back to login",
+    "goToLogin": "Go to login",
+    "unexpectedError": "Unexpected error. Please try again.",
+    "copyright": "© {year} Blister. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "soon": "Coming soon",
+    "soonTooltip": " · Coming soon",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "validation": {
+    "invalidEmail": "Invalid email",
+    "passwordRequired": "Password is required",
+    "nameMin": "Name must be at least 2 characters",
+    "passwordMin8": "Password must be at least 8 characters",
+    "passwordUppercase": "Include at least one uppercase letter",
+    "passwordNumber": "Include at least one number",
+    "passwordSpecial": "Include at least one special character",
+    "passwordMismatch": "Passwords do not match",
+    "currentPasswordRequired": "Enter your current password",
+    "newPasswordMin8": "New password must be at least 8 characters",
+    "confirmPasswordRequired": "Confirm your new password",
+    "userIdRequired": "Enter the userId"
+  },
+  "passwordStrength": {
+    "minLength": "At least 8 characters",
+    "uppercase": "Uppercase letter",
+    "number": "Number",
+    "special": "Special character",
+    "strength": "Strength: {label}",
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account to continue",
+      "forgotPassword": "Forgot password?",
+      "passwordPlaceholder": "Your password",
+      "rememberEmail": "Remember email on this device",
+      "submitting": "Signing in...",
+      "submit": "Sign in",
+      "googleConnecting": "Connecting with Google...",
+      "googleContinue": "Continue with Google",
+      "appleDisabled": "Apple login is not configured in this environment yet.",
+      "appleContinue": "Continue with Apple",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "googleError": "Could not sign in with Google.",
+      "googleUnexpectedError": "Unexpected error signing in with Google.",
+      "emailNotVerified": "Your email is not verified yet. Check your inbox.",
+      "invalidCredentials": "Incorrect email or password."
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Fill in your details to get started",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Your full name",
+      "passwordPlaceholder": "Create a strong password",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat password",
+      "submitting": "Creating account...",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "createError": "Error creating account. Please try again.",
+      "createSuccess": "Account created successfully!"
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "Enter your email to receive a recovery link",
+      "submitting": "Sending...",
+      "submit": "Send recovery link",
+      "sendError": "Error sending email. Please try again.",
+      "sentTitle": "Email sent",
+      "sentSubtitle": "Check your inbox",
+      "sentBody": "We sent a recovery link to {email}. Click the link to reset your password.",
+      "spamHint": "Can't find it? Check your spam folder."
+    },
+    "resetPassword": {
+      "invalidToken": "Invalid or expired reset token.",
+      "error": "Error resetting password. Please try again.",
+      "success": "Password reset successfully!",
+      "invalidLinkTitle": "Invalid link",
+      "invalidLinkSubtitle": "This reset link is invalid or has expired",
+      "invalidLinkBody": "Please request a new password recovery link.",
+      "requestNewLink": "Request new link",
+      "title": "Create new password",
+      "subtitle": "Set a new password for your account",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "Create a strong password",
+      "confirmNewPassword": "Confirm new password",
+      "confirmNewPasswordPlaceholder": "Repeat new password",
+      "submitting": "Saving...",
+      "submit": "Save new password"
+    },
+    "verifyEmail": {
+      "emailNotFound": "Email not found. Go back to sign up.",
+      "resendError": "Error resending email. Please try again.",
+      "resendSuccess": "Verification email resent to {email}.",
+      "pendingBody": "We sent a verification link to {email}. Click the link to activate your account.",
+      "pendingBodyFallback": "We sent a verification link to your email. Click the link to activate your account.",
+      "spamHint": "Can't find it? Check spam or resend below.",
+      "resending": "Resending...",
+      "resend": "Resend verification email",
+      "states": {
+        "pending": {
+          "title": "Verify your email",
+          "description": "Open the link we sent to confirm your account"
+        },
+        "success": {
+          "title": "Email verified successfully",
+          "description": "Your account is active. You can sign in now."
+        },
+        "error": {
+          "title": "Invalid or expired verification link",
+          "description": "This link is no longer valid. Request a new verification email to continue."
+        }
+      }
+    },
+    "serviceUnavailable": {
+      "badge": "Temporary instability",
+      "title": "Could not connect to the server",
+      "description": "Blister could not validate your session right now. This usually happens during temporary API downtime. Try again in a moment.",
+      "retry": "Try again",
+      "goToLogin": "Go to login",
+      "footer": "If the error persists, check whether the internal API is running in the current environment."
+    }
+  },
+  "dashboard": {
+    "welcomeTitle": "Welcome to Blister",
+    "welcomeSubtitle": "AI marketing for your business.",
+    "brand": "Blister",
+    "home": "Home",
+    "main": "Main",
+    "settings": "Settings",
+    "accountSettings": "Account settings",
+    "viewCompanies": "View companies",
+    "platformAdminArea": "Admin area",
+    "userMenu": "User menu",
+    "signOut": "Sign out",
+    "signOutShort": "Sign out",
+    "toggleTheme": "Toggle theme",
+    "signOutError": "Error signing out.",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "agents": "Agents",
+    "myAgents": "My agents",
+    "agentStrategist": "Strategist",
+    "agentCopywriter": "Copywriter",
+    "agentDesigner": "Designer",
+    "agentPost": "Full post",
+    "generateCopy": "Generate copy",
+    "generateImage": "Generate image",
+    "createPost": "Create post",
+    "adaptContent": "Adapt content",
+    "createEmail": "Create email",
+    "history": "History",
+    "credits": "Credits",
+    "company": "Company",
+    "brandBrain": "Brain",
+    "campaigns": "Campaigns",
+    "integrations": "Integrations",
+    "workspace": "Workspace",
+    "team": "Team",
+    "permissions": "Permissions",
+    "settings": "Settings",
+    "admin": "Admin",
+    "settingsAria": "Settings"
+  },
+  "workspace": {
+    "team": {
+      "title": "Team",
+      "description": "Manage who has access and which roles each person holds.",
+      "invite": "Invite member",
+      "actionsMenu": "Actions for {name}",
+      "editMember": "Edit member roles",
+      "removeMember": "Remove member",
+      "emptyTitle": "No members found",
+      "emptyDescription": "Invite the first person to collaborate with you.",
+      "removeDialogTitle": "Remove member",
+      "removeDialogDescription": "Are you sure you want to remove {name} ({email})? They will lose access immediately.",
+      "remove": "Remove",
+      "removing": "Removing...",
+      "columns": {
+        "member": "Member",
+        "email": "Email",
+        "roles": "Roles",
+        "joinedAt": "Joined"
+      },
+      "filters": {
+        "role": "Role"
+      },
+      "inviteDialog": {
+        "title": "Invite member",
+        "description": "Enter the email of someone who already has a Blister account and choose their initial role.",
+        "email": "Email",
+        "emailPlaceholder": "name@company.com",
+        "role": "Role",
+        "rolePlaceholder": "Select a role",
+        "roleRequired": "Select a role",
+        "submit": "Send invite",
+        "submitting": "Sending..."
+      },
+      "editDialog": {
+        "title": "Edit roles",
+        "description": "Add or remove roles for this member.",
+        "currentRoles": "Current roles",
+        "noRoles": "No roles assigned",
+        "removeRole": "Remove role {role}",
+        "addRole": "Add role",
+        "addRolePlaceholder": "Select a role",
+        "noRolesAvailable": "All roles are already assigned",
+        "close": "Close"
+      },
+      "toasts": {
+        "inviteSuccess": "Member added successfully.",
+        "inviteError": "Could not invite member.",
+        "roleAssigned": "Role assigned.",
+        "roleAssignError": "Could not assign role.",
+        "roleRemoved": "Role removed.",
+        "roleRemoveError": "Could not remove role.",
+        "memberRemoved": "Member removed.",
+        "memberRemoveError": "Could not remove member."
+      }
+    },
+    "permissions": {
+      "title": "Permissions",
+      "description": "Manage roles and control what each profile can do.",
+      "createRole": "Create role",
+      "actionsMenu": "Actions for {name}",
+      "editRole": "Edit role",
+      "deleteRole": "Delete role",
+      "systemBadge": "System",
+      "emptyTitle": "No roles found",
+      "emptyDescription": "Create the first custom role for your team.",
+      "deleteDialogTitle": "Delete role",
+      "deleteDialogDescription": "Are you sure you want to delete role {name}? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleting": "Deleting...",
+      "tabs": {
+        "roles": "Roles",
+        "matrix": "Matrix"
+      },
+      "columns": {
+        "role": "Role",
+        "members": "Members",
+        "permissions": "Permissions"
+      },
+      "systemRoles": {
+        "owner": "Owner",
+        "admin": "Admin",
+        "member": "Member"
+      },
+      "groups": {
+        "users": "Users",
+        "members": "Members",
+        "roles": "Roles",
+        "permissions": "Permissions",
+        "company": "Company",
+        "brand": "Brand",
+        "campaigns": "Campaigns",
+        "files": "Files",
+        "pieces": "Pieces",
+        "credits": "Credits",
+        "generation": "Generation"
+      },
+      "keys": {
+        "user": {
+          "read": "View users",
+          "update": "Edit users"
+        },
+        "member": {
+          "read": "View members",
+          "invite": "Invite members",
+          "update": "Edit members",
+          "remove": "Remove members"
+        },
+        "role": {
+          "read": "View roles",
+          "create": "Create roles",
+          "update": "Edit roles",
+          "delete": "Delete roles"
+        },
+        "permission": {
+          "read": "View permissions"
+        },
+        "company": {
+          "read": "View company",
+          "update": "Edit company",
+          "delete": "Delete company"
+        },
+        "brand": {
+          "read": "View brand",
+          "update": "Edit brand"
+        },
+        "campaign": {
+          "read": "View campaigns",
+          "create": "Create campaigns",
+          "update": "Edit campaigns",
+          "delete": "Delete campaigns",
+          "generate": "Generate campaigns"
+        },
+        "file": {
+          "create": "Upload files",
+          "delete": "Delete files"
+        },
+        "piece": {
+          "read": "View pieces",
+          "approve": "Approve pieces",
+          "update": "Edit pieces"
+        },
+        "credit": {
+          "read": "View credits"
+        },
+        "generation": {
+          "create": "Create quick generation"
+        }
+      },
+      "roleDialog": {
+        "createTitle": "Create role",
+        "createDescription": "Set a name and select permissions for this role.",
+        "editTitle": "Edit role",
+        "editDescription": "Update the role name and permissions.",
+        "name": "Role name",
+        "namePlaceholder": "e.g. content-editor",
+        "nameFormat": "Use only letters, numbers, hyphen or underscore",
+        "permissions": "Permissions",
+        "permissionsRequired": "Select at least one permission",
+        "create": "Create role",
+        "save": "Save changes",
+        "saving": "Saving..."
+      },
+      "matrix": {
+        "sectionTitle": "Permission matrix",
+        "sectionDescription": "Quickly compare what each role can do.",
+        "permission": "Permission",
+        "system": "System",
+        "allowed": "Allowed",
+        "denied": "Denied",
+        "empty": "No roles available to display the matrix."
+      },
+      "toasts": {
+        "createSuccess": "Role created successfully.",
+        "createError": "Could not create role.",
+        "updateSuccess": "Role updated.",
+        "updateError": "Could not update role.",
+        "deleteSuccess": "Role deleted.",
+        "deleteError": "Could not delete role."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Company data and sensitive workspace actions.",
+      "general": {
+        "title": "Company information",
+        "description": "Name and identifier used in your workspace.",
+        "companyName": "Company name",
+        "companyNamePlaceholder": "e.g. Maria's Bakery",
+        "slug": "Identifier (slug)",
+        "slugReadonly": "The slug is generated automatically and cannot be changed here.",
+        "save": "Save changes",
+        "saving": "Saving..."
+      },
+      "danger": {
+        "title": "Danger zone",
+        "description": "Irreversible actions that affect the entire company.",
+        "deleteTitle": "Delete company",
+        "deleteDescription": "Permanently removes campaigns, brand, credits and history for this company.",
+        "deleteButton": "Delete company",
+        "deleteDialogTitle": "Permanently delete company",
+        "deleteDialogDescription": "This action cannot be undone. All data for {name} will be removed.",
+        "confirmLabel": "Type {name} to confirm",
+        "confirmRequired": "Confirm the company name",
+        "confirmMismatch": "The typed name does not match",
+        "cancel": "Cancel",
+        "deleteConfirm": "Delete permanently",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "deleteSuccess": "Company deleted successfully.",
+        "deleteError": "Could not delete company."
+      }
+    }
+  },
+  "workspacesHub": {
+    "title": "Companies",
+    "companies": "Companies",
+    "admin": "Admin",
+    "companiesDescription": "Choose a company to continue or create a new one.",
+    "newCompany": "New company",
+    "emptyTitle": "No companies found",
+    "emptyDescription": "Create your first company to start using Blister.",
+    "createFirstCompany": "Create company",
+    "openCompany": "Open {name}"
+  },
+  "account": {
+    "eyebrow": "Account",
+    "title": "Account settings",
+    "description": "Manage your personal profile and access credentials. These settings are independent of the workspace.",
+    "profile": {
+      "title": "Profile",
+      "fullName": "Full name",
+      "namePlaceholder": "Your name",
+      "emailReadonly": "Email cannot be changed.",
+      "saving": "Saving...",
+      "save": "Save changes",
+      "updateError": "Error updating profile.",
+      "updateSuccess": "Profile updated successfully."
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submitting": "Changing...",
+      "submit": "Change password",
+      "changeError": "Error changing password.",
+      "changeSuccess": "Password changed successfully."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Select the interface language. Changes will be applied immediately.",
+      "label": "Interface language",
+      "ptBR": "Português (Brasil)",
+      "en": "English"
+    }
+  },
+  "onboarding": {
+    "successMessage": "All set! Welcome to Blister.",
+    "saveError": "We couldn't save. Please try again.",
+    "validation": {
+      "companyNameMin": "At least 2 characters",
+      "nicheMin": "At least 2 characters",
+      "descriptionMin": "At least 10 characters",
+      "brandVoiceMin": "At least 10 characters"
+    },
+    "stepOne": {
+      "title": "What's your business called?",
+      "subtitle": "Share the essentials — you can complete the rest later in Brand Brain.",
+      "companyNameLabel": "Business name",
+      "companyNamePlaceholder": "e.g. Ana's Bakery",
+      "nicheLabel": "Industry / business type",
+      "nichePlaceholder": "e.g. Artisan bakery",
+      "descriptionLabel": "Short description",
+      "descriptionPlaceholder": "e.g. Custom cakes and sweets for parties and special occasions",
+      "logoLabel": "Logo (optional)",
+      "logoUploadText": "+ Logo",
+      "logoAlt": "Logo preview",
+      "logoChangeText": "Change logo",
+      "uploadError": "We couldn't upload the logo. Try another file.",
+      "uploading": "Uploading...",
+      "nextButton": "Continue"
+    },
+    "stepTwo": {
+      "title": "How do you communicate?",
+      "subtitle": "Describe how you talk to your customers.",
+      "examplesLabel": "Examples:",
+      "example1": "Relaxed and friendly, like chatting with a friend",
+      "example2": "Professional and straight to the point",
+      "example3": "Warm and welcoming, like hosting someone at home",
+      "label": "Tone of voice",
+      "placeholder": "Describe how you talk to your customers...",
+      "backButton": "Back",
+      "submitting": "Saving...",
+      "submitButton": "Get started"
+    }
+  },
+  "brand": {
+    "title": "Brand Brain",
+    "description": "Everything Blister needs to know about your business to create content your way",
+    "saveSuccess": "Brand Brain updated",
+    "saveError": "We couldn't save. Please try again.",
+    "saving": "Saving...",
+    "saveButton": "Save changes",
+    "progress": {
+      "title": "Brand Brain completeness",
+      "description": "{filled} of {total} fields filled",
+      "overall": "{percent}% complete"
+    },
+    "validation": {
+      "nicheMin": "At least 2 characters",
+      "descriptionMin": "At least 10 characters",
+      "brandVoiceMin": "At least 10 characters",
+      "colorNameRequired": "Enter a color name"
+    },
+    "tabs": {
+      "logo": "Logo",
+      "business": "Business",
+      "audience": "Audience",
+      "voice": "Tone of voice",
+      "social": "Social",
+      "visual": "Visual",
+      "offer": "Offer"
+    },
+    "logoSection": {
+      "title": "Logo",
+      "description": "Upload up to 4 logo variations for your brand",
+      "autoSaveHint": "Logos are saved automatically when you upload each file."
+    },
+    "assetsSection": {
+      "title": "Assets",
+      "description": "Reference images and visual materials to use in generated pieces",
+      "uploadTitle": "Upload visual asset",
+      "uploadHint": "JPG, PNG, WebP or SVG · max 5MB",
+      "uploadAria": "Upload visual asset",
+      "uploading": "Uploading...",
+      "uploadSuccess": "Asset added",
+      "uploadError": "Could not upload asset",
+      "removeSuccess": "Asset removed",
+      "removeError": "Could not remove asset",
+      "removeAria": "Remove {name}",
+      "empty": "No assets uploaded yet."
+    },
+    "businessSection": {
+      "title": "About the business",
+      "description": "Name, industry, and what your company does",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "e.g. Ana's Bakery",
+      "niche": "Industry / business type",
+      "nichePlaceholder": "e.g. Artisan bakery",
+      "description": "Short description",
+      "descriptionPlaceholder": "What your company does in a few words"
+    },
+    "audienceSection": {
+      "title": "Audience and goal",
+      "description": "Who you speak to and what you want to achieve with marketing",
+      "targetAudience": "Main target audience",
+      "targetAudiencePlaceholder": "e.g. Women aged 25–45 looking for sweets for home parties",
+      "marketingObjective": "Main marketing goal",
+      "marketingObjectivePlaceholder": "Select your focus"
+    },
+    "marketingObjectives": {
+      "SELL_MORE": "Sell more",
+      "GENERATE_LEADS": "Generate leads",
+      "STRENGTHEN_BRAND": "Strengthen brand"
+    },
+    "voiceSection": {
+      "title": "Tone of voice",
+      "description": "How you communicate with your customers"
+    },
+    "socialNetworks": {
+      "title": "Social networks",
+      "description": "Where you publish content today",
+      "options": {
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "youtube": "YouTube",
+        "whatsapp": "WhatsApp"
+      }
+    },
+    "visualSection": {
+      "title": "Visual identity",
+      "description": "Colors and style that represent your brand",
+      "palette": "Brand colors",
+      "coreColors": "Core colors",
+      "coreColorsDescription": "Every brand needs a primary and a secondary color.",
+      "primaryColor": "Primary color",
+      "secondaryColor": "Secondary color",
+      "primaryDefaultName": "Primary color",
+      "secondaryDefaultName": "Secondary color",
+      "additionalDefaultName": "Color {index}",
+      "primaryColorNamePlaceholder": "e.g. Main purple",
+      "secondaryColorNamePlaceholder": "e.g. Accent pink",
+      "primaryColorUsagePlaceholder": "e.g. Post backgrounds, headlines, and main elements",
+      "secondaryColorUsagePlaceholder": "e.g. Details, buttons, and highlights",
+      "additionalColors": "Other colors",
+      "additionalColorsDescription": "Add complementary colors with usage guidance.",
+      "additionalColorsEmpty": "No complementary colors added yet.",
+      "additionalColorTitle": "Complementary color {index}",
+      "additionalColorNamePlaceholder": "e.g. Support green",
+      "additionalColorUsagePlaceholder": "e.g. When to use this color in assets",
+      "colorName": "Color name",
+      "colorUsage": "How to use",
+      "optional": "optional",
+      "addColor": "Add color",
+      "removeColor": "Remove color",
+      "visualStyle": "Visual style",
+      "visualStylePlaceholder": "Select a style",
+      "typography": "Preferred typography",
+      "typographyPlaceholder": "e.g. Modern sans-serif, elegant"
+    },
+    "visualStyles": {
+      "minimal": "Minimal",
+      "modern": "Modern",
+      "traditional": "Traditional",
+      "bold": "Bold",
+      "elegant": "Elegant"
+    },
+    "offerSection": {
+      "title": "Products and differentiators",
+      "description": "What you sell and what sets you apart",
+      "mainProducts": "Main products or services",
+      "mainProductsPlaceholder": "List your main products or services",
+      "differentiators": "Company differentiators",
+      "differentiatorsPlaceholder": "What makes your business unique?"
+    },
+    "logo": {
+      "successMessage": "Logo updated",
+      "errorMessage": "We couldn't update the logo",
+      "uploadText": "+ Logo",
+      "uploadAria": "Upload {variant} logo",
+      "alt": "Brand logo",
+      "formatHint": "JPG, PNG or SVG · max 5MB · saved automatically",
+      "variants": {
+        "primary": "Primary",
+        "horizontal": "Horizontal",
+        "icon": "Icon",
+        "monochrome": "Monochrome"
+      }
+    },
+    "voice": {
+      "placeholder": "Describe how you talk to your customers...",
+      "saveButton": "Save tone of voice",
+      "saving": "Saving...",
+      "successMessage": "Tone of voice updated.",
+      "errorMessage": "Could not save tone of voice."
+    }
+  },
+  "credits": {
+    "balanceTitle": "Balance: US$ {amount}"
+  },
+  "agents": {
+    "strategist": "Plan content",
+    "strategistDescription": "Turn a brief into a content plan with themes, angles, and a suggested calendar.",
+    "strategistPlaceholder": "E.g.: Mother's Day posts for my bakery, focused on pre-orders",
+    "strategistSuggestion1": "Content plan for a product launch",
+    "strategistSuggestion2": "Post calendar for seasonal dates",
+    "strategistSuggestion3": "Content strategy to increase orders",
+    "copywriter": "Create copy",
+    "copywriterDescription": "Generate captions and hashtags aligned with your brand voice.",
+    "copywriterPlaceholder": "E.g.: Caption for a carrot cake post with a weekend promo",
+    "copywriterSuggestion1": "Caption for a flash sale",
+    "copywriterSuggestion2": "Copy to introduce a new product",
+    "copywriterSuggestion3": "Caption with a WhatsApp call to action",
+    "designer": "Generate image",
+    "designerDescription": "Create post visuals using your brand identity.",
+    "designerPlaceholder": "E.g.: Square artwork for a carrot cake launch post",
+    "designerSuggestion1": "Artwork for a weekend promotion",
+    "designerSuggestion2": "Brand visual with logo and palette",
+    "designerSuggestion3": "Image to announce a seasonal menu",
+    "post": "Create full post",
+    "postDescription": "Generate image, caption, and hashtags in one flow.",
+    "postPlaceholder": "E.g.: Full post about carrot cake launch with a promo",
+    "postSuggestion1": "Full post for a product launch",
+    "postSuggestion2": "Visual + copy package for a promotion",
+    "postSuggestion3": "Holiday post with brand identity",
+    "status": {
+      "queued": "Queued",
+      "running": "Generating",
+      "paused": "Waiting for you",
+      "completed": "Completed",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "reviewPending": "Pending review",
+      "reviewApproved": "Approved",
+      "reviewRejected": "Rejected",
+      "reviewEdited": "Edited"
+    },
+    "history": {
+      "title": "History",
+      "count": "{count, plural, one {# run} other {# runs}}",
+      "newRun": "New run",
+      "empty": "No runs yet",
+      "emptyHint": "Describe what you need in the Agent tab to get started.",
+      "loading": "Loading history",
+      "untitledRun": "Untitled"
+    },
+    "tabs": {
+      "agent": "Agent",
+      "history": "History"
+    },
+    "chat": {
+      "greeting": "Where should we start?",
+      "subtitle": "Describe what you need in one sentence. Pick a suggestion below or write your own.",
+      "newChat": "New chat"
+    },
+    "input": {
+      "title": "What do you need from {agent}?",
+      "promptLabel": "Describe in one sentence",
+      "campaignLabel": "Campaign (optional)",
+      "campaignPlaceholder": "Select a campaign",
+      "noCampaign": "No campaign",
+      "estimatedCost": "Estimated cost: ~US$ {amount}",
+      "submit": "Generate",
+      "submitting": "Starting..."
+    },
+    "progress": {
+      "runningTitle": "Working on your request",
+      "runningDescription": "Follow the progress below.",
+      "pausedTitle": "We need more information"
+    },
+    "clarification": {
+      "title": "Complete the information",
+      "description": "Answer to continue generation.",
+      "genericTitle": "Confirm to continue",
+      "genericDescription": "We need your confirmation to proceed.",
+      "fieldRequired": "Required field",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "submitting": "Sending..."
+    },
+    "surface": {
+      "subtitle": "Describe what you need and review the result here",
+      "promptLabel": "Your request",
+      "startSuccess": "Generation started",
+      "startError": "Could not start generation",
+      "resumeSuccess": "Resuming generation",
+      "resumeError": "Could not resume",
+      "cancelSuccess": "Generation cancelled",
+      "cancelError": "Could not cancel",
+      "cancelRun": "Cancel",
+      "runNotFound": "Run not found",
+      "newRun": "New run"
+    },
+    "output": {
+      "failedTitle": "Generation failed",
+      "failedDescription": "Try again or adjust your request.",
+      "strategist": {
+        "summary": "Summary",
+        "plan": "Content plan",
+        "angles": "Suggested angles",
+        "calendar": "Suggested calendar",
+        "date": "Date",
+        "topic": "Topic",
+        "format": "Format"
+      },
+      "copywriter": {
+        "caption": "Caption",
+        "hashtags": "Hashtags",
+        "variations": "Variations"
+      },
+      "designer": {
+        "preview": "Generated visual",
+        "previewAlt": "Generated post visual",
+        "noImage": "Image not available yet",
+        "prompt": "Visual brief"
+      },
+      "post": {
+        "title": "Full post",
+        "description": "Visual, caption, and hashtags ready for review."
+      }
+    },
+    "review": {
+      "title": "Review the result",
+      "description": "Approve, edit, or request a new version.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "edit": "Edit",
+      "regenerate": "Regenerate",
+      "approvedMessage": "Result approved and saved to history.",
+      "rejectedMessage": "Result rejected. You can generate a new version.",
+      "approveSuccess": "Approved successfully",
+      "approveError": "Could not approve",
+      "rejectSuccess": "Result rejected",
+      "rejectError": "Could not reject",
+      "editSuccess": "Changes saved",
+      "editError": "Could not save",
+      "regenerateSuccess": "New generation started",
+      "regenerateError": "Could not regenerate",
+      "rejectDialog": {
+        "title": "Reject result",
+        "description": "Tell us what did not work so we can improve future generations.",
+        "reasonLabel": "Reason",
+        "reasonPlaceholder": "E.g.: Tone too formal, irrelevant hashtags...",
+        "cancel": "Cancel",
+        "submit": "Reject",
+        "submitting": "Sending..."
+      },
+      "editDialog": {
+        "title": "Edit copy",
+        "description": "Adjust caption and hashtags before approving.",
+        "captionLabel": "Caption",
+        "hashtagsLabel": "Hashtags",
+        "cancel": "Cancel",
+        "submit": "Save",
+        "submitting": "Saving..."
+      },
+      "regenerateDialog": {
+        "title": "Regenerate",
+        "description": "Optionally describe what should change in the new version.",
+        "instructionLabel": "Instruction (optional)",
+        "instructionPlaceholder": "E.g.: Make the caption shorter and use a more casual tone",
+        "cancel": "Cancel",
+        "submit": "Regenerate",
+        "submitting": "Starting..."
+      }
+    },
+    "campaigns": {
+      "title": "Campaigns",
+      "description": "Organize context, files, and runs by marketing project.",
+      "createButton": "New campaign",
+      "emptyTitle": "No campaigns yet",
+      "emptyDescription": "Create a campaign to group generations and context.",
+      "activeBadge": "Active",
+      "deleteButton": "Archive",
+      "deleteSuccess": "Campaign archived",
+      "createSuccess": "Campaign created",
+      "createDialog": {
+        "title": "New campaign",
+        "description": "Name and objective are enough to get started.",
+        "nameLabel": "Name",
+        "namePlaceholder": "E.g.: Mother's Day 2026",
+        "objectiveLabel": "Objective",
+        "objectivePlaceholder": "E.g.: Increase pre-orders",
+        "contextLabel": "Context (optional)",
+        "contextPlaceholder": "Extra information to guide generations",
+        "cancel": "Cancel",
+        "submit": "Create campaign"
+      }
+    },
+    "historyPage": {
+      "title": "History",
+      "description": "All runs from your company in one place.",
+      "empty": "No runs found",
+      "emptyDescription": "Use the agents to generate content and it will appear here.",
+      "untitledRun": "Untitled",
+      "openRun": "Open",
+      "columns": {
+        "agent": "Agent",
+        "prompt": "Request",
+        "result": "Result",
+        "status": "Status",
+        "date": "Date"
+      }
+    },
+    "creditsPage": {
+      "title": "Credits",
+      "description": "Track your balance and estimated cost per generation type.",
+      "balanceTitle": "Available balance",
+      "balanceHint": "Credits are debited after each completed generation.",
+      "lowBalanceHint": "Low balance. Some generations may be blocked.",
+      "costsTitle": "Estimated cost per generation",
+      "rechargeTitle": "Recharge credits",
+      "rechargeDescription": "Automatic recharge will be available soon.",
+      "rechargeButton": "Recharge (coming soon)"
+    }
+  },
+  "platformAdmin": {
+    "eyebrow": "Account",
+    "title": "Platform admin",
+    "description": "Manage global platform access and support sessions.",
+    "adminsCard": {
+      "title": "Platform admins",
+      "description": "{count, plural, one {# global access configured.} other {# global accesses configured.}}",
+      "manage": "Manage admins"
+    },
+    "supportCard": {
+      "title": "Support",
+      "description": "Active support sessions and recent history.",
+      "view": "View sessions"
+    },
+    "header": {
+      "title": "Platform Admin",
+      "description": "Access management, costs, and AI models for the platform"
+    },
+    "nav": {
+      "overview": "Overview",
+      "overviewDescription": "Global platform administration overview.",
+      "admins": "Admins",
+      "adminsDescription": "Global platform access and governance.",
+      "support": "Support",
+      "supportDescription": "Active support sessions and recent history.",
+      "aiCatalog": "AI Catalog",
+      "aiCatalogDescription": "AI providers and models available on the platform.",
+      "rag": "RAG",
+      "ragDescription": "Global indexing and retrieval parameters.",
+      "credits": "Credits",
+      "creditsDescription": "Credit settings and company balances."
+    },
+    "aiCatalogPage": {
+      "title": "AI Catalog",
+      "description": "Manage AI providers and models available on the platform."
+    },
+    "ragPage": {
+      "title": "RAG",
+      "description": "Set the global indexing and retrieval parameters."
+    },
+    "creditsPage": {
+      "title": "Credits",
+      "description": "Configure platform credits and track company balances."
+    },
+    "adminsPage": {
+      "title": "Global admins",
+      "description": "Manage who can operate the central platform admin. Keep this group small, auditable, and reviewed frequently.",
+      "grantAccess": "Grant access",
+      "assignments": "Assignments",
+      "assignmentsHint": "Total active global accesses in platform admin.",
+      "owners": "Owners",
+      "ownersHint": "People with maximum control of the global layer. Review carefully.",
+      "admins": "Admins",
+      "adminsHint": "Operators with global access without full platform control.",
+      "user": "User",
+      "role": "Role",
+      "grantedBy": "Granted by",
+      "grantedAt": "Granted at",
+      "removeSelected": "Remove selected",
+      "emptyTitle": "No global admins",
+      "emptyDescription": "Assign the first platform role to enable central account operations.",
+      "emptyAction": "Grant first access",
+      "removeDialogTitle": "Remove global role",
+      "removeDialogDescription": "Global access for {userId} as {role} will be removed.",
+      "removing": "Removing...",
+      "remove": "Remove role",
+      "assignmentId": "Assignment {id}"
+    },
+    "roles": {
+      "platform_admin": "Platform admin",
+      "platform_owner": "Platform owner"
+    },
+    "roleDialog": {
+      "title": "Assign global role",
+      "description": "Grants platform admin access to the specified user.",
+      "userId": "User ID",
+      "userIdPlaceholder": "user_123",
+      "role": "Role",
+      "rolePlaceholder": "Select a role",
+      "grant": "Grant access",
+      "granting": "Granting..."
+    },
+    "toasts": {
+      "grantSuccess": "Platform access granted.",
+      "grantError": "Error assigning platform access.",
+      "removeSuccess": "Platform access removed.",
+      "removeError": "Error removing platform access."
+    },
+    "aiCatalogTab": {
+      "providersTitle": "Providers",
+      "noProviders": "No providers registered",
+      "noProvidersDescription": "Register the first provider to enable models on the platform.",
+      "modelsTitle": "Models",
+      "noModels": "No models registered",
+      "noModelsDescription": "Register models linked to active providers.",
+      "nameColumn": "Name",
+      "slugColumn": "Slug",
+      "statusColumn": "Status",
+      "externalIdColumn": "External ID",
+      "inputCostColumn": "Input cost",
+      "outputCostColumn": "Output cost"
+    },
+    "ragTab": {
+      "chunkSizeLabel": "Chunk Size (tokens)",
+      "chunkOverlapLabel": "Chunk Overlap (tokens)",
+      "topKLabel": "Top-K",
+      "rerankEnabledLabel": "Reranking enabled",
+      "saveSuccess": "RAG settings saved",
+      "saveError": "Error saving settings",
+      "saving": "Saving...",
+      "submitButton": "Save RAG settings"
+    },
+    "creditsTab": {
+      "globalSettingsTitle": "Global Settings",
+      "freeTierLabel": "Free Tier (US$)",
+      "markupLabel": "Default markup (e.g. 1.2 = 20%)",
+      "minCostLabel": "Minimum cost per run (US$)",
+      "saving": "Saving...",
+      "submitButton": "Save",
+      "companiesTitle": "Companies",
+      "noCompanies": "No companies registered",
+      "noCompaniesDescription": "Companies will appear here as they are created on the platform.",
+      "companyNameColumn": "Company",
+      "ownerEmailColumn": "Owner email",
+      "balanceColumn": "Balance",
+      "saveSuccess": "Credit settings saved",
+      "saveError": "Error saving"
+    }
+  }
+}

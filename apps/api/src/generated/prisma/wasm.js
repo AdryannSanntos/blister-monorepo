@@ -99,6 +99,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  userType: 'userType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -139,18 +140,8 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.OrganizationScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  logo: 'logo',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
   name: 'name',
   isSystem: 'isSystem',
   createdAt: 'createdAt',
@@ -163,175 +154,11 @@ exports.Prisma.RolePermissionScalarFieldEnum = {
   key: 'key'
 };
 
-exports.Prisma.MembershipScalarFieldEnum = {
+exports.Prisma.UserRoleAssignmentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  organizationId: 'organizationId',
-  active: 'active',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.MembershipRoleScalarFieldEnum = {
-  id: 'id',
-  membershipId: 'membershipId',
   roleId: 'roleId',
   assignedAt: 'assignedAt'
-};
-
-exports.Prisma.MembershipPermissionOverrideScalarFieldEnum = {
-  id: 'id',
-  membershipId: 'membershipId',
-  key: 'key',
-  effect: 'effect'
-};
-
-exports.Prisma.InvitationScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  inviterId: 'inviterId',
-  organizationId: 'organizationId',
-  roleId: 'roleId',
-  status: 'status',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.OnboardingDraftScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  currentStep: 'currentStep',
-  data: 'data',
-  publishedAt: 'publishedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContextSourceScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  description: 'description',
-  sourceKind: 'sourceKind',
-  sourceUrl: 'sourceUrl',
-  fileName: 'fileName',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  pipelineStatus: 'pipelineStatus',
-  pipelineError: 'pipelineError',
-  extractedContent: 'extractedContent',
-  normalizedContent: 'normalizedContent',
-  reviewNotes: 'reviewNotes',
-  reviewedAt: 'reviewedAt',
-  reviewedById: 'reviewedById',
-  tags: 'tags',
-  category: 'category',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContextArtifactScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  syncStatus: 'syncStatus',
-  syncedAt: 'syncedAt',
-  syncError: 'syncError',
-  sourceCount: 'sourceCount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AssetScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  description: 'description',
-  sourceKind: 'sourceKind',
-  sourceUrl: 'sourceUrl',
-  fileName: 'fileName',
-  mimeType: 'mimeType',
-  visibleType: 'visibleType',
-  visibleCategory: 'visibleCategory',
-  tags: 'tags',
-  contextRole: 'contextRole',
-  operationalRole: 'operationalRole',
-  contextStatus: 'contextStatus',
-  operationalStatus: 'operationalStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AssetRelationScalarFieldEnum = {
-  id: 'id',
-  assetId: 'assetId',
-  kind: 'kind',
-  value: 'value'
-};
-
-exports.Prisma.DesignSystemProfileScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  brandEssence: 'brandEssence',
-  desiredPerception: 'desiredPerception',
-  visualStyle: 'visualStyle',
-  antiPatterns: 'antiPatterns',
-  conceptualReferences: 'conceptualReferences',
-  aiNotes: 'aiNotes',
-  artifactSyncStatus: 'artifactSyncStatus',
-  artifactSyncedAt: 'artifactSyncedAt',
-  artifactSyncError: 'artifactSyncError',
-  artifactObjectKey: 'artifactObjectKey',
-  contextArtifactSyncStatus: 'contextArtifactSyncStatus',
-  contextArtifactSyncedAt: 'contextArtifactSyncedAt',
-  contextArtifactSyncError: 'contextArtifactSyncError',
-  contextArtifactObjectKey: 'contextArtifactObjectKey',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignColorGroupScalarFieldEnum = {
-  id: 'id',
-  designSystemId: 'designSystemId',
-  name: 'name',
-  description: 'description',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignColorTokenScalarFieldEnum = {
-  id: 'id',
-  colorGroupId: 'colorGroupId',
-  name: 'name',
-  value: 'value',
-  displayFormat: 'displayFormat',
-  semanticRole: 'semanticRole',
-  usageNote: 'usageNote',
-  restrictionNote: 'restrictionNote',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignAssetScalarFieldEnum = {
-  id: 'id',
-  designSystemId: 'designSystemId',
-  organizationId: 'organizationId',
-  primaryRole: 'primaryRole',
-  secondaryTags: 'secondaryTags',
-  title: 'title',
-  description: 'description',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  fileName: 'fileName',
-  contentType: 'contentType',
-  size: 'size',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PlatformRoleAssignmentScalarFieldEnum = {
@@ -345,7 +172,6 @@ exports.Prisma.PlatformRoleAssignmentScalarFieldEnum = {
 exports.Prisma.SupportSessionScalarFieldEnum = {
   id: 'id',
   actorUserId: 'actorUserId',
-  organizationId: 'organizationId',
   reason: 'reason',
   status: 'status',
   startedAt: 'startedAt',
@@ -355,7 +181,6 @@ exports.Prisma.SupportSessionScalarFieldEnum = {
 exports.Prisma.AuditLogScalarFieldEnum = {
   id: 'id',
   actorUserId: 'actorUserId',
-  targetOrganizationId: 'targetOrganizationId',
   targetUserId: 'targetUserId',
   action: 'action',
   resourceType: 'resourceType',
@@ -364,386 +189,265 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AIProviderScalarFieldEnum = {
+exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
-  slug: 'slug',
+  ownerUserId: 'ownerUserId',
   name: 'name',
-  description: 'description',
-  status: 'status',
-  iconMetadata: 'iconMetadata',
-  capabilityMetadata: 'capabilityMetadata',
-  pricingMetadata: 'pricingMetadata',
-  limitsMetadata: 'limitsMetadata',
-  schemaMetadata: 'schemaMetadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AIModelScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
   slug: 'slug',
-  name: 'name',
-  description: 'description',
-  externalModelId: 'externalModelId',
-  status: 'status',
-  capabilityMetadata: 'capabilityMetadata',
-  pricingMetadata: 'pricingMetadata',
-  limitsMetadata: 'limitsMetadata',
-  schemaMetadata: 'schemaMetadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AICredentialScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  organizationId: 'organizationId',
-  label: 'label',
-  value: 'value',
-  schemaMetadata: 'schemaMetadata',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AIProviderPolicyScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  organizationId: 'organizationId',
-  allowedModelIds: 'allowedModelIds',
-  metadata: 'metadata',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentTemplateScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  name: 'name',
-  description: 'description',
-  category: 'category',
-  status: 'status',
-  allowedBlocks: 'allowedBlocks',
-  defaultFlow: 'defaultFlow',
-  defaultInputSchema: 'defaultInputSchema',
-  defaultOutputSchema: 'defaultOutputSchema',
-  executionProfile: 'executionProfile',
-  modelPolicy: 'modelPolicy',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyAgentScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  templateId: 'templateId',
-  slug: 'slug',
-  name: 'name',
-  description: 'description',
-  status: 'status',
-  allowedTools: 'allowedTools',
-  suggestedMessages: 'suggestedMessages',
-  activeVersionId: 'activeVersionId',
   onboardingCompletedAt: 'onboardingCompletedAt',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SystemAgentConfigScalarFieldEnum = {
+exports.Prisma.BrandProfileScalarFieldEnum = {
   id: 'id',
-  key: 'key',
-  providerId: 'providerId',
-  modelId: 'modelId',
-  temperature: 'temperature',
-  maxOutputTokens: 'maxOutputTokens',
-  enabled: 'enabled',
-  updatedByUserId: 'updatedByUserId',
+  companyId: 'companyId',
+  logoStorageKey: 'logoStorageKey',
+  logoVariants: 'logoVariants',
+  brandAssets: 'brandAssets',
+  brandVoice: 'brandVoice',
+  palette: 'palette',
+  typography: 'typography',
+  visualStyle: 'visualStyle',
+  niche: 'niche',
+  description: 'description',
+  targetAudience: 'targetAudience',
+  marketingObjective: 'marketingObjective',
+  socialNetworks: 'socialNetworks',
+  mainProducts: 'mainProducts',
+  differentiators: 'differentiators',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.AgentVersionScalarFieldEnum = {
+exports.Prisma.CampaignScalarFieldEnum = {
   id: 'id',
-  agentId: 'agentId',
-  versionNumber: 'versionNumber',
+  companyId: 'companyId',
+  name: 'name',
+  objective: 'objective',
+  context: 'context',
   status: 'status',
-  flowDefinition: 'flowDefinition',
-  inputSchema: 'inputSchema',
-  outputSchema: 'outputSchema',
-  notes: 'notes',
-  createdByUserId: 'createdByUserId',
-  publishedByUserId: 'publishedByUserId',
-  publishedAt: 'publishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CampaignFileScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  name: 'name',
+  mimeType: 'mimeType',
+  storageKey: 'storageKey',
+  type: 'type',
+  status: 'status',
+  extractedText: 'extractedText',
+  caption: 'caption',
+  sizeBytes: 'sizeBytes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContentPieceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  pipelineRunId: 'pipelineRunId',
+  agentRunId: 'agentRunId',
+  format: 'format',
+  status: 'status',
+  caption: 'caption',
+  hashtags: 'hashtags',
+  imageStorageKey: 'imageStorageKey',
+  htmlSnapshot: 'htmlSnapshot',
+  creditCost: 'creditCost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  approvedAt: 'approvedAt'
+};
+
+exports.Prisma.PipelineRunScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  triggeredByUserId: 'triggeredByUserId',
+  userInput: 'userInput',
+  status: 'status',
+  agentOrder: 'agentOrder',
+  creditCost: 'creditCost',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
+  pipelineRunId: 'pipelineRunId',
+  campaignId: 'campaignId',
   agentId: 'agentId',
-  agentVersionId: 'agentVersionId',
+  parentRunId: 'parentRunId',
+  feedbackId: 'feedbackId',
   status: 'status',
+  currentStepKey: 'currentStepKey',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
-  createdByUserId: 'createdByUserId',
+  pauseReason: 'pauseReason',
+  pauseFormSchema: 'pauseFormSchema',
+  creditCost: 'creditCost',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  attemptCount: 'attemptCount',
-  completedAt: 'completedAt',
-  lastAttemptAt: 'lastAttemptAt',
-  leaseExpiresAt: 'leaseExpiresAt',
-  processingLeaseId: 'processingLeaseId',
-  processingMetadata: 'processingMetadata',
-  queuePosition: 'queuePosition',
-  sourceMessageId: 'sourceMessageId',
   startedAt: 'startedAt',
-  threadId: 'threadId',
-  rootRunId: 'rootRunId',
-  parentRunId: 'parentRunId',
-  parentStepId: 'parentStepId',
-  depth: 'depth',
-  currentBlockId: 'currentBlockId',
-  currentBlockType: 'currentBlockType',
-  waitingReason: 'waitingReason',
-  resumeStatus: 'resumeStatus',
-  chunkIdsRetrieved: 'chunkIdsRetrieved',
-  durationMs: 'durationMs',
-  intentClassified: 'intentClassified',
-  sourcesSelected: 'sourcesSelected',
-  tokensUsed: 'tokensUsed'
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.AgentRunStepScalarFieldEnum = {
   id: 'id',
-  runId: 'runId',
-  blockKey: 'blockKey',
-  blockType: 'blockType',
+  agentRunId: 'agentRunId',
+  stepKey: 'stepKey',
+  stepIndex: 'stepIndex',
   status: 'status',
+  resultType: 'resultType',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
+  llmModel: 'llmModel',
+  tokensInput: 'tokensInput',
+  tokensOutput: 'tokensOutput',
+  creditCost: 'creditCost',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
-  metadata: 'metadata',
-  sequence: 'sequence',
-  branchKey: 'branchKey',
-  inputType: 'inputType',
-  outputType: 'outputType',
-  statePayload: 'statePayload',
-  uiOutputPayload: 'uiOutputPayload'
+  updatedAt: 'updatedAt'
 };
 
-exports.Prisma.AgentContextProfileScalarFieldEnum = {
+exports.Prisma.AgentFeedbackScalarFieldEnum = {
   id: 'id',
+  companyId: 'companyId',
+  contentPieceId: 'contentPieceId',
   agentId: 'agentId',
-  instructions: 'instructions',
-  notes: 'notes',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  feedbackType: 'feedbackType',
+  userId: 'userId',
+  reason: 'reason',
+  originalContent: 'originalContent',
+  editedContent: 'editedContent',
+  instruction: 'instruction',
+  contentHash: 'contentHash',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentContextFileScalarFieldEnum = {
+exports.Prisma.LearningSignalScalarFieldEnum = {
   id: 'id',
-  profileId: 'profileId',
-  filename: 'filename',
-  objectKey: 'objectKey',
-  mimeType: 'mimeType',
-  sizeBytes: 'sizeBytes',
-  publicUrl: 'publicUrl',
-  status: 'status',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentContextReferenceScalarFieldEnum = {
-  id: 'id',
-  profileId: 'profileId',
-  sourceType: 'sourceType',
-  sourceId: 'sourceId',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentRunContextSnapshotScalarFieldEnum = {
-  id: 'id',
-  runId: 'runId',
-  layers: 'layers',
-  resolvedSummary: 'resolvedSummary',
+  feedbackId: 'feedbackId',
+  companyId: 'companyId',
+  agentId: 'agentId',
+  signalType: 'signalType',
+  signalValue: 'signalValue',
+  weight: 'weight',
   metadata: 'metadata',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentRunContextSnapshotItemScalarFieldEnum = {
+exports.Prisma.AgentMemoryScalarFieldEnum = {
   id: 'id',
-  snapshotId: 'snapshotId',
-  sourceType: 'sourceType',
-  sourceId: 'sourceId',
-  label: 'label',
-  content: 'content',
+  companyId: 'companyId',
+  agentId: 'agentId',
   summary: 'summary',
-  metadata: 'metadata',
+  signals: 'signals',
+  lastFeedbackId: 'lastFeedbackId',
+  updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentRunSuspensionScalarFieldEnum = {
+exports.Prisma.CreditBalanceScalarFieldEnum = {
   id: 'id',
-  runId: 'runId',
-  stepId: 'stepId',
-  type: 'type',
-  status: 'status',
-  resolvedPayload: 'resolvedPayload',
-  roundNumber: 'roundNumber',
-  metadata: 'metadata',
-  answeredAt: 'answeredAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentRunSuspensionResponseScalarFieldEnum = {
-  id: 'id',
-  suspensionId: 'suspensionId',
-  answers: 'answers',
-  roundNumber: 'roundNumber',
-  metadata: 'metadata',
-  answeredById: 'answeredById',
-  answeredAt: 'answeredAt'
-};
-
-exports.Prisma.AgentChatThreadScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  agentId: 'agentId',
-  scope: 'scope',
-  title: 'title',
-  parentThreadId: 'parentThreadId',
-  branchedFromMessageId: 'branchedFromMessageId',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentChatMessageScalarFieldEnum = {
-  id: 'id',
-  threadId: 'threadId',
-  agentRunId: 'agentRunId',
-  role: 'role',
-  content: 'content',
-  metadata: 'metadata',
-  editedFromMessageId: 'editedFromMessageId',
-  regeneratedFromMessageId: 'regeneratedFromMessageId',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.AgentChatToolCallScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  agentId: 'agentId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  toolName: 'toolName',
-  status: 'status',
-  inputPayload: 'inputPayload',
-  outputPayload: 'outputPayload',
-  errorMessage: 'errorMessage',
-  durationMs: 'durationMs',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationEventScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  sequence: 'sequence',
-  eventType: 'eventType',
-  status: 'status',
-  payload: 'payload',
-  idempotencyKey: 'idempotencyKey',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationMessageProjectionScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  status: 'status',
-  text: 'text',
-  citations: 'citations',
-  isStreaming: 'isStreaming',
-  isCompleted: 'isCompleted',
-  isFailed: 'isFailed',
-  errorMessage: 'errorMessage',
-  lastSequence: 'lastSequence',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ConversationToolCallProjectionScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  toolCallId: 'toolCallId',
-  groupId: 'groupId',
-  toolName: 'toolName',
-  status: 'status',
-  inputPayload: 'inputPayload',
-  outputPayload: 'outputPayload',
-  errorMessage: 'errorMessage',
-  durationMs: 'durationMs',
-  displayOrder: 'displayOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  runId: 'runId',
-  entryType: 'entryType',
-  amount: 'amount',
-  balanceAfter: 'balanceAfter',
-  metadata: 'metadata',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt',
-  idempotencyKey: 'idempotencyKey'
-};
-
-exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  runId: 'runId',
-  providerId: 'providerId',
-  modelId: 'modelId',
+  companyId: 'companyId',
   amount: 'amount',
   currency: 'currency',
-  unit: 'unit',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CreditLedgerScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  type: 'type',
+  amount: 'amount',
+  balanceAfter: 'balanceAfter',
+  currency: 'currency',
+  agentRunStepId: 'agentRunStepId',
+  agentRunId: 'agentRunId',
+  description: 'description',
   metadata: 'metadata',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlatformCreditSettingsScalarFieldEnum = {
+  id: 'id',
+  freeTierAmount: 'freeTierAmount',
+  currency: 'currency',
+  markupDefault: 'markupDefault',
+  minRunCost: 'minRunCost',
+  updatedAt: 'updatedAt',
+  updatedByUserId: 'updatedByUserId'
+};
+
+exports.Prisma.AiProviderScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  isEnabled: 'isEnabled',
   createdAt: 'createdAt',
-  idempotencyKey: 'idempotencyKey'
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AiProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  label: 'label',
+  encryptedValue: 'encryptedValue',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AiModelScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  externalId: 'externalId',
+  name: 'name',
+  isEnabled: 'isEnabled',
+  inputCostPer1k: 'inputCostPer1k',
+  outputCostPer1k: 'outputCostPer1k',
+  maxTokens: 'maxTokens',
+  capabilities: 'capabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentModelPolicyScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  modelId: 'modelId',
+  markupMultiplier: 'markupMultiplier',
+  isEnabled: 'isEnabled',
+  minCostPerRun: 'minCostPerRun',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PipelineAgentConfigScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  sortOrder: 'sortOrder',
+  isEnabled: 'isEnabled'
 };
 
 exports.Prisma.RagDocumentScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
   sourceType: 'sourceType',
   sourceId: 'sourceId',
   title: 'title',
@@ -757,7 +461,10 @@ exports.Prisma.RagDocumentScalarFieldEnum = {
 exports.Prisma.RagChunkScalarFieldEnum = {
   id: 'id',
   documentId: 'documentId',
-  sequence: 'sequence',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  agentId: 'agentId',
+  chunkIndex: 'chunkIndex',
   content: 'content',
   tokenCount: 'tokenCount',
   metadata: 'metadata',
@@ -767,45 +474,32 @@ exports.Prisma.RagChunkScalarFieldEnum = {
 exports.Prisma.RagEmbeddingScalarFieldEnum = {
   id: 'id',
   chunkId: 'chunkId',
-  organizationId: 'organizationId',
-  model: 'model',
+  embeddingModel: 'embeddingModel',
   dimensions: 'dimensions',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.RagIndexJobScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
   documentId: 'documentId',
   status: 'status',
   errorMessage: 'errorMessage',
-  triggeredByUserId: 'triggeredByUserId',
+  attempts: 'attempts',
+  scheduledAt: 'scheduledAt',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.BrainVersionScalarFieldEnum = {
+exports.Prisma.RagPlatformSettingsScalarFieldEnum = {
   id: 'id',
-  brainId: 'brainId',
-  versionNumber: 'versionNumber',
-  status: 'status',
-  data: 'data',
-  notes: 'notes',
-  createdByUserId: 'createdByUserId',
-  publishedByUserId: 'publishedByUserId',
-  publishedAt: 'publishedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyBrainScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  activeVersionId: 'activeVersionId',
-  createdAt: 'createdAt',
+  embeddingModelId: 'embeddingModelId',
+  chunkSize: 'chunkSize',
+  chunkOverlap: 'chunkOverlap',
+  topK: 'topK',
+  rerankEnabled: 'rerankEnabled',
+  captionModelId: 'captionModelId',
   updatedAt: 'updatedAt'
 };
 
@@ -838,63 +532,152 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.UserType = exports.$Enums.UserType = {
+  BUSINESS: 'BUSINESS',
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+};
 
+exports.MarketingObjective = exports.$Enums.MarketingObjective = {
+  SELL_MORE: 'SELL_MORE',
+  GENERATE_LEADS: 'GENERATE_LEADS',
+  STRENGTHEN_BRAND: 'STRENGTHEN_BRAND'
+};
+
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.CampaignFileType = exports.$Enums.CampaignFileType = {
+  IMAGE: 'IMAGE',
+  TEXT: 'TEXT',
+  PDF: 'PDF'
+};
+
+exports.CampaignFileStatus = exports.$Enums.CampaignFileStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+exports.ContentPieceStatus = exports.$Enums.ContentPieceStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.ContentPieceFormat = exports.$Enums.ContentPieceFormat = {
+  INSTAGRAM_SQUARE_1080: 'INSTAGRAM_SQUARE_1080'
+};
+
+exports.PipelineRunStatus = exports.$Enums.PipelineRunStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.AgentRunStatus = exports.$Enums.AgentRunStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.AgentRunStepStatus = exports.$Enums.AgentRunStepStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+exports.StepResultType = exports.$Enums.StepResultType = {
+  CONTINUE: 'CONTINUE',
+  PAUSED: 'PAUSED',
+  FAILED: 'FAILED',
+  COMPLETE: 'COMPLETE'
+};
+
+exports.FeedbackType = exports.$Enums.FeedbackType = {
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  EDITED: 'EDITED',
+  IMPROVE_REQUEST: 'IMPROVE_REQUEST',
+  REGENERATED: 'REGENERATED'
+};
+
+exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT',
+  ADJUST: 'ADJUST',
+  REFUND: 'REFUND'
+};
+
+exports.RagSourceType = exports.$Enums.RagSourceType = {
+  BRAND_BRAIN: 'BRAND_BRAIN',
+  CAMPAIGN: 'CAMPAIGN',
+  CAMPAIGN_FILE: 'CAMPAIGN_FILE',
+  AGENT_LEARNING: 'AGENT_LEARNING',
+  APPROVED_PIECE: 'APPROVED_PIECE'
+};
+
+exports.RagDocumentStatus = exports.$Enums.RagDocumentStatus = {
+  PENDING: 'PENDING',
+  INDEXING: 'INDEXING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+exports.RagIndexJobStatus = exports.$Enums.RagIndexJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Organization: 'Organization',
   Role: 'Role',
   RolePermission: 'RolePermission',
-  Membership: 'Membership',
-  MembershipRole: 'MembershipRole',
-  MembershipPermissionOverride: 'MembershipPermissionOverride',
-  Invitation: 'Invitation',
-  OnboardingDraft: 'OnboardingDraft',
-  ContextSource: 'ContextSource',
-  ContextArtifact: 'ContextArtifact',
-  Asset: 'Asset',
-  AssetRelation: 'AssetRelation',
-  DesignSystemProfile: 'DesignSystemProfile',
-  DesignColorGroup: 'DesignColorGroup',
-  DesignColorToken: 'DesignColorToken',
-  DesignAsset: 'DesignAsset',
+  UserRoleAssignment: 'UserRoleAssignment',
   PlatformRoleAssignment: 'PlatformRoleAssignment',
   SupportSession: 'SupportSession',
   AuditLog: 'AuditLog',
-  AIProvider: 'AIProvider',
-  AIModel: 'AIModel',
-  AICredential: 'AICredential',
-  AIProviderPolicy: 'AIProviderPolicy',
-  AgentTemplate: 'AgentTemplate',
-  CompanyAgent: 'CompanyAgent',
-  SystemAgentConfig: 'SystemAgentConfig',
-  AgentVersion: 'AgentVersion',
+  Company: 'Company',
+  BrandProfile: 'BrandProfile',
+  Campaign: 'Campaign',
+  CampaignFile: 'CampaignFile',
+  ContentPiece: 'ContentPiece',
+  PipelineRun: 'PipelineRun',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
-  AgentContextProfile: 'AgentContextProfile',
-  AgentContextFile: 'AgentContextFile',
-  AgentContextReference: 'AgentContextReference',
-  AgentRunContextSnapshot: 'AgentRunContextSnapshot',
-  AgentRunContextSnapshotItem: 'AgentRunContextSnapshotItem',
-  AgentRunSuspension: 'AgentRunSuspension',
-  AgentRunSuspensionResponse: 'AgentRunSuspensionResponse',
-  AgentChatThread: 'AgentChatThread',
-  AgentChatMessage: 'AgentChatMessage',
-  AgentChatToolCall: 'AgentChatToolCall',
-  ConversationEvent: 'ConversationEvent',
-  ConversationMessageProjection: 'ConversationMessageProjection',
-  ConversationToolCallProjection: 'ConversationToolCallProjection',
-  CreditLedgerEntry: 'CreditLedgerEntry',
-  TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
+  AgentFeedback: 'AgentFeedback',
+  LearningSignal: 'LearningSignal',
+  AgentMemory: 'AgentMemory',
+  CreditBalance: 'CreditBalance',
+  CreditLedger: 'CreditLedger',
+  PlatformCreditSettings: 'PlatformCreditSettings',
+  AiProvider: 'AiProvider',
+  AiProviderCredential: 'AiProviderCredential',
+  AiModel: 'AiModel',
+  AgentModelPolicy: 'AgentModelPolicy',
+  PipelineAgentConfig: 'PipelineAgentConfig',
   RagDocument: 'RagDocument',
   RagChunk: 'RagChunk',
   RagEmbedding: 'RagEmbedding',
   RagIndexJob: 'RagIndexJob',
-  BrainVersion: 'BrainVersion',
-  CompanyBrain: 'CompanyBrain'
+  RagPlatformSettings: 'RagPlatformSettings'
 };
 /**
  * Create the Client
@@ -907,7 +690,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/adryansantos/Documents/PROJETOS/ai-business-os-monorepo/apps/api/src/generated/prisma",
+      "value": "/Users/adryansantos/Documents/PROJETOS/blister-monorepo/apps/api/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -923,7 +706,7 @@ const config = {
     "previewFeatures": [
       "postgresqlExtensions"
     ],
-    "sourceFilePath": "/Users/adryansantos/Documents/PROJETOS/ai-business-os-monorepo/apps/api/prisma/schema.prisma",
+    "sourceFilePath": "/Users/adryansantos/Documents/PROJETOS/blister-monorepo/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -946,13 +729,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"postgresqlExtensions\"]\n}\n\ndatasource db {\n  provider   = \"postgresql\"\n  url        = env(\"DATABASE_URL\")\n  extensions = [vector]\n}\n\nmodel User {\n  id            String       @id\n  name          String\n  email         String       @unique\n  emailVerified Boolean\n  image         String?\n  createdAt     DateTime\n  updatedAt     DateTime\n  accounts      Account[]\n  invitations   Invitation[] @relation(\"InvitationInviter\")\n  memberships   Membership[]\n  sessions      Session[]\n}\n\nmodel Session {\n  id        String   @id\n  userId    String\n  token     String   @unique\n  expiresAt DateTime\n  ipAddress String?\n  userAgent String?\n  createdAt DateTime\n  updatedAt DateTime\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel Account {\n  id                    String    @id\n  userId                String\n  accountId             String\n  providerId            String\n  accessToken           String?\n  refreshToken          String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  idToken               String?\n  password              String?\n  createdAt             DateTime\n  updatedAt             DateTime\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([providerId, accountId])\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime\n  updatedAt  DateTime\n}\n\nmodel Organization {\n  id              String               @id @default(cuid())\n  name            String\n  slug            String               @unique\n  logo            String?\n  createdAt       DateTime             @default(now())\n  updatedAt       DateTime             @updatedAt\n  assets          Asset[]\n  CompanyBrain    CompanyBrain?\n  contextArtifact ContextArtifact?\n  contextSources  ContextSource[]\n  designSystem    DesignSystemProfile?\n  invitations     Invitation[]\n  memberships     Membership[]\n  onboardingDraft OnboardingDraft?\n  roles           Role[]\n}\n\nmodel Role {\n  id              String           @id @default(cuid())\n  organizationId  String\n  name            String\n  isSystem        Boolean          @default(false)\n  createdAt       DateTime         @default(now())\n  updatedAt       DateTime         @updatedAt\n  membershipRoles MembershipRole[]\n  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n  permissions     RolePermission[]\n\n  @@unique([organizationId, name])\n}\n\nmodel RolePermission {\n  id     String @id @default(cuid())\n  roleId String\n  key    String\n  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@unique([roleId, key])\n}\n\nmodel Membership {\n  id             String                         @id @default(cuid())\n  userId         String\n  organizationId String\n  active         Boolean                        @default(true)\n  createdAt      DateTime                       @default(now())\n  updatedAt      DateTime                       @updatedAt\n  organization   Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n  user           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  overrides      MembershipPermissionOverride[]\n  roles          MembershipRole[]\n\n  @@unique([userId, organizationId])\n}\n\nmodel MembershipRole {\n  id           String     @id @default(cuid())\n  membershipId String\n  roleId       String\n  assignedAt   DateTime   @default(now())\n  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)\n  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@unique([membershipId, roleId])\n}\n\nmodel MembershipPermissionOverride {\n  id           String     @id @default(cuid())\n  membershipId String\n  key          String\n  effect       String\n  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)\n\n  @@unique([membershipId, key])\n}\n\nmodel Invitation {\n  id             String       @id @default(cuid())\n  email          String\n  inviterId      String\n  organizationId String\n  roleId         String?\n  status         String       @default(\"pending\")\n  expiresAt      DateTime\n  createdAt      DateTime     @default(now())\n  inviter        User         @relation(\"InvitationInviter\", fields: [inviterId], references: [id], onDelete: Cascade)\n  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n}\n\nmodel OnboardingDraft {\n  id             String       @id @default(cuid())\n  organizationId String       @unique\n  currentStep    Int          @default(0)\n  data           Json         @default(\"{}\")\n  publishedAt    DateTime?\n  createdAt      DateTime     @default(now())\n  updatedAt      DateTime     @updatedAt\n  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n}\n\nmodel ContextSource {\n  id                String       @id @default(cuid())\n  organizationId    String\n  title             String\n  description       String?\n  sourceKind        String\n  sourceUrl         String?\n  fileName          String?\n  mimeType          String?\n  fileSize          Int?\n  objectKey         String?\n  publicUrl         String?\n  pipelineStatus    String       @default(\"pending\")\n  pipelineError     String?\n  extractedContent  String?\n  normalizedContent String?\n  reviewNotes       String?\n  reviewedAt        DateTime?\n  reviewedById      String?\n  tags              String[]     @default([])\n  category          String?\n  createdAt         DateTime     @default(now())\n  updatedAt         DateTime     @updatedAt\n  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, updatedAt])\n  @@index([organizationId, pipelineStatus])\n}\n\nmodel ContextArtifact {\n  id             String       @id @default(cuid())\n  organizationId String       @unique\n  objectKey      String?\n  publicUrl      String?\n  syncStatus     String       @default(\"idle\")\n  syncedAt       DateTime?\n  syncError      String?\n  sourceCount    Int          @default(0)\n  createdAt      DateTime     @default(now())\n  updatedAt      DateTime     @updatedAt\n  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n}\n\nmodel Asset {\n  id                String          @id @default(cuid())\n  organizationId    String\n  title             String\n  description       String?\n  sourceKind        String\n  sourceUrl         String?\n  fileName          String?\n  mimeType          String?\n  visibleType       String?\n  visibleCategory   String?\n  tags              String[]        @default([])\n  contextRole       Boolean         @default(false)\n  operationalRole   Boolean         @default(true)\n  contextStatus     String?\n  operationalStatus String?\n  createdAt         DateTime        @default(now())\n  updatedAt         DateTime        @updatedAt\n  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n  relations         AssetRelation[]\n\n  @@index([organizationId, updatedAt])\n  @@index([organizationId, contextRole])\n  @@index([organizationId, operationalRole])\n}\n\nmodel AssetRelation {\n  id      String @id @default(cuid())\n  assetId String\n  kind    String\n  value   String\n  asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)\n\n  @@index([assetId])\n}\n\nmodel DesignSystemProfile {\n  id                        String             @id @default(cuid())\n  organizationId            String             @unique\n  brandEssence              String?\n  desiredPerception         String?\n  visualStyle               String?\n  antiPatterns              String?\n  conceptualReferences      String?\n  aiNotes                   String?\n  artifactSyncStatus        String             @default(\"idle\")\n  artifactSyncedAt          DateTime?\n  artifactSyncError         String?\n  artifactObjectKey         String?\n  contextArtifactSyncStatus String             @default(\"idle\")\n  contextArtifactSyncedAt   DateTime?\n  contextArtifactSyncError  String?\n  contextArtifactObjectKey  String?\n  createdAt                 DateTime           @default(now())\n  updatedAt                 DateTime           @updatedAt\n  assets                    DesignAsset[]\n  colorGroups               DesignColorGroup[]\n  organization              Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, artifactSyncStatus])\n}\n\nmodel DesignColorGroup {\n  id             String              @id @default(cuid())\n  designSystemId String\n  name           String\n  description    String?\n  sortOrder      Int                 @default(0)\n  createdAt      DateTime            @default(now())\n  updatedAt      DateTime            @updatedAt\n  designSystem   DesignSystemProfile @relation(fields: [designSystemId], references: [id], onDelete: Cascade)\n  colors         DesignColorToken[]\n\n  @@unique([designSystemId, name])\n  @@index([designSystemId, sortOrder])\n}\n\nmodel DesignColorToken {\n  id              String           @id @default(cuid())\n  colorGroupId    String\n  name            String\n  value           String\n  displayFormat   String           @default(\"hex\")\n  semanticRole    String\n  usageNote       String?\n  restrictionNote String?\n  sortOrder       Int              @default(0)\n  createdAt       DateTime         @default(now())\n  updatedAt       DateTime         @updatedAt\n  colorGroup      DesignColorGroup @relation(fields: [colorGroupId], references: [id], onDelete: Cascade)\n\n  @@unique([colorGroupId, name])\n  @@index([colorGroupId, sortOrder])\n}\n\nmodel DesignAsset {\n  id             String              @id @default(cuid())\n  designSystemId String\n  organizationId String\n  primaryRole    String\n  secondaryTags  String[]            @default([])\n  title          String?\n  description    String?\n  objectKey      String\n  publicUrl      String?\n  fileName       String\n  contentType    String\n  size           Int\n  createdAt      DateTime            @default(now())\n  updatedAt      DateTime            @updatedAt\n  designSystem   DesignSystemProfile @relation(fields: [designSystemId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, updatedAt])\n  @@index([designSystemId, primaryRole])\n}\n\nmodel PlatformRoleAssignment {\n  id         String   @id @default(cuid())\n  userId     String\n  role       String\n  assignedBy String\n  assignedAt DateTime @default(now())\n\n  @@unique([userId, role])\n  @@index([userId])\n}\n\nmodel SupportSession {\n  id             String    @id @default(cuid())\n  actorUserId    String\n  organizationId String\n  reason         String\n  status         String    @default(\"active\")\n  startedAt      DateTime  @default(now())\n  endedAt        DateTime?\n\n  @@index([actorUserId])\n  @@index([organizationId])\n  @@index([status])\n}\n\nmodel AuditLog {\n  id                   String   @id @default(cuid())\n  actorUserId          String\n  targetOrganizationId String?\n  targetUserId         String?\n  action               String\n  resourceType         String\n  resourceId           String\n  metadata             Json     @default(\"{}\")\n  createdAt            DateTime @default(now())\n\n  @@index([actorUserId])\n  @@index([targetOrganizationId])\n  @@index([action])\n  @@index([createdAt])\n}\n\nmodel AIProvider {\n  id                 String             @id @default(cuid())\n  slug               String             @unique\n  name               String\n  description        String?\n  status             String             @default(\"draft\")\n  iconMetadata       Json               @default(\"{}\")\n  capabilityMetadata Json               @default(\"{}\")\n  pricingMetadata    Json               @default(\"{}\")\n  limitsMetadata     Json               @default(\"{}\")\n  schemaMetadata     Json               @default(\"{}\")\n  createdAt          DateTime           @default(now())\n  updatedAt          DateTime           @updatedAt\n  credentials        AICredential[]\n  models             AIModel[]\n  policies           AIProviderPolicy[]\n\n  @@index([status])\n}\n\nmodel AIModel {\n  id                 String     @id @default(cuid())\n  providerId         String\n  slug               String\n  name               String\n  description        String?\n  externalModelId    String\n  status             String     @default(\"draft\")\n  capabilityMetadata Json       @default(\"{}\")\n  pricingMetadata    Json       @default(\"{}\")\n  limitsMetadata     Json       @default(\"{}\")\n  schemaMetadata     Json       @default(\"{}\")\n  createdAt          DateTime   @default(now())\n  updatedAt          DateTime   @updatedAt\n  provider           AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)\n\n  @@unique([providerId, slug])\n  @@unique([providerId, externalModelId])\n  @@index([providerId, status])\n}\n\nmodel AICredential {\n  id              String     @id @default(cuid())\n  providerId      String\n  organizationId  String?\n  label           String\n  value           String\n  schemaMetadata  Json       @default(\"{}\")\n  createdByUserId String\n  updatedByUserId String\n  createdAt       DateTime   @default(now())\n  updatedAt       DateTime   @updatedAt\n  provider        AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)\n\n  @@index([providerId])\n  @@index([organizationId])\n}\n\nmodel AIProviderPolicy {\n  id              String     @id @default(cuid())\n  providerId      String\n  organizationId  String\n  allowedModelIds String[]   @default([])\n  metadata        Json       @default(\"{}\")\n  createdByUserId String\n  updatedByUserId String\n  createdAt       DateTime   @default(now())\n  updatedAt       DateTime   @updatedAt\n  provider        AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)\n\n  @@unique([organizationId, providerId])\n  @@index([organizationId])\n}\n\nmodel AgentTemplate {\n  id                  String         @id @default(cuid())\n  slug                String         @unique\n  name                String\n  description         String?\n  category            String\n  status              String         @default(\"draft\")\n  allowedBlocks       String[]       @default([])\n  defaultFlow         Json           @default(\"{}\")\n  defaultInputSchema  Json           @default(\"{}\")\n  defaultOutputSchema Json           @default(\"{}\")\n  executionProfile    Json           @default(\"{}\")\n  modelPolicy         Json           @default(\"{}\")\n  createdByUserId     String?\n  updatedByUserId     String?\n  createdAt           DateTime       @default(now())\n  updatedAt           DateTime       @updatedAt\n  agents              CompanyAgent[]\n\n  @@index([status, updatedAt])\n}\n\nmodel CompanyAgent {\n  id                    String               @id @default(cuid())\n  organizationId        String\n  templateId            String?\n  slug                  String\n  name                  String\n  description           String?\n  status                String               @default(\"draft\")\n  allowedTools          Json                 @default(\"[]\")\n  suggestedMessages     Json                 @default(\"[]\")\n  activeVersionId       String?\n  onboardingCompletedAt DateTime?\n  createdByUserId       String\n  updatedByUserId       String\n  createdAt             DateTime             @default(now())\n  updatedAt             DateTime             @updatedAt\n  chatThreads           AgentChatThread[]\n  chatToolCalls         AgentChatToolCall[]\n  contextProfile        AgentContextProfile?\n  runs                  AgentRun[]\n  versions              AgentVersion[]\n  template              AgentTemplate?       @relation(fields: [templateId], references: [id])\n\n  @@unique([organizationId, slug])\n  @@index([organizationId, status, updatedAt])\n}\n\n/// Configuração editável (admin) de um agente de sistema. A definição vive em\n/// código (`system-agents/*.agent.ts`); aqui ficam apenas overrides de IA.\nmodel SystemAgentConfig {\n  id              String   @id @default(cuid())\n  key             String   @unique\n  providerId      String?\n  modelId         String?\n  temperature     Float?\n  maxOutputTokens Int?\n  enabled         Boolean  @default(true)\n  updatedByUserId String?\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n}\n\nmodel AgentVersion {\n  id                String       @id @default(cuid())\n  agentId           String\n  versionNumber     Int\n  status            String       @default(\"draft\")\n  flowDefinition    Json         @default(\"{}\")\n  inputSchema       Json         @default(\"{}\")\n  outputSchema      Json         @default(\"{}\")\n  notes             String?\n  createdByUserId   String\n  publishedByUserId String?\n  publishedAt       DateTime?\n  createdAt         DateTime     @default(now())\n  updatedAt         DateTime     @updatedAt\n  runs              AgentRun[]\n  companyAgent      CompanyAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)\n\n  @@unique([agentId, versionNumber])\n  @@index([agentId, status, updatedAt])\n}\n\nmodel AgentRun {\n  id                   String                     @id @default(cuid())\n  organizationId       String\n  agentId              String\n  agentVersionId       String\n  status               String                     @default(\"queued\")\n  inputPayload         Json                       @default(\"{}\")\n  outputPayload        Json?\n  errorMessage         String?\n  createdByUserId      String\n  createdAt            DateTime                   @default(now())\n  updatedAt            DateTime                   @updatedAt\n  attemptCount         Int                        @default(0)\n  completedAt          DateTime?\n  lastAttemptAt        DateTime?\n  leaseExpiresAt       DateTime?\n  processingLeaseId    String?\n  processingMetadata   Json                       @default(\"{}\")\n  queuePosition        Int?\n  sourceMessageId      String?\n  startedAt            DateTime?\n  threadId             String?\n  rootRunId            String?\n  parentRunId          String?\n  parentStepId         String?\n  depth                Int                        @default(0)\n  currentBlockId       String?\n  currentBlockType     String?\n  waitingReason        String?\n  resumeStatus         String?\n  chunkIdsRetrieved    String[]                   @default([])\n  durationMs           Int?\n  intentClassified     String?\n  sourcesSelected      String[]                   @default([])\n  tokensUsed           Int?\n  chatMessages         AgentChatMessage[]\n  agent                CompanyAgent               @relation(fields: [agentId], references: [id], onDelete: Cascade)\n  agentVersion         AgentVersion               @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)\n  parentRun            AgentRun?                  @relation(\"AgentRunParentLineage\", fields: [parentRunId], references: [id])\n  childRuns            AgentRun[]                 @relation(\"AgentRunParentLineage\")\n  parentStep           AgentRunStep?              @relation(\"AgentRunParentStep\", fields: [parentStepId], references: [id])\n  rootRun              AgentRun?                  @relation(\"AgentRunRootLineage\", fields: [rootRunId], references: [id])\n  rootChildRuns        AgentRun[]                 @relation(\"AgentRunRootLineage\")\n  sourceMessage        AgentChatMessage?          @relation(\"AgentRunSourceMessage\", fields: [sourceMessageId], references: [id])\n  thread               AgentChatThread?           @relation(fields: [threadId], references: [id])\n  contextSnapshot      AgentRunContextSnapshot?\n  steps                AgentRunStep[]\n  suspensions          AgentRunSuspension[]\n  creditEntries        CreditLedgerEntry[]\n  technicalCostEntries TechnicalCostLedgerEntry[]\n\n  @@index([organizationId, status, createdAt])\n  @@index([agentId, createdAt])\n  @@index([processingLeaseId])\n  @@index([status, leaseExpiresAt])\n  @@index([organizationId, threadId])\n  @@index([organizationId, createdByUserId, createdAt])\n  @@index([rootRunId])\n  @@index([parentRunId])\n  @@index([parentStepId])\n}\n\nmodel AgentRunStep {\n  id              String               @id @default(cuid())\n  runId           String\n  blockKey        String\n  blockType       String\n  status          String\n  inputPayload    Json                 @default(\"{}\")\n  outputPayload   Json?\n  errorMessage    String?\n  startedAt       DateTime?\n  completedAt     DateTime?\n  createdAt       DateTime             @default(now())\n  metadata        Json                 @default(\"{}\")\n  sequence        Int?\n  branchKey       String?\n  inputType       String?\n  outputType      String?\n  statePayload    Json?\n  uiOutputPayload Json?\n  childAgentRuns  AgentRun[]           @relation(\"AgentRunParentStep\")\n  run             AgentRun             @relation(fields: [runId], references: [id], onDelete: Cascade)\n  suspensions     AgentRunSuspension[]\n\n  @@index([runId, createdAt])\n  @@index([runId, sequence])\n}\n\nmodel AgentContextProfile {\n  id           String                  @id @default(cuid())\n  agentId      String                  @unique\n  instructions String?\n  notes        String?\n  metadata     Json                    @default(\"{}\")\n  createdAt    DateTime                @default(now())\n  updatedAt    DateTime                @updatedAt\n  files        AgentContextFile[]\n  agent        CompanyAgent            @relation(fields: [agentId], references: [id], onDelete: Cascade)\n  references   AgentContextReference[]\n}\n\nmodel AgentContextFile {\n  id        String              @id @default(cuid())\n  profileId String\n  filename  String\n  objectKey String\n  mimeType  String\n  sizeBytes Int\n  publicUrl String?\n  status    String              @default(\"active\")\n  metadata  Json                @default(\"{}\")\n  createdAt DateTime            @default(now())\n  updatedAt DateTime            @updatedAt\n  profile   AgentContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)\n\n  @@index([profileId])\n  @@index([profileId, status])\n}\n\nmodel AgentContextReference {\n  id         String              @id @default(cuid())\n  profileId  String\n  sourceType String\n  sourceId   String\n  metadata   Json                @default(\"{}\")\n  createdAt  DateTime            @default(now())\n  updatedAt  DateTime            @updatedAt\n  profile    AgentContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)\n\n  @@unique([profileId, sourceType, sourceId])\n  @@index([profileId])\n}\n\nmodel AgentRunContextSnapshot {\n  id              String                        @id @default(cuid())\n  runId           String                        @unique\n  layers          Json                          @default(\"{}\")\n  resolvedSummary String?\n  metadata        Json                          @default(\"{}\")\n  createdAt       DateTime                      @default(now())\n  run             AgentRun                      @relation(fields: [runId], references: [id], onDelete: Cascade)\n  items           AgentRunContextSnapshotItem[]\n}\n\nmodel AgentRunContextSnapshotItem {\n  id         String                  @id @default(cuid())\n  snapshotId String\n  sourceType String\n  sourceId   String?\n  label      String\n  content    String?\n  summary    String?\n  metadata   Json                    @default(\"{}\")\n  createdAt  DateTime                @default(now())\n  snapshot   AgentRunContextSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)\n\n  @@index([snapshotId])\n  @@index([sourceType, sourceId])\n}\n\nmodel AgentRunSuspension {\n  id              String                       @id @default(cuid())\n  runId           String\n  stepId          String?\n  type            String\n  status          String                       @default(\"pending\")\n  resolvedPayload Json                         @default(\"{}\")\n  roundNumber     Int                          @default(1)\n  metadata        Json                         @default(\"{}\")\n  answeredAt      DateTime?\n  createdAt       DateTime                     @default(now())\n  updatedAt       DateTime                     @updatedAt\n  run             AgentRun                     @relation(fields: [runId], references: [id], onDelete: Cascade)\n  step            AgentRunStep?                @relation(fields: [stepId], references: [id])\n  responses       AgentRunSuspensionResponse[]\n\n  @@index([runId, status])\n  @@index([stepId])\n}\n\nmodel AgentRunSuspensionResponse {\n  id           String             @id @default(cuid())\n  suspensionId String\n  answers      Json               @default(\"{}\")\n  roundNumber  Int                @default(1)\n  metadata     Json               @default(\"{}\")\n  answeredById String\n  answeredAt   DateTime           @default(now())\n  suspension   AgentRunSuspension @relation(fields: [suspensionId], references: [id], onDelete: Cascade)\n\n  @@index([suspensionId])\n  @@index([answeredById])\n}\n\nmodel AgentChatThread {\n  id                    String                           @id @default(cuid())\n  organizationId        String\n  agentId               String?\n  scope                 String\n  title                 String?\n  parentThreadId        String?\n  branchedFromMessageId String?\n  createdByUserId       String\n  createdAt             DateTime                         @default(now())\n  updatedAt             DateTime                         @updatedAt\n  messages              AgentChatMessage[]\n  toolCalls             AgentChatToolCall[]\n  agent                 CompanyAgent?                    @relation(fields: [agentId], references: [id])\n  branchedFromMessage   AgentChatMessage?                @relation(\"AgentChatThreadBranchMessage\", fields: [branchedFromMessageId], references: [id])\n  parentThread          AgentChatThread?                 @relation(\"AgentChatThreadBranches\", fields: [parentThreadId], references: [id])\n  branches              AgentChatThread[]                @relation(\"AgentChatThreadBranches\")\n  runs                  AgentRun[]\n  conversationEvents    ConversationEvent[]\n  messageProjections    ConversationMessageProjection[]\n  toolCallProjections   ConversationToolCallProjection[]\n\n  @@index([organizationId, scope, updatedAt])\n  @@index([agentId, updatedAt])\n}\n\nmodel AgentChatMessage {\n  id                       String                           @id @default(cuid())\n  threadId                 String\n  agentRunId               String?\n  role                     String\n  content                  String\n  metadata                 Json                             @default(\"{}\")\n  editedFromMessageId      String?\n  regeneratedFromMessageId String?\n  createdByUserId          String?\n  createdAt                DateTime                         @default(now())\n  agentRun                 AgentRun?                        @relation(fields: [agentRunId], references: [id])\n  editedFromMessage        AgentChatMessage?                @relation(\"AgentChatMessageEdits\", fields: [editedFromMessageId], references: [id])\n  editedVariants           AgentChatMessage[]               @relation(\"AgentChatMessageEdits\")\n  regeneratedFromMessage   AgentChatMessage?                @relation(\"AgentChatMessageRegenerations\", fields: [regeneratedFromMessageId], references: [id])\n  regenerations            AgentChatMessage[]               @relation(\"AgentChatMessageRegenerations\")\n  thread                   AgentChatThread                  @relation(fields: [threadId], references: [id], onDelete: Cascade)\n  branches                 AgentChatThread[]                @relation(\"AgentChatThreadBranchMessage\")\n  sourceRuns               AgentRun[]                       @relation(\"AgentRunSourceMessage\")\n  toolCalls                AgentChatToolCall[]\n  conversationEvents       ConversationEvent[]\n  messageProjection        ConversationMessageProjection?\n  toolCallProjections      ConversationToolCallProjection[]\n\n  @@index([threadId, createdAt])\n  @@index([agentRunId])\n}\n\nmodel AgentChatToolCall {\n  id              String           @id @default(cuid())\n  organizationId  String\n  agentId         String\n  threadId        String\n  messageId       String\n  toolName        String\n  status          String\n  inputPayload    Json\n  outputPayload   Json?\n  errorMessage    String?\n  durationMs      Int?\n  createdByUserId String?\n  createdAt       DateTime         @default(now())\n  agent           CompanyAgent     @relation(fields: [agentId], references: [id], onDelete: Cascade)\n  thread          AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)\n  message         AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, agentId, createdAt])\n  @@index([threadId, createdAt])\n  @@index([messageId])\n}\n\n/// Canonical, append-only conversation event log. Source of truth for replay.\n/// `sequence` is monotonic per thread for deterministic ordering. `idempotencyKey`\n/// (when provided) dedupes retried appends — NULLs are distinct in Postgres so\n/// keyless events are never blocked.\nmodel ConversationEvent {\n  id             String           @id @default(cuid())\n  organizationId String\n  threadId       String\n  messageId      String\n  sequence       Int\n  eventType      String\n  status         String?\n  payload        Json             @default(\"{}\")\n  idempotencyKey String?\n  createdAt      DateTime         @default(now())\n  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)\n  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)\n\n  @@unique([threadId, sequence])\n  @@unique([threadId, idempotencyKey])\n  @@index([messageId, sequence])\n  @@index([organizationId, threadId])\n}\n\n/// Materialized projection of the assistant message — rebuilt from the event log.\n/// Lets replay/load skip event folding on read.\nmodel ConversationMessageProjection {\n  id             String           @id @default(cuid())\n  organizationId String\n  threadId       String\n  messageId      String           @unique\n  status         String           @default(\"pending\")\n  text           String           @default(\"\")\n  citations      Json             @default(\"[]\")\n  isStreaming    Boolean          @default(false)\n  isCompleted    Boolean          @default(false)\n  isFailed       Boolean          @default(false)\n  errorMessage   String?\n  lastSequence   Int              @default(0)\n  metadata       Json             @default(\"{}\")\n  createdAt      DateTime         @default(now())\n  updatedAt      DateTime         @updatedAt\n  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)\n  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, threadId])\n  @@index([threadId, updatedAt])\n}\n\n/// Materialized projection of a single tool call within a message — rebuilt from\n/// the event log. `displayOrder` preserves operational narrative order in replay.\nmodel ConversationToolCallProjection {\n  id             String           @id @default(cuid())\n  organizationId String\n  threadId       String\n  messageId      String\n  toolCallId     String\n  groupId        String?\n  toolName       String\n  status         String           @default(\"pending\")\n  inputPayload   Json             @default(\"{}\")\n  outputPayload  Json?\n  errorMessage   String?\n  durationMs     Int?\n  displayOrder   Int              @default(0)\n  createdAt      DateTime         @default(now())\n  updatedAt      DateTime         @updatedAt\n  thread         AgentChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)\n  message        AgentChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)\n\n  @@unique([messageId, toolCallId])\n  @@index([organizationId, threadId])\n  @@index([messageId, displayOrder])\n}\n\nmodel CreditLedgerEntry {\n  id              String    @id @default(cuid())\n  organizationId  String\n  runId           String?\n  entryType       String\n  amount          Int\n  balanceAfter    Int\n  metadata        Json      @default(\"{}\")\n  createdByUserId String?\n  createdAt       DateTime  @default(now())\n  idempotencyKey  String?   @unique\n  run             AgentRun? @relation(fields: [runId], references: [id])\n\n  @@index([organizationId, createdAt])\n  @@index([entryType])\n}\n\nmodel TechnicalCostLedgerEntry {\n  id             String    @id @default(cuid())\n  organizationId String?\n  runId          String?\n  providerId     String?\n  modelId        String?\n  amount         Float\n  currency       String    @default(\"USD\")\n  unit           String    @default(\"estimated\")\n  metadata       Json      @default(\"{}\")\n  createdAt      DateTime  @default(now())\n  idempotencyKey String?   @unique\n  run            AgentRun? @relation(fields: [runId], references: [id])\n\n  @@index([createdAt])\n  @@index([providerId, createdAt])\n  @@index([modelId, createdAt])\n}\n\nmodel RagDocument {\n  id             String        @id @default(cuid())\n  organizationId String\n  sourceType     String\n  sourceId       String?\n  title          String?\n  contentHash    String?\n  status         String        @default(\"pending\")\n  metadata       Json          @default(\"{}\")\n  createdAt      DateTime      @default(now())\n  updatedAt      DateTime      @updatedAt\n  chunks         RagChunk[]\n  indexJobs      RagIndexJob[]\n\n  @@unique([organizationId, sourceType, sourceId])\n  @@index([organizationId, status])\n  @@index([organizationId, sourceType])\n}\n\nmodel RagChunk {\n  id         String        @id @default(cuid())\n  documentId String\n  sequence   Int\n  content    String\n  tokenCount Int?\n  metadata   Json          @default(\"{}\")\n  createdAt  DateTime      @default(now())\n  document   RagDocument   @relation(fields: [documentId], references: [id], onDelete: Cascade)\n  embedding  RagEmbedding?\n\n  @@index([documentId, sequence])\n}\n\nmodel RagEmbedding {\n  id             String                 @id @default(cuid())\n  chunkId        String                 @unique\n  organizationId String\n  model          String\n  dimensions     Int\n  vector         Unsupported(\"vector\")?\n  createdAt      DateTime               @default(now())\n  chunk          RagChunk               @relation(fields: [chunkId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId])\n}\n\nmodel RagIndexJob {\n  id                String      @id @default(cuid())\n  organizationId    String\n  documentId        String\n  status            String      @default(\"queued\")\n  errorMessage      String?\n  triggeredByUserId String?\n  startedAt         DateTime?\n  completedAt       DateTime?\n  metadata          Json        @default(\"{}\")\n  createdAt         DateTime    @default(now())\n  updatedAt         DateTime    @updatedAt\n  document          RagDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId, status])\n  @@index([documentId, createdAt])\n}\n\nmodel BrainVersion {\n  id                String       @id\n  brainId           String\n  versionNumber     Int\n  status            String       @default(\"draft\")\n  data              Json         @default(\"{}\")\n  notes             String?\n  createdByUserId   String\n  publishedByUserId String?\n  publishedAt       DateTime?\n  createdAt         DateTime     @default(now())\n  updatedAt         DateTime\n  CompanyBrain      CompanyBrain @relation(fields: [brainId], references: [id], onDelete: Cascade)\n\n  @@unique([brainId, versionNumber])\n  @@index([brainId, status, updatedAt])\n}\n\nmodel CompanyBrain {\n  id              String         @id\n  organizationId  String         @unique\n  activeVersionId String?\n  createdAt       DateTime       @default(now())\n  updatedAt       DateTime\n  BrainVersion    BrainVersion[]\n  Organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)\n\n  @@index([organizationId])\n}\n",
-  "inlineSchemaHash": "991ff76d218a2635cc9d695a57e0f23e25933a7ec7102c51e4eb51d6bb1dc413",
+  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"postgresqlExtensions\"]\n}\n\ndatasource db {\n  provider   = \"postgresql\"\n  url        = env(\"DATABASE_URL\")\n  extensions = [vector]\n}\n\n// ─── Auth (better-auth) ─────────────────────────────────────────────────────\n\nenum UserType {\n  BUSINESS\n  ADMIN\n  USER\n}\n\nmodel User {\n  id              String               @id\n  name            String\n  email           String               @unique\n  emailVerified   Boolean\n  image           String?\n  userType        UserType             @default(USER)\n  createdAt       DateTime\n  updatedAt       DateTime\n  accounts        Account[]\n  sessions        Session[]\n  roleAssignments UserRoleAssignment[]\n  ownedCompanies  Company[]\n  agentFeedbacks  AgentFeedback[]\n}\n\nmodel Session {\n  id        String   @id\n  userId    String\n  token     String   @unique\n  expiresAt DateTime\n  ipAddress String?\n  userAgent String?\n  createdAt DateTime\n  updatedAt DateTime\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel Account {\n  id                    String    @id\n  userId                String\n  accountId             String\n  providerId            String\n  accessToken           String?\n  refreshToken          String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  idToken               String?\n  password              String?\n  createdAt             DateTime\n  updatedAt             DateTime\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([providerId, accountId])\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime\n  updatedAt  DateTime\n}\n\n// ─── RBAC ───────────────────────────────────────────────────────────────────\n\nmodel Role {\n  id                String               @id @default(cuid())\n  name              String               @unique\n  isSystem          Boolean              @default(false)\n  createdAt         DateTime             @default(now())\n  updatedAt         DateTime             @updatedAt\n  permissions       RolePermission[]\n  memberAssignments UserRoleAssignment[]\n}\n\nmodel RolePermission {\n  id     String @id @default(cuid())\n  roleId String\n  key    String\n  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@unique([roleId, key])\n}\n\nmodel UserRoleAssignment {\n  id         String   @id @default(cuid())\n  userId     String\n  roleId     String\n  assignedAt DateTime @default(now())\n  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@unique([userId, roleId])\n  @@index([userId])\n}\n\nmodel PlatformRoleAssignment {\n  id         String   @id @default(cuid())\n  userId     String\n  role       String\n  assignedBy String\n  assignedAt DateTime @default(now())\n\n  @@unique([userId, role])\n  @@index([userId])\n}\n\n// ─── Platform / audit ───────────────────────────────────────────────────────\n\nmodel SupportSession {\n  id          String    @id @default(cuid())\n  actorUserId String\n  reason      String\n  status      String    @default(\"active\")\n  startedAt   DateTime  @default(now())\n  endedAt     DateTime?\n\n  @@index([actorUserId])\n  @@index([status])\n}\n\nmodel AuditLog {\n  id           String   @id @default(cuid())\n  actorUserId  String\n  targetUserId String?\n  action       String\n  resourceType String\n  resourceId   String\n  metadata     Json     @default(\"{}\")\n  createdAt    DateTime @default(now())\n\n  @@index([actorUserId])\n  @@index([action])\n  @@index([resourceType, resourceId])\n  @@index([createdAt])\n}\n\n// ─── Company / Brand Brain ──────────────────────────────────────────────────\n\nenum MarketingObjective {\n  SELL_MORE\n  GENERATE_LEADS\n  STRENGTHEN_BRAND\n}\n\nmodel Company {\n  id                    String    @id @default(cuid())\n  ownerUserId           String\n  name                  String\n  slug                  String    @unique\n  onboardingCompletedAt DateTime?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  owner          User            @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)\n  brandProfile   BrandProfile?\n  campaigns      Campaign[]\n  campaignFiles  CampaignFile[]\n  contentPieces  ContentPiece[]\n  pipelineRuns   PipelineRun[]\n  agentRuns      AgentRun[]\n  agentFeedbacks AgentFeedback[]\n  agentMemories  AgentMemory[]\n  creditBalance  CreditBalance?\n  creditLedger   CreditLedger[]\n  ragDocuments   RagDocument[]\n  ragIndexJobs   RagIndexJob[]\n\n  @@index([ownerUserId])\n  @@index([slug])\n}\n\nmodel BrandProfile {\n  id                 String              @id @default(cuid())\n  companyId          String              @unique\n  logoStorageKey     String?\n  logoVariants       Json                @default(\"{}\")\n  brandAssets        Json                @default(\"[]\")\n  brandVoice         String\n  palette            Json                @default(\"[]\")\n  typography         String?\n  visualStyle        String?\n  niche              String?\n  description        String?\n  targetAudience     String?\n  marketingObjective MarketingObjective?\n  socialNetworks     Json                @default(\"[]\")\n  mainProducts       String?\n  differentiators    String?\n  createdAt          DateTime            @default(now())\n  updatedAt          DateTime            @updatedAt\n\n  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)\n}\n\n// ─── Campaigns ──────────────────────────────────────────────────────────────\n\nenum CampaignStatus {\n  DRAFT\n  ACTIVE\n  ARCHIVED\n}\n\nmodel Campaign {\n  id        String         @id @default(cuid())\n  companyId String\n  name      String\n  objective String\n  context   String?\n  status    CampaignStatus @default(ACTIVE)\n  createdAt DateTime       @default(now())\n  updatedAt DateTime       @updatedAt\n\n  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  files         CampaignFile[]\n  contentPieces ContentPiece[]\n  pipelineRuns  PipelineRun[]\n  ragDocuments  RagDocument[]\n\n  @@index([companyId])\n  @@index([status])\n}\n\nenum CampaignFileType {\n  IMAGE\n  TEXT\n  PDF\n}\n\nenum CampaignFileStatus {\n  PENDING\n  PROCESSING\n  INDEXED\n  FAILED\n}\n\nmodel CampaignFile {\n  id            String             @id @default(cuid())\n  companyId     String\n  campaignId    String\n  name          String\n  mimeType      String\n  storageKey    String\n  type          CampaignFileType\n  status        CampaignFileStatus @default(PENDING)\n  extractedText String?\n  caption       String?\n  sizeBytes     Int?\n  createdAt     DateTime           @default(now())\n  updatedAt     DateTime           @updatedAt\n\n  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)\n\n  @@index([companyId])\n  @@index([campaignId])\n  @@index([status])\n}\n\n// ─── Generated content ──────────────────────────────────────────────────────\n\nenum ContentPieceStatus {\n  DRAFT\n  PENDING_REVIEW\n  APPROVED\n  REJECTED\n}\n\nenum ContentPieceFormat {\n  INSTAGRAM_SQUARE_1080\n}\n\nmodel ContentPiece {\n  id              String             @id @default(cuid())\n  companyId       String\n  campaignId      String?\n  pipelineRunId   String?\n  agentRunId      String?\n  format          ContentPieceFormat @default(INSTAGRAM_SQUARE_1080)\n  status          ContentPieceStatus @default(PENDING_REVIEW)\n  caption         String?\n  hashtags        String[]           @default([])\n  imageStorageKey String?\n  htmlSnapshot    String?\n  creditCost      Decimal?           @db.Decimal(12, 4)\n  createdAt       DateTime           @default(now())\n  updatedAt       DateTime           @updatedAt\n  approvedAt      DateTime?\n\n  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  campaign    Campaign?       @relation(fields: [campaignId], references: [id], onDelete: SetNull)\n  pipelineRun PipelineRun?    @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)\n  agentRun    AgentRun?       @relation(fields: [agentRunId], references: [id], onDelete: SetNull)\n  feedbacks   AgentFeedback[]\n\n  @@index([companyId])\n  @@index([campaignId])\n  @@index([status])\n  @@index([pipelineRunId])\n}\n\n// ─── Agent orchestration ────────────────────────────────────────────────────\n\nenum PipelineRunStatus {\n  QUEUED\n  RUNNING\n  COMPLETED\n  FAILED\n  CANCELLED\n}\n\nenum AgentRunStatus {\n  QUEUED\n  RUNNING\n  PAUSED\n  COMPLETED\n  FAILED\n  CANCELLED\n}\n\nenum AgentRunStepStatus {\n  PENDING\n  RUNNING\n  COMPLETED\n  FAILED\n  SKIPPED\n}\n\nenum StepResultType {\n  CONTINUE\n  PAUSED\n  FAILED\n  COMPLETE\n}\n\nmodel PipelineRun {\n  id                String            @id @default(cuid())\n  companyId         String\n  campaignId        String?\n  triggeredByUserId String\n  userInput         String\n  status            PipelineRunStatus @default(QUEUED)\n  agentOrder        String[]          @default([])\n  creditCost        Decimal?          @db.Decimal(12, 4)\n  metadata          Json              @default(\"{}\")\n  createdAt         DateTime          @default(now())\n  updatedAt         DateTime          @updatedAt\n  completedAt       DateTime?\n\n  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  campaign      Campaign?      @relation(fields: [campaignId], references: [id], onDelete: SetNull)\n  agentRuns     AgentRun[]\n  contentPieces ContentPiece[]\n\n  @@index([companyId])\n  @@index([campaignId])\n  @@index([status])\n}\n\nmodel AgentRun {\n  id              String         @id @default(cuid())\n  companyId       String\n  pipelineRunId   String?\n  campaignId      String?\n  agentId         String\n  parentRunId     String?\n  feedbackId      String?        @unique\n  status          AgentRunStatus @default(QUEUED)\n  currentStepKey  String?\n  inputPayload    Json           @default(\"{}\")\n  outputPayload   Json           @default(\"{}\")\n  errorMessage    String?\n  pauseReason     String?\n  pauseFormSchema Json?\n  creditCost      Decimal?       @db.Decimal(12, 4)\n  createdAt       DateTime       @default(now())\n  updatedAt       DateTime       @updatedAt\n  startedAt       DateTime?\n  completedAt     DateTime?\n\n  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  pipelineRun   PipelineRun?   @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)\n  parentRun     AgentRun?      @relation(\"AgentRunRegeneration\", fields: [parentRunId], references: [id], onDelete: SetNull)\n  childRuns     AgentRun[]     @relation(\"AgentRunRegeneration\")\n  feedback      AgentFeedback? @relation(fields: [feedbackId], references: [id], onDelete: SetNull)\n  steps         AgentRunStep[]\n  contentPieces ContentPiece[]\n  creditLedger  CreditLedger[]\n\n  @@index([companyId])\n  @@index([pipelineRunId])\n  @@index([agentId])\n  @@index([status])\n}\n\nmodel AgentRunStep {\n  id            String             @id @default(cuid())\n  agentRunId    String\n  stepKey       String\n  stepIndex     Int\n  status        AgentRunStepStatus @default(PENDING)\n  resultType    StepResultType?\n  inputPayload  Json               @default(\"{}\")\n  outputPayload Json               @default(\"{}\")\n  errorMessage  String?\n  llmModel      String?\n  tokensInput   Int?\n  tokensOutput  Int?\n  creditCost    Decimal?           @db.Decimal(12, 4)\n  startedAt     DateTime?\n  completedAt   DateTime?\n  createdAt     DateTime           @default(now())\n  updatedAt     DateTime           @updatedAt\n\n  agentRun     AgentRun       @relation(fields: [agentRunId], references: [id], onDelete: Cascade)\n  creditLedger CreditLedger[]\n\n  @@unique([agentRunId, stepIndex])\n  @@index([agentRunId])\n  @@index([status])\n}\n\n// ─── Agent learning ─────────────────────────────────────────────────────────\n\nenum FeedbackType {\n  APPROVED\n  REJECTED\n  EDITED\n  IMPROVE_REQUEST\n  REGENERATED\n}\n\nmodel AgentFeedback {\n  id              String       @id @default(cuid())\n  companyId       String\n  contentPieceId  String\n  agentId         String\n  feedbackType    FeedbackType\n  userId          String\n  reason          String?\n  originalContent Json         @default(\"{}\")\n  editedContent   Json?\n  instruction     String?\n  contentHash     String\n  createdAt       DateTime     @default(now())\n\n  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  contentPiece    ContentPiece     @relation(fields: [contentPieceId], references: [id], onDelete: Cascade)\n  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)\n  learningSignals LearningSignal[]\n  regenerationRun AgentRun?\n\n  @@unique([companyId, contentHash])\n  @@index([contentPieceId])\n  @@index([agentId])\n  @@index([feedbackType])\n}\n\nmodel LearningSignal {\n  id          String   @id @default(cuid())\n  feedbackId  String\n  companyId   String\n  agentId     String\n  signalType  String\n  signalValue String\n  weight      Float    @default(1)\n  metadata    Json     @default(\"{}\")\n  createdAt   DateTime @default(now())\n\n  feedback AgentFeedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)\n\n  @@index([companyId, agentId])\n  @@index([feedbackId])\n}\n\nmodel AgentMemory {\n  id             String   @id @default(cuid())\n  companyId      String\n  agentId        String\n  summary        String\n  signals        Json     @default(\"[]\")\n  lastFeedbackId String?\n  updatedAt      DateTime @updatedAt\n  createdAt      DateTime @default(now())\n\n  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)\n\n  @@unique([companyId, agentId])\n}\n\n// ─── Credits ────────────────────────────────────────────────────────────────\n\nenum CreditLedgerType {\n  CREDIT\n  DEBIT\n  ADJUST\n  REFUND\n}\n\nmodel CreditBalance {\n  id        String   @id @default(cuid())\n  companyId String   @unique\n  amount    Decimal  @default(0) @db.Decimal(12, 4)\n  currency  String   @default(\"USD\")\n  updatedAt DateTime @updatedAt\n  createdAt DateTime @default(now())\n\n  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)\n}\n\nmodel CreditLedger {\n  id              String           @id @default(cuid())\n  companyId       String\n  type            CreditLedgerType\n  amount          Decimal          @db.Decimal(12, 4)\n  balanceAfter    Decimal          @db.Decimal(12, 4)\n  currency        String           @default(\"USD\")\n  agentRunStepId  String?\n  agentRunId      String?\n  description     String?\n  metadata        Json             @default(\"{}\")\n  createdByUserId String?\n  createdAt       DateTime         @default(now())\n\n  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  agentRunStep AgentRunStep? @relation(fields: [agentRunStepId], references: [id], onDelete: SetNull)\n  agentRun     AgentRun?     @relation(fields: [agentRunId], references: [id], onDelete: SetNull)\n\n  @@index([companyId])\n  @@index([createdAt])\n  @@index([type])\n}\n\nmodel PlatformCreditSettings {\n  id              String   @id @default(\"default\")\n  freeTierAmount  Decimal  @default(20) @db.Decimal(12, 4)\n  currency        String   @default(\"USD\")\n  markupDefault   Decimal  @default(1.2) @db.Decimal(5, 4)\n  minRunCost      Decimal  @default(0.01) @db.Decimal(12, 4)\n  updatedAt       DateTime @updatedAt\n  updatedByUserId String?\n}\n\n// ─── AI catalog (admin) ─────────────────────────────────────────────────────\n\nmodel AiProvider {\n  id        String   @id @default(cuid())\n  slug      String   @unique\n  name      String\n  isEnabled Boolean  @default(true)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  credentials AiProviderCredential[]\n  models      AiModel[]\n}\n\nmodel AiProviderCredential {\n  id             String   @id @default(cuid())\n  providerId     String\n  label          String\n  encryptedValue String\n  isActive       Boolean  @default(true)\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @updatedAt\n\n  provider AiProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)\n\n  @@index([providerId])\n}\n\nmodel AiModel {\n  id              String   @id @default(cuid())\n  providerId      String\n  externalId      String\n  name            String\n  isEnabled       Boolean  @default(true)\n  inputCostPer1k  Decimal  @db.Decimal(12, 6)\n  outputCostPer1k Decimal  @db.Decimal(12, 6)\n  maxTokens       Int?\n  capabilities    String[] @default([])\n  createdAt       DateTime @default(now())\n  updatedAt       DateTime @updatedAt\n\n  provider          AiProvider           @relation(fields: [providerId], references: [id], onDelete: Cascade)\n  agentPolicies     AgentModelPolicy[]\n  embeddingSettings RagPlatformSettings?\n\n  @@unique([providerId, externalId])\n  @@index([providerId])\n}\n\nmodel AgentModelPolicy {\n  id               String   @id @default(cuid())\n  agentId          String   @unique\n  modelId          String\n  markupMultiplier Decimal  @default(1.2) @db.Decimal(5, 4)\n  isEnabled        Boolean  @default(true)\n  minCostPerRun    Decimal? @db.Decimal(12, 4)\n  updatedAt        DateTime @updatedAt\n\n  model AiModel @relation(fields: [modelId], references: [id], onDelete: Restrict)\n}\n\nmodel PipelineAgentConfig {\n  id        String  @id @default(cuid())\n  agentId   String  @unique\n  sortOrder Int\n  isEnabled Boolean @default(true)\n\n  @@index([sortOrder])\n}\n\n// ─── RAG ────────────────────────────────────────────────────────────────────\n\nenum RagSourceType {\n  BRAND_BRAIN\n  CAMPAIGN\n  CAMPAIGN_FILE\n  AGENT_LEARNING\n  APPROVED_PIECE\n}\n\nenum RagDocumentStatus {\n  PENDING\n  INDEXING\n  INDEXED\n  FAILED\n}\n\nenum RagIndexJobStatus {\n  PENDING\n  PROCESSING\n  COMPLETED\n  FAILED\n}\n\nmodel RagDocument {\n  id          String            @id @default(cuid())\n  companyId   String\n  campaignId  String?\n  sourceType  RagSourceType\n  sourceId    String\n  title       String?\n  contentHash String\n  status      RagDocumentStatus @default(PENDING)\n  metadata    Json              @default(\"{}\")\n  createdAt   DateTime          @default(now())\n  updatedAt   DateTime          @updatedAt\n\n  company   Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  campaign  Campaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)\n  chunks    RagChunk[]\n  indexJobs RagIndexJob[]\n\n  @@unique([companyId, sourceType, sourceId, contentHash])\n  @@index([companyId])\n  @@index([campaignId])\n  @@index([sourceType])\n  @@index([status])\n}\n\nmodel RagChunk {\n  id         String   @id @default(cuid())\n  documentId String\n  companyId  String\n  campaignId String?\n  agentId    String?\n  chunkIndex Int\n  content    String\n  tokenCount Int?\n  metadata   Json     @default(\"{}\")\n  createdAt  DateTime @default(now())\n\n  document  RagDocument   @relation(fields: [documentId], references: [id], onDelete: Cascade)\n  embedding RagEmbedding?\n\n  @@unique([documentId, chunkIndex])\n  @@index([companyId])\n  @@index([campaignId])\n  @@index([agentId])\n}\n\nmodel RagEmbedding {\n  id             String                       @id @default(cuid())\n  chunkId        String                       @unique\n  embeddingModel String\n  dimensions     Int                          @default(1536)\n  embedding      Unsupported(\"vector(1536)\")?\n  createdAt      DateTime                     @default(now())\n\n  chunk RagChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)\n}\n\nmodel RagIndexJob {\n  id           String            @id @default(cuid())\n  companyId    String\n  documentId   String?\n  status       RagIndexJobStatus @default(PENDING)\n  errorMessage String?\n  attempts     Int               @default(0)\n  scheduledAt  DateTime          @default(now())\n  startedAt    DateTime?\n  completedAt  DateTime?\n  createdAt    DateTime          @default(now())\n\n  company  Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)\n  document RagDocument? @relation(fields: [documentId], references: [id], onDelete: SetNull)\n\n  @@index([status, scheduledAt])\n  @@index([companyId])\n}\n\nmodel RagPlatformSettings {\n  id               String   @id @default(\"default\")\n  embeddingModelId String?  @unique\n  chunkSize        Int      @default(512)\n  chunkOverlap     Int      @default(64)\n  topK             Int      @default(8)\n  rerankEnabled    Boolean  @default(true)\n  captionModelId   String?\n  updatedAt        DateTime @updatedAt\n\n  embeddingModel AiModel? @relation(fields: [embeddingModelId], references: [id], onDelete: SetNull)\n}\n",
+  "inlineSchemaHash": "c1e0280e230f2398d84a3d324e15083e29621caca0b7df76d160e5e7c46271aa",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"invitations\",\"kind\":\"object\",\"type\":\"Invitation\",\"relationName\":\"InvitationInviter\"},{\"name\":\"memberships\",\"kind\":\"object\",\"type\":\"Membership\",\"relationName\":\"MembershipToUser\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"ipAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refreshTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"}],\"dbName\":null},\"Verification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Organization\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"logo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"assets\",\"kind\":\"object\",\"type\":\"Asset\",\"relationName\":\"AssetToOrganization\"},{\"name\":\"CompanyBrain\",\"kind\":\"object\",\"type\":\"CompanyBrain\",\"relationName\":\"CompanyBrainToOrganization\"},{\"name\":\"contextArtifact\",\"kind\":\"object\",\"type\":\"ContextArtifact\",\"relationName\":\"ContextArtifactToOrganization\"},{\"name\":\"contextSources\",\"kind\":\"object\",\"type\":\"ContextSource\",\"relationName\":\"ContextSourceToOrganization\"},{\"name\":\"designSystem\",\"kind\":\"object\",\"type\":\"DesignSystemProfile\",\"relationName\":\"DesignSystemProfileToOrganization\"},{\"name\":\"invitations\",\"kind\":\"object\",\"type\":\"Invitation\",\"relationName\":\"InvitationToOrganization\"},{\"name\":\"memberships\",\"kind\":\"object\",\"type\":\"Membership\",\"relationName\":\"MembershipToOrganization\"},{\"name\":\"onboardingDraft\",\"kind\":\"object\",\"type\":\"OnboardingDraft\",\"relationName\":\"OnboardingDraftToOrganization\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"OrganizationToRole\"}],\"dbName\":null},\"Role\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isSystem\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"membershipRoles\",\"kind\":\"object\",\"type\":\"MembershipRole\",\"relationName\":\"MembershipRoleToRole\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"OrganizationToRole\"},{\"name\":\"permissions\",\"kind\":\"object\",\"type\":\"RolePermission\",\"relationName\":\"RoleToRolePermission\"}],\"dbName\":null},\"RolePermission\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToRolePermission\"}],\"dbName\":null},\"Membership\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"MembershipToOrganization\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"MembershipToUser\"},{\"name\":\"overrides\",\"kind\":\"object\",\"type\":\"MembershipPermissionOverride\",\"relationName\":\"MembershipToMembershipPermissionOverride\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"MembershipRole\",\"relationName\":\"MembershipToMembershipRole\"}],\"dbName\":null},\"MembershipRole\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"membershipId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"membership\",\"kind\":\"object\",\"type\":\"Membership\",\"relationName\":\"MembershipToMembershipRole\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"MembershipRoleToRole\"}],\"dbName\":null},\"MembershipPermissionOverride\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"membershipId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"effect\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"membership\",\"kind\":\"object\",\"type\":\"Membership\",\"relationName\":\"MembershipToMembershipPermissionOverride\"}],\"dbName\":null},\"Invitation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inviterId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"inviter\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"InvitationInviter\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"InvitationToOrganization\"}],\"dbName\":null},\"OnboardingDraft\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currentStep\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"OnboardingDraftToOrganization\"}],\"dbName\":null},\"ContextSource\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceKind\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mimeType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileSize\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"objectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publicUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipelineStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipelineError\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"extractedContent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"normalizedContent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reviewNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reviewedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reviewedById\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"ContextSourceToOrganization\"}],\"dbName\":null},\"ContextArtifact\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"objectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publicUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"syncStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"syncedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"syncError\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"ContextArtifactToOrganization\"}],\"dbName\":null},\"Asset\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceKind\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mimeType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibleType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibleCategory\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contextRole\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"operationalRole\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"contextStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"operationalStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"AssetToOrganization\"},{\"name\":\"relations\",\"kind\":\"object\",\"type\":\"AssetRelation\",\"relationName\":\"AssetToAssetRelation\"}],\"dbName\":null},\"AssetRelation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assetId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"kind\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"asset\",\"kind\":\"object\",\"type\":\"Asset\",\"relationName\":\"AssetToAssetRelation\"}],\"dbName\":null},\"DesignSystemProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"brandEssence\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"desiredPerception\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visualStyle\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"antiPatterns\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conceptualReferences\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"aiNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"artifactSyncStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"artifactSyncedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"artifactSyncError\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"artifactObjectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contextArtifactSyncStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contextArtifactSyncedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"contextArtifactSyncError\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contextArtifactObjectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"assets\",\"kind\":\"object\",\"type\":\"DesignAsset\",\"relationName\":\"DesignAssetToDesignSystemProfile\"},{\"name\":\"colorGroups\",\"kind\":\"object\",\"type\":\"DesignColorGroup\",\"relationName\":\"DesignColorGroupToDesignSystemProfile\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"DesignSystemProfileToOrganization\"}],\"dbName\":null},\"DesignColorGroup\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"designSystemId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sortOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"designSystem\",\"kind\":\"object\",\"type\":\"DesignSystemProfile\",\"relationName\":\"DesignColorGroupToDesignSystemProfile\"},{\"name\":\"colors\",\"kind\":\"object\",\"type\":\"DesignColorToken\",\"relationName\":\"DesignColorGroupToDesignColorToken\"}],\"dbName\":null},\"DesignColorToken\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"colorGroupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"displayFormat\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"semanticRole\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"usageNote\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"restrictionNote\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sortOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"colorGroup\",\"kind\":\"object\",\"type\":\"DesignColorGroup\",\"relationName\":\"DesignColorGroupToDesignColorToken\"}],\"dbName\":null},\"DesignAsset\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"designSystemId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"primaryRole\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"secondaryTags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"objectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publicUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"designSystem\",\"kind\":\"object\",\"type\":\"DesignSystemProfile\",\"relationName\":\"DesignAssetToDesignSystemProfile\"}],\"dbName\":null},\"PlatformRoleAssignment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedBy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"SupportSession\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actorUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"AuditLog\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actorUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"targetOrganizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"targetUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resourceType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"AIProvider\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"iconMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"capabilityMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"pricingMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"limitsMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"schemaMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"credentials\",\"kind\":\"object\",\"type\":\"AICredential\",\"relationName\":\"AICredentialToAIProvider\"},{\"name\":\"models\",\"kind\":\"object\",\"type\":\"AIModel\",\"relationName\":\"AIModelToAIProvider\"},{\"name\":\"policies\",\"kind\":\"object\",\"type\":\"AIProviderPolicy\",\"relationName\":\"AIProviderToAIProviderPolicy\"}],\"dbName\":null},\"AIModel\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"externalModelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capabilityMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"pricingMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"limitsMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"schemaMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"AIProvider\",\"relationName\":\"AIModelToAIProvider\"}],\"dbName\":null},\"AICredential\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"schemaMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"AIProvider\",\"relationName\":\"AICredentialToAIProvider\"}],\"dbName\":null},\"AIProviderPolicy\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allowedModelIds\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"AIProvider\",\"relationName\":\"AIProviderToAIProviderPolicy\"}],\"dbName\":null},\"AgentTemplate\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allowedBlocks\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"defaultFlow\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"defaultInputSchema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"defaultOutputSchema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"executionProfile\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"modelPolicy\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"agents\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentTemplateToCompanyAgent\"}],\"dbName\":null},\"CompanyAgent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"templateId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allowedTools\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"suggestedMessages\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"activeVersionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"onboardingCompletedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"chatThreads\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToCompanyAgent\"},{\"name\":\"chatToolCalls\",\"kind\":\"object\",\"type\":\"AgentChatToolCall\",\"relationName\":\"AgentChatToolCallToCompanyAgent\"},{\"name\":\"contextProfile\",\"kind\":\"object\",\"type\":\"AgentContextProfile\",\"relationName\":\"AgentContextProfileToCompanyAgent\"},{\"name\":\"runs\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToCompanyAgent\"},{\"name\":\"versions\",\"kind\":\"object\",\"type\":\"AgentVersion\",\"relationName\":\"AgentVersionToCompanyAgent\"},{\"name\":\"template\",\"kind\":\"object\",\"type\":\"AgentTemplate\",\"relationName\":\"AgentTemplateToCompanyAgent\"}],\"dbName\":null},\"SystemAgentConfig\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"modelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"maxOutputTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"AgentVersion\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"versionNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"flowDefinition\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"inputSchema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputSchema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publishedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"runs\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToAgentVersion\"},{\"name\":\"companyAgent\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentVersionToCompanyAgent\"}],\"dbName\":null},\"AgentRun\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentVersionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"attemptCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastAttemptAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"leaseExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"processingLeaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processingMetadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"queuePosition\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sourceMessageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rootRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parentStepId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"depth\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"currentBlockId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currentBlockType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"waitingReason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resumeStatus\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chunkIdsRetrieved\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"durationMs\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"intentClassified\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourcesSelected\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tokensUsed\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"chatMessages\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToAgentRun\"},{\"name\":\"agent\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentRunToCompanyAgent\"},{\"name\":\"agentVersion\",\"kind\":\"object\",\"type\":\"AgentVersion\",\"relationName\":\"AgentRunToAgentVersion\"},{\"name\":\"parentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunParentLineage\"},{\"name\":\"childRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunParentLineage\"},{\"name\":\"parentStep\",\"kind\":\"object\",\"type\":\"AgentRunStep\",\"relationName\":\"AgentRunParentStep\"},{\"name\":\"rootRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunRootLineage\"},{\"name\":\"rootChildRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunRootLineage\"},{\"name\":\"sourceMessage\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentRunSourceMessage\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToAgentRun\"},{\"name\":\"contextSnapshot\",\"kind\":\"object\",\"type\":\"AgentRunContextSnapshot\",\"relationName\":\"AgentRunToAgentRunContextSnapshot\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"AgentRunStep\",\"relationName\":\"AgentRunToAgentRunStep\"},{\"name\":\"suspensions\",\"kind\":\"object\",\"type\":\"AgentRunSuspension\",\"relationName\":\"AgentRunToAgentRunSuspension\"},{\"name\":\"creditEntries\",\"kind\":\"object\",\"type\":\"CreditLedgerEntry\",\"relationName\":\"AgentRunToCreditLedgerEntry\"},{\"name\":\"technicalCostEntries\",\"kind\":\"object\",\"type\":\"TechnicalCostLedgerEntry\",\"relationName\":\"AgentRunToTechnicalCostLedgerEntry\"}],\"dbName\":null},\"AgentRunStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"runId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blockKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blockType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"sequence\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"branchKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"outputType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"statePayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"uiOutputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"childAgentRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunParentStep\"},{\"name\":\"run\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToAgentRunStep\"},{\"name\":\"suspensions\",\"kind\":\"object\",\"type\":\"AgentRunSuspension\",\"relationName\":\"AgentRunStepToAgentRunSuspension\"}],\"dbName\":null},\"AgentContextProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"instructions\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"AgentContextFile\",\"relationName\":\"AgentContextFileToAgentContextProfile\"},{\"name\":\"agent\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentContextProfileToCompanyAgent\"},{\"name\":\"references\",\"kind\":\"object\",\"type\":\"AgentContextReference\",\"relationName\":\"AgentContextProfileToAgentContextReference\"}],\"dbName\":null},\"AgentContextFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"filename\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"objectKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mimeType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sizeBytes\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"publicUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"AgentContextProfile\",\"relationName\":\"AgentContextFileToAgentContextProfile\"}],\"dbName\":null},\"AgentContextReference\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"AgentContextProfile\",\"relationName\":\"AgentContextProfileToAgentContextReference\"}],\"dbName\":null},\"AgentRunContextSnapshot\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"runId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"layers\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"resolvedSummary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"run\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToAgentRunContextSnapshot\"},{\"name\":\"items\",\"kind\":\"object\",\"type\":\"AgentRunContextSnapshotItem\",\"relationName\":\"AgentRunContextSnapshotToAgentRunContextSnapshotItem\"}],\"dbName\":null},\"AgentRunContextSnapshotItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"snapshotId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"snapshot\",\"kind\":\"object\",\"type\":\"AgentRunContextSnapshot\",\"relationName\":\"AgentRunContextSnapshotToAgentRunContextSnapshotItem\"}],\"dbName\":null},\"AgentRunSuspension\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"runId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stepId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resolvedPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"roundNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"answeredAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"run\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToAgentRunSuspension\"},{\"name\":\"step\",\"kind\":\"object\",\"type\":\"AgentRunStep\",\"relationName\":\"AgentRunStepToAgentRunSuspension\"},{\"name\":\"responses\",\"kind\":\"object\",\"type\":\"AgentRunSuspensionResponse\",\"relationName\":\"AgentRunSuspensionToAgentRunSuspensionResponse\"}],\"dbName\":null},\"AgentRunSuspensionResponse\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"suspensionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answers\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"roundNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"answeredById\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answeredAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"suspension\",\"kind\":\"object\",\"type\":\"AgentRunSuspension\",\"relationName\":\"AgentRunSuspensionToAgentRunSuspensionResponse\"}],\"dbName\":null},\"AgentChatThread\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parentThreadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"branchedFromMessageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"messages\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToAgentChatThread\"},{\"name\":\"toolCalls\",\"kind\":\"object\",\"type\":\"AgentChatToolCall\",\"relationName\":\"AgentChatThreadToAgentChatToolCall\"},{\"name\":\"agent\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentChatThreadToCompanyAgent\"},{\"name\":\"branchedFromMessage\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatThreadBranchMessage\"},{\"name\":\"parentThread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadBranches\"},{\"name\":\"branches\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadBranches\"},{\"name\":\"runs\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentChatThreadToAgentRun\"},{\"name\":\"conversationEvents\",\"kind\":\"object\",\"type\":\"ConversationEvent\",\"relationName\":\"AgentChatThreadToConversationEvent\"},{\"name\":\"messageProjections\",\"kind\":\"object\",\"type\":\"ConversationMessageProjection\",\"relationName\":\"AgentChatThreadToConversationMessageProjection\"},{\"name\":\"toolCallProjections\",\"kind\":\"object\",\"type\":\"ConversationToolCallProjection\",\"relationName\":\"AgentChatThreadToConversationToolCallProjection\"}],\"dbName\":null},\"AgentChatMessage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"editedFromMessageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"regeneratedFromMessageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"agentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentChatMessageToAgentRun\"},{\"name\":\"editedFromMessage\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageEdits\"},{\"name\":\"editedVariants\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageEdits\"},{\"name\":\"regeneratedFromMessage\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageRegenerations\"},{\"name\":\"regenerations\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageRegenerations\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatMessageToAgentChatThread\"},{\"name\":\"branches\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadBranchMessage\"},{\"name\":\"sourceRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunSourceMessage\"},{\"name\":\"toolCalls\",\"kind\":\"object\",\"type\":\"AgentChatToolCall\",\"relationName\":\"AgentChatMessageToAgentChatToolCall\"},{\"name\":\"conversationEvents\",\"kind\":\"object\",\"type\":\"ConversationEvent\",\"relationName\":\"AgentChatMessageToConversationEvent\"},{\"name\":\"messageProjection\",\"kind\":\"object\",\"type\":\"ConversationMessageProjection\",\"relationName\":\"AgentChatMessageToConversationMessageProjection\"},{\"name\":\"toolCallProjections\",\"kind\":\"object\",\"type\":\"ConversationToolCallProjection\",\"relationName\":\"AgentChatMessageToConversationToolCallProjection\"}],\"dbName\":null},\"AgentChatToolCall\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"messageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"toolName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"durationMs\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"agent\",\"kind\":\"object\",\"type\":\"CompanyAgent\",\"relationName\":\"AgentChatToolCallToCompanyAgent\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToAgentChatToolCall\"},{\"name\":\"message\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToAgentChatToolCall\"}],\"dbName\":null},\"ConversationEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"messageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sequence\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"eventType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"idempotencyKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToConversationEvent\"},{\"name\":\"message\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToConversationEvent\"}],\"dbName\":null},\"ConversationMessageProjection\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"messageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"text\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"citations\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"isStreaming\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isCompleted\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isFailed\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastSequence\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToConversationMessageProjection\"},{\"name\":\"message\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToConversationMessageProjection\"}],\"dbName\":null},\"ConversationToolCallProjection\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"threadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"messageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"toolCallId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"groupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"toolName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"durationMs\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"displayOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"thread\",\"kind\":\"object\",\"type\":\"AgentChatThread\",\"relationName\":\"AgentChatThreadToConversationToolCallProjection\"},{\"name\":\"message\",\"kind\":\"object\",\"type\":\"AgentChatMessage\",\"relationName\":\"AgentChatMessageToConversationToolCallProjection\"}],\"dbName\":null},\"CreditLedgerEntry\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"runId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entryType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"balanceAfter\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"idempotencyKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"run\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToCreditLedgerEntry\"}],\"dbName\":null},\"TechnicalCostLedgerEntry\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"runId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"modelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"unit\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"idempotencyKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"run\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToTechnicalCostLedgerEntry\"}],\"dbName\":null},\"RagDocument\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentHash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"chunks\",\"kind\":\"object\",\"type\":\"RagChunk\",\"relationName\":\"RagChunkToRagDocument\"},{\"name\":\"indexJobs\",\"kind\":\"object\",\"type\":\"RagIndexJob\",\"relationName\":\"RagDocumentToRagIndexJob\"}],\"dbName\":null},\"RagChunk\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"documentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sequence\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tokenCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"document\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"RagChunkToRagDocument\"},{\"name\":\"embedding\",\"kind\":\"object\",\"type\":\"RagEmbedding\",\"relationName\":\"RagChunkToRagEmbedding\"}],\"dbName\":null},\"RagEmbedding\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chunkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"model\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dimensions\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"chunk\",\"kind\":\"object\",\"type\":\"RagChunk\",\"relationName\":\"RagChunkToRagEmbedding\"}],\"dbName\":null},\"RagIndexJob\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"documentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"triggeredByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"document\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"RagDocumentToRagIndexJob\"}],\"dbName\":null},\"BrainVersion\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"brainId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"versionNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publishedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"CompanyBrain\",\"kind\":\"object\",\"type\":\"CompanyBrain\",\"relationName\":\"BrainVersionToCompanyBrain\"}],\"dbName\":null},\"CompanyBrain\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"activeVersionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"BrainVersion\",\"kind\":\"object\",\"type\":\"BrainVersion\",\"relationName\":\"BrainVersionToCompanyBrain\"},{\"name\":\"Organization\",\"kind\":\"object\",\"type\":\"Organization\",\"relationName\":\"CompanyBrainToOrganization\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userType\",\"kind\":\"enum\",\"type\":\"UserType\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"roleAssignments\",\"kind\":\"object\",\"type\":\"UserRoleAssignment\",\"relationName\":\"UserToUserRoleAssignment\"},{\"name\":\"ownedCompanies\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToUser\"},{\"name\":\"agentFeedbacks\",\"kind\":\"object\",\"type\":\"AgentFeedback\",\"relationName\":\"AgentFeedbackToUser\"}],\"dbName\":null},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"ipAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refreshTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"}],\"dbName\":null},\"Verification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Role\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isSystem\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"permissions\",\"kind\":\"object\",\"type\":\"RolePermission\",\"relationName\":\"RoleToRolePermission\"},{\"name\":\"memberAssignments\",\"kind\":\"object\",\"type\":\"UserRoleAssignment\",\"relationName\":\"RoleToUserRoleAssignment\"}],\"dbName\":null},\"RolePermission\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToRolePermission\"}],\"dbName\":null},\"UserRoleAssignment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserRoleAssignment\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToUserRoleAssignment\"}],\"dbName\":null},\"PlatformRoleAssignment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedBy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assignedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"SupportSession\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actorUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"AuditLog\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actorUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"targetUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resourceType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Company\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ownerUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"onboardingCompletedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"owner\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"CompanyToUser\"},{\"name\":\"brandProfile\",\"kind\":\"object\",\"type\":\"BrandProfile\",\"relationName\":\"BrandProfileToCompany\"},{\"name\":\"campaigns\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToCompany\"},{\"name\":\"campaignFiles\",\"kind\":\"object\",\"type\":\"CampaignFile\",\"relationName\":\"CampaignFileToCompany\"},{\"name\":\"contentPieces\",\"kind\":\"object\",\"type\":\"ContentPiece\",\"relationName\":\"CompanyToContentPiece\"},{\"name\":\"pipelineRuns\",\"kind\":\"object\",\"type\":\"PipelineRun\",\"relationName\":\"CompanyToPipelineRun\"},{\"name\":\"agentRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToCompany\"},{\"name\":\"agentFeedbacks\",\"kind\":\"object\",\"type\":\"AgentFeedback\",\"relationName\":\"AgentFeedbackToCompany\"},{\"name\":\"agentMemories\",\"kind\":\"object\",\"type\":\"AgentMemory\",\"relationName\":\"AgentMemoryToCompany\"},{\"name\":\"creditBalance\",\"kind\":\"object\",\"type\":\"CreditBalance\",\"relationName\":\"CompanyToCreditBalance\"},{\"name\":\"creditLedger\",\"kind\":\"object\",\"type\":\"CreditLedger\",\"relationName\":\"CompanyToCreditLedger\"},{\"name\":\"ragDocuments\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"CompanyToRagDocument\"},{\"name\":\"ragIndexJobs\",\"kind\":\"object\",\"type\":\"RagIndexJob\",\"relationName\":\"CompanyToRagIndexJob\"}],\"dbName\":null},\"BrandProfile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"logoStorageKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"logoVariants\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"brandAssets\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"brandVoice\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"palette\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"typography\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visualStyle\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"niche\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"targetAudience\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"marketingObjective\",\"kind\":\"enum\",\"type\":\"MarketingObjective\"},{\"name\":\"socialNetworks\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"mainProducts\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"differentiators\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"BrandProfileToCompany\"}],\"dbName\":null},\"Campaign\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"objective\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"context\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"CampaignStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CampaignToCompany\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"CampaignFile\",\"relationName\":\"CampaignToCampaignFile\"},{\"name\":\"contentPieces\",\"kind\":\"object\",\"type\":\"ContentPiece\",\"relationName\":\"CampaignToContentPiece\"},{\"name\":\"pipelineRuns\",\"kind\":\"object\",\"type\":\"PipelineRun\",\"relationName\":\"CampaignToPipelineRun\"},{\"name\":\"ragDocuments\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"CampaignToRagDocument\"}],\"dbName\":null},\"CampaignFile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mimeType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"storageKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"CampaignFileType\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"CampaignFileStatus\"},{\"name\":\"extractedText\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"caption\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sizeBytes\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CampaignFileToCompany\"},{\"name\":\"campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToCampaignFile\"}],\"dbName\":null},\"ContentPiece\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipelineRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"format\",\"kind\":\"enum\",\"type\":\"ContentPieceFormat\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ContentPieceStatus\"},{\"name\":\"caption\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hashtags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageStorageKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"htmlSnapshot\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creditCost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"approvedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToContentPiece\"},{\"name\":\"campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToContentPiece\"},{\"name\":\"pipelineRun\",\"kind\":\"object\",\"type\":\"PipelineRun\",\"relationName\":\"ContentPieceToPipelineRun\"},{\"name\":\"agentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToContentPiece\"},{\"name\":\"feedbacks\",\"kind\":\"object\",\"type\":\"AgentFeedback\",\"relationName\":\"AgentFeedbackToContentPiece\"}],\"dbName\":null},\"PipelineRun\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"triggeredByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userInput\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"PipelineRunStatus\"},{\"name\":\"agentOrder\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creditCost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToPipelineRun\"},{\"name\":\"campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToPipelineRun\"},{\"name\":\"agentRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToPipelineRun\"},{\"name\":\"contentPieces\",\"kind\":\"object\",\"type\":\"ContentPiece\",\"relationName\":\"ContentPieceToPipelineRun\"}],\"dbName\":null},\"AgentRun\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipelineRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"feedbackId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"AgentRunStatus\"},{\"name\":\"currentStepKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pauseReason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pauseFormSchema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"creditCost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"AgentRunToCompany\"},{\"name\":\"pipelineRun\",\"kind\":\"object\",\"type\":\"PipelineRun\",\"relationName\":\"AgentRunToPipelineRun\"},{\"name\":\"parentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunRegeneration\"},{\"name\":\"childRuns\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunRegeneration\"},{\"name\":\"feedback\",\"kind\":\"object\",\"type\":\"AgentFeedback\",\"relationName\":\"AgentFeedbackToAgentRun\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"AgentRunStep\",\"relationName\":\"AgentRunToAgentRunStep\"},{\"name\":\"contentPieces\",\"kind\":\"object\",\"type\":\"ContentPiece\",\"relationName\":\"AgentRunToContentPiece\"},{\"name\":\"creditLedger\",\"kind\":\"object\",\"type\":\"CreditLedger\",\"relationName\":\"AgentRunToCreditLedger\"}],\"dbName\":null},\"AgentRunStep\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stepKey\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stepIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"AgentRunStepStatus\"},{\"name\":\"resultType\",\"kind\":\"enum\",\"type\":\"StepResultType\"},{\"name\":\"inputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"outputPayload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"llmModel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tokensInput\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tokensOutput\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"creditCost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"agentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToAgentRunStep\"},{\"name\":\"creditLedger\",\"kind\":\"object\",\"type\":\"CreditLedger\",\"relationName\":\"AgentRunStepToCreditLedger\"}],\"dbName\":null},\"AgentFeedback\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentPieceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"feedbackType\",\"kind\":\"enum\",\"type\":\"FeedbackType\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"originalContent\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"editedContent\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"instruction\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentHash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"AgentFeedbackToCompany\"},{\"name\":\"contentPiece\",\"kind\":\"object\",\"type\":\"ContentPiece\",\"relationName\":\"AgentFeedbackToContentPiece\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AgentFeedbackToUser\"},{\"name\":\"learningSignals\",\"kind\":\"object\",\"type\":\"LearningSignal\",\"relationName\":\"AgentFeedbackToLearningSignal\"},{\"name\":\"regenerationRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentFeedbackToAgentRun\"}],\"dbName\":null},\"LearningSignal\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"feedbackId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"signalType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"signalValue\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weight\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"feedback\",\"kind\":\"object\",\"type\":\"AgentFeedback\",\"relationName\":\"AgentFeedbackToLearningSignal\"}],\"dbName\":null},\"AgentMemory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"signals\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"lastFeedbackId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"AgentMemoryToCompany\"}],\"dbName\":null},\"CreditBalance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToCreditBalance\"}],\"dbName\":null},\"CreditLedger\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"CreditLedgerType\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"balanceAfter\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentRunStepId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentRunId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdByUserId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToCreditLedger\"},{\"name\":\"agentRunStep\",\"kind\":\"object\",\"type\":\"AgentRunStep\",\"relationName\":\"AgentRunStepToCreditLedger\"},{\"name\":\"agentRun\",\"kind\":\"object\",\"type\":\"AgentRun\",\"relationName\":\"AgentRunToCreditLedger\"}],\"dbName\":null},\"PlatformCreditSettings\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"freeTierAmount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markupDefault\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"minRunCost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedByUserId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"AiProvider\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isEnabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"credentials\",\"kind\":\"object\",\"type\":\"AiProviderCredential\",\"relationName\":\"AiProviderToAiProviderCredential\"},{\"name\":\"models\",\"kind\":\"object\",\"type\":\"AiModel\",\"relationName\":\"AiModelToAiProvider\"}],\"dbName\":null},\"AiProviderCredential\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"encryptedValue\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"AiProvider\",\"relationName\":\"AiProviderToAiProviderCredential\"}],\"dbName\":null},\"AiModel\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"externalId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isEnabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"inputCostPer1k\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"outputCostPer1k\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"maxTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"capabilities\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"AiProvider\",\"relationName\":\"AiModelToAiProvider\"},{\"name\":\"agentPolicies\",\"kind\":\"object\",\"type\":\"AgentModelPolicy\",\"relationName\":\"AgentModelPolicyToAiModel\"},{\"name\":\"embeddingSettings\",\"kind\":\"object\",\"type\":\"RagPlatformSettings\",\"relationName\":\"AiModelToRagPlatformSettings\"}],\"dbName\":null},\"AgentModelPolicy\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"modelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markupMultiplier\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"isEnabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"minCostPerRun\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"model\",\"kind\":\"object\",\"type\":\"AiModel\",\"relationName\":\"AgentModelPolicyToAiModel\"}],\"dbName\":null},\"PipelineAgentConfig\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sortOrder\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"isEnabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null},\"RagDocument\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sourceType\",\"kind\":\"enum\",\"type\":\"RagSourceType\"},{\"name\":\"sourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentHash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RagDocumentStatus\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToRagDocument\"},{\"name\":\"campaign\",\"kind\":\"object\",\"type\":\"Campaign\",\"relationName\":\"CampaignToRagDocument\"},{\"name\":\"chunks\",\"kind\":\"object\",\"type\":\"RagChunk\",\"relationName\":\"RagChunkToRagDocument\"},{\"name\":\"indexJobs\",\"kind\":\"object\",\"type\":\"RagIndexJob\",\"relationName\":\"RagDocumentToRagIndexJob\"}],\"dbName\":null},\"RagChunk\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"documentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaignId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"agentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chunkIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tokenCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"document\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"RagChunkToRagDocument\"},{\"name\":\"embedding\",\"kind\":\"object\",\"type\":\"RagEmbedding\",\"relationName\":\"RagChunkToRagEmbedding\"}],\"dbName\":null},\"RagEmbedding\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chunkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"embeddingModel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dimensions\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"chunk\",\"kind\":\"object\",\"type\":\"RagChunk\",\"relationName\":\"RagChunkToRagEmbedding\"}],\"dbName\":null},\"RagIndexJob\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"companyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"documentId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RagIndexJobStatus\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"scheduledAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"startedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"Company\",\"relationName\":\"CompanyToRagIndexJob\"},{\"name\":\"document\",\"kind\":\"object\",\"type\":\"RagDocument\",\"relationName\":\"RagDocumentToRagIndexJob\"}],\"dbName\":null},\"RagPlatformSettings\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"embeddingModelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chunkSize\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"chunkOverlap\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"topK\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"rerankEnabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"captionModelId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"embeddingModel\",\"kind\":\"object\",\"type\":\"AiModel\",\"relationName\":\"AiModelToRagPlatformSettings\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

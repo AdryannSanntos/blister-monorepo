@@ -30,7 +30,7 @@ export function ColorSelect({ value, onChange, disabled, className }: ColorSelec
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <label className="relative flex size-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-sunken)] shadow-sm transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:scale-[1.02] focus-within:ring-2 focus-within:ring-[var(--ring-focus)]">
+      <label className="relative flex size-[var(--control-h-md)] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-sunken)] shadow-sm transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:scale-[1.02] focus-within:ring-2 focus-within:ring-[var(--ring-focus)]">
         <span className="size-6 rounded-[var(--r-sm)] border border-[var(--line-subtle)]" style={{ backgroundColor: pickerValue }} />
         <input
           type="color"

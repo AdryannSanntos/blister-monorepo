@@ -7,7 +7,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "relative flex flex-col rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] text-card-foreground shadow-[var(--shadow-sm)] transition-[border-color,box-shadow,transform] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--line-strong)] data-[interactive=true]:cursor-pointer data-[interactive=true]:hover:-translate-y-px data-[interactive=true]:hover:shadow-[var(--shadow-md)] data-[selected=true]:border-[var(--accent)]",
+        "relative flex flex-col rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-raised)] text-card-foreground transition-[border-color,transform] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--line-strong)] data-[interactive=true]:cursor-pointer data-[interactive=true]:hover:-translate-y-px data-[selected=true]:border-[var(--accent)]",
         className,
       )}
       {...props}
@@ -33,7 +33,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "text-[17px] leading-snug font-medium tracking-[-0.01em] text-[var(--fg-primary)]",
+        "font-heading text-[17px] leading-snug font-semibold tracking-[-0.01em] text-[var(--fg-primary)]",
         className,
       )}
       {...props}

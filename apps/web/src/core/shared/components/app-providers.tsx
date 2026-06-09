@@ -17,7 +17,13 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+          storageKey="blister-theme"
+        >
           <TooltipProvider delayDuration={240}>{children}</TooltipProvider>
           <Toaster position="top-right" closeButton />
         </ThemeProvider>

@@ -10,7 +10,6 @@ describe("getVerifyEmailViewState", () => {
       new URLSearchParams({ status: "success" }),
     );
     expect(state.kind).toBe("success");
-    expect(state.title).toBe("Email verificado com sucesso");
   });
 
   it("returns error state for an error param", () => {
@@ -18,7 +17,6 @@ describe("getVerifyEmailViewState", () => {
       new URLSearchParams({ error: "TOKEN_EXPIRED" }),
     );
     expect(state.kind).toBe("error");
-    expect(state.title).toBe("Link de verificação inválido ou expirado");
   });
 
   it("returns pending state with the email when no status/error is present", () => {

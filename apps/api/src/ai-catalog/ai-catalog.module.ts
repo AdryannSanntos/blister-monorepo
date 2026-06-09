@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AIRuntimeModule } from '../ai-runtime/ai-runtime.module';
+import { AuditModule } from '../audit/audit.module';
+import { CreditsModule } from '../credits/credits.module';
 import { PlatformModule } from '../platform/platform.module';
-import { AICatalogController } from './ai-catalog.controller';
-import { OrganizationAICatalogController } from './organization-ai-catalog.controller';
-import { AICatalogService } from './ai-catalog.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { AiCatalogController } from './ai-catalog.controller';
+import { ModelsService } from './models.service';
+import { PlatformCompaniesService } from './platform-companies.service';
+import { PlatformSettingsService } from './platform-settings.service';
+import { PoliciesService } from './policies.service';
+import { ProvidersService } from './providers.service';
 
 @Module({
-  imports: [PlatformModule, AIRuntimeModule],
-  controllers: [AICatalogController, OrganizationAICatalogController],
-  providers: [AICatalogService],
-  exports: [AICatalogService],
+  imports: [PrismaModule, AuditModule, CreditsModule, PlatformModule],
+  controllers: [AiCatalogController],
+  providers: [
+    ProvidersService,
+    ModelsService,
+    PoliciesService,
+    PlatformSettingsService,
+    PlatformCompaniesService,
+  ],
 })
-export class AICatalogModule {}
+export class AiCatalogModule {}

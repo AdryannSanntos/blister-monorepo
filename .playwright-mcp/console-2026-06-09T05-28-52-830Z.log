@@ -1,0 +1,535 @@
+[     895ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[    1076ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[    1228ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[    1462ms] [LOG] [Fast Refresh] done in 338ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[    1602ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-500.woff2 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[    1602ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[    1604ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-400.woff2 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[    1604ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[    1606ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-700.woff2 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[    1607ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/auth/login?next=%2Fdashboard%2Fagents%2Fstrategist:0
+[   13909ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   13938ms] [LOG] [Fast Refresh] done in 130ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   14324ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   14356ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/api/agents/strategist/runs?limit=20&offset=0:0
+[   14383ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://localhost:3001/api/platform/admins:0
+[   14560ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/images/brand/icon.png:0
+[   15362ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/api/agents/strategist/runs?limit=20&offset=0:0
+[   15405ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://localhost:3001/api/platform/admins:0
+[   18590ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   18592ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   44307ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-400.woff2 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   44309ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   44309ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-500.woff2 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   44309ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   44309ms] [WARNING] Failed to decode downloaded font: http://localhost:3000/fonts/satoshi/satoshi-700.woff2 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   44309ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ http://localhost:3000/dashboard/agents/strategist?tab=history:0
+[   48053ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   48054ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   62513ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   65262ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   65293ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   65294ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   65295ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   65377ms] [LOG] [Fast Refresh] done in 2966ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   65501ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   65736ms] [LOG] [Fast Refresh] done in 337ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   65991ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   66939ms] [LOG] [Fast Refresh] done in 1050ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   69731ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   72444ms] [LOG] [Fast Refresh] done in 2358ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   72520ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   72528ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   72528ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   72528ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   73161ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   74846ms] [LOG] [Fast Refresh] done in 1787ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   74951ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   75322ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75329ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75330ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75331ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75347ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75348ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75349ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75349ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at flushSyncWork$1 (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9230:86)
+    at Object.scheduleRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:299:13)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:384:38)
+    at applyUpdate (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:878:31)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_11f7mss._.js:886:13 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   75475ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/api/agents/strategist/runs?limit=20&offset=0:0
+[   75862ms] [LOG] [Fast Refresh] done in 1013ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   75964ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   75969ms] [LOG] [Fast Refresh] done in 106ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   76155ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   76252ms] [LOG] [Fast Refresh] done in 197ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   76315ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/fonts/satoshi/satoshi-700.woff2:0
+[   76316ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/fonts/satoshi/satoshi-400.woff2:0
+[   76317ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/fonts/satoshi/satoshi-500.woff2:0
+[   76493ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/api/agents/strategist/runs?limit=20&offset=0:0
+[   76498ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10274:158 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   76498ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10274:158 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   76498ms] [ERROR] IntlError: FORMATTING_ERROR: The intl string context variable "agent" was not provided to the string "O que você precisa de {agent}?"
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4350:20)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:37:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10274:158 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   76499ms] [ERROR] IntlError: MISSING_MESSAGE: Could not resolve `agents.chat.subtitle` in messages for locale `pt-BR`.
+    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4296:23)
+    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4326:28)
+    at translateFn (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0t9jrqk._.js:4354:24)
+    at AgentChatEmptyState (http://localhost:3000/_next/static/chunks/apps_web_src_0pu1~_.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fsrc%252Fcore%252Fmodules%252Fagents%252Fcomponents%252Fagent-chat-empty-state.tsx+%255Bapp-client%255D+%2528ecmascript%2529:45:27)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:15037:24)
+    at renderWithHooksAgain (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4675:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:4626:28)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:9061:186)
+    at performSyncWorkOnRoot (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10179:316)
+    at processRootScheduleInMicrotask (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10200:106)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-dom_04-pwfv._.js:10274:158 @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:3318
+[   76505ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   76519ms] [LOG] [Fast Refresh] done in 114ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   79925ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   80920ms] [LOG] [Fast Refresh] done in 1044ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[   92506ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  372061ms] [LOG] [Fast Refresh] done in 279627ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  399167ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  400569ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  406468ms] [LOG] [Fast Refresh] done in 6710ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  408403ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  408671ms] [LOG] [Fast Refresh] done in 368ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  411190ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  411407ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  411636ms] Error: Module [project]/node_modules/.pnpm/next@16.2.6_@babel+core@7.29.0_@opentelemetry+api@1.9.0_@playwright+test@1.60.0_react-d_4ced3b12f017e7a72b72e4106d401dc8/node_modules/next/dist/client/components/builtin/global-error.js [app-client] (ecmascript) was instantiated because it was required from module [project]/node_modules/.pnpm/next@16.2.6_@babel+core@7.29.0_@opentelemetry+api@1.9.0_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/next/dist/compiled/react-server-dom-turbopack/cjs/react-server-dom-turbopack-client.browser.development.js [app-client] (ecmascript), but the module factory is not available.
+This is often caused by a stale browser cache, misconfigured Cache-Control headers, or a service worker serving outdated responses.
+To fix this, make sure your Cache-Control headers allow revalidation of chunks and review your service worker configuration. As an immediate workaround, try hard-reloading the page, clearing the browser cache, or unregistering any service workers.
+    at instantiateModuleShared (http://localhost:3000/_next/static/chunks/turbopack-apps_web_0vxn6o2._.js:1272:15)
+    at instantiateModule (http://localhost:3000/_next/static/chunks/turbopack-apps_web_0vxn6o2._.js:1621:12)
+    at getOrInstantiateModuleFromParent (http://localhost:3000/_next/static/chunks/turbopack-apps_web_0vxn6o2._.js:1604:12)
+    at DevContext.commonJsRequire [as r] (http://localhost:3000/_next/static/chunks/turbopack-apps_web_0vxn6o2._.js:299:12)
+    at requireAsyncModule (http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-server-dom-turbopack_10tchcd._.js:68:78)
+    at http://localhost:3000/_next/static/chunks/0v79_next_dist_compiled_react-server-dom-turbopack_10tchcd._.js:91:20
+[  411961ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  417031ms] [LOG] [Fast Refresh] done in 5161ms @ http://localhost:3000/_next/static/chunks/0v79_next_dist_06ddkv7._.js:2477
+[  418546ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=XYyhFHL8s5d83yUt1mOEA' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0v79_next_dist_client_13ed_ge._.js:13322
+[  419548ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=XYyhFHL8s5d83yUt1mOEA' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0v79_next_dist_client_13ed_ge._.js:13322
+[  420550ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=XYyhFHL8s5d83yUt1mOEA' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0v79_next_dist_client_13ed_ge._.js:13322
+[  421553ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=XYyhFHL8s5d83yUt1mOEA' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0v79_next_dist_client_13ed_ge._.js:13322
+[  422557ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=XYyhFHL8s5d83yUt1mOEA' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0v79_next_dist_client_13ed_ge._.js:13322

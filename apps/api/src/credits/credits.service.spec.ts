@@ -1,104 +1,135 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreditsService } from './credits.service';
+import { AuditService } from '../audit/audit.service';
+import { CreditService } from './credits.service';
 
-const makeMockPrisma = () => ({
-  creditLedgerEntry: {
-    findMany: jest.fn(),
-    create: jest.fn(),
-  },
-  technicalCostLedgerEntry: {
-    create: jest.fn(),
-    findMany: jest.fn(),
-  },
-  agentRun: {
+const makeMockPrisma = () => {
+  const creditBalance = {
     findUnique: jest.fn(),
-  },
-});
+    findUniqueOrThrow: jest.fn(),
+    update: jest.fn(),
+  };
+  const creditLedger = {
+    findMany: jest.fn(),
+    count: jest.fn(),
+    create: jest.fn(),
+  };
+  return {
+    creditBalance,
+    creditLedger,
+    // Execute the callback with the same mocked client as the transaction client.
+    $transaction: jest.fn((cb: (tx: unknown) => unknown) =>
+      cb({ creditBalance, creditLedger }),
+    ),
+  };
+};
 
-describe('CreditsService', () => {
-  let service: CreditsService;
-  let prisma: ReturnType<typeof makeMockPrisma>;
+type MockPrisma = ReturnType<typeof makeMockPrisma>;
+
+const makeMockAudit = () => ({ write: jest.fn().mockResolvedValue({}) });
+
+describe('CreditService', () => {
+  let service: CreditService;
+  let prisma: MockPrisma;
+  let audit: ReturnType<typeof makeMockAudit>;
 
   beforeEach(async () => {
     prisma = makeMockPrisma();
+    audit = makeMockAudit();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CreditsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        CreditService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: AuditService, useValue: audit },
+      ],
     }).compile();
 
-    service = module.get(CreditsService);
+    service = module.get<CreditService>(CreditService);
   });
 
-  it('adds credits to organization', async () => {
-    prisma.creditLedgerEntry.findMany.mockResolvedValue([]);
-    prisma.creditLedgerEntry.create.mockResolvedValue({ id: 'entry-1', amount: 100 });
-
-    const result = await service.addCredits('actor-1', 'org-1', { amount: 100 });
-
-    expect(prisma.creditLedgerEntry.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ organizationId: 'org-1', entryType: 'credit_added', amount: 100 }),
-    });
-    expect(result.amount).toBe(100);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('debits credits for run', async () => {
-    prisma.agentRun.findUnique.mockResolvedValue({ id: 'run-1', organizationId: 'org-1' });
-    prisma.creditLedgerEntry.findMany.mockResolvedValue([{ amount: 200 }]);
-    prisma.creditLedgerEntry.create.mockResolvedValue({ id: 'entry-1', amount: -40 });
+  describe('debit', () => {
+    it('reduces balance and writes a DEBIT ledger row with correct balanceAfter', async () => {
+      prisma.creditBalance.findUniqueOrThrow.mockResolvedValue({
+        companyId: 'company-1',
+        amount: '20',
+        currency: 'USD',
+      });
+      prisma.creditLedger.create.mockResolvedValue({ id: 'ledger-1' });
 
-    const result = await service.debitRunCredits('run-1', 40);
+      await service.debit('company-1', 5, 'agent run');
 
-    expect(result.amount).toBe(-40);
-  });
-
-  it('rejects debit when insufficient balance if strict mode is enabled', async () => {
-    prisma.agentRun.findUnique.mockResolvedValue({ id: 'run-1', organizationId: 'org-1' });
-    prisma.creditLedgerEntry.findMany.mockResolvedValue([{ amount: 10 }]);
-
-    await expect(service.debitRunCredits('run-1', 40, { strict: true })).rejects.toThrow(
-      BadRequestException,
-    );
-  });
-
-  it('records technical cost separately from credits', async () => {
-    prisma.technicalCostLedgerEntry.create.mockResolvedValue({ id: 'cost-1', amount: 1.25 });
-
-    const result = await service.recordTechnicalCost({
-      organizationId: 'org-1',
-      runId: 'run-1',
-      providerId: 'provider-1',
-      modelId: 'model-1',
-      amount: 1.25,
+      expect(prisma.creditBalance.update).toHaveBeenCalledWith({
+        where: { companyId: 'company-1' },
+        data: { amount: 15 },
+      });
+      const ledgerArg = prisma.creditLedger.create.mock.calls[0][0];
+      expect(ledgerArg.data).toEqual(
+        expect.objectContaining({
+          companyId: 'company-1',
+          type: 'DEBIT',
+          amount: 5,
+          balanceAfter: 15,
+          currency: 'USD',
+          description: 'agent run',
+        }),
+      );
     });
 
-    expect(result.id).toBe('cost-1');
-    expect(prisma.creditLedgerEntry.create).not.toHaveBeenCalled();
+    it('throws when balance is insufficient', async () => {
+      prisma.creditBalance.findUniqueOrThrow.mockResolvedValue({
+        companyId: 'company-1',
+        amount: '3',
+        currency: 'USD',
+      });
+
+      await expect(service.debit('company-1', 5)).rejects.toBeInstanceOf(
+        UnprocessableEntityException,
+      );
+      expect(prisma.creditBalance.update).not.toHaveBeenCalled();
+      expect(prisma.creditLedger.create).not.toHaveBeenCalled();
+    });
   });
 
-  it('global platform cost report includes provider/model breakdown', async () => {
-    prisma.technicalCostLedgerEntry.findMany.mockResolvedValue([
-      { providerId: 'provider-1', modelId: 'model-1', amount: 1.5 },
-      { providerId: 'provider-1', modelId: 'model-2', amount: 2 },
-      { providerId: 'provider-2', modelId: 'model-3', amount: 3 },
-    ]);
+  describe('adjust', () => {
+    it('clamps balance at 0 for a DEBIT adjustment and writes an audit entry', async () => {
+      prisma.creditBalance.findUniqueOrThrow.mockResolvedValue({
+        companyId: 'company-1',
+        amount: '2',
+        currency: 'USD',
+      });
+      prisma.creditLedger.create.mockResolvedValue({ id: 'ledger-1' });
 
-    const providerSummary = await service.getPlatformCostSummary({ groupBy: 'provider' });
-    const modelSummary = await service.getPlatformCostSummary({ groupBy: 'model' });
+      await service.adjust('company-1', 5, 'DEBIT', 'admin-1', 'manual fix');
 
-    expect(providerSummary.totalCost).toBe(6.5);
-    expect(providerSummary.breakdown).toEqual(
-      expect.arrayContaining([{ key: 'provider-1', amount: 3.5 }, { key: 'provider-2', amount: 3 }]),
-    );
-    expect(modelSummary.breakdown).toEqual(
-      expect.arrayContaining([{ key: 'model-1', amount: 1.5 }, { key: 'model-2', amount: 2 }]),
-    );
-  });
-
-  it('throws when debiting a missing run', async () => {
-    prisma.agentRun.findUnique.mockResolvedValue(null);
-
-    await expect(service.debitRunCredits('run-404', 10)).rejects.toThrow(NotFoundException);
+      expect(prisma.creditBalance.update).toHaveBeenCalledWith({
+        where: { companyId: 'company-1' },
+        data: { amount: 0 },
+      });
+      const ledgerArg = prisma.creditLedger.create.mock.calls[0][0];
+      expect(ledgerArg.data).toEqual(
+        expect.objectContaining({
+          type: 'DEBIT',
+          amount: 5,
+          balanceAfter: 0,
+          description: 'manual fix',
+          createdByUserId: 'admin-1',
+        }),
+      );
+      expect(audit.write).toHaveBeenCalledWith(
+        expect.objectContaining({
+          actorUserId: 'admin-1',
+          action: 'credit.adjust',
+          resourceType: 'CreditBalance',
+          resourceId: 'company-1',
+          metadata: { amount: 5, type: 'DEBIT', reason: 'manual fix' },
+        }),
+      );
+    });
   });
 });

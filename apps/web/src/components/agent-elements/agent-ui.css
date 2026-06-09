@@ -8,7 +8,7 @@
   --an-input-border-radius: var(--r-lg, 12px);
   --an-tool-border-radius: var(--r-md, 8px);
   --an-message-radius-inner-offset: 4px;
-  --an-max-width: 720px;
+  --an-max-width: 768px;
 
   /* Surfaces */
   --an-background: var(--bg-canvas);

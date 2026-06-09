@@ -4,7 +4,7 @@ import { Slot } from "radix-ui";
 
 import { cn } from "src/core/shared/utils";
 
-const headingVariants = cva("font-medium text-[var(--fg-primary)]", {
+const headingVariants = cva("font-heading font-medium text-[var(--fg-primary)]", {
   variants: {
     level: {
       h1: "text-[40px] leading-[1.05] font-semibold tracking-[-0.020em]",

@@ -27,7 +27,7 @@ function RadioGroupItem({
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
-        "aspect-square size-4 shrink-0 rounded-full border border-[var(--line-strong)] bg-[var(--bg-sunken)] text-[var(--accent)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] focus:border-[var(--accent)] focus:ring-[3px] focus:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-[var(--danger)] aria-invalid:focus-visible:ring-[3px] aria-invalid:focus-visible:ring-[var(--danger-soft)]",
+        "aspect-square size-5 shrink-0 rounded-full border-[1.5px] border-[var(--line-strong)] bg-[var(--bg-base)] text-white shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--primary-400)] focus-visible:border-[var(--primary-700)] focus-visible:ring-[3px] focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:border-[var(--line-default)] disabled:bg-[var(--bg-sunken)] disabled:opacity-60 aria-invalid:border-[var(--danger)] aria-invalid:focus-visible:ring-[3px] aria-invalid:focus-visible:ring-[var(--danger-soft)] data-[state=checked]:border-[var(--primary-600)] data-[state=checked]:bg-[var(--primary-600)]",
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ function RadioGroupItem({
         data-slot="radio-group-indicator"
         className="relative flex items-center justify-center"
       >
-        <CircleIcon className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-[var(--accent)]" />
+        <CircleIcon className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-white text-white" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );

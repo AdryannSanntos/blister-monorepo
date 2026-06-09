@@ -1,103 +1,46 @@
-# Skill de Autorização — Workana AI
+# Authorization Skill — Blister
 
-Catálogo completo de permissões, roles e padrões de implementação de autorização.
+Permission catalog, roles, and authorization patterns.
+Source of truth: `packages/authz/src/index.ts`. Details: `docs/project/authorization.md`.
+
+> Scope by `companyId`. See [`docs/project/authorization.md`](../../docs/project/authorization.md).
 
 ---
 
-## Catálogo de permissões (AppPermissionKey)
+## Permission catalog (`AppPermissionKey`)
 
-| Chave | Ação CASL | Subject CASL |
-|-------|-----------|--------------|
-| `company.read` | read | Company |
-| `company.update` | update | Company |
-| `company.delete` | delete | Company |
-| `member.read` | read | Member |
-| `member.invite` | create | Member |
-| `member.update` | update | Member |
-| `member.remove` | delete | Member |
-| `role.read` | read | Role |
-| `role.create` | create | Role |
-| `role.update` | update | Role |
-| `role.delete` | delete | Role |
+### RBAC / workspace
+
+| Key | Action | Subject |
+|-----|--------|---------|
+| `user.read` / `user.update` | read/update | User |
+| `member.*` | CRUD | Member |
+| `role.*` | CRUD | Role |
 | `permission.read` | read | Permission |
-| `onboarding.publish` | update | Onboarding |
-| `brain.read` | read | CompanyBrain |
-| `brain.update` | update | CompanyBrain |
-| `skill.read` | read | Skill |
-| `skill.execute` | create | Skill |
-| `output.read` | read | Output |
-| `output.review` | update | Output |
 
-## Roles padrão de sistema (imutáveis)
+### Business (Blister IA)
 
-**owner** — todas as permissões incluindo `company.delete`, `role.create/update/delete`, `onboarding.publish`
+| Key | Subject | Usage |
+|-----|---------|-------|
+| `company.read` / `company.update` | Company | Business profile |
+| `brand.read` / `brand.update` | Brand | Brand Brain |
+| `campaign.*` | Campaign | CRUD + `campaign.generate` |
+| `file.create` / `file.delete` | File | Campaign uploads |
+| `piece.read` / `piece.approve` / `piece.update` | ContentPiece | **Legado** — preferir `generation.create` / `campaign.generate` + revisão na `AgentRun` |
+| `credit.read` | Credit | Balance and ledger |
+| `generation.create` | Generation | Quick generation |
 
-**admin** — `company.read/update`, `member.read/invite/update/remove`, `role.read`, `permission.read`, `brain.read/update`, `skill.read/execute`, `output.read/review`
+## System roles (immutable)
 
-**member** — `company.read`, `brain.read`, `skill.read/execute`, `output.read`
+- **owner** — `allPermissionKeys`
+- **admin** — business + team (no `role.create/update/delete`)
+- **member** — `businessPermissionKeys` + basic read (MEI owner in MVP)
 
-Nota: `onboarding.publish` não é assignable — exclusiva do owner.
+Platform admin: `platform_owner` / `platform_admin` via `PlatformRoleAssignment` + `PlatformRoleGuard`.
 
-## Invariantes de segurança
+## Adding a permission
 
-- Não remover o último owner → `ForbiddenException`
-- Roles de sistema não podem ser renomeadas nem deletadas
-- Um membro pode ter múltiplas roles simultâneas
-- Overrides individuais `allow`/`deny` sobrepõem permissões das roles
-
-## Backend — uso nos controllers
-
-```typescript
-import { RequirePermission } from '../auth/decorators/require-permission.decorator';
-import { Public } from '../auth/decorators/public.decorator';
-
-@Get('health')
-@Public()
-health() { return 'ok'; }
-
-@Patch(':id')
-@RequirePermission('company.update')  // orgId deve estar em req.params.id ou req.params.orgId
-async update(@Param('id') id: string, @Body() body: unknown, @Req() req: Request) {
-  const currentUser = (req as unknown as Record<string, unknown>)['currentUser'] as CurrentUser;
-  // userId de req.currentUser.id — nunca do body
-}
-```
-
-## Frontend — proteção de UI
-
-```tsx
-import { PermissionGate } from 'src/core/shared/components/permission-gate';
-import { useAbility } from 'src/core/modules/organization/hooks/use-ability';
-
-// Declarativo
-<PermissionGate permission="member.invite">
-  <Button>Convidar</Button>
-</PermissionGate>
-
-// Programático
-const { can, cannot } = useAbility();
-if (can('update', 'Company')) { ... }
-```
-
-## Adicionando nova permissão (fluxo completo)
-
-1. `packages/authz/src/index.ts`:
-   - Adicionar chave em `AppPermissionKey`
-   - Adicionar em `allPermissionKeys`
-   - Adicionar em `permissionMap` com `[AppAction, AppSubject]`
-   - Se subject for novo, adicionar em `subjects`
-   - Definir em `getDefaultRolePermissions` para cada role aplicável
-
-2. Rodar seed de roles padrão no banco
-
-3. Backend: `@RequirePermission('nova.chave')` no controller
-
-4. Frontend: `<PermissionGate permission="nova.chave">` na UI
-
-## Regra universal
-
-**Toda ação do produto tem verificação de permissão — sem exceção.**
-
-Backend: `@RequirePermission(key)` em todo endpoint sensível.
-Frontend: `<PermissionGate>` ou `can()` antes de renderizar controles de escrita/exclusão.
-Nenhuma feature é entregue sem guards e checks de UI implementados.
+1. `packages/authz/src/index.ts` — subject, key, map, `getDefaultRolePermissions`
+2. `pnpm --filter @company-os/authz build`
+3. Seed roles
+4. `@RequirePermission` + `<PermissionGate>`

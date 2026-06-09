@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { AuthBrandHeader } from 'src/core/modules/auth/components/auth-brand-header';
-import { AuthSplitLayout } from 'src/core/modules/auth/components/auth-split-layout';
-import { Button } from 'src/core/shared/components/ui/button';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { AuthBrandHeader } from "src/core/modules/auth/components/auth-brand-header";
+import { AuthSplitLayout } from "src/core/modules/auth/components/auth-split-layout";
+import { Button } from "src/core/shared/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,62 +17,77 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from 'src/core/shared/components/ui/form';
-import { PasswordInput } from 'src/core/shared/components/ui/password-input';
-import { PasswordStrength } from 'src/core/shared/components/ui/password-strength';
-import { authClient } from 'src/core/shared/utils/auth-client';
-import { z } from 'zod';
+} from "src/core/shared/components/ui/form";
+import { PasswordInput } from "src/core/shared/components/ui/password-input";
+import { PasswordStrength } from "src/core/shared/components/ui/password-strength";
+import { authClient } from "src/core/shared/utils/auth-client";
+import { z } from "zod";
 
-const resetPasswordSchema = z
-  .object({
-    newPassword: z
-      .string()
-      .min(8, 'Senha deve ter pelo menos 8 caracteres')
-      .regex(/[A-Z]/, 'Inclua pelo menos uma letra maiúscula')
-      .regex(/[0-9]/, 'Inclua pelo menos um número')
-      .regex(/[^A-Za-z0-9]/, 'Inclua pelo menos um caractere especial'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'As senhas não coincidem',
-    path: ['confirmPassword'],
-  });
+import { Link, useRouter } from "@/i18n/routing";
 
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+type ResetPasswordFormValues = {
+  newPassword: string;
+  confirmPassword: string;
+};
 
 export function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get('token') ?? '';
+  const token = searchParams.get("token") ?? "";
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("auth.resetPassword");
+  const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
+
+  const resetPasswordSchema = useMemo(
+    () =>
+      z
+        .object({
+          newPassword: z
+            .string()
+            .min(8, tValidation("passwordMin8"))
+            .regex(/[A-Z]/, tValidation("passwordUppercase"))
+            .regex(/[0-9]/, tValidation("passwordNumber"))
+            .regex(/[^A-Za-z0-9]/, tValidation("passwordSpecial")),
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+          message: tValidation("passwordMismatch"),
+          path: ["confirmPassword"],
+        }),
+    [tValidation],
+  );
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
-    mode: 'onBlur',
-    defaultValues: { newPassword: '', confirmPassword: '' },
+    mode: "onBlur",
+    defaultValues: { newPassword: "", confirmPassword: "" },
   });
 
-  const passwordValue = form.watch('newPassword');
+  const passwordValue = form.watch("newPassword");
 
   async function onSubmit(values: ResetPasswordFormValues) {
     if (!token) {
-      toast.error('Token de redefinição inválido ou expirado.');
+      toast.error(t("invalidToken"));
       return;
     }
 
     setIsLoading(true);
     try {
-      const { error } = await authClient.resetPassword({ newPassword: values.newPassword, token });
+      const { error } = await authClient.resetPassword({
+        newPassword: values.newPassword,
+        token,
+      });
 
       if (error) {
-        toast.error(error.message ?? 'Erro ao redefinir senha. Tente novamente.');
+        toast.error(error.message ?? t("error"));
         return;
       }
 
-      toast.success('Senha redefinida com sucesso!');
-      router.push('/auth/login');
+      toast.success(t("success"));
+      router.push("/auth/login");
     } catch {
-      toast.error('Erro inesperado. Tente novamente.');
+      toast.error(tCommon("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -84,18 +99,20 @@ export function ResetPasswordPage() {
         <AuthBrandHeader />
 
         <div className="mb-8">
-          <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">Link inválido</h1>
+          <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">
+            {t("invalidLinkTitle")}
+          </h1>
           <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-            Este link de redefinição é inválido ou expirou
+            {t("invalidLinkSubtitle")}
           </p>
         </div>
 
         <p className="text-[13px] text-[var(--fg-secondary)] mb-6">
-          Por favor, solicite um novo link de recuperação de senha.
+          {t("invalidLinkBody")}
         </p>
 
         <Button asChild className="w-full">
-          <Link href="/auth/forgot-password">Solicitar novo link</Link>
+          <Link href="/auth/forgot-password">{t("requestNewLink")}</Link>
         </Button>
       </AuthSplitLayout>
     );
@@ -106,9 +123,11 @@ export function ResetPasswordPage() {
       <AuthBrandHeader />
 
       <div className="mb-8">
-        <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">Criar nova senha</h1>
+        <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">
+          {t("title")}
+        </h1>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          Defina uma nova senha para sua conta
+          {t("subtitle")}
         </p>
       </div>
 
@@ -119,10 +138,10 @@ export function ResetPasswordPage() {
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nova senha</FormLabel>
+                <FormLabel>{t("newPassword")}</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Crie uma senha forte"
+                    placeholder={t("newPasswordPlaceholder")}
                     autoComplete="new-password"
                     {...field}
                   />
@@ -137,10 +156,10 @@ export function ResetPasswordPage() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirmar nova senha</FormLabel>
+                <FormLabel>{t("confirmNewPassword")}</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Repita a nova senha"
+                    placeholder={t("confirmNewPasswordPlaceholder")}
                     autoComplete="new-password"
                     {...field}
                   />
@@ -150,7 +169,7 @@ export function ResetPasswordPage() {
             )}
           />
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Salvando...' : 'Salvar nova senha'}
+            {isLoading ? t("submitting") : t("submit")}
           </Button>
         </form>
       </Form>
@@ -161,7 +180,7 @@ export function ResetPasswordPage() {
           className="inline-flex items-center gap-1.5 text-[13px] text-[var(--fg-tertiary)] underline-offset-4 hover:text-[var(--fg-secondary)] hover:underline"
         >
           <ArrowLeft className="size-3.5" />
-          Voltar para login
+          {tCommon("backToLogin")}
         </Link>
       </div>
     </AuthSplitLayout>

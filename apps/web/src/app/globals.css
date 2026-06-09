@@ -2,90 +2,263 @@
 @import "tw-animate-css";
 @import "../components/agent-elements/agent-ui.css";
 
+/* ============================================================
+   Satoshi (fonte principal) — auto-hospedada em /public/fonts
+   ============================================================ */
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/satoshi-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/satoshi-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/satoshi-700.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/satoshi-900.woff2") format("woff2");
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   Blister Design System — paleta gerada (reference v2)
+   ============================================================ */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --bg-canvas: oklch(0.13 0.008 250);
-  --bg-base: oklch(0.16 0.008 250);
-  --bg-raised: oklch(0.19 0.009 250);
-  --bg-overlay: oklch(0.22 0.01 250);
-  --bg-sunken: oklch(0.115 0.006 250);
-  --bg-hover: oklch(0.245 0.012 250);
-  --bg-active: oklch(0.285 0.014 250);
+  /* primary */
+  --primary-50: #ecf2ff;
+  --primary-100: #ced4ff;
+  --primary-200: #b0b4ff;
+  --primary-300: #9594ff;
+  --primary-400: #7e76ff;
+  --primary-500: #6958ff;
+  --primary-600: #563be7;
+  --primary-700: #4820d2;
+  --primary-800: #3b00b8;
+  --primary-900: #2e0095;
+  --primary-950: #210074;
 
-  --fg-primary: oklch(0.96 0.006 250);
-  --fg-secondary: oklch(0.78 0.008 250);
-  --fg-tertiary: oklch(0.62 0.01 250);
-  --fg-quaternary: oklch(0.47 0.012 250);
-  --fg-on-accent: oklch(0.99 0.004 265);
+  /* secondary */
+  --secondary-50: #ffe3f3;
+  --secondary-100: #ffc7e0;
+  --secondary-200: #ffa5cc;
+  --secondary-300: #ff85b9;
+  --secondary-400: #ff69a8;
+  --secondary-500: #ff5097;
+  --secondary-600: #f83b87;
+  --secondary-700: #d5006b;
+  --secondary-800: #af0051;
+  --secondary-900: #850038;
+  --secondary-950: #5e0022;
 
-  --accent: oklch(0.58 0.24 265);
-  --accent-hover: oklch(0.64 0.24 265);
-  --accent-active: oklch(0.52 0.23 265);
-  --accent-soft: oklch(0.58 0.24 265 / 0.14);
-  --accent-soft-hi: oklch(0.58 0.24 265 / 0.34);
-  --premium: #f6bb1b;
-  --premium-soft: rgb(246 187 27 / 16%);
-  --ai-live: #93e72a;
-  --ai-live-soft: rgb(147 231 42 / 16%);
+  /* accent (laranja) */
+  --accent-50: #ffedd4;
+  --accent-100: #ffdbb5;
+  --accent-200: #ffc58e;
+  --accent-300: #ffb26b;
+  --accent-400: #ffa04f;
+  --accent-500: #ff9136;
+  --accent-600: #fb8423;
+  --accent-700: #d66200;
+  --accent-800: #af4300;
+  --accent-900: #842a00;
+  --accent-950: #5c1000;
 
-  --success: oklch(0.78 0.16 155);
-  --success-soft: oklch(0.78 0.16 155 / 0.14);
-  --warning: oklch(0.82 0.16 78);
-  --warning-soft: oklch(0.82 0.16 78 / 0.14);
-  --danger: oklch(0.7 0.2 22);
-  --danger-soft: oklch(0.7 0.2 22 / 0.14);
-  --info: oklch(0.78 0.13 235);
-  --info-soft: oklch(0.78 0.13 235 / 0.14);
+  /* success */
+  --success-50: #dafffd;
+  --success-100: #bbf6f2;
+  --success-200: #94ede8;
+  --success-300: #6fe3de;
+  --success-400: #4ed7d1;
+  --success-500: #2ccac5;
+  --success-600: #05bcb7;
+  --success-700: #009b97;
+  --success-800: #007a77;
+  --success-900: #005a57;
+  --success-950: #003b39;
 
-  --chart-1: oklch(0.78 0.16 130);
-  --chart-2: oklch(0.76 0.13 235);
-  --chart-3: var(--accent);
-  --chart-4: oklch(0.8 0.15 35);
-  --chart-5: oklch(0.78 0.14 165);
-  --chart-6: oklch(0.78 0.16 350);
-  --chart-7: oklch(0.82 0.15 90);
-  --chart-8: oklch(0.62 0.13 270);
+  /* warning */
+  --warning-50: #fff4cd;
+  --warning-100: #ffebb0;
+  --warning-200: #ffe086;
+  --warning-300: #ffd660;
+  --warning-400: #ffcd3f;
+  --warning-500: #ffc51d;
+  --warning-600: #ffbd00;
+  --warning-700: #d69600;
+  --warning-800: #ad7100;
+  --warning-900: #825000;
+  --warning-950: #593100;
 
-  --line-subtle: oklch(1 0 0 / 0.07);
-  --line-default: oklch(1 0 0 / 0.11);
-  --line-strong: oklch(1 0 0 / 0.18);
-  --ring-focus: oklch(0.58 0.24 265 / 0.45);
-  --scrim: oklch(0.05 0 0 / 0.62);
-  --scrim-strong: oklch(0.05 0 0 / 0.78);
+  /* error */
+  --error-50: #ffe5de;
+  --error-100: #ffc9bf;
+  --error-200: #ffa79b;
+  --error-300: #ff877c;
+  --error-400: #ff6b63;
+  --error-500: #ff514d;
+  --error-600: #f53b3b;
+  --error-700: #d3001c;
+  --error-800: #ae0000;
+  --error-900: #850000;
+  --error-950: #5d0000;
 
-  --field-h-sm: 28px;
-  --field-h-md: 34px;
-  --field-h-lg: 44px;
+  /* info */
+  --info-50: #dff8ff;
+  --info-100: #c0e5ff;
+  --info-200: #9dd1ff;
+  --info-300: #7dbdff;
+  --info-400: #64a9ff;
+  --info-500: #4d95ff;
+  --info-600: #3b82f6;
+  --info-700: #1e65d7;
+  --info-800: #004ab4;
+  --info-900: #00328b;
+  --info-950: #001a64;
 
+  /* neutral */
+  --neutral-50: #fafbfc;
+  --neutral-100: #f4f5f7;
+  --neutral-200: #d7d9e3;
+  --neutral-300: #b2b5c4;
+  --neutral-400: #8d90a1;
+  --neutral-500: #6b6e7a;
+  --neutral-600: #4a4d5a;
+  --neutral-700: #2a2c39;
+  --neutral-800: #1a1b23;
+  --neutral-900: #0e0f16;
+  --neutral-950: #070811;
+
+  /* gradients */
+  --gradient-primary: linear-gradient(135deg, #563be7 0%, #7b5ce8 100%);
+  --gradient-secondary: linear-gradient(135deg, #f83b87 0%, #fb6fa5 100%);
+  --gradient-spark: linear-gradient(
+    135deg,
+    #f83b87 0%,
+    #fb8423 50%,
+    #05bcb7 100%
+  );
+
+  /* ---- surfaces & text (light) ---- */
+  --bg-canvas: #f6f7f9;
+  --bg-base: #ffffff;
+  --bg-raised: #ffffff;
+  --bg-overlay: #ffffff;
+  --bg-sunken: var(--neutral-100);
+  --bg-hover: var(--neutral-200);
+  --bg-active: var(--neutral-300);
+
+  --fg-primary: var(--neutral-900);
+  --fg-secondary: var(--neutral-600);
+  --fg-tertiary: var(--neutral-500);
+  --fg-quaternary: var(--neutral-400);
+  --fg-on-accent: #ffffff;
+
+  /* ---- accent = primary roxo ---- */
+  --accent: var(--primary-600);
+  --accent-hover: var(--primary-700);
+  --accent-active: var(--primary-800);
+  --accent-soft: var(--primary-50);
+  --accent-soft-hi: var(--primary-100);
+  --accent-soft-3: var(--primary-200);
+  --accent-soft-text: var(--primary-700);
+
+  /* brand secundário/terciário */
+  --brand-secondary: var(--secondary-600);
+  --brand-secondary-soft: var(--secondary-50);
+  --brand-secondary-soft-text: var(--secondary-700);
+  --brand-accent: var(--accent-600);
+  --brand-accent-soft: var(--accent-100);
+  --brand-accent-soft-text: var(--accent-900);
+
+  --premium: var(--warning-600);
+  --premium-soft: var(--warning-50);
+  --ai-live: var(--secondary-600);
+  --ai-live-soft: var(--secondary-50);
+
+  --success: var(--success-600);
+  --success-soft: var(--success-50);
+  --success-soft-text: var(--success-900);
+  --warning: var(--warning-600);
+  --warning-soft: var(--warning-50);
+  --warning-soft-text: var(--warning-900);
+  --danger: var(--error-600);
+  --danger-soft: var(--error-50);
+  --danger-soft-text: var(--error-900);
+  --info: var(--info-600);
+  --info-soft: var(--info-50);
+  --info-soft-text: var(--info-900);
+
+  /* charts — usa a paleta da marca */
+  --chart-1: var(--primary-600);
+  --chart-2: var(--secondary-600);
+  --chart-3: var(--accent-600);
+  --chart-4: var(--success-600);
+  --chart-5: var(--info-600);
+  --chart-6: var(--warning-600);
+  --chart-7: var(--primary-400);
+  --chart-8: var(--secondary-400);
+
+  --line-subtle: color-mix(in srgb, var(--neutral-200) 55%, transparent);
+  --line-default: var(--neutral-200);
+  --line-strong: var(--neutral-300);
+  --ring-focus: var(--primary-200);
+  --scrim: rgba(14, 15, 22, 0.45);
+  --scrim-strong: rgba(14, 15, 22, 0.6);
+
+  /* unified control heights — button, input, select, toggle, etc. */
+  --control-h-xs: 28px;
+  --control-h-sm: 32px;
+  --control-h-md: 40px;
+  --control-h-lg: 48px;
+  --control-h-xl: 56px;
+
+  /* legacy aliases */
+  --field-h-sm: var(--control-h-sm);
+  --field-h-md: var(--control-h-md);
+  --field-h-lg: var(--control-h-lg);
+
+  /* radius (reference v2) */
   --r-xs: 4px;
-  --r-sm: 6px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 16px;
-  --r-2xl: 20px;
+  --r-sm: 8px;
+  --r-md: 11px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --r-2xl: 24px;
+  --r-3xl: 32px;
   --r-full: 999px;
 
-  --shadow-xs:
-    0 1px 0 0 oklch(1 0 0 / 0.03) inset, 0 1px 1px oklch(0 0 0 / 0.3);
-  --shadow-sm:
-    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 1px 2px oklch(0 0 0 / 0.32), 0 2px
-    6px oklch(0 0 0 / 0.18);
-  --shadow-md:
-    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 4px 12px oklch(0 0 0 / 0.38), 0 2px
-    4px oklch(0 0 0 / 0.22);
-  --shadow-lg:
-    0 1px 0 0 oklch(1 0 0 / 0.05) inset, 0 12px 32px oklch(0 0 0 / 0.5), 0 4px
-    10px oklch(0 0 0 / 0.3);
-  --shadow-xl:
-    0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 28px 64px oklch(0 0 0 / 0.55), 0 10px
-    24px oklch(0 0 0 / 0.36);
-  --shadow-glow:
-    0 0 0 1px var(--accent-soft-hi), 0 10px 28px rgb(94 145 255 / 18%);
-  --shadow-glow-live:
-    0 0 0 1px var(--ai-live-soft), 0 10px 28px rgb(147 231 42 / 14%);
+  /* elevation e1..e5 (reference) */
+  --shadow:14,15,22;
+  --shadow-xs: 0 1px 2px rgba(var(--shadow), 0.06),
+    0 1px 1px rgba(var(--shadow), 0.04);
+  --shadow-sm: 0 2px 6px rgba(var(--shadow), 0.08),
+    0 1px 2px rgba(var(--shadow), 0.05);
+  --shadow-md: 0 6px 16px rgba(var(--shadow), 0.1),
+    0 2px 4px rgba(var(--shadow), 0.05);
+  --shadow-lg: 0 12px 28px rgba(var(--shadow), 0.14),
+    0 4px 8px rgba(var(--shadow), 0.06);
+  --shadow-xl: 0 24px 56px rgba(var(--shadow), 0.2),
+    0 8px 16px rgba(var(--shadow), 0.1);
+  --shadow-glow: var(--shadow-sm);
+  --shadow-glow-live: var(--shadow-sm);
 
   --space-0: 0;
   --space-px: 1px;
@@ -145,53 +318,72 @@
   --sidebar-ring: var(--ring-focus);
 }
 
-.light {
-  color-scheme: light;
+.dark {
+  color-scheme: dark;
 
-  --bg-canvas: oklch(0.985 0.003 95);
-  --bg-base: oklch(0.99 0.002 95);
-  --bg-raised: oklch(1 0 0);
-  --bg-overlay: oklch(1 0 0);
-  --bg-sunken: oklch(0.965 0.004 95);
-  --bg-hover: oklch(0.955 0.005 95);
-  --bg-active: oklch(0.93 0.007 95);
+  --bg-canvas: #0a0b11;
+  --bg-base: #14151d;
+  --bg-raised: #14151d;
+  --bg-overlay: #1d1e29;
+  --bg-sunken: #20212c;
+  --bg-hover: #2a2c39;
+  --bg-active: #34374a;
 
-  --fg-primary: oklch(0.2 0.015 250);
-  --fg-secondary: oklch(0.34 0.012 250);
-  --fg-tertiary: oklch(0.5 0.01 250);
-  --fg-quaternary: oklch(0.66 0.008 250);
-  --fg-on-accent: oklch(0.985 0.006 265);
+  --fg-primary: #ecedf2;
+  --fg-secondary: #9ca0af;
+  --fg-tertiary: #6e7280;
+  --fg-quaternary: #565a68;
+  --fg-on-accent: #ffffff;
 
-  --line-subtle: oklch(0.2 0.015 250 / 0.08);
-  --line-default: oklch(0.2 0.015 250 / 0.12);
-  --line-strong: oklch(0.2 0.015 250 / 0.2);
-  --scrim: oklch(0.14 0.015 250 / 0.35);
-  --scrim-strong: oklch(0.14 0.015 250 / 0.5);
-  --shadow-xs:
-    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 1px 1px oklch(0 0 0 / 0.08);
-  --shadow-sm:
-    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 1px 2px oklch(0 0 0 / 0.08), 0 2px 6px
-    oklch(0 0 0 / 0.05);
-  --shadow-md:
-    0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 4px 12px oklch(0 0 0 / 0.1), 0 2px 4px
-    oklch(0 0 0 / 0.06);
-  --shadow-lg:
-    0 1px 0 0 oklch(1 0 0 / 0.9) inset, 0 12px 32px oklch(0 0 0 / 0.12), 0 4px
-    10px oklch(0 0 0 / 0.08);
-  --shadow-xl:
-    0 1px 0 0 oklch(1 0 0 / 0.95) inset, 0 28px 64px oklch(0 0 0 / 0.16), 0 10px
-    24px oklch(0 0 0 / 0.1);
+  --accent-soft: rgba(86, 59, 231, 0.2);
+  --accent-soft-hi: rgba(86, 59, 231, 0.3);
+  --accent-soft-3: rgba(86, 59, 231, 0.4);
+  --accent-soft-text: var(--primary-300);
+
+  --brand-secondary-soft: rgba(255, 77, 182, 0.18);
+  --brand-secondary-soft-text: var(--secondary-300);
+  --brand-accent-soft: rgba(255, 210, 63, 0.18);
+  --brand-accent-soft-text: var(--accent-300);
+
+  --premium-soft: rgba(255, 210, 63, 0.16);
+  --ai-live-soft: rgba(255, 77, 182, 0.18);
+
+  --success-soft: rgba(5, 188, 183, 0.16);
+  --success-soft-text: var(--success-300);
+  --warning-soft: rgba(255, 210, 63, 0.16);
+  --warning-soft-text: var(--warning-300);
+  --danger-soft: rgba(255, 59, 48, 0.16);
+  --danger-soft-text: var(--error-300);
+  --info-soft: rgba(59, 130, 246, 0.18);
+  --info-soft-text: var(--info-300);
+
+  --line-subtle: color-mix(in srgb, #2a2c3a 60%, transparent);
+  --line-default: #2a2c3a;
+  --line-strong: #3a3d4f;
+  --ring-focus: rgba(86, 59, 231, 0.4);
+  --scrim: rgba(0, 0, 0, 0.62);
+  --scrim-strong: rgba(0, 0, 0, 0.78);
+
+  --shadow: 0, 0, 0;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 14px 32px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 26px 60px rgba(0, 0, 0, 0.65);
 }
 
 @theme inline {
   --font-sans:
-    var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+    "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-heading:
+    var(--font-poppins), "Poppins", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --font-mono:
     var(--font-geist-mono), "Geist Mono", ui-monospace, "JetBrains Mono",
     "SF Mono", Menlo, monospace;
   --font-serif:
-    var(--font-instrument-serif), "Instrument Serif", "Times New Roman", serif;
+    var(--font-poppins), "Poppins", -apple-system, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -227,9 +419,10 @@
   --radius-lg: var(--r-lg);
   --radius-xl: var(--r-xl);
   --radius-2xl: var(--r-2xl);
+  --radius-3xl: var(--r-3xl);
 }
 
-* {
+*:not([data-slot="button"]) {
   border-color: var(--line-default);
 }
 
@@ -241,9 +434,28 @@ body {
   background: var(--bg-canvas);
   color: var(--fg-primary);
   font-family:
-    var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  text-rendering: geometricprecision;
+    "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif,
+    system-ui, sans-serif;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading,
+[data-slot="button"],
+[data-slot="heading"],
+[data-slot="card-title"],
+[data-slot="dialog-title"],
+[data-slot="sheet-title"],
+[data-slot="alert-title"],
+[data-slot="popover-title"] {
+  font-family: var(--font-heading) !important;
 }
 
 ::selection {
@@ -424,11 +636,18 @@ body {
   }
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @theme {
   --animate-accordion-down: accordion-down 200ms var(--ease-out);
   --animate-accordion-up: accordion-up 200ms var(--ease-out);
   --animate-collapsible-down: collapsible-down 180ms var(--ease-out);
   --animate-collapsible-up: collapsible-up 150ms var(--ease-out);
+  --animate-spin: spin 1s linear infinite;
 }
 
 /* Auth split layout — painel visual */

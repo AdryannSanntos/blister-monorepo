@@ -1,74 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useActiveOrganization } from "src/core/modules/organization/hooks/use-active-organization";
-import { useUserOrganizations } from "src/core/modules/organization/hooks/use-organizations";
-import { resolvePostLoginRouting } from "src/core/modules/organization/utils/post-login-routing";
 import { authClient } from "src/core/shared/utils/auth-client";
+
+import { useRouter } from "@/i18n/routing";
 
 export function AppEntryPage() {
   const router = useRouter();
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
-  const { activeOrgId, setActiveOrgId, clearActiveOrg, isLoaded } =
-    useActiveOrganization();
-  const { data: organizations, isLoading: isOrganizationsLoading } =
-    useUserOrganizations(session?.user?.id);
-  const entryRouting = resolvePostLoginRouting(organizations ?? [], activeOrgId);
-
-  const validActiveOrgId = organizations?.some((org) => org.id === activeOrgId)
-    ? activeOrgId
-    : null;
-  const fallbackOrgId =
-    organizations?.length === 1 ? organizations[0].id : null;
-  const selectedOrgId = validActiveOrgId ?? fallbackOrgId;
 
   useEffect(() => {
-    if (!isLoaded || !activeOrgId || !organizations) {
-      return;
-    }
-
-    if (
-      organizations.length > 1 ||
-      !organizations.some((org) => org.id === activeOrgId)
-    ) {
-      clearActiveOrg();
-    }
-  }, [activeOrgId, clearActiveOrg, isLoaded, organizations]);
-
-  useEffect(() => {
-    if (!isLoaded || !selectedOrgId || activeOrgId === selectedOrgId) {
-      return;
-    }
-
-    setActiveOrgId(selectedOrgId);
-  }, [activeOrgId, isLoaded, selectedOrgId, setActiveOrgId]);
-
-  useEffect(() => {
-    if (isSessionPending || !isLoaded) {
-      return;
-    }
+    if (isSessionPending) return;
 
     if (!session?.user) {
       router.replace("/auth/login");
       return;
     }
 
-    if (isOrganizationsLoading) {
-      return;
-    }
-
-    router.replace(entryRouting.destination);
-  }, [
-    entryRouting.destination,
-    isLoaded,
-    isOrganizationsLoading,
-    isSessionPending,
-    organizations,
-    router,
-    session?.user,
-  ]);
+    router.replace("/dashboard");
+  }, [isSessionPending, session?.user, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">

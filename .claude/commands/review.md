@@ -1,6 +1,8 @@
-# Skill de Code Review — Workana AI
+# Skill de Code Review — Blister
 
 Faça a revisão do código usando os critérios abaixo. Findings primeiro, resumo depois.
+
+> Scope by `companyId`. See [`docs/prd/blister-master-prd.md`](../../docs/prd/blister-master-prd.md).
 
 ---
 
@@ -21,26 +23,27 @@ Faça a revisão do código usando os critérios abaixo. Findings primeiro, resu
 - [ ] Endpoints sem `@RequirePermission` têm justificativa clara
 - [ ] Endpoints públicos têm `@Public()` explícito
 - [ ] `userId` vem de `req.currentUser.id` — nunca de `req.body.userId`
-- [ ] `orgId` vem de `req.params` — nunca do body
-- [ ] Dados de um usuário não acessíveis por outro sem verificação de membership
+- [ ] IDs de recurso vêm de `req.params` — nunca do body
+- [ ] Dados de um usuário não acessíveis por outro sem verificação de dono/role
+- [ ] Mutação crítica (campanha, agent run/revisão, créditos, Cérebro da Marca) registra em `AuditLog`
+- [ ] Novos fluxos **não** usam hub `/api/pecas` — revisão em `/api/agents/runs/:runId/*`
 
 **Frontend:**
 - [ ] Toda ação de escrita/exclusão dentro de `<PermissionGate permission="...">`
 - [ ] Nenhuma lógica de permissão hardcoded — sempre via `useAbility()` ou `PermissionGate`
+- [ ] `userType`/roles não derivados da sessão better-auth
 
 ---
 
 ## Checklist alto — Contratos e dados
 
+- [ ] **Zod em toda fronteira** — body, query, params, outputs de IA (backend e frontend)
 - [ ] Nova permissão declarada em `packages/authz` antes de usar em guard ou PermissionGate
 - [ ] Nenhuma permissão hardcoded fora de `packages/authz/src/index.ts`
 - [ ] DTOs validados com Zod antes de passar ao service (backend)
-- [ ] Formulários com `zodResolver` e `mode: 'onBlur'` (frontend)
+- [ ] Formulários com **RHF + zodResolver** e `mode: 'onBlur'` (frontend) — sempre
 - [ ] Tipos inferidos do schema Zod — sem `any` sem justificativa
-- [ ] Invariantes de negócio respeitadas:
-  - Não remove último owner
-  - Não remove último role de membro
-  - `onboarding.publish` não é assignable
+- [ ] Business invariants respected (ownership `companyId`, status transitions, credit balance)
 
 ---
 
@@ -48,12 +51,16 @@ Faça a revisão do código usando os critérios abaixo. Findings primeiro, resu
 
 - [ ] Nenhuma biblioteca nova sem decisão registrada
 - [ ] `Prisma` é o único acesso a banco
-- [ ] `better-auth` trata apenas auth/sessão
+- [ ] `better-auth` trata apenas auth/sessão (não `userType`/roles/perfil)
 - [ ] `generated/prisma` não foi editado manualmente
 - [ ] Lógica de negócio no service, não no controller (backend)
-- [ ] Nenhuma chamada HTTP direta em page/component — hook com React Query (frontend)
-- [ ] `activeOrgId` de `useActiveOrganization()`, não de sessão better-auth (frontend)
+- [ ] **TanStack Query** via hooks de domínio — nunca fetch direto em page/component
+- [ ] **nuqs** para filtros, tabs e paginação na URL
+- [ ] **Server Components** por padrão; client isolado quando necessário
+- [ ] Componentes em `core/modules/<modulo>/components/` — nada solto
+- [ ] **zustand** só para estado global de UI
 - [ ] Estrutura `core/modules` e `core/shared` respeitada (frontend)
+- [ ] **Playwright** cobre fluxos/UX críticos afetados pela mudança
 
 ---
 
@@ -66,8 +73,10 @@ Faça a revisão do código usando os critérios abaixo. Findings primeiro, resu
 - [ ] Três ou mais ações lado a lado → `DropdownMenu`
 - [ ] Modais com header + content + footer separados
 - [ ] Sem `font-semibold` amplo — máximo `font-medium`
-- [ ] Sem glow em cards
-- [ ] `AvatarFallback` com iniciais, borda e fundo sutil
+- [ ] Sem glow em cards; sem `dark:` utility
+- [ ] Coleções de dados em `<DataTable>` com sort/filtros/seleção/export
+- [ ] Simplicidade radical: máx. 2–3 campos para iniciar uma tarefa
+- [ ] Animações preservadas; espaçamento 24px/16px
 
 ---
 
@@ -75,16 +84,22 @@ Faça a revisão do código usando os critérios abaixo. Findings primeiro, resu
 
 **Bloqueia merge:**
 - Endpoint de mutação sem guard de permissão
-- `userId` lido do body
+- `userId` lido do body (ou id de recurso vindo do body)
 - Nova permissão hardcoded fora de `packages/authz`
 - Acesso ao banco fora do PrismaService
 - Role de sistema sendo deletada/renomeada
 
 **Deve corrigir antes do merge:**
 - Ação de UI sem `PermissionGate`
-- Fetch direto em componente (sem hook de domínio)
-- DTO sem validação Zod
+- Fetch direto em componente (sem hook + TanStack Query)
+- DTO ou formulário sem validação Zod
+- Formulário sem RHF + zodResolver
+- Filtros/tabs na URL sem nuqs
+- Componente de feature fora de `core/modules/<modulo>/components/`
+- `"use client"` desnecessário onde Server Component bastaria
 - Tipo `any` sem justificativa
+- Fluxo UX crítico sem cobertura Playwright
+- Formulário inflado violando a simplicidade radical (Regra 9)
 
 **Observação/tech debt:**
 - Token de design system ignorado

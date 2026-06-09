@@ -1,11 +1,17 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { apiClient } from "src/core/shared/utils/api-client";
 import { authClient } from "src/core/shared/utils/auth-client";
 
-export type PlatformRole = "platform_owner" | "platform_admin";
+export const PLATFORM_ROLE_VALUES = [
+  "platform_owner",
+  "platform_admin",
+] as const;
+
+export type PlatformRole = (typeof PLATFORM_ROLE_VALUES)[number];
 
 export type PlatformAdminAssignment = {
   id: string;
@@ -71,6 +77,7 @@ export function usePlatformQueryEnabled(): boolean {
 
 export function useAssignPlatformRole() {
   const queryClient = useQueryClient();
+  const t = useTranslations("platformAdmin.toasts");
 
   return useMutation({
     mutationFn: async (payload: { userId: string; role: PlatformRole }) => {
@@ -82,16 +89,17 @@ export function useAssignPlatformRole() {
     },
     onSuccess: async () => {
       await invalidatePlatformAdmins(queryClient);
-      toast.success("Acesso de plataforma concedido.");
+      toast.success(t("grantSuccess"));
     },
     onError: () => {
-      toast.error("Erro ao atribuir acesso de plataforma.");
+      toast.error(t("grantError"));
     },
   });
 }
 
 export function useRemovePlatformRole() {
   const queryClient = useQueryClient();
+  const t = useTranslations("platformAdmin.toasts");
 
   return useMutation({
     mutationFn: async (assignmentId: string) => {
@@ -99,10 +107,10 @@ export function useRemovePlatformRole() {
     },
     onSuccess: async () => {
       await invalidatePlatformAdmins(queryClient);
-      toast.success("Acesso de plataforma removido.");
+      toast.success(t("removeSuccess"));
     },
     onError: () => {
-      toast.error("Erro ao remover acesso de plataforma.");
+      toast.error(t("removeError"));
     },
   });
 }

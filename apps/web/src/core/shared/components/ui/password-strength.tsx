@@ -1,31 +1,39 @@
+"use client";
+
 import { Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 import { cn } from "src/core/shared/utils";
-
-const rules = [
-  { label: "Mínimo 8 caracteres", test: (p: string) => p.length >= 8 },
-  { label: "Letra maiúscula", test: (p: string) => /[A-Z]/.test(p) },
-  { label: "Número", test: (p: string) => /[0-9]/.test(p) },
-  { label: "Caractere especial", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
-];
-
-function getStrength(password: string): number {
-  return rules.filter((r) => r.test(password)).length;
-}
-
-const strengthConfig = [
-  { label: "", color: "bg-[var(--line-default)]" },
-  { label: "Fraca", color: "bg-destructive" },
-  { label: "Razoável", color: "bg-[var(--warning)]" },
-  { label: "Boa", color: "bg-[var(--warning)]" },
-  { label: "Forte", color: "bg-[var(--success)]" },
-];
 
 type PasswordStrengthProps = { password: string };
 
 export function PasswordStrength({ password }: PasswordStrengthProps) {
+  const t = useTranslations("passwordStrength");
+
+  const rules = useMemo(
+    () => [
+      { label: t("minLength"), test: (p: string) => p.length >= 8 },
+      { label: t("uppercase"), test: (p: string) => /[A-Z]/.test(p) },
+      { label: t("number"), test: (p: string) => /[0-9]/.test(p) },
+      { label: t("special"), test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+    ],
+    [t],
+  );
+
+  const strengthConfig = useMemo(
+    () => [
+      { label: "", color: "bg-[var(--line-default)]" },
+      { label: t("weak"), color: "bg-destructive" },
+      { label: t("fair"), color: "bg-[var(--warning)]" },
+      { label: t("good"), color: "bg-[var(--warning)]" },
+      { label: t("strong"), color: "bg-[var(--success)]" },
+    ],
+    [t],
+  );
+
   if (!password) return null;
 
-  const strength = getStrength(password);
+  const strength = rules.filter((rule) => rule.test(password)).length;
   const config = strengthConfig[strength] ?? strengthConfig[0];
 
   return (
@@ -41,11 +49,11 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
           />
         ))}
       </div>
-      {config.label && (
+      {config.label ? (
         <p className="text-[11.5px] text-[var(--fg-tertiary)]">
-          Força: <span className="font-medium text-[var(--fg-secondary)]">{config.label}</span>
+          {t("strength", { label: config.label })}
         </p>
-      )}
+      ) : null}
       <ul className="space-y-1">
         {rules.map((rule) => {
           const passed = rule.test(password);
@@ -56,7 +64,13 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
               ) : (
                 <X className="size-3 text-[var(--fg-quaternary)]" />
               )}
-              <span className={passed ? "text-[var(--fg-secondary)]" : "text-[var(--fg-quaternary)]"}>
+              <span
+                className={
+                  passed
+                    ? "text-[var(--fg-secondary)]"
+                    : "text-[var(--fg-quaternary)]"
+                }
+              >
                 {rule.label}
               </span>
             </li>

@@ -1,68 +1,43 @@
-import { BadRequestException, Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  Req,
+} from '@nestjs/common';
+import type { Request } from 'express';
+import type { CurrentUser } from '../auth/session.service';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
-import { RequirePlatformRole } from '../platform/decorators/require-platform-role.decorator';
-import { PlatformRoleGuard } from '../platform/guards/platform-role.guard';
-import { CreditsService } from './credits.service';
-import { z } from 'zod';
+import { CompanyService } from '../company/company.service';
+import { CreditService } from './credits.service';
+import { creditHistoryQuerySchema } from './dto/credits.dto';
 
-@Controller('organizations/:orgId/credits')
-export class OrganizationCreditsController {
-  constructor(private readonly creditsService: CreditsService) {}
+@Controller('company/credits')
+export class CreditsController {
+  constructor(
+    private readonly creditService: CreditService,
+    private readonly companyService: CompanyService,
+  ) {}
 
   @Get()
   @RequirePermission('credit.read')
-  async getBalance(@Param('orgId') orgId: string) {
-    return this.creditsService.getOrganizationBalance(orgId);
+  async getSummary(@Req() req: Request) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const company = await this.companyService.findByOwnerOrThrow(user.id, req);
+    return this.creditService.getSummary(company.id);
   }
 
-  @Get('ledger')
+  @Get('history')
   @RequirePermission('credit.read')
-  async getLedger(@Param('orgId') orgId: string) {
-    return this.creditsService.listOrganizationLedger(orgId);
-  }
-}
-
-@Controller('platform/costs')
-@UseGuards(PlatformRoleGuard)
-@RequirePlatformRole('platform_admin')
-export class PlatformCostsController {
-  constructor(private readonly creditsService: CreditsService) {}
-
-  private parseFilters(query: unknown) {
-    const schema = z.object({
-      providerId: z.string().min(1).optional(),
-      modelId: z.string().min(1).optional(),
-      organizationId: z.string().min(1).optional(),
-      dateFrom: z.string().min(1).optional(),
-      dateTo: z.string().min(1).optional(),
-      minCost: z.coerce.number().optional(),
-      maxCost: z.coerce.number().optional(),
-    });
-    const parsed = schema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-    return parsed.data;
-  }
-
-  @Get()
-  async getSummary(@Query() query: unknown) {
-    return this.creditsService.getPlatformCostSummary(this.parseFilters(query));
-  }
-
-  @Get('providers')
-  async getProviderBreakdown(@Query() query: unknown) {
-    return this.creditsService.getPlatformCostSummary({
-      ...this.parseFilters(query),
-      groupBy: 'provider',
-    });
-  }
-
-  @Get('models')
-  async getModelBreakdown(@Query() query: unknown) {
-    return this.creditsService.getPlatformCostSummary({
-      ...this.parseFilters(query),
-      groupBy: 'model',
-    });
+  async getHistory(@Req() req: Request, @Query() query: unknown) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const parsed = creditHistoryQuerySchema.safeParse(query);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    const company = await this.companyService.findByOwnerOrThrow(user.id, req);
+    return this.creditService.getHistory(
+      company.id,
+      parsed.data.page,
+      parsed.data.pageSize,
+    );
   }
 }

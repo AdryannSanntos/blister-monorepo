@@ -1,0 +1,28 @@
+---
+description: All code identifiers, routes, and variables must be in English
+alwaysApply: true
+---
+
+# English-only code
+
+Always use English for anything in the codebase:
+
+- Variable, function, class, type, and file names
+- API routes and URL paths
+- Database fields, Prisma models, and migration names
+- Environment variables and config keys
+- Comments and inline documentation in code
+
+Portuguese is allowed only in user-facing copy (UI strings, emails, marketing) via i18n/message files — never in code identifiers or routes.
+
+Examples:
+
+```typescript
+// ❌ BAD
+const saldoCreditos = await getCreditos(empresaId);
+router.get('/dashboard/creditos', ...);
+
+// ✅ GOOD
+const creditBalance = await getCredits(companyId);
+router.get('/dashboard/credits', ...);
+```

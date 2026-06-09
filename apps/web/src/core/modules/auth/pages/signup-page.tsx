@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { AuthBrandHeader } from 'src/core/modules/auth/components/auth-brand-header';
-import { AuthSplitLayout } from 'src/core/modules/auth/components/auth-split-layout';
-import { buildEmailVerificationCallbackURL } from 'src/core/modules/auth/utils/verify-email-state';
-import { Button } from 'src/core/shared/components/ui/button';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { AuthBrandHeader } from "src/core/modules/auth/components/auth-brand-header";
+import { AuthSplitLayout } from "src/core/modules/auth/components/auth-split-layout";
+import { buildEmailVerificationCallbackURL } from "src/core/modules/auth/utils/verify-email-state";
+import { Button } from "src/core/shared/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,49 +17,74 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from 'src/core/shared/components/ui/form';
-import { Input } from 'src/core/shared/components/ui/input';
-import { PasswordInput } from 'src/core/shared/components/ui/password-input';
-import { PasswordStrength } from 'src/core/shared/components/ui/password-strength';
-import { authClient } from 'src/core/shared/utils/auth-client';
-import { z } from 'zod';
+} from "src/core/shared/components/ui/form";
+import { Input } from "src/core/shared/components/ui/input";
+import { PasswordInput } from "src/core/shared/components/ui/password-input";
+import { PasswordStrength } from "src/core/shared/components/ui/password-strength";
+import { authClient } from "src/core/shared/utils/auth-client";
+import { z } from "zod";
 
-const signupSchema = z
-  .object({
-    name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-    email: z.string().email('Email inválido'),
-    password: z
-      .string()
-      .min(8, 'Senha deve ter pelo menos 8 caracteres')
-      .regex(/[A-Z]/, 'Inclua pelo menos uma letra maiúscula')
-      .regex(/[0-9]/, 'Inclua pelo menos um número')
-      .regex(/[^A-Za-z0-9]/, 'Inclua pelo menos um caractere especial'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas não coincidem',
-    path: ['confirmPassword'],
-  });
+import { getPathname, Link, useRouter } from "@/i18n/routing";
 
-type SignupFormValues = z.infer<typeof signupSchema>;
+type SignupFormValues = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export function SignupPage() {
   const router = useRouter();
+  const locale = useLocale();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect');
+  const redirectPath = searchParams.get("redirect");
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("auth.signup");
+  const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
+
+  const verifyEmailPath = getPathname({
+    locale,
+    href: "/auth/verify-email?status=success",
+  });
+
   const loginCallbackURL =
-    typeof window !== 'undefined'
-      ? buildEmailVerificationCallbackURL(window.location.origin, redirectPath)
-      : 'http://localhost:3000/auth/verify-email?status=success';
+    typeof window !== "undefined"
+      ? buildEmailVerificationCallbackURL(
+          window.location.origin,
+          redirectPath,
+          verifyEmailPath,
+        )
+      : `http://localhost:3000${verifyEmailPath}`;
+
+  const signupSchema = useMemo(
+    () =>
+      z
+        .object({
+          name: z.string().min(2, tValidation("nameMin")),
+          email: z.string().email(tValidation("invalidEmail")),
+          password: z
+            .string()
+            .min(8, tValidation("passwordMin8"))
+            .regex(/[A-Z]/, tValidation("passwordUppercase"))
+            .regex(/[0-9]/, tValidation("passwordNumber"))
+            .regex(/[^A-Za-z0-9]/, tValidation("passwordSpecial")),
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+          message: tValidation("passwordMismatch"),
+          path: ["confirmPassword"],
+        }),
+    [tValidation],
+  );
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    mode: 'onBlur',
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+    mode: "onBlur",
+    defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
 
-  const passwordValue = form.watch('password');
+  const passwordValue = form.watch("password");
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);
@@ -72,17 +97,20 @@ export function SignupPage() {
       });
 
       if (error) {
-        toast.error(error.message ?? 'Erro ao criar conta. Tente novamente.');
+        toast.error(error.message ?? t("createError"));
         return;
       }
 
-      toast.success('Conta criada com sucesso!');
-      const verifyUrl = new URL('/auth/verify-email', window.location.origin);
-      verifyUrl.searchParams.set('email', values.email);
-      if (redirectPath) verifyUrl.searchParams.set('redirect', redirectPath);
-      router.push(verifyUrl.pathname + verifyUrl.search);
+      toast.success(t("createSuccess"));
+      const verifyUrl = new URL(
+        getPathname({ locale, href: "/auth/verify-email" }),
+        window.location.origin,
+      );
+      verifyUrl.searchParams.set("email", values.email);
+      if (redirectPath) verifyUrl.searchParams.set("redirect", redirectPath);
+      router.push(`${verifyUrl.pathname}${verifyUrl.search}`);
     } catch {
-      toast.error('Erro inesperado. Tente novamente.');
+      toast.error(tCommon("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -93,8 +121,12 @@ export function SignupPage() {
       <AuthBrandHeader />
 
       <div className="mb-8">
-        <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">Crie sua conta</h1>
-        <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">Preencha os dados para começar</p>
+        <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
+          {t("subtitle")}
+        </p>
       </div>
 
       <Form {...form}>
@@ -104,9 +136,13 @@ export function SignupPage() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome completo</FormLabel>
+                <FormLabel>{t("fullName")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Seu nome completo" autoComplete="name" {...field} />
+                  <Input
+                    placeholder={t("fullNamePlaceholder")}
+                    autoComplete="name"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,9 +153,14 @@ export function SignupPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{tCommon("email")}</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="seu@email.com" autoComplete="email" {...field} />
+                  <Input
+                    type="email"
+                    placeholder={tCommon("emailPlaceholder")}
+                    autoComplete="email"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,10 +171,10 @@ export function SignupPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Senha</FormLabel>
+                <FormLabel>{tCommon("password")}</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Crie uma senha forte"
+                    placeholder={t("passwordPlaceholder")}
                     autoComplete="new-password"
                     {...field}
                   />
@@ -148,10 +189,10 @@ export function SignupPage() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirmar senha</FormLabel>
+                <FormLabel>{t("confirmPassword")}</FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Repita a senha"
+                    placeholder={t("confirmPasswordPlaceholder")}
                     autoComplete="new-password"
                     {...field}
                   />
@@ -161,18 +202,18 @@ export function SignupPage() {
             )}
           />
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Criando conta...' : 'Criar conta'}
+            {isLoading ? t("submitting") : t("submit")}
           </Button>
         </form>
       </Form>
 
       <p className="mt-6 text-center text-[13px] text-[var(--fg-tertiary)]">
-        Já tem uma conta?{' '}
+        {t("hasAccount")}{" "}
         <Link
           href="/auth/login"
           className="text-[var(--fg-primary)] underline-offset-4 hover:underline font-medium"
         >
-          Entrar
+          {t("signIn")}
         </Link>
       </p>
     </AuthSplitLayout>

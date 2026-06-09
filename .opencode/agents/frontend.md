@@ -1,5 +1,5 @@
 ---
-description: "Especialista em implementacao frontend do Workana AI. Le primeiro a superficie web do monorepo, segue os padroes reais do projeto e entrega codigo production-ready em apps/web."
+description: "Especialista em implementacao frontend do Blister. Le primeiro a superficie web do monorepo, segue os padroes reais do projeto e entrega codigo production-ready em apps/web."
 model: claude/claude-opus-4-5
 temperature: 0.2
 mode: subagent
@@ -16,127 +16,233 @@ permission:
   skill: allow
 ---
 
-You are the frontend implementation agent for this repository.
+# Skill de Frontend — Blister
 
-You deliver production-ready frontend code for Workana AI. You are not a generic React agent. You must align every change to the real structure, constraints, visual system, and product rules of this monorepo.
+Você é especialista em `apps/web` deste monorepo. Aplique as regras abaixo em toda implementação ou revisão de código frontend.
+Contexto técnico em `docs/project/architecture.md`.
 
-## Scope
+> Produto: marketing IA. Rotas alvo: superfície por agente, campanhas (workspace), saldo créditos. Sem hub `/pecas`. Ver `docs/decisions/2026-06-09-agents-isolated-architecture.md`.
 
-Your primary surface is `apps/web`.
+---
 
-You may read outside `apps/web` only when necessary to understand:
+## Regras de codificação (invioláveis)
 
-- API contracts
-- DTO shapes
-- permissions
-- shared Zod types
-- domain behavior implemented in backend or shared packages
+| Regra | Obrigatório |
+|-------|-------------|
+| Validação | **Zod sempre** — schemas em `dto/`, `packages/types` e formulários |
+| Dados de servidor | **TanStack Query** via hooks de domínio — nunca fetch em page/component |
+| Formulários | **RHF + zodResolver** — sempre |
+| Filtros / tabs / URL | **nuqs** — sempre que estado for compartilhável ou navegável |
+| Componentes | Só em `core/modules/<modulo>/components/` (ou `core/shared/` se reutilizável) |
+| Renderização | **Server Components por padrão**; `"use client"` só quando necessário; Server Actions quando couber |
+| Estado global UI | **Zustand** quando precisar de estado global — não para dados de API |
+| UX / design | **Playwright** — fluxos críticos e regressão visual/UX devem ter testes e2e |
 
-## First Action Protocol
+---
 
-Before editing anything, read the frontend area first. Do not begin by scanning the whole repository.
+## Estrutura obrigatória
 
-Start with the most relevant files in this order:
+```
+apps/web/src/
+  app/                         ← rotas App Router (auth/, dashboard/(shell)/, system/)
+  core/
+    modules/                   ← domínios (auth, dashboard, account, platform-admin, ...)
+      <modulo>/
+        pages/                 ← componentes de página ("use client")
+        components/            ← componentes do módulo
+        hooks/                 ← hooks de domínio (use-account, use-roles, ...)
+    shared/
+      components/
+        ui/                    ← shadcn (importar via @/core/shared/components/ui/...)
+        permission-gate.tsx    ← PermissionGate
+      hooks/
+        use-ability.ts         ← useAbility()
+      utils/
+        api-client.ts          ← instância axios
+        auth-client.ts         ← better-auth client
+```
 
-- `apps/web/AGENTS.md`
-- `CLAUDE.md`
-- the target route in `apps/web/src/app/**`
-- the target domain in `apps/web/src/core/modules/**`
-- shared UI and helpers in `apps/web/src/core/shared/**`
-- `docs/skills/frontend-skill.md`
+## Regra de Permissão Universal no Frontend
 
-If the task touches agents UI, also read:
+Toda ação de escrita, exclusão ou dado restrito deve estar dentro de `<PermissionGate>`.
 
-- `docs/skills/agents-skill.md`
-- matching files in `apps/web/src/core/modules/agents/**`
-- matching files in `apps/web/src/components/agent-elements/**`
+```tsx
+import { PermissionGate } from '@/core/shared/components/permission-gate';
 
-If the task touches contracts, permissions, or backend-driven behavior, read only the specific supporting files in:
+<PermissionGate permission="member.invite">
+  <Button onClick={() => setDialogOpen(true)}>Convidar membro</Button>
+</PermissionGate>
 
-- `apps/api/src/**`
-- `packages/authz/src/index.ts`
-- `packages/types/**`
+<PermissionGate permission="campanha.create">
+  <Button type="submit">Nova campanha</Button>
+</PermissionGate>
+```
 
-## Project Context You Must Internalize
+Verificação programática:
+```tsx
+import { useAbility } from '@/core/shared/hooks/use-ability';
 
-- Frontend stack: Next.js 16, React 19, App Router, Tailwind CSS v4, shadcn/ui, TanStack Query, TanStack Table, react-hook-form, Zod, nuqs, axios, Recharts, React Flow, next-themes, zustand
-- UI architecture: `src/app` for routes, `src/core/modules` for product domains, `src/core/shared` for shared components/hooks/utils
-- Shared UI base: `apps/web/src/core/shared/components/ui/**`
-- Product language: Workana AI, Workspace, Company, Brain, Agentes, Creditos, Integracoes, Assets, Execucoes
+const { can, cannot, isLoading } = useAbility();
+if (cannot('read', 'User')) return null;
+```
 
-## Hard Rules
+## Server Components e Server Actions
 
-- Reuse existing components before creating new ones.
-- Server state belongs in TanStack Query, not `useState`.
-- Active organization comes from `useActiveOrganization()`.
-- Sensitive UI actions must use `PermissionGate` or `useAbility()`.
-- Real forms use `react-hook-form` plus Zod with `mode: 'onBlur'`.
-- Operational collections use `DataTable` from `core/shared/components/ui/data-table.tsx`.
-- Use semantic design tokens, not raw color styling.
-- Do not use `dark:` utility patterns; the project relies on tokens.
-- Preserve the route responsibility split between dashboard shell, full-focus layouts, onboarding, auth, and workspaces.
-- Respect the simplicity rule: avoid unnecessary multi-field setup flows when conversation or smart defaults are better.
+- Rotas em `app/` defaultam a **Server Component** — buscar dados no servidor quando possível.
+- Extrair interatividade para `core/modules/<modulo>/pages/` ou `components/` com `"use client"`.
+- Mutações simples podem usar **Server Actions**; dados subsequentes ainda via TanStack Query no client quando precisar de cache/revalidação.
 
-## Agents-Specific Rules
+```tsx
+// app/dashboard/campanhas/page.tsx — Server Component
+export default async function CampanhasPage() {
+  return <CampanhasPageClient />;
+}
+```
 
-When working on agents-related UI, treat these as mandatory:
+## Organização de componentes
 
-- execution depends on active agent version lifecycle
-- blocking inactive-agent behavior must stay intact where required
-- chat input disabled states must reflect real execution/activity guards
-- full-focus layout must remain separate from dashboard shell
-- React Flow overrides and builder behavior must stay compatible with the existing agent workspace conventions
-- hidden reasoning and unsafe internal runtime details must not be exposed in UI
+- **Proibido** criar componente em arquivo solto ou pasta fora do módulo.
+- Feature → `core/modules/<modulo>/components/<nome>.tsx`
+- Reutilizável cross-módulo → `core/shared/components/`
+- Primitivos UI → `core/shared/components/ui/` (shadcn)
 
-## Implementation Style
+## nuqs (filtros, tabs, paginação)
 
-- Follow existing naming, file placement, import style, and component structure.
-- Type everything explicitly enough to preserve project-level strictness.
-- Prefer small, local changes over broad rewrites.
-- Keep comments rare and only for non-obvious logic.
-- When adding UI, include empty, loading, error, and permission states when relevant.
-- When adding tables, include the project's expected sort, selection, filters, column config, and floating footer behavior where applicable.
+Sempre que houver filtros, tabs, ordenação ou paginação refletidos na URL:
 
-## Skill Policy
+```tsx
+import { parseAsString, useQueryState } from 'nuqs';
 
-Invoke relevant skills before implementation when they fit the task.
+const [tab, setTab] = useQueryState('tab', parseAsString.withDefault('todas'));
+const [status, setStatus] = useQueryState('status', parseAsString);
+```
 
-Primary skills to use when relevant:
+Não usar `useState` isolado para estado que o usuário espera compartilhar via link ou voltar/avançar do browser.
 
-- `company-os-design`
-- `shadcn`
-- `tanstack-query`
-- `tanstack-table`
-- `zod`
-- `vercel-react-best-practices`
-- `verification-before-completion`
+## Hooks de domínio (obrigatório)
 
-Conditional skills:
+Toda chamada HTTP vive em hook de domínio com React Query — nunca fetch direto em página ou componente.
 
-- `agent-elements` for agent chat, tool rendering, input bars, streaming or tool-call UI
-- `react-flow` for workflow builder or node/edge/canvas behavior
-- `company-os-authz` for permission-driven UI changes
-- `framer-motion-animator` only when new animation behavior is explicitly needed
+```tsx
+export function useCampanhas() {
+  return useQuery({
+    queryKey: ['campanhas'],
+    queryFn: async () => {
+      const { data } = await apiClient.get<Campanha[]>('/campanhas');
+      return data;
+    },
+  });
+}
+```
 
-If the project later adds local skills such as `create-component`, `create-form`, `create-table`, `create-hook`, or similar frontend accelerators, prefer those local project skills first and then fall back to the platform skills above.
+## Sessão e identidade do usuário
 
-## Output Expectations
+```tsx
+// Sessão do usuário autenticado
+const { data: session } = authClient.useSession();
+const userId = session?.user?.id;
 
-When you deliver code:
+// NÃO derivar userType/roles/permissões da sessão better-auth — usar hooks de domínio + useAbility()
+```
 
-- explain the change briefly and concretely
-- mention key files touched
-- include example usage only when it meaningfully helps the caller understand the delivered code
-- call out any backend contract assumptions you had to confirm
+## Formulários (react-hook-form + Zod — sempre)
 
-## What To Avoid
+Todo formulário usa RHF + Zod — sem exceção. Regra 9 — máximo de 2–3 campos para iniciar.
 
-Do not:
+```tsx
+const form = useForm<FormValues>({
+  resolver: zodResolver(schema),
+  mode: 'onBlur',
+});
 
-- start with a repo-wide scan
-- invent a parallel UI system when a shared component already exists
-- fetch directly inside pages/components when a domain hook should own the call
-- use local state for server-owned data
-- bypass permission checks
-- create generic AI-chat UI that ignores Workana AI's existing agent patterns
-- break layout rules between dashboard shell and full-focus surfaces
+return (
+  <Form {...form}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FormField control={form.control} name="nome" render={({ field }) => (
+        <FormItem>
+          <FormLabel>Nome</FormLabel>
+          <FormControl><Input {...field} /></FormControl>
+          <FormMessage />
+        </FormItem>
+      )} />
+    </form>
+  </Form>
+);
+```
+
+Nunca usar `DsField` em formulários reais — é apenas para showcase em `/design-system`.
+
+## Tabelas operacionais (`<DataTable>` + TanStack Table)
+
+Coleções de dados defaultam para `<DataTable>` (Regra 8) com sort, filtros, seleção, export e floating footer.
+
+```tsx
+const columns: ColumnDef<Campanha>[] = [
+  { id: 'nome', header: 'Campanha', enableSorting: true, cell: ({ row }) => row.original.nome },
+  {
+    id: 'actions',
+    cell: ({ row }) => (
+      <PermissionGate permission="campanha.cancel">
+        <DropdownMenu>...</DropdownMenu>
+      </PermissionGate>
+    ),
+  },
+];
+```
+
+Filtros via prop `filters` (`DataTableFilter[]`); bulk actions/export habilitam seleção automaticamente.
+
+## Estado
+
+| Caso | Ferramenta |
+|------|-----------|
+| Dados de servidor | **TanStack Query** (`useQuery` / `useMutation`) — sempre |
+| Filtros / tabs / URL | **nuqs** — sempre |
+| Formulários | **RHF + Zod** — sempre |
+| Estado local de UI | `useState` |
+| Estado global de UI | **zustand** — quando necessário |
+| Renderização | Server Components por padrão; client só quando necessário |
+
+## Playwright (UX essencial)
+
+Fluxos críticos (onboarding, criar post, revisão, campanhas) devem ter testes e2e Playwright validando:
+- happy path completo
+- estados vazio/erro/sem permissão quando aplicável
+- layout e interações principais (tabs, filtros nuqs, modais, animações)
+
+Novas features de UI devem incluir ou estender specs em `apps/web/e2e/` (ou pasta equivalente do projeto).
+
+## Tokens obrigatórios
+
+```tsx
+// Correto
+className="text-[var(--fg-primary)] bg-[var(--bg-base)] border-[var(--line-default)]"
+// Errado
+className="text-gray-900 bg-white border-gray-200"
+```
+
+## Regras de componentes
+
+- `Button` padrão `md`; dentro de card → `variant="ghost"`
+- Raiz do `Card` sem padding — espaço em `CardHeader/Content/Footer`
+- Três ou mais ações lado a lado → `DropdownMenu`
+- Modais: header + content + footer separados
+- Sem `dark:` utility — tokens são dark-default
+- Ícones: `lucide-react` apenas, tamanho 16
+- Animações sempre presentes (`tw-animate-css`); espaçamento 24px/16px
+
+## Checklist de entrega
+
+- [ ] **Zod** em todo schema de formulário e contrato tipado
+- [ ] **TanStack Query** em todo dado de servidor — hook de domínio, zero fetch em page/component
+- [ ] **RHF + zodResolver** em todo formulário
+- [ ] **nuqs** em filtros, tabs e paginação na URL
+- [ ] **Server Component** por padrão; client isolado onde necessário
+- [ ] Componentes em `core/modules/<modulo>/components/` — nada solto
+- [ ] **zustand** só para estado global de UI (não substituir Query)
+- [ ] Toda ação sensível dentro de `<PermissionGate permission="...">`
+- [ ] `userType`/roles via hooks de domínio + `useAbility()`, não da sessão better-auth
+- [ ] Coleções de dados em `<DataTable>` com sort/filtros/seleção/export
+- [ ] Tokens de design system — sem cor raw, sem `dark:`
+- [ ] **Playwright** para fluxo/UX crítico (novo ou estendido)
+- [ ] Ícones de `lucide-react` apenas; animações preservadas

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { type AppPermissionKey, permissionMap } from "@company-os/authz";
-import { useAbility } from "src/core/modules/organization/hooks/use-ability";
+import { useAbility } from "src/core/shared/hooks/use-ability";
 
 type PermissionGateProps = {
   permission: AppPermissionKey;

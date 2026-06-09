@@ -5,10 +5,18 @@ import type * as React from 'react';
 import { Button } from 'src/core/shared/components/ui/button';
 import { Input } from 'src/core/shared/components/ui/input';
 import { Textarea } from 'src/core/shared/components/ui/textarea';
+import {
+  type ControlSize,
+  controlHeightClass,
+  controlHeightDataClasses,
+  controlIconSizeClass,
+  controlPaddingXDataClasses,
+  controlRadiusDataClasses,
+} from 'src/core/shared/styles/control-size';
 import { cn } from 'src/core/shared/utils';
 
 type InputGroupProps = React.ComponentProps<'div'> & {
-  size?: 'sm' | 'md' | 'lg';
+  size?: ControlSize;
 };
 
 function InputGroup({ className, size = 'md', ...props }: InputGroupProps) {
@@ -16,9 +24,9 @@ function InputGroup({ className, size = 'md', ...props }: InputGroupProps) {
     <div
       className={cn(
         'group/input-group relative flex min-w-0 w-full items-center gap-2 border border-[var(--line-strong)] bg-[var(--bg-sunken)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[140ms] ease-out hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))]',
-        'data-[size=sm]:h-7 data-[size=sm]:rounded-[var(--r-sm)] data-[size=sm]:px-2.5',
-        'data-[size=md]:h-9 data-[size=md]:rounded-[var(--r-md)] data-[size=md]:px-3',
-        'data-[size=lg]:h-11 data-[size=lg]:rounded-[var(--r-md)] data-[size=lg]:px-3.5',
+        controlHeightDataClasses,
+        controlPaddingXDataClasses,
+        controlRadiusDataClasses,
         'has-[>textarea]:h-auto has-[>textarea]:items-start has-[>textarea]:py-2',
 
         // Variants based on alignment.
@@ -81,10 +89,10 @@ function InputGroupAddon({
 const inputGroupButtonVariants = cva('flex items-center gap-2 text-[13px] shadow-none', {
   variants: {
     size: {
-      xs: "h-6 gap-1 rounded-[var(--r-sm)] px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
-      sm: 'h-8 gap-1.5 rounded-[var(--r-md)] px-2.5 has-[>svg]:px-2.5',
-      'icon-xs': 'size-6 rounded-[var(--r-sm)] p-0 has-[>svg]:p-0',
-      'icon-sm': 'size-8 rounded-[var(--r-md)] p-0 has-[>svg]:p-0',
+      xs: `${controlHeightClass.xs} gap-1 rounded-[var(--r-sm)] px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5`,
+      sm: `${controlHeightClass.sm} gap-1.5 rounded-[var(--r-md)] px-2.5 has-[>svg]:px-2.5`,
+      'icon-xs': `${controlIconSizeClass.xs} rounded-[var(--r-sm)] p-0 has-[>svg]:p-0`,
+      'icon-sm': `${controlIconSizeClass.sm} rounded-[var(--r-md)] p-0 has-[>svg]:p-0`,
     },
   },
   defaultVariants: {
@@ -129,7 +137,7 @@ function InputGroupInput({ className, ...props }: React.ComponentProps<'input'>)
       data-slot="input-group-control"
       className={cn(
         'h-full flex-1 rounded-none border-0 bg-transparent px-0 shadow-none hover:border-0 focus:border-0 focus:bg-transparent focus:ring-0 focus-visible:border-0 focus-visible:bg-transparent focus-visible:ring-0',
-        'data-[size=sm]:text-[12.5px] data-[size=md]:text-[13.5px] data-[size=lg]:text-[15px]',
+        'data-[size=xs]:text-xs data-[size=sm]:text-[13px] data-[size=md]:text-sm data-[size=lg]:text-[15px] data-[size=xl]:text-base',
         className,
       )}
       {...props}

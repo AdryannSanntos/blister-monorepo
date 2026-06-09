@@ -4,6 +4,14 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
 import type * as React from "react";
 
+import {
+  type ControlSizeInput,
+  controlHeightDataClasses,
+  controlPaddingXDataClasses,
+  controlRadiusDataClasses,
+  controlTextDataClasses,
+  normalizeControlSize,
+} from "src/core/shared/styles/control-size";
 import { cn } from "src/core/shared/utils";
 
 function Select({
@@ -30,12 +38,18 @@ function SelectTrigger({
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default";
+  size?: ControlSizeInput;
 }) {
+  const normalizedSize = normalizeControlSize(size);
+
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-3 py-0 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none whitespace-nowrap transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-[var(--fg-quaternary)] data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)]",
+        "flex w-full items-center justify-between gap-2 rounded-[var(--r-md)] border-[1.5px] border-[var(--line-default)] bg-[var(--bg-base)] py-0 text-[var(--fg-primary)] shadow-none outline-none whitespace-nowrap transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--line-strong)] disabled:cursor-not-allowed disabled:bg-[var(--bg-sunken)] disabled:opacity-60 data-[placeholder]:text-[var(--fg-quaternary)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)] [&[data-state=open]_svg.select-caret]:rotate-180",
+        controlHeightDataClasses,
+        controlPaddingXDataClasses,
+        controlTextDataClasses,
+        controlRadiusDataClasses,
         "focus:border-[var(--accent)] focus:bg-[var(--bg-base)] focus:ring-[3px] focus:ring-[var(--accent-soft)]",
         "aria-invalid:border-[var(--danger)]",
         "aria-invalid:focus:ring-[3px] aria-invalid:focus:ring-[var(--danger-soft)]",
@@ -43,11 +57,11 @@ function SelectTrigger({
       )}
       {...props}
       data-slot="select-trigger"
-      data-size={size}
+      data-size={normalizedSize}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-70" />
+        <ChevronDownIcon className="select-caret size-4 text-[var(--fg-tertiary)] transition-transform duration-[var(--dur-base)]" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -65,7 +79,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-overlay)] text-[var(--fg-secondary)] shadow-[var(--shadow-lg)] data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-overlay)] text-[var(--fg-secondary)] shadow-[var(--shadow-lg)] data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className,
@@ -77,7 +91,7 @@ function SelectContent({
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
           className={cn(
-            "p-1",
+            "p-1.5",
             position === "popper" &&
               "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1",
           )}
@@ -115,7 +129,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-[var(--r-sm)] py-2 pr-8 pl-2.5 text-[13px] text-[var(--fg-secondary)] outline-hidden select-none focus:bg-[var(--bg-active)] focus:text-[var(--fg-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)] *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "relative flex w-full cursor-pointer items-center gap-2 rounded-[var(--r-sm)] py-2 pr-8 pl-2.5 text-sm font-medium text-[var(--fg-secondary)] outline-hidden select-none focus:bg-[var(--bg-sunken)] focus:text-[var(--fg-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:bg-[var(--accent-soft)] data-[state=checked]:font-bold data-[state=checked]:text-[var(--accent-soft-text)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-[var(--fg-tertiary)] *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
         className,
       )}
       {...props}
@@ -125,7 +139,7 @@ function SelectItem({
         className="absolute right-2 flex size-3.5 items-center justify-center"
       >
         <SelectPrimitive.ItemIndicator>
-          <CheckIcon className="size-4 text-[var(--accent)]" />
+          <CheckIcon className="size-4 text-[var(--primary-600)]" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

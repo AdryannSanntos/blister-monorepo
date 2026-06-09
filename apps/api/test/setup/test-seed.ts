@@ -1,0 +1,293 @@
+import { Prisma } from '../../src/generated/prisma';
+import { getTestPrisma } from './test-database';
+import { hash } from '@better-auth/utils/hash';
+
+export interface TestCompany {
+  id: string;
+  name: string;
+  slug: string;
+  userId: string;
+  brandProfileId: string;
+  creditBalance: number;
+}
+
+export interface TestSeedResult {
+  company: TestCompany;
+  user: {
+    id: string;
+    email: string;
+    password: string;
+  };
+  platformSettings: {
+    freeTierAmount: number;
+    markupDefault: number;
+    minRunCost: number;
+  };
+  providers: {
+    openrouterId: string;
+    geminiId: string;
+  };
+  models: {
+    gpt4oMiniId: string;
+    embeddingModelId: string;
+    geminiFlashId: string;
+    geminiEmbeddingId: string;
+  };
+}
+
+const TEST_USER = {
+  email: 'test@blister.test',
+  password: 'TestPassword123!',
+  name: 'Test Business User',
+};
+
+const TEST_COMPANY = {
+  name: 'Test Business',
+  slug: 'test-business',
+};
+
+export async function seedTestDatabase(): Promise<TestSeedResult> {
+  const prisma = await getTestPrisma();
+
+  const hashedPassword = await hash.create(TEST_USER.password);
+
+  const user = await prisma.user.create({
+    data: {
+      id: `test_user_${Date.now()}`,
+      name: TEST_USER.name,
+      email: TEST_USER.email,
+      emailVerified: true,
+      userType: 'BUSINESS',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: `test_account_${Date.now()}`,
+      userId: user.id,
+      providerId: 'credential',
+      accountId: TEST_USER.email,
+      password: hashedPassword,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  const ownerRole = await prisma.role.findUnique({ where: { name: 'owner' } });
+  if (ownerRole) {
+    await prisma.userRole.create({
+      data: {
+        userId: user.id,
+        roleId: ownerRole.id,
+      },
+    });
+  }
+
+  const company = await prisma.company.create({
+    data: {
+      id: `test_company_${Date.now()}`,
+      name: TEST_COMPANY.name,
+      slug: TEST_COMPANY.slug,
+      ownerId: user.id,
+      onboardingCompletedAt: new Date(),
+    },
+  });
+
+  const platformSettings = await prisma.platformCreditSettings.findUnique({
+    where: { id: 'default' },
+  });
+
+  const freeTierAmount = platformSettings?.freeTierAmount
+    ? Number(platformSettings.freeTierAmount)
+    : 20;
+
+  const creditBalance = await prisma.creditBalance.create({
+    data: {
+      companyId: company.id,
+      amount: new Prisma.Decimal(freeTierAmount),
+      currency: 'USD',
+    },
+  });
+
+  await prisma.creditLedger.create({
+    data: {
+      companyId: company.id,
+      type: 'CREDIT',
+      amount: new Prisma.Decimal(freeTierAmount),
+      balanceAfter: new Prisma.Decimal(freeTierAmount),
+      description: 'Test free tier credit',
+    },
+  });
+
+  const brandProfile = await prisma.brandProfile.create({
+    data: {
+      id: `test_brand_${Date.now()}`,
+      companyId: company.id,
+      brandVoice:
+        'Friendly and professional tone. We speak directly to small business owners.',
+      niche: 'Marketing Digital',
+      description: 'Test business for automated testing',
+      targetAudience: 'Small business owners in Brazil',
+      marketingObjective: 'Increase brand awareness',
+    },
+  });
+
+  const openrouterProvider = await prisma.aiProvider.findUnique({
+    where: { slug: 'openrouter' },
+  });
+  const geminiProvider = await prisma.aiProvider.findUnique({
+    where: { slug: 'gemini' },
+  });
+
+  const gpt4oMini = openrouterProvider
+    ? await prisma.aiModel.findFirst({
+        where: {
+          providerId: openrouterProvider.id,
+          externalId: 'openai/gpt-4o-mini',
+        },
+      })
+    : null;
+
+  const embeddingModel = openrouterProvider
+    ? await prisma.aiModel.findFirst({
+        where: {
+          providerId: openrouterProvider.id,
+          externalId: 'openai/text-embedding-3-small',
+        },
+      })
+    : null;
+
+  let geminiFlash = geminiProvider
+    ? await prisma.aiModel.findFirst({
+        where: { providerId: geminiProvider.id, externalId: 'gemini-2.5-flash' },
+      })
+    : null;
+
+  let geminiEmbedding = geminiProvider
+    ? await prisma.aiModel.findFirst({
+        where: {
+          providerId: geminiProvider.id,
+          externalId: 'gemini-embedding-001',
+        },
+      })
+    : null;
+
+  if (geminiProvider && !geminiFlash) {
+    geminiFlash = await prisma.aiModel.create({
+      data: {
+        providerId: geminiProvider.id,
+        externalId: 'gemini-2.5-flash',
+        name: 'Gemini 2.5 Flash',
+        isEnabled: true,
+        inputCostPer1k: new Prisma.Decimal('0.000075'),
+        outputCostPer1k: new Prisma.Decimal('0.00030'),
+        capabilities: ['text', 'structured_output'],
+      },
+    });
+  }
+
+  if (geminiProvider && !geminiEmbedding) {
+    geminiEmbedding = await prisma.aiModel.create({
+      data: {
+        providerId: geminiProvider.id,
+        externalId: 'gemini-embedding-001',
+        name: 'Gemini Embedding',
+        isEnabled: true,
+        inputCostPer1k: new Prisma.Decimal('0.000025'),
+        outputCostPer1k: new Prisma.Decimal('0'),
+        capabilities: ['embedding'],
+      },
+    });
+  }
+
+  return {
+    company: {
+      id: company.id,
+      name: company.name,
+      slug: company.slug,
+      userId: user.id,
+      brandProfileId: brandProfile.id,
+      creditBalance: freeTierAmount,
+    },
+    user: {
+      id: user.id,
+      email: TEST_USER.email,
+      password: TEST_USER.password,
+    },
+    platformSettings: {
+      freeTierAmount,
+      markupDefault: platformSettings?.markupDefault
+        ? Number(platformSettings.markupDefault)
+        : 1.2,
+      minRunCost: platformSettings?.minRunCost
+        ? Number(platformSettings.minRunCost)
+        : 0.01,
+    },
+    providers: {
+      openrouterId: openrouterProvider?.id ?? '',
+      geminiId: geminiProvider?.id ?? '',
+    },
+    models: {
+      gpt4oMiniId: gpt4oMini?.id ?? '',
+      embeddingModelId: embeddingModel?.id ?? '',
+      geminiFlashId: geminiFlash?.id ?? '',
+      geminiEmbeddingId: geminiEmbedding?.id ?? '',
+    },
+  };
+}
+
+export async function seedCompanyWithLowBalance(
+  creditAmount: number,
+): Promise<TestCompany> {
+  const prisma = await getTestPrisma();
+
+  const user = await prisma.user.create({
+    data: {
+      id: `test_low_credit_user_${Date.now()}`,
+      name: 'Low Credit User',
+      email: `lowcredit_${Date.now()}@blister.test`,
+      emailVerified: true,
+      userType: 'BUSINESS',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  const company = await prisma.company.create({
+    data: {
+      id: `test_low_credit_company_${Date.now()}`,
+      name: 'Low Credit Company',
+      slug: `low-credit-${Date.now()}`,
+      ownerId: user.id,
+      onboardingCompletedAt: new Date(),
+    },
+  });
+
+  await prisma.creditBalance.create({
+    data: {
+      companyId: company.id,
+      amount: new Prisma.Decimal(creditAmount),
+      currency: 'USD',
+    },
+  });
+
+  const brandProfile = await prisma.brandProfile.create({
+    data: {
+      id: `test_low_credit_brand_${Date.now()}`,
+      companyId: company.id,
+      brandVoice: 'Test brand voice',
+      niche: 'Testing',
+    },
+  });
+
+  return {
+    id: company.id,
+    name: company.name,
+    slug: company.slug,
+    userId: user.id,
+    brandProfileId: brandProfile.id,
+    creditBalance: creditAmount,
+  };
+}

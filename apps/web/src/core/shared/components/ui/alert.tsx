@@ -5,29 +5,26 @@ import { cn } from "src/core/shared/utils";
 
 const alertVariants = cva(
   [
-    "relative grid w-full gap-x-3 gap-y-0.5 rounded-[var(--r-md)] p-3 text-[13px] leading-5",
+    "relative grid w-full gap-x-3 gap-y-0.5 rounded-[var(--r-lg)] p-4 text-[13px] leading-5",
     "transition-[background,border-color,box-shadow] duration-[var(--dur-fast)] ease-[var(--ease-out)]",
     "grid-cols-[auto_minmax(0,1fr)] has-[>[data-slot=alert-action]]:grid-cols-[auto_minmax(0,1fr)_auto]",
     "[&>svg]:pointer-events-none [&>svg]:col-start-1 [&>svg]:row-start-1 [&>svg]:row-span-2",
-    "[&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0",
+    "[&>svg]:mt-0.5 [&>svg]:size-[18px] [&>svg]:shrink-0",
   ].join(" "),
   {
     variants: {
       variant: {
         default:
           "border border-[var(--line-default)] bg-[var(--bg-raised)] text-[var(--fg-primary)] [&>svg]:text-[var(--fg-tertiary)]",
-        info: [
-          "rounded-r-[var(--r-md)] border border-[var(--line-subtle)] border-l-[3px] border-l-[var(--info)]",
-          "bg-[var(--bg-raised)] text-[var(--fg-primary)] [&>svg]:text-[var(--info)]",
-        ].join(" "),
+        info: "bg-[var(--info-soft)] text-[var(--fg-primary)] [&_[data-slot=alert-title]]:text-[var(--info-soft-text)] [&>svg]:text-[var(--info)]",
         accent:
-          "border border-[color-mix(in_oklch,var(--accent)_45%,transparent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] text-[var(--fg-primary)] [&>svg]:text-[var(--accent)]",
+          "bg-[var(--accent-soft)] text-[var(--fg-primary)] [&_[data-slot=alert-title]]:text-[var(--accent-soft-text)] [&>svg]:text-[var(--accent)]",
         success:
-          "border border-[color-mix(in_oklch,var(--success)_45%,transparent)] bg-[color-mix(in_oklch,var(--success)_10%,transparent)] text-[var(--fg-primary)] [&>svg]:text-[var(--success)]",
+          "bg-[var(--success-soft)] text-[var(--fg-primary)] [&_[data-slot=alert-title]]:text-[var(--success-soft-text)] [&>svg]:text-[var(--success)]",
         warning:
-          "border border-[color-mix(in_oklch,var(--warning)_45%,transparent)] bg-[color-mix(in_oklch,var(--warning)_10%,transparent)] text-[var(--fg-primary)] [&>svg]:text-[var(--warning)]",
+          "bg-[var(--warning-soft)] text-[var(--fg-primary)] [&_[data-slot=alert-title]]:text-[var(--warning-soft-text)] [&>svg]:text-[var(--warning)]",
         destructive:
-          "border border-[color-mix(in_oklch,var(--danger)_45%,transparent)] bg-[color-mix(in_oklch,var(--danger)_10%,transparent)] text-[var(--fg-primary)] [&>svg]:text-[var(--danger)]",
+          "bg-[var(--danger-soft)] text-[var(--fg-primary)] [&_[data-slot=alert-title]]:text-[var(--danger-soft-text)] [&>svg]:text-[var(--danger)]",
       },
     },
     defaultVariants: {

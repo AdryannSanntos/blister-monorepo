@@ -127,6 +127,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  userType: 'userType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -167,18 +168,8 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.OrganizationScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  logo: 'logo',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
   name: 'name',
   isSystem: 'isSystem',
   createdAt: 'createdAt',
@@ -191,175 +182,11 @@ exports.Prisma.RolePermissionScalarFieldEnum = {
   key: 'key'
 };
 
-exports.Prisma.MembershipScalarFieldEnum = {
+exports.Prisma.UserRoleAssignmentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  organizationId: 'organizationId',
-  active: 'active',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.MembershipRoleScalarFieldEnum = {
-  id: 'id',
-  membershipId: 'membershipId',
   roleId: 'roleId',
   assignedAt: 'assignedAt'
-};
-
-exports.Prisma.MembershipPermissionOverrideScalarFieldEnum = {
-  id: 'id',
-  membershipId: 'membershipId',
-  key: 'key',
-  effect: 'effect'
-};
-
-exports.Prisma.InvitationScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  inviterId: 'inviterId',
-  organizationId: 'organizationId',
-  roleId: 'roleId',
-  status: 'status',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.OnboardingDraftScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  currentStep: 'currentStep',
-  data: 'data',
-  publishedAt: 'publishedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContextSourceScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  description: 'description',
-  sourceKind: 'sourceKind',
-  sourceUrl: 'sourceUrl',
-  fileName: 'fileName',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  pipelineStatus: 'pipelineStatus',
-  pipelineError: 'pipelineError',
-  extractedContent: 'extractedContent',
-  normalizedContent: 'normalizedContent',
-  reviewNotes: 'reviewNotes',
-  reviewedAt: 'reviewedAt',
-  reviewedById: 'reviewedById',
-  tags: 'tags',
-  category: 'category',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContextArtifactScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  syncStatus: 'syncStatus',
-  syncedAt: 'syncedAt',
-  syncError: 'syncError',
-  sourceCount: 'sourceCount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AssetScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  description: 'description',
-  sourceKind: 'sourceKind',
-  sourceUrl: 'sourceUrl',
-  fileName: 'fileName',
-  mimeType: 'mimeType',
-  visibleType: 'visibleType',
-  visibleCategory: 'visibleCategory',
-  tags: 'tags',
-  contextRole: 'contextRole',
-  operationalRole: 'operationalRole',
-  contextStatus: 'contextStatus',
-  operationalStatus: 'operationalStatus',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AssetRelationScalarFieldEnum = {
-  id: 'id',
-  assetId: 'assetId',
-  kind: 'kind',
-  value: 'value'
-};
-
-exports.Prisma.DesignSystemProfileScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  brandEssence: 'brandEssence',
-  desiredPerception: 'desiredPerception',
-  visualStyle: 'visualStyle',
-  antiPatterns: 'antiPatterns',
-  conceptualReferences: 'conceptualReferences',
-  aiNotes: 'aiNotes',
-  artifactSyncStatus: 'artifactSyncStatus',
-  artifactSyncedAt: 'artifactSyncedAt',
-  artifactSyncError: 'artifactSyncError',
-  artifactObjectKey: 'artifactObjectKey',
-  contextArtifactSyncStatus: 'contextArtifactSyncStatus',
-  contextArtifactSyncedAt: 'contextArtifactSyncedAt',
-  contextArtifactSyncError: 'contextArtifactSyncError',
-  contextArtifactObjectKey: 'contextArtifactObjectKey',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignColorGroupScalarFieldEnum = {
-  id: 'id',
-  designSystemId: 'designSystemId',
-  name: 'name',
-  description: 'description',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignColorTokenScalarFieldEnum = {
-  id: 'id',
-  colorGroupId: 'colorGroupId',
-  name: 'name',
-  value: 'value',
-  displayFormat: 'displayFormat',
-  semanticRole: 'semanticRole',
-  usageNote: 'usageNote',
-  restrictionNote: 'restrictionNote',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DesignAssetScalarFieldEnum = {
-  id: 'id',
-  designSystemId: 'designSystemId',
-  organizationId: 'organizationId',
-  primaryRole: 'primaryRole',
-  secondaryTags: 'secondaryTags',
-  title: 'title',
-  description: 'description',
-  objectKey: 'objectKey',
-  publicUrl: 'publicUrl',
-  fileName: 'fileName',
-  contentType: 'contentType',
-  size: 'size',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PlatformRoleAssignmentScalarFieldEnum = {
@@ -373,7 +200,6 @@ exports.Prisma.PlatformRoleAssignmentScalarFieldEnum = {
 exports.Prisma.SupportSessionScalarFieldEnum = {
   id: 'id',
   actorUserId: 'actorUserId',
-  organizationId: 'organizationId',
   reason: 'reason',
   status: 'status',
   startedAt: 'startedAt',
@@ -383,7 +209,6 @@ exports.Prisma.SupportSessionScalarFieldEnum = {
 exports.Prisma.AuditLogScalarFieldEnum = {
   id: 'id',
   actorUserId: 'actorUserId',
-  targetOrganizationId: 'targetOrganizationId',
   targetUserId: 'targetUserId',
   action: 'action',
   resourceType: 'resourceType',
@@ -392,386 +217,265 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AIProviderScalarFieldEnum = {
+exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
-  slug: 'slug',
+  ownerUserId: 'ownerUserId',
   name: 'name',
-  description: 'description',
-  status: 'status',
-  iconMetadata: 'iconMetadata',
-  capabilityMetadata: 'capabilityMetadata',
-  pricingMetadata: 'pricingMetadata',
-  limitsMetadata: 'limitsMetadata',
-  schemaMetadata: 'schemaMetadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AIModelScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
   slug: 'slug',
-  name: 'name',
-  description: 'description',
-  externalModelId: 'externalModelId',
-  status: 'status',
-  capabilityMetadata: 'capabilityMetadata',
-  pricingMetadata: 'pricingMetadata',
-  limitsMetadata: 'limitsMetadata',
-  schemaMetadata: 'schemaMetadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AICredentialScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  organizationId: 'organizationId',
-  label: 'label',
-  value: 'value',
-  schemaMetadata: 'schemaMetadata',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AIProviderPolicyScalarFieldEnum = {
-  id: 'id',
-  providerId: 'providerId',
-  organizationId: 'organizationId',
-  allowedModelIds: 'allowedModelIds',
-  metadata: 'metadata',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentTemplateScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  name: 'name',
-  description: 'description',
-  category: 'category',
-  status: 'status',
-  allowedBlocks: 'allowedBlocks',
-  defaultFlow: 'defaultFlow',
-  defaultInputSchema: 'defaultInputSchema',
-  defaultOutputSchema: 'defaultOutputSchema',
-  executionProfile: 'executionProfile',
-  modelPolicy: 'modelPolicy',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyAgentScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  templateId: 'templateId',
-  slug: 'slug',
-  name: 'name',
-  description: 'description',
-  status: 'status',
-  allowedTools: 'allowedTools',
-  suggestedMessages: 'suggestedMessages',
-  activeVersionId: 'activeVersionId',
   onboardingCompletedAt: 'onboardingCompletedAt',
-  createdByUserId: 'createdByUserId',
-  updatedByUserId: 'updatedByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SystemAgentConfigScalarFieldEnum = {
+exports.Prisma.BrandProfileScalarFieldEnum = {
   id: 'id',
-  key: 'key',
-  providerId: 'providerId',
-  modelId: 'modelId',
-  temperature: 'temperature',
-  maxOutputTokens: 'maxOutputTokens',
-  enabled: 'enabled',
-  updatedByUserId: 'updatedByUserId',
+  companyId: 'companyId',
+  logoStorageKey: 'logoStorageKey',
+  logoVariants: 'logoVariants',
+  brandAssets: 'brandAssets',
+  brandVoice: 'brandVoice',
+  palette: 'palette',
+  typography: 'typography',
+  visualStyle: 'visualStyle',
+  niche: 'niche',
+  description: 'description',
+  targetAudience: 'targetAudience',
+  marketingObjective: 'marketingObjective',
+  socialNetworks: 'socialNetworks',
+  mainProducts: 'mainProducts',
+  differentiators: 'differentiators',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.AgentVersionScalarFieldEnum = {
+exports.Prisma.CampaignScalarFieldEnum = {
   id: 'id',
-  agentId: 'agentId',
-  versionNumber: 'versionNumber',
+  companyId: 'companyId',
+  name: 'name',
+  objective: 'objective',
+  context: 'context',
   status: 'status',
-  flowDefinition: 'flowDefinition',
-  inputSchema: 'inputSchema',
-  outputSchema: 'outputSchema',
-  notes: 'notes',
-  createdByUserId: 'createdByUserId',
-  publishedByUserId: 'publishedByUserId',
-  publishedAt: 'publishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CampaignFileScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  name: 'name',
+  mimeType: 'mimeType',
+  storageKey: 'storageKey',
+  type: 'type',
+  status: 'status',
+  extractedText: 'extractedText',
+  caption: 'caption',
+  sizeBytes: 'sizeBytes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContentPieceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  pipelineRunId: 'pipelineRunId',
+  agentRunId: 'agentRunId',
+  format: 'format',
+  status: 'status',
+  caption: 'caption',
+  hashtags: 'hashtags',
+  imageStorageKey: 'imageStorageKey',
+  htmlSnapshot: 'htmlSnapshot',
+  creditCost: 'creditCost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  approvedAt: 'approvedAt'
+};
+
+exports.Prisma.PipelineRunScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  triggeredByUserId: 'triggeredByUserId',
+  userInput: 'userInput',
+  status: 'status',
+  agentOrder: 'agentOrder',
+  creditCost: 'creditCost',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
+  pipelineRunId: 'pipelineRunId',
+  campaignId: 'campaignId',
   agentId: 'agentId',
-  agentVersionId: 'agentVersionId',
+  parentRunId: 'parentRunId',
+  feedbackId: 'feedbackId',
   status: 'status',
+  currentStepKey: 'currentStepKey',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
-  createdByUserId: 'createdByUserId',
+  pauseReason: 'pauseReason',
+  pauseFormSchema: 'pauseFormSchema',
+  creditCost: 'creditCost',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  attemptCount: 'attemptCount',
-  completedAt: 'completedAt',
-  lastAttemptAt: 'lastAttemptAt',
-  leaseExpiresAt: 'leaseExpiresAt',
-  processingLeaseId: 'processingLeaseId',
-  processingMetadata: 'processingMetadata',
-  queuePosition: 'queuePosition',
-  sourceMessageId: 'sourceMessageId',
   startedAt: 'startedAt',
-  threadId: 'threadId',
-  rootRunId: 'rootRunId',
-  parentRunId: 'parentRunId',
-  parentStepId: 'parentStepId',
-  depth: 'depth',
-  currentBlockId: 'currentBlockId',
-  currentBlockType: 'currentBlockType',
-  waitingReason: 'waitingReason',
-  resumeStatus: 'resumeStatus',
-  chunkIdsRetrieved: 'chunkIdsRetrieved',
-  durationMs: 'durationMs',
-  intentClassified: 'intentClassified',
-  sourcesSelected: 'sourcesSelected',
-  tokensUsed: 'tokensUsed'
+  completedAt: 'completedAt'
 };
 
 exports.Prisma.AgentRunStepScalarFieldEnum = {
   id: 'id',
-  runId: 'runId',
-  blockKey: 'blockKey',
-  blockType: 'blockType',
+  agentRunId: 'agentRunId',
+  stepKey: 'stepKey',
+  stepIndex: 'stepIndex',
   status: 'status',
+  resultType: 'resultType',
   inputPayload: 'inputPayload',
   outputPayload: 'outputPayload',
   errorMessage: 'errorMessage',
+  llmModel: 'llmModel',
+  tokensInput: 'tokensInput',
+  tokensOutput: 'tokensOutput',
+  creditCost: 'creditCost',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt',
-  metadata: 'metadata',
-  sequence: 'sequence',
-  branchKey: 'branchKey',
-  inputType: 'inputType',
-  outputType: 'outputType',
-  statePayload: 'statePayload',
-  uiOutputPayload: 'uiOutputPayload'
+  updatedAt: 'updatedAt'
 };
 
-exports.Prisma.AgentContextProfileScalarFieldEnum = {
+exports.Prisma.AgentFeedbackScalarFieldEnum = {
   id: 'id',
+  companyId: 'companyId',
+  contentPieceId: 'contentPieceId',
   agentId: 'agentId',
-  instructions: 'instructions',
-  notes: 'notes',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  feedbackType: 'feedbackType',
+  userId: 'userId',
+  reason: 'reason',
+  originalContent: 'originalContent',
+  editedContent: 'editedContent',
+  instruction: 'instruction',
+  contentHash: 'contentHash',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentContextFileScalarFieldEnum = {
+exports.Prisma.LearningSignalScalarFieldEnum = {
   id: 'id',
-  profileId: 'profileId',
-  filename: 'filename',
-  objectKey: 'objectKey',
-  mimeType: 'mimeType',
-  sizeBytes: 'sizeBytes',
-  publicUrl: 'publicUrl',
-  status: 'status',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentContextReferenceScalarFieldEnum = {
-  id: 'id',
-  profileId: 'profileId',
-  sourceType: 'sourceType',
-  sourceId: 'sourceId',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentRunContextSnapshotScalarFieldEnum = {
-  id: 'id',
-  runId: 'runId',
-  layers: 'layers',
-  resolvedSummary: 'resolvedSummary',
+  feedbackId: 'feedbackId',
+  companyId: 'companyId',
+  agentId: 'agentId',
+  signalType: 'signalType',
+  signalValue: 'signalValue',
+  weight: 'weight',
   metadata: 'metadata',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentRunContextSnapshotItemScalarFieldEnum = {
+exports.Prisma.AgentMemoryScalarFieldEnum = {
   id: 'id',
-  snapshotId: 'snapshotId',
-  sourceType: 'sourceType',
-  sourceId: 'sourceId',
-  label: 'label',
-  content: 'content',
+  companyId: 'companyId',
+  agentId: 'agentId',
   summary: 'summary',
-  metadata: 'metadata',
+  signals: 'signals',
+  lastFeedbackId: 'lastFeedbackId',
+  updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AgentRunSuspensionScalarFieldEnum = {
+exports.Prisma.CreditBalanceScalarFieldEnum = {
   id: 'id',
-  runId: 'runId',
-  stepId: 'stepId',
-  type: 'type',
-  status: 'status',
-  resolvedPayload: 'resolvedPayload',
-  roundNumber: 'roundNumber',
-  metadata: 'metadata',
-  answeredAt: 'answeredAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentRunSuspensionResponseScalarFieldEnum = {
-  id: 'id',
-  suspensionId: 'suspensionId',
-  answers: 'answers',
-  roundNumber: 'roundNumber',
-  metadata: 'metadata',
-  answeredById: 'answeredById',
-  answeredAt: 'answeredAt'
-};
-
-exports.Prisma.AgentChatThreadScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  agentId: 'agentId',
-  scope: 'scope',
-  title: 'title',
-  parentThreadId: 'parentThreadId',
-  branchedFromMessageId: 'branchedFromMessageId',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentChatMessageScalarFieldEnum = {
-  id: 'id',
-  threadId: 'threadId',
-  agentRunId: 'agentRunId',
-  role: 'role',
-  content: 'content',
-  metadata: 'metadata',
-  editedFromMessageId: 'editedFromMessageId',
-  regeneratedFromMessageId: 'regeneratedFromMessageId',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.AgentChatToolCallScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  agentId: 'agentId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  toolName: 'toolName',
-  status: 'status',
-  inputPayload: 'inputPayload',
-  outputPayload: 'outputPayload',
-  errorMessage: 'errorMessage',
-  durationMs: 'durationMs',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationEventScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  sequence: 'sequence',
-  eventType: 'eventType',
-  status: 'status',
-  payload: 'payload',
-  idempotencyKey: 'idempotencyKey',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationMessageProjectionScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  status: 'status',
-  text: 'text',
-  citations: 'citations',
-  isStreaming: 'isStreaming',
-  isCompleted: 'isCompleted',
-  isFailed: 'isFailed',
-  errorMessage: 'errorMessage',
-  lastSequence: 'lastSequence',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ConversationToolCallProjectionScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  threadId: 'threadId',
-  messageId: 'messageId',
-  toolCallId: 'toolCallId',
-  groupId: 'groupId',
-  toolName: 'toolName',
-  status: 'status',
-  inputPayload: 'inputPayload',
-  outputPayload: 'outputPayload',
-  errorMessage: 'errorMessage',
-  durationMs: 'durationMs',
-  displayOrder: 'displayOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  runId: 'runId',
-  entryType: 'entryType',
-  amount: 'amount',
-  balanceAfter: 'balanceAfter',
-  metadata: 'metadata',
-  createdByUserId: 'createdByUserId',
-  createdAt: 'createdAt',
-  idempotencyKey: 'idempotencyKey'
-};
-
-exports.Prisma.TechnicalCostLedgerEntryScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  runId: 'runId',
-  providerId: 'providerId',
-  modelId: 'modelId',
+  companyId: 'companyId',
   amount: 'amount',
   currency: 'currency',
-  unit: 'unit',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CreditLedgerScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  type: 'type',
+  amount: 'amount',
+  balanceAfter: 'balanceAfter',
+  currency: 'currency',
+  agentRunStepId: 'agentRunStepId',
+  agentRunId: 'agentRunId',
+  description: 'description',
   metadata: 'metadata',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlatformCreditSettingsScalarFieldEnum = {
+  id: 'id',
+  freeTierAmount: 'freeTierAmount',
+  currency: 'currency',
+  markupDefault: 'markupDefault',
+  minRunCost: 'minRunCost',
+  updatedAt: 'updatedAt',
+  updatedByUserId: 'updatedByUserId'
+};
+
+exports.Prisma.AiProviderScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  isEnabled: 'isEnabled',
   createdAt: 'createdAt',
-  idempotencyKey: 'idempotencyKey'
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AiProviderCredentialScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  label: 'label',
+  encryptedValue: 'encryptedValue',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AiModelScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  externalId: 'externalId',
+  name: 'name',
+  isEnabled: 'isEnabled',
+  inputCostPer1k: 'inputCostPer1k',
+  outputCostPer1k: 'outputCostPer1k',
+  maxTokens: 'maxTokens',
+  capabilities: 'capabilities',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentModelPolicyScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  modelId: 'modelId',
+  markupMultiplier: 'markupMultiplier',
+  isEnabled: 'isEnabled',
+  minCostPerRun: 'minCostPerRun',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PipelineAgentConfigScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  sortOrder: 'sortOrder',
+  isEnabled: 'isEnabled'
 };
 
 exports.Prisma.RagDocumentScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
   sourceType: 'sourceType',
   sourceId: 'sourceId',
   title: 'title',
@@ -785,7 +489,10 @@ exports.Prisma.RagDocumentScalarFieldEnum = {
 exports.Prisma.RagChunkScalarFieldEnum = {
   id: 'id',
   documentId: 'documentId',
-  sequence: 'sequence',
+  companyId: 'companyId',
+  campaignId: 'campaignId',
+  agentId: 'agentId',
+  chunkIndex: 'chunkIndex',
   content: 'content',
   tokenCount: 'tokenCount',
   metadata: 'metadata',
@@ -795,45 +502,32 @@ exports.Prisma.RagChunkScalarFieldEnum = {
 exports.Prisma.RagEmbeddingScalarFieldEnum = {
   id: 'id',
   chunkId: 'chunkId',
-  organizationId: 'organizationId',
-  model: 'model',
+  embeddingModel: 'embeddingModel',
   dimensions: 'dimensions',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.RagIndexJobScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
+  companyId: 'companyId',
   documentId: 'documentId',
   status: 'status',
   errorMessage: 'errorMessage',
-  triggeredByUserId: 'triggeredByUserId',
+  attempts: 'attempts',
+  scheduledAt: 'scheduledAt',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.BrainVersionScalarFieldEnum = {
+exports.Prisma.RagPlatformSettingsScalarFieldEnum = {
   id: 'id',
-  brainId: 'brainId',
-  versionNumber: 'versionNumber',
-  status: 'status',
-  data: 'data',
-  notes: 'notes',
-  createdByUserId: 'createdByUserId',
-  publishedByUserId: 'publishedByUserId',
-  publishedAt: 'publishedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyBrainScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  activeVersionId: 'activeVersionId',
-  createdAt: 'createdAt',
+  embeddingModelId: 'embeddingModelId',
+  chunkSize: 'chunkSize',
+  chunkOverlap: 'chunkOverlap',
+  topK: 'topK',
+  rerankEnabled: 'rerankEnabled',
+  captionModelId: 'captionModelId',
   updatedAt: 'updatedAt'
 };
 
@@ -866,63 +560,152 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.UserType = exports.$Enums.UserType = {
+  BUSINESS: 'BUSINESS',
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+};
 
+exports.MarketingObjective = exports.$Enums.MarketingObjective = {
+  SELL_MORE: 'SELL_MORE',
+  GENERATE_LEADS: 'GENERATE_LEADS',
+  STRENGTHEN_BRAND: 'STRENGTHEN_BRAND'
+};
+
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.CampaignFileType = exports.$Enums.CampaignFileType = {
+  IMAGE: 'IMAGE',
+  TEXT: 'TEXT',
+  PDF: 'PDF'
+};
+
+exports.CampaignFileStatus = exports.$Enums.CampaignFileStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+exports.ContentPieceFormat = exports.$Enums.ContentPieceFormat = {
+  INSTAGRAM_SQUARE_1080: 'INSTAGRAM_SQUARE_1080'
+};
+
+exports.ContentPieceStatus = exports.$Enums.ContentPieceStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.PipelineRunStatus = exports.$Enums.PipelineRunStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.AgentRunStatus = exports.$Enums.AgentRunStatus = {
+  QUEUED: 'QUEUED',
+  RUNNING: 'RUNNING',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.AgentRunStepStatus = exports.$Enums.AgentRunStepStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+exports.StepResultType = exports.$Enums.StepResultType = {
+  CONTINUE: 'CONTINUE',
+  PAUSED: 'PAUSED',
+  FAILED: 'FAILED',
+  COMPLETE: 'COMPLETE'
+};
+
+exports.FeedbackType = exports.$Enums.FeedbackType = {
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  EDITED: 'EDITED',
+  IMPROVE_REQUEST: 'IMPROVE_REQUEST',
+  REGENERATED: 'REGENERATED'
+};
+
+exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT',
+  ADJUST: 'ADJUST',
+  REFUND: 'REFUND'
+};
+
+exports.RagSourceType = exports.$Enums.RagSourceType = {
+  BRAND_BRAIN: 'BRAND_BRAIN',
+  CAMPAIGN: 'CAMPAIGN',
+  CAMPAIGN_FILE: 'CAMPAIGN_FILE',
+  AGENT_LEARNING: 'AGENT_LEARNING',
+  APPROVED_PIECE: 'APPROVED_PIECE'
+};
+
+exports.RagDocumentStatus = exports.$Enums.RagDocumentStatus = {
+  PENDING: 'PENDING',
+  INDEXING: 'INDEXING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+exports.RagIndexJobStatus = exports.$Enums.RagIndexJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Organization: 'Organization',
   Role: 'Role',
   RolePermission: 'RolePermission',
-  Membership: 'Membership',
-  MembershipRole: 'MembershipRole',
-  MembershipPermissionOverride: 'MembershipPermissionOverride',
-  Invitation: 'Invitation',
-  OnboardingDraft: 'OnboardingDraft',
-  ContextSource: 'ContextSource',
-  ContextArtifact: 'ContextArtifact',
-  Asset: 'Asset',
-  AssetRelation: 'AssetRelation',
-  DesignSystemProfile: 'DesignSystemProfile',
-  DesignColorGroup: 'DesignColorGroup',
-  DesignColorToken: 'DesignColorToken',
-  DesignAsset: 'DesignAsset',
+  UserRoleAssignment: 'UserRoleAssignment',
   PlatformRoleAssignment: 'PlatformRoleAssignment',
   SupportSession: 'SupportSession',
   AuditLog: 'AuditLog',
-  AIProvider: 'AIProvider',
-  AIModel: 'AIModel',
-  AICredential: 'AICredential',
-  AIProviderPolicy: 'AIProviderPolicy',
-  AgentTemplate: 'AgentTemplate',
-  CompanyAgent: 'CompanyAgent',
-  SystemAgentConfig: 'SystemAgentConfig',
-  AgentVersion: 'AgentVersion',
+  Company: 'Company',
+  BrandProfile: 'BrandProfile',
+  Campaign: 'Campaign',
+  CampaignFile: 'CampaignFile',
+  ContentPiece: 'ContentPiece',
+  PipelineRun: 'PipelineRun',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
-  AgentContextProfile: 'AgentContextProfile',
-  AgentContextFile: 'AgentContextFile',
-  AgentContextReference: 'AgentContextReference',
-  AgentRunContextSnapshot: 'AgentRunContextSnapshot',
-  AgentRunContextSnapshotItem: 'AgentRunContextSnapshotItem',
-  AgentRunSuspension: 'AgentRunSuspension',
-  AgentRunSuspensionResponse: 'AgentRunSuspensionResponse',
-  AgentChatThread: 'AgentChatThread',
-  AgentChatMessage: 'AgentChatMessage',
-  AgentChatToolCall: 'AgentChatToolCall',
-  ConversationEvent: 'ConversationEvent',
-  ConversationMessageProjection: 'ConversationMessageProjection',
-  ConversationToolCallProjection: 'ConversationToolCallProjection',
-  CreditLedgerEntry: 'CreditLedgerEntry',
-  TechnicalCostLedgerEntry: 'TechnicalCostLedgerEntry',
+  AgentFeedback: 'AgentFeedback',
+  LearningSignal: 'LearningSignal',
+  AgentMemory: 'AgentMemory',
+  CreditBalance: 'CreditBalance',
+  CreditLedger: 'CreditLedger',
+  PlatformCreditSettings: 'PlatformCreditSettings',
+  AiProvider: 'AiProvider',
+  AiProviderCredential: 'AiProviderCredential',
+  AiModel: 'AiModel',
+  AgentModelPolicy: 'AgentModelPolicy',
+  PipelineAgentConfig: 'PipelineAgentConfig',
   RagDocument: 'RagDocument',
   RagChunk: 'RagChunk',
   RagEmbedding: 'RagEmbedding',
   RagIndexJob: 'RagIndexJob',
-  BrainVersion: 'BrainVersion',
-  CompanyBrain: 'CompanyBrain'
+  RagPlatformSettings: 'RagPlatformSettings'
 };
 
 /**

@@ -95,12 +95,14 @@ function FormLabel({
 }: React.ComponentProps<typeof LabelPrimitive.Root> & { required?: boolean }) {
   const { error, formItemId } = useFormField();
 
+  if (!children && !required) return null;
+
   return (
     <Label
       data-slot="form-label"
       data-error={!!error}
       className={cn(
-        "min-h-[20px] text-[12px] font-medium leading-[1.3] text-[var(--fg-secondary)] data-[error=true]:text-[var(--danger)]",
+        "text-[12px] font-medium leading-[1.3] text-[var(--fg-secondary)] data-[error=true]:text-[var(--danger)]",
         className,
       )}
       htmlFor={formItemId}
@@ -151,23 +153,20 @@ function FormMessage({ className, children, ...props }: React.ComponentProps<"p"
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? "") : children;
 
+  if (!body) return null;
+
   return (
     <p
       data-slot="form-message"
       id={formMessageId}
       className={cn(
-        "flex h-[14px] items-center gap-1 text-[11.5px] leading-none text-[var(--danger)]",
-        !body && "invisible pointer-events-none",
+        "flex items-center gap-1 text-[11.5px] leading-none text-[var(--danger)]",
         className,
       )}
       {...props}
     >
-      {body ? (
-        <>
-          <AlertTriangle className="size-3 shrink-0" />
-          {body}
-        </>
-      ) : null}
+      <AlertTriangle className="size-3 shrink-0" />
+      {body}
     </p>
   );
 }

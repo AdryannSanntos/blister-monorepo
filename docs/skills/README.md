@@ -1,26 +1,29 @@
-# Habilidades de IA do Projeto
+# Habilidades de IA do Projeto — Blister
 
-Esta pasta e reservada para skills operacionais que uma IA deve seguir ao trabalhar neste monorepo.
+> Fonte de verdade: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`.claude/commands/`](../../.claude/commands/)
 
-Cada skill traduz o contexto do projeto em instrucoes praticas para execucao consistente.
+Skills operacionais para IA trabalhar neste monorepo.
 
-## Habilidades Disponiveis
+## Habilidades Disponíveis
 
-- `project-engineering-skill.md`: skill base com regras do monorepo, stack e bibliotecas
-- `frontend-skill.md`: skill para implementacoes e refactors no `apps/web`
-- `backend-skill.md`: skill para implementacoes e refactors no `apps/api`
-- `code-review-skill.md`: skill para revisoes tecnicas com foco em bugs, risco e aderencia
-- `design-system-skill.md`: skill para tokens, componentes, variacoes e uso da rota `/design-system`
-- `agents-skill.md`: skill para o dominio de agentes — workspace, chat, workflow builder, execucoes, ciclo de vida de versoes e bloqueio quando agente nao esta ativo
+| Skill | Uso |
+|-------|-----|
+| `project-engineering-skill.md` | Regras base do monorepo, stack, produto |
+| `frontend-skill.md` | `apps/web` — UI, hooks, fluxos |
+| `backend-skill.md` | `apps/api` — módulos, DTOs, Prisma |
+| `code-review-skill.md` | Revisão técnica |
+| `design-system-skill.md` | Tokens, componentes, `/design-system` |
+| `agents-skill.md` | Agentes plugáveis, workflow, RAG |
 
-## Regra de Uso
+## Ordem de leitura
 
-Antes de alterar codigo, a IA deve ler primeiro a skill base e depois a skill especifica da tarefa.
+1. `CLAUDE.md` (inclui **Regra 17 — codificação**)
+2. `project-engineering-skill.md`
+3. Skill específica da tarefa
+4. `docs/prd/` ou `docs/agents/` conforme domínio
 
-Quando uma decisao de arquitetura ou produto for fechada em conversas de planejamento, a documentacao em `/docs` e as skills desta pasta devem ser atualizadas para refletir a decisao aprovada e destacar divergencias temporarias do codigo real.
+## Legado
 
-Quando a tarefa envolver UI, componentes, tokens visuais ou design system, a IA deve ler tambem `design-system-skill.md`.
+`docs/archive/` e `docs/superpowers/` = Workana / TikTok Shop — não usar como verdade de produto.
 
-Quando a tarefa envolver dashboard, cards, sidebar, charts, buttons, modais ou avatares, a IA deve aplicar `docs/design-system/usage-rules.md` antes de criar ou refatorar UI.
-
-Quando a tarefa envolver agentes (chat, workflow builder, execucoes, sidebar do workspace de agente, publicacao/ativacao de versoes), a IA deve ler `agents-skill.md` antes de tocar qualquer arquivo em `apps/web/src/core/modules/agents/**` ou `apps/api/src/agents/**`.
+Mirrors em `.claude/commands/` e `.opencode/agents/` devem estar alinhados com estas skills.

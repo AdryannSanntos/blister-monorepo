@@ -1,0 +1,990 @@
+{
+  "metadata": {
+    "title": "Blister",
+    "description": "Marketing com IA para pequenos negócios no Brasil."
+  },
+  "common": {
+    "localeSwitcher": {
+      "label": "Alterar idioma"
+    },
+    "or": "ou",
+    "email": "Email",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
+    "cancel": "Cancelar",
+    "backToLogin": "Voltar para login",
+    "goToLogin": "Ir para login",
+    "unexpectedError": "Erro inesperado. Tente novamente.",
+    "copyright": "© {year} Blister. Todos os direitos reservados.",
+    "privacyPolicy": "Política de Privacidade",
+    "termsOfUse": "Termos de Uso",
+    "soon": "Em breve",
+    "soonTooltip": " · Em breve",
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "validation": {
+    "invalidEmail": "Email inválido",
+    "passwordRequired": "Senha é obrigatória",
+    "nameMin": "Nome deve ter pelo menos 2 caracteres",
+    "passwordMin8": "Senha deve ter pelo menos 8 caracteres",
+    "passwordUppercase": "Inclua pelo menos uma letra maiúscula",
+    "passwordNumber": "Inclua pelo menos um número",
+    "passwordSpecial": "Inclua pelo menos um caractere especial",
+    "passwordMismatch": "As senhas não coincidem",
+    "currentPasswordRequired": "Informe a senha atual",
+    "newPasswordMin8": "Nova senha deve ter pelo menos 8 caracteres",
+    "confirmPasswordRequired": "Confirme a nova senha",
+    "userIdRequired": "Informe o userId"
+  },
+  "passwordStrength": {
+    "minLength": "Mínimo 8 caracteres",
+    "uppercase": "Letra maiúscula",
+    "number": "Número",
+    "special": "Caractere especial",
+    "strength": "Força: {label}",
+    "weak": "Fraca",
+    "fair": "Razoável",
+    "good": "Boa",
+    "strong": "Forte"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Entre na sua conta para continuar",
+      "forgotPassword": "Esqueceu a senha?",
+      "passwordPlaceholder": "Sua senha",
+      "rememberEmail": "Lembrar email neste dispositivo",
+      "submitting": "Entrando...",
+      "submit": "Entrar",
+      "googleConnecting": "Conectando com Google...",
+      "googleContinue": "Continuar com Google",
+      "appleDisabled": "Login com Apple ainda não está configurado neste ambiente.",
+      "appleContinue": "Continuar com Apple",
+      "noAccount": "Não tem uma conta?",
+      "createAccount": "Criar conta",
+      "googleError": "Não foi possível entrar com Google.",
+      "googleUnexpectedError": "Erro inesperado ao entrar com Google.",
+      "emailNotVerified": "Seu email ainda não foi verificado. Verifique sua caixa de entrada.",
+      "invalidCredentials": "Email ou senha incorretos."
+    },
+    "signup": {
+      "title": "Crie sua conta",
+      "subtitle": "Preencha os dados para começar",
+      "fullName": "Nome completo",
+      "fullNamePlaceholder": "Seu nome completo",
+      "passwordPlaceholder": "Crie uma senha forte",
+      "confirmPassword": "Confirmar senha",
+      "confirmPasswordPlaceholder": "Repita a senha",
+      "submitting": "Criando conta...",
+      "submit": "Criar conta",
+      "hasAccount": "Já tem uma conta?",
+      "signIn": "Entrar",
+      "createError": "Erro ao criar conta. Tente novamente.",
+      "createSuccess": "Conta criada com sucesso!"
+    },
+    "forgotPassword": {
+      "title": "Recuperar senha",
+      "subtitle": "Informe seu email para receber o link de recuperação",
+      "submitting": "Enviando...",
+      "submit": "Enviar link de recuperação",
+      "sendError": "Erro ao enviar email. Tente novamente.",
+      "sentTitle": "Email enviado",
+      "sentSubtitle": "Verifique sua caixa de entrada",
+      "sentBody": "Enviamos o link de recuperação para {email}. Clique no link para redefinir sua senha.",
+      "spamHint": "Não encontrou? Verifique a pasta de spam."
+    },
+    "resetPassword": {
+      "invalidToken": "Token de redefinição inválido ou expirado.",
+      "error": "Erro ao redefinir senha. Tente novamente.",
+      "success": "Senha redefinida com sucesso!",
+      "invalidLinkTitle": "Link inválido",
+      "invalidLinkSubtitle": "Este link de redefinição é inválido ou expirou",
+      "invalidLinkBody": "Por favor, solicite um novo link de recuperação de senha.",
+      "requestNewLink": "Solicitar novo link",
+      "title": "Criar nova senha",
+      "subtitle": "Defina uma nova senha para sua conta",
+      "newPassword": "Nova senha",
+      "newPasswordPlaceholder": "Crie uma senha forte",
+      "confirmNewPassword": "Confirmar nova senha",
+      "confirmNewPasswordPlaceholder": "Repita a nova senha",
+      "submitting": "Salvando...",
+      "submit": "Salvar nova senha"
+    },
+    "verifyEmail": {
+      "emailNotFound": "Email não encontrado. Volte para o cadastro.",
+      "resendError": "Erro ao reenviar email. Tente novamente.",
+      "resendSuccess": "Email de verificação reenviado para {email}.",
+      "pendingBody": "Enviamos um link de verificação para {email}. Clique no link para ativar sua conta.",
+      "pendingBodyFallback": "Enviamos um link de verificação para seu email. Clique no link para ativar sua conta.",
+      "spamHint": "Não encontrou? Verifique a pasta de spam ou reenvie abaixo.",
+      "resending": "Reenviando...",
+      "resend": "Reenviar email de verificação",
+      "states": {
+        "pending": {
+          "title": "Verifique seu email",
+          "description": "Acesse o link enviado para confirmar sua conta"
+        },
+        "success": {
+          "title": "Email verificado com sucesso",
+          "description": "Sua conta foi ativada. Agora você já pode entrar."
+        },
+        "error": {
+          "title": "Link de verificação inválido ou expirado",
+          "description": "Esse link não é mais válido. Solicite um novo email de verificação para continuar."
+        }
+      }
+    },
+    "serviceUnavailable": {
+      "badge": "Instabilidade temporária",
+      "title": "Não foi possível conectar ao servidor",
+      "description": "A Blister não conseguiu validar sua sessão agora. Isso costuma acontecer durante uma indisponibilidade temporária da API. Tente novamente em instantes.",
+      "retry": "Tentar novamente",
+      "goToLogin": "Ir para login",
+      "footer": "Se o erro continuar, verifique se a API interna está ativa no ambiente atual."
+    }
+  },
+  "dashboard": {
+    "welcomeTitle": "Bem-vindo à Blister",
+    "welcomeSubtitle": "Marketing com IA para o seu negócio.",
+    "brand": "Blister",
+    "home": "Início",
+    "main": "Principal",
+    "settings": "Configurações",
+    "accountSettings": "Configurações da conta",
+    "viewCompanies": "Ver empresas",
+    "platformAdminArea": "Área do admin",
+    "userMenu": "Menu do usuário",
+    "signOut": "Deslogar",
+    "signOutShort": "Sair",
+    "toggleTheme": "Alternar tema",
+    "signOutError": "Erro ao sair da conta.",
+    "collapseSidebar": "Recolher sidebar",
+    "expandSidebar": "Expandir sidebar"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "agents": "Agentes",
+    "myAgents": "Meus agentes",
+    "agentStrategist": "Estrategista",
+    "agentCopywriter": "Copywriter",
+    "agentDesigner": "Designer",
+    "agentPost": "Post completo",
+    "generateCopy": "Gerar copy",
+    "generateImage": "Gerar imagem",
+    "createPost": "Criar post",
+    "adaptContent": "Adaptar conteúdo",
+    "createEmail": "Criar email",
+    "history": "Histórico",
+    "credits": "Créditos",
+    "company": "Empresa",
+    "brandBrain": "Cérebro",
+    "campaigns": "Campanhas",
+    "integrations": "Integrações",
+    "workspace": "Workspace",
+    "team": "Equipe",
+    "permissions": "Permissões",
+    "settings": "Configurações",
+    "admin": "Admin",
+    "settingsAria": "Configurações"
+  },
+  "workspace": {
+    "team": {
+      "title": "Equipe",
+      "description": "Gerencie quem tem acesso e quais cargos cada pessoa exerce.",
+      "invite": "Convidar membro",
+      "actionsMenu": "Ações para {name}",
+      "editMember": "Editar cargos do membro",
+      "removeMember": "Remover membro",
+      "emptyTitle": "Nenhum membro encontrado",
+      "emptyDescription": "Convide a primeira pessoa para colaborar com você.",
+      "removeDialogTitle": "Remover membro",
+      "removeDialogDescription": "Tem certeza que deseja remover {name} ({email})? Essa pessoa perderá o acesso imediatamente.",
+      "remove": "Remover",
+      "removing": "Removendo...",
+      "columns": {
+        "member": "Membro",
+        "email": "Email",
+        "roles": "Cargos",
+        "joinedAt": "Entrou em"
+      },
+      "filters": {
+        "role": "Cargo"
+      },
+      "inviteDialog": {
+        "title": "Convidar membro",
+        "description": "Informe o email de quem já possui conta na Blister e escolha o cargo inicial.",
+        "email": "Email",
+        "emailPlaceholder": "nome@empresa.com.br",
+        "role": "Cargo",
+        "rolePlaceholder": "Selecione um cargo",
+        "roleRequired": "Selecione um cargo",
+        "submit": "Enviar convite",
+        "submitting": "Enviando..."
+      },
+      "editDialog": {
+        "title": "Editar cargos",
+        "description": "Adicione ou remova cargos deste membro.",
+        "currentRoles": "Cargos atuais",
+        "noRoles": "Nenhum cargo atribuído",
+        "removeRole": "Remover cargo {role}",
+        "addRole": "Adicionar cargo",
+        "addRolePlaceholder": "Selecione um cargo",
+        "noRolesAvailable": "Todos os cargos já foram atribuídos",
+        "close": "Fechar"
+      },
+      "toasts": {
+        "inviteSuccess": "Membro adicionado com sucesso.",
+        "inviteError": "Não foi possível convidar o membro.",
+        "roleAssigned": "Cargo atribuído.",
+        "roleAssignError": "Não foi possível atribuir o cargo.",
+        "roleRemoved": "Cargo removido.",
+        "roleRemoveError": "Não foi possível remover o cargo.",
+        "memberRemoved": "Membro removido.",
+        "memberRemoveError": "Não foi possível remover o membro."
+      }
+    },
+    "permissions": {
+      "title": "Permissões",
+      "description": "Gerencie cargos e controle o que cada perfil pode fazer.",
+      "createRole": "Criar cargo",
+      "actionsMenu": "Ações para {name}",
+      "editRole": "Editar cargo",
+      "deleteRole": "Excluir cargo",
+      "systemBadge": "Sistema",
+      "emptyTitle": "Nenhum cargo encontrado",
+      "emptyDescription": "Crie o primeiro cargo personalizado para sua equipe.",
+      "deleteDialogTitle": "Excluir cargo",
+      "deleteDialogDescription": "Tem certeza que deseja excluir o cargo {name}? Esta ação não pode ser desfeita.",
+      "deleteConfirm": "Excluir",
+      "deleting": "Excluindo...",
+      "tabs": {
+        "roles": "Cargos",
+        "matrix": "Matriz"
+      },
+      "columns": {
+        "role": "Cargo",
+        "members": "Membros",
+        "permissions": "Permissões"
+      },
+      "systemRoles": {
+        "owner": "Proprietário",
+        "admin": "Administrador",
+        "member": "Membro"
+      },
+      "groups": {
+        "users": "Usuários",
+        "members": "Membros",
+        "roles": "Cargos",
+        "permissions": "Permissões",
+        "company": "Empresa",
+        "brand": "Marca",
+        "campaigns": "Campanhas",
+        "files": "Arquivos",
+        "pieces": "Peças",
+        "credits": "Créditos",
+        "generation": "Geração"
+      },
+      "keys": {
+        "user": {
+          "read": "Ver usuários",
+          "update": "Editar usuários"
+        },
+        "member": {
+          "read": "Ver membros",
+          "invite": "Convidar membros",
+          "update": "Editar membros",
+          "remove": "Remover membros"
+        },
+        "role": {
+          "read": "Ver cargos",
+          "create": "Criar cargos",
+          "update": "Editar cargos",
+          "delete": "Excluir cargos"
+        },
+        "permission": {
+          "read": "Ver permissões"
+        },
+        "company": {
+          "read": "Ver empresa",
+          "update": "Editar empresa",
+          "delete": "Excluir empresa"
+        },
+        "brand": {
+          "read": "Ver marca",
+          "update": "Editar marca"
+        },
+        "campaign": {
+          "read": "Ver campanhas",
+          "create": "Criar campanhas",
+          "update": "Editar campanhas",
+          "delete": "Excluir campanhas",
+          "generate": "Gerar campanhas"
+        },
+        "file": {
+          "create": "Enviar arquivos",
+          "delete": "Excluir arquivos"
+        },
+        "piece": {
+          "read": "Ver peças",
+          "approve": "Aprovar peças",
+          "update": "Editar peças"
+        },
+        "credit": {
+          "read": "Ver créditos"
+        },
+        "generation": {
+          "create": "Criar geração rápida"
+        }
+      },
+      "roleDialog": {
+        "createTitle": "Criar cargo",
+        "createDescription": "Defina um nome e selecione as permissões deste cargo.",
+        "editTitle": "Editar cargo",
+        "editDescription": "Atualize o nome e as permissões do cargo.",
+        "name": "Nome do cargo",
+        "namePlaceholder": "ex: editor-conteudo",
+        "nameFormat": "Use apenas letras, números, hífen ou underscore",
+        "permissions": "Permissões",
+        "permissionsRequired": "Selecione pelo menos uma permissão",
+        "create": "Criar cargo",
+        "save": "Salvar alterações",
+        "saving": "Salvando..."
+      },
+      "matrix": {
+        "sectionTitle": "Matriz de permissões",
+        "sectionDescription": "Compare rapidamente o que cada cargo pode fazer.",
+        "permission": "Permissão",
+        "system": "Sistema",
+        "allowed": "Permitido",
+        "denied": "Negado",
+        "empty": "Nenhum cargo disponível para exibir a matriz."
+      },
+      "toasts": {
+        "createSuccess": "Cargo criado com sucesso.",
+        "createError": "Não foi possível criar o cargo.",
+        "updateSuccess": "Cargo atualizado.",
+        "updateError": "Não foi possível atualizar o cargo.",
+        "deleteSuccess": "Cargo excluído.",
+        "deleteError": "Não foi possível excluir o cargo."
+      }
+    },
+    "settings": {
+      "title": "Configurações",
+      "description": "Dados da empresa e ações sensíveis do workspace.",
+      "general": {
+        "title": "Informações da empresa",
+        "description": "Nome e identificador usados no seu workspace.",
+        "companyName": "Nome da empresa",
+        "companyNamePlaceholder": "Ex: Doces da Maria",
+        "slug": "Identificador (slug)",
+        "slugReadonly": "O slug é gerado automaticamente e não pode ser alterado por aqui.",
+        "save": "Salvar alterações",
+        "saving": "Salvando..."
+      },
+      "danger": {
+        "title": "Zona de perigo",
+        "description": "Ações irreversíveis que afetam toda a empresa.",
+        "deleteTitle": "Excluir empresa",
+        "deleteDescription": "Remove permanentemente campanhas, marca, créditos e histórico desta empresa.",
+        "deleteButton": "Excluir empresa",
+        "deleteDialogTitle": "Excluir empresa permanentemente",
+        "deleteDialogDescription": "Esta ação não pode ser desfeita. Todos os dados de {name} serão removidos.",
+        "confirmLabel": "Digite {name} para confirmar",
+        "confirmRequired": "Confirme o nome da empresa",
+        "confirmMismatch": "O nome digitado não confere",
+        "cancel": "Cancelar",
+        "deleteConfirm": "Excluir permanentemente",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "deleteSuccess": "Empresa excluída com sucesso.",
+        "deleteError": "Não foi possível excluir a empresa."
+      }
+    }
+  },
+  "workspacesHub": {
+    "title": "Empresas",
+    "companies": "Empresas",
+    "admin": "Admin",
+    "companiesDescription": "Escolha uma empresa para continuar ou crie uma nova.",
+    "newCompany": "Nova empresa",
+    "emptyTitle": "Nenhuma empresa encontrada",
+    "emptyDescription": "Crie sua primeira empresa para começar a usar a Blister.",
+    "createFirstCompany": "Criar empresa",
+    "openCompany": "Abrir {name}"
+  },
+  "account": {
+    "eyebrow": "Conta",
+    "title": "Configurações da conta",
+    "description": "Gerencie seu perfil pessoal e credenciais de acesso. Estas configurações são independentes do workspace.",
+    "profile": {
+      "title": "Perfil",
+      "fullName": "Nome completo",
+      "namePlaceholder": "Seu nome",
+      "emailReadonly": "O email não pode ser alterado.",
+      "saving": "Salvando...",
+      "save": "Salvar alterações",
+      "updateError": "Erro ao atualizar perfil.",
+      "updateSuccess": "Perfil atualizado com sucesso."
+    },
+    "password": {
+      "title": "Alterar senha",
+      "current": "Senha atual",
+      "new": "Nova senha",
+      "confirm": "Confirmar nova senha",
+      "submitting": "Alterando...",
+      "submit": "Alterar senha",
+      "changeError": "Erro ao alterar senha.",
+      "changeSuccess": "Senha alterada com sucesso."
+    },
+    "language": {
+      "title": "Idioma",
+      "description": "Selecione o idioma da interface. A alteração será aplicada imediatamente.",
+      "label": "Idioma da interface",
+      "ptBR": "Português (Brasil)",
+      "en": "English"
+    }
+  },
+  "onboarding": {
+    "successMessage": "Tudo pronto! Bem-vindo ao Blister.",
+    "saveError": "Não foi possível salvar. Tente novamente.",
+    "validation": {
+      "companyNameMin": "Mínimo 2 caracteres",
+      "nicheMin": "Mínimo 2 caracteres",
+      "descriptionMin": "Mínimo 10 caracteres",
+      "brandVoiceMin": "Mínimo 10 caracteres"
+    },
+    "stepOne": {
+      "title": "Como se chama seu negócio?",
+      "subtitle": "Conte o essencial — o restante você configura depois no Cérebro da Marca.",
+      "companyNameLabel": "Nome do negócio",
+      "companyNamePlaceholder": "Ex: Confeitaria da Ana",
+      "nicheLabel": "Segmento / tipo de negócio",
+      "nichePlaceholder": "Ex: Confeitaria artesanal",
+      "descriptionLabel": "Descrição curta",
+      "descriptionPlaceholder": "Ex: Bolos e doces sob encomenda para festas e datas especiais",
+      "logoLabel": "Logo (opcional)",
+      "logoUploadText": "+ Logo",
+      "logoAlt": "Pré-visualização do logo",
+      "logoChangeText": "Trocar logo",
+      "uploadError": "Não foi possível enviar o logo. Tente outro arquivo.",
+      "uploading": "Enviando...",
+      "nextButton": "Continuar"
+    },
+    "stepTwo": {
+      "title": "Como você se comunica?",
+      "subtitle": "Descreva o jeito que você fala com seus clientes.",
+      "examplesLabel": "Exemplos:",
+      "example1": "Descontraído, próximo, como uma conversa com amigo",
+      "example2": "Profissional e direto ao ponto, sem firulas",
+      "example3": "Caloroso e acolhedor, como receber alguém em casa",
+      "label": "Tom de voz",
+      "placeholder": "Descreva como você fala com seus clientes...",
+      "backButton": "Voltar",
+      "submitting": "Salvando...",
+      "submitButton": "Começar"
+    }
+  },
+  "brand": {
+    "title": "Cérebro da Marca",
+    "description": "Tudo que a Blister precisa saber sobre sua empresa para criar conteúdo no seu jeito",
+    "saveSuccess": "Cérebro da Marca atualizado",
+    "saveError": "Não foi possível salvar. Tente novamente.",
+    "saving": "Salvando...",
+    "saveButton": "Salvar alterações",
+    "progress": {
+      "title": "Completude do Cérebro da Marca",
+      "description": "{filled} de {total} campos preenchidos",
+      "overall": "{percent}% completo"
+    },
+    "validation": {
+      "nicheMin": "Mínimo 2 caracteres",
+      "descriptionMin": "Mínimo 10 caracteres",
+      "brandVoiceMin": "Mínimo 10 caracteres",
+      "colorNameRequired": "Informe o nome da cor"
+    },
+    "tabs": {
+      "logo": "Logo",
+      "business": "Negócio",
+      "audience": "Público",
+      "voice": "Tom de voz",
+      "social": "Redes",
+      "visual": "Visual",
+      "offer": "Oferta"
+    },
+    "logoSection": {
+      "title": "Logo",
+      "description": "Envie até 4 variações do logo da sua marca",
+      "autoSaveHint": "Os logos são salvos automaticamente ao enviar cada arquivo."
+    },
+    "assetsSection": {
+      "title": "Assets",
+      "description": "Imagens de referência e materiais visuais para usar nas peças",
+      "uploadTitle": "Enviar asset visual",
+      "uploadHint": "JPG, PNG, WebP ou SVG · máx. 5MB",
+      "uploadAria": "Enviar asset visual",
+      "uploading": "Enviando...",
+      "uploadSuccess": "Asset adicionado",
+      "uploadError": "Não foi possível enviar o asset",
+      "removeSuccess": "Asset removido",
+      "removeError": "Não foi possível remover o asset",
+      "removeAria": "Remover {name}",
+      "empty": "Nenhum asset enviado ainda."
+    },
+    "businessSection": {
+      "title": "Sobre o negócio",
+      "description": "Nome, segmento e o que sua empresa faz",
+      "companyName": "Nome da empresa",
+      "companyNamePlaceholder": "Ex: Confeitaria da Ana",
+      "niche": "Segmento / tipo de negócio",
+      "nichePlaceholder": "Ex: Confeitaria artesanal",
+      "description": "Descrição curta",
+      "descriptionPlaceholder": "O que sua empresa faz em poucas palavras"
+    },
+    "audienceSection": {
+      "title": "Público e objetivo",
+      "description": "Para quem você fala e o que quer alcançar com o marketing",
+      "targetAudience": "Público-alvo principal",
+      "targetAudiencePlaceholder": "Ex: Mulheres de 25 a 45 anos que buscam doces para festas em casa",
+      "marketingObjective": "Objetivo principal com marketing",
+      "marketingObjectivePlaceholder": "Selecione seu foco"
+    },
+    "marketingObjectives": {
+      "SELL_MORE": "Vender mais",
+      "GENERATE_LEADS": "Gerar leads",
+      "STRENGTHEN_BRAND": "Fortalecer a marca"
+    },
+    "voiceSection": {
+      "title": "Tom de voz",
+      "description": "Como você se comunica com seus clientes"
+    },
+    "socialNetworks": {
+      "title": "Redes sociais",
+      "description": "Onde você publica conteúdo hoje",
+      "options": {
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "youtube": "YouTube",
+        "whatsapp": "WhatsApp"
+      }
+    },
+    "visualSection": {
+      "title": "Identidade visual",
+      "description": "Cores e estilo que representam sua marca",
+      "palette": "Cores da marca",
+      "coreColors": "Cores principais",
+      "coreColorsDescription": "Toda marca precisa de uma cor principal e uma secundária.",
+      "primaryColor": "Cor principal",
+      "secondaryColor": "Cor secundária",
+      "primaryDefaultName": "Cor principal",
+      "secondaryDefaultName": "Cor secundária",
+      "additionalDefaultName": "Cor {index}",
+      "primaryColorNamePlaceholder": "Ex: Roxo principal",
+      "secondaryColorNamePlaceholder": "Ex: Rosa destaque",
+      "primaryColorUsagePlaceholder": "Ex: Fundo de posts, títulos e elementos principais",
+      "secondaryColorUsagePlaceholder": "Ex: Detalhes, botões e destaques",
+      "additionalColors": "Outras cores",
+      "additionalColorsDescription": "Adicione cores complementares com orientação de uso.",
+      "additionalColorsEmpty": "Nenhuma cor complementar adicionada.",
+      "additionalColorTitle": "Cor complementar {index}",
+      "additionalColorNamePlaceholder": "Ex: Verde apoio",
+      "additionalColorUsagePlaceholder": "Ex: Quando usar esta cor nas peças",
+      "colorName": "Nome da cor",
+      "colorUsage": "Como usar",
+      "optional": "opcional",
+      "addColor": "Adicionar cor",
+      "removeColor": "Remover cor",
+      "visualStyle": "Estilo visual",
+      "visualStylePlaceholder": "Selecione um estilo",
+      "typography": "Tipografia preferida",
+      "typographyPlaceholder": "Ex: Sans-serif moderna, elegante"
+    },
+    "visualStyles": {
+      "minimal": "Minimalista",
+      "modern": "Moderno",
+      "traditional": "Tradicional",
+      "bold": "Ousado",
+      "elegant": "Elegante"
+    },
+    "offerSection": {
+      "title": "Produtos e diferenciais",
+      "description": "O que você vende e o que te destaca da concorrência",
+      "mainProducts": "Produtos ou serviços principais",
+      "mainProductsPlaceholder": "Liste seus principais produtos ou serviços",
+      "differentiators": "Diferenciais da empresa",
+      "differentiatorsPlaceholder": "O que torna seu negócio único?"
+    },
+    "logo": {
+      "successMessage": "Logo atualizado",
+      "errorMessage": "Não foi possível atualizar o logo",
+      "uploadText": "+ Logo",
+      "uploadAria": "Enviar logo {variant}",
+      "alt": "Logo da marca",
+      "formatHint": "JPG, PNG ou SVG · máx. 5MB · salvo automaticamente",
+      "variants": {
+        "primary": "Principal",
+        "horizontal": "Horizontal",
+        "icon": "Ícone",
+        "monochrome": "Monocromático"
+      }
+    },
+    "voice": {
+      "placeholder": "Descreva como você fala com seus clientes...",
+      "saveButton": "Salvar tom de voz",
+      "saving": "Salvando...",
+      "successMessage": "Tom de voz atualizado.",
+      "errorMessage": "Não foi possível salvar o tom de voz."
+    }
+  },
+  "credits": {
+    "balanceTitle": "Saldo: US$ {amount}"
+  },
+  "agents": {
+    "strategist": "Planejar conteúdo",
+    "strategistDescription": "Transforme um briefing em um plano de conteúdo com temas, ângulos e calendário sugerido.",
+    "strategistPlaceholder": "Ex.: Quero posts para o Dia das Mães na confeitaria, foco em encomendas antecipadas",
+    "strategistSuggestion1": "Plano de conteúdo para lançamento de produto",
+    "strategistSuggestion2": "Calendário de posts para datas comemorativas",
+    "strategistSuggestion3": "Estratégia de conteúdo para aumentar encomendas",
+    "copywriter": "Criar texto",
+    "copywriterDescription": "Gere legendas e hashtags alinhadas ao tom da sua marca.",
+    "copywriterPlaceholder": "Ex.: Legenda para post sobre bolo de cenoura com promoção de fim de semana",
+    "copywriterSuggestion1": "Legenda para promoção relâmpago",
+    "copywriterSuggestion2": "Texto para apresentar um novo produto",
+    "copywriterSuggestion3": "Legenda com call to action para WhatsApp",
+    "designer": "Gerar imagem",
+    "designerDescription": "Crie visuais para posts usando a identidade da sua marca.",
+    "designerPlaceholder": "Ex.: Arte quadrada para post de lançamento do bolo de cenoura",
+    "designerSuggestion1": "Arte para promoção de fim de semana",
+    "designerSuggestion2": "Visual institucional com logo e cores da marca",
+    "designerSuggestion3": "Imagem para anunciar cardápio sazonal",
+    "post": "Criar post completo",
+    "postDescription": "Gere imagem, legenda e hashtags em um único fluxo.",
+    "postPlaceholder": "Ex.: Post completo sobre lançamento do bolo de cenoura com promoção",
+    "postSuggestion1": "Post completo para lançamento de produto",
+    "postSuggestion2": "Pacote visual + texto para promoção",
+    "postSuggestion3": "Post de datas comemorativas com identidade da marca",
+    "status": {
+      "queued": "Na fila",
+      "running": "Gerando",
+      "paused": "Aguardando você",
+      "completed": "Concluído",
+      "failed": "Falhou",
+      "cancelled": "Cancelado",
+      "reviewPending": "Aguardando aprovação",
+      "reviewApproved": "Aprovado",
+      "reviewRejected": "Negado",
+      "reviewEdited": "Editado"
+    },
+    "history": {
+      "title": "Histórico",
+      "count": "{count, plural, one {# execução} other {# execuções}}",
+      "newRun": "Nova execução",
+      "empty": "Nenhuma execução ainda",
+      "emptyHint": "Descreva o que precisa na aba Agente para começar.",
+      "loading": "Carregando histórico",
+      "untitledRun": "Sem título"
+    },
+    "tabs": {
+      "agent": "Agente",
+      "history": "Histórico"
+    },
+    "chat": {
+      "greeting": "Por onde começamos?",
+      "subtitle": "Descreva em uma frase o que você precisa. Você pode usar uma sugestão abaixo ou escrever do seu jeito.",
+      "newChat": "Nova conversa"
+    },
+    "input": {
+      "title": "O que você precisa de {agent}?",
+      "promptLabel": "Descreva em uma frase",
+      "campaignLabel": "Campanha (opcional)",
+      "campaignPlaceholder": "Selecione uma campanha",
+      "noCampaign": "Sem campanha",
+      "estimatedCost": "Custo estimado: ~US$ {amount}",
+      "submit": "Gerar",
+      "submitting": "Iniciando..."
+    },
+    "progress": {
+      "runningTitle": "Trabalhando no seu pedido",
+      "runningDescription": "Acompanhe o progresso abaixo.",
+      "pausedTitle": "Precisamos de mais informações"
+    },
+    "clarification": {
+      "title": "Complete as informações",
+      "description": "Responda para continuar a geração.",
+      "genericTitle": "Confirme para continuar",
+      "genericDescription": "Precisamos da sua confirmação para seguir.",
+      "fieldRequired": "Campo obrigatório",
+      "cancel": "Cancelar",
+      "continue": "Continuar",
+      "submitting": "Enviando..."
+    },
+    "surface": {
+      "subtitle": "Descreva o que precisa e revise o resultado aqui",
+      "promptLabel": "Seu pedido",
+      "startSuccess": "Geração iniciada",
+      "startError": "Não foi possível iniciar a geração",
+      "resumeSuccess": "Continuando a geração",
+      "resumeError": "Não foi possível continuar",
+      "cancelSuccess": "Geração cancelada",
+      "cancelError": "Não foi possível cancelar",
+      "cancelRun": "Cancelar",
+      "runNotFound": "Execução não encontrada",
+      "newRun": "Nova execução"
+    },
+    "output": {
+      "failedTitle": "A geração falhou",
+      "failedDescription": "Tente novamente ou ajuste o pedido.",
+      "strategist": {
+        "summary": "Resumo",
+        "plan": "Plano de conteúdo",
+        "angles": "Ângulos sugeridos",
+        "calendar": "Calendário sugerido",
+        "date": "Data",
+        "topic": "Tema",
+        "format": "Formato"
+      },
+      "copywriter": {
+        "caption": "Legenda",
+        "hashtags": "Hashtags",
+        "variations": "Variações"
+      },
+      "designer": {
+        "preview": "Visual gerado",
+        "previewAlt": "Visual gerado para o post",
+        "noImage": "Imagem ainda não disponível",
+        "prompt": "Briefing visual"
+      },
+      "post": {
+        "title": "Post completo",
+        "description": "Visual, legenda e hashtags prontos para revisão."
+      }
+    },
+    "review": {
+      "title": "Revise o resultado",
+      "description": "Aprove, edite ou peça uma nova versão.",
+      "approve": "Aprovar",
+      "reject": "Negar",
+      "edit": "Editar",
+      "regenerate": "Gerar de novo",
+      "approvedMessage": "Resultado aprovado e salvo no histórico.",
+      "rejectedMessage": "Resultado negado. Você pode gerar uma nova versão.",
+      "approveSuccess": "Aprovado com sucesso",
+      "approveError": "Não foi possível aprovar",
+      "rejectSuccess": "Resultado negado",
+      "rejectError": "Não foi possível negar",
+      "editSuccess": "Alterações salvas",
+      "editError": "Não foi possível salvar",
+      "regenerateSuccess": "Nova geração iniciada",
+      "regenerateError": "Não foi possível gerar de novo",
+      "rejectDialog": {
+        "title": "Negar resultado",
+        "description": "Conte o que não funcionou para melhorarmos nas próximas gerações.",
+        "reasonLabel": "Motivo",
+        "reasonPlaceholder": "Ex.: Tom muito formal, hashtags irrelevantes...",
+        "cancel": "Cancelar",
+        "submit": "Negar",
+        "submitting": "Enviando..."
+      },
+      "editDialog": {
+        "title": "Editar texto",
+        "description": "Ajuste legenda e hashtags antes de aprovar.",
+        "captionLabel": "Legenda",
+        "hashtagsLabel": "Hashtags",
+        "cancel": "Cancelar",
+        "submit": "Salvar",
+        "submitting": "Salvando..."
+      },
+      "regenerateDialog": {
+        "title": "Gerar de novo",
+        "description": "Opcionalmente, descreva o que deve mudar na nova versão.",
+        "instructionLabel": "Instrução (opcional)",
+        "instructionPlaceholder": "Ex.: Deixe a legenda mais curta e use tom mais descontraído",
+        "cancel": "Cancelar",
+        "submit": "Gerar de novo",
+        "submitting": "Iniciando..."
+      }
+    },
+    "campaigns": {
+      "title": "Campanhas",
+      "description": "Organize contexto, arquivos e execuções por projeto de marketing.",
+      "createButton": "Nova campanha",
+      "emptyTitle": "Nenhuma campanha ainda",
+      "emptyDescription": "Crie uma campanha para agrupar gerações e contexto.",
+      "activeBadge": "Ativa",
+      "deleteButton": "Arquivar",
+      "deleteSuccess": "Campanha arquivada",
+      "createSuccess": "Campanha criada",
+      "createDialog": {
+        "title": "Nova campanha",
+        "description": "Nome e objetivo bastam para começar.",
+        "nameLabel": "Nome",
+        "namePlaceholder": "Ex.: Dia das Mães 2026",
+        "objectiveLabel": "Objetivo",
+        "objectivePlaceholder": "Ex.: Aumentar encomendas antecipadas",
+        "contextLabel": "Contexto (opcional)",
+        "contextPlaceholder": "Informações extras para orientar as gerações",
+        "cancel": "Cancelar",
+        "submit": "Criar campanha"
+      }
+    },
+    "historyPage": {
+      "title": "Histórico",
+      "description": "Todas as execuções da sua empresa, em um só lugar.",
+      "empty": "Nenhuma execução encontrada",
+      "emptyDescription": "Use os agentes para gerar conteúdo e ele aparecerá aqui.",
+      "untitledRun": "Sem título",
+      "openRun": "Abrir",
+      "columns": {
+        "agent": "Agente",
+        "prompt": "Pedido",
+        "result": "Resultado",
+        "status": "Status",
+        "date": "Data"
+      }
+    },
+    "creditsPage": {
+      "title": "Créditos",
+      "description": "Acompanhe seu saldo e custo estimado por tipo de geração.",
+      "balanceTitle": "Saldo disponível",
+      "balanceHint": "Créditos são debitados a cada geração concluída.",
+      "lowBalanceHint": "Saldo baixo. Algumas gerações podem ser bloqueadas.",
+      "costsTitle": "Custo estimado por geração",
+      "rechargeTitle": "Recarregar créditos",
+      "rechargeDescription": "Recarga automática estará disponível em breve.",
+      "rechargeButton": "Recarregar (em breve)"
+    }
+  },
+  "platformAdmin": {
+    "eyebrow": "Conta",
+    "title": "Admin de plataforma",
+    "description": "Gerencie acessos globais de plataforma e sessões de suporte.",
+    "adminsCard": {
+      "title": "Admins de plataforma",
+      "description": "{count, plural, one {# acesso global configurado.} other {# acessos globais configurados.}}",
+      "manage": "Gerenciar admins"
+    },
+    "supportCard": {
+      "title": "Suporte",
+      "description": "Sessões de suporte ativas e histórico recente.",
+      "view": "Ver sessões"
+    },
+    "header": {
+      "title": "Platform Admin",
+      "description": "Gestão de acesso, custos e modelos de IA da plataforma"
+    },
+    "nav": {
+      "overview": "Visão geral",
+      "overviewDescription": "Panorama da administração global da plataforma.",
+      "admins": "Admins",
+      "adminsDescription": "Acessos globais de plataforma e governança.",
+      "support": "Suporte",
+      "supportDescription": "Sessões de suporte ativas e histórico recente.",
+      "aiCatalog": "AI Catalog",
+      "aiCatalogDescription": "Providers e modelos de IA disponíveis na plataforma.",
+      "rag": "RAG",
+      "ragDescription": "Parâmetros globais de indexação e recuperação.",
+      "credits": "Créditos",
+      "creditsDescription": "Configurações de crédito e saldo das empresas."
+    },
+    "aiCatalogPage": {
+      "title": "AI Catalog",
+      "description": "Gerencie providers e modelos de IA disponíveis na plataforma."
+    },
+    "ragPage": {
+      "title": "RAG",
+      "description": "Defina os parâmetros globais de indexação e recuperação."
+    },
+    "creditsPage": {
+      "title": "Créditos",
+      "description": "Configure os créditos da plataforma e acompanhe o saldo das empresas."
+    },
+    "adminsPage": {
+      "title": "Admins globais",
+      "description": "Gerencie quem consegue operar o admin central da plataforma. O ideal é manter esse grupo pequeno, auditável e revisado com frequência.",
+      "grantAccess": "Conceder acesso",
+      "assignments": "Assignments",
+      "assignmentsHint": "Quantidade total de acessos globais ativos no admin de plataforma.",
+      "owners": "Owners",
+      "ownersHint": "Pessoas com controle máximo da camada global. Revise com rigor.",
+      "admins": "Admins",
+      "adminsHint": "Operadores com acesso global sem controle total da plataforma.",
+      "user": "Usuário",
+      "role": "Role",
+      "grantedBy": "Concedido por",
+      "grantedAt": "Concedido em",
+      "removeSelected": "Remover selecionados",
+      "emptyTitle": "Nenhum admin global",
+      "emptyDescription": "Atribua a primeira role de plataforma para liberar a operação central da conta.",
+      "emptyAction": "Conceder primeiro acesso",
+      "removeDialogTitle": "Remover role global",
+      "removeDialogDescription": "O acesso global de {userId} como {role} será removido.",
+      "removing": "Removendo...",
+      "remove": "Remover role",
+      "assignmentId": "Atribuição {id}"
+    },
+    "roles": {
+      "platform_admin": "Admin de plataforma",
+      "platform_owner": "Owner de plataforma"
+    },
+    "roleDialog": {
+      "title": "Atribuir role global",
+      "description": "Concede acesso ao admin de plataforma para o usuário informado.",
+      "userId": "User ID",
+      "userIdPlaceholder": "user_123",
+      "role": "Role",
+      "rolePlaceholder": "Selecione a role",
+      "grant": "Conceder acesso",
+      "granting": "Concedendo..."
+    },
+    "toasts": {
+      "grantSuccess": "Acesso de plataforma concedido.",
+      "grantError": "Erro ao atribuir acesso de plataforma.",
+      "removeSuccess": "Acesso de plataforma removido.",
+      "removeError": "Erro ao remover acesso de plataforma."
+    },
+    "aiCatalogTab": {
+      "providersTitle": "Providers",
+      "noProviders": "Nenhum provider cadastrado",
+      "noProvidersDescription": "Cadastre o primeiro provider para liberar modelos na plataforma.",
+      "modelsTitle": "Modelos",
+      "noModels": "Nenhum modelo cadastrado",
+      "noModelsDescription": "Cadastre modelos vinculados aos providers ativos.",
+      "nameColumn": "Nome",
+      "slugColumn": "Slug",
+      "statusColumn": "Status",
+      "externalIdColumn": "ID externo",
+      "inputCostColumn": "Custo entrada",
+      "outputCostColumn": "Custo saída"
+    },
+    "ragTab": {
+      "chunkSizeLabel": "Chunk Size (tokens)",
+      "chunkOverlapLabel": "Chunk Overlap (tokens)",
+      "topKLabel": "Top-K",
+      "rerankEnabledLabel": "Reranking habilitado",
+      "saveSuccess": "Configurações RAG salvas",
+      "saveError": "Erro ao salvar configurações",
+      "saving": "Salvando...",
+      "submitButton": "Salvar configurações RAG"
+    },
+    "creditsTab": {
+      "globalSettingsTitle": "Configurações Globais",
+      "freeTierLabel": "Free Tier (US$)",
+      "markupLabel": "Markup padrão (ex: 1.2 = 20%)",
+      "minCostLabel": "Custo mínimo por execução (US$)",
+      "saving": "Salvando...",
+      "submitButton": "Salvar",
+      "companiesTitle": "Empresas",
+      "noCompanies": "Nenhuma empresa cadastrada",
+      "noCompaniesDescription": "As empresas aparecerão aqui conforme forem criadas na plataforma.",
+      "companyNameColumn": "Empresa",
+      "ownerEmailColumn": "E-mail do dono",
+      "balanceColumn": "Saldo",
+      "saveSuccess": "Configurações de crédito salvas",
+      "saveError": "Erro ao salvar"
+    }
+  }
+}

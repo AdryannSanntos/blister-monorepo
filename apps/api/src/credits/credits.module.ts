@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { PlatformModule } from '../platform/platform.module';
-import { CreditsService } from './credits.service';
-import { OrganizationCreditsController, PlatformCostsController } from './credits.controller';
+import { CreditService } from './credits.service';
+import { CreditsController } from './credits.controller';
+import { AuditModule } from '../audit/audit.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { CompanyModule } from '../company/company.module';
 
 @Module({
-  imports: [PlatformModule],
-  controllers: [OrganizationCreditsController, PlatformCostsController],
-  providers: [CreditsService],
-  exports: [CreditsService],
+  imports: [PrismaModule, AuditModule, CompanyModule],
+  controllers: [CreditsController],
+  providers: [CreditService],
+  exports: [CreditService],
 })
 export class CreditsModule {}

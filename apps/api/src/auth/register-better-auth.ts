@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 import type { INestApplication } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
+import { Resend } from 'resend';
+import { bootstrapUserOnSignup } from '../company/company-bootstrap.util';
 import type { PrismaService } from '../prisma/prisma.service';
 
 const logger = new Logger('BetterAuth');
@@ -44,7 +46,7 @@ export async function registerBetterAuth(
   type BetterAuthOptions = Parameters<BA['betterAuth']>[0];
 
   const options: BetterAuthOptions = {
-    appName: 'Workana AI API',
+    appName: 'Blister API',
     baseURL,
     basePath: authBasePath,
     secret:
@@ -58,12 +60,49 @@ export async function registerBetterAuth(
       enabled: true,
       requireEmailVerification: true,
       sendResetPassword: async (data: { user: { email: string }; url: string }) => {
-        logger.log(`Password reset for ${data.user.email}: ${data.url}`);
+        const apiKey = process.env.RESEND_API_KEY;
+        const from = process.env.RESEND_FROM_EMAIL ?? 'Blister <noreply@blister.com.br>';
+        if (!apiKey || apiKey === 'change-me') {
+          logger.warn(`[DEV] Reset password for ${data.user.email}: ${data.url}`);
+          return;
+        }
+        const resend = new Resend(apiKey);
+        await resend.emails.send({
+          from,
+          to: data.user.email,
+          subject: 'Reset your password — Blister',
+          html: `<p>Click <a href="${data.url}">here</a> to reset your password.</p>`,
+        });
       },
     },
     emailVerification: {
       sendVerificationEmail: async (data: { user: { email: string }; url: string }) => {
-        logger.log(`Verification email for ${data.user.email}: ${data.url}`);
+        const apiKey = process.env.RESEND_API_KEY;
+        const from = process.env.RESEND_FROM_EMAIL ?? 'Blister <noreply@blister.com.br>';
+        if (!apiKey || apiKey === 'change-me') {
+          logger.warn(`[DEV] Verify email for ${data.user.email}: ${data.url}`);
+          return;
+        }
+        const resend = new Resend(apiKey);
+        await resend.emails.send({
+          from,
+          to: data.user.email,
+          subject: 'Confirm your email — Blister',
+          html: `<p>Click <a href="${data.url}">here</a> to confirm your email.</p>`,
+        });
+      },
+    },
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user: { id: string; name?: string; email: string }) => {
+            try {
+              await bootstrapUserOnSignup(prisma.getClient(), user);
+            } catch (err) {
+              logger.error('Failed to bootstrap company after signup', err);
+            }
+          },
+        },
       },
     },
     ...(googleClientId && googleClientSecret

@@ -2,12 +2,20 @@
 
 import { X } from "lucide-react";
 import * as React from "react";
+import {
+  type ControlSize,
+  controlMinHeightDataClasses,
+  controlPaddingXDataClasses,
+  controlRadiusDataClasses,
+  controlTextDataClasses,
+} from "src/core/shared/styles/control-size";
 import { cn } from "src/core/shared/utils";
 
 type TagInputProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  size?: ControlSize;
   className?: string;
 };
 
@@ -15,6 +23,7 @@ export function TagInput({
   value,
   onChange,
   placeholder,
+  size = "md",
   className,
 }: TagInputProps) {
   const [input, setInput] = React.useState("");
@@ -51,22 +60,27 @@ export function TagInput({
 
   return (
     <div
+      data-size={size}
       className={cn(
-        "flex min-h-9 flex-wrap gap-1.5 rounded-[var(--r-md)] border border-[var(--line-strong)] bg-[var(--bg-sunken)] px-2 py-1.5 text-[13.5px] text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[color-mix(in_oklch,var(--line-strong)_60%,var(--fg-quaternary))] focus-within:border-[var(--accent)] focus-within:bg-[var(--bg-base)] focus-within:ring-[3px] focus-within:ring-[var(--accent-soft)]",
+        "flex flex-wrap items-center gap-1.5 border-[1.5px] border-[var(--line-default)] bg-[var(--bg-base)] py-1.5 text-[var(--fg-primary)] shadow-none outline-none transition-[background,border-color,box-shadow,color] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--line-strong)] focus-within:border-[var(--accent)] focus-within:ring-[3px] focus-within:ring-[var(--accent-soft)]",
+        controlMinHeightDataClasses,
+        controlPaddingXDataClasses,
+        controlTextDataClasses,
+        controlRadiusDataClasses,
         className,
       )}
     >
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex h-5 items-center gap-1 rounded-[var(--r-sm)] border border-[var(--line-subtle)] bg-[var(--bg-active)] px-2 text-[11px] font-medium text-[var(--fg-secondary)]"
+          className="inline-flex h-7 items-center gap-1.5 rounded-[var(--r-sm)] bg-[var(--accent-soft)] pr-1.5 pl-2.5 text-[13px] font-semibold text-[var(--accent-soft-text)]"
         >
           {tag}
           <button
             type="button"
             tabIndex={-1}
             onClick={() => removeTag(tag)}
-            className="text-[var(--fg-quaternary)] hover:text-[var(--fg-primary)]"
+            className="rounded-[5px] p-0.5 text-current opacity-70 hover:bg-[var(--accent-soft-hi)] hover:opacity-100"
           >
             <X className="size-3" />
           </button>

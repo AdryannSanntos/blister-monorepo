@@ -74,17 +74,17 @@ export class PlatformService {
       throw new NotFoundException('Platform role assignment not found');
     }
 
-    // Protect the last platform_owner from being removed
-    if (assignment.role === 'platform_owner') {
-      const ownerCount = await this.prisma.platformRoleAssignment.count({
-        where: { role: 'platform_owner' },
-      });
-      if (ownerCount <= 1) {
-        throw new BadRequestException('Cannot remove the last platform_owner');
-      }
-    }
-
     await this.prisma.$transaction(async (tx) => {
+      // Re-check inside the transaction to prevent TOCTOU race
+      if (assignment.role === 'platform_owner') {
+        const ownerCount = await tx.platformRoleAssignment.count({
+          where: { role: 'platform_owner' },
+        });
+        if (ownerCount <= 1) {
+          throw new BadRequestException('Cannot remove the last platform_owner');
+        }
+      }
+
       await tx.platformRoleAssignment.delete({ where: { id: assignmentId } });
       await tx.auditLog.create({
         data: {
@@ -108,7 +108,6 @@ export class PlatformService {
       const session = await tx.supportSession.create({
         data: {
           actorUserId,
-          organizationId: input.organizationId,
           reason: input.reason,
           status: 'active',
         },
@@ -117,7 +116,6 @@ export class PlatformService {
       await tx.auditLog.create({
         data: {
           actorUserId,
-          targetOrganizationId: input.organizationId,
           action: 'start_support_session',
           resourceType: 'SupportSession',
           resourceId: session.id,
@@ -155,7 +153,6 @@ export class PlatformService {
       await tx.auditLog.create({
         data: {
           actorUserId,
-          targetOrganizationId: session.organizationId,
           action: 'end_support_session',
           resourceType: 'SupportSession',
           resourceId: sessionId,

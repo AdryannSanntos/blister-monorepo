@@ -31,13 +31,13 @@ export function AgentContentLayout({
       {banner}
 
       {!hideHeader ? (
-      <header className="flex h-[82px] shrink-0 items-center border-b border-[var(--line-subtle)] px-6">
+      <header className="flex h-14 shrink-0 items-center border-b border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-5">
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
-            <Icon className="size-5" />
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]">
+            <Icon className="size-4" />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-[15px] font-medium text-[var(--fg-primary)]">
+            <h1 className="truncate text-[14px] font-semibold text-[var(--fg-primary)]">
               {title}
             </h1>
             {subtitle ? (

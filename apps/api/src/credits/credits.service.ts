@@ -1,177 +1,152 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '../generated/prisma';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import type { AddCreditsDto } from './dto';
-
-const toJsonValue = (value: unknown): Prisma.InputJsonValue => value as Prisma.InputJsonValue;
-
-type RecordTechnicalCostInput = {
-  organizationId?: string;
-  runId?: string;
-  idempotencyKey?: string;
-  providerId?: string;
-  modelId?: string;
-  amount: number;
-  currency?: string;
-  unit?: string;
-  metadata?: Record<string, unknown>;
-};
-
-type PlatformCostSummaryFilters = {
-  providerId?: string;
-  modelId?: string;
-  organizationId?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  minCost?: number;
-  maxCost?: number;
-  groupBy?: 'provider' | 'model';
-};
+import { AuditService } from '../audit/audit.service';
 
 @Injectable()
-export class CreditsService {
-  constructor(private readonly prisma: PrismaService) {}
+export class CreditService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditService,
+  ) {}
 
-  async getOrganizationBalance(organizationId: string) {
-    const entries = await this.prisma.creditLedgerEntry.findMany({
-      where: { organizationId },
-      orderBy: { createdAt: 'asc' },
+  async getBalance(companyId: string) {
+    const balance = await this.prisma.creditBalance.findUnique({
+      where: { companyId },
     });
-
-    const balance = entries.reduce((total, entry) => total + entry.amount, 0);
-    return { organizationId, balance };
+    if (!balance) throw new NotFoundException('Credit balance not found');
+    return balance;
   }
 
-  async listOrganizationLedger(organizationId: string) {
-    return this.prisma.creditLedgerEntry.findMany({
-      where: { organizationId },
-      orderBy: { createdAt: 'desc' },
-    });
+  async checkBalance(companyId: string, estimatedCost: number) {
+    const balance = await this.getBalance(companyId);
+    if (Number(balance.amount) < estimatedCost) {
+      throw new UnprocessableEntityException('Insufficient credit balance');
+    }
   }
 
-  async addCredits(actorUserId: string, organizationId: string, input: AddCreditsDto) {
-    const { balance } = await this.getOrganizationBalance(organizationId);
-    return this.prisma.creditLedgerEntry.create({
-      data: {
-        organizationId,
-        entryType: 'credit_added',
-        amount: input.amount,
-        balanceAfter: balance + input.amount,
-        metadata: toJsonValue({ reason: input.reason ?? null }),
-        createdByUserId: actorUserId,
-      },
-    });
+  async getSummary(companyId: string) {
+    const [balance, ledger] = await Promise.all([
+      this.getBalance(companyId),
+      this.prisma.creditLedger.findMany({
+        where: { companyId },
+        orderBy: { createdAt: 'desc' },
+        take: 20,
+      }),
+    ]);
+    return { balance, ledger };
   }
 
-  async debitRunCredits(
-    runId: string,
+  async getHistory(companyId: string, page: number, pageSize: number) {
+    const skip = (page - 1) * pageSize;
+    const [items, total] = await Promise.all([
+      this.prisma.creditLedger.findMany({
+        where: { companyId },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+      this.prisma.creditLedger.count({ where: { companyId } }),
+    ]);
+    return { items, total, page, pageSize };
+  }
+
+  async debit(
+    companyId: string,
     amount: number,
-    options: { strict?: boolean; idempotencyKey?: string } = {},
+    description?: string,
+    agentRunStepId?: string,
+    agentRunId?: string,
   ) {
-    const run = await this.prisma.agentRun.findUnique({ where: { id: runId } });
-    if (!run) {
-      throw new NotFoundException('Agent run not found');
-    }
-
-    if (options.idempotencyKey) {
-      const existingEntry = await this.prisma.creditLedgerEntry.findUnique({
-        where: { idempotencyKey: options.idempotencyKey },
+    return this.prisma.$transaction(async (tx) => {
+      const balance = await tx.creditBalance.findUniqueOrThrow({
+        where: { companyId },
       });
-
-      if (existingEntry) {
-        return existingEntry;
+      const newAmount = Number(balance.amount) - amount;
+      if (newAmount < 0) {
+        throw new UnprocessableEntityException('Insufficient credit balance');
       }
-    }
-
-    const { balance } = await this.getOrganizationBalance(run.organizationId);
-    if (options.strict && balance < amount) {
-      throw new BadRequestException('Insufficient credit balance');
-    }
-
-    return this.prisma.creditLedgerEntry.create({
-      data: {
-        organizationId: run.organizationId,
-        runId,
-        idempotencyKey: options.idempotencyKey,
-        entryType: 'run_debit',
-        amount: -amount,
-        balanceAfter: balance - amount,
-        metadata: toJsonValue({ strict: options.strict === true }),
-      },
+      await tx.creditBalance.update({
+        where: { companyId },
+        data: { amount: newAmount },
+      });
+      return tx.creditLedger.create({
+        data: {
+          companyId,
+          type: 'DEBIT',
+          amount,
+          balanceAfter: newAmount,
+          currency: balance.currency,
+          description,
+          agentRunStepId,
+          agentRunId,
+        },
+      });
     });
   }
 
-  async recordTechnicalCost(input: RecordTechnicalCostInput) {
-    if (input.idempotencyKey) {
-      const existingEntry = await this.prisma.technicalCostLedgerEntry.findUnique({
-        where: { idempotencyKey: input.idempotencyKey },
+  async credit(companyId: string, amount: number, description?: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const balance = await tx.creditBalance.findUniqueOrThrow({
+        where: { companyId },
       });
-
-      if (existingEntry) {
-        return existingEntry;
-      }
-    }
-
-    return this.prisma.technicalCostLedgerEntry.create({
-      data: {
-        organizationId: input.organizationId ?? null,
-        runId: input.runId ?? null,
-        idempotencyKey: input.idempotencyKey ?? null,
-        providerId: input.providerId ?? null,
-        modelId: input.modelId ?? null,
-        amount: input.amount,
-        currency: input.currency ?? 'USD',
-        unit: input.unit ?? 'estimated',
-        metadata: toJsonValue(input.metadata ?? {}),
-      },
+      const newAmount = Number(balance.amount) + amount;
+      await tx.creditBalance.update({
+        where: { companyId },
+        data: { amount: newAmount },
+      });
+      return tx.creditLedger.create({
+        data: {
+          companyId,
+          type: 'CREDIT',
+          amount,
+          balanceAfter: newAmount,
+          currency: balance.currency,
+          description,
+        },
+      });
     });
   }
 
-  async getPlatformCostSummary(filters: PlatformCostSummaryFilters = {}) {
-    const entries = await this.prisma.technicalCostLedgerEntry.findMany({
-      where: {
-        ...(filters.providerId ? { providerId: filters.providerId } : {}),
-        ...(filters.modelId ? { modelId: filters.modelId } : {}),
-        ...(filters.organizationId ? { organizationId: filters.organizationId } : {}),
-        ...(filters.dateFrom || filters.dateTo
-          ? {
-              createdAt: {
-                ...(filters.dateFrom ? { gte: new Date(filters.dateFrom) } : {}),
-                ...(filters.dateTo ? { lte: new Date(filters.dateTo) } : {}),
-              },
-            }
-          : {}),
-      },
-      orderBy: { createdAt: 'desc' },
+  async adjust(
+    companyId: string,
+    amount: number,
+    type: 'CREDIT' | 'DEBIT' | 'ADJUST',
+    adminUserId: string,
+    reason: string,
+  ) {
+    const result = await this.prisma.$transaction(async (tx) => {
+      const balance = await tx.creditBalance.findUniqueOrThrow({
+        where: { companyId },
+      });
+      const delta = type === 'DEBIT' ? -amount : amount;
+      const newAmount = Math.max(0, Number(balance.amount) + delta);
+      await tx.creditBalance.update({
+        where: { companyId },
+        data: { amount: newAmount },
+      });
+      return tx.creditLedger.create({
+        data: {
+          companyId,
+          type,
+          amount,
+          balanceAfter: newAmount,
+          currency: balance.currency,
+          description: reason,
+          createdByUserId: adminUserId,
+        },
+      });
     });
-
-    const filteredEntries = entries.filter((entry) => {
-      if (filters.minCost !== undefined && entry.amount < filters.minCost) {
-        return false;
-      }
-      if (filters.maxCost !== undefined && entry.amount > filters.maxCost) {
-        return false;
-      }
-      return true;
+    await this.audit.write({
+      actorUserId: adminUserId,
+      action: 'credit.adjust',
+      resourceType: 'CreditBalance',
+      resourceId: companyId,
+      metadata: { amount, type, reason },
     });
-
-    const totalCost = filteredEntries.reduce((sum, entry) => sum + entry.amount, 0);
-    if (!filters.groupBy) {
-      return { totalCost, entries: filteredEntries };
-    }
-
-    const grouped = new Map<string, number>();
-    for (const entry of filteredEntries) {
-      const key =
-        filters.groupBy === 'provider'
-          ? (entry.providerId ?? 'unknown')
-          : (entry.modelId ?? 'unknown');
-      grouped.set(key, (grouped.get(key) ?? 0) + entry.amount);
-    }
-
-    return {
-      totalCost,
-      breakdown: Array.from(grouped.entries()).map(([key, amount]) => ({ key, amount })),
-    };
+    return result;
   }
 }
