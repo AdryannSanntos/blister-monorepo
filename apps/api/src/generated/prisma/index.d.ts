@@ -104,6 +104,11 @@ export type AgentRun = $Result.DefaultSelection<Prisma.$AgentRunPayload>
  */
 export type AgentRunStep = $Result.DefaultSelection<Prisma.$AgentRunStepPayload>
 /**
+ * Model AgentRunBlock
+ * 
+ */
+export type AgentRunBlock = $Result.DefaultSelection<Prisma.$AgentRunBlockPayload>
+/**
  * Model AgentFeedback
  * 
  */
@@ -709,6 +714,16 @@ export class PrismaClient<
     * ```
     */
   get agentRunStep(): Prisma.AgentRunStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.agentRunBlock`: Exposes CRUD operations for the **AgentRunBlock** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AgentRunBlocks
+    * const agentRunBlocks = await prisma.agentRunBlock.findMany()
+    * ```
+    */
+  get agentRunBlock(): Prisma.AgentRunBlockDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.agentFeedback`: Exposes CRUD operations for the **AgentFeedback** model.
@@ -1328,6 +1343,7 @@ export namespace Prisma {
     PipelineRun: 'PipelineRun',
     AgentRun: 'AgentRun',
     AgentRunStep: 'AgentRunStep',
+    AgentRunBlock: 'AgentRunBlock',
     AgentFeedback: 'AgentFeedback',
     LearningSignal: 'LearningSignal',
     AgentMemory: 'AgentMemory',
@@ -1362,7 +1378,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings"
+      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentRunBlock" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2698,6 +2714,80 @@ export namespace Prisma {
           }
         }
       }
+      AgentRunBlock: {
+        payload: Prisma.$AgentRunBlockPayload<ExtArgs>
+        fields: Prisma.AgentRunBlockFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AgentRunBlockFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AgentRunBlockFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          findFirst: {
+            args: Prisma.AgentRunBlockFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AgentRunBlockFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          findMany: {
+            args: Prisma.AgentRunBlockFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>[]
+          }
+          create: {
+            args: Prisma.AgentRunBlockCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          createMany: {
+            args: Prisma.AgentRunBlockCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AgentRunBlockCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>[]
+          }
+          delete: {
+            args: Prisma.AgentRunBlockDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          update: {
+            args: Prisma.AgentRunBlockUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          deleteMany: {
+            args: Prisma.AgentRunBlockDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AgentRunBlockUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AgentRunBlockUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>[]
+          }
+          upsert: {
+            args: Prisma.AgentRunBlockUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentRunBlockPayload>
+          }
+          aggregate: {
+            args: Prisma.AgentRunBlockAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentRunBlock>
+          }
+          groupBy: {
+            args: Prisma.AgentRunBlockGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentRunBlockGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AgentRunBlockCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentRunBlockCountAggregateOutputType> | number
+          }
+        }
+      }
       AgentFeedback: {
         payload: Prisma.$AgentFeedbackPayload<ExtArgs>
         fields: Prisma.AgentFeedbackFieldRefs
@@ -3996,6 +4086,7 @@ export namespace Prisma {
     pipelineRun?: PipelineRunOmit
     agentRun?: AgentRunOmit
     agentRunStep?: AgentRunStepOmit
+    agentRunBlock?: AgentRunBlockOmit
     agentFeedback?: AgentFeedbackOmit
     learningSignal?: LearningSignalOmit
     agentMemory?: AgentMemoryOmit
@@ -4442,6 +4533,7 @@ export namespace Prisma {
   export type AgentRunCountOutputType = {
     childRuns: number
     steps: number
+    blocks: number
     contentPieces: number
     creditLedger: number
   }
@@ -4449,6 +4541,7 @@ export namespace Prisma {
   export type AgentRunCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     childRuns?: boolean | AgentRunCountOutputTypeCountChildRunsArgs
     steps?: boolean | AgentRunCountOutputTypeCountStepsArgs
+    blocks?: boolean | AgentRunCountOutputTypeCountBlocksArgs
     contentPieces?: boolean | AgentRunCountOutputTypeCountContentPiecesArgs
     creditLedger?: boolean | AgentRunCountOutputTypeCountCreditLedgerArgs
   }
@@ -4476,6 +4569,13 @@ export namespace Prisma {
    */
   export type AgentRunCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentRunStepWhereInput
+  }
+
+  /**
+   * AgentRunCountOutputType without action
+   */
+  export type AgentRunCountOutputTypeCountBlocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentRunBlockWhereInput
   }
 
   /**
@@ -23305,6 +23405,7 @@ export namespace Prisma {
     childRuns?: boolean | AgentRun$childRunsArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
     steps?: boolean | AgentRun$stepsArgs<ExtArgs>
+    blocks?: boolean | AgentRun$blocksArgs<ExtArgs>
     contentPieces?: boolean | AgentRun$contentPiecesArgs<ExtArgs>
     creditLedger?: boolean | AgentRun$creditLedgerArgs<ExtArgs>
     _count?: boolean | AgentRunCountOutputTypeDefaultArgs<ExtArgs>
@@ -23392,6 +23493,7 @@ export namespace Prisma {
     childRuns?: boolean | AgentRun$childRunsArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
     steps?: boolean | AgentRun$stepsArgs<ExtArgs>
+    blocks?: boolean | AgentRun$blocksArgs<ExtArgs>
     contentPieces?: boolean | AgentRun$contentPiecesArgs<ExtArgs>
     creditLedger?: boolean | AgentRun$creditLedgerArgs<ExtArgs>
     _count?: boolean | AgentRunCountOutputTypeDefaultArgs<ExtArgs>
@@ -23418,6 +23520,7 @@ export namespace Prisma {
       childRuns: Prisma.$AgentRunPayload<ExtArgs>[]
       feedback: Prisma.$AgentFeedbackPayload<ExtArgs> | null
       steps: Prisma.$AgentRunStepPayload<ExtArgs>[]
+      blocks: Prisma.$AgentRunBlockPayload<ExtArgs>[]
       contentPieces: Prisma.$ContentPiecePayload<ExtArgs>[]
       creditLedger: Prisma.$CreditLedgerPayload<ExtArgs>[]
     }
@@ -23841,6 +23944,7 @@ export namespace Prisma {
     childRuns<T extends AgentRun$childRunsArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$childRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feedback<T extends AgentRun$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$feedbackArgs<ExtArgs>>): Prisma__AgentFeedbackClient<$Result.GetResult<Prisma.$AgentFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     steps<T extends AgentRun$stepsArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    blocks<T extends AgentRun$blocksArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$blocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     contentPieces<T extends AgentRun$contentPiecesArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$contentPiecesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContentPiecePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     creditLedger<T extends AgentRun$creditLedgerArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$creditLedgerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -24389,6 +24493,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentRunStepScalarFieldEnum | AgentRunStepScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRun.blocks
+   */
+  export type AgentRun$blocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    where?: AgentRunBlockWhereInput
+    orderBy?: AgentRunBlockOrderByWithRelationInput | AgentRunBlockOrderByWithRelationInput[]
+    cursor?: AgentRunBlockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentRunBlockScalarFieldEnum | AgentRunBlockScalarFieldEnum[]
   }
 
   /**
@@ -25737,6 +25865,1198 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AgentRunStepInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AgentRunBlock
+   */
+
+  export type AggregateAgentRunBlock = {
+    _count: AgentRunBlockCountAggregateOutputType | null
+    _avg: AgentRunBlockAvgAggregateOutputType | null
+    _sum: AgentRunBlockSumAggregateOutputType | null
+    _min: AgentRunBlockMinAggregateOutputType | null
+    _max: AgentRunBlockMaxAggregateOutputType | null
+  }
+
+  export type AgentRunBlockAvgAggregateOutputType = {
+    index: number | null
+  }
+
+  export type AgentRunBlockSumAggregateOutputType = {
+    index: number | null
+  }
+
+  export type AgentRunBlockMinAggregateOutputType = {
+    id: string | null
+    agentRunId: string | null
+    messageId: string | null
+    role: string | null
+    blockType: string | null
+    index: number | null
+    label: string | null
+    text: string | null
+    stepKey: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentRunBlockMaxAggregateOutputType = {
+    id: string | null
+    agentRunId: string | null
+    messageId: string | null
+    role: string | null
+    blockType: string | null
+    index: number | null
+    label: string | null
+    text: string | null
+    stepKey: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentRunBlockCountAggregateOutputType = {
+    id: number
+    agentRunId: number
+    messageId: number
+    role: number
+    blockType: number
+    index: number
+    label: number
+    text: number
+    payload: number
+    stepKey: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AgentRunBlockAvgAggregateInputType = {
+    index?: true
+  }
+
+  export type AgentRunBlockSumAggregateInputType = {
+    index?: true
+  }
+
+  export type AgentRunBlockMinAggregateInputType = {
+    id?: true
+    agentRunId?: true
+    messageId?: true
+    role?: true
+    blockType?: true
+    index?: true
+    label?: true
+    text?: true
+    stepKey?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentRunBlockMaxAggregateInputType = {
+    id?: true
+    agentRunId?: true
+    messageId?: true
+    role?: true
+    blockType?: true
+    index?: true
+    label?: true
+    text?: true
+    stepKey?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentRunBlockCountAggregateInputType = {
+    id?: true
+    agentRunId?: true
+    messageId?: true
+    role?: true
+    blockType?: true
+    index?: true
+    label?: true
+    text?: true
+    payload?: true
+    stepKey?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AgentRunBlockAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentRunBlock to aggregate.
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentRunBlocks to fetch.
+     */
+    orderBy?: AgentRunBlockOrderByWithRelationInput | AgentRunBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AgentRunBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentRunBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentRunBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AgentRunBlocks
+    **/
+    _count?: true | AgentRunBlockCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AgentRunBlockAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AgentRunBlockSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AgentRunBlockMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AgentRunBlockMaxAggregateInputType
+  }
+
+  export type GetAgentRunBlockAggregateType<T extends AgentRunBlockAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentRunBlock]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAgentRunBlock[P]>
+      : GetScalarType<T[P], AggregateAgentRunBlock[P]>
+  }
+
+
+
+
+  export type AgentRunBlockGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentRunBlockWhereInput
+    orderBy?: AgentRunBlockOrderByWithAggregationInput | AgentRunBlockOrderByWithAggregationInput[]
+    by: AgentRunBlockScalarFieldEnum[] | AgentRunBlockScalarFieldEnum
+    having?: AgentRunBlockScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AgentRunBlockCountAggregateInputType | true
+    _avg?: AgentRunBlockAvgAggregateInputType
+    _sum?: AgentRunBlockSumAggregateInputType
+    _min?: AgentRunBlockMinAggregateInputType
+    _max?: AgentRunBlockMaxAggregateInputType
+  }
+
+  export type AgentRunBlockGroupByOutputType = {
+    id: string
+    agentRunId: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label: string | null
+    text: string | null
+    payload: JsonValue
+    stepKey: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: AgentRunBlockCountAggregateOutputType | null
+    _avg: AgentRunBlockAvgAggregateOutputType | null
+    _sum: AgentRunBlockSumAggregateOutputType | null
+    _min: AgentRunBlockMinAggregateOutputType | null
+    _max: AgentRunBlockMaxAggregateOutputType | null
+  }
+
+  type GetAgentRunBlockGroupByPayload<T extends AgentRunBlockGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AgentRunBlockGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AgentRunBlockGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AgentRunBlockGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentRunBlockGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AgentRunBlockSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentRunId?: boolean
+    messageId?: boolean
+    role?: boolean
+    blockType?: boolean
+    index?: boolean
+    label?: boolean
+    text?: boolean
+    payload?: boolean
+    stepKey?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentRunBlock"]>
+
+  export type AgentRunBlockSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentRunId?: boolean
+    messageId?: boolean
+    role?: boolean
+    blockType?: boolean
+    index?: boolean
+    label?: boolean
+    text?: boolean
+    payload?: boolean
+    stepKey?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentRunBlock"]>
+
+  export type AgentRunBlockSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentRunId?: boolean
+    messageId?: boolean
+    role?: boolean
+    blockType?: boolean
+    index?: boolean
+    label?: boolean
+    text?: boolean
+    payload?: boolean
+    stepKey?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentRunBlock"]>
+
+  export type AgentRunBlockSelectScalar = {
+    id?: boolean
+    agentRunId?: boolean
+    messageId?: boolean
+    role?: boolean
+    blockType?: boolean
+    index?: boolean
+    label?: boolean
+    text?: boolean
+    payload?: boolean
+    stepKey?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AgentRunBlockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "agentRunId" | "messageId" | "role" | "blockType" | "index" | "label" | "text" | "payload" | "stepKey" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["agentRunBlock"]>
+  export type AgentRunBlockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }
+  export type AgentRunBlockIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }
+  export type AgentRunBlockIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    agentRun?: boolean | AgentRunDefaultArgs<ExtArgs>
+  }
+
+  export type $AgentRunBlockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentRunBlock"
+    objects: {
+      agentRun: Prisma.$AgentRunPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      agentRunId: string
+      messageId: string
+      role: string
+      blockType: string
+      index: number
+      label: string | null
+      text: string | null
+      payload: Prisma.JsonValue
+      stepKey: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["agentRunBlock"]>
+    composites: {}
+  }
+
+  type AgentRunBlockGetPayload<S extends boolean | null | undefined | AgentRunBlockDefaultArgs> = $Result.GetResult<Prisma.$AgentRunBlockPayload, S>
+
+  type AgentRunBlockCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentRunBlockFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentRunBlockCountAggregateInputType | true
+    }
+
+  export interface AgentRunBlockDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentRunBlock'], meta: { name: 'AgentRunBlock' } }
+    /**
+     * Find zero or one AgentRunBlock that matches the filter.
+     * @param {AgentRunBlockFindUniqueArgs} args - Arguments to find a AgentRunBlock
+     * @example
+     * // Get one AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AgentRunBlockFindUniqueArgs>(args: SelectSubset<T, AgentRunBlockFindUniqueArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AgentRunBlock that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AgentRunBlockFindUniqueOrThrowArgs} args - Arguments to find a AgentRunBlock
+     * @example
+     * // Get one AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AgentRunBlockFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentRunBlockFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentRunBlock that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockFindFirstArgs} args - Arguments to find a AgentRunBlock
+     * @example
+     * // Get one AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AgentRunBlockFindFirstArgs>(args?: SelectSubset<T, AgentRunBlockFindFirstArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentRunBlock that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockFindFirstOrThrowArgs} args - Arguments to find a AgentRunBlock
+     * @example
+     * // Get one AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AgentRunBlockFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentRunBlockFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AgentRunBlocks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AgentRunBlocks
+     * const agentRunBlocks = await prisma.agentRunBlock.findMany()
+     * 
+     * // Get first 10 AgentRunBlocks
+     * const agentRunBlocks = await prisma.agentRunBlock.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const agentRunBlockWithIdOnly = await prisma.agentRunBlock.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AgentRunBlockFindManyArgs>(args?: SelectSubset<T, AgentRunBlockFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AgentRunBlock.
+     * @param {AgentRunBlockCreateArgs} args - Arguments to create a AgentRunBlock.
+     * @example
+     * // Create one AgentRunBlock
+     * const AgentRunBlock = await prisma.agentRunBlock.create({
+     *   data: {
+     *     // ... data to create a AgentRunBlock
+     *   }
+     * })
+     * 
+     */
+    create<T extends AgentRunBlockCreateArgs>(args: SelectSubset<T, AgentRunBlockCreateArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AgentRunBlocks.
+     * @param {AgentRunBlockCreateManyArgs} args - Arguments to create many AgentRunBlocks.
+     * @example
+     * // Create many AgentRunBlocks
+     * const agentRunBlock = await prisma.agentRunBlock.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AgentRunBlockCreateManyArgs>(args?: SelectSubset<T, AgentRunBlockCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AgentRunBlocks and returns the data saved in the database.
+     * @param {AgentRunBlockCreateManyAndReturnArgs} args - Arguments to create many AgentRunBlocks.
+     * @example
+     * // Create many AgentRunBlocks
+     * const agentRunBlock = await prisma.agentRunBlock.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AgentRunBlocks and only return the `id`
+     * const agentRunBlockWithIdOnly = await prisma.agentRunBlock.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AgentRunBlockCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentRunBlockCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AgentRunBlock.
+     * @param {AgentRunBlockDeleteArgs} args - Arguments to delete one AgentRunBlock.
+     * @example
+     * // Delete one AgentRunBlock
+     * const AgentRunBlock = await prisma.agentRunBlock.delete({
+     *   where: {
+     *     // ... filter to delete one AgentRunBlock
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AgentRunBlockDeleteArgs>(args: SelectSubset<T, AgentRunBlockDeleteArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AgentRunBlock.
+     * @param {AgentRunBlockUpdateArgs} args - Arguments to update one AgentRunBlock.
+     * @example
+     * // Update one AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AgentRunBlockUpdateArgs>(args: SelectSubset<T, AgentRunBlockUpdateArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AgentRunBlocks.
+     * @param {AgentRunBlockDeleteManyArgs} args - Arguments to filter AgentRunBlocks to delete.
+     * @example
+     * // Delete a few AgentRunBlocks
+     * const { count } = await prisma.agentRunBlock.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AgentRunBlockDeleteManyArgs>(args?: SelectSubset<T, AgentRunBlockDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentRunBlocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AgentRunBlocks
+     * const agentRunBlock = await prisma.agentRunBlock.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AgentRunBlockUpdateManyArgs>(args: SelectSubset<T, AgentRunBlockUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentRunBlocks and returns the data updated in the database.
+     * @param {AgentRunBlockUpdateManyAndReturnArgs} args - Arguments to update many AgentRunBlocks.
+     * @example
+     * // Update many AgentRunBlocks
+     * const agentRunBlock = await prisma.agentRunBlock.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AgentRunBlocks and only return the `id`
+     * const agentRunBlockWithIdOnly = await prisma.agentRunBlock.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AgentRunBlockUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentRunBlockUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AgentRunBlock.
+     * @param {AgentRunBlockUpsertArgs} args - Arguments to update or create a AgentRunBlock.
+     * @example
+     * // Update or create a AgentRunBlock
+     * const agentRunBlock = await prisma.agentRunBlock.upsert({
+     *   create: {
+     *     // ... data to create a AgentRunBlock
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AgentRunBlock we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AgentRunBlockUpsertArgs>(args: SelectSubset<T, AgentRunBlockUpsertArgs<ExtArgs>>): Prisma__AgentRunBlockClient<$Result.GetResult<Prisma.$AgentRunBlockPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AgentRunBlocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockCountArgs} args - Arguments to filter AgentRunBlocks to count.
+     * @example
+     * // Count the number of AgentRunBlocks
+     * const count = await prisma.agentRunBlock.count({
+     *   where: {
+     *     // ... the filter for the AgentRunBlocks we want to count
+     *   }
+     * })
+    **/
+    count<T extends AgentRunBlockCountArgs>(
+      args?: Subset<T, AgentRunBlockCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AgentRunBlockCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AgentRunBlock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AgentRunBlockAggregateArgs>(args: Subset<T, AgentRunBlockAggregateArgs>): Prisma.PrismaPromise<GetAgentRunBlockAggregateType<T>>
+
+    /**
+     * Group by AgentRunBlock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentRunBlockGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AgentRunBlockGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AgentRunBlockGroupByArgs['orderBy'] }
+        : { orderBy?: AgentRunBlockGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AgentRunBlockGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentRunBlockGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AgentRunBlock model
+   */
+  readonly fields: AgentRunBlockFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AgentRunBlock.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AgentRunBlockClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    agentRun<T extends AgentRunDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentRunDefaultArgs<ExtArgs>>): Prisma__AgentRunClient<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AgentRunBlock model
+   */
+  interface AgentRunBlockFieldRefs {
+    readonly id: FieldRef<"AgentRunBlock", 'String'>
+    readonly agentRunId: FieldRef<"AgentRunBlock", 'String'>
+    readonly messageId: FieldRef<"AgentRunBlock", 'String'>
+    readonly role: FieldRef<"AgentRunBlock", 'String'>
+    readonly blockType: FieldRef<"AgentRunBlock", 'String'>
+    readonly index: FieldRef<"AgentRunBlock", 'Int'>
+    readonly label: FieldRef<"AgentRunBlock", 'String'>
+    readonly text: FieldRef<"AgentRunBlock", 'String'>
+    readonly payload: FieldRef<"AgentRunBlock", 'Json'>
+    readonly stepKey: FieldRef<"AgentRunBlock", 'String'>
+    readonly status: FieldRef<"AgentRunBlock", 'String'>
+    readonly createdAt: FieldRef<"AgentRunBlock", 'DateTime'>
+    readonly updatedAt: FieldRef<"AgentRunBlock", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AgentRunBlock findUnique
+   */
+  export type AgentRunBlockFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentRunBlock to fetch.
+     */
+    where: AgentRunBlockWhereUniqueInput
+  }
+
+  /**
+   * AgentRunBlock findUniqueOrThrow
+   */
+  export type AgentRunBlockFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentRunBlock to fetch.
+     */
+    where: AgentRunBlockWhereUniqueInput
+  }
+
+  /**
+   * AgentRunBlock findFirst
+   */
+  export type AgentRunBlockFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentRunBlock to fetch.
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentRunBlocks to fetch.
+     */
+    orderBy?: AgentRunBlockOrderByWithRelationInput | AgentRunBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentRunBlocks.
+     */
+    cursor?: AgentRunBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentRunBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentRunBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentRunBlocks.
+     */
+    distinct?: AgentRunBlockScalarFieldEnum | AgentRunBlockScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRunBlock findFirstOrThrow
+   */
+  export type AgentRunBlockFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentRunBlock to fetch.
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentRunBlocks to fetch.
+     */
+    orderBy?: AgentRunBlockOrderByWithRelationInput | AgentRunBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentRunBlocks.
+     */
+    cursor?: AgentRunBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentRunBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentRunBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentRunBlocks.
+     */
+    distinct?: AgentRunBlockScalarFieldEnum | AgentRunBlockScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRunBlock findMany
+   */
+  export type AgentRunBlockFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentRunBlocks to fetch.
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentRunBlocks to fetch.
+     */
+    orderBy?: AgentRunBlockOrderByWithRelationInput | AgentRunBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AgentRunBlocks.
+     */
+    cursor?: AgentRunBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentRunBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentRunBlocks.
+     */
+    skip?: number
+    distinct?: AgentRunBlockScalarFieldEnum | AgentRunBlockScalarFieldEnum[]
+  }
+
+  /**
+   * AgentRunBlock create
+   */
+  export type AgentRunBlockCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AgentRunBlock.
+     */
+    data: XOR<AgentRunBlockCreateInput, AgentRunBlockUncheckedCreateInput>
+  }
+
+  /**
+   * AgentRunBlock createMany
+   */
+  export type AgentRunBlockCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AgentRunBlocks.
+     */
+    data: AgentRunBlockCreateManyInput | AgentRunBlockCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AgentRunBlock createManyAndReturn
+   */
+  export type AgentRunBlockCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * The data used to create many AgentRunBlocks.
+     */
+    data: AgentRunBlockCreateManyInput | AgentRunBlockCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentRunBlock update
+   */
+  export type AgentRunBlockUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AgentRunBlock.
+     */
+    data: XOR<AgentRunBlockUpdateInput, AgentRunBlockUncheckedUpdateInput>
+    /**
+     * Choose, which AgentRunBlock to update.
+     */
+    where: AgentRunBlockWhereUniqueInput
+  }
+
+  /**
+   * AgentRunBlock updateMany
+   */
+  export type AgentRunBlockUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AgentRunBlocks.
+     */
+    data: XOR<AgentRunBlockUpdateManyMutationInput, AgentRunBlockUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentRunBlocks to update
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * Limit how many AgentRunBlocks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentRunBlock updateManyAndReturn
+   */
+  export type AgentRunBlockUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * The data used to update AgentRunBlocks.
+     */
+    data: XOR<AgentRunBlockUpdateManyMutationInput, AgentRunBlockUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentRunBlocks to update
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * Limit how many AgentRunBlocks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentRunBlock upsert
+   */
+  export type AgentRunBlockUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AgentRunBlock to update in case it exists.
+     */
+    where: AgentRunBlockWhereUniqueInput
+    /**
+     * In case the AgentRunBlock found by the `where` argument doesn't exist, create a new AgentRunBlock with this data.
+     */
+    create: XOR<AgentRunBlockCreateInput, AgentRunBlockUncheckedCreateInput>
+    /**
+     * In case the AgentRunBlock was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AgentRunBlockUpdateInput, AgentRunBlockUncheckedUpdateInput>
+  }
+
+  /**
+   * AgentRunBlock delete
+   */
+  export type AgentRunBlockDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
+    /**
+     * Filter which AgentRunBlock to delete.
+     */
+    where: AgentRunBlockWhereUniqueInput
+  }
+
+  /**
+   * AgentRunBlock deleteMany
+   */
+  export type AgentRunBlockDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentRunBlocks to delete
+     */
+    where?: AgentRunBlockWhereInput
+    /**
+     * Limit how many AgentRunBlocks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentRunBlock without action
+   */
+  export type AgentRunBlockDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRunBlock
+     */
+    select?: AgentRunBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRunBlock
+     */
+    omit?: AgentRunBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunBlockInclude<ExtArgs> | null
   }
 
 
@@ -44276,6 +45596,25 @@ export namespace Prisma {
   export type AgentRunStepScalarFieldEnum = (typeof AgentRunStepScalarFieldEnum)[keyof typeof AgentRunStepScalarFieldEnum]
 
 
+  export const AgentRunBlockScalarFieldEnum: {
+    id: 'id',
+    agentRunId: 'agentRunId',
+    messageId: 'messageId',
+    role: 'role',
+    blockType: 'blockType',
+    index: 'index',
+    label: 'label',
+    text: 'text',
+    payload: 'payload',
+    stepKey: 'stepKey',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AgentRunBlockScalarFieldEnum = (typeof AgentRunBlockScalarFieldEnum)[keyof typeof AgentRunBlockScalarFieldEnum]
+
+
   export const AgentFeedbackScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
@@ -46168,6 +47507,7 @@ export namespace Prisma {
     childRuns?: AgentRunListRelationFilter
     feedback?: XOR<AgentFeedbackNullableScalarRelationFilter, AgentFeedbackWhereInput> | null
     steps?: AgentRunStepListRelationFilter
+    blocks?: AgentRunBlockListRelationFilter
     contentPieces?: ContentPieceListRelationFilter
     creditLedger?: CreditLedgerListRelationFilter
   }
@@ -46198,6 +47538,7 @@ export namespace Prisma {
     childRuns?: AgentRunOrderByRelationAggregateInput
     feedback?: AgentFeedbackOrderByWithRelationInput
     steps?: AgentRunStepOrderByRelationAggregateInput
+    blocks?: AgentRunBlockOrderByRelationAggregateInput
     contentPieces?: ContentPieceOrderByRelationAggregateInput
     creditLedger?: CreditLedgerOrderByRelationAggregateInput
   }
@@ -46231,6 +47572,7 @@ export namespace Prisma {
     childRuns?: AgentRunListRelationFilter
     feedback?: XOR<AgentFeedbackNullableScalarRelationFilter, AgentFeedbackWhereInput> | null
     steps?: AgentRunStepListRelationFilter
+    blocks?: AgentRunBlockListRelationFilter
     contentPieces?: ContentPieceListRelationFilter
     creditLedger?: CreditLedgerListRelationFilter
   }, "id" | "feedbackId">
@@ -46406,6 +47748,104 @@ export namespace Prisma {
     completedAt?: DateTimeNullableWithAggregatesFilter<"AgentRunStep"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AgentRunStep"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AgentRunStep"> | Date | string
+  }
+
+  export type AgentRunBlockWhereInput = {
+    AND?: AgentRunBlockWhereInput | AgentRunBlockWhereInput[]
+    OR?: AgentRunBlockWhereInput[]
+    NOT?: AgentRunBlockWhereInput | AgentRunBlockWhereInput[]
+    id?: StringFilter<"AgentRunBlock"> | string
+    agentRunId?: StringFilter<"AgentRunBlock"> | string
+    messageId?: StringFilter<"AgentRunBlock"> | string
+    role?: StringFilter<"AgentRunBlock"> | string
+    blockType?: StringFilter<"AgentRunBlock"> | string
+    index?: IntFilter<"AgentRunBlock"> | number
+    label?: StringNullableFilter<"AgentRunBlock"> | string | null
+    text?: StringNullableFilter<"AgentRunBlock"> | string | null
+    payload?: JsonFilter<"AgentRunBlock">
+    stepKey?: StringNullableFilter<"AgentRunBlock"> | string | null
+    status?: StringFilter<"AgentRunBlock"> | string
+    createdAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+    agentRun?: XOR<AgentRunScalarRelationFilter, AgentRunWhereInput>
+  }
+
+  export type AgentRunBlockOrderByWithRelationInput = {
+    id?: SortOrder
+    agentRunId?: SortOrder
+    messageId?: SortOrder
+    role?: SortOrder
+    blockType?: SortOrder
+    index?: SortOrder
+    label?: SortOrderInput | SortOrder
+    text?: SortOrderInput | SortOrder
+    payload?: SortOrder
+    stepKey?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    agentRun?: AgentRunOrderByWithRelationInput
+  }
+
+  export type AgentRunBlockWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    agentRunId_messageId_index?: AgentRunBlockAgentRunIdMessageIdIndexCompoundUniqueInput
+    AND?: AgentRunBlockWhereInput | AgentRunBlockWhereInput[]
+    OR?: AgentRunBlockWhereInput[]
+    NOT?: AgentRunBlockWhereInput | AgentRunBlockWhereInput[]
+    agentRunId?: StringFilter<"AgentRunBlock"> | string
+    messageId?: StringFilter<"AgentRunBlock"> | string
+    role?: StringFilter<"AgentRunBlock"> | string
+    blockType?: StringFilter<"AgentRunBlock"> | string
+    index?: IntFilter<"AgentRunBlock"> | number
+    label?: StringNullableFilter<"AgentRunBlock"> | string | null
+    text?: StringNullableFilter<"AgentRunBlock"> | string | null
+    payload?: JsonFilter<"AgentRunBlock">
+    stepKey?: StringNullableFilter<"AgentRunBlock"> | string | null
+    status?: StringFilter<"AgentRunBlock"> | string
+    createdAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+    agentRun?: XOR<AgentRunScalarRelationFilter, AgentRunWhereInput>
+  }, "id" | "agentRunId_messageId_index">
+
+  export type AgentRunBlockOrderByWithAggregationInput = {
+    id?: SortOrder
+    agentRunId?: SortOrder
+    messageId?: SortOrder
+    role?: SortOrder
+    blockType?: SortOrder
+    index?: SortOrder
+    label?: SortOrderInput | SortOrder
+    text?: SortOrderInput | SortOrder
+    payload?: SortOrder
+    stepKey?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AgentRunBlockCountOrderByAggregateInput
+    _avg?: AgentRunBlockAvgOrderByAggregateInput
+    _max?: AgentRunBlockMaxOrderByAggregateInput
+    _min?: AgentRunBlockMinOrderByAggregateInput
+    _sum?: AgentRunBlockSumOrderByAggregateInput
+  }
+
+  export type AgentRunBlockScalarWhereWithAggregatesInput = {
+    AND?: AgentRunBlockScalarWhereWithAggregatesInput | AgentRunBlockScalarWhereWithAggregatesInput[]
+    OR?: AgentRunBlockScalarWhereWithAggregatesInput[]
+    NOT?: AgentRunBlockScalarWhereWithAggregatesInput | AgentRunBlockScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    agentRunId?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    messageId?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    role?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    blockType?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    index?: IntWithAggregatesFilter<"AgentRunBlock"> | number
+    label?: StringNullableWithAggregatesFilter<"AgentRunBlock"> | string | null
+    text?: StringNullableWithAggregatesFilter<"AgentRunBlock"> | string | null
+    payload?: JsonWithAggregatesFilter<"AgentRunBlock">
+    stepKey?: StringNullableWithAggregatesFilter<"AgentRunBlock"> | string | null
+    status?: StringWithAggregatesFilter<"AgentRunBlock"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"AgentRunBlock"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AgentRunBlock"> | Date | string
   }
 
   export type AgentFeedbackWhereInput = {
@@ -49035,6 +50475,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -49061,6 +50502,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -49087,6 +50529,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -49113,6 +50556,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -49318,6 +50762,117 @@ export namespace Prisma {
     creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockCreateInput = {
+    id?: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agentRun: AgentRunCreateNestedOneWithoutBlocksInput
+  }
+
+  export type AgentRunBlockUncheckedCreateInput = {
+    id?: string
+    agentRunId: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentRunBlockUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentRun?: AgentRunUpdateOneRequiredWithoutBlocksNestedInput
+  }
+
+  export type AgentRunBlockUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentRunId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockCreateManyInput = {
+    id?: string
+    agentRunId: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentRunBlockUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentRunId?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51812,7 +53367,17 @@ export namespace Prisma {
     none?: AgentRunStepWhereInput
   }
 
+  export type AgentRunBlockListRelationFilter = {
+    every?: AgentRunBlockWhereInput
+    some?: AgentRunBlockWhereInput
+    none?: AgentRunBlockWhereInput
+  }
+
   export type AgentRunStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AgentRunBlockOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -52059,6 +53624,66 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumStepResultTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumStepResultTypeNullableFilter<$PrismaModel>
+  }
+
+  export type AgentRunBlockAgentRunIdMessageIdIndexCompoundUniqueInput = {
+    agentRunId: string
+    messageId: string
+    index: number
+  }
+
+  export type AgentRunBlockCountOrderByAggregateInput = {
+    id?: SortOrder
+    agentRunId?: SortOrder
+    messageId?: SortOrder
+    role?: SortOrder
+    blockType?: SortOrder
+    index?: SortOrder
+    label?: SortOrder
+    text?: SortOrder
+    payload?: SortOrder
+    stepKey?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentRunBlockAvgOrderByAggregateInput = {
+    index?: SortOrder
+  }
+
+  export type AgentRunBlockMaxOrderByAggregateInput = {
+    id?: SortOrder
+    agentRunId?: SortOrder
+    messageId?: SortOrder
+    role?: SortOrder
+    blockType?: SortOrder
+    index?: SortOrder
+    label?: SortOrder
+    text?: SortOrder
+    stepKey?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentRunBlockMinOrderByAggregateInput = {
+    id?: SortOrder
+    agentRunId?: SortOrder
+    messageId?: SortOrder
+    role?: SortOrder
+    blockType?: SortOrder
+    index?: SortOrder
+    label?: SortOrder
+    text?: SortOrder
+    stepKey?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentRunBlockSumOrderByAggregateInput = {
+    index?: SortOrder
   }
 
   export type EnumFeedbackTypeFilter<$PrismaModel = never> = {
@@ -54393,6 +56018,13 @@ export namespace Prisma {
     connect?: AgentRunStepWhereUniqueInput | AgentRunStepWhereUniqueInput[]
   }
 
+  export type AgentRunBlockCreateNestedManyWithoutAgentRunInput = {
+    create?: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput> | AgentRunBlockCreateWithoutAgentRunInput[] | AgentRunBlockUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentRunBlockCreateOrConnectWithoutAgentRunInput | AgentRunBlockCreateOrConnectWithoutAgentRunInput[]
+    createMany?: AgentRunBlockCreateManyAgentRunInputEnvelope
+    connect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+  }
+
   export type ContentPieceCreateNestedManyWithoutAgentRunInput = {
     create?: XOR<ContentPieceCreateWithoutAgentRunInput, ContentPieceUncheckedCreateWithoutAgentRunInput> | ContentPieceCreateWithoutAgentRunInput[] | ContentPieceUncheckedCreateWithoutAgentRunInput[]
     connectOrCreate?: ContentPieceCreateOrConnectWithoutAgentRunInput | ContentPieceCreateOrConnectWithoutAgentRunInput[]
@@ -54419,6 +56051,13 @@ export namespace Prisma {
     connectOrCreate?: AgentRunStepCreateOrConnectWithoutAgentRunInput | AgentRunStepCreateOrConnectWithoutAgentRunInput[]
     createMany?: AgentRunStepCreateManyAgentRunInputEnvelope
     connect?: AgentRunStepWhereUniqueInput | AgentRunStepWhereUniqueInput[]
+  }
+
+  export type AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput = {
+    create?: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput> | AgentRunBlockCreateWithoutAgentRunInput[] | AgentRunBlockUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentRunBlockCreateOrConnectWithoutAgentRunInput | AgentRunBlockCreateOrConnectWithoutAgentRunInput[]
+    createMany?: AgentRunBlockCreateManyAgentRunInputEnvelope
+    connect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
   }
 
   export type ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput = {
@@ -54505,6 +56144,20 @@ export namespace Prisma {
     deleteMany?: AgentRunStepScalarWhereInput | AgentRunStepScalarWhereInput[]
   }
 
+  export type AgentRunBlockUpdateManyWithoutAgentRunNestedInput = {
+    create?: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput> | AgentRunBlockCreateWithoutAgentRunInput[] | AgentRunBlockUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentRunBlockCreateOrConnectWithoutAgentRunInput | AgentRunBlockCreateOrConnectWithoutAgentRunInput[]
+    upsert?: AgentRunBlockUpsertWithWhereUniqueWithoutAgentRunInput | AgentRunBlockUpsertWithWhereUniqueWithoutAgentRunInput[]
+    createMany?: AgentRunBlockCreateManyAgentRunInputEnvelope
+    set?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    disconnect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    delete?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    connect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    update?: AgentRunBlockUpdateWithWhereUniqueWithoutAgentRunInput | AgentRunBlockUpdateWithWhereUniqueWithoutAgentRunInput[]
+    updateMany?: AgentRunBlockUpdateManyWithWhereWithoutAgentRunInput | AgentRunBlockUpdateManyWithWhereWithoutAgentRunInput[]
+    deleteMany?: AgentRunBlockScalarWhereInput | AgentRunBlockScalarWhereInput[]
+  }
+
   export type ContentPieceUpdateManyWithoutAgentRunNestedInput = {
     create?: XOR<ContentPieceCreateWithoutAgentRunInput, ContentPieceUncheckedCreateWithoutAgentRunInput> | ContentPieceCreateWithoutAgentRunInput[] | ContentPieceUncheckedCreateWithoutAgentRunInput[]
     connectOrCreate?: ContentPieceCreateOrConnectWithoutAgentRunInput | ContentPieceCreateOrConnectWithoutAgentRunInput[]
@@ -54559,6 +56212,20 @@ export namespace Prisma {
     update?: AgentRunStepUpdateWithWhereUniqueWithoutAgentRunInput | AgentRunStepUpdateWithWhereUniqueWithoutAgentRunInput[]
     updateMany?: AgentRunStepUpdateManyWithWhereWithoutAgentRunInput | AgentRunStepUpdateManyWithWhereWithoutAgentRunInput[]
     deleteMany?: AgentRunStepScalarWhereInput | AgentRunStepScalarWhereInput[]
+  }
+
+  export type AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput = {
+    create?: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput> | AgentRunBlockCreateWithoutAgentRunInput[] | AgentRunBlockUncheckedCreateWithoutAgentRunInput[]
+    connectOrCreate?: AgentRunBlockCreateOrConnectWithoutAgentRunInput | AgentRunBlockCreateOrConnectWithoutAgentRunInput[]
+    upsert?: AgentRunBlockUpsertWithWhereUniqueWithoutAgentRunInput | AgentRunBlockUpsertWithWhereUniqueWithoutAgentRunInput[]
+    createMany?: AgentRunBlockCreateManyAgentRunInputEnvelope
+    set?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    disconnect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    delete?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    connect?: AgentRunBlockWhereUniqueInput | AgentRunBlockWhereUniqueInput[]
+    update?: AgentRunBlockUpdateWithWhereUniqueWithoutAgentRunInput | AgentRunBlockUpdateWithWhereUniqueWithoutAgentRunInput[]
+    updateMany?: AgentRunBlockUpdateManyWithWhereWithoutAgentRunInput | AgentRunBlockUpdateManyWithWhereWithoutAgentRunInput[]
+    deleteMany?: AgentRunBlockScalarWhereInput | AgentRunBlockScalarWhereInput[]
   }
 
   export type ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput = {
@@ -54659,6 +56326,20 @@ export namespace Prisma {
     update?: CreditLedgerUpdateWithWhereUniqueWithoutAgentRunStepInput | CreditLedgerUpdateWithWhereUniqueWithoutAgentRunStepInput[]
     updateMany?: CreditLedgerUpdateManyWithWhereWithoutAgentRunStepInput | CreditLedgerUpdateManyWithWhereWithoutAgentRunStepInput[]
     deleteMany?: CreditLedgerScalarWhereInput | CreditLedgerScalarWhereInput[]
+  }
+
+  export type AgentRunCreateNestedOneWithoutBlocksInput = {
+    create?: XOR<AgentRunCreateWithoutBlocksInput, AgentRunUncheckedCreateWithoutBlocksInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutBlocksInput
+    connect?: AgentRunWhereUniqueInput
+  }
+
+  export type AgentRunUpdateOneRequiredWithoutBlocksNestedInput = {
+    create?: XOR<AgentRunCreateWithoutBlocksInput, AgentRunUncheckedCreateWithoutBlocksInput>
+    connectOrCreate?: AgentRunCreateOrConnectWithoutBlocksInput
+    upsert?: AgentRunUpsertWithoutBlocksInput
+    connect?: AgentRunWhereUniqueInput
+    update?: XOR<XOR<AgentRunUpdateToOneWithWhereWithoutBlocksInput, AgentRunUpdateWithoutBlocksInput>, AgentRunUncheckedUpdateWithoutBlocksInput>
   }
 
   export type CompanyCreateNestedOneWithoutAgentFeedbacksInput = {
@@ -56941,6 +58622,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -56966,6 +58648,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -58369,6 +60052,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
 
@@ -58394,6 +60078,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
 
@@ -58612,6 +60297,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
 
@@ -58637,6 +60323,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
 
@@ -58757,6 +60444,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -58782,6 +60470,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -59071,6 +60760,7 @@ export namespace Prisma {
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -59096,6 +60786,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -59126,6 +60817,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -59151,6 +60843,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -59249,6 +60942,46 @@ export namespace Prisma {
 
   export type AgentRunStepCreateManyAgentRunInputEnvelope = {
     data: AgentRunStepCreateManyAgentRunInput | AgentRunStepCreateManyAgentRunInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentRunBlockCreateWithoutAgentRunInput = {
+    id?: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentRunBlockUncheckedCreateWithoutAgentRunInput = {
+    id?: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentRunBlockCreateOrConnectWithoutAgentRunInput = {
+    where: AgentRunBlockWhereUniqueInput
+    create: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput>
+  }
+
+  export type AgentRunBlockCreateManyAgentRunInputEnvelope = {
+    data: AgentRunBlockCreateManyAgentRunInput | AgentRunBlockCreateManyAgentRunInput[]
     skipDuplicates?: boolean
   }
 
@@ -59464,6 +61197,7 @@ export namespace Prisma {
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -59489,6 +61223,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -59591,6 +61326,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AgentRunStep"> | Date | string
   }
 
+  export type AgentRunBlockUpsertWithWhereUniqueWithoutAgentRunInput = {
+    where: AgentRunBlockWhereUniqueInput
+    update: XOR<AgentRunBlockUpdateWithoutAgentRunInput, AgentRunBlockUncheckedUpdateWithoutAgentRunInput>
+    create: XOR<AgentRunBlockCreateWithoutAgentRunInput, AgentRunBlockUncheckedCreateWithoutAgentRunInput>
+  }
+
+  export type AgentRunBlockUpdateWithWhereUniqueWithoutAgentRunInput = {
+    where: AgentRunBlockWhereUniqueInput
+    data: XOR<AgentRunBlockUpdateWithoutAgentRunInput, AgentRunBlockUncheckedUpdateWithoutAgentRunInput>
+  }
+
+  export type AgentRunBlockUpdateManyWithWhereWithoutAgentRunInput = {
+    where: AgentRunBlockScalarWhereInput
+    data: XOR<AgentRunBlockUpdateManyMutationInput, AgentRunBlockUncheckedUpdateManyWithoutAgentRunInput>
+  }
+
+  export type AgentRunBlockScalarWhereInput = {
+    AND?: AgentRunBlockScalarWhereInput | AgentRunBlockScalarWhereInput[]
+    OR?: AgentRunBlockScalarWhereInput[]
+    NOT?: AgentRunBlockScalarWhereInput | AgentRunBlockScalarWhereInput[]
+    id?: StringFilter<"AgentRunBlock"> | string
+    agentRunId?: StringFilter<"AgentRunBlock"> | string
+    messageId?: StringFilter<"AgentRunBlock"> | string
+    role?: StringFilter<"AgentRunBlock"> | string
+    blockType?: StringFilter<"AgentRunBlock"> | string
+    index?: IntFilter<"AgentRunBlock"> | number
+    label?: StringNullableFilter<"AgentRunBlock"> | string | null
+    text?: StringNullableFilter<"AgentRunBlock"> | string | null
+    payload?: JsonFilter<"AgentRunBlock">
+    stepKey?: StringNullableFilter<"AgentRunBlock"> | string | null
+    status?: StringFilter<"AgentRunBlock"> | string
+    createdAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentRunBlock"> | Date | string
+  }
+
   export type ContentPieceUpsertWithWhereUniqueWithoutAgentRunInput = {
     where: ContentPieceWhereUniqueInput
     update: XOR<ContentPieceUpdateWithoutAgentRunInput, ContentPieceUncheckedUpdateWithoutAgentRunInput>
@@ -59644,6 +61414,7 @@ export namespace Prisma {
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -59669,6 +61440,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -59748,6 +61520,7 @@ export namespace Prisma {
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -59773,6 +61546,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -59791,6 +61565,126 @@ export namespace Prisma {
   export type CreditLedgerUpdateManyWithWhereWithoutAgentRunStepInput = {
     where: CreditLedgerScalarWhereInput
     data: XOR<CreditLedgerUpdateManyMutationInput, CreditLedgerUncheckedUpdateManyWithoutAgentRunStepInput>
+  }
+
+  export type AgentRunCreateWithoutBlocksInput = {
+    id?: string
+    campaignId?: string | null
+    agentId: string
+    status?: $Enums.AgentRunStatus
+    currentStepKey?: string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    pauseReason?: string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
+    parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
+    childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
+    feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutBlocksInput = {
+    id?: string
+    companyId: string
+    pipelineRunId?: string | null
+    campaignId?: string | null
+    agentId: string
+    parentRunId?: string | null
+    feedbackId?: string | null
+    status?: $Enums.AgentRunStatus
+    currentStepKey?: string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    pauseReason?: string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutBlocksInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutBlocksInput, AgentRunUncheckedCreateWithoutBlocksInput>
+  }
+
+  export type AgentRunUpsertWithoutBlocksInput = {
+    update: XOR<AgentRunUpdateWithoutBlocksInput, AgentRunUncheckedUpdateWithoutBlocksInput>
+    create: XOR<AgentRunCreateWithoutBlocksInput, AgentRunUncheckedCreateWithoutBlocksInput>
+    where?: AgentRunWhereInput
+  }
+
+  export type AgentRunUpdateToOneWithWhereWithoutBlocksInput = {
+    where?: AgentRunWhereInput
+    data: XOR<AgentRunUpdateWithoutBlocksInput, AgentRunUncheckedUpdateWithoutBlocksInput>
+  }
+
+  export type AgentRunUpdateWithoutBlocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
+    currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseReason?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
+    parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
+    childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
+    feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutBlocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
+    currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseReason?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
 
   export type CompanyCreateWithoutAgentFeedbacksInput = {
@@ -59969,6 +61863,7 @@ export namespace Prisma {
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
   }
@@ -59994,6 +61889,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
   }
@@ -60207,6 +62103,7 @@ export namespace Prisma {
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -60232,6 +62129,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -60630,6 +62528,7 @@ export namespace Prisma {
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
     steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
   }
 
@@ -60655,6 +62554,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
     steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
     contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
   }
 
@@ -60800,6 +62700,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
   }
 
@@ -60825,6 +62726,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
   }
 
@@ -62620,6 +64522,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -62645,6 +64548,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -63232,6 +65136,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -63257,6 +65162,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -63375,6 +65281,21 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AgentRunBlockCreateManyAgentRunInput = {
+    id?: string
+    messageId: string
+    role: string
+    blockType: string
+    index: number
+    label?: string | null
+    text?: string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ContentPieceCreateManyAgentRunInput = {
     id?: string
     companyId: string
@@ -63427,6 +65348,7 @@ export namespace Prisma {
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
     steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
   }
@@ -63452,6 +65374,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
     steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
     contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
   }
@@ -63532,6 +65455,51 @@ export namespace Prisma {
     creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockUpdateWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockUncheckedUpdateWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunBlockUncheckedUpdateManyWithoutAgentRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    messageId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    blockType?: StringFieldUpdateOperationsInput | string
+    index?: IntFieldUpdateOperationsInput | number
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: JsonNullValueInput | InputJsonValue
+    stepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

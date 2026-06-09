@@ -350,6 +350,22 @@ exports.Prisma.AgentRunStepScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AgentRunBlockScalarFieldEnum = {
+  id: 'id',
+  agentRunId: 'agentRunId',
+  messageId: 'messageId',
+  role: 'role',
+  blockType: 'blockType',
+  index: 'index',
+  label: 'label',
+  text: 'text',
+  payload: 'payload',
+  stepKey: 'stepKey',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AgentFeedbackScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -690,6 +706,7 @@ exports.Prisma.ModelName = {
   PipelineRun: 'PipelineRun',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
+  AgentRunBlock: 'AgentRunBlock',
   AgentFeedback: 'AgentFeedback',
   LearningSignal: 'LearningSignal',
   AgentMemory: 'AgentMemory',

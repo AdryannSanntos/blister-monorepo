@@ -391,12 +391,13 @@ model AgentRun {
   startedAt       DateTime?
   completedAt     DateTime?
 
-  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  pipelineRun   PipelineRun?   @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)
-  parentRun     AgentRun?      @relation("AgentRunRegeneration", fields: [parentRunId], references: [id], onDelete: SetNull)
-  childRuns     AgentRun[]     @relation("AgentRunRegeneration")
-  feedback      AgentFeedback? @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+  company       Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  pipelineRun   PipelineRun?    @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)
+  parentRun     AgentRun?       @relation("AgentRunRegeneration", fields: [parentRunId], references: [id], onDelete: SetNull)
+  childRuns     AgentRun[]      @relation("AgentRunRegeneration")
+  feedback      AgentFeedback?  @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
   steps         AgentRunStep[]
+  blocks        AgentRunBlock[]
   contentPieces ContentPiece[]
   creditLedger  CreditLedger[]
 
@@ -431,6 +432,26 @@ model AgentRunStep {
   @@unique([agentRunId, stepIndex])
   @@index([agentRunId])
   @@index([status])
+}
+
+model AgentRunBlock {
+  id         String   @id @default(cuid())
+  agentRunId String
+  messageId  String
+  role       String
+  blockType  String
+  index      Int
+  label      String?
+  text       String?  @db.Text
+  payload    Json     @default("{}")
+  stepKey    String?
+  status     String   @default("streaming")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  agentRun   AgentRun @relation(fields: [agentRunId], references: [id], onDelete: Cascade)
+
+  @@unique([agentRunId, messageId, index])
+  @@index([agentRunId])
 }
 
 // ─── Agent learning ─────────────────────────────────────────────────────────
