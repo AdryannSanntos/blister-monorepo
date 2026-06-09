@@ -17,8 +17,14 @@ export async function loginAsDemoBusiness(
     .send({ email, password })
     .expect(200);
 
-  const cookies = response.headers['set-cookie'] as string[] | undefined;
-  if (!cookies?.length) {
+  const rawCookies = response.headers['set-cookie'];
+  const cookies: string[] = Array.isArray(rawCookies)
+    ? rawCookies
+    : rawCookies
+      ? [rawCookies]
+      : [];
+
+  if (!cookies.length) {
     throw new Error('No session cookie returned from login');
   }
 

@@ -40,7 +40,7 @@ export async function cleanupTestDatabase(): Promise<void> {
     prisma.ragIndexJob.deleteMany(),
     prisma.creditBalance.deleteMany(),
     prisma.brandProfile.deleteMany(),
-    prisma.userRole.deleteMany(),
+    prisma.userRoleAssignment.deleteMany(),
     prisma.company.deleteMany(),
     prisma.session.deleteMany(),
     prisma.account.deleteMany(),

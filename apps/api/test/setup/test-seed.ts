@@ -1,6 +1,10 @@
 import { Prisma } from '../../src/generated/prisma';
 import { getTestPrisma } from './test-database';
-import { hash } from '@better-auth/utils/hash';
+import { createHash } from 'crypto';
+
+function hashPassword(password: string): string {
+  return createHash('sha256').update(password).digest('hex');
+}
 
 export interface TestCompany {
   id: string;
@@ -49,7 +53,7 @@ const TEST_COMPANY = {
 export async function seedTestDatabase(): Promise<TestSeedResult> {
   const prisma = await getTestPrisma();
 
-  const hashedPassword = await hash.create(TEST_USER.password);
+  const hashedPassword = hashPassword(TEST_USER.password);
 
   const user = await prisma.user.create({
     data: {
@@ -77,7 +81,7 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
 
   const ownerRole = await prisma.role.findUnique({ where: { name: 'owner' } });
   if (ownerRole) {
-    await prisma.userRole.create({
+    await prisma.userRoleAssignment.create({
       data: {
         userId: user.id,
         roleId: ownerRole.id,
@@ -90,7 +94,7 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
       id: `test_company_${Date.now()}`,
       name: TEST_COMPANY.name,
       slug: TEST_COMPANY.slug,
-      ownerId: user.id,
+      ownerUserId: user.id,
       onboardingCompletedAt: new Date(),
     },
   });
@@ -130,7 +134,7 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
       niche: 'Marketing Digital',
       description: 'Test business for automated testing',
       targetAudience: 'Small business owners in Brazil',
-      marketingObjective: 'Increase brand awareness',
+      marketingObjective: 'STRENGTHEN_BRAND',
     },
   });
 
@@ -260,7 +264,7 @@ export async function seedCompanyWithLowBalance(
       id: `test_low_credit_company_${Date.now()}`,
       name: 'Low Credit Company',
       slug: `low-credit-${Date.now()}`,
-      ownerId: user.id,
+      ownerUserId: user.id,
       onboardingCompletedAt: new Date(),
     },
   });

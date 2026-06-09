@@ -71,7 +71,7 @@ async function getBrandProfile(
     visualStyle: profile.visualStyle,
     palette: profile.palette,
     typography: profile.typography,
-    socialNetworks: profile.socialNetworks,
+    socialNetworks: (profile.socialNetworks as string[]) ?? [],
   };
 }
 

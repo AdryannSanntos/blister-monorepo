@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma } from '../../src/generated/prisma';
+import { Prisma, type PrismaClient } from '../../src/generated/prisma';
 
 export type AgentExecutionMode = 'inline-stub' | 'inline-live' | 'trigger';
 

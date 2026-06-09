@@ -58,6 +58,6 @@ export function validateCopywriterOutput(output: unknown): {
 
   return {
     valid: false,
-    errors: result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`),
+    errors: result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`),
   };
 }

@@ -1,0 +1,34 @@
+---
+description: Use project typography components instead of raw HTML text elements
+globs: apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# Typography components
+
+Always prefer the shared typography components over raw `<h1>`–`<h6>`, `<p>`, or ad-hoc Tailwind text classes when rendering UI copy.
+
+Components live in `apps/web/src/core/shared/components/ui/`:
+
+| Component | Use for |
+|-----------|---------|
+| `Display` | Hero/marketing headlines (`level`: d1, d2, d3) |
+| `Heading` | Page and section titles (`level`: h1–h6; use `as` for semantic tag) |
+| `Paragraph` | Body copy, descriptions, captions (`size`: p1–p6; `tone`: primary–quaternary) |
+
+```tsx
+// ❌ BAD
+<h1 className="text-2xl font-semibold">{title}</h1>
+<p className="text-muted-foreground mt-1">{description}</p>
+
+// ✅ GOOD
+<Heading level="h3" as="h1">{title}</Heading>
+<Paragraph className="mt-1">{description}</Paragraph>
+```
+
+Exceptions (keep raw elements or utility classes):
+
+- Form labels → `Label` / `FormLabel`
+- shadcn primitives that already wrap typography (`CardTitle`, `CardDescription`, etc.)
+- Markdown or rich-text renderers
+- When no typography variant fits and a one-off utility is intentional in design-system docs

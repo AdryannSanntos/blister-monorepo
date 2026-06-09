@@ -1,7 +1,9 @@
 import type { LucideIcon } from "lucide-react";
 
-import { cn } from "@/core/shared/utils";
+import { Heading } from "@/core/shared/components/ui/heading";
+import { Paragraph } from "@/core/shared/components/ui/paragraph";
 import { SurfaceIcon } from "@/core/shared/components/ui/surface-icon";
+import { cn } from "@/core/shared/utils";
 
 interface PageLayoutProps {
   title: string;
@@ -28,9 +30,11 @@ export function PageLayout({
         <div className="flex min-w-0 items-start gap-4">
           <SurfaceIcon icon={icon} />
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold">{title}</h1>
+            <Heading level="h3" as="h1">
+              {title}
+            </Heading>
             {description && (
-              <p className="text-muted-foreground mt-1">{description}</p>
+              <Paragraph className="mt-1">{description}</Paragraph>
             )}
           </div>
         </div>
