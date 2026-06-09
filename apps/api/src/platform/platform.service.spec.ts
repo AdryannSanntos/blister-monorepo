@@ -205,7 +205,6 @@ describe('PlatformService', () => {
       prisma.auditLog.create.mockResolvedValue({});
 
       const result = await service.startSupportSession('actor-1', {
-        organizationId: 'org-1',
         reason: 'Helping client with issue',
       });
 
@@ -237,7 +236,6 @@ describe('PlatformService', () => {
     it('does not start session without a reason', async () => {
       await expect(
         service.startSupportSession('actor-1', {
-          organizationId: 'org-1',
           reason: 'short', // less than 8 chars
         }),
       ).rejects.toThrow(BadRequestException);

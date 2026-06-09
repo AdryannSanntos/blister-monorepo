@@ -30,7 +30,7 @@ const eventPayloadSchema = z.object({
   timestamp: z.string().optional(),
 });
 
-@Controller('api/internal/agent-runs')
+@Controller('internal/agent-runs')
 export class InternalEventsController {
   private readonly triggerSecret: string;
 

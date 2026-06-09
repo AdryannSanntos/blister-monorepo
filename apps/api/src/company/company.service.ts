@@ -19,6 +19,7 @@ import type {
 } from './dto/company.dto';
 import { createCompanyForUser } from './company-bootstrap.util';
 import { getActiveCompanyIdFromRequest } from './company-context.util';
+import { CompanyRagSyncService } from '../rag/company-rag-sync.service';
 
 export type HomeDestination = 'onboarding' | 'dashboard' | 'workspaces';
 
@@ -37,6 +38,7 @@ export class CompanyService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly storage: StorageService,
+    private readonly companyRagSync: CompanyRagSyncService,
   ) {}
 
   listByOwner(ownerUserId: string): Promise<CompanySummary[]> {

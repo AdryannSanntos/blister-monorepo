@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "src/core/shared/components/ui/button";
 
 import { AdminRoleDialog } from "../components/admin-role-dialog";
+import { AgentsPlatformTab } from "../components/agents-platform-tab";
 import { AiCatalogTab } from "../components/ai-catalog-tab";
 import { CreditsPlatformTab } from "../components/credits-platform-tab";
 import { PlatformAdminOverviewPanel } from "../components/platform-admin-overview-panel";
@@ -36,6 +37,7 @@ export function PlatformAdminPage() {
           <PlatformAdminsPanel onGrantAccess={() => setAdminDialogOpen(true)} />
         )}
         {tab === "support" && <PlatformSupportPanel />}
+        {tab === "agents" && <AgentsPlatformTab />}
         {tab === "ai-catalog" && <AiCatalogTab />}
         {tab === "rag" && <RagSettingsTab />}
         {tab === "credits" && <CreditsPlatformTab />}

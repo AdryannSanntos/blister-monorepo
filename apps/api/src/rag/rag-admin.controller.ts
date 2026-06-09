@@ -14,6 +14,7 @@ import { DocumentService } from './document.service';
 import { IngestionService } from './ingestion.service';
 import { RetrievalService } from './retrieval.service';
 import { ContextPackService } from './context-pack.service';
+import { CompanyRagSyncService } from './company-rag-sync.service';
 import type { RagSourceType } from '@company-os/types';
 import { z } from 'zod';
 
@@ -35,7 +36,7 @@ const buildContextPackSchema = z.object({
   includeCampaignContext: z.boolean().default(true),
 });
 
-@Controller('api/admin/rag')
+@Controller('admin/rag')
 export class RagAdminController {
   constructor(
     private readonly documentService: DocumentService,

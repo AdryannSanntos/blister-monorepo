@@ -28,7 +28,7 @@ import {
   regenerateAgentRunSchema,
 } from '@company-os/types';
 
-@Controller('api/agents/runs')
+@Controller('agents/runs')
 export class AgentRunsController {
   constructor(
     private readonly companyService: CompanyService,

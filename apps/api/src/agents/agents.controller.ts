@@ -17,7 +17,7 @@ import { WorkflowEngineService } from './runtime/workflow-engine.service';
 import { AgentRunService } from './runtime/agent-run.service';
 import { runAgentRequestSchema } from '@company-os/types';
 
-@Controller('api/agents')
+@Controller('agents')
 export class AgentsController {
   constructor(
     private readonly companyService: CompanyService,

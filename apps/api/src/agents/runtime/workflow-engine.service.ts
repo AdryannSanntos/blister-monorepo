@@ -6,6 +6,7 @@ import { AgentRegistryService } from './agent-registry.service';
 import { StepContextFactory } from './step-context.factory';
 import { CreditStepInterceptor } from './credit-step.interceptor';
 import { AgentSseService } from './agent-sse.service';
+import { CompanyRagSyncService } from '../../rag/company-rag-sync.service';
 import type { AgentRunStatus } from '@company-os/types';
 
 type AgentRunExecuteTask = typeof agentRunExecute;

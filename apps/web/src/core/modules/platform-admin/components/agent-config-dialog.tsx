@@ -1,0 +1,357 @@
+"use client";
+
+import type { AiModel, PlatformAgentAdminItem } from "@company-os/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Badge } from "src/core/shared/components/ui/badge";
+import { Button } from "src/core/shared/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "src/core/shared/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "src/core/shared/components/ui/form";
+import { Input } from "src/core/shared/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "src/core/shared/components/ui/select";
+import { Switch } from "src/core/shared/components/ui/switch";
+import { z } from "zod";
+
+import {
+  useAiModels,
+  useUpdateAgentPolicy,
+  useUpdatePipeline,
+} from "../hooks/use-ai-catalog";
+
+const schema = z.object({
+  modelId: z.string().min(1),
+  markupMultiplier: z.coerce.number().positive(),
+  minCostPerRun: z.union([z.coerce.number().positive(), z.literal("")]).optional(),
+  policyEnabled: z.boolean(),
+  pipelineEnabled: z.boolean(),
+  sortOrder: z.coerce.number().int().min(0),
+});
+
+type AgentConfigFormInput = z.input<typeof schema>;
+type AgentConfigFormOutput = z.output<typeof schema>;
+
+type AgentConfigDialogProps = {
+  agent: PlatformAgentAdminItem | null;
+  allAgents: PlatformAgentAdminItem[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+function filterModelsForAgent(
+  agent: PlatformAgentAdminItem,
+  models: AiModel[],
+): AiModel[] {
+  const enabledModels = models.filter((model) => model.isEnabled);
+  const needsImage = agent.capabilities.includes("image_generation");
+  const needsText =
+    agent.capabilities.includes("text_generation") ||
+    agent.capabilities.includes("strategy") ||
+    agent.capabilities.includes("planning") ||
+    agent.capabilities.includes("analysis");
+
+  return enabledModels.filter((model) => {
+    const caps = model.capabilities ?? [];
+    if (needsImage && caps.includes("image")) return true;
+    if (needsText && (caps.includes("text") || caps.includes("structured_output")))
+      return true;
+    return !needsImage && !needsText;
+  });
+}
+
+export function AgentConfigDialog({
+  agent,
+  allAgents,
+  open,
+  onOpenChange,
+}: AgentConfigDialogProps) {
+  const t = useTranslations("platformAdmin.agentsTab");
+  const { data: models = [] } = useAiModels();
+  const { mutateAsync: updatePolicy, isPending: isSavingPolicy } =
+    useUpdateAgentPolicy(agent?.agentId ?? "");
+  const { mutateAsync: updatePipeline, isPending: isSavingPipeline } =
+    useUpdatePipeline();
+
+  const form = useForm<AgentConfigFormInput, unknown, AgentConfigFormOutput>({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+    defaultValues: {
+      modelId: "",
+      markupMultiplier: 1.2,
+      minCostPerRun: "",
+      policyEnabled: true,
+      pipelineEnabled: true,
+      sortOrder: 0,
+    },
+  });
+
+  const compatibleModels = useMemo(
+    () => (agent ? filterModelsForAgent(agent, models) : []),
+    [agent, models],
+  );
+
+  useEffect(() => {
+    if (!agent || !open) return;
+
+    form.reset({
+      modelId: agent.policy?.modelId ?? compatibleModels[0]?.id ?? "",
+      markupMultiplier: agent.policy
+        ? parseFloat(agent.policy.markupMultiplier)
+        : 1.2,
+      minCostPerRun: agent.policy?.minCostPerRun
+        ? parseFloat(agent.policy.minCostPerRun)
+        : "",
+      policyEnabled: agent.policy?.isEnabled ?? true,
+      pipelineEnabled: agent.isEnabled,
+      sortOrder: agent.sortOrder,
+    });
+  }, [agent, compatibleModels, form, open]);
+
+  const handleSubmit = async (data: AgentConfigFormOutput) => {
+    if (!agent) return;
+
+    try {
+      await updatePolicy({
+        modelId: data.modelId,
+        markupMultiplier: data.markupMultiplier,
+        minCostPerRun:
+          data.minCostPerRun === "" || data.minCostPerRun == null
+            ? null
+            : data.minCostPerRun,
+        isEnabled: data.policyEnabled,
+      });
+
+      await updatePipeline({
+        agents: allAgents.map((item) => ({
+          agentId: item.agentId,
+          sortOrder: item.agentId === agent.agentId ? data.sortOrder : item.sortOrder,
+          isEnabled:
+            item.agentId === agent.agentId ? data.pipelineEnabled : item.isEnabled,
+        })),
+      });
+
+      toast.success(t("saveSuccess"));
+      onOpenChange(false);
+    } catch {
+      toast.error(t("saveError"));
+    }
+  };
+
+  if (!agent) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="animate-in fade-in zoom-in-95 sm:max-w-[560px]">
+        <DialogHeader>
+          <DialogTitle>{t("dialogTitle", { label: agent.label })}</DialogTitle>
+          <DialogDescription>
+            {agent.description ?? t("dialogDescriptionFallback")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-2">
+            {agent.capabilities.map((capability) => (
+              <Badge key={capability} variant="secondary">
+                {capability}
+              </Badge>
+            ))}
+          </div>
+
+          {agent.estimatedCreditCost != null ? (
+            <p className="text-sm text-[var(--fg-secondary)]">
+              {t("estimatedCost", {
+                amount: agent.estimatedCreditCost.toFixed(2),
+              })}
+            </p>
+          ) : null}
+
+          <div className="rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-sunken)] p-4">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
+              {t("stepsTitle")}
+            </p>
+            <ol className="flex flex-col gap-2">
+              {agent.steps.map((step, index) => (
+                <li
+                  key={step.key}
+                  className="flex items-center justify-between gap-3 text-sm"
+                >
+                  <span>
+                    {index + 1}. {step.label}
+                  </span>
+                  <Badge variant="outline">{step.type}</Badge>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormField
+              control={form.control}
+              name="modelId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("modelLabel")}</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("modelPlaceholder")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {compatibleModels.map((model) => (
+                        <SelectItem key={model.id} value={model.id}>
+                          {model.name} ({model.externalId})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="markupMultiplier"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("markupLabel")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        {...field}
+                        value={field.value as number}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="minCostPerRun"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("minCostLabel")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.0001"
+                        {...field}
+                        value={field.value as number | ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="sortOrder"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("sortOrderLabel")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      value={field.value as number}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex flex-col gap-3">
+              <FormField
+                control={form.control}
+                name="policyEnabled"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between gap-3">
+                    <FormLabel className="mt-0">{t("policyEnabledLabel")}</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pipelineEnabled"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between gap-3">
+                    <FormLabel className="mt-0">
+                      {t("pipelineEnabledLabel")}
+                    </FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                {t("cancelButton")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSavingPolicy || isSavingPipeline}
+              >
+                {isSavingPolicy || isSavingPipeline
+                  ? t("saving")
+                  : t("saveButton")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

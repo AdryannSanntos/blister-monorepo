@@ -91,6 +91,37 @@ export const updatePipelineSchema = z.object({
 });
 export type UpdatePipelineDto = z.infer<typeof updatePipelineSchema>;
 
+export const platformAgentStepSchema = z.object({
+  key: z.string(),
+  label: z.string(),
+  type: z.string(),
+});
+export type PlatformAgentStep = z.infer<typeof platformAgentStepSchema>;
+
+export const platformAgentPolicyViewSchema = z.object({
+  modelId: z.string(),
+  modelName: z.string().nullable(),
+  modelExternalId: z.string().nullable(),
+  markupMultiplier: z.string(),
+  minCostPerRun: z.string().nullable(),
+  isEnabled: z.boolean(),
+});
+export type PlatformAgentPolicyView = z.infer<typeof platformAgentPolicyViewSchema>;
+
+export const platformAgentAdminItemSchema = z.object({
+  agentId: z.string(),
+  label: z.string(),
+  description: z.string().nullable(),
+  icon: z.string().nullable(),
+  capabilities: z.array(z.string()),
+  isEnabled: z.boolean(),
+  estimatedCreditCost: z.number().nullable(),
+  sortOrder: z.number(),
+  policy: platformAgentPolicyViewSchema.nullable(),
+  steps: z.array(platformAgentStepSchema),
+});
+export type PlatformAgentAdminItem = z.infer<typeof platformAgentAdminItemSchema>;
+
 export const platformCreditSettingsSchema = z.object({
   freeTierAmount: z.string(),
   currency: z.string(),

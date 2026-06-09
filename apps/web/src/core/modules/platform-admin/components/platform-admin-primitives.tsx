@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
+  Bot,
   ChartColumn,
   Coins,
   Cpu,
@@ -59,6 +60,14 @@ export function usePlatformAdminNavItems(): PlatformAdminNavItem[] {
         description: t("supportDescription"),
         titleKey: "supportCard.title",
         descriptionKey: "supportCard.description",
+      },
+      {
+        value: "agents",
+        label: t("agents"),
+        icon: Bot,
+        description: t("agentsDescription"),
+        titleKey: "agentsPage.title",
+        descriptionKey: "agentsPage.description",
       },
       {
         value: "ai-catalog",

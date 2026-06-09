@@ -6,3 +6,5 @@ export * from './ingestion.service';
 export * from './retrieval.service';
 export * from './context-pack.service';
 export * from './rag-events.service';
+export * from './company-rag-sync.service';
+export * from './brand-brain.serializer';

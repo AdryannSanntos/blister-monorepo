@@ -8,6 +8,8 @@ import type {
   CreateAiModelDto,
   CreateAiProviderDto,
   PipelineAgentConfig,
+  PlatformAgentAdminItem,
+  UpdateAgentPolicyDto,
   UpdatePipelineDto,
 } from "@company-os/types";
 
@@ -75,6 +77,43 @@ export function useCreateModel() {
   });
 }
 
+export function usePlatformAgentsOverview() {
+  const enabled = usePlatformQueryEnabled();
+
+  return useQuery<PlatformAgentAdminItem[]>({
+    queryKey: ["platform", "agents", "overview"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<PlatformAgentAdminItem[]>(
+        "/platform/agents/overview",
+      );
+      return data;
+    },
+    enabled,
+  });
+}
+
+export function useUpdateAgentPolicy(agentId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<AgentPolicy, Error, UpdateAgentPolicyDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.patch<AgentPolicy>(
+        `/platform/agents/policies/${agentId}`,
+        dto,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "overview"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "policies"],
+      });
+    },
+  });
+}
+
 export function useAgentPolicies() {
   const enabled = usePlatformQueryEnabled();
 
@@ -116,9 +155,13 @@ export function useUpdatePipeline() {
       );
       return data;
     },
-    onSuccess: () =>
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["platform", "agents", "pipeline"],
-      }),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "overview"],
+      });
+    },
   });
 }

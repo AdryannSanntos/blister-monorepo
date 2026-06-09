@@ -5,6 +5,12 @@ import { DocumentService } from './document.service';
 import { ChunkService } from './chunk.service';
 import { EmbeddingRepository } from './embedding.repository';
 import type { RagDocument, Prisma } from '../generated/prisma';
+import {
+  hashRagContent,
+  serializeBrandBrain,
+  serializeCampaign,
+  type BrandBrainSerializeInput,
+} from './brand-brain.serializer';
 
 export interface IngestResult {
   documentId: string;
@@ -13,15 +19,7 @@ export interface IngestResult {
   status: 'created' | 'updated' | 'skipped';
 }
 
-export interface BrandBrainContent {
-  brandVoice: string;
-  niche?: string | null;
-  description?: string | null;
-  targetAudience?: string | null;
-  mainProducts?: string | null;
-  differentiators?: string | null;
-  visualStyle?: string | null;
-}
+export type BrandBrainContent = BrandBrainSerializeInput;
 
 @Injectable()
 export class IngestionService {
@@ -44,7 +42,7 @@ export class IngestionService {
     );
 
     if (existing && !dto.forceReindex) {
-      const contentHash = this.hashContent(dto.content);
+      const contentHash = hashRagContent(dto.content);
       if ((existing.metadata as { contentHash?: string })?.contentHash === contentHash) {
         this.logger.debug(`Document unchanged, skipping: ${existing.id}`);
         return {
@@ -73,7 +71,7 @@ export class IngestionService {
       campaignId: dto.campaignId,
       metadata: {
         ...dto.metadata,
-        contentHash: this.hashContent(dto.content),
+        contentHash: hashRagContent(dto.content),
       },
     });
 
@@ -115,7 +113,7 @@ export class IngestionService {
     brandProfileId: string,
     content: BrandBrainContent,
   ): Promise<IngestResult> {
-    const textContent = this.serializeBrandBrain(content);
+    const textContent = serializeBrandBrain(content);
 
     return this.ingest({
       companyId,
@@ -140,7 +138,7 @@ export class IngestionService {
     objective: string,
     context?: string | null,
   ): Promise<IngestResult> {
-    const textContent = this.serializeCampaign(name, objective, context);
+    const textContent = serializeCampaign({ name, objective, context });
 
     return this.ingest({
       companyId,
@@ -253,46 +251,6 @@ export class IngestionService {
     }
   }
 
-  private serializeBrandBrain(content: BrandBrainContent): string {
-    const parts: string[] = [];
-
-    if (content.brandVoice) {
-      parts.push(`## Tom de Voz\n${content.brandVoice}`);
-    }
-    if (content.niche) {
-      parts.push(`## Nicho\n${content.niche}`);
-    }
-    if (content.description) {
-      parts.push(`## Descrição\n${content.description}`);
-    }
-    if (content.targetAudience) {
-      parts.push(`## Público-Alvo\n${content.targetAudience}`);
-    }
-    if (content.mainProducts) {
-      parts.push(`## Produtos/Serviços Principais\n${content.mainProducts}`);
-    }
-    if (content.differentiators) {
-      parts.push(`## Diferenciais\n${content.differentiators}`);
-    }
-    if (content.visualStyle) {
-      parts.push(`## Estilo Visual\n${content.visualStyle}`);
-    }
-
-    return parts.join('\n\n');
-  }
-
-  private serializeCampaign(
-    name: string,
-    objective: string,
-    context?: string | null,
-  ): string {
-    let content = `# Campanha: ${name}\n\n## Objetivo\n${objective}`;
-    if (context) {
-      content += `\n\n## Contexto\n${context}`;
-    }
-    return content;
-  }
-
   private serializeAgentLearning(
     agentId: string,
     approved: boolean,
@@ -311,8 +269,4 @@ export class IngestionService {
     return content;
   }
 
-  private hashContent(content: string): string {
-    const crypto = require('node:crypto');
-    return crypto.createHash('sha256').update(content).digest('hex').slice(0, 32);
-  }
 }

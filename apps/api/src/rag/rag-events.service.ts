@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { tasks } from '@trigger.dev/sdk';
-import type { brandBrainIndex } from '../../trigger/brand-brain-index';
+import type { companyRagSync } from '../../trigger/company-rag-sync';
 import type { ragIndexDocument } from '../../trigger/rag-index-document';
 
-type BrandBrainIndexTask = typeof brandBrainIndex;
+type CompanyRagSyncTask = typeof companyRagSync;
 type RagIndexDocumentTask = typeof ragIndexDocument;
 
 @Injectable()
@@ -11,18 +11,25 @@ export class RagEventsService {
   private readonly logger = new Logger(RagEventsService.name);
 
   async triggerBrandBrainIndex(companyId: string, brandProfileId: string): Promise<string> {
-    this.logger.log(`Triggering Brand Brain indexing for company ${companyId}`);
+    return this.triggerCompanySync(companyId);
+  }
+
+  async triggerCompanySync(
+    companyId: string,
+    options?: { campaignId?: string },
+  ): Promise<string> {
+    this.logger.log(`Triggering company RAG sync for ${companyId}`);
 
     try {
-      const handle = await tasks.trigger<BrandBrainIndexTask>('brand-brain-index', {
+      const handle = await tasks.trigger<CompanyRagSyncTask>('company-rag-sync', {
         companyId,
-        brandProfileId,
+        campaignId: options?.campaignId,
       });
 
-      this.logger.log(`Brand Brain index job triggered: ${handle.id}`);
+      this.logger.log(`Company RAG sync job triggered: ${handle.id}`);
       return handle.id;
     } catch (error) {
-      this.logger.error('Failed to trigger Brand Brain indexing', error);
+      this.logger.error('Failed to trigger company RAG sync', error);
       throw error;
     }
   }

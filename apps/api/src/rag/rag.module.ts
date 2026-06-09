@@ -8,6 +8,7 @@ import { IngestionService } from './ingestion.service';
 import { RetrievalService } from './retrieval.service';
 import { ContextPackService } from './context-pack.service';
 import { RagEventsService } from './rag-events.service';
+import { CompanyRagSyncService } from './company-rag-sync.service';
 import { RagAdminController } from './rag-admin.controller';
 
 @Module({
@@ -21,7 +22,14 @@ import { RagAdminController } from './rag-admin.controller';
     RetrievalService,
     ContextPackService,
     RagEventsService,
+    CompanyRagSyncService,
   ],
-  exports: [IngestionService, RetrievalService, ContextPackService, RagEventsService],
+  exports: [
+    IngestionService,
+    RetrievalService,
+    ContextPackService,
+    RagEventsService,
+    CompanyRagSyncService,
+  ],
 })
 export class RagModule {}

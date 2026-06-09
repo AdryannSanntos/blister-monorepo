@@ -2,8 +2,11 @@
 
 import { Tabs, TabsList, TabsTrigger } from "src/core/shared/components/ui/tabs";
 
+import {
+  isPlatformAdminTabValue,
+  usePlatformAdminTab,
+} from "../hooks/use-platform-admin-tab";
 import { usePlatformAdminNavItems } from "./platform-admin-primitives";
-import { usePlatformAdminTab } from "../hooks/use-platform-admin-tab";
 
 export function PlatformAdminTabs() {
   const [tab, setTab] = usePlatformAdminTab();
@@ -12,7 +15,9 @@ export function PlatformAdminTabs() {
   return (
     <Tabs
       value={tab}
-      onValueChange={(value) => void setTab(value)}
+      onValueChange={(value) => {
+        if (isPlatformAdminTabValue(value)) void setTab(value);
+      }}
       className="w-full"
     >
       <TabsList variant="pill" className="flex-wrap justify-start">

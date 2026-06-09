@@ -29,6 +29,7 @@ import {
   updateRagSettingsSchema,
 } from './dto/ai-catalog.dto';
 import { ModelsService } from './models.service';
+import { PlatformAgentsService } from './platform-agents.service';
 import { PlatformCompaniesService } from './platform-companies.service';
 import { PlatformSettingsService } from './platform-settings.service';
 import { PoliciesService } from './policies.service';
@@ -42,6 +43,7 @@ export class AiCatalogController {
     private readonly providers: ProvidersService,
     private readonly models: ModelsService,
     private readonly policies: PoliciesService,
+    private readonly platformAgents: PlatformAgentsService,
     private readonly settings: PlatformSettingsService,
     private readonly companies: PlatformCompaniesService,
   ) {}
@@ -101,6 +103,12 @@ export class AiCatalogController {
   @Delete('ai/models/:id')
   deleteModel(@Param('id') id: string) {
     return this.models.delete(id);
+  }
+
+  // ── Agents (platform admin) ────────────────────────────────────────────────
+  @Get('agents/overview')
+  listAgentsOverview() {
+    return this.platformAgents.getAdminOverview();
   }
 
   // ── Policies ───────────────────────────────────────────────────────────────

@@ -31,9 +31,9 @@ import { InternalEventsController } from './internal-events.controller';
     CompanyModule,
   ],
   controllers: [
-    AgentsController,
-    AgentRunsController,
     AgentCatalogController,
+    AgentRunsController,
+    AgentsController,
     InternalEventsController,
   ],
   providers: [

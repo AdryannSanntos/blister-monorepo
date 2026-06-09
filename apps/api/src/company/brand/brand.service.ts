@@ -32,6 +32,7 @@ export const RAG_EVENTS_SERVICE = 'RAG_EVENTS_SERVICE';
 
 export interface RagEventsServiceInterface {
   triggerBrandBrainIndex(companyId: string, brandProfileId: string): Promise<string>;
+  triggerCompanySync(companyId: string, options?: { campaignId?: string }): Promise<string>;
 }
 
 @Injectable()
@@ -97,12 +98,17 @@ export class BrandService {
   }
 
   private async triggerRagIndexing(companyId: string, brandProfileId: string): Promise<void> {
-    if (this.ragEvents) {
-      try {
-        await this.ragEvents.triggerBrandBrainIndex(companyId, brandProfileId);
-      } catch (error) {
-        console.error('Failed to trigger RAG indexing for brand brain', error);
+    if (!this.ragEvents) return;
+
+    try {
+      if (this.ragEvents.triggerCompanySync) {
+        await this.ragEvents.triggerCompanySync(companyId);
+        return;
       }
+
+      await this.ragEvents.triggerBrandBrainIndex(companyId, brandProfileId);
+    } catch (error) {
+      console.error('Failed to trigger RAG sync for company', error);
     }
   }
 
@@ -143,6 +149,9 @@ export class BrandService {
       resourceId: profile.id,
       metadata: { variant: dto.variant },
     });
+
+    await this.triggerRagIndexing(companyId, profile.id);
+
     return this.serialize(updated);
   }
 
@@ -176,6 +185,9 @@ export class BrandService {
       resourceId: profile.id,
       metadata: { assetId: nextAsset.id },
     });
+
+    await this.triggerRagIndexing(companyId, profile.id);
+
     return this.serialize(updated);
   }
 
@@ -202,6 +214,9 @@ export class BrandService {
       resourceId: profile.id,
       metadata: { assetId },
     });
+
+    await this.triggerRagIndexing(companyId, profile.id);
+
     return this.serialize(updated);
   }
 

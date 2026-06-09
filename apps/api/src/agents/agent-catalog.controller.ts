@@ -16,7 +16,7 @@ const updateAgentConfigSchema = z.object({
   sortOrder: z.number().int().min(0).optional(),
 });
 
-@Controller('api/agents/catalog')
+@Controller('agents/catalog')
 export class AgentCatalogController {
   constructor(private readonly registry: AgentRegistryService) {}
 
