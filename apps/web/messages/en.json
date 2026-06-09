@@ -614,12 +614,11 @@
     },
     "businessSection": {
       "title": "About the business",
-      "description": "Name, industry, and what your company does",
+      "description": "Short description",
       "companyName": "Company name",
       "companyNamePlaceholder": "e.g. Ana's Bakery",
       "niche": "Industry / business type",
       "nichePlaceholder": "e.g. Artisan bakery",
-      "description": "Short description",
       "descriptionPlaceholder": "What your company does in a few words"
     },
     "audienceSection": {
@@ -720,7 +719,89 @@
     }
   },
   "credits": {
-    "balanceTitle": "Balance: US$ {amount}"
+    "balanceTitle": "Balance: US$ {amount}",
+    "page": {
+      "title": "Credits",
+      "description": "Manage your balance, track usage, and understand the cost of each generation type.",
+      "primaryAction": "Create post",
+      "lowBalanceAlert": {
+        "title": "Low balance",
+        "description": "Some generations may be blocked. Consider recharging before starting new creations."
+      },
+      "kpi": {
+        "balance": {
+          "label": "Available balance",
+          "hint": "Credits ready to use for your generations.",
+          "lowHint": "Critical balance. New generations may be blocked."
+        },
+        "spent": {
+          "label": "Usage (30 days)",
+          "hint": "Total debited over the last 4 weeks."
+        },
+        "transactions": {
+          "label": "Transactions",
+          "hint": "Latest entries shown in the history below."
+        },
+        "status": {
+          "label": "Account status",
+          "active": "Active",
+          "activeHint": "Your account is ready to generate content.",
+          "low": "Attention",
+          "lowHint": "Recharge to avoid interruptions in your creations."
+        }
+      },
+      "costs": {
+        "title": "Cost per generation",
+        "description": "Estimated values per creation type. Actual debit depends on size and complexity.",
+        "footnote": "Values are estimates. Final cost is calculated when each generation completes."
+      },
+      "howItWorks": {
+        "title": "How credits work",
+        "description": "Understand the debit flow and when your balance is updated.",
+        "step1": {
+          "title": "Balance per company",
+          "description": "Each company has an independent balance. New accounts receive initial free credits."
+        },
+        "step2": {
+          "title": "Debit per generation",
+          "description": "Credits are debited when each generation completes, based on the actual operation cost."
+        },
+        "step3": {
+          "title": "No balance, no generation",
+          "description": "When balance runs out, new creations are blocked until you recharge."
+        }
+      },
+      "recharge": {
+        "title": "Recharge credits",
+        "description": "Add balance to your account to keep creating without interruptions.",
+        "comingSoon": "Coming soon",
+        "phaseHint": "Product phase 2",
+        "body": "Automatic card recharge will be available soon. For now, contact support for manual adjustments.",
+        "button": "Recharge (coming soon)"
+      },
+      "ledger": {
+        "title": "Transaction history",
+        "description": "Track credits added, generation debits, and adjustments to your account.",
+        "noDescription": "No description",
+        "columns": {
+          "date": "Date",
+          "type": "Type",
+          "description": "Description",
+          "amount": "Amount",
+          "balanceAfter": "Balance after"
+        },
+        "types": {
+          "CREDIT": "Credit",
+          "DEBIT": "Debit",
+          "ADJUST": "Adjust",
+          "REFUND": "Refund"
+        },
+        "empty": {
+          "title": "No transactions yet",
+          "description": "When you generate content or receive credits, history will appear here."
+        }
+      }
+    }
   },
   "agents": {
     "strategist": "Plan content",
@@ -748,11 +829,23 @@
     "postSuggestion2": "Single promo post with brand identity",
     "postSuggestion3": "Educational carousel about the service",
     "postPreview": {
-      "copyHtml": "Copy HTML",
-      "copied": "Copied!",
       "slideCounter": "Slide {current} of {total}",
       "previousSlide": "Previous slide",
-      "nextSlide": "Next slide"
+      "nextSlide": "Next slide",
+      "viewPost": "View post",
+      "postTitle": "Generated post",
+      "openPreview": "Open post preview",
+      "modalTitle": "Post preview",
+      "selectSlides": "Select slides",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "selectSlide": "Select slide {number}",
+      "slideLabel": "View slide {number}",
+      "formatLabel": "Download format",
+      "downloadSelected": "Download selected",
+      "downloadAll": "Download all",
+      "downloading": "Downloading…",
+      "downloadFailed": "Could not download slides."
     },
     "status": {
       "queued": "Queued",
@@ -782,7 +875,10 @@
     "chat": {
       "greeting": "Where should we start?",
       "subtitle": "Describe what you need in one sentence. Pick a suggestion below or write your own.",
-      "newChat": "New chat"
+      "newChat": "New chat",
+      "thinking": "Working on it…",
+      "working": "Thinking",
+      "greetingLead": "Let's make something great"
     },
     "input": {
       "title": "What do you need from {agent}?",
@@ -808,6 +904,11 @@
       "cancel": "Cancel",
       "continue": "Continue",
       "submitting": "Sending..."
+    },
+    "designPlan": {
+      "approve": "Approve and build post",
+      "approveSuccess": "Plan approved — building the post",
+      "approveError": "Could not approve the plan"
     },
     "surface": {
       "subtitle": "Describe what you need and review the result here",
@@ -932,17 +1033,6 @@
         "status": "Status",
         "date": "Date"
       }
-    },
-    "creditsPage": {
-      "title": "Credits",
-      "description": "Track your balance and estimated cost per generation type.",
-      "balanceTitle": "Available balance",
-      "balanceHint": "Credits are debited after each completed generation.",
-      "lowBalanceHint": "Low balance. Some generations may be blocked.",
-      "costsTitle": "Estimated cost per generation",
-      "rechargeTitle": "Recharge credits",
-      "rechargeDescription": "Automatic recharge will be available soon.",
-      "rechargeButton": "Recharge (coming soon)"
     }
   },
   "platformAdmin": {

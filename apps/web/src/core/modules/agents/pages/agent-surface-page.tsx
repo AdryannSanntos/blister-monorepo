@@ -3,17 +3,10 @@
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-
-import { Button } from "@/core/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/core/shared/components/ui/card";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
-import {
-  Tabs,
-  TabsContent,
-} from "src/core/shared/components/ui/tabs";
+import { Tabs, TabsContent } from "src/core/shared/components/ui/tabs";
+import { Button } from "@/core/shared/components/ui/button";
+import { Card, CardContent } from "@/core/shared/components/ui/card";
 
 import { AgentHistoryPanel } from "../components/agent-history-panel";
 import { AgentSurfaceTabs } from "../components/agent-surface-tabs";
@@ -111,7 +104,7 @@ export function AgentSurfacePage({ agentId }: AgentSurfacePageProps) {
             data-testid="agent-chat-tab"
             className="mt-0 animate-in fade-in duration-200 focus-visible:outline-none"
           >
-            <Card className="overflow-hidden border-[var(--line-default)] bg-[var(--bg-base)]">
+            <Card className="overflow-hidden rounded-[var(--r-xl)] border-[var(--line-subtle)] bg-[var(--bg-base)] shadow-[var(--shadow-sm)] hover:border-[var(--line-subtle)]">
               <div className="h-[calc(100svh-19rem)] min-h-[480px]">
                 <BlisterAgentChat
                   config={config}

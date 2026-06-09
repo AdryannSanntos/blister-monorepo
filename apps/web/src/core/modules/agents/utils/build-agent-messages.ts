@@ -1,3 +1,4 @@
+/** @deprecated Chat UI now uses build-messages-from-blocks.ts (block streaming). */
 import type {
   AgentRunStatusDto,
   AgentRunStepDto,
@@ -24,6 +25,7 @@ import {
 import {
   formatPostOnboardingAnswer,
   getAnsweredPostOnboardingFields,
+  isPostDesignPlanAwaitingApproval,
   isPostOnboardingInProgress,
 } from "./post-onboarding-fields";
 
@@ -31,6 +33,7 @@ const STEP_LABELS: Record<string, string> = {
   retrieve_context: "Analisando o Cérebro da Marca",
   collect_brief: "Definindo o briefing",
   plan_design: "Planejando o design",
+  approve_design_plan: "Aguardando aprovação do plano",
   prepare_context: "Reunindo contexto da marca",
   generate_caption: "Escrevendo a legenda",
   generate_prompt: "Planejando a imagem",
@@ -56,6 +59,11 @@ export type ReviewCallbacks = {
 export type ClarificationCallbacks = {
   onAnswer: (answer: QuestionAnswer) => void;
   submitLabel?: string;
+};
+
+export type PlanApprovalCallbacks = {
+  onApprove: () => void;
+  approveLabel: string;
 };
 
 export type QuestionAnswerHandler = (payload: {
@@ -343,6 +351,7 @@ const POST_WORKFLOW_STEP_KEYS = [
   "retrieve_context",
   "collect_brief",
   "plan_design",
+  "approve_design_plan",
   "generate_post",
   "validate_output",
 ] as const;
@@ -525,7 +534,7 @@ function buildPostAgentMessages({
     }),
   ];
 
-  if (run.status === "PAUSED") {
+  if (run.status === "PAUSED" && !isPostDesignPlanAwaitingApproval(run)) {
     assistantTailParts.push(
       buildClarificationPart(
         run,
@@ -779,6 +788,7 @@ export function resolveChatStatus(
   if (isStarting || optimisticUserInput?.trim()) return "submitted";
   if (!run) return "ready";
   if (run.status === "FAILED") return "error";
+  if (run.status === "PAUSED") return "ready";
   if (isRunActive(run.status)) {
     return run.status === "RUNNING" ? "streaming" : "submitted";
   }

@@ -10,6 +10,8 @@ import {
   createTriggerLlmProvider,
   type ExecutionDependencies,
 } from '../src/agents/runtime/kernel';
+import { AgentRunBlockService } from '../src/agents/runtime/agent-run-block.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 const prisma = new PrismaClient();
 
@@ -75,6 +77,10 @@ export const agentRunExecute = task({
 
     const useLiveProviders = mode !== 'inline-stub' && hasAnyLlmProviderConfigured();
 
+    const agentRunBlockService = new AgentRunBlockService(
+      prisma as unknown as PrismaService,
+    );
+
     const deps: ExecutionDependencies = {
       prisma,
       contextPackBuilder: null,
@@ -82,6 +88,7 @@ export const agentRunExecute = task({
       imageProvider: useLiveProviders ? createTriggerImageProvider(prisma) : null,
       assetResolver: useLiveProviders ? createTriggerAssetResolver() : null,
       eventPublisher: createEventPublisher(),
+      blocks: agentRunBlockService,
       stubMode: mode === 'inline-stub',
     };
 

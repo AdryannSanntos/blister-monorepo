@@ -32,17 +32,21 @@ function extractJsonObject(content: string): Record<string, unknown> | null {
   }
 }
 
-function parseDesignPlan(response: LlmCompletion, expectedSlides: number) {
+function parseDesignPlan(
+  response: LlmCompletion,
+  expectedSlides: number,
+  brandVisualStyle?: string,
+) {
   const raw = response.structuredOutput ?? extractJsonObject(response.content);
   if (!raw) return null;
-  return normalizeDesignPlanInput(raw, expectedSlides);
+  return normalizeDesignPlanInput(raw, expectedSlides, { brandVisualStyle });
 }
 
 /**
  * Planning step. Uses the blister-social-post-uiux skill to produce a detailed
  * design plan before HTML generation. Output is consumed by generate_post.
  */
-export const planDesignStep: CustomStepExecutor = async (context, deps, onChunk) => {
+export const planDesignStep: CustomStepExecutor = async (context, deps) => {
   if (!deps.llmProvider) {
     return {
       type: 'FAILED',
@@ -54,6 +58,7 @@ export const planDesignStep: CustomStepExecutor = async (context, deps, onChunk)
   const brief = buildPostBrief(context.inputPayload);
   const userInput =
     typeof context.inputPayload.userInput === 'string' ? context.inputPayload.userInput : '';
+  const brandVisualStyle = context.brandProfile?.visualStyle?.trim() || undefined;
 
   try {
     const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver);
@@ -79,6 +84,7 @@ export const planDesignStep: CustomStepExecutor = async (context, deps, onChunk)
       structuredOutputSchema: postDesignPlanSchema,
     };
 
+    const thinking = deps.message.thinking();
     let lastResponse: LlmCompletion | null = null;
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
@@ -88,13 +94,26 @@ export const planDesignStep: CustomStepExecutor = async (context, deps, onChunk)
       };
 
       const response =
-        onChunk && deps.llmProvider.completeStream
-          ? await deps.llmProvider.completeStream(params, onChunk)
+        deps.llmProvider.completeStream
+          ? await deps.llmProvider.completeStream(params, (delta) => thinking.delta(delta))
           : await deps.llmProvider.complete(params);
 
       lastResponse = response;
-      const plan = parseDesignPlan(response, brief.slidesCount);
+      const plan = parseDesignPlan(response, brief.slidesCount, brandVisualStyle);
       if (plan) {
+        await thinking.end();
+        await deps.message.planning({
+          summary: plan.creativeDirection,
+          plan: {
+            id: context.runId,
+            title: 'Plano de design',
+            summary: plan.creativeDirection,
+            status: 'awaiting_approval',
+          },
+          designPlan: plan,
+          brandVisualStyle: plan.brandVisualStyle,
+        });
+
         return {
           type: 'CONTINUE',
           output: { designPlan: plan },
@@ -105,6 +124,8 @@ export const planDesignStep: CustomStepExecutor = async (context, deps, onChunk)
         };
       }
     }
+
+    await thinking.end();
 
     const hasContent =
       typeof lastResponse?.content === 'string' && lastResponse.content.length > 0;

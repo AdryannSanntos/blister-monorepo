@@ -1,4 +1,4 @@
-import type { AgentRunEventType, BlockType } from '@company-os/types';
+import type { AgentRunBlockDto, AgentRunEventType, BlockType } from '@company-os/types';
 import type { EventPublisher } from './run-event.publisher';
 import type { RunEventPayload } from './types';
 
@@ -30,6 +30,7 @@ export interface AgentRunBlockServiceLike {
     status: 'streaming' | 'complete' | 'error',
     payload?: Record<string, unknown>,
   ): Promise<void>;
+  listByRun(agentRunId: string): Promise<AgentRunBlockDto[]>;
 }
 
 export interface BlockEmitterOptions {
@@ -38,6 +39,11 @@ export interface BlockEmitterOptions {
   companyId: string;
   publisher: EventPublisher;
   blocks: AgentRunBlockServiceLike;
+  /**
+   * Seeds the internal message counter so messageIds stay unique across resume
+   * invocations (where a fresh emitter is constructed for the same run).
+   */
+  messageStartIndex?: number;
 }
 
 type BlockStatus = 'streaming' | 'complete' | 'error';
@@ -57,19 +63,79 @@ export interface WorkingBlock {
 }
 
 export class BlockEmitter {
-  private messageCounter = 0;
+  private messageCounter: number;
 
-  constructor(private readonly opts: BlockEmitterOptions) {}
+  constructor(private readonly opts: BlockEmitterOptions) {
+    this.messageCounter = opts.messageStartIndex ?? 0;
+  }
 
   openMessage(role: 'assistant' | 'user' = 'assistant'): MessageHandle {
     const messageId = `${this.opts.runId}:m${this.messageCounter++}`;
     const handle = new MessageHandle(this.opts, messageId, role);
     return handle;
   }
+
+  /**
+   * Persists and emits a complete user turn as a single text block. Used by the
+   * kernel to record the user's input (or submitted form answers) in the chat
+   * thread before the assistant message begins.
+   */
+  async userMessage(text: string): Promise<void> {
+    const messageId = `${this.opts.runId}:m${this.messageCounter++}`;
+    const blockId = `${messageId}:b0`;
+
+    await this.opts.publisher.publish({
+      runId: this.opts.runId,
+      agentId: this.opts.agentId,
+      companyId: this.opts.companyId,
+      type: 'message_start',
+      data: { messageId, role: 'user' },
+      timestamp: new Date(),
+    });
+
+    await this.opts.publisher.publish({
+      runId: this.opts.runId,
+      agentId: this.opts.agentId,
+      companyId: this.opts.companyId,
+      type: 'block_start',
+      data: { messageId, blockId, blockType: 'text', index: 0 },
+      timestamp: new Date(),
+    });
+    await this.opts.blocks.save({
+      agentRunId: this.opts.runId,
+      messageId,
+      blockId,
+      role: 'user',
+      blockType: 'text',
+      index: 0,
+      text,
+      status: 'streaming',
+    });
+
+    await this.opts.publisher.publish({
+      runId: this.opts.runId,
+      agentId: this.opts.agentId,
+      companyId: this.opts.companyId,
+      type: 'block_end',
+      data: { messageId, blockId, status: 'complete', payload: { text } },
+      timestamp: new Date(),
+    });
+    await this.opts.blocks.finalize(this.opts.runId, messageId, blockId, 'complete', { text });
+
+    await this.opts.publisher.publish({
+      runId: this.opts.runId,
+      agentId: this.opts.agentId,
+      companyId: this.opts.companyId,
+      type: 'message_end',
+      data: { messageId },
+      timestamp: new Date(),
+    });
+  }
 }
 
 class MessageHandle {
   private blockCounter = 0;
+  private outputEmitted = false;
 
   constructor(
     private readonly opts: BlockEmitterOptions,
@@ -216,8 +282,15 @@ class MessageHandle {
   }
 
   async output(payload: Record<string, unknown>): Promise<void> {
+    this.outputEmitted = true;
     const { blockId } = await this.startBlock('output');
     await this.endBlock(blockId, 'complete', payload);
+  }
+
+  /** Emits an output block only when no step has already done so. */
+  async ensureOutput(payload: Record<string, unknown>): Promise<void> {
+    if (this.outputEmitted) return;
+    await this.output(payload);
   }
 
   async error(message: string, payload?: Record<string, unknown>): Promise<void> {

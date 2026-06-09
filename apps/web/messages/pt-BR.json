@@ -614,12 +614,11 @@
     },
     "businessSection": {
       "title": "Sobre o negócio",
-      "description": "Nome, segmento e o que sua empresa faz",
+      "description": "Descrição curta",
       "companyName": "Nome da empresa",
       "companyNamePlaceholder": "Ex: Confeitaria da Ana",
       "niche": "Segmento / tipo de negócio",
       "nichePlaceholder": "Ex: Confeitaria artesanal",
-      "description": "Descrição curta",
       "descriptionPlaceholder": "O que sua empresa faz em poucas palavras"
     },
     "audienceSection": {
@@ -720,7 +719,89 @@
     }
   },
   "credits": {
-    "balanceTitle": "Saldo: US$ {amount}"
+    "balanceTitle": "Saldo: US$ {amount}",
+    "page": {
+      "title": "Créditos",
+      "description": "Gerencie seu saldo, acompanhe consumo e entenda o custo de cada tipo de geração.",
+      "primaryAction": "Criar post",
+      "lowBalanceAlert": {
+        "title": "Saldo baixo",
+        "description": "Algumas gerações podem ser bloqueadas. Considere recarregar antes de iniciar novas criações."
+      },
+      "kpi": {
+        "balance": {
+          "label": "Saldo disponível",
+          "hint": "Créditos prontos para usar nas suas gerações.",
+          "lowHint": "Saldo crítico. Novas gerações podem ser bloqueadas."
+        },
+        "spent": {
+          "label": "Consumo (30 dias)",
+          "hint": "Total debitado nas últimas 4 semanas."
+        },
+        "transactions": {
+          "label": "Movimentações",
+          "hint": "Últimas entradas exibidas no histórico abaixo."
+        },
+        "status": {
+          "label": "Status da conta",
+          "active": "Ativo",
+          "activeHint": "Sua conta está pronta para gerar conteúdo.",
+          "low": "Atenção",
+          "lowHint": "Recarregue para evitar interrupções nas criações."
+        }
+      },
+      "costs": {
+        "title": "Custo por geração",
+        "description": "Valores estimados por tipo de criação. O débito real depende do tamanho e complexidade.",
+        "footnote": "Os valores são estimativas. O custo final é calculado ao concluir cada geração."
+      },
+      "howItWorks": {
+        "title": "Como funcionam os créditos",
+        "description": "Entenda o fluxo de débito e quando seu saldo é atualizado.",
+        "step1": {
+          "title": "Saldo por empresa",
+          "description": "Cada empresa tem um saldo independente. Novas contas recebem créditos iniciais gratuitos."
+        },
+        "step2": {
+          "title": "Débito por geração",
+          "description": "Créditos são debitados ao concluir cada geração, com base no custo real da operação."
+        },
+        "step3": {
+          "title": "Sem saldo, sem geração",
+          "description": "Quando o saldo acaba, novas criações ficam bloqueadas até você recarregar."
+        }
+      },
+      "recharge": {
+        "title": "Recarregar créditos",
+        "description": "Adicione saldo à sua conta para continuar criando sem interrupções.",
+        "comingSoon": "Em breve",
+        "phaseHint": "Fase 2 do produto",
+        "body": "A recarga automática por cartão estará disponível em breve. Por enquanto, entre em contato com o suporte para ajustes manuais.",
+        "button": "Recarregar (em breve)"
+      },
+      "ledger": {
+        "title": "Histórico de movimentações",
+        "description": "Acompanhe créditos adicionados, débitos de gerações e ajustes na sua conta.",
+        "noDescription": "Sem descrição",
+        "columns": {
+          "date": "Data",
+          "type": "Tipo",
+          "description": "Descrição",
+          "amount": "Valor",
+          "balanceAfter": "Saldo após"
+        },
+        "types": {
+          "CREDIT": "Crédito",
+          "DEBIT": "Débito",
+          "ADJUST": "Ajuste",
+          "REFUND": "Estorno"
+        },
+        "empty": {
+          "title": "Nenhuma movimentação ainda",
+          "description": "Quando você gerar conteúdo ou receber créditos, o histórico aparecerá aqui."
+        }
+      }
+    }
   },
   "agents": {
     "strategist": "Planejar conteúdo",
@@ -748,11 +829,23 @@
     "postSuggestion2": "Post único de promoção com a identidade da marca",
     "postSuggestion3": "Carrossel educativo sobre o serviço",
     "postPreview": {
-      "copyHtml": "Copiar HTML",
-      "copied": "Copiado!",
       "slideCounter": "Slide {current} de {total}",
       "previousSlide": "Slide anterior",
-      "nextSlide": "Próximo slide"
+      "nextSlide": "Próximo slide",
+      "viewPost": "Ver post",
+      "postTitle": "Post gerado",
+      "openPreview": "Abrir pré-visualização do post",
+      "modalTitle": "Pré-visualização do post",
+      "selectSlides": "Selecionar slides",
+      "selectAll": "Selecionar todos",
+      "deselectAll": "Desmarcar todos",
+      "selectSlide": "Selecionar slide {number}",
+      "slideLabel": "Ver slide {number}",
+      "formatLabel": "Formato de download",
+      "downloadSelected": "Baixar selecionados",
+      "downloadAll": "Baixar todos",
+      "downloading": "Baixando…",
+      "downloadFailed": "Não foi possível baixar os slides."
     },
     "status": {
       "queued": "Na fila",
@@ -782,7 +875,10 @@
     "chat": {
       "greeting": "Por onde começamos?",
       "subtitle": "Descreva em uma frase o que você precisa. Você pode usar uma sugestão abaixo ou escrever do seu jeito.",
-      "newChat": "Nova conversa"
+      "newChat": "Nova conversa",
+      "thinking": "Trabalhando nisso…",
+      "working": "Pensando",
+      "greetingLead": "Vamos criar algo bom"
     },
     "input": {
       "title": "O que você precisa de {agent}?",
@@ -808,6 +904,11 @@
       "cancel": "Cancelar",
       "continue": "Continuar",
       "submitting": "Enviando..."
+    },
+    "designPlan": {
+      "approve": "Aprovar e montar post",
+      "approveSuccess": "Plano aprovado — montando o post",
+      "approveError": "Não foi possível aprovar o plano"
     },
     "surface": {
       "subtitle": "Descreva o que precisa e revise o resultado aqui",
@@ -932,17 +1033,6 @@
         "status": "Status",
         "date": "Data"
       }
-    },
-    "creditsPage": {
-      "title": "Créditos",
-      "description": "Acompanhe seu saldo e custo estimado por tipo de geração.",
-      "balanceTitle": "Saldo disponível",
-      "balanceHint": "Créditos são debitados a cada geração concluída.",
-      "lowBalanceHint": "Saldo baixo. Algumas gerações podem ser bloqueadas.",
-      "costsTitle": "Custo estimado por geração",
-      "rechargeTitle": "Recarregar créditos",
-      "rechargeDescription": "Recarga automática estará disponível em breve.",
-      "rechargeButton": "Recarregar (em breve)"
     }
   },
   "platformAdmin": {

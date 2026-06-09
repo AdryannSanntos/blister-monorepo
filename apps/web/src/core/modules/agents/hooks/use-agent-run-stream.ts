@@ -5,10 +5,23 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 import {
+  hydrateFromBlocks,
+  isBlockEvent,
+  reduceBlockEvent,
+} from "../utils/agent-block-reducer";
+import {
   applyAgentRunEvent,
   shouldKeepRunStreamOpen,
 } from "../utils/apply-agent-run-event";
 import type { AgentRunWithSteps } from "./use-agent-run";
+
+const BLOCK_EVENT_TYPES: AgentRunEvent["type"][] = [
+  "message_start",
+  "block_start",
+  "block_delta",
+  "block_end",
+  "message_end",
+];
 
 export function useAgentRunStream(
   runId: string | null,
@@ -31,12 +44,27 @@ export function useAgentRunStream(
     const handlePayload = (payload: AgentRunEvent) => {
       queryClient.setQueryData<AgentRunWithSteps>(
         ["agent-run", runId],
-        (current) => applyAgentRunEvent(current, payload) ?? current,
+        (current) => {
+          if (!current) return current;
+
+          let next = applyAgentRunEvent(current, payload) ?? current;
+
+          if (isBlockEvent(payload.type)) {
+            const baseState =
+              next.blockChatState ??
+              hydrateFromBlocks(next.blocks ?? [], next.run.status);
+            next = {
+              ...next,
+              blockChatState: reduceBlockEvent(baseState, payload),
+            };
+          }
+
+          return next;
+        },
       );
 
-      // Keep the stream open while paused so resume/step events still arrive.
-      // Closing on run_paused left the UI stuck until a full page reload.
       if (payload.type === "run_completed" || payload.type === "run_failed") {
+        void queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
         queryClient.setQueryData<{ runs: unknown[]; total: number } | undefined>(
           ["agent-runs", agentId, 20],
           (current) => {
@@ -86,13 +114,10 @@ export function useAgentRunStream(
 
     const eventTypes: AgentRunEvent["type"][] = [
       "run_started",
-      "step_started",
-      "step_completed",
-      "step_failed",
       "run_completed",
       "run_failed",
       "run_paused",
-      "output_chunk",
+      ...BLOCK_EVENT_TYPES,
     ];
 
     eventSource.onmessage = handleEvent;

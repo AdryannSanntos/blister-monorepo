@@ -7,6 +7,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CompanyRagSyncService } from '../../rag/company-rag-sync.service';
 import { StorageService } from '../../storage/storage.service';
 import { AgentRegistryService } from './agent-registry.service';
+import { AgentRunBlockService } from './agent-run-block.service';
 import { AgentSseService } from './agent-sse.service';
 import { CreditStepInterceptor } from './credit-step.interceptor';
 import { InProcessEventPublisher } from './in-process-event.publisher';
@@ -58,6 +59,7 @@ export class WorkflowEngineService {
     private readonly companyRagSync: CompanyRagSyncService,
     private readonly storage: StorageService,
     private readonly config: ConfigService,
+    private readonly agentRunBlockService: AgentRunBlockService,
   ) {}
 
   /**
@@ -115,6 +117,7 @@ export class WorkflowEngineService {
       imageProvider: stubMode ? null : createTriggerImageProvider(this.prisma),
       assetResolver: stubMode ? null : this.buildAssetResolver(),
       eventPublisher: new InProcessEventPublisher(this.sseService),
+      blocks: this.agentRunBlockService,
       stubMode,
     };
 

@@ -2,21 +2,21 @@
 
 import {
   IconCheck,
-  IconChevronLeft,
-  IconChevronRight,
-  IconCopy,
   IconPencil,
   IconRefresh,
   IconSparkles,
   IconX,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { Markdown } from "@/components/agent-elements/markdown";
 import type { CustomToolRendererProps } from "@/components/agent-elements/types";
 import { cn } from "@/components/agent-elements/utils/cn";
 import { Button } from "@/core/shared/components/ui/button";
+
+import { PostPreviewCard } from "./post-preview-card";
+import { PostPreviewModal } from "./post-preview-modal";
 
 function readMarkdown(
   input: CustomToolRendererProps["input"],
@@ -212,66 +212,10 @@ type BlisterPostInput = {
   onEdit?: () => void;
 };
 
-/**
- * Renders a single slide's HTML inside a sandboxed iframe at the platform's
- * real dimensions, scaled down (never up) to fit the chat bubble while keeping
- * the exact aspect ratio. `sandbox=""` blocks scripts/forms but still renders
- * HTML, CSS and images.
- */
-function SlidePreview({
-  html,
-  width,
-  height,
-}: {
-  html: string;
-  width: number;
-  height: number;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-
-  useEffect(() => {
-    const element = containerRef.current;
-    if (!element) return;
-    const update = () => setContainerWidth(element.clientWidth);
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
-  const scale = containerWidth > 0 ? Math.min(1, containerWidth / width) : 0;
-
-  return (
-    <div ref={containerRef} className="flex w-full justify-center">
-      {scale > 0 ? (
-        <div
-          className="relative overflow-hidden rounded-[var(--r-md)] border border-[var(--line-subtle)] bg-white"
-          style={{ width: width * scale, height: height * scale }}
-        >
-          <iframe
-            title="Pré-visualização do post"
-            sandbox=""
-            srcDoc={html}
-            style={{
-              width,
-              height,
-              border: "none",
-              transform: `scale(${scale})`,
-              transformOrigin: "top left",
-            }}
-          />
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
 export const BlisterPostRenderer = memo(function BlisterPostRenderer({
   input,
 }: CustomToolRendererProps) {
   const t = useTranslations("agents.review");
-  const tp = useTranslations("agents.postPreview");
   const data = (input ?? {}) as BlisterPostInput;
 
   const slides = (data.slides ?? []).flatMap((slide) =>
@@ -285,23 +229,11 @@ export const BlisterPostRenderer = memo(function BlisterPostRenderer({
     data.height && data.height > 0 ? data.height : DEFAULT_POST_HEIGHT;
   const hashtags = data.hashtags ?? [];
 
-  const [current, setCurrent] = useState(0);
-  const [copied, setCopied] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const safeIndex = Math.min(current, Math.max(0, total - 1));
-
-  const handleCopy = useCallback(() => {
-    const html = slides[safeIndex];
-    if (!html) return;
-    void navigator.clipboard?.writeText(html);
-    setCopied(true);
-  }, [safeIndex, slides]);
-
-  useEffect(() => {
-    if (!copied) return;
-    const timeout = setTimeout(() => setCopied(false), 2000);
-    return () => clearTimeout(timeout);
-  }, [copied]);
+  const handleOpenPreview = useCallback(() => {
+    setModalOpen(true);
+  }, []);
 
   const reviewStatus = data.reviewStatus;
   const isClosed =
@@ -317,90 +249,27 @@ export const BlisterPostRenderer = memo(function BlisterPostRenderer({
 
   if (total === 0) return null;
 
-  const navButtonClass =
-    "inline-flex size-7 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] text-[var(--fg-secondary)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-40";
-
   return (
     <div className="flex animate-in fade-in slide-in-from-bottom-1 duration-[var(--dur-base)]">
       <div className="flex w-full max-w-[88%] flex-col gap-3">
-        <div className="overflow-hidden rounded-an-message border border-[var(--line-subtle)] bg-[var(--bg-base)]">
-          <div className="flex items-center justify-between gap-2 px-5 pt-3">
-            <div className="flex items-center gap-1.5">
-              <IconSparkles className="size-3.5 shrink-0 text-[var(--accent)]" />
-              <span className="text-xs font-medium text-[var(--fg-tertiary)]">
-                {[data.platform, `${width}×${height}`]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="inline-flex items-center gap-1.5 rounded-[var(--r-md)] px-2 py-1 text-xs font-medium text-[var(--fg-tertiary)] transition-colors duration-[var(--dur-fast)] hover:bg-[var(--bg-hover)] hover:text-[var(--fg-secondary)]"
-            >
-              {copied ? (
-                <IconCheck className="size-3.5" />
-              ) : (
-                <IconCopy className="size-3.5" />
-              )}
-              {copied ? tp("copied") : tp("copyHtml")}
-            </button>
-          </div>
+        <PostPreviewCard
+          slides={slides}
+          platform={data.platform}
+          width={width}
+          height={height}
+          caption={data.caption}
+          hashtags={hashtags}
+          onOpenPreview={handleOpenPreview}
+        />
 
-          <div className="px-5 pb-3 pt-2">
-            <SlidePreview
-              html={slides[safeIndex]}
-              width={width}
-              height={height}
-            />
-
-            {total > 1 ? (
-              <div className="mt-3 flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setCurrent((value) => Math.max(0, value - 1))}
-                  disabled={safeIndex === 0}
-                  className={navButtonClass}
-                  aria-label={tp("previousSlide")}
-                >
-                  <IconChevronLeft className="size-4" />
-                </button>
-                <span className="text-xs font-medium text-[var(--fg-tertiary)]">
-                  {tp("slideCounter", {
-                    current: safeIndex + 1,
-                    total,
-                  })}
-                </span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCurrent((value) => Math.min(total - 1, value + 1))
-                  }
-                  disabled={safeIndex >= total - 1}
-                  className={navButtonClass}
-                  aria-label={tp("nextSlide")}
-                >
-                  <IconChevronRight className="size-4" />
-                </button>
-              </div>
-            ) : null}
-          </div>
-
-          {data.caption || hashtags.length > 0 ? (
-            <div className="border-t border-[var(--line-subtle)] px-5 py-3 text-[14px] text-[var(--fg-primary)]">
-              {data.caption ? (
-                <p className="whitespace-pre-wrap">{data.caption}</p>
-              ) : null}
-              {hashtags.length > 0 ? (
-                <p className="mt-2 text-[13px] text-[var(--accent)]">
-                  {hashtags
-                    .map((tag) => (tag.startsWith("#") ? tag : `#${tag}`))
-                    .join(" ")}
-                </p>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+        <PostPreviewModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          slides={slides}
+          platform={data.platform}
+          width={width}
+          height={height}
+        />
 
         {data.canReview && !isClosed ? (
           <div className="flex flex-wrap items-center gap-2">

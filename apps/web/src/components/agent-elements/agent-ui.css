@@ -35,7 +35,7 @@
   --an-input-border-color: var(--line-default);
   --an-input-color: var(--fg-primary);
   --an-input-placeholder-color: var(--fg-quaternary);
-  --an-input-focus-outline: transparent;
+  --an-input-focus-outline: color-mix(in oklch, var(--primary) 55%, transparent);
   --an-context-padding: 12px;
 
   /* Send/Stop */

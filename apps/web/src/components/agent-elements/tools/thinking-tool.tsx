@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useToolComplete } from "../hooks/use-tool-complete";
 import type { StepState, TimelineStep } from "../types/timeline";
 import {
@@ -20,7 +20,7 @@ export function ThinkingCollapsed({
   step,
   state,
   onComplete,
-  defaultOpen,
+  defaultOpen = false,
   expanded,
   onToggleExpand,
 }: ThinkingCollapsedProps) {
@@ -28,11 +28,27 @@ export function ThinkingCollapsed({
 
   useToolComplete(isRunning, step.duration, onComplete);
 
+  // Self-managed open state so the row stays a single controlled component
+  // across the running → complete transition. It is forced open while the
+  // agent is thinking, then collapses once done and becomes toggleable. A
+  // parent may still drive it explicitly via `expanded`/`onToggleExpand`.
+  const isControlled = expanded !== undefined;
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const resolvedOpen = isControlled ? Boolean(expanded) : localOpen;
+  const open = isRunning ? true : resolvedOpen;
+  const handleToggle = isRunning
+    ? undefined
+    : isControlled
+      ? onToggleExpand
+      : () => setLocalOpen((prev) => !prev);
+
   const statusLabel = step.thoughtContent?.split("\n")[0]?.trim();
   const previewBody = step.thoughtContent?.includes("\n")
     ? step.thoughtContent.split("\n").slice(1).join("\n").trim()
     : "";
-  const hasExpandableBody = Boolean(previewBody || (isRunning && step.thoughtContent));
+  const hasExpandableBody = Boolean(
+    previewBody || (isRunning && step.thoughtContent),
+  );
 
   return (
     <ToolRowBase
@@ -40,9 +56,8 @@ export function ThinkingCollapsed({
       completeLabel={statusLabel || "Thought"}
       isAnimating={isRunning}
       expandable={hasExpandableBody}
-      defaultOpen={defaultOpen}
-      expanded={isRunning ? true : expanded}
-      onToggleExpand={isRunning ? undefined : onToggleExpand}
+      expanded={open}
+      onToggleExpand={handleToggle}
     >
       <div className="max-h-[175px] overflow-y-auto">
         <p className="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -102,6 +117,30 @@ export const ThinkingTool = memo(function ThinkingTool({
     onComplete = () => {};
   } else {
     return null;
+  }
+
+  const thoughtContent = step.thoughtContent?.trim() ?? "";
+  const looksLikeJson =
+    thoughtContent.startsWith("{") ||
+    thoughtContent.startsWith("[") ||
+    (() => {
+      try {
+        JSON.parse(thoughtContent);
+        return true;
+      } catch {
+        return false;
+      }
+    })();
+
+  if (stepState === "complete") {
+    return null;
+  }
+
+  if (looksLikeJson) {
+    step = {
+      ...step,
+      thoughtContent: undefined,
+    };
   }
 
   return (

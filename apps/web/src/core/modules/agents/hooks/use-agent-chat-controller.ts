@@ -30,10 +30,15 @@ import {
   parseCopywriterOutput,
   parsePostOutput,
 } from "../utils/agent-run-helpers";
+import { mergeBlockState, hydrateFromBlocks } from "../utils/agent-block-reducer";
 import {
-  buildThreadMessages,
   resolveChatStatus,
+  type PlanApprovalCallbacks,
 } from "../utils/build-agent-messages";
+import { isPostDesignPlanAwaitingApproval } from "../utils/post-onboarding-fields";
+import {
+  buildThreadMessagesFromBlocks,
+} from "../utils/build-messages-from-blocks";
 import { formatAgentOutputMarkdown } from "../utils/format-agent-output-markdown";
 import {
   createChatId,
@@ -72,6 +77,7 @@ const createQueuedRunPlaceholder = (
       completedAt: null,
     },
     steps: [],
+    blocks: [],
   };
 };
 
@@ -129,8 +135,15 @@ export function useAgentChatController(agentId: AgentUiId) {
   });
 
   const sessionRuns = useMemo(
-    () =>
-      sessionRunIds
+    () => {
+      const seenRunIds = new Set<string>();
+
+      return sessionRunIds
+        .filter((sessionRunId) => {
+          if (seenRunIds.has(sessionRunId)) return false;
+          seenRunIds.add(sessionRunId);
+          return true;
+        })
         .map((sessionRunId) => {
           const fromQuery = sessionQueries.find(
             (query) => query.data?.run.id === sessionRunId,
@@ -147,18 +160,17 @@ export function useAgentChatController(agentId: AgentUiId) {
 
           return null;
         })
-        .filter((entry): entry is AgentRunWithSteps => Boolean(entry)),
+        .filter((entry): entry is AgentRunWithSteps => Boolean(entry));
+    },
     [queryClient, runData, runId, sessionQueries, sessionRunIds],
   );
 
   useEffect(() => {
     if (!chatId || !runId) return;
-    if (!sessionRunIds.includes(runId)) {
-      setSessionRunIds((previous) =>
-        previous.length === 0 ? [runId] : [...previous, runId],
-      );
-    }
-  }, [chatId, runId, sessionRunIds, setSessionRunIds]);
+    setSessionRunIds((previous) =>
+      previous.includes(runId) ? previous : [...previous, runId],
+    );
+  }, [chatId, runId, setSessionRunIds]);
 
   const startRunMutation = useStartAgentRun(agentId);
   const resumeRunMutation = useResumeAgentRun(runId, agentId);
@@ -169,7 +181,6 @@ export function useAgentChatController(agentId: AgentUiId) {
   const regenerateMutation = useRegenerateAgentRun(runId, agentId);
 
   const activeRun = runData?.run ?? null;
-  const steps = runData?.steps ?? [];
 
   const streamEnabled = Boolean(runId && shouldKeepRunStreamOpen(activeRun));
   useAgentRunStream(runId, agentId, streamEnabled);
@@ -235,19 +246,55 @@ export function useAgentChatController(agentId: AgentUiId) {
 
   const threadRuns = useMemo(() => {
     if (sessionRuns.length > 0) {
-      return sessionRuns.map((entry) => ({
-        run: entry.run,
-        steps: entry.steps,
-        streamingText: entry.streamingText,
-      }));
+      return sessionRuns.map((entry) => {
+        const persisted = hydrateFromBlocks(entry.blocks ?? [], entry.run.status);
+        const messages = mergeBlockState(
+          persisted,
+          entry.blockChatState,
+        ).messages;
+        const hasAssistantBlocks = messages.some(
+          (message) => message.role === "assistant" && message.blocks.length > 0,
+        );
+        const hasLiveAssistantTimeline = Boolean(
+          entry.blockChatState?.messages.some(
+            (message) => message.role === "assistant" && message.blocks.length > 0,
+          ),
+        );
+
+        return {
+          run: entry.run,
+          messages,
+          hasBlocks: hasAssistantBlocks || hasLiveAssistantTimeline,
+        };
+      });
     }
 
     if (activeRun) {
-      return [{ run: activeRun, steps, streamingText: runData?.streamingText }];
+      const persisted = hydrateFromBlocks(runData?.blocks ?? [], activeRun.status);
+      const messages = mergeBlockState(
+        persisted,
+        runData?.blockChatState,
+      ).messages;
+      const hasAssistantBlocks = messages.some(
+        (message) => message.role === "assistant" && message.blocks.length > 0,
+      );
+      const hasLiveAssistantTimeline = Boolean(
+        runData?.blockChatState?.messages.some(
+          (message) => message.role === "assistant" && message.blocks.length > 0,
+        ),
+      );
+
+      return [
+        {
+          run: activeRun,
+          messages,
+          hasBlocks: hasAssistantBlocks || hasLiveAssistantTimeline,
+        },
+      ];
     }
 
     return [];
-  }, [activeRun, runData?.streamingText, sessionRuns, steps]);
+  }, [activeRun, runData?.blockChatState, runData?.blocks, sessionRuns]);
 
   const submitPausedFormAnswer = useCallback(
     async (answer: QuestionAnswer) => {
@@ -308,9 +355,47 @@ export function useAgentChatController(agentId: AgentUiId) {
     [activeRun, queryClient, resumeRunMutation, runId, t],
   );
 
+  const submitDesignPlanApproval = useCallback(async () => {
+    if (!runId || !activeRun || !isPostDesignPlanAwaitingApproval(activeRun)) {
+      return;
+    }
+
+    const formData = { designPlanApproved: true };
+
+    queryClient.setQueryData<AgentRunWithSteps>(
+      ["agent-run", runId],
+      (current) => {
+        if (!current) return current;
+        const mergedInput = {
+          ...(current.run.inputPayload as Record<string, unknown>),
+          ...formData,
+        };
+        return {
+          ...current,
+          run: {
+            ...current.run,
+            status: "QUEUED",
+            inputPayload: mergedInput,
+            pauseReason: null,
+            pauseFormSchema: null,
+          },
+        };
+      },
+    );
+
+    try {
+      await resumeRunMutation.mutateAsync({ formData });
+      toast.success(tAgent("designPlan.approveSuccess"));
+    } catch {
+      queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
+      toast.error(tAgent("designPlan.approveError"));
+    }
+  }, [activeRun, queryClient, resumeRunMutation, runId, tAgent]);
+
   const clarificationCallbacks = useMemo(
     () =>
-      activeRun?.status === "PAUSED"
+      activeRun?.status === "PAUSED" &&
+      !isPostDesignPlanAwaitingApproval(activeRun)
         ? {
             onAnswer: (answer: QuestionAnswer) => {
               void submitPausedFormAnswer(answer);
@@ -318,7 +403,20 @@ export function useAgentChatController(agentId: AgentUiId) {
             submitLabel: tAgent("clarification.continue"),
           }
         : null,
-    [activeRun?.status, submitPausedFormAnswer, tAgent],
+    [activeRun, submitPausedFormAnswer, tAgent],
+  );
+
+  const planApprovalCallbacks = useMemo<PlanApprovalCallbacks | null>(
+    () =>
+      activeRun && isPostDesignPlanAwaitingApproval(activeRun)
+        ? {
+            onApprove: () => {
+              void submitDesignPlanApproval();
+            },
+            approveLabel: tAgent("designPlan.approve"),
+          }
+        : null,
+    [activeRun, submitDesignPlanApproval, tAgent],
   );
 
   const status: ChatStatus = resolveChatStatus(
@@ -546,25 +644,30 @@ export function useAgentChatController(agentId: AgentUiId) {
   );
 
   const messages = useMemo(
-    () =>
-      buildThreadMessages({
+    () => {
+      const built = buildThreadMessagesFromBlocks({
         agentId,
         runs: threadRuns,
         activeRunId: runId,
         optimisticUserInput,
         reviewCallbacks,
         clarificationCallbacks,
+        planApprovalCallbacks,
         questionAnswerHandler,
         rejectQuestion: pendingFlow === "reject",
         regenerateQuestion: pendingFlow === "regenerate",
         editQuestion: editCaption ? { caption: editCaption } : null,
-      }),
+      });
+
+      return built;
+    },
     [
       agentId,
       clarificationCallbacks,
       editCaption,
       optimisticUserInput,
       pendingFlow,
+      planApprovalCallbacks,
       questionAnswerHandler,
       reviewCallbacks,
       runId,

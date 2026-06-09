@@ -105,6 +105,17 @@ export const getPendingPostOnboardingField = (
   return pending ?? null;
 };
 
+export const DESIGN_PLAN_APPROVAL_PAUSE_TYPE = "design_plan_approval";
+
+export const isPostDesignPlanAwaitingApproval = (run: AgentRunStatusDto): boolean => {
+  if (run.status !== "PAUSED" || run.currentStepKey !== "approve_design_plan") {
+    return false;
+  }
+
+  const schema = run.pauseFormSchema as { type?: string } | null;
+  return schema?.type === DESIGN_PLAN_APPROVAL_PAUSE_TYPE;
+};
+
 export const isPostOnboardingInProgress = (run: AgentRunStatusDto): boolean => {
   if (run.status === "PAUSED" && run.currentStepKey === "collect_brief") {
     return true;

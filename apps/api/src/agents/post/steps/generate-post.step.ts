@@ -201,7 +201,7 @@ function parsePostLlmOutput(
  * assets + platform dimensions) and asks the model for the HTML/CSS slides,
  * caption and hashtags. Combines the result with the brief metadata.
  */
-export const generatePostStep: CustomStepExecutor = async (context, deps, onChunk) => {
+export const generatePostStep: CustomStepExecutor = async (context, deps) => {
   if (!deps.llmProvider) {
     return {
       type: 'FAILED',
@@ -213,6 +213,17 @@ export const generatePostStep: CustomStepExecutor = async (context, deps, onChun
   const brief = buildPostBrief(context.inputPayload);
   const userInput =
     typeof context.inputPayload.userInput === 'string' ? context.inputPayload.userInput : '';
+
+  const designPlanApproved =
+    context.inputPayload.designPlanApproved === true ||
+    context.previousStepsOutput.approve_design_plan?.designPlanApproved === true;
+
+  if (!designPlanApproved) {
+    return {
+      type: 'FAILED',
+      error: 'O plano de design ainda não foi aprovado.',
+    };
+  }
 
   const planRaw = context.previousStepsOutput.plan_design?.designPlan;
   const designPlanResult = postDesignPlanZod.safeParse(planRaw);
@@ -249,6 +260,7 @@ export const generatePostStep: CustomStepExecutor = async (context, deps, onChun
       structuredOutputSchema: postLlmOutputSchema,
     };
 
+    const progress = deps.message.thinking();
     let lastResponse: LlmCompletion | null = null;
 
     for (let attempt = 1; attempt <= MAX_PARSE_ATTEMPTS; attempt += 1) {
@@ -257,26 +269,30 @@ export const generatePostStep: CustomStepExecutor = async (context, deps, onChun
         temperature: attempt === 1 ? TEMPERATURE : 0.35,
       };
 
-      const response =
-        onChunk && deps.llmProvider.completeStream
-          ? await deps.llmProvider.completeStream(params, onChunk)
-          : await deps.llmProvider.complete(params);
+      const response = deps.llmProvider.completeStream
+        ? await deps.llmProvider.completeStream(params, (delta) => progress.delta(delta))
+        : await deps.llmProvider.complete(params);
 
       lastResponse = response;
       const output = parsePostLlmOutput(response, userInput, brief);
       if (output) {
+        await progress.end();
+        const postOutput = {
+          agentId: 'post',
+          platform: brief.platformLabel,
+          format: brief.format,
+          width: brief.width,
+          height: brief.height,
+          slidesCount: brief.slidesCount,
+          slides: output.slides,
+          caption: output.caption,
+          hashtags: output.hashtags,
+        };
+        await deps.message.output(postOutput);
+
         return {
           type: 'CONTINUE',
-          output: {
-            platform: brief.platformLabel,
-            format: brief.format,
-            width: brief.width,
-            height: brief.height,
-            slidesCount: brief.slidesCount,
-            slides: output.slides,
-            caption: output.caption,
-            hashtags: output.hashtags,
-          },
+          output: postOutput,
           llmModel: response.model,
           tokensInput: response.tokensInput,
           tokensOutput: response.tokensOutput,
@@ -284,6 +300,8 @@ export const generatePostStep: CustomStepExecutor = async (context, deps, onChun
         };
       }
     }
+
+    await progress.end();
 
     const finishReason =
       typeof lastResponse?.content === 'string' && lastResponse.content.length > 0

@@ -113,6 +113,7 @@ function formatDesignPlanForExecution(plan: PostDesignPlan): string {
   return [
     '## Plano de design aprovado (SIGA À RISCA)',
     `Direção criativa: ${plan.creativeDirection}`,
+    `Estilo visual da empresa: ${plan.brandVisualStyle}`,
     `Linguagem estética: ${plan.aestheticLanguage}`,
     `Sistema de composição: ${plan.compositionSystem}`,
     `Presença da marca: ${plan.brandPresence}`,

@@ -2,9 +2,8 @@
 
 import type { ChatStatus } from "ai";
 import type { ReactNode } from "react";
-
-import { InputBar } from "@/components/agent-elements/input-bar";
 import type { SuggestionItem } from "@/components/agent-elements/input/suggestions";
+import { InputBar } from "@/components/agent-elements/input-bar";
 import { cn } from "@/core/shared/utils";
 
 import { AgentSuggestionCards } from "./agent-suggestion-cards";
@@ -41,7 +40,7 @@ export function AgentChatComposer({
     <div
       data-testid="agent-chat-composer"
       className={cn(
-        "shrink-0 border-t border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-4 pb-4 pt-4",
+        "shrink-0 border-t border-[var(--line-subtle)] bg-[var(--bg-base)] px-4 pb-4 pt-3",
         className,
       )}
     >

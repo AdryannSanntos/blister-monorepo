@@ -117,6 +117,10 @@ const normalizeSlide = (
   return parsed.success ? parsed.data : null;
 };
 
+export type NormalizeDesignPlanOptions = {
+  brandVisualStyle?: string;
+};
+
 /**
  * Best-effort normalization so minor schema slips from the model do not fail the
  * whole planning step.
@@ -124,7 +128,12 @@ const normalizeSlide = (
 export const normalizeDesignPlanInput = (
   raw: Record<string, unknown>,
   expectedSlides: number,
+  options: NormalizeDesignPlanOptions = {},
 ): PostDesignPlan | null => {
+  const brandStyleFallback =
+    options.brandVisualStyle?.trim() ||
+    coerceString(raw.brandVisualStyle) ||
+    'Estilo visual alinhado ao Cérebro da Marca e ao briefing do usuário.';
   const slidesRaw = Array.isArray(raw.slides) ? raw.slides : [];
   const slides = slidesRaw
     .map((slide, index) => normalizeSlide(slide, index))
@@ -158,12 +167,13 @@ export const normalizeDesignPlanInput = (
   const candidate = {
     creativeDirection: coerceString(
       raw.creativeDirection,
-      'Composição profissional alinhada à marca e ao briefing.',
+      `Composição alinhada ao estilo da marca: ${brandStyleFallback}`,
     ),
+    brandVisualStyle: coerceString(raw.brandVisualStyle, brandStyleFallback),
     aestheticLanguage: pickEnum(raw.aestheticLanguage, AESTHETIC_LANGUAGE_ALIASES, 'clean'),
     compositionSystem: coerceString(
       raw.compositionSystem,
-      'Layout editorial com hierarquia clara e respiro generoso.',
+      'Sistema de composição derivado do estilo visual da marca e do objetivo do post.',
     ),
     brandPresence: pickEnum(raw.brandPresence, BRAND_PRESENCE_ALIASES, 'signature'),
     typography: {

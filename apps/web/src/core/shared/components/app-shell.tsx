@@ -10,7 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CreditBadge } from "src/core/modules/credits/components/credit-badge";
 import { UserTrigger } from "src/core/modules/dashboard/components/sidebar-triggers";
@@ -59,6 +59,13 @@ type AppShellProps = {
   navGroups: SidebarGroupDef[];
   breadcrumb: AppShellBreadcrumb;
   headerEnd?: ReactNode;
+  /**
+   * When this key becomes truthy (or changes to a different value) the sidebar
+   * auto-collapses so the surface gets full focus — used for agent pages. The
+   * collapse is contextual and intentionally does NOT overwrite the user's
+   * persisted sidebar preference; they can reopen it manually at any time.
+   */
+  focusCollapseKey?: string | null;
 };
 
 export function AppShell({
@@ -67,6 +74,7 @@ export function AppShell({
   navGroups,
   breadcrumb,
   headerEnd,
+  focusCollapseKey = null,
 }: AppShellProps) {
   const router = useRouter();
   const t = useTranslations("dashboard");
@@ -80,6 +88,20 @@ export function AppShell({
       return true;
     }
   });
+
+  // Auto-collapse the sidebar whenever the user enters (or switches between)
+  // a focus surface such as an agent page. Starts at null so a direct load /
+  // deep link onto an agent page also collapses on first paint.
+  const prevFocusCollapseKeyRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (
+      focusCollapseKey &&
+      focusCollapseKey !== prevFocusCollapseKeyRef.current
+    ) {
+      setSidebarOpen(false);
+    }
+    prevFocusCollapseKeyRef.current = focusCollapseKey;
+  }, [focusCollapseKey]);
 
   const { displayName, sessionUser, isLoading } = useDashboardData();
   const userInitials = getInitials(displayName);

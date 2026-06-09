@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { type ReactNode, useMemo } from "react";
-import { useDashboardNavGroups } from "src/core/modules/dashboard/hooks/use-dashboard-nav-groups";
 import { getDashboardAgentBreadcrumbKey } from "src/core/modules/dashboard/config/dashboard-agents";
+import { useDashboardNavGroups } from "src/core/modules/dashboard/hooks/use-dashboard-nav-groups";
 import { useHomeDestination } from "src/core/modules/workspaces/hooks/use-companies";
 import { AppShell } from "src/core/shared/components/app-shell";
 import { Button } from "src/core/shared/components/ui/button";
@@ -20,6 +20,8 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const tSidebar = useTranslations("sidebar");
   const { data: homeDestination } = useHomeDestination();
   const navGroups = useDashboardNavGroups();
+
+  const activeAgentKey = getDashboardAgentBreadcrumbKey(pathname);
 
   const currentPageTitle = useMemo(() => {
     if (pathname === "/dashboard") return null;
@@ -50,6 +52,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         homeHref: "/dashboard",
         currentPageTitle,
       }}
+      focusCollapseKey={activeAgentKey}
       headerEnd={
         homeDestination?.destination === "workspaces" ? (
           <Button variant="outline" size="sm" asChild>

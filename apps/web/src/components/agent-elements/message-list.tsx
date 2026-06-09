@@ -50,6 +50,14 @@ export type MessageListProps = {
     userMessage?: string;
   };
   toolRenderers?: Record<string, React.ComponentType<CustomToolRendererProps>>;
+  /**
+   * Optional identity avatar rendered in a left gutter beside every assistant
+   * turn. Gives the conversation a clear "who is speaking" anchor. When omitted
+   * the assistant content renders full-width (no gutter) for backward compat.
+   */
+  assistantAvatar?: React.ReactNode;
+  /** Localized label shown while the assistant is preparing its reply. */
+  planningLabel?: string;
 };
 
 const SCROLL_THRESHOLD = 80;
@@ -280,16 +288,14 @@ export const MessageList = memo(function MessageList({
   slots,
   classNames,
   toolRenderers,
+  assistantAvatar,
+  planningLabel,
 }: MessageListProps) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const contentWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerObserverRef = useRef<ResizeObserver | null>(null);
   const shouldAutoScrollRef = useRef(true);
   const prevScrollTopRef = useRef(0);
-  const lastMessageIdRef = useRef<string | null>(
-    messages[messages.length - 1]?.id ?? null,
-  );
-  const assistantSpaceActiveRef = useRef(false);
   const [activeCopyId, setActiveCopyId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -427,8 +433,6 @@ export const MessageList = memo(function MessageList({
     [messages],
   );
   const lastMessage = normalizedMessages[normalizedMessages.length - 1];
-  const lastMessageId = lastMessage?.id ?? null;
-  const lastMessageRole = lastMessage?.role ?? null;
   const lastUserMessageId = useMemo(
     () => getLastUserMessageId(normalizedMessages),
     [normalizedMessages],
@@ -449,7 +453,8 @@ export const MessageList = memo(function MessageList({
     }
   }, [lastUserMessageId, scrollToBottomSettled]);
 
-  const planningLabel = "Processing...";
+  const resolvedPlanningLabel = planningLabel ?? "Processing...";
+  const hasAvatarGutter = Boolean(assistantAvatar);
   const turns = useMemo(
     () => groupMessagesIntoTurns(normalizedMessages),
     [normalizedMessages],
@@ -462,24 +467,10 @@ export const MessageList = memo(function MessageList({
     if (lastMessage.role === "user" && !hasAssistant) return true;
     return isStreaming && !getLastAssistantHasContent(normalizedMessages);
   }, [isStreaming, normalizedMessages, turns]);
-  const isNewAssistantMessage =
-    lastMessageRole === "assistant" &&
-    Boolean(lastMessageId) &&
-    lastMessageId !== lastMessageIdRef.current;
-  const showAssistantBreathingSpace =
-    showPlanning || assistantSpaceActiveRef.current || isNewAssistantMessage;
-
-  useEffect(() => {
-    if (lastMessageRole === "assistant") {
-      if (lastMessageId && lastMessageId !== lastMessageIdRef.current) {
-        assistantSpaceActiveRef.current = true;
-      }
-    }
-    if (lastMessageRole === "user") {
-      assistantSpaceActiveRef.current = false;
-    }
-    lastMessageIdRef.current = lastMessageId;
-  }, [lastMessageId, lastMessageRole]);
+  // Reserve scroll breathing space only while waiting for the first assistant
+  // reply. Once content exists (tools, text, forms), collapse so the composer
+  // sits directly under the last message.
+  const showAssistantBreathingSpace = isStreaming && showPlanning;
 
   useLayoutEffect(() => {
     if (!showPlanning || !lastUserMessageId) return;
@@ -572,54 +563,69 @@ export const MessageList = memo(function MessageList({
                     const toolbarText = showCopyToolbar ? assistantText : "";
 
                     return (
-                      <div className="group/assistant-turn">
-                        <div className="flex flex-col gap-3">
-                          {turn.assistantMsgs.map((msg, i) => {
-                            const isLastMsg =
-                              isLastTurn && i === turn.assistantMsgs.length - 1;
-                            return (
-                              <AssistantParts
-                                key={msg.id}
-                                msg={msg}
-                                isLast={isLastMsg}
-                                isStreaming={isStreaming}
-                                suppressQuestionTool={suppressQuestionTool}
-                                ToolRendererComponent={CustomToolRenderer}
-                                toolRenderers={toolRenderers}
-                              />
-                            );
-                          })}
-                        </div>
-                        {showToolbar ? (
-                          <MessageToolbar
-                            text={toolbarText}
-                            heightClass="h-[48px] flex items-start w-full"
-                            hoverClass="group-hover/assistant-turn:opacity-100 group-hover/assistant-turn:pointer-events-auto"
-                            isVisible={activeCopyId === copyKey}
-                            alignClass="justify-start"
-                            onCopied={() => markCopied(copyKey)}
-                          />
-                        ) : activeCopyId === copyKey ? (
-                          <MessageToolbar
-                            text={toolbarText}
-                            heightClass="h-[48px] flex items-start w-full"
-                            hoverClass="group-hover/assistant-turn:opacity-100 group-hover/assistant-turn:pointer-events-auto"
-                            isVisible={true}
-                            alignClass="justify-start"
-                            onCopied={() => markCopied(copyKey)}
-                          />
+                      <div className="group/assistant-turn flex gap-3">
+                        {hasAvatarGutter ? (
+                          <div className="mt-0.5 shrink-0">
+                            {assistantAvatar}
+                          </div>
                         ) : null}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-col gap-3">
+                            {turn.assistantMsgs.map((msg, i) => {
+                              const isLastMsg =
+                                isLastTurn &&
+                                i === turn.assistantMsgs.length - 1;
+                              return (
+                                <AssistantParts
+                                  key={msg.id}
+                                  msg={msg}
+                                  isLast={isLastMsg}
+                                  isStreaming={isStreaming}
+                                  suppressQuestionTool={suppressQuestionTool}
+                                  ToolRendererComponent={CustomToolRenderer}
+                                  toolRenderers={toolRenderers}
+                                />
+                              );
+                            })}
+                          </div>
+                          {showToolbar ? (
+                            <MessageToolbar
+                              text={toolbarText}
+                              heightClass="h-[48px] flex items-start w-full"
+                              hoverClass="group-hover/assistant-turn:opacity-100 group-hover/assistant-turn:pointer-events-auto"
+                              isVisible={activeCopyId === copyKey}
+                              alignClass="justify-start"
+                              onCopied={() => markCopied(copyKey)}
+                            />
+                          ) : activeCopyId === copyKey ? (
+                            <MessageToolbar
+                              text={toolbarText}
+                              heightClass="h-[48px] flex items-start w-full"
+                              hoverClass="group-hover/assistant-turn:opacity-100 group-hover/assistant-turn:pointer-events-auto"
+                              isVisible={true}
+                              alignClass="justify-start"
+                              onCopied={() => markCopied(copyKey)}
+                            />
+                          ) : null}
+                        </div>
                       </div>
                     );
                   })()}
 
                 {isLastTurn && showPlanning && (
-                  <ToolRowBase
-                    icon={<SpiralLoader size={12} />}
-                    shimmerLabel={planningLabel}
-                    completeLabel="Done"
-                    isAnimating={true}
-                  />
+                  <div className="flex gap-3">
+                    {hasAvatarGutter ? (
+                      <div className="mt-0.5 shrink-0">{assistantAvatar}</div>
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                      <ToolRowBase
+                        icon={<SpiralLoader size={12} />}
+                        shimmerLabel={resolvedPlanningLabel}
+                        completeLabel="Done"
+                        isAnimating={true}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
             );
@@ -628,7 +634,7 @@ export const MessageList = memo(function MessageList({
         {showAssistantBreathingSpace && (
           <div
             aria-hidden="true"
-            className="min-h-[max(140px,24vh)] mx-auto max-w-an w-full"
+            className="min-h-[max(80px,12vh)] mx-auto max-w-an w-full"
           />
         )}
       </div>
@@ -701,7 +707,7 @@ function AssistantParts({
               key={`${msg.id}-text-${i}`}
               className="group/assistant-text flex animate-in fade-in slide-in-from-bottom-1 duration-[var(--dur-base)]"
             >
-              <div className="max-w-[88%] rounded-an-message border border-[var(--line-subtle)] bg-[var(--bg-base)] px-5 py-3 text-[14px] text-[var(--fg-primary)]">
+              <div className="max-w-full rounded-[var(--r-lg)] rounded-tl-[var(--r-xs)] border border-[var(--line-subtle)] bg-[var(--bg-sunken)] px-4 py-3 text-[14px] text-[var(--fg-primary)] shadow-[var(--shadow-xs)]">
                 <Markdown
                   content={text}
                   className="leading-relaxed [&_p]:leading-relaxed"

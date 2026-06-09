@@ -1,7 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AgentRegistryService } from './agent-registry.service';
-import type { AgentRunStatus, AgentRunStatusDto, AgentRunStepDto } from '@company-os/types';
+import { AgentRunBlockService } from './agent-run-block.service';
+import type {
+  AgentRunBlockDto,
+  AgentRunStatus,
+  AgentRunStatusDto,
+  AgentRunStepDto,
+} from '@company-os/types';
 import type { AgentRunStatus as PrismaAgentRunStatus, Prisma } from '../../generated/prisma';
 
 export interface ListRunsOptions {
@@ -16,6 +22,7 @@ export interface ListRunsOptions {
 export interface RunWithSteps {
   run: AgentRunStatusDto;
   steps: AgentRunStepDto[];
+  blocks: AgentRunBlockDto[];
 }
 
 @Injectable()
@@ -25,6 +32,7 @@ export class AgentRunService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly registry: AgentRegistryService,
+    private readonly agentRunBlockService: AgentRunBlockService,
   ) {}
 
   async findById(runId: string): Promise<AgentRunStatusDto | null> {
@@ -53,9 +61,12 @@ export class AgentRunService {
 
     if (!run) throw new NotFoundException('Agent run not found');
 
+    const blocks = await this.agentRunBlockService.listByRun(runId);
+
     return {
       run: this.mapRunToDto(run),
       steps: run.steps.map((step) => this.mapStepToDto(step)),
+      blocks,
     };
   }
 

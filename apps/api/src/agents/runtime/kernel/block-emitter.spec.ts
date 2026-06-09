@@ -53,6 +53,46 @@ describe('BlockEmitter', () => {
     expect(end.data.payload).toEqual({ message: 'Não foi possível concluir a geração.' });
   });
 
+  it('seeds messageId from messageStartIndex', async () => {
+    const { events } = makeDeps();
+    const em = new BlockEmitter({
+      runId: 'r1',
+      agentId: 'post',
+      companyId: 'c1',
+      publisher: { publish: jest.fn(async (e: any) => { events.push(e); }) } as any,
+      blocks: { save: jest.fn(), appendText: jest.fn(), finalize: jest.fn() } as any,
+      messageStartIndex: 2,
+    });
+    const msg = em.openMessage('assistant');
+    await msg.searching({}, 'a');
+    const start = events.find((e) => e.type === 'block_start');
+    expect(start.data.messageId).toBe('r1:m2');
+  });
+
+  it('userMessage emits full event sequence and persists user text block', async () => {
+    const { events } = makeDeps();
+    const blocks = { save: jest.fn(), appendText: jest.fn(), finalize: jest.fn() };
+    const em = new BlockEmitter({
+      runId: 'r1',
+      agentId: 'post',
+      companyId: 'c1',
+      publisher: { publish: jest.fn(async (e: any) => { events.push(e); }) } as any,
+      blocks: blocks as any,
+    });
+    await em.userMessage('olá mundo');
+    const types = events.map((e) => e.type);
+    expect(types).toEqual(['message_start', 'block_start', 'block_end', 'message_end']);
+    const start = events[0];
+    expect(start.data.role).toBe('user');
+    const blockStart = events[1];
+    expect(blockStart.data.blockType).toBe('text');
+    const blockEnd = events[2];
+    expect(blockEnd.data.status).toBe('complete');
+    expect(blocks.save).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'user', blockType: 'text', index: 0, text: 'olá mundo' }),
+    );
+  });
+
   it('assigns deterministic, ordered ids and indexes per message', async () => {
     const { events } = makeDeps();
     const em = new BlockEmitter({ runId: 'r1', agentId: 'post', companyId: 'c1', publisher: { publish: jest.fn(async (e:any)=>{events.push(e);}) } as any, blocks: { save: jest.fn(), appendText: jest.fn(), finalize: jest.fn() } as any });
@@ -64,5 +104,23 @@ describe('BlockEmitter', () => {
     expect(starts[1].data.index).toBe(1);
     expect(starts[0].data.messageId).toBe(starts[1].data.messageId);
     expect(starts[0].data.blockId).not.toBe(starts[1].data.blockId);
+  });
+
+  it('ensureOutput skips duplicate output blocks', async () => {
+    const { events, publisher, blocks } = makeDeps();
+    const em = new BlockEmitter({
+      runId: 'r1',
+      agentId: 'post',
+      companyId: 'c1',
+      publisher: publisher as any,
+      blocks: blocks as any,
+    });
+    const msg = em.openMessage('assistant');
+    await msg.output({ caption: 'first' });
+    await msg.ensureOutput({ caption: 'second' });
+    const outputStarts = events.filter(
+      (e) => e.type === 'block_start' && e.data.blockType === 'output',
+    );
+    expect(outputStarts).toHaveLength(1);
   });
 });

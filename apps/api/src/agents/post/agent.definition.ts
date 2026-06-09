@@ -46,6 +46,11 @@ export const postAgentDefinition: AgentDefinition = {
       },
     },
     {
+      key: 'approve_design_plan',
+      label: 'Aprovar plano de design',
+      type: 'clarification',
+    },
+    {
       key: 'generate_post',
       label: 'Montar o post',
       type: 'llm_call',

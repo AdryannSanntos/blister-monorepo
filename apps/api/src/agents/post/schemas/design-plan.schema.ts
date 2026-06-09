@@ -39,6 +39,7 @@ export const postSlidePlanZod = z.object({
 
 export const postDesignPlanZod = z.object({
   creativeDirection: z.string().min(1).max(800),
+  brandVisualStyle: z.string().min(1).max(500),
   aestheticLanguage: aestheticLanguageZod,
   compositionSystem: z.string().min(1).max(400),
   brandPresence: z.enum(['protagonist', 'signature', 'subtle']),
@@ -72,13 +73,18 @@ export const postDesignPlanSchema = {
       type: 'string',
       description: 'Direção criativa geral da peça em 2-4 frases objetivas',
     },
+    brandVisualStyle: {
+      type: 'string',
+      description:
+        'Estilo visual da empresa conforme Cérebro da Marca — base obrigatória de todas as decisões estéticas',
+    },
     aestheticLanguage: {
       type: 'string',
       enum: aestheticLanguageZod.options,
     },
     compositionSystem: {
       type: 'string',
-      description: 'Sistema de composição escolhido (ex: split editorial, bloco tipográfico)',
+      description: 'Sistema de composição alinhado ao estilo visual da marca e ao objetivo do post',
     },
     brandPresence: {
       type: 'string',
@@ -149,6 +155,7 @@ export const postDesignPlanSchema = {
   },
   required: [
     'creativeDirection',
+    'brandVisualStyle',
     'aestheticLanguage',
     'compositionSystem',
     'brandPresence',

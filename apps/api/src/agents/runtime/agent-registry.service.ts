@@ -322,6 +322,7 @@ export class AgentRegistryService implements OnModuleInit {
         { key: 'retrieve_context', label: 'Buscar contexto', type: 'preparation' },
         { key: 'collect_brief', label: 'Entender o pedido', type: 'clarification' },
         { key: 'plan_design', label: 'Planejar o design', type: 'llm_call' },
+        { key: 'approve_design_plan', label: 'Aprovar plano de design', type: 'clarification' },
         { key: 'generate_post', label: 'Montar o post', type: 'llm_call' },
         { key: 'validate_output', label: 'Validar saída', type: 'validation' },
       ],

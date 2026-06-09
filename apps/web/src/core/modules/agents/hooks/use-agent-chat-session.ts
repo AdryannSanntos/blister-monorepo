@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { AgentUiId } from "../config/agent-ui-config";
 
@@ -18,6 +18,8 @@ const getStorageKey = (agentId: AgentUiId, chatId: string) =>
   `${STORAGE_PREFIX}${agentId}:${chatId}`;
 
 const getIndexKey = (agentId: AgentUiId) => `${INDEX_PREFIX}${agentId}`;
+
+export const dedupeRunIds = (runIds: string[]): string[] => [...new Set(runIds)];
 
 const loadIndex = (agentId: AgentUiId): ChatIndex => {
   if (typeof window === "undefined") return {};
@@ -44,7 +46,9 @@ const loadSession = (agentId: AgentUiId, chatId: string): string[] => {
     const raw = localStorage.getItem(getStorageKey(agentId, chatId));
     if (!raw) return [];
     const parsed = JSON.parse(raw) as ChatSession;
-    return Array.isArray(parsed.runIds) ? parsed.runIds : [];
+    return dedupeRunIds(
+      Array.isArray(parsed.runIds) ? parsed.runIds : [],
+    );
   } catch {
     return [];
   }
@@ -58,7 +62,7 @@ const saveSession = (
   if (typeof window === "undefined") return;
 
   const payload: ChatSession = {
-    runIds,
+    runIds: dedupeRunIds(runIds),
     updatedAt: new Date().toISOString(),
   };
   localStorage.setItem(
@@ -80,7 +84,7 @@ const updateIndex = (
   if (typeof window === "undefined" || runIds.length === 0) return;
 
   const index = loadIndex(agentId);
-  for (const runId of runIds) {
+  for (const runId of dedupeRunIds(runIds)) {
     index[runId] = chatId;
   }
   saveIndex(agentId, index);
@@ -107,7 +111,9 @@ export const migrateLegacySession = (
     if (!raw) return null;
 
     const parsed = JSON.parse(raw) as ChatSession;
-    const runIds = Array.isArray(parsed.runIds) ? parsed.runIds : [];
+    const runIds = dedupeRunIds(
+      Array.isArray(parsed.runIds) ? parsed.runIds : [],
+    );
     if (runIds.length === 0 || !runIds.includes(runId)) return null;
 
     const nextChatId = createChatId();
@@ -125,17 +131,22 @@ export function useAgentChatSession(
   chatId: string | null,
 ) {
   const [sessionRunIds, setSessionRunIds] = useState<string[]>([]);
+  const hydratedRef = useRef(false);
 
   useEffect(() => {
+    hydratedRef.current = false;
+
     if (!chatId) {
       setSessionRunIds([]);
       return;
     }
+
     setSessionRunIds(loadSession(agentId, chatId));
+    hydratedRef.current = true;
   }, [agentId, chatId]);
 
   useEffect(() => {
-    if (!chatId) return;
+    if (!chatId || !hydratedRef.current) return;
     saveSession(agentId, chatId, sessionRunIds);
     updateIndex(agentId, chatId, sessionRunIds);
   }, [agentId, chatId, sessionRunIds]);
@@ -153,9 +164,11 @@ export function useAgentChatSession(
 
   const initChat = useCallback(
     (nextChatId: string, runIds: string[]) => {
-      saveSession(agentId, nextChatId, runIds);
-      updateIndex(agentId, nextChatId, runIds);
-      setSessionRunIds(runIds);
+      const deduped = dedupeRunIds(runIds);
+      saveSession(agentId, nextChatId, deduped);
+      updateIndex(agentId, nextChatId, deduped);
+      hydratedRef.current = true;
+      setSessionRunIds(deduped);
     },
     [agentId],
   );

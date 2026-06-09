@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { compareAgentMessageIds } from '@company-os/types';
 import { PrismaService } from '../../prisma/prisma.service';
 import type { AgentRunBlockDto } from '@company-os/types';
 import type { Prisma } from '../../generated/prisma';
@@ -161,10 +162,16 @@ export class AgentRunBlockService {
   async listByRun(agentRunId: string): Promise<AgentRunBlockDto[]> {
     const rows = await this.prisma.agentRunBlock.findMany({
       where: { agentRunId },
-      orderBy: [{ messageId: 'asc' }, { index: 'asc' }],
+      orderBy: [{ createdAt: 'asc' }, { index: 'asc' }],
     });
 
-    return rows.map((row) => this.mapToDto(row));
+    return rows
+      .map((row) => this.mapToDto(row))
+      .sort((a, b) => {
+        const byMessage = compareAgentMessageIds(a.messageId, b.messageId);
+        if (byMessage !== 0) return byMessage;
+        return a.index - b.index;
+      });
   }
 
   private mapToDto(row: {

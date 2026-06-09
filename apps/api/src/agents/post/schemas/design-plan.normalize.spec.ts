@@ -5,6 +5,7 @@ describe('normalizeDesignPlanInput', () => {
     const plan = normalizeDesignPlanInput(
       {
         creativeDirection: '  Post premium para lançamento  ',
+        brandVisualStyle: 'Moderno e vibrante com foco em produto',
         aestheticLanguage: 'Minimalist',
         compositionSystem: 'Grid editorial',
         brandPresence: 'protagonista',
@@ -31,6 +32,7 @@ describe('normalizeDesignPlanInput', () => {
     );
 
     expect(plan).not.toBeNull();
+    expect(plan?.brandVisualStyle).toBe('Moderno e vibrante com foco em produto');
     expect(plan?.aestheticLanguage).toBe('minimalista');
     expect(plan?.brandPresence).toBe('protagonist');
     expect(plan?.colorStrategy.backgroundType).toBe('solid');

@@ -6,15 +6,18 @@ import { buildPostBrief, getNextOnboardingField } from '../onboarding';
  * missing it PAUSES with a single-field form; once the brief is complete it
  * emits the normalized generation parameters and continues.
  */
-export const collectBriefStep: CustomStepExecutor = async (context) => {
+export const collectBriefStep: CustomStepExecutor = async (context, deps) => {
   const answers = context.inputPayload;
   const field = getNextOnboardingField(answers);
 
   if (field) {
+    const pauseFormSchema = { fields: [field] };
+    await deps.message.formQuestion(pauseFormSchema);
+
     return {
       type: 'PAUSED',
       pauseReason: field.label,
-      pauseFormSchema: { fields: [field] },
+      pauseFormSchema,
     };
   }
 

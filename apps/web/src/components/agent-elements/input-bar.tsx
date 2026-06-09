@@ -454,7 +454,7 @@ export const InputBar = memo(function InputBar({
           {questionBarNode}
           <div
             className={cn(
-              "relative cursor-text rounded-an-input-border-radius bg-an-input-background shadow-2xs ring-1 ring-foreground/10",
+              "relative cursor-text rounded-an-input-border-radius bg-an-input-background shadow-[var(--shadow-sm)] ring-1 ring-[var(--line-default)] transition-shadow duration-[var(--dur-fast)]",
               isDragOver && "ring-2 ring-an-primary-color",
             )}
             onClick={handleContainerClick}

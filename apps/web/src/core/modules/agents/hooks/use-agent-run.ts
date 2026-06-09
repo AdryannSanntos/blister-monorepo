@@ -1,17 +1,17 @@
 "use client";
 
-import type { AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
+import type { AgentRunBlockDto, AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
+
+import type { ChatBlockState } from "../utils/agent-block-reducer";
 
 export type AgentRunWithSteps = {
   run: AgentRunStatusDto;
   steps: AgentRunStepDto[];
-  /**
-   * Accumulated text streamed via `output_chunk` SSE events while the run is
-   * active. Transient client-only state — not persisted on the server.
-   */
-  streamingText?: string;
+  blocks: AgentRunBlockDto[];
+  /** Live block timeline reduced from SSE while the run is active. */
+  blockChatState?: ChatBlockState;
 };
 
 export function useAgentRun(runId: string | null) {
@@ -21,7 +21,10 @@ export function useAgentRun(runId: string | null) {
       const { data } = await apiClient.get<AgentRunWithSteps>(
         `/agents/runs/${runId}`,
       );
-      return data;
+      return {
+        ...data,
+        blocks: data.blocks ?? [],
+      };
     },
     enabled: Boolean(runId),
     staleTime: Infinity,

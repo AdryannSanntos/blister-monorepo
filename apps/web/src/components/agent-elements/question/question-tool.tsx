@@ -20,6 +20,8 @@ export type QuestionToolPart = {
   };
   output?: {
     answer?: QuestionAnswer;
+    answerLabel?: string;
+    answers?: Array<{ title: string; label: string }>;
   };
 };
 
@@ -28,12 +30,38 @@ export type QuestionToolProps = {
   chatStatus?: string;
 };
 
-function formatAnswer(answer: QuestionAnswer) {
+function formatAnswer(question: QuestionConfig, answer: QuestionAnswer) {
   if (answer.kind === "skip") return "Pulado";
-  if (answer.kind === "text") return answer.text || "Respondido";
-  const ids = answer.selectedIds?.length ? answer.selectedIds.join(", ") : "";
-  if (answer.text) return ids ? `${ids} (${answer.text})` : answer.text;
-  return ids || "Respondido";
+  if (answer.kind === "text") return answer.text?.trim() || "Respondido";
+
+  const selectedIds = answer.selectedIds ?? [];
+  if (selectedIds.length > 0 && question.options?.length) {
+    const labels = selectedIds.map((id) => {
+      const option = question.options!.find((entry) => entry.id === id);
+      return option?.label ?? id;
+    });
+    if (answer.text?.trim()) {
+      return `${labels.join(", ")} — ${answer.text.trim()}`;
+    }
+    return labels.join(", ");
+  }
+
+  return answer.text?.trim() || "Respondido";
+}
+
+function AnsweredQuestionCard({
+  title,
+  answerLabel,
+}: {
+  title: string;
+  answerLabel: string;
+}) {
+  return (
+    <div className="rounded-[var(--r-lg)] border border-[var(--line-subtle)] bg-[var(--bg-sunken)] px-4 py-3">
+      <p className="text-sm font-medium text-[var(--fg-primary)]">{title}</p>
+      <p className="mt-1.5 text-sm text-[var(--fg-secondary)]">{answerLabel}</p>
+    </div>
+  );
 }
 
 export function QuestionTool({ part }: QuestionToolProps) {
@@ -63,35 +91,58 @@ export function QuestionTool({ part }: QuestionToolProps) {
     setLocalIndex(part.input?.questionIndex ?? 1);
   }, [part.toolCallId]);
 
-  if (!question) return null;
-
   const outputAnswer = part.output?.answer;
+  const outputAnswers = part.output?.answers;
   const answeredCount = Object.keys(localAnswers).length;
   const isComplete =
-    totalQuestions === 1
-      ? !!outputAnswer || answeredCount >= 1
-      : totalQuestions > 0 && answeredCount >= totalQuestions;
+    part.state === "output-available" ||
+    Boolean(outputAnswer) ||
+    Boolean(outputAnswers?.length) ||
+    (totalQuestions === 1
+      ? answeredCount >= 1
+      : totalQuestions > 0 && answeredCount >= totalQuestions);
 
-  const summaryText = useMemo(() => {
-    if (!isComplete) return "";
+  const answeredEntries = useMemo(() => {
+    if (outputAnswers?.length) {
+      return outputAnswers.map((entry) => ({
+        title: entry.title,
+        label: entry.label,
+      }));
+    }
+
     if (totalQuestions > 1) {
       return Array.from({ length: totalQuestions }, (_, idx) => {
+        const q = questions[idx];
         const answer = localAnswers[idx + 1];
-        return answer ? formatAnswer(answer) : "Pendente";
-      }).join(" · ");
+        if (!q || !answer) return null;
+        return {
+          title: q.title,
+          label: formatAnswer(q, answer),
+        };
+      }).filter((entry): entry is { title: string; label: string } =>
+        Boolean(entry),
+      );
     }
-    if (outputAnswer) return formatAnswer(outputAnswer);
-    if (localAnswers[clampedIndex]) {
-      return formatAnswer(localAnswers[clampedIndex]);
-    }
-    return "Respondido";
+
+    const answer = outputAnswer ?? localAnswers[clampedIndex];
+    if (!answer || !question) return [];
+
+    const label =
+      part.output?.answerLabel ?? formatAnswer(question, answer);
+
+    return [{ title: question.title, label }];
   }, [
     clampedIndex,
-    isComplete,
     localAnswers,
     outputAnswer,
+    outputAnswers,
+    part.output?.answerLabel,
+    question,
+    questions,
     totalQuestions,
   ]);
+
+  if (!question) return null;
 
   const goNext = () => {
     if (clampedIndex >= totalQuestions) return;
@@ -101,17 +152,17 @@ export function QuestionTool({ part }: QuestionToolProps) {
     }
   };
 
-  if (isComplete) {
+  if (isComplete && answeredEntries.length > 0) {
     return (
-      <p className="text-sm text-[var(--fg-tertiary)]">
-        <span className="font-medium text-[var(--fg-secondary)]">
-          {question.title}
-        </span>
-        <span aria-hidden="true" className="mx-1.5">
-          ·
-        </span>
-        <span>{summaryText}</span>
-      </p>
+      <div className="flex flex-col gap-3">
+        {answeredEntries.map((entry) => (
+          <AnsweredQuestionCard
+            key={`${part.toolCallId}-${entry.title}`}
+            title={entry.title}
+            answerLabel={entry.label}
+          />
+        ))}
+      </div>
     );
   }
 

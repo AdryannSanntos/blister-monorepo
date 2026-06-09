@@ -1,17 +1,21 @@
 import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
+import { nextAgentMessageIndex } from '@company-os/types';
 import { Prisma, type PrismaClient } from '../../../generated/prisma';
 import { loadAgentDefinition } from './agent-loader';
+import {
+  type AgentRunBlockServiceLike,
+  BlockEmitter,
+  type MessageHandle,
+  type StreamingBlock,
+} from './block-emitter';
 import { debitStepCredits, getPlatformSettings } from './credit-debit.helper';
 import { customStepExecutors } from './custom-steps';
 import {
   type EventPublisher,
-  createOutputChunkEvent,
   createRunCompletedEvent,
   createRunFailedEvent,
   createRunPausedEvent,
   createRunStartedEvent,
-  createStepCompletedEvent,
-  createStepStartedEvent,
 } from './run-event.publisher';
 import { type ContextPackBuilder, buildStepContext } from './step-context.builder';
 import type {
@@ -70,6 +74,8 @@ export interface ExecutionDependencies {
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
   eventPublisher: EventPublisher;
+  /** Persists typed chat blocks streamed by the kernel during a run. */
+  blocks: AgentRunBlockServiceLike;
   /** Resolves brand asset storage keys to signed URLs (optional). */
   assetResolver?: AssetResolver | null;
   stubMode?: boolean;
@@ -84,6 +90,8 @@ export interface StepExecutorDeps {
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
   assetResolver: AssetResolver | null;
+  /** The open assistant message; steps emit typed blocks onto it. */
+  message: MessageHandle;
 }
 
 /**
@@ -163,6 +171,43 @@ export async function executeRun(
 
   await eventPublisher.publish(createRunStartedEvent(run.id, run.agentId, run.companyId));
 
+  // Seed the message counter from the highest persisted `:mN` suffix so resume
+  // invocations never collide with prior turns (even when some turns have no blocks).
+  const existingBlocks = await deps.blocks.listByRun(run.id);
+  const messageStartIndex = nextAgentMessageIndex(
+    existingBlocks.map((block) => block.messageId),
+  );
+
+  const emitter = new BlockEmitter({
+    runId: run.id,
+    agentId: run.agentId,
+    companyId: run.companyId,
+    publisher: eventPublisher,
+    blocks: deps.blocks,
+    messageStartIndex,
+  });
+
+  // Persist the user turn that triggered this invocation.
+  if (messageStartIndex === 0) {
+    const userInput = (run.inputPayload as { userInput?: unknown }).userInput;
+    if (typeof userInput === 'string' && userInput.length > 0) {
+      await emitter.userMessage(userInput);
+    }
+  } else if (params.formData && Object.keys(params.formData).length > 0) {
+    const answerText = Object.values(params.formData).map(String).join(', ');
+    if (answerText.length > 0) {
+      await emitter.userMessage(answerText);
+    }
+  }
+
+  const message = emitter.openMessage('assistant');
+  let messageClosed = false;
+  const closeMessage = async (): Promise<void> => {
+    if (messageClosed) return;
+    messageClosed = true;
+    await message.end();
+  };
+
   const platformSettings = await getPlatformSettings(prisma);
 
   try {
@@ -172,6 +217,7 @@ export async function executeRun(
 
     let currentOutput: Record<string, unknown> = {};
     let totalCreditCost = 0;
+    const genericTextRef: { current: StreamingBlock | null } = { current: null };
 
     for (let i = startStepIndex; i < agentDefinition.steps.length; i++) {
       const stepDef = agentDefinition.steps[i];
@@ -200,10 +246,6 @@ export async function executeRun(
             },
           });
 
-      await eventPublisher.publish(
-        createStepStartedEvent(run.id, run.agentId, run.companyId, stepDef.key, i),
-      );
-
       const stepContext = await buildStepContext(prisma, deps.contextPackBuilder, {
         runId: run.id,
         agentId: run.agentId,
@@ -220,14 +262,13 @@ export async function executeRun(
 
       const onChunk = (delta: string): void => {
         if (!delta) return;
-        void eventPublisher.publish(
-          createOutputChunkEvent(run.id, run.agentId, run.companyId, delta),
-        );
+        if (!genericTextRef.current) genericTextRef.current = message.text();
+        genericTextRef.current.delta(delta);
       };
 
       const stepResult = stubMode
         ? await executeStepStub(stepDef.key, run.agentId)
-        : await executeStep(deps, agentDefinition, stepDef.key, stepContext, onChunk);
+        : await executeStep(deps, agentDefinition, stepDef.key, stepContext, message, onChunk);
 
       let stepCreditCost = 0;
       if (stepResult.creditCost && stepResult.creditCost > 0) {
@@ -259,6 +300,13 @@ export async function executeRun(
               completedAt: new Date(),
             },
           });
+
+          if (genericTextRef.current) {
+            await genericTextRef.current.end();
+            genericTextRef.current = null;
+          }
+          await message.error(`Insufficient credit balance: ${debitResult.error}`);
+          await closeMessage();
 
           await eventPublisher.publish(
             createRunFailedEvent(
@@ -296,17 +344,10 @@ export async function executeRun(
         },
       });
 
-      await eventPublisher.publish(
-        createStepCompletedEvent(
-          run.id,
-          run.agentId,
-          run.companyId,
-          stepDef.key,
-          i,
-          stepResult.output ?? {},
-          stepCreditCost,
-        ),
-      );
+      if (genericTextRef.current) {
+        await genericTextRef.current.end();
+        genericTextRef.current = null;
+      }
 
       if (stepResult.type === 'PAUSED') {
         await prisma.agentRun.update({
@@ -320,6 +361,8 @@ export async function executeRun(
             creditCost: new Prisma.Decimal(totalCreditCost),
           },
         });
+
+        await closeMessage();
 
         await eventPublisher.publish(
           createRunPausedEvent(
@@ -351,6 +394,9 @@ export async function executeRun(
           },
         });
 
+        await message.error(stepResult.error ?? 'Unknown');
+        await closeMessage();
+
         await eventPublisher.publish(
           createRunFailedEvent(run.id, run.agentId, run.companyId, stepResult.error ?? 'Unknown'),
         );
@@ -369,6 +415,16 @@ export async function executeRun(
     }
 
     currentOutput.reviewStatus = 'PENDING';
+
+    if (genericTextRef.current) {
+      await genericTextRef.current.end();
+      genericTextRef.current = null;
+    }
+    await message.ensureOutput({
+      agentId: run.agentId,
+      ...currentOutput,
+    });
+    await closeMessage();
 
     await prisma.agentRun.update({
       where: { id: run.id },
@@ -392,6 +448,15 @@ export async function executeRun(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+    try {
+      if (!messageClosed) {
+        await message.error(errorMessage);
+        await closeMessage();
+      }
+    } catch {
+      // Never let block emission mask the original failure.
+    }
 
     await prisma.agentRun.update({
       where: { id: run.id },
@@ -420,6 +485,7 @@ async function executeStep(
   agentDef: AgentDefinition,
   stepKey: string,
   context: StepExecutionContext,
+  message: MessageHandle,
   onChunk?: (delta: string) => void,
 ): Promise<StepResult> {
   const stepDef = agentDef.steps.find((s) => s.key === stepKey);
@@ -437,6 +503,7 @@ async function executeStep(
         llmProvider: deps.llmProvider,
         imageProvider: deps.imageProvider,
         assetResolver: deps.assetResolver ?? null,
+        message,
       },
       onChunk,
     );

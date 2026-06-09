@@ -41,3 +41,4 @@ export * from './company';
 export * from './credits';
 export * from './ai-catalog';
 export * from './workspace';
+export * from './agent-message-sequence';

@@ -1,16 +1,16 @@
 "use client";
 
 import type { ChatStatus, UIMessage } from "ai";
+import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 
 import type { SuggestionItem } from "@/components/agent-elements/input/suggestions";
 import { MessageList } from "@/components/agent-elements/message-list";
 import type { CustomToolRendererProps } from "@/components/agent-elements/types";
 import { cn } from "@/components/agent-elements/utils/cn";
-
+import type { AgentUiConfig } from "../config/agent-ui-config";
 import { AgentChatComposer } from "./agent-chat-composer";
 import { AgentChatEmptyState } from "./agent-chat-empty-state";
-import type { AgentUiConfig } from "../config/agent-ui-config";
 
 type BlisterAgentChatProps = {
   config: AgentUiConfig;
@@ -37,10 +37,17 @@ export function BlisterAgentChat({
   showCopyToolbar = true,
   className,
 }: BlisterAgentChatProps) {
+  const tChat = useTranslations("agents.chat");
   const [draft, setDraft] = useState("");
   const isEmpty = messages.length === 0;
   const isStreaming = status === "streaming" || status === "submitted";
   const Icon = config.icon;
+
+  const assistantAvatar = (
+    <div className="flex size-8 items-center justify-center rounded-[var(--r-md)] text-white shadow-[var(--shadow-xs)] [background-image:var(--gradient-primary)]">
+      <Icon className="size-4" aria-hidden />
+    </div>
+  );
 
   const handleSuggestionSelect = useCallback(
     (item: SuggestionItem) => {
@@ -64,7 +71,7 @@ export function BlisterAgentChat({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 flex-col bg-[var(--bg-canvas)]",
+        "flex h-full min-h-0 flex-col bg-[var(--bg-base)]",
         className,
       )}
     >
@@ -79,7 +86,9 @@ export function BlisterAgentChat({
           toolRenderers={toolRenderers}
           showCopyToolbar={showCopyToolbar}
           suppressQuestionTool={false}
-          className="min-h-0 flex-1 bg-[var(--bg-canvas)]"
+          assistantAvatar={assistantAvatar}
+          planningLabel={tChat("thinking")}
+          className="min-h-0 flex-1 bg-[var(--bg-base)]"
         />
       )}
 
