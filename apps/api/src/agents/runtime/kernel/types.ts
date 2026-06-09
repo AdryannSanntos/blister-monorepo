@@ -1,3 +1,4 @@
+import type { AgentRunEventType } from '@company-os/types';
 import type { Prisma } from '../../../generated/prisma';
 
 export type AgentRunStatus = 'QUEUED' | 'RUNNING' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
@@ -107,15 +108,7 @@ export interface RunEventPayload {
   runId: string;
   agentId: string;
   companyId: string;
-  type:
-    | 'run_started'
-    | 'step_started'
-    | 'step_completed'
-    | 'step_failed'
-    | 'run_completed'
-    | 'run_failed'
-    | 'run_paused'
-    | 'output_chunk';
+  type: AgentRunEventType;
   data: Record<string, unknown>;
   timestamp: Date;
 }
