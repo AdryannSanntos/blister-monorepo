@@ -11,6 +11,7 @@ import { StorageModule } from '../storage/storage.module';
 import { AgentRegistryService } from './runtime/agent-registry.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
 import { AgentRunService } from './runtime/agent-run.service';
+import { AgentRunBlockService } from './runtime/agent-run-block.service';
 import { AgentRunReviewService } from './runtime/agent-run-review.service';
 import { StepContextFactory } from './runtime/step-context.factory';
 import { CreditStepInterceptor } from './runtime/credit-step.interceptor';
@@ -42,6 +43,7 @@ import { InternalEventsController } from './internal-events.controller';
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,
+    AgentRunBlockService,
     AgentRunReviewService,
     StepContextFactory,
     CreditStepInterceptor,
@@ -51,6 +53,7 @@ import { InternalEventsController } from './internal-events.controller';
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,
+    AgentRunBlockService,
     AgentRunReviewService,
     AgentSseService,
   ],
