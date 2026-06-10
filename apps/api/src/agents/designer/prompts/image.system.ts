@@ -1,4 +1,4 @@
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 
 export function buildDesignerSystemPrompt(
   brandProfile: BrandProfile | null,
@@ -34,7 +34,10 @@ ${brandProfile.visualStyle}`);
     }
 
     if (brandProfile.palette) {
-      const palette = brandProfile.palette as { primary?: { hex?: string }; secondary?: { hex?: string } };
+      const palette = brandProfile.palette as {
+        primary?: { hex?: string };
+        secondary?: { hex?: string };
+      };
       if (palette.primary?.hex || palette.secondary?.hex) {
         sections.push(`### Paleta de Cores
 - Cor primária: ${palette.primary?.hex ?? 'não definida'}
@@ -53,9 +56,7 @@ ${brandProfile.mainProducts}`);
     }
   }
 
-  const learningChunks = contextPack.chunks.filter(
-    (c) => c.sourceType === 'AGENT_LEARNING',
-  );
+  const learningChunks = contextPack.chunks.filter((c) => c.sourceType === 'AGENT_LEARNING');
   if (learningChunks.length > 0) {
     sections.push(`## Aprendizados de Imagens Anteriores
 

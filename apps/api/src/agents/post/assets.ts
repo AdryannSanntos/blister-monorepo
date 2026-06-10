@@ -1,6 +1,6 @@
 import { normalizeBrandAssets, normalizeLogoVariants } from '@company-os/types';
 
-import type { AssetResolver, BrandProfile } from '../runtime/kernel/types';
+import type { AssetResolver, BrandProfile } from '@company-os/agent-sdk';
 
 export interface ResolvedAsset {
   label: string;

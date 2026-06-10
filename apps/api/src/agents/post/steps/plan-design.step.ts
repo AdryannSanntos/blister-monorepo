@@ -1,11 +1,11 @@
 import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
-import type { CustomStepExecutor } from '../../runtime/kernel/agent-execution.kernel';
-import type { LlmCompletion } from '../../runtime/kernel/agent-execution.kernel';
+import type { LlmCompleteResult, StepExecutor } from '@company-os/agent-sdk';
+import { zodToJsonSchema } from '@company-os/agent-sdk';
 import { resolveBrandAssets } from '../assets';
 import { buildPostBrief } from '../onboarding';
 import { buildPlanDesignSystemPrompt, buildPlanDesignUserPrompt } from '../prompts/post.plan';
 import { normalizeDesignPlanInput } from '../schemas/design-plan.normalize';
-import { postDesignPlanSchema } from '../schemas/design-plan.schema';
+import { postDesignPlanZod } from '../schemas/design-plan.schema';
 
 const MAX_TOKENS = 4096;
 const TEMPERATURE = 0.35;
@@ -33,20 +33,16 @@ function extractJsonObject(content: string): Record<string, unknown> | null {
 }
 
 function parseDesignPlan(
-  response: LlmCompletion,
+  response: LlmCompleteResult,
   expectedSlides: number,
   brandVisualStyle?: string,
 ) {
-  const raw = response.structuredOutput ?? extractJsonObject(response.content);
+  const raw = extractJsonObject(response.content);
   if (!raw) return null;
   return normalizeDesignPlanInput(raw, expectedSlides, { brandVisualStyle });
 }
 
-/**
- * Planning step. Uses the blister-social-post-uiux skill to produce a detailed
- * design plan before HTML generation. Output is consumed by generate_post.
- */
-export const planDesignStep: CustomStepExecutor = async (context, deps) => {
+export const planDesignStep: StepExecutor = async (context, deps) => {
   if (!deps.llmProvider) {
     return {
       type: 'FAILED',
@@ -61,48 +57,39 @@ export const planDesignStep: CustomStepExecutor = async (context, deps) => {
   const brandVisualStyle = context.brandProfile?.visualStyle?.trim() || undefined;
 
   try {
-    const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver);
+    const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver ?? null);
 
-    const baseParams = {
-      messages: [
-        {
-          role: 'system' as const,
-          content: buildPlanDesignSystemPrompt(
-            context.brandProfile,
-            context.contextPack,
-            brief,
-            assets,
-          ),
-        },
-        {
-          role: 'user' as const,
-          content: buildPlanDesignUserPrompt(userInput, brief),
-        },
-      ],
-      agentId: context.agentId,
+    const llmParams = {
+      system: buildPlanDesignSystemPrompt(
+        context.brandProfile,
+        context.contextPack,
+        brief,
+        assets,
+      ),
+      user: buildPlanDesignUserPrompt(userInput, brief),
+      structuredOutputSchema: zodToJsonSchema(postDesignPlanZod),
       maxTokens: MAX_TOKENS,
-      structuredOutputSchema: postDesignPlanSchema,
+      temperature: TEMPERATURE,
     };
 
-    const thinking = deps.message.thinking();
-    let lastResponse: LlmCompletion | null = null;
+    const thinking = deps.message?.thinking();
+    let lastResponse: LlmCompleteResult | null = null;
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       const params = {
-        ...baseParams,
+        ...llmParams,
         temperature: attempt === 1 ? TEMPERATURE : 0.25,
       };
 
-      const response =
-        deps.llmProvider.completeStream
-          ? await deps.llmProvider.completeStream(params, (delta) => thinking.delta(delta))
-          : await deps.llmProvider.complete(params);
+      const response = deps.llmProvider.completeStream
+        ? await deps.llmProvider.completeStream(params, (delta) => thinking?.delta(delta))
+        : await deps.llmProvider.complete(params);
 
       lastResponse = response;
       const plan = parseDesignPlan(response, brief.slidesCount, brandVisualStyle);
       if (plan) {
-        await thinking.end();
-        await deps.message.planning({
+        if (thinking) await thinking.end();
+        await deps.message?.planning({
           summary: plan.creativeDirection,
           plan: {
             id: context.runId,
@@ -125,10 +112,9 @@ export const planDesignStep: CustomStepExecutor = async (context, deps) => {
       }
     }
 
-    await thinking.end();
+    if (thinking) await thinking.end();
 
-    const hasContent =
-      typeof lastResponse?.content === 'string' && lastResponse.content.length > 0;
+    const hasContent = typeof lastResponse?.content === 'string' && lastResponse.content.length > 0;
 
     return {
       type: 'FAILED',

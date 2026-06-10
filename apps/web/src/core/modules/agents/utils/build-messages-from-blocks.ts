@@ -111,6 +111,7 @@ const buildInteractiveQuestionPart = (
     options?: Array<{ id: string; label: string; description?: string }>;
   },
   questionAnswerHandler?: QuestionAnswerHandler | null,
+  initialText?: string,
 ) => ({
   type: "tool-Question" as const,
   toolCallId,
@@ -119,6 +120,9 @@ const buildInteractiveQuestionPart = (
     questions: [question],
     totalQuestions: 1,
     questionIndex: 1,
+    initialAnswer: initialText
+      ? { kind: "text" as const, text: initialText }
+      : undefined,
     onSubmitAnswer: questionAnswerHandler
       ? (answer: QuestionAnswer) =>
           questionAnswerHandler({ toolCallId, answer })
@@ -642,6 +646,9 @@ export const buildMessagesFromBlocks = ({
   editQuestion,
 }: BuildMessagesFromBlocksOptions): UIMessage[] => {
   const uiMessages: UIMessage[] = [];
+  const lastAssistantMessageId = [...messages]
+    .reverse()
+    .find((entry) => entry.role === "assistant")?.messageId;
 
   for (const message of messages) {
     if (message.role === "user" && isDuplicateFormAnswerUserMessage(message, run)) {
@@ -662,7 +669,11 @@ export const buildMessagesFromBlocks = ({
       )
       .filter((part): part is UIMessage["parts"][number] => Boolean(part));
 
-    if (message.role === "assistant" && rejectQuestion) {
+    const isLastAssistant =
+      message.role === "assistant" &&
+      message.messageId === lastAssistantMessageId;
+
+    if (isLastAssistant && rejectQuestion) {
       parts.push(
         buildInteractiveQuestionPart(
           `reject-${run.id}`,
@@ -676,7 +687,7 @@ export const buildMessagesFromBlocks = ({
       );
     }
 
-    if (message.role === "assistant" && regenerateQuestion) {
+    if (isLastAssistant && regenerateQuestion) {
       parts.push(
         buildInteractiveQuestionPart(
           `regenerate-${run.id}`,
@@ -690,16 +701,17 @@ export const buildMessagesFromBlocks = ({
       );
     }
 
-    if (message.role === "assistant" && editQuestion) {
+    if (isLastAssistant && editQuestion) {
       parts.push(
         buildInteractiveQuestionPart(
           `edit-${run.id}`,
           {
             kind: "text",
             title: "Edite a legenda",
-            placeholder: editQuestion.caption,
+            placeholder: "Edite a legenda do post",
           },
           questionAnswerHandler,
+          editQuestion.caption,
         ) as UIMessage["parts"][number],
       );
     }
@@ -865,6 +877,10 @@ export const buildThreadMessagesFromBlocks = ({
     seenRunIds.add(entry.run.id);
 
     const isActive = entry.run.id === activeRunId;
+    const showReviewActions =
+      isActive ||
+      (entry.run.status === "COMPLETED" &&
+        entry.run.reviewStatus === "PENDING_REVIEW");
 
     if (!entry.hasBlocks && entry.messages.length === 0) {
       messages.push(
@@ -873,7 +889,7 @@ export const buildThreadMessagesFromBlocks = ({
           run: entry.run,
           messages: [],
           optimisticUserInput: isActive ? optimisticUserInput : null,
-          reviewCallbacks: isActive ? reviewCallbacks : null,
+          reviewCallbacks: showReviewActions ? reviewCallbacks : null,
           clarificationCallbacks: isActive ? clarificationCallbacks : null,
           planApprovalCallbacks: isActive ? planApprovalCallbacks : null,
           questionAnswerHandler: isActive ? questionAnswerHandler : null,
@@ -896,7 +912,7 @@ export const buildThreadMessagesFromBlocks = ({
         agentId,
         run: entry.run,
         messages: normalizedMessages,
-        reviewCallbacks: isActive ? reviewCallbacks : null,
+        reviewCallbacks: showReviewActions ? reviewCallbacks : null,
         clarificationCallbacks: isActive ? clarificationCallbacks : null,
         planApprovalCallbacks: isActive ? planApprovalCallbacks : null,
         questionAnswerHandler: isActive ? questionAnswerHandler : null,

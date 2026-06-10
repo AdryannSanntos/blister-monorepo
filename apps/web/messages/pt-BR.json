@@ -878,6 +878,7 @@
       "newChat": "Nova conversa",
       "thinking": "Trabalhando nisso…",
       "working": "Pensando",
+      "renderError": "Não foi possível exibir parte da conversa. Recarregue a página para continuar.",
       "greetingLead": "Vamos criar algo bom"
     },
     "input": {

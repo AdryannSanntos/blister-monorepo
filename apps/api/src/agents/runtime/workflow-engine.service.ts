@@ -5,7 +5,9 @@ import { tasks } from '@trigger.dev/sdk';
 import type { agentRunExecute } from '../../../trigger/agent-run-execute';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CompanyRagSyncService } from '../../rag/company-rag-sync.service';
+import { ContextPackService } from '../../rag/context-pack.service';
 import { StorageService } from '../../storage/storage.service';
+import { adaptContextPackService } from '../adapters/context-pack-builder.adapter';
 import { AgentRegistryService } from './agent-registry.service';
 import { AgentRunBlockService } from './agent-run-block.service';
 import { AgentSseService } from './agent-sse.service';
@@ -18,7 +20,6 @@ import {
   executeRun,
 } from './kernel';
 import type { AssetResolver } from './kernel';
-import { StepContextFactory } from './step-context.factory';
 
 type AgentRunExecuteTask = typeof agentRunExecute;
 
@@ -53,13 +54,13 @@ export class WorkflowEngineService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly registry: AgentRegistryService,
-    private readonly stepContextFactory: StepContextFactory,
     private readonly creditInterceptor: CreditStepInterceptor,
     private readonly sseService: AgentSseService,
     private readonly companyRagSync: CompanyRagSyncService,
     private readonly storage: StorageService,
     private readonly config: ConfigService,
     private readonly agentRunBlockService: AgentRunBlockService,
+    private readonly contextPackService: ContextPackService,
   ) {}
 
   /**
@@ -112,7 +113,7 @@ export class WorkflowEngineService {
     const stubMode = mode === 'inline-stub';
     const deps: ExecutionDependencies = {
       prisma: this.prisma,
-      contextPackBuilder: null,
+      contextPackBuilder: stubMode ? null : adaptContextPackService(this.contextPackService),
       llmProvider: stubMode ? null : createTriggerLlmProvider(this.prisma),
       imageProvider: stubMode ? null : createTriggerImageProvider(this.prisma),
       assetResolver: stubMode ? null : this.buildAssetResolver(),
@@ -157,6 +158,8 @@ export class WorkflowEngineService {
       data: {
         companyId: options.companyId,
         agentId: options.agentId,
+        // Persist the agent version with the run for traceability/reproducibility.
+        agentVersion: agent.version,
         campaignId: options.campaignId,
         status: 'QUEUED',
         inputPayload: JSON.parse(JSON.stringify(parsed.data)),
@@ -269,9 +272,9 @@ export class WorkflowEngineService {
     }
   }
 
-  async cancelRun(runId: string): Promise<RunResult> {
-    const run = await this.prisma.agentRun.findUnique({
-      where: { id: runId },
+  async cancelRun(runId: string, companyId: string): Promise<RunResult> {
+    const run = await this.prisma.agentRun.findFirst({
+      where: { id: runId, companyId },
     });
 
     if (!run) {
@@ -289,6 +292,8 @@ export class WorkflowEngineService {
         completedAt: new Date(),
       },
     });
+
+    this.sseService.emitRunCancelled(runId, run.companyId, run.agentId);
 
     this.logger.log(`Cancelled run: ${runId}`);
 

@@ -11,6 +11,7 @@ import { cn } from "@/components/agent-elements/utils/cn";
 import type { AgentUiConfig } from "../config/agent-ui-config";
 import { AgentChatComposer } from "./agent-chat-composer";
 import { AgentChatEmptyState } from "./agent-chat-empty-state";
+import { ChatErrorBoundary } from "./chat-error-boundary";
 
 type BlisterAgentChatProps = {
   config: AgentUiConfig;
@@ -80,16 +81,24 @@ export function BlisterAgentChat({
           <AgentChatEmptyState icon={Icon} />
         </div>
       ) : (
-        <MessageList
-          messages={messages}
-          status={status}
-          toolRenderers={toolRenderers}
-          showCopyToolbar={showCopyToolbar}
-          suppressQuestionTool={false}
-          assistantAvatar={assistantAvatar}
-          planningLabel={tChat("thinking")}
-          className="min-h-0 flex-1 bg-[var(--bg-base)]"
-        />
+        <ChatErrorBoundary
+          fallback={
+            <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-sm text-[var(--text-muted)]">
+              {tChat("renderError")}
+            </div>
+          }
+        >
+          <MessageList
+            messages={messages}
+            status={status}
+            toolRenderers={toolRenderers}
+            showCopyToolbar={showCopyToolbar}
+            suppressQuestionTool={false}
+            assistantAvatar={assistantAvatar}
+            planningLabel={tChat("thinking")}
+            className="min-h-0 flex-1 bg-[var(--bg-base)]"
+          />
+        </ChatErrorBoundary>
       )}
 
       <AgentChatComposer

@@ -8,7 +8,7 @@ interface InternalEvent {
   event: AgentRunEvent;
 }
 
-const TERMINAL_EVENTS: AgentRunEventType[] = ['run_completed', 'run_failed'];
+const TERMINAL_EVENTS: AgentRunEventType[] = ['run_completed', 'run_failed', 'run_cancelled'];
 const MAX_BUFFER_PER_RUN = 500;
 const BUFFER_TTL_MS = 5 * 60 * 1000;
 
@@ -135,6 +135,10 @@ export class AgentSseService {
 
   emitRunFailed(runId: string, companyId: string, error: string): void {
     this.emit(runId, companyId, 'run_failed', { error });
+  }
+
+  emitRunCancelled(runId: string, companyId: string, agentId: string): void {
+    this.emit(runId, companyId, 'run_cancelled', { agentId });
   }
 
   emitOutputChunk(runId: string, companyId: string, chunk: string): void {

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { LearningSerializerRegistry } from '@company-os/agent-sdk';
 import { tasks } from '@trigger.dev/sdk';
 import type { companyRagSync } from '../../trigger/company-rag-sync';
 import type { ragIndexDocument } from '../../trigger/rag-index-document';
@@ -78,7 +79,14 @@ export class RagEventsService {
     output: Record<string, unknown>,
     feedback?: string,
   ): Promise<string> {
-    const content = this.serializeAgentLearning(agentId, approved, output, feedback);
+    const content = this.serializeAgentLearning(
+      agentId,
+      approved,
+      output,
+      feedback,
+      agentRunId,
+      companyId,
+    );
 
     return this.triggerDocumentIndex(
       companyId,
@@ -126,7 +134,20 @@ export class RagEventsService {
     approved: boolean,
     output: Record<string, unknown>,
     feedback?: string,
+    agentRunId?: string,
+    companyId?: string,
   ): string {
+    // Prefer the agent's own learning serializer (registered via .withLearning);
+    // fall back to a generic JSON note for agents without one.
+    const note = LearningSerializerRegistry.serialize(agentId, {
+      agentRunId: agentRunId ?? '',
+      companyId: companyId ?? '',
+      approved,
+      output,
+      userFeedback: feedback,
+    });
+    if (note) return note;
+
     const status = approved ? 'Aprovado' : 'Rejeitado';
     let content = `# Aprendizado do Agente: ${agentId}\n\nStatus: ${status}`;
 

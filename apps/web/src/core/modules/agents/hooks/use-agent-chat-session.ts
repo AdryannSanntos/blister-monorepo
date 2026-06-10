@@ -39,7 +39,7 @@ const saveIndex = (agentId: AgentUiId, index: ChatIndex) => {
   localStorage.setItem(getIndexKey(agentId), JSON.stringify(index));
 };
 
-const loadSession = (agentId: AgentUiId, chatId: string): string[] => {
+export const loadSession = (agentId: AgentUiId, chatId: string): string[] => {
   if (typeof window === "undefined") return [];
 
   try {
@@ -147,6 +147,7 @@ export function useAgentChatSession(
 
   useEffect(() => {
     if (!chatId || !hydratedRef.current) return;
+    if (sessionRunIds.length === 0) return;
     saveSession(agentId, chatId, sessionRunIds);
     updateIndex(agentId, chatId, sessionRunIds);
   }, [agentId, chatId, sessionRunIds]);

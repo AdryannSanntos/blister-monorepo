@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@company-os/authz": ["packages/authz/src/index.ts"],
+      "@company-os/agent-sdk": ["packages/agent-sdk/src/index.ts"],
+      "@company-os/agent-sdk/stream": ["packages/agent-sdk/src/stream/index.ts"],
+      "@company-os/agent-sdk/testing": ["packages/agent-sdk/src/testing/index.ts"],
       "@company-os/types": ["packages/types/src/index.ts"],
       "@company-os/configs/*": ["packages/configs/*"]
     }

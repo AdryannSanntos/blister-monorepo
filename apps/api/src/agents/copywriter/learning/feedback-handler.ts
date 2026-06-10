@@ -39,7 +39,10 @@ ${feedback.userFeedback}`);
   if (feedback.editedOutput) {
     sections.push(`## Edições do Usuário`);
 
-    if (feedback.editedOutput.caption && feedback.editedOutput.caption !== feedback.output.caption) {
+    if (
+      feedback.editedOutput.caption &&
+      feedback.editedOutput.caption !== feedback.output.caption
+    ) {
       sections.push(`**Legenda editada:**
 ${feedback.editedOutput.caption}`);
     }
@@ -74,8 +77,8 @@ export function extractLearningInsights(feedback: CopywriterFeedback): {
     insights.tonePreference = feedback.editedOutput?.tone ?? feedback.output.tone;
 
     const finalHashtags = feedback.editedOutput?.hashtags ?? feedback.output.hashtags;
-    insights.hashtagPatterns = finalHashtags.filter((tag) =>
-      !['#marketing', '#brasil', '#empreendedorismo'].includes(tag.toLowerCase()),
+    insights.hashtagPatterns = finalHashtags.filter(
+      (tag) => !['#marketing', '#brasil', '#empreendedorismo'].includes(tag.toLowerCase()),
     );
 
     const finalCaption = feedback.editedOutput?.caption ?? feedback.output.caption;

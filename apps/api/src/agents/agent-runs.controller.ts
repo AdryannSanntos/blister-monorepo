@@ -46,10 +46,17 @@ export class AgentRunsController {
     private readonly sseService: AgentSseService,
   ) {}
 
+  private async resolveCompanyId(req: Request): Promise<string> {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const company = await this.companyService.findByOwnerOrThrow(user.id, req);
+    return company.id;
+  }
+
   @Get(':runId')
   @RequirePermission('generation.create')
-  async getRunStatus(@Param('runId') runId: string) {
-    return this.runService.findWithSteps(runId);
+  async getRunStatus(@Param('runId') runId: string, @Req() req: Request) {
+    const companyId = await this.resolveCompanyId(req);
+    return this.runService.findWithSteps(runId, companyId);
   }
 
   @Post(':runId/resume')
@@ -58,7 +65,10 @@ export class AgentRunsController {
   async resumeRun(
     @Param('runId') runId: string,
     @Body() body: unknown,
+    @Req() req: Request,
   ) {
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
     const dto = resumeAgentRequestSchema.parse(body);
 
     const result = await this.workflowEngine.resumeRun({
@@ -75,8 +85,10 @@ export class AgentRunsController {
   @Post(':runId/cancel')
   @RequirePermission('generation.create')
   @HttpCode(HttpStatus.OK)
-  async cancelRun(@Param('runId') runId: string) {
-    const result = await this.workflowEngine.cancelRun(runId);
+  async cancelRun(@Param('runId') runId: string, @Req() req: Request) {
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
+    const result = await this.workflowEngine.cancelRun(runId, companyId);
     return { runId: result.runId, status: result.status };
   }
 
@@ -89,6 +101,8 @@ export class AgentRunsController {
     @Req() req: Request,
   ) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
     const dto = approveAgentRunSchema.parse(body);
 
     return this.reviewService.approve(runId, user.id, dto);
@@ -103,6 +117,8 @@ export class AgentRunsController {
     @Req() req: Request,
   ) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
     const dto = rejectAgentRunSchema.parse(body);
 
     return this.reviewService.reject(runId, user.id, dto);
@@ -116,6 +132,8 @@ export class AgentRunsController {
     @Req() req: Request,
   ) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
     const dto = editAgentRunOutputSchema.parse(body);
 
     return this.reviewService.editOutput(runId, user.id, dto);
@@ -130,6 +148,8 @@ export class AgentRunsController {
     @Req() req: Request,
   ) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const companyId = await this.resolveCompanyId(req);
+    await this.runService.assertRunBelongsToCompany(runId, companyId);
     const dto = regenerateAgentRunSchema.parse(body);
 
     return this.reviewService.regenerate(runId, user.id, dto);
@@ -141,7 +161,6 @@ export class AgentRunsController {
     @Param('runId') runId: string,
     @Req() req: Request,
   ): Observable<MessageEvent> {
-    const _user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const disconnect$ = new Subject<void>();
 
     req.on('close', () => {
@@ -149,13 +168,13 @@ export class AgentRunsController {
       disconnect$.complete();
     });
 
-    // NestJS @Sse requires an Observable. The previous implementation returned
-    // a Promise<Observable> cast to Observable, which Nest never subscribed to —
-    // so the stream never emitted anything. We resolve the run (for its
-    // companyId / tenant scoping) inside the Observable via switchMap instead.
     let counter = 0;
-    return from(this.runService.findByIdOrThrow(runId)).pipe(
-      switchMap((run) => this.sseService.subscribe(runId, run.companyId)),
+    return from(this.resolveCompanyId(req)).pipe(
+      switchMap((companyId) =>
+        from(this.runService.findByIdOrThrow(runId, companyId)).pipe(
+          switchMap((run) => this.sseService.subscribe(runId, run.companyId)),
+        ),
+      ),
       takeUntil(disconnect$),
       map((event) => ({
         data: JSON.stringify(event),

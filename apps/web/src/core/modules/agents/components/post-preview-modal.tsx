@@ -154,6 +154,7 @@ export const PostPreviewModal = memo(function PostPreviewModal({
             html={slides[safeIndex] ?? ""}
             width={width}
             height={height}
+            slideLabel={t("slideLabel", { number: safeIndex + 1 })}
           />
 
           {total > 1 ? (
@@ -230,6 +231,7 @@ export const PostPreviewModal = memo(function PostPreviewModal({
                         width={width}
                         height={height}
                         maxWidth={THUMBNAIL_MAX_WIDTH}
+                        slideLabel={t("slideLabel", { number: index + 1 })}
                       />
                     </button>
 
@@ -259,6 +261,7 @@ export const PostPreviewModal = memo(function PostPreviewModal({
               type="button"
               className={formatButtonClass("png")}
               onClick={() => setFormat("png")}
+              aria-pressed={format === "png"}
             >
               PNG
             </button>
@@ -266,6 +269,7 @@ export const PostPreviewModal = memo(function PostPreviewModal({
               type="button"
               className={formatButtonClass("html")}
               onClick={() => setFormat("html")}
+              aria-pressed={format === "html"}
             >
               HTML
             </button>

@@ -1,15 +1,11 @@
 import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
-import type { CustomStepExecutor } from '../../runtime/kernel/agent-execution.kernel';
-import type { LlmCompletion } from '../../runtime/kernel/agent-execution.kernel';
+import type { LlmCompleteResult, StepExecutor } from '@company-os/agent-sdk';
+import { zodToJsonSchema } from '@company-os/agent-sdk';
 import { resolveBrandAssets } from '../assets';
-import { buildPostBrief, type PostBrief } from '../onboarding';
+import { type PostBrief, buildPostBrief } from '../onboarding';
 import { buildPostSystemPrompt, buildPostUserPrompt } from '../prompts/post.system';
 import { type PostDesignPlan, postDesignPlanZod } from '../schemas/design-plan.schema';
-import {
-  type PostLlmOutput,
-  postLlmOutputSchema,
-  postLlmOutputZod,
-} from '../schemas/output.schema';
+import { type PostLlmOutput, postLlmOutputZod } from '../schemas/output.schema';
 
 const MAX_TOKENS = 16384;
 const TEMPERATURE = 0.7;
@@ -131,8 +127,7 @@ function normalizeSlides(raw: unknown): Array<{ html: string }> {
     if (typeof slide !== 'object' || slide === null) return [];
 
     const record = slide as Record<string, unknown>;
-    const htmlCandidate =
-      record.html ?? record.content ?? record.markup ?? record.body;
+    const htmlCandidate = record.html ?? record.content ?? record.markup ?? record.body;
 
     return typeof htmlCandidate === 'string' && htmlCandidate.trim().length > 0
       ? [{ html: htmlCandidate }]
@@ -146,17 +141,12 @@ function buildFallbackCaption(userInput: string, brief: PostBrief): string {
   return `Post para ${brief.platformLabel}`.slice(0, 2200);
 }
 
-/**
- * Parses and validates the model response into slides + caption + hashtags.
- * Returns null when the payload has no usable slides.
- */
 function parsePostLlmOutput(
-  response: LlmCompletion,
+  response: LlmCompleteResult,
   userInput: string,
   brief: PostBrief,
 ): PostLlmOutput | null {
   const raw =
-    response.structuredOutput ??
     extractJsonObject(response.content) ??
     (response.content.trim()
       ? ({ slides: extractSlidesFromBrokenJson(response.content) } as Record<string, unknown>)
@@ -196,12 +186,7 @@ function parsePostLlmOutput(
   };
 }
 
-/**
- * Generation step. Builds an on-brand prompt (identity + palette + resolved
- * assets + platform dimensions) and asks the model for the HTML/CSS slides,
- * caption and hashtags. Combines the result with the brief metadata.
- */
-export const generatePostStep: CustomStepExecutor = async (context, deps) => {
+export const generatePostStep: StepExecutor = async (context, deps) => {
   if (!deps.llmProvider) {
     return {
       type: 'FAILED',
@@ -236,47 +221,39 @@ export const generatePostStep: CustomStepExecutor = async (context, deps) => {
   const designPlan: PostDesignPlan = designPlanResult.data;
 
   try {
-    const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver);
+    const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver ?? null);
 
-    const baseParams = {
-      messages: [
-        {
-          role: 'system' as const,
-          content: buildPostSystemPrompt(
-            context.brandProfile,
-            context.contextPack,
-            brief,
-            assets,
-            designPlan,
-          ),
-        },
-        {
-          role: 'user' as const,
-          content: buildPostUserPrompt(userInput, brief, designPlan),
-        },
-      ],
-      agentId: context.agentId,
+    const llmParams = {
+      system: buildPostSystemPrompt(
+        context.brandProfile,
+        context.contextPack,
+        brief,
+        assets,
+        designPlan,
+      ),
+      user: buildPostUserPrompt(userInput, brief, designPlan),
+      structuredOutputSchema: zodToJsonSchema(postLlmOutputZod),
       maxTokens: MAX_TOKENS,
-      structuredOutputSchema: postLlmOutputSchema,
+      temperature: TEMPERATURE,
     };
 
-    const progress = deps.message.thinking();
-    let lastResponse: LlmCompletion | null = null;
+    const progress = deps.message?.thinking();
+    let lastResponse: LlmCompleteResult | null = null;
 
     for (let attempt = 1; attempt <= MAX_PARSE_ATTEMPTS; attempt += 1) {
       const params = {
-        ...baseParams,
+        ...llmParams,
         temperature: attempt === 1 ? TEMPERATURE : 0.35,
       };
 
       const response = deps.llmProvider.completeStream
-        ? await deps.llmProvider.completeStream(params, (delta) => progress.delta(delta))
+        ? await deps.llmProvider.completeStream(params, (delta) => progress?.delta(delta))
         : await deps.llmProvider.complete(params);
 
       lastResponse = response;
       const output = parsePostLlmOutput(response, userInput, brief);
       if (output) {
-        await progress.end();
+        if (progress) await progress.end();
         const postOutput = {
           agentId: 'post',
           platform: brief.platformLabel,
@@ -288,7 +265,7 @@ export const generatePostStep: CustomStepExecutor = async (context, deps) => {
           caption: output.caption,
           hashtags: output.hashtags,
         };
-        await deps.message.output(postOutput);
+        await deps.message?.output(postOutput);
 
         return {
           type: 'CONTINUE',
@@ -301,7 +278,7 @@ export const generatePostStep: CustomStepExecutor = async (context, deps) => {
       }
     }
 
-    await progress.end();
+    if (progress) await progress.end();
 
     const finishReason =
       typeof lastResponse?.content === 'string' && lastResponse.content.length > 0

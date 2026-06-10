@@ -23127,6 +23127,7 @@ export namespace Prisma {
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string | null
+    agentVersion: string | null
     parentRunId: string | null
     feedbackId: string | null
     status: $Enums.AgentRunStatus | null
@@ -23146,6 +23147,7 @@ export namespace Prisma {
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string | null
+    agentVersion: string | null
     parentRunId: string | null
     feedbackId: string | null
     status: $Enums.AgentRunStatus | null
@@ -23165,6 +23167,7 @@ export namespace Prisma {
     pipelineRunId: number
     campaignId: number
     agentId: number
+    agentVersion: number
     parentRunId: number
     feedbackId: number
     status: number
@@ -23197,6 +23200,7 @@ export namespace Prisma {
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
+    agentVersion?: true
     parentRunId?: true
     feedbackId?: true
     status?: true
@@ -23216,6 +23220,7 @@ export namespace Prisma {
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
+    agentVersion?: true
     parentRunId?: true
     feedbackId?: true
     status?: true
@@ -23235,6 +23240,7 @@ export namespace Prisma {
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
+    agentVersion?: true
     parentRunId?: true
     feedbackId?: true
     status?: true
@@ -23344,6 +23350,7 @@ export namespace Prisma {
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string
+    agentVersion: string | null
     parentRunId: string | null
     feedbackId: string | null
     status: $Enums.AgentRunStatus
@@ -23385,6 +23392,7 @@ export namespace Prisma {
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
+    agentVersion?: boolean
     parentRunId?: boolean
     feedbackId?: boolean
     status?: boolean
@@ -23417,6 +23425,7 @@ export namespace Prisma {
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
+    agentVersion?: boolean
     parentRunId?: boolean
     feedbackId?: boolean
     status?: boolean
@@ -23443,6 +23452,7 @@ export namespace Prisma {
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
+    agentVersion?: boolean
     parentRunId?: boolean
     feedbackId?: boolean
     status?: boolean
@@ -23469,6 +23479,7 @@ export namespace Prisma {
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
+    agentVersion?: boolean
     parentRunId?: boolean
     feedbackId?: boolean
     status?: boolean
@@ -23485,7 +23496,7 @@ export namespace Prisma {
     completedAt?: boolean
   }
 
-  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "pipelineRunId" | "campaignId" | "agentId" | "parentRunId" | "feedbackId" | "status" | "currentStepKey" | "inputPayload" | "outputPayload" | "errorMessage" | "pauseReason" | "pauseFormSchema" | "creditCost" | "createdAt" | "updatedAt" | "startedAt" | "completedAt", ExtArgs["result"]["agentRun"]>
+  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "pipelineRunId" | "campaignId" | "agentId" | "agentVersion" | "parentRunId" | "feedbackId" | "status" | "currentStepKey" | "inputPayload" | "outputPayload" | "errorMessage" | "pauseReason" | "pauseFormSchema" | "creditCost" | "createdAt" | "updatedAt" | "startedAt" | "completedAt", ExtArgs["result"]["agentRun"]>
   export type AgentRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
@@ -23530,6 +23541,7 @@ export namespace Prisma {
       pipelineRunId: string | null
       campaignId: string | null
       agentId: string
+      agentVersion: string | null
       parentRunId: string | null
       feedbackId: string | null
       status: $Enums.AgentRunStatus
@@ -23981,6 +23993,7 @@ export namespace Prisma {
     readonly pipelineRunId: FieldRef<"AgentRun", 'String'>
     readonly campaignId: FieldRef<"AgentRun", 'String'>
     readonly agentId: FieldRef<"AgentRun", 'String'>
+    readonly agentVersion: FieldRef<"AgentRun", 'String'>
     readonly parentRunId: FieldRef<"AgentRun", 'String'>
     readonly feedbackId: FieldRef<"AgentRun", 'String'>
     readonly status: FieldRef<"AgentRun", 'AgentRunStatus'>
@@ -45554,6 +45567,7 @@ export namespace Prisma {
     pipelineRunId: 'pipelineRunId',
     campaignId: 'campaignId',
     agentId: 'agentId',
+    agentVersion: 'agentVersion',
     parentRunId: 'parentRunId',
     feedbackId: 'feedbackId',
     status: 'status',
@@ -47487,6 +47501,7 @@ export namespace Prisma {
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
+    agentVersion?: StringNullableFilter<"AgentRun"> | string | null
     parentRunId?: StringNullableFilter<"AgentRun"> | string | null
     feedbackId?: StringNullableFilter<"AgentRun"> | string | null
     status?: EnumAgentRunStatusFilter<"AgentRun"> | $Enums.AgentRunStatus
@@ -47518,6 +47533,7 @@ export namespace Prisma {
     pipelineRunId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     agentId?: SortOrder
+    agentVersion?: SortOrderInput | SortOrder
     parentRunId?: SortOrderInput | SortOrder
     feedbackId?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -47553,6 +47569,7 @@ export namespace Prisma {
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
+    agentVersion?: StringNullableFilter<"AgentRun"> | string | null
     parentRunId?: StringNullableFilter<"AgentRun"> | string | null
     status?: EnumAgentRunStatusFilter<"AgentRun"> | $Enums.AgentRunStatus
     currentStepKey?: StringNullableFilter<"AgentRun"> | string | null
@@ -47583,6 +47600,7 @@ export namespace Prisma {
     pipelineRunId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     agentId?: SortOrder
+    agentVersion?: SortOrderInput | SortOrder
     parentRunId?: SortOrderInput | SortOrder
     feedbackId?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -47613,6 +47631,7 @@ export namespace Prisma {
     pipelineRunId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     campaignId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     agentId?: StringWithAggregatesFilter<"AgentRun"> | string
+    agentVersion?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     parentRunId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     feedbackId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     status?: EnumAgentRunStatusWithAggregatesFilter<"AgentRun"> | $Enums.AgentRunStatus
@@ -50457,6 +50476,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -50486,6 +50506,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -50511,6 +50532,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -50540,6 +50562,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -50567,6 +50590,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -50587,6 +50611,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -50607,6 +50632,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -53387,6 +53413,7 @@ export namespace Prisma {
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
+    agentVersion?: SortOrder
     parentRunId?: SortOrder
     feedbackId?: SortOrder
     status?: SortOrder
@@ -53413,6 +53440,7 @@ export namespace Prisma {
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
+    agentVersion?: SortOrder
     parentRunId?: SortOrder
     feedbackId?: SortOrder
     status?: SortOrder
@@ -53432,6 +53460,7 @@ export namespace Prisma {
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
+    agentVersion?: SortOrder
     parentRunId?: SortOrder
     feedbackId?: SortOrder
     status?: SortOrder
@@ -58605,6 +58634,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -58632,6 +58662,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -59121,6 +59152,7 @@ export namespace Prisma {
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
+    agentVersion?: StringNullableFilter<"AgentRun"> | string | null
     parentRunId?: StringNullableFilter<"AgentRun"> | string | null
     feedbackId?: StringNullableFilter<"AgentRun"> | string | null
     status?: EnumAgentRunStatusFilter<"AgentRun"> | $Enums.AgentRunStatus
@@ -60034,6 +60066,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -60062,6 +60095,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -60279,6 +60313,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -60307,6 +60342,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -60427,6 +60463,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -60454,6 +60491,7 @@ export namespace Prisma {
     companyId: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -60743,6 +60781,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -60771,6 +60810,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -60800,6 +60840,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -60828,6 +60869,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
@@ -61180,6 +61222,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61208,6 +61251,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -61397,6 +61441,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61425,6 +61470,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -61503,6 +61549,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61531,6 +61578,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -61571,6 +61619,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61599,6 +61648,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -61639,6 +61689,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61667,6 +61718,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -61846,6 +61898,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -61874,6 +61927,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
@@ -62086,6 +62140,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -62114,6 +62169,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62510,6 +62566,7 @@ export namespace Prisma {
     id?: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -62538,6 +62595,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -62682,6 +62740,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -62710,6 +62769,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -64240,6 +64300,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -64505,6 +64566,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -64532,6 +64594,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -64558,6 +64621,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -65082,6 +65146,7 @@ export namespace Prisma {
     companyId: string
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     parentRunId?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
@@ -65119,6 +65184,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -65146,6 +65212,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -65172,6 +65239,7 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
@@ -65247,6 +65315,7 @@ export namespace Prisma {
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
+    agentVersion?: string | null
     feedbackId?: string | null
     status?: $Enums.AgentRunStatus
     currentStepKey?: string | null
@@ -65331,6 +65400,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
     inputPayload?: JsonNullValueInput | InputJsonValue
@@ -65359,6 +65429,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65385,6 +65456,7 @@ export namespace Prisma {
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
     feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
     currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null

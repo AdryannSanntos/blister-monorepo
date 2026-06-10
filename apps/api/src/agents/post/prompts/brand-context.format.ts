@@ -1,7 +1,7 @@
 import { normalizeBrandPalette } from '@company-os/types';
 
-import { formatContextPackForPrompt } from '../../runtime/kernel/step-context.builder';
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import { formatContextPackForPrompt } from '../../context/formatters';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 import type { ResolvedAsset } from '../assets';
 import type { PostBrief } from '../onboarding';
 
@@ -37,11 +37,14 @@ export function formatBrandIdentityForPrompt(profile: BrandProfile | null): stri
   if (profile.description) lines.push(`Descrição: ${profile.description}`);
   if (profile.brandVoice) lines.push(`Tom de voz: ${profile.brandVoice}`);
   if (profile.targetAudience) lines.push(`Público-alvo: ${profile.targetAudience}`);
-  if (profile.marketingObjective) lines.push(`Objetivo de marketing: ${profile.marketingObjective}`);
+  if (profile.marketingObjective)
+    lines.push(`Objetivo de marketing: ${profile.marketingObjective}`);
   if (profile.mainProducts) lines.push(`Produtos/serviços: ${profile.mainProducts}`);
   if (profile.differentiators) lines.push(`Diferenciais: ${profile.differentiators}`);
   if (profile.visualStyle) {
-    lines.push(`Estilo visual da marca (OBRIGATÓRIO — base de toda decisão estética): ${profile.visualStyle}`);
+    lines.push(
+      `Estilo visual da marca (OBRIGATÓRIO — base de toda decisão estética): ${profile.visualStyle}`,
+    );
   } else {
     lines.push(
       'Estilo visual da marca: não cadastrado — derive a direção visual apenas de tom de voz, nicho e contexto RAG.',

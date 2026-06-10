@@ -21,6 +21,38 @@ interface GeminiContent {
   parts: Array<{ text: string }>;
 }
 
+/**
+ * Gemini's `responseSchema` only accepts a subset of JSON Schema (OpenAPI 3.0
+ * style). It rejects JSON-Schema-only keywords such as `$schema`, `$ref`,
+ * `$defs`, `additionalProperties`. Strip them recursively so structured-output
+ * requests don't fail with "Unknown name ... Cannot find field".
+ */
+const GEMINI_UNSUPPORTED_SCHEMA_KEYS = new Set([
+  '$schema',
+  '$id',
+  '$ref',
+  '$defs',
+  'definitions',
+  'additionalProperties',
+  'const',
+  'examples',
+]);
+
+const sanitizeGeminiSchema = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(sanitizeGeminiSchema);
+  }
+  if (value && typeof value === 'object') {
+    const result: Record<string, unknown> = {};
+    for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+      if (GEMINI_UNSUPPORTED_SCHEMA_KEYS.has(key)) continue;
+      result[key] = sanitizeGeminiSchema(child);
+    }
+    return result;
+  }
+  return value;
+};
+
 interface GeminiGenerateResponse {
   candidates?: Array<{
     content?: {
@@ -94,7 +126,7 @@ export class GeminiAdapter implements AiProviderAdapter {
 
     if (request.structuredOutputSchema) {
       generationConfig.responseMimeType = 'application/json';
-      generationConfig.responseSchema = request.structuredOutputSchema;
+      generationConfig.responseSchema = sanitizeGeminiSchema(request.structuredOutputSchema);
     }
 
     if (Object.keys(generationConfig).length > 0) {

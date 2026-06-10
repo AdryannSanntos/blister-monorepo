@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AgentRegistryService } from './agent-registry.service';
 import { AgentRunBlockService } from './agent-run-block.service';
@@ -45,19 +45,38 @@ export class AgentRunService {
     return this.mapRunToDto(run);
   }
 
-  async findByIdOrThrow(runId: string): Promise<AgentRunStatusDto> {
-    const run = await this.findById(runId);
+  async findByIdForCompany(runId: string, companyId: string): Promise<AgentRunStatusDto | null> {
+    const run = await this.prisma.agentRun.findFirst({
+      where: { id: runId, companyId },
+    });
+
+    if (!run) return null;
+
+    return this.mapRunToDto(run);
+  }
+
+  async findByIdOrThrow(runId: string, companyId?: string): Promise<AgentRunStatusDto> {
+    const run = companyId
+      ? await this.findByIdForCompany(runId, companyId)
+      : await this.findById(runId);
     if (!run) throw new NotFoundException('Agent run not found');
     return run;
   }
 
-  async findWithSteps(runId: string): Promise<RunWithSteps> {
-    const run = await this.prisma.agentRun.findUnique({
-      where: { id: runId },
-      include: {
-        steps: { orderBy: { stepIndex: 'asc' } },
-      },
-    });
+  async findWithSteps(runId: string, companyId?: string): Promise<RunWithSteps> {
+    const run = companyId
+      ? await this.prisma.agentRun.findFirst({
+          where: { id: runId, companyId },
+          include: {
+            steps: { orderBy: { stepIndex: 'asc' } },
+          },
+        })
+      : await this.prisma.agentRun.findUnique({
+          where: { id: runId },
+          include: {
+            steps: { orderBy: { stepIndex: 'asc' } },
+          },
+        });
 
     if (!run) throw new NotFoundException('Agent run not found');
 
@@ -119,6 +138,14 @@ export class AgentRunService {
       limit: options?.limit,
       offset: options?.offset,
     });
+  }
+
+  async assertRunBelongsToCompany(runId: string, companyId: string): Promise<AgentRunStatusDto> {
+    const run = await this.findByIdForCompany(runId, companyId);
+    if (!run) {
+      throw new ForbiddenException('Agent run not found for this company');
+    }
+    return run;
   }
 
   async getRunStats(companyId: string, agentId?: string): Promise<{

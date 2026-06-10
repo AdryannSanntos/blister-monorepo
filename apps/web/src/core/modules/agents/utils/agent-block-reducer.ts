@@ -181,6 +181,8 @@ export const reduceBlockEvent = (
       return { ...state, runStatus: "COMPLETED" };
     case "run_failed":
       return { ...state, runStatus: "FAILED" };
+    case "run_cancelled":
+      return { ...state, runStatus: "CANCELLED" };
     case "message_start": {
       const messageId =
         typeof data.messageId === "string" ? data.messageId : "";

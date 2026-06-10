@@ -17,6 +17,7 @@ export type QuestionToolPart = {
     skipLabel?: string;
     allowSkip?: boolean;
     onSubmitAnswer?: (answer: QuestionAnswer) => void;
+    initialAnswer?: QuestionAnswer;
   };
   output?: {
     answer?: QuestionAnswer;
@@ -173,7 +174,7 @@ export function QuestionTool({ part }: QuestionToolProps) {
       questions={questions}
       questionIndex={clampedIndex}
       totalQuestions={totalQuestions}
-      initialAnswer={localAnswers[clampedIndex]}
+      initialAnswer={localAnswers[clampedIndex] ?? part.input?.initialAnswer}
       submitLabel={part.input?.submitLabel}
       nextLabel={part.input?.nextLabel}
       skipLabel={part.input?.skipLabel}

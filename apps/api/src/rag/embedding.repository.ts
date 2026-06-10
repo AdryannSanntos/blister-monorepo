@@ -124,7 +124,7 @@ export class EmbeddingRepository {
 
     if (options.sourceTypes && options.sourceTypes.length > 0) {
       conditions.push(
-        Prisma.sql`d."sourceType" IN (${Prisma.join(options.sourceTypes)})`,
+        Prisma.sql`d."sourceType"::text IN (${Prisma.join(options.sourceTypes)})`,
       );
     }
 

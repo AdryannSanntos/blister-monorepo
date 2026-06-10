@@ -1,7 +1,7 @@
 import { normalizeBrandPalette } from '@company-os/types';
 
-import { formatContextPackForPrompt } from '../../runtime/kernel/step-context.builder';
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import { formatContextPackForPrompt } from '../../context/formatters';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 import type { ResolvedAsset } from '../assets';
 import type { PostBrief } from '../onboarding';
 import type { PostDesignPlan } from '../schemas/design-plan.schema';
@@ -167,9 +167,7 @@ export function buildPostSystemPrompt(
   sections.push(formatDesignPlanForExecution(designPlan));
 
   sections.push(`## Identidade da marca\n${formatBrandIdentity(brandProfile)}`);
-  sections.push(
-    `## Tipografia (execução)\n${formatBrandTypography(brandProfile, designPlan)}`,
-  );
+  sections.push(`## Tipografia (execução)\n${formatBrandTypography(brandProfile, designPlan)}`);
 
   if (brandProfile) {
     sections.push(

@@ -108,6 +108,17 @@ export function applyAgentRunEvent(
       };
     }
 
+    case "run_cancelled":
+      return {
+        ...current,
+        run: {
+          ...run,
+          status: "CANCELLED",
+          completedAt: event.timestamp,
+          errorMessage: null,
+        },
+      };
+
     default:
       return current;
   }

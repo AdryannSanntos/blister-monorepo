@@ -249,7 +249,7 @@ O módulo `platform-admin` já existe com shell e componentes base. Estender:
 #### Backend — `agents/runtime/`
 
 - [ ] Criar `apps/api/src/agents/runtime/`
-- [ ] `AgentRegistryService` — descobre agentes por pasta em `agents/<agentId>/agent.definition.ts`; sem if/switch
+- [ ] `AgentRegistryService` — catálogo via `agent-catalog.ts` + `agents/<agentId>/agent.ts`; sem if/switch por step
 - [ ] `WorkflowEngineService`:
   - Lê steps de `workflow.ts` do agente
   - Loop: executa step → processa `StepResult` (CONTINUE / PAUSED / FAILED / COMPLETE)
@@ -288,7 +288,7 @@ O módulo `platform-admin` já existe com shell e componentes base. Estender:
 
 #### Backend — `agents/copywriter/`
 
-- [ ] `agent.definition.ts` — agentId: `copywriter`, schema de input/output Zod
+- [ ] `agent.ts` — agentId: `copywriter`, schemas Zod via `AgentBuilder` + `@company-os/agent-sdk`
 - [ ] `workflow.ts` — steps em ordem:
   1. `retrieve_context` — chama `ContextPackService`, boost AGENT_LEARNING por agentId
   2. `generate_captions` — LLM: gera legendas + hashtags para cada peça planejada pelo strategist
@@ -300,7 +300,7 @@ O módulo `platform-admin` já existe com shell e componentes base. Estender:
 
 #### Backend — `agents/designer/`
 
-- [ ] `agent.definition.ts` — agentId: `designer`
+- [ ] `agent.ts` — agentId: `designer`
 - [ ] `workflow.ts` — steps:
   1. `retrieve_context` — busca assets da marca (logo, paleta, tipografia)
   2. `generate_html` — LLM: gera HTML/CSS para post 1080×1080 usando variáveis de marca
@@ -311,7 +311,7 @@ O módulo `platform-admin` já existe com shell e componentes base. Estender:
 
 #### Backend — `agents/strategist/`
 
-- [ ] `agent.definition.ts` — agentId: `strategist`
+- [ ] `agent.ts` — agentId: `strategist`
 - [ ] `workflow.ts` — steps:
   1. `retrieve_context` — contexto de marca + campanha
   2. `plan_pieces` — LLM: decide quantidade e ângulos das peças para a solicitação
@@ -586,16 +586,14 @@ agents/
     pipeline-orchestrator.service.ts
     pipeline-run.service.ts
   strategist/
-    agent.definition.ts
-    workflow.ts
-    steps/
+    agent.ts
+    schemas/
+    prompts/
     learning/
       feedback-handler.ts
-      learning-rules.ts
-    rules.ts
-    prompts/
-  copywriter/          ← mesma estrutura
+  copywriter/          ← mesma estrutura (agent.ts + schemas + prompts + learning)
   designer/            ← mesma estrutura
+  post/                ← + steps/ custom quando necessário
   agents.module.ts
   agents.controller.ts
 

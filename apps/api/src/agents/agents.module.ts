@@ -13,7 +13,6 @@ import { WorkflowEngineService } from './runtime/workflow-engine.service';
 import { AgentRunService } from './runtime/agent-run.service';
 import { AgentRunBlockService } from './runtime/agent-run-block.service';
 import { AgentRunReviewService } from './runtime/agent-run-review.service';
-import { StepContextFactory } from './runtime/step-context.factory';
 import { CreditStepInterceptor } from './runtime/credit-step.interceptor';
 import { AgentSseService } from './runtime/agent-sse.service';
 
@@ -45,7 +44,6 @@ import { InternalEventsController } from './internal-events.controller';
     AgentRunService,
     AgentRunBlockService,
     AgentRunReviewService,
-    StepContextFactory,
     CreditStepInterceptor,
     AgentSseService,
   ],

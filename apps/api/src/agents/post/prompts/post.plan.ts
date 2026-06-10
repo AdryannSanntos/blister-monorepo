@@ -1,4 +1,4 @@
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 import type { ResolvedAsset } from '../assets';
 import type { PostBrief } from '../onboarding';
 import { formatPostAgentSkillsForPrompt } from '../skills';

@@ -376,6 +376,7 @@ model AgentRun {
   pipelineRunId   String?
   campaignId      String?
   agentId         String
+  agentVersion    String?
   parentRunId     String?
   feedbackId      String?        @unique
   status          AgentRunStatus @default(QUEUED)

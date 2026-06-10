@@ -1,8 +1,8 @@
 import type { PrismaClient } from '../../../generated/prisma';
-import { copywriterAgentDefinition } from '../../copywriter/agent.definition';
-import { designerAgentDefinition } from '../../designer/agent.definition';
-import { postAgentDefinition } from '../../post/agent.definition';
-import { strategistAgentDefinition } from '../../strategist/agent.definition';
+import { copywriterAgentDefinition } from '../../copywriter/agent';
+import { designerAgentDefinition } from '../../designer/agent';
+import { postAgentDefinition } from '../../post/agent';
+import { strategistAgentDefinition } from '../../strategist/agent';
 import type { AgentDefinition } from './types';
 
 const defaultAgentDefinitions: Record<string, AgentDefinition> = {

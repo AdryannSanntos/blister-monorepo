@@ -1,4 +1,3 @@
-import type { AgentRunEventType } from '@company-os/types';
 import type { Prisma } from '../../../generated/prisma';
 
 export type AgentRunStatus = 'QUEUED' | 'RUNNING' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
@@ -14,6 +13,7 @@ export interface StepDefinition {
 
 export interface AgentDefinition {
   agentId: string;
+  version?: string;
   label: string;
   description: string;
   inputSchema: Record<string, unknown>;
@@ -104,14 +104,7 @@ export interface RunResult {
   creditCost: number;
 }
 
-export interface RunEventPayload {
-  runId: string;
-  agentId: string;
-  companyId: string;
-  type: AgentRunEventType;
-  data: Record<string, unknown>;
-  timestamp: Date;
-}
+export type { RunEventPayload } from '@company-os/agent-sdk';
 
 export interface PlatformSettings {
   markupDefault: number;

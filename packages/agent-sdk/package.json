@@ -1,0 +1,35 @@
+{
+  "name": "@company-os/agent-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./stream": {
+      "types": "./dist/stream/index.d.ts",
+      "default": "./dist/stream/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "biome check src package.json tsconfig.json tsconfig.test.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "pnpm --filter @company-os/types build",
+    "test": "tsc -p tsconfig.test.json && node --test \"dist-test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@company-os/types": "workspace:^",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21"
+  }
+}

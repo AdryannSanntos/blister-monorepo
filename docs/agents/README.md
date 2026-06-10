@@ -4,7 +4,7 @@
 
 ## Princípio
 
-Cada agente = **1 pasta plugável** em `apps/api/src/agents/<agentId>/`. Registry descobre definitions — **sem if/switch** por `agentId` no engine.
+Cada agente = **1 pasta plugável** em `apps/api/src/agents/<agentId>/`. O runtime descobre definitions via `agent-catalog.ts` e executa steps registrados em `agent-step-registry.ts` — **sem if/switch** por step no engine.
 
 **Não há pipeline automático** entre agentes. Usuário escolhe qual rodar.
 
@@ -12,16 +12,16 @@ Cada agente = **1 pasta plugável** em `apps/api/src/agents/<agentId>/`. Registr
 
 ```
 agents/<agentId>/
-├── agent.definition.ts    # inputSchema, outputSchema, reviewSchema?, label UI
-├── workflow.ts
-├── steps/
-├── learning/
-│   ├── feedback-handler.ts   ← OBRIGATÓRIO
-│   └── learning-rules.ts
-├── rules.ts
+├── agent.ts                 # AgentBuilder (@company-os/agent-sdk): steps, schemas, contexto
+├── index.ts                 # re-export fino (opcional)
+├── schemas/                 # defineAgentSchemas + Zod (fonte de verdade)
 ├── prompts/
-└── schemas/
+├── learning/
+│   └── feedback-handler.ts  ← OBRIGATÓRIO
+└── steps/                   # só quando o agente precisa de lógica custom (ex.: post)
 ```
+
+Steps simples usam primitives da SDK (`createLlmCallStep`, `createRetrieveContextStep`, etc.) declarados diretamente no `agent.ts`. Não duplicar executores em arquivos soltos.
 
 ## Agentes MVP (catálogo inicial)
 
@@ -29,8 +29,8 @@ agents/<agentId>/
 |----|--------|
 | `strategist` | Planejamento de conteúdo |
 | `copywriter` | Legendas + hashtags |
-| `designer` | HTML → PNG (Satori) |
-| `post` (futuro) | Pacote completo — **um agente entre vários**, não o centro do produto |
+| `designer` | Imagem via prompt + geração |
+| `post` | Pacote completo (HTML slides + legenda) — **um agente entre vários** |
 
 Docs: [`strategist/`](strategist/README.md) · [`copywriter/`](copywriter/README.md) · [`designer/`](designer/README.md)
 
@@ -48,14 +48,17 @@ Ver [`pipeline-default.md`](pipeline-default.md) — nome legado do arquivo; con
 
 Ver [`workflow-engine.md`](workflow-engine.md)
 
+Pacote compartilhado: `@company-os/agent-sdk` (`packages/agent-sdk/`). Adapters Nest/Prisma/RAG ficam em `apps/api/src/agents/adapters/`.
+
 ## Criar novo agente
 
-1. Copiar `agents/_template/`
-2. Preencher `agent.definition.ts`, `workflow.ts`, steps
-3. Implementar `learning/feedback-handler.ts`
-4. Registrar no `AgentRegistryService`
-5. Doc em `docs/agents/<id>/README.md`
-6. Admin: habilitar no catálogo + política de modelo
+1. Criar pasta `agents/<agentId>/`
+2. Implementar `agent.ts` com `AgentBuilder.create({ id, version })` + steps da SDK
+3. Schemas em `schemas/` via `defineAgentSchemas`
+4. Implementar `learning/feedback-handler.ts`
+5. Registrar em `agent-catalog.ts` e `agent-loader.ts`
+6. Doc em `docs/agents/<id>/README.md`
+7. Admin: habilitar no catálogo + política de modelo
 
 ## Linguagem UI
 

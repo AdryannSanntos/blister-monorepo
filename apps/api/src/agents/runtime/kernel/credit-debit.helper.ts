@@ -41,17 +41,20 @@ export async function debitStepCredits(
     stepKey: string;
     baseCost: number;
     markupMultiplier: number;
+    minRunCost: number;
   },
 ): Promise<CreditDebitResult> {
-  const debitAmount = params.baseCost * params.markupMultiplier;
+  const rawAmount = params.baseCost * params.markupMultiplier;
 
-  if (debitAmount <= 0) {
+  if (rawAmount <= 0) {
     return {
       success: true,
       debitedAmount: 0,
       newBalance: 0,
     };
   }
+
+  const debitAmount = Math.max(rawAmount, params.minRunCost);
 
   try {
     const result = await prisma.$transaction(async (tx) => {

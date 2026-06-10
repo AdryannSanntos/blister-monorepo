@@ -1,4 +1,4 @@
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 
 export function buildCopywriterSystemPrompt(
   brandProfile: BrandProfile | null,
@@ -58,9 +58,7 @@ ${brandProfile.marketingObjective}`);
     }
   }
 
-  const learningChunks = contextPack.chunks.filter(
-    (c) => c.sourceType === 'AGENT_LEARNING',
-  );
+  const learningChunks = contextPack.chunks.filter((c) => c.sourceType === 'AGENT_LEARNING');
   if (learningChunks.length > 0) {
     sections.push(`## Aprendizados de Posts Anteriores
 

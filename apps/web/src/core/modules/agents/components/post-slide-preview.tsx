@@ -8,6 +8,8 @@ type PostSlidePreviewProps = {
   html: string;
   width: number;
   height: number;
+  /** Accessible label for the slide preview iframe. */
+  slideLabel?: string;
   /** Caps the preview width; height follows aspect ratio. */
   maxWidth?: number;
   className?: string;
@@ -22,6 +24,7 @@ export const PostSlidePreview = memo(function PostSlidePreview({
   html,
   width,
   height,
+  slideLabel = "Post preview",
   maxWidth,
   className,
 }: PostSlidePreviewProps) {
@@ -56,7 +59,7 @@ export const PostSlidePreview = memo(function PostSlidePreview({
           style={{ width: width * scale, height: height * scale }}
         >
           <iframe
-            title="Post preview"
+            title={slideLabel}
             sandbox=""
             srcDoc={html}
             style={{

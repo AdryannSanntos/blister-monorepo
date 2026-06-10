@@ -1,7 +1,7 @@
 import {
+  type AgentSkillDefinition,
   formatSkillsForPrompt,
   loadAgentSkills,
-  type AgentSkillDefinition,
 } from '../../runtime/kernel/agent-skills.loader';
 
 /** Skill ids enabled for the post agent. One folder per skill under `post/skills/`. */

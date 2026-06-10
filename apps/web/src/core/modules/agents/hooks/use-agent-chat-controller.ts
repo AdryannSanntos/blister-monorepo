@@ -427,10 +427,7 @@ export function useAgentChatController(agentId: AgentUiId) {
 
   const buildConversationHistory = useCallback(() => {
     return sessionRuns
-      .filter(
-        (entry) =>
-          entry.run.status === "COMPLETED" || entry.run.status === "FAILED",
-      )
+      .filter((entry) => entry.run.status === "COMPLETED")
       .map((entry) => ({
         userInput: getRunUserInput(entry.run),
         assistantSummary: formatAgentOutputMarkdown(
@@ -677,6 +674,15 @@ export function useAgentChatController(agentId: AgentUiId) {
 
   const openRun = useCallback(
     (nextRunId: string) => {
+      const existingChatId = findChatIdByRunId(agentId, nextRunId);
+      if (existingChatId) {
+        void setChatId(existingChatId);
+        setRunId(nextRunId);
+        setPendingFlow(null);
+        setOptimisticUserInput(null);
+        return;
+      }
+
       const nextChatId = createChatId();
       void setChatId(nextChatId);
       initChat(nextChatId, [nextRunId]);
@@ -684,7 +690,7 @@ export function useAgentChatController(agentId: AgentUiId) {
       setPendingFlow(null);
       setOptimisticUserInput(null);
     },
-    [initChat, setChatId, setRunId],
+    [agentId, initChat, setChatId, setRunId],
   );
 
   const startNewRun = useCallback(() => {

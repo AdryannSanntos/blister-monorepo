@@ -1,4 +1,4 @@
-import type { BrandProfile, ContextPack } from '../../runtime/kernel/types';
+import type { BrandProfile, ContextPack } from '@company-os/agent-sdk';
 
 export function buildStrategistSystemPrompt(
   brandProfile: BrandProfile | null,
@@ -60,9 +60,7 @@ ${brandProfile.socialNetworks.join(', ')}`);
     }
   }
 
-  const learningChunks = contextPack.chunks.filter(
-    (c) => c.sourceType === 'AGENT_LEARNING',
-  );
+  const learningChunks = contextPack.chunks.filter((c) => c.sourceType === 'AGENT_LEARNING');
   if (learningChunks.length > 0) {
     sections.push(`## Aprendizados de Estratégias Anteriores
 

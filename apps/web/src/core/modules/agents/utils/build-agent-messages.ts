@@ -788,7 +788,7 @@ export function resolveChatStatus(
   if (isStarting || optimisticUserInput?.trim()) return "submitted";
   if (!run) return "ready";
   if (run.status === "FAILED") return "error";
-  if (run.status === "PAUSED") return "ready";
+  if (run.status === "PAUSED") return "submitted";
   if (isRunActive(run.status)) {
     return run.status === "RUNNING" ? "streaming" : "submitted";
   }

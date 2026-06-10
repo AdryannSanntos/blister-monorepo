@@ -220,6 +220,7 @@ export const agentRunEventTypeSchema = z.enum([
   'run_paused',
   'run_completed',
   'run_failed',
+  'run_cancelled',
   // legacy (no longer consumed by the chat UI; kept for compatibility)
   'step_started',
   'step_completed',

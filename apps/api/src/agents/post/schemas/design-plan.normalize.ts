@@ -1,8 +1,4 @@
-import {
-  type PostDesignPlan,
-  postDesignPlanZod,
-  postSlidePlanZod,
-} from './design-plan.schema';
+import { type PostDesignPlan, postDesignPlanZod, postSlidePlanZod } from './design-plan.schema';
 
 const AESTHETIC_LANGUAGE_ALIASES: Record<string, PostDesignPlan['aestheticLanguage']> = {
   minimalista: 'minimalista',
@@ -72,29 +68,23 @@ const coerceString = (value: unknown, fallback = ''): string => {
 
 const coerceStringArray = (value: unknown): string[] => {
   if (!Array.isArray(value)) return [];
-  return value
-    .map((item) => coerceString(item))
-    .filter((item) => item.length > 0);
+  return value.map((item) => coerceString(item)).filter((item) => item.length > 0);
 };
 
-const pickEnum = <T extends string>(
-  value: unknown,
-  aliases: Record<string, T>,
-  fallback: T,
-): T => {
+const pickEnum = <T extends string>(value: unknown, aliases: Record<string, T>, fallback: T): T => {
   const normalized = coerceString(value).toLowerCase();
   return aliases[normalized] ?? fallback;
 };
 
-const normalizeSlide = (
-  slide: unknown,
-  index: number,
-): PostDesignPlan['slides'][number] | null => {
+const normalizeSlide = (slide: unknown, index: number): PostDesignPlan['slides'][number] | null => {
   if (typeof slide !== 'object' || slide === null) return null;
 
   const record = slide as Record<string, unknown>;
   const headline = coerceString(record.headline);
-  const compositionLayout = coerceString(record.compositionLayout, 'Composição tipográfica centralizada');
+  const compositionLayout = coerceString(
+    record.compositionLayout,
+    'Composição tipográfica centralizada',
+  );
   const backgroundTreatment = coerceString(
     record.backgroundTreatment,
     'Fundo sólido da paleta da marca',
@@ -206,12 +196,7 @@ export const normalizeDesignPlanInput = (
     qualityChecklist:
       qualityChecklist.length >= 4
         ? qualityChecklist.slice(0, 12)
-        : [
-            'Hierarquia clara',
-            'Contraste adequado',
-            'Área segura respeitada',
-            'Branding coerente',
-          ],
+        : ['Hierarquia clara', 'Contraste adequado', 'Área segura respeitada', 'Branding coerente'],
   };
 
   const parsed = postDesignPlanZod.safeParse(candidate);

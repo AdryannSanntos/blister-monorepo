@@ -1,8 +1,13 @@
-import type { RunEventPayload } from './types';
+import type { RunEventPayload } from '@company-os/agent-sdk';
+import {
+  type EventPublisher,
+  createRunCompletedEvent,
+  createRunFailedEvent,
+  createRunPausedEvent,
+  createRunStartedEvent,
+} from '@company-os/agent-sdk';
 
-export interface EventPublisher {
-  publish(event: RunEventPayload): Promise<void>;
-}
+export type { EventPublisher, RunEventPayload };
 
 export class HttpEventPublisher implements EventPublisher {
   constructor(
@@ -57,21 +62,6 @@ export class NoOpEventPublisher implements EventPublisher {
   }
 }
 
-export function createRunStartedEvent(
-  runId: string,
-  agentId: string,
-  companyId: string,
-): RunEventPayload {
-  return {
-    runId,
-    agentId,
-    companyId,
-    type: 'run_started',
-    data: {},
-    timestamp: new Date(),
-  };
-}
-
 export function createStepStartedEvent(
   runId: string,
   agentId: string,
@@ -104,39 +94,6 @@ export function createStepCompletedEvent(
     companyId,
     type: 'step_completed',
     data: { stepKey, stepIndex, output, creditCost },
-    timestamp: new Date(),
-  };
-}
-
-export function createRunCompletedEvent(
-  runId: string,
-  agentId: string,
-  companyId: string,
-  outputPayload: Record<string, unknown>,
-  totalCreditCost: number,
-): RunEventPayload {
-  return {
-    runId,
-    agentId,
-    companyId,
-    type: 'run_completed',
-    data: { outputPayload, totalCreditCost },
-    timestamp: new Date(),
-  };
-}
-
-export function createRunFailedEvent(
-  runId: string,
-  agentId: string,
-  companyId: string,
-  errorMessage: string,
-): RunEventPayload {
-  return {
-    runId,
-    agentId,
-    companyId,
-    type: 'run_failed',
-    data: { errorMessage },
     timestamp: new Date(),
   };
 }
@@ -174,20 +131,9 @@ export function createOutputChunkEvent(
   };
 }
 
-export function createRunPausedEvent(
-  runId: string,
-  agentId: string,
-  companyId: string,
-  pauseReason: string,
-  pauseFormSchema?: Record<string, unknown>,
-  inputPayload?: Record<string, unknown>,
-): RunEventPayload {
-  return {
-    runId,
-    agentId,
-    companyId,
-    type: 'run_paused',
-    data: { pauseReason, pauseFormSchema, inputPayload },
-    timestamp: new Date(),
-  };
-}
+export {
+  createRunCompletedEvent,
+  createRunFailedEvent,
+  createRunPausedEvent,
+  createRunStartedEvent,
+};

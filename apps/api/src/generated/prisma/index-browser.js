@@ -314,6 +314,7 @@ exports.Prisma.AgentRunScalarFieldEnum = {
   pipelineRunId: 'pipelineRunId',
   campaignId: 'campaignId',
   agentId: 'agentId',
+  agentVersion: 'agentVersion',
   parentRunId: 'parentRunId',
   feedbackId: 'feedbackId',
   status: 'status',

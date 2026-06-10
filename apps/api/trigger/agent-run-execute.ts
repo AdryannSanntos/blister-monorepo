@@ -10,6 +10,7 @@ import {
   createTriggerLlmProvider,
   type ExecutionDependencies,
 } from '../src/agents/runtime/kernel';
+import { createTriggerContextPackBuilder } from '../src/agents/adapters/create-trigger-context-pack-builder';
 import { AgentRunBlockService } from '../src/agents/runtime/agent-run-block.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 
@@ -83,7 +84,8 @@ export const agentRunExecute = task({
 
     const deps: ExecutionDependencies = {
       prisma,
-      contextPackBuilder: null,
+      contextPackBuilder:
+        mode === 'inline-stub' ? null : createTriggerContextPackBuilder(prisma),
       llmProvider: useLiveProviders ? createTriggerLlmProvider(prisma) : null,
       imageProvider: useLiveProviders ? createTriggerImageProvider(prisma) : null,
       assetResolver: useLiveProviders ? createTriggerAssetResolver() : null,

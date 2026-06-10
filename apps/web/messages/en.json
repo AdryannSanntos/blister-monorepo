@@ -878,6 +878,7 @@
       "newChat": "New chat",
       "thinking": "Working on it…",
       "working": "Thinking",
+      "renderError": "Part of the conversation couldn't be shown. Reload the page to continue.",
       "greetingLead": "Let's make something great"
     },
     "input": {

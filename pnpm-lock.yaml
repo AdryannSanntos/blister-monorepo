@@ -35,6 +35,9 @@ importers:
       '@better-auth/utils':
         specifier: ^0.4.0
         version: 0.4.0
+      '@company-os/agent-sdk':
+        specifier: workspace:^
+        version: link:../../packages/agent-sdk
       '@company-os/authz':
         specifier: workspace:^
         version: link:../../packages/authz
@@ -331,6 +334,19 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.41)(jiti@2.7.0)(jsdom@29.1.1(@noble/hashes@2.2.0))(lightningcss@1.32.0)(terser@5.47.1)
+
+  packages/agent-sdk:
+    dependencies:
+      '@company-os/types':
+        specifier: workspace:^
+        version: link:../types
+      zod:
+        specifier: ^4.1.12
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.21
+        version: 22.19.20
 
   packages/authz:
     dependencies:
@@ -3679,6 +3695,9 @@ packages:
 
   '@types/node@20.19.41':
     resolution: {integrity: sha512-ECymXOukMnOoVkC2bb1Vc/w/836DXncOg5m8Xj1RH7xSHZJWNYY6Zh7EH477vcnD5egKNNfy2RpNOmuChhFPgQ==}
+
+  '@types/node@22.19.20':
+    resolution: {integrity: sha512-6tELRwSDYWW9EdZhbeZmYGZ1/7Djkt+Ah3/ScEYT9cDord7UJzasR/4D3VONg9tQI5CDp+/CZC1AXj2pCFOvpw==}
 
   '@types/node@24.12.4':
     resolution: {integrity: sha512-GUUEShf+PBCGW2KaXwcIt3Yk+e3pkKwWKb9GSyM9WQVE+ep2jzmHdGsHzu4wgcZy5fN9FBdVzjpBQsYlpfpgLA==}
@@ -11549,6 +11568,10 @@ snapshots:
       '@types/express': 5.0.6
 
   '@types/node@20.19.41':
+    dependencies:
+      undici-types: 6.21.0
+
+  '@types/node@22.19.20':
     dependencies:
       undici-types: 6.21.0
 
