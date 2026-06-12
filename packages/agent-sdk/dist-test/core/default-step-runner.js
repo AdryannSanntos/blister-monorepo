@@ -194,6 +194,88 @@ function buildUserPrompt(context) {
 }
 async function executeStepStub(stepKey, agentId) {
     await new Promise((resolve) => setTimeout(resolve, 50));
+    if (agentId === 'cuts') {
+        const cutsStubByStep = {
+            retrieve_context: {},
+            resolve_source: {
+                sourceFileId: 'stub-file',
+                sourceFileName: 'stub.mp4',
+                transcriptText: 'Welcome to the show. Today we discuss retention hooks.',
+                segments: [
+                    { startSec: 0, endSec: 45, text: 'Welcome to the show.' },
+                    { startSec: 45, endSec: 120, text: 'Today we discuss retention hooks.' },
+                ],
+            },
+            analyze_source: {
+                transcriptText: 'Welcome to the show. Today we discuss retention hooks.',
+                analyzedSegments: [
+                    { id: 'seg-1', startSec: 0, endSec: 45, text: 'Welcome to the show.', wordCount: 4 },
+                    {
+                        id: 'seg-2',
+                        startSec: 45,
+                        endSec: 120,
+                        text: 'Today we discuss retention hooks.',
+                        wordCount: 5,
+                    },
+                ],
+            },
+            rank_segments: {
+                cuts: [
+                    {
+                        id: 'cut-1',
+                        title: 'Retention hook',
+                        description: 'Opens with a strong question',
+                        startSec: 45,
+                        endSec: 105,
+                        durationSec: 60,
+                        viralScore: 91,
+                        reviewStatus: 'approved',
+                    },
+                ],
+                sourceFileId: 'stub-file',
+            },
+            await_cut_review: {
+                cuts: [
+                    {
+                        id: 'cut-1',
+                        title: 'Retention hook',
+                        description: 'Opens with a strong question',
+                        startSec: 45,
+                        endSec: 105,
+                        durationSec: 60,
+                        viralScore: 91,
+                        reviewStatus: 'approved',
+                    },
+                ],
+                sourceFileId: 'stub-file',
+            },
+            validate_output: {},
+            finalize_cuts: {
+                cuts: [
+                    {
+                        id: 'cut-1',
+                        title: 'Retention hook',
+                        description: 'Opens with a strong question',
+                        startSec: 45,
+                        endSec: 105,
+                        durationSec: 60,
+                        viralScore: 91,
+                        reviewStatus: 'approved',
+                    },
+                ],
+                sourceFileId: 'stub-file',
+            },
+            cleanup_source: { deleted: false },
+        };
+        return {
+            type: 'CONTINUE',
+            output: cutsStubByStep[stepKey] ?? { stepKey },
+            llmModel: stepKey === 'rank_segments' ? 'stub/cuts' : undefined,
+            tokensInput: stepKey === 'rank_segments' ? 100 : 0,
+            tokensOutput: stepKey === 'rank_segments' ? 50 : 0,
+            creditCost: stepKey === 'rank_segments' ? 0 : 0,
+        };
+    }
     const stubOutputs = {
         copywriter: {
             caption: 'Descubra o sabor irresistível do nosso novo produto! 🎉',
