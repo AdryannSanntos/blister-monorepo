@@ -220,6 +220,10 @@ export const generatePostStep: StepExecutor = async (context, deps) => {
   }
   const designPlan: PostDesignPlan = designPlanResult.data;
 
+  // Declared outside the try so the catch can always finalize the streaming
+  // block — otherwise a provider error leaves it stuck showing "Processando…".
+  const progress = deps.message?.thinking();
+
   try {
     const assets = await resolveBrandAssets(context.brandProfile, deps.assetResolver ?? null);
 
@@ -237,7 +241,6 @@ export const generatePostStep: StepExecutor = async (context, deps) => {
       temperature: TEMPERATURE,
     };
 
-    const progress = deps.message?.thinking();
     let lastResponse: LlmCompleteResult | null = null;
 
     for (let attempt = 1; attempt <= MAX_PARSE_ATTEMPTS; attempt += 1) {
@@ -293,6 +296,7 @@ export const generatePostStep: StepExecutor = async (context, deps) => {
           : 'O modelo não retornou slides válidos para o post. Tente novamente.',
     };
   } catch (error) {
+    if (progress) await progress.end();
     return {
       type: 'FAILED',
       error: toUserFacingProviderError(error),

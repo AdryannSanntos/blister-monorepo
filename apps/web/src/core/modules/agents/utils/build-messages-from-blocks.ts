@@ -8,23 +8,23 @@ import type { UIMessage } from "ai";
 import type { QuestionAnswer } from "@/components/agent-elements/question/question-prompt";
 
 import type { AgentUiId } from "../config/agent-ui-config";
+import type { BlockState, MessageState } from "./agent-block-reducer";
 import {
   canReviewRun,
   getRunUserInput,
   parsePostOutput,
 } from "./agent-run-helpers";
-import type { BlockState, MessageState } from "./agent-block-reducer";
-import { formatAgentOutputMarkdown } from "./format-agent-output-markdown";
-import {
-  formatDesignPlanPreviewMarkdown,
-  parseDesignPlanPreview,
-} from "./format-design-plan-preview";
 import type {
   ClarificationCallbacks,
   PlanApprovalCallbacks,
   QuestionAnswerHandler,
   ReviewCallbacks,
 } from "./build-agent-messages";
+import { formatAgentOutputMarkdown } from "./format-agent-output-markdown";
+import {
+  formatDesignPlanPreviewMarkdown,
+  parseDesignPlanPreview,
+} from "./format-design-plan-preview";
 import {
   DESIGN_PLAN_APPROVAL_PAUSE_TYPE,
   isPostDesignPlanAwaitingApproval,
@@ -44,53 +44,6 @@ const looksLikeStructuredPayload = (text: string): boolean => {
   } catch {
     return false;
   }
-};
-
-const resolveFormFieldAnswer = (
-  field: {
-    name: string;
-    kind?: "single" | "multi" | "text";
-    options?: Array<{ id: string; label: string }>;
-  },
-  inputPayload: Record<string, unknown>,
-): QuestionAnswer | null => {
-  const raw = inputPayload[field.name];
-  if (raw === undefined || raw === null) return null;
-  if (typeof raw === "string") {
-    if (field.kind === "text") {
-      return raw.trim() ? { kind: "text", text: raw } : null;
-    }
-    return raw.trim() ? { kind: "single", selectedIds: [raw] } : null;
-  }
-  if (Array.isArray(raw) && raw.length > 0) {
-    return { kind: "multi", selectedIds: raw.map(String) };
-  }
-  return null;
-};
-
-const formatQuestionAnswerLabel = (
-  question: {
-    kind?: "single" | "multi" | "text";
-    options?: Array<{ id: string; label: string }>;
-  },
-  answer: QuestionAnswer,
-): string => {
-  if (answer.kind === "skip") return "Pulado";
-  if (answer.kind === "text") return answer.text?.trim() || "Respondido";
-
-  const selectedIds = answer.selectedIds ?? [];
-  if (selectedIds.length > 0 && question.options?.length) {
-    const labels = selectedIds.map((id) => {
-      const option = question.options!.find((entry) => entry.id === id);
-      return option?.label ?? id;
-    });
-    if (answer.text?.trim()) {
-      return `${labels.join(", ")} — ${answer.text.trim()}`;
-    }
-    return labels.join(", ");
-  }
-
-  return answer.text?.trim() || "Respondido";
 };
 
 const blockPartState = (
@@ -186,7 +139,10 @@ const buildPostPart = (
   };
 };
 
-const buildOutputPart = (agentId: AgentUiId, outputPayload: Record<string, unknown>) => {
+const buildOutputPart = (
+  agentId: AgentUiId,
+  outputPayload: Record<string, unknown>,
+) => {
   const markdown = formatAgentOutputMarkdown(agentId, outputPayload);
   return {
     type: MCP_OUTPUT,
@@ -224,31 +180,30 @@ const mapFormQuestionPart = (
 
   const fields = formSchema?.fields ?? [];
   const inputPayload = (run.inputPayload ?? {}) as Record<string, unknown>;
-  const isInteractive = run.status === "PAUSED" && block.status === "complete";
+  const fieldsAnswered =
+    fields.length > 0 &&
+    fields.every((field) => {
+      const value = inputPayload[field.name];
+      if (value === undefined || value === null) return false;
+      if (typeof value === "string") return value.trim().length > 0;
+      if (Array.isArray(value)) return value.length > 0;
+      return true;
+    });
+  // Interactive only for the question still awaiting an answer — already-answered
+  // questions from earlier pauses render as plain text even while the run is paused.
+  const isInteractive =
+    run.status === "PAUSED" && block.status === "complete" && !fieldsAnswered;
 
-  const resolvedAnswers = fields.flatMap((field) => {
-    const answer = resolveFormFieldAnswer(field, inputPayload);
-    if (!answer) return [];
-    return [
-      {
-        question: {
-          kind: field.kind ?? ("text" as const),
-          title: field.label,
-          description: field.description,
-          options: field.options,
-          placeholder: field.placeholder,
-        },
-        answer,
-        label: formatQuestionAnswerLabel(
-          {
-            kind: field.kind,
-            options: field.options,
-          },
-          answer,
-        ),
-      },
-    ];
-  });
+  // Answered / closed question: render the question text only. The user's answer
+  // is rendered as their own message bubble (see buildMessagesFromBlocks), so the
+  // question + answer read as a natural conversation turn without duplication.
+  if (!isInteractive) {
+    const title = fields
+      .map((field) => field.label)
+      .filter((label): label is string => Boolean(label))
+      .join("\n");
+    return title ? { type: "text" as const, text: title } : null;
+  }
 
   const baseInput = {
     questions: fields.map((field) => ({
@@ -261,38 +216,17 @@ const mapFormQuestionPart = (
     totalQuestions: fields.length,
     questionIndex: 1,
     ...questionInputExtras,
-    onSubmitAnswer:
-      questionAnswerHandler && isInteractive
-        ? (answer: QuestionAnswer) =>
-            questionAnswerHandler({ toolCallId: block.blockId, answer })
-        : questionInputExtras.onSubmitAnswer,
+    onSubmitAnswer: questionAnswerHandler
+      ? (answer: QuestionAnswer) =>
+          questionAnswerHandler({ toolCallId: block.blockId, answer })
+      : questionInputExtras.onSubmitAnswer,
   };
-
-  if (!isInteractive && resolvedAnswers.length > 0) {
-    const primary = resolvedAnswers[0];
-    return {
-      type: "tool-Question" as const,
-      toolCallId: block.blockId,
-      state: "output-available" as const,
-      input: baseInput,
-      output: {
-        answer: primary.answer,
-        answerLabel: primary.label,
-        answers: resolvedAnswers.map((entry) => ({
-          title: entry.question.title,
-          label: entry.label,
-        })),
-      },
-    };
-  }
 
   if (fields.length === 0) {
     return {
       type: "tool-Question" as const,
       toolCallId: block.blockId,
-      state: isInteractive
-        ? ("input-available" as const)
-        : blockPartState(block.status),
+      state: "input-available" as const,
       input: {
         questions: [
           {
@@ -311,9 +245,7 @@ const mapFormQuestionPart = (
   return {
     type: "tool-Question" as const,
     toolCallId: block.blockId,
-    state: isInteractive
-      ? ("input-available" as const)
-      : blockPartState(block.status),
+    state: "input-available" as const,
     input: baseInput,
   };
 };
@@ -330,11 +262,18 @@ const mapBlockToPart = (
   },
 ): UIMessage["parts"][number] | null => {
   const state = blockPartState(block.status);
+  const runIsTerminal =
+    options.run.status === "COMPLETED" ||
+    options.run.status === "FAILED" ||
+    options.run.status === "CANCELLED";
 
   switch (block.blockType) {
     case "thinking":
     case "working":
-      if (block.status !== "streaming") return null;
+      // Only show the live "Processando…" placeholder while the run is active.
+      // Once the run ends — or a block is left mid-stream by a provider error —
+      // the placeholder is meaningless and would otherwise linger/duplicate.
+      if (block.status !== "streaming" || runIsTerminal) return null;
       if (looksLikeStructuredPayload(block.text)) {
         return {
           type: "tool-Thinking",
@@ -360,7 +299,9 @@ const mapBlockToPart = (
         : [];
       const label =
         block.label ??
-        (typeof block.payload.label === "string" ? block.payload.label : undefined);
+        (typeof block.payload.label === "string"
+          ? block.payload.label
+          : undefined);
       return {
         type: "tool-Search",
         toolCallId: block.blockId,
@@ -380,10 +321,13 @@ const mapBlockToPart = (
       const designPlan = parseDesignPlanPreview(block.payload.designPlan);
       const summary =
         planPayload?.summary ??
-        (typeof block.payload.summary === "string" ? block.payload.summary : "");
+        (typeof block.payload.summary === "string"
+          ? block.payload.summary
+          : "");
       const awaitingApproval = isPostDesignPlanAwaitingApproval(options.run);
       const planApproved =
-        (options.run.inputPayload as Record<string, unknown>).designPlanApproved === true;
+        (options.run.inputPayload as Record<string, unknown>)
+          .designPlanApproved === true;
 
       return {
         type: "tool-PlanWrite",
@@ -393,10 +337,9 @@ const mapBlockToPart = (
           plan: {
             id: planPayload?.id ?? block.blockId,
             title: planPayload?.title ?? "Plano de design",
-            summary:
-              designPlan
-                ? formatDesignPlanPreviewMarkdown(designPlan)
-                : summary,
+            summary: designPlan
+              ? formatDesignPlanPreviewMarkdown(designPlan)
+              : summary,
             status: planApproved
               ? "approved"
               : awaitingApproval
@@ -455,7 +398,10 @@ const mapBlockToPart = (
         ) as UIMessage["parts"][number];
       }
 
-      return buildOutputPart(options.agentId, payload) as UIMessage["parts"][number];
+      return buildOutputPart(
+        options.agentId,
+        payload,
+      ) as UIMessage["parts"][number];
     }
 
     case "error": {
@@ -587,37 +533,60 @@ const shouldHideStreamingTextPart = (
   return looksLikeStructuredPayload(block.text);
 };
 
-/** User turns persisted for form answers are already shown inside answered question cards. */
-const isDuplicateFormAnswerUserMessage = (
+/** Maps every option id seen in form questions to its human label (e.g. linkedin → LinkedIn). */
+const buildOptionLabelMap = (messages: MessageState[]): Map<string, string> => {
+  const map = new Map<string, string>();
+  for (const message of messages) {
+    for (const block of message.blocks) {
+      if (block.blockType !== "form_question") continue;
+      const schema = block.payload.formSchema as {
+        fields?: Array<{ options?: Array<{ id: string; label: string }> }>;
+      } | null;
+      for (const field of schema?.fields ?? []) {
+        for (const option of field.options ?? []) {
+          if (option?.id) map.set(option.id, option.label ?? option.id);
+        }
+      }
+    }
+  }
+  return map;
+};
+
+type UserAnswerClassification =
+  | { kind: "prompt" }
+  | { kind: "fieldAnswer"; text: string }
+  | { kind: "confirmation" };
+
+/**
+ * Classifies a user message: the initial prompt, a form-field answer (kept as a
+ * chat bubble, prettified to the option label) or a boolean confirmation such as
+ * design-plan approval (hidden — it carries no conversational meaning).
+ */
+const classifyUserMessage = (
   message: MessageState,
   run: AgentRunStatusDto,
-): boolean => {
-  if (
-    run.status === "PAUSED" ||
-    run.status === "RUNNING" ||
-    run.status === "QUEUED"
-  ) {
-    return false;
-  }
-
+): UserAnswerClassification => {
   const textBlock = message.blocks.find((block) => block.blockType === "text");
-  if (!textBlock || message.blocks.length !== 1) return false;
+  if (!textBlock || message.blocks.length !== 1) return { kind: "prompt" };
 
   const text = textBlock.text.trim();
-  if (!text) return false;
+  if (!text) return { kind: "prompt" };
 
   const userInput = getRunUserInput(run).trim();
-  if (text === userInput) return false;
+  if (text === userInput) return { kind: "prompt" };
 
   const inputPayload = (run.inputPayload ?? {}) as Record<string, unknown>;
   for (const [key, value] of Object.entries(inputPayload)) {
     if (key === "userInput" || key === "conversationHistory") continue;
-    if (typeof value === "string" && value.trim() === text) return true;
-    if (value === true && text === "true") return true;
-    if (value === false && text === "false") return true;
+    if (typeof value === "boolean" && String(value) === text) {
+      return { kind: "confirmation" };
+    }
+    if (typeof value === "string" && value.trim() === text) {
+      return { kind: "fieldAnswer", text };
+    }
   }
 
-  return false;
+  return { kind: "prompt" };
 };
 
 export type BuildMessagesFromBlocksOptions = {
@@ -649,10 +618,27 @@ export const buildMessagesFromBlocks = ({
   const lastAssistantMessageId = [...messages]
     .reverse()
     .find((entry) => entry.role === "assistant")?.messageId;
+  const optionLabelMap = buildOptionLabelMap(messages);
 
   for (const message of messages) {
-    if (message.role === "user" && isDuplicateFormAnswerUserMessage(message, run)) {
-      continue;
+    if (message.role === "user") {
+      const classification = classifyUserMessage(message, run);
+      // Boolean confirmations (e.g. design-plan approval) aren't shown as chat.
+      if (classification.kind === "confirmation") {
+        continue;
+      }
+      // Keep the user's form answer as their own message bubble, prettified to
+      // the chosen option's label so it reads naturally in the conversation.
+      if (classification.kind === "fieldAnswer") {
+        const label =
+          optionLabelMap.get(classification.text) ?? classification.text;
+        uiMessages.push({
+          id: `${message.role}-${message.messageId}`,
+          role: "user",
+          parts: [{ type: "text", text: label }],
+        });
+        continue;
+      }
     }
 
     const parts = message.blocks
@@ -738,7 +724,6 @@ export const buildLegacyRunMessages = ({
   run,
   optimisticUserInput,
   reviewCallbacks,
-  clarificationCallbacks,
   planApprovalCallbacks,
   questionAnswerHandler,
   rejectQuestion,
@@ -827,7 +812,10 @@ export const buildLegacyRunMessages = ({
       run.status === "PAUSED" && !isDesignPlanApprovalPause
         ? {
             onAnswer: (answer) =>
-              questionAnswerHandler?.({ toolCallId: `clarify-${run.id}`, answer }),
+              questionAnswerHandler?.({
+                toolCallId: `clarify-${run.id}`,
+                answer,
+              }),
           }
         : null,
     planApprovalCallbacks,

@@ -127,7 +127,7 @@ describe("build-messages-from-blocks", () => {
     ).toBe(true);
   });
 
-  it("hides duplicate user bubbles for answered onboarding fields", () => {
+  it("keeps the user's form answer as a prettified bubble and shows the question as text", () => {
     const run = {
       ...baseRun,
       status: "COMPLETED" as const,
@@ -203,7 +203,23 @@ describe("build-messages-from-blocks", () => {
       messages,
     });
 
-    expect(ui.filter((message) => message.role === "user")).toHaveLength(1);
-    expect(ui[0]?.parts[0]).toMatchObject({ type: "text", text: "Post sobre bolo" });
+    const userMessages = ui.filter((message) => message.role === "user");
+    // Initial prompt + the answer bubble are both kept.
+    expect(userMessages).toHaveLength(2);
+    expect(userMessages[0]?.parts[0]).toMatchObject({
+      type: "text",
+      text: "Post sobre bolo",
+    });
+    // The raw "linkedin" answer is prettified to the option label.
+    expect(userMessages[1]?.parts[0]).toMatchObject({
+      type: "text",
+      text: "LinkedIn",
+    });
+    // The answered question is rendered as assistant text (no duplicated answer card).
+    const assistant = ui.find((message) => message.role === "assistant");
+    expect(assistant?.parts[0]).toMatchObject({
+      type: "text",
+      text: "Para qual rede social?",
+    });
   });
 });
