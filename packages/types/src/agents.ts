@@ -96,6 +96,8 @@ export const resumeAgentRequestSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+export { reviewCutsSchema, type ReviewCutsDto } from './agents/cuts';
+
 // ---------------------------------------------------------------------------
 // Agent Run Status DTO
 // ---------------------------------------------------------------------------

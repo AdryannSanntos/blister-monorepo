@@ -7,6 +7,10 @@ import { RagModule } from '../rag/rag.module';
 import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CompanyModule } from '../company/company.module';
 import { StorageModule } from '../storage/storage.module';
+import { WorkspaceModule } from '../workspace/workspace.module';
+import { WorkspaceSettingsModule } from '../workspace-settings/workspace-settings.module';
+
+import { CutsRunDepsAdapter } from './adapters/cuts-run-deps.adapter';
 
 import { AgentRegistryService } from './runtime/agent-registry.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
@@ -31,6 +35,8 @@ import { InternalEventsController } from './internal-events.controller';
     AiRuntimeModule,
     CompanyModule,
     StorageModule,
+    WorkspaceModule,
+    WorkspaceSettingsModule,
   ],
   controllers: [
     AgentCatalogController,
@@ -39,6 +45,7 @@ import { InternalEventsController } from './internal-events.controller';
     InternalEventsController,
   ],
   providers: [
+    CutsRunDepsAdapter,
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,

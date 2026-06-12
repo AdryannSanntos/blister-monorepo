@@ -6,6 +6,53 @@ type BootstrapUser = {
   email: string;
 };
 
+async function ensurePersonalSpace(db: PrismaClient, user: BootstrapUser) {
+  const existing = await db.personalSpace.findUnique({ where: { userId: user.id } });
+  if (existing) return existing;
+
+  const name = user.name ?? user.email.split('@')[0];
+
+  return db.$transaction(async (tx) => {
+    const personalSpace = await tx.personalSpace.create({
+      data: { userId: user.id, name },
+    });
+
+    await tx.workspaceSettings.create({
+      data: { personalSpaceId: personalSpace.id, displayName: name },
+    });
+
+    const settings = await tx.platformCreditSettings.findUnique({
+      where: { id: 'default' },
+    });
+    const freeTierAmount = settings?.freeTierAmount ?? 20;
+
+    await tx.personalCreditBalance.create({
+      data: {
+        personalSpaceId: personalSpace.id,
+        amount: freeTierAmount,
+        currency: 'USD',
+      },
+    });
+
+    for (const folder of [
+      { name: 'Uploads', systemKey: 'uploads' },
+      { name: 'Gerados', systemKey: 'generated' },
+      { name: 'Integrações', systemKey: 'integrations' },
+    ]) {
+      await tx.workspaceFolder.create({
+        data: {
+          personalSpaceId: personalSpace.id,
+          name: folder.name,
+          kind: 'SYSTEM',
+          systemKey: folder.systemKey,
+        },
+      });
+    }
+
+    return personalSpace;
+  });
+}
+
 function buildUniqueSlug(db: PrismaClient, email: string): Promise<string> {
   const baseSlug = email
     .split('@')[0]
@@ -35,13 +82,15 @@ export async function bootstrapUserOnSignup(
   });
 
   const ownerRole = await db.role.findUnique({ where: { name: 'owner' } });
-  if (!ownerRole) return;
+  if (ownerRole) {
+    await db.userRoleAssignment.upsert({
+      where: { userId_roleId: { userId: user.id, roleId: ownerRole.id } },
+      update: {},
+      create: { userId: user.id, roleId: ownerRole.id },
+    });
+  }
 
-  await db.userRoleAssignment.upsert({
-    where: { userId_roleId: { userId: user.id, roleId: ownerRole.id } },
-    update: {},
-    create: { userId: user.id, roleId: ownerRole.id },
-  });
+  await ensurePersonalSpace(db, user);
 }
 
 export async function createCompanyForUser(
@@ -82,6 +131,41 @@ export async function createCompanyForUser(
         description: 'Free tier credit',
       },
     });
+
+    await tx.workspaceSettings.create({
+      data: {
+        companyId: company.id,
+        displayName: name,
+      },
+    });
+
+    for (const folder of [
+      { name: 'Uploads', systemKey: 'uploads' },
+      { name: 'Gerados', systemKey: 'generated' },
+      { name: 'Integrações', systemKey: 'integrations' },
+    ]) {
+      await tx.workspaceFolder.create({
+        data: {
+          companyId: company.id,
+          name: folder.name,
+          kind: 'SYSTEM',
+          systemKey: folder.systemKey,
+        },
+      });
+    }
+
+    const ownerRole = await tx.role.findUnique({ where: { name: 'owner' } });
+    if (ownerRole) {
+      await tx.companyMember.upsert({
+        where: { companyId_userId: { companyId: company.id, userId: user.id } },
+        update: { roleId: ownerRole.id },
+        create: {
+          companyId: company.id,
+          userId: user.id,
+          roleId: ownerRole.id,
+        },
+      });
+    }
 
     return company;
   });

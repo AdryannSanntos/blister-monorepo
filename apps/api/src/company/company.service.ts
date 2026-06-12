@@ -21,7 +21,7 @@ import { createCompanyForUser } from './company-bootstrap.util';
 import { getActiveCompanyIdFromRequest } from './company-context.util';
 import { CompanyRagSyncService } from '../rag/company-rag-sync.service';
 
-export type HomeDestination = 'onboarding' | 'dashboard' | 'workspaces';
+export type HomeDestination = 'onboarding' | 'dashboard' | 'personal-space';
 
 export type CompanySummary = {
   id: string;
@@ -41,11 +41,32 @@ export class CompanyService {
     private readonly companyRagSync: CompanyRagSyncService,
   ) {}
 
-  listByOwner(ownerUserId: string): Promise<CompanySummary[]> {
-    return this.prisma.company.findMany({
-      where: { ownerUserId },
+  async listAccessibleCompanies(userId: string): Promise<CompanySummary[]> {
+    const owned = await this.prisma.company.findMany({
+      where: { ownerUserId: userId },
       orderBy: { createdAt: 'asc' },
     });
+
+    const memberships = await this.prisma.companyMember.findMany({
+      where: { userId },
+      include: { company: true },
+    });
+
+    const map = new Map<string, CompanySummary>();
+    for (const company of owned) {
+      map.set(company.id, company);
+    }
+    for (const membership of memberships) {
+      map.set(membership.company.id, membership.company);
+    }
+
+    return [...map.values()].sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+    );
+  }
+
+  listByOwner(ownerUserId: string): Promise<CompanySummary[]> {
+    return this.listAccessibleCompanies(ownerUserId);
   }
 
   async findIncompleteByOwner(ownerUserId: string) {
@@ -56,23 +77,27 @@ export class CompanyService {
   }
 
   async getHomeDestination(ownerUserId: string): Promise<HomeDestination> {
-    const companies = await this.listByOwner(ownerUserId);
+    const companies = await this.listAccessibleCompanies(ownerUserId);
     const incomplete = companies.filter((company) => !company.onboardingCompletedAt);
 
-    if (companies.length === 0 || incomplete.length > 0) {
+    if (incomplete.length > 0) {
       return 'onboarding';
     }
 
-    const onboarded = companies.filter((company) => company.onboardingCompletedAt);
-    if (onboarded.length === 1) {
-      return 'dashboard';
+    if (companies.length === 0) {
+      return 'personal-space';
     }
 
-    return 'workspaces';
+    return 'dashboard';
   }
 
   async resolveActiveCompany(ownerUserId: string, activeCompanyId?: string) {
-    const companies = await this.listByOwner(ownerUserId);
+    const companies = await this.listAccessibleCompanies(ownerUserId);
+
+    if (activeCompanyId === 'personal' || activeCompanyId === '__personal__') {
+      throw new BadRequestException('Personal workspace is not a company');
+    }
+
     if (companies.length === 0) {
       throw new NotFoundException('Company not found');
     }

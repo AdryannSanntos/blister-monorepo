@@ -1,5 +1,5 @@
-import { CompaniesListPage } from "src/core/modules/workspaces/pages/companies-list-page";
+import { redirect } from "next/navigation";
 
-export default function WorkspacesPage() {
-  return <CompaniesListPage />;
+export default function WorkspacesRedirectPage() {
+  redirect("/dashboard");
 }

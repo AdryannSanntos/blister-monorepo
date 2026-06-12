@@ -8,7 +8,7 @@ const BrandLogoDefault: React.FC<React.SVGProps<SVGSVGElement>> = ({
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="320 240 1580 480"
+    viewBox="300 190 1640 530"
     className={className}
     aria-hidden
     {...props}
@@ -58,11 +58,11 @@ export const BrandLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
   ...props
 }) => (
   <span
-    className={cn("inline-flex shrink-0", className)}
+    className={cn("inline-flex shrink-0 items-center overflow-visible", className)}
     aria-label="Blister"
     role="img"
   >
-    <BrandLogoDefault className="h-full w-auto dark:hidden" {...props} />
+    <BrandLogoDefault className="block h-full w-auto dark:hidden" {...props} />
     <BrandLogoWhite className="hidden h-full w-auto dark:block" {...props} />
   </span>
 );

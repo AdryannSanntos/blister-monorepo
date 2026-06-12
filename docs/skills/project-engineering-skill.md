@@ -1,89 +1,62 @@
-# Project Engineering Skill — Blister
+# Project Engineering Skill — Blister OS
 
-> Fonte de verdade: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`CLAUDE.md`](../../CLAUDE.md)
+> Fonte: [`docs/prd/blister-os-prd.md`](../prd/blister-os-prd.md) · [`CLAUDE.md`](../../CLAUDE.md) · [`docs/plans/blister-os/`](../plans/blister-os/)
 
 ## Objetivo
 
-Skill base para qualquer tarefa neste monorepo. Estabelece regras de produto, arquitetura, permissões e implementação.
+Skill base para qualquer tarefa neste monorepo pós-pivot OS.
 
-## Entendimento do Projeto
+## Produto
 
-- **Blister** é marketing com IA para MEIs, pequenos negócios e autônomos no Brasil.
-- O usuário descreve o que precisa (*"post sobre lançamento do bolo de cenoura"*) e recebe pacote completo: imagem PNG, legenda e hashtags — com identidade da marca.
-- Moat: **Cérebro da Marca** + **RAG** + **auto-melhoramento** por feedback (sem fine-tuning no MVP).
-- Estado atual: auth/RBAC/platform admin implementados; domínio Blister IA (empresa, campanhas, agentes, RAG, créditos) a implementar.
+- **Blister OS** — SO de conteúdo video-first (creators, mentores, agências)
+- Espaço Pessoal + Empresas (5 roles)
+- Contexto: **Configurações + Arquivos** — sem módulo Brand Brain
+- Marketplace + Biblioteca; Projetos como workspace
+- Agentes default: `research`, `cuts`, `video_editor`
+
+## Planos de execução
+
+```
+Plano 1 Docs → Plano 2 Frontend (zero API) → Plano 3 Backend
+```
+
+Regras: [`00-execution-rules.md`](../plans/blister-os/00-execution-rules.md)
 
 ## Estrutura
 
 ```
-apps/web          Next.js 16 + React 19
-apps/api          NestJS 11 + Prisma + pgvector + CASL
-packages/authz    permissões, roles e ability CASL
-packages/types    schemas/tipos Zod compartilhados
-packages/configs  presets TypeScript
+apps/web              Next.js 16 + React 19
+apps/api              NestJS — HTTP + adapters only for agents
+packages/agent-sdk    100% agent + workflow logic
+packages/authz        CASL
+packages/types        Zod shared
 ```
 
-## Regras Invioláveis
+## Regras invioláveis
 
-- Toda mutação ou leitura sensível no backend precisa de `@RequirePermission(key)`.
-- Toda ação de escrita/exclusão ou dado restrito no frontend precisa de `PermissionGate` ou `useAbility()`.
-- `userId` vem sempre de `req.currentUser.id`, nunca do body.
-- IDs de recurso vêm de `req.params`, nunca do body.
-- Endpoints públicos precisam de `@Public()` explícito.
-- Nova permissão nasce em `packages/authz` antes de ser usada.
-- Prisma é o único cliente de banco.
-- `better-auth` trata apenas auth/sessão.
-- Roles de sistema `owner`, `admin`, `member` são imutáveis.
-- 1 company per user in MVP (`companyId`).
+- `@RequirePermission` / `<PermissionGate>`
+- `userId` de `req.currentUser.id`
+- Nova permissão → `packages/authz` primeiro
+- Prisma único cliente DB
+- better-auth = sessão apenas
+- Agentes isolados — sem pipeline
+- SDK monolith — ver `.cursor/rules/agent-sdk-monolith.mdc`
 
-## Regras de codificação
+## Codificação
 
-| Área | Regra |
-|------|-------|
-| Validação | **Zod sempre** — backend, frontend, `packages/types`, outputs de IA |
-| Servidor (web) | **TanStack Query** via hooks de domínio |
-| Formulários | **RHF + zodResolver** sempre |
-| URL state | **nuqs** para filtros, tabs, paginação |
-| Componentes | `core/modules/<modulo>/components/` ou `core/shared/` |
-| Renderização | Server Components por padrão; Server Actions quando couber |
-| Estado global UI | **zustand** quando necessário |
-| UX | **Playwright** para fluxos críticos e regressão |
+Zod · TanStack Query · RHF · nuqs · Server Components · `core/modules/<feature>/` · zustand (UI) · Playwright
 
-## Agentes e RAG (MVP)
+## Plano 2
 
-- 3 agentes plugáveis: Estrategista, Copywriter, Designer (`apps/api/src/agents/<nome>/`).
-- Workflow multi-step por agente na mesma `AgentRun` (pause/resume/fail).
-- RAG dedicado em `apps/api/src/rag/`: estruturado → pgvector → rerank.
-- Campanhas opcionais — enriquecem contexto quando existem.
-- HTML→PNG via Satori no MVP.
-- Créditos: US$ 20 free tier único por empresa; bloqueio sem saldo.
-
-## Produto e Linguagem
-
-- Marca: **Blister**
-- Termos UI: Criar post, Campanha, Cérebro da Marca, Peça, Créditos, Aprovar
-- **Não** expor jargão de IA ao usuário (agente, prompt, LLM)
-- Simplicidade radical: máx. 2 campos para campanha; 1 frase para gerar post
-
-## Stack
-
-### Frontend
-- Next.js 16, React 19, App Router — **Server Components por padrão**
-- Tailwind CSS v4, shadcn/ui, **RHF + Zod**, **TanStack Query/Table**, **nuqs**, **zustand**, **Playwright**
-- next-themes (light default)
-
-### Backend
-- NestJS 11, Prisma + PostgreSQL + pgvector
-- better-auth, CASL, Zod, Resend
-- S3-compatível para assets gerados
+Zero integração API de produto — fixtures funcionais.
 
 ## Ordem de leitura
 
-1. `CLAUDE.md`
-2. `docs/prd/blister-master-prd.md`
-3. Skill específica da tarefa (frontend, backend, agents, design-system)
-4. `docs/project/architecture.md`
+1. `blister-os-prd.md`
+2. `CLAUDE.md`
+3. Plano ativo (01/02/03)
+4. Skill de domínio
 
 ## Legado
 
-`docs/archive/` e `docs/superpowers/` = Workana AI / TikTok Shop — referência histórica apenas.
+`blister-master-prd.md`, Brand Brain, agentes strategist/copywriter/designer/post — **deprecated**. `docs/archive/` não é contrato.

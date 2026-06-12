@@ -12,6 +12,12 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Request } from 'express';
+import { createReadStream } from 'node:fs';
+import { unlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { randomUUID } from 'node:crypto';
+import { diskStorage } from 'multer';
+import { MAX_PRESIGNED_UPLOAD_BYTES } from '@company-os/types';
 import type { CurrentUser } from '../auth/session.service';
 import { CompanyService } from '../company/company.service';
 import { StorageService } from './storage.service';
@@ -36,6 +42,13 @@ const ALLOWED_UPLOAD_MIME_TYPES = new Set([
 ]);
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+const workspaceUploadStorage = diskStorage({
+  destination: tmpdir(),
+  filename: (_req, file, callback) => {
+    callback(null, `${randomUUID()}-${file.originalname}`);
+  },
+});
 
 @Controller('storage')
 export class StorageController {
@@ -144,6 +157,48 @@ export class StorageController {
     const scopedKey = `${companyScopePrefix(scope.slug)}${hint}`;
 
     await this.storageService.uploadObject(scopedKey, file.buffer, file.mimetype);
+
+    return { key: scopedKey };
+  }
+
+  /** Workspace file upload via API — avoids S3 CORS on direct presigned browser PUT. */
+  @Post('object-upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: workspaceUploadStorage,
+      limits: { fileSize: MAX_PRESIGNED_UPLOAD_BYTES },
+    }),
+  )
+  async uploadObject(
+    @Req() req: Request,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body('keyHint') keyHint?: string,
+  ) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+
+    const scope = await this.resolveUploadScope(user.id, req);
+    const hint = keyHint
+      ? sanitizeKeyHint(keyHint)
+      : `uploads/${Date.now()}-${file.originalname}`;
+    const scopedKey = `${companyScopePrefix(scope.slug)}${hint}`;
+
+    const tempPath = file.path;
+
+    try {
+      const stream = createReadStream(tempPath);
+      await this.storageService.uploadObjectStream(
+        scopedKey,
+        stream,
+        file.mimetype || 'application/octet-stream',
+        file.size,
+      );
+    } finally {
+      await unlink(tempPath).catch(() => undefined);
+    }
 
     return { key: scopedKey };
   }

@@ -1,7 +1,10 @@
 # Catálogo de Agentes (sem pipeline automático)
 
-> **Atualizado:** 2026-06-09  
-> **Decisão:** [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md)
+> ⚠️ **Atualizado Blister OS — 2026-06-12**  
+> Agentes default: `research`, `cuts`, `video_editor`. Marketplace: `planning`, `script`, `thumbnail`, `distribution`.  
+> IDs `strategist`, `copywriter`, `designer`, `post` — **deprecated**. Ver [`README.md`](README.md).
+
+> **Decisão:** [`2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md)
 
 Não existe pipeline que executa agentes em sequência. `PipelineAgentConfig` no admin é **catálogo** (habilitado/desabilitado + ordem de exibição na UI), não ordem de execução.
 

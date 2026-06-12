@@ -1,13 +1,12 @@
 import { buildAgentStepExecutors } from '../../adapters/build-agent-step-executors';
-import { copywriterAgent } from '../../copywriter/agent';
-import { designerAgent } from '../../designer/agent';
-import { postAgent } from '../../post/agent';
-import { strategistAgent } from '../../strategist/agent';
+import { cutsAgent } from '../../cuts/agent';
 import type { CustomStepExecutor } from './agent-execution.kernel';
 
+/**
+ * Registry de executores de step customizados, indexado por `agentId:stepKey`.
+ *
+ * `cuts` é o único agente concreto criado. Ver `docs/agents/agent-sdk.md`.
+ */
 export const agentStepRegistry: Record<string, CustomStepExecutor> = {
-  ...buildAgentStepExecutors(copywriterAgent),
-  ...buildAgentStepExecutors(strategistAgent),
-  ...buildAgentStepExecutors(designerAgent),
-  ...buildAgentStepExecutors(postAgent),
+  ...buildAgentStepExecutors(cutsAgent),
 };

@@ -7,10 +7,13 @@ import {
   logoVariantsSchema,
 } from './brand-visual';
 
+/** Max size for workspace video uploads via presigned URL (5 GB). */
+export const MAX_PRESIGNED_UPLOAD_BYTES = 5 * 1024 * 1024 * 1024;
+
 export const presignedUploadRequestSchema = z.object({
   key: z.string().min(1),
   mimeType: z.string().min(1),
-  sizeBytes: z.number().int().positive(),
+  sizeBytes: z.number().int().positive().max(MAX_PRESIGNED_UPLOAD_BYTES),
 });
 export type PresignedUploadRequest = z.infer<typeof presignedUploadRequestSchema>;
 

@@ -11,7 +11,12 @@ import { RagModule } from '../rag/rag.module';
 import { RagEventsService } from '../rag/rag-events.service';
 
 @Module({
-  imports: [PrismaModule, AuditModule, forwardRef(() => StorageModule), RagModule],
+  imports: [
+    PrismaModule,
+    AuditModule,
+    forwardRef(() => StorageModule),
+    forwardRef(() => RagModule),
+  ],
   controllers: [CompanyController, CompaniesController, BrandController, RagCompanyController],
   providers: [
     CompanyService,

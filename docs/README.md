@@ -1,38 +1,70 @@
 # Blister Docs
 
-Documentação viva do **Blister** — marketing com IA para MEIs e pequenos negócios.
+Documentação viva do **Blister OS** — SO de conteúdo video-first.
 
-## Fonte de verdade (ordem)
+## Planos de migração (comece aqui)
 
-1. [`docs/prd/blister-master-prd.md`](prd/blister-master-prd.md) — PRD mestre
-2. [`CLAUDE.md`](../CLAUDE.md) — regras operacionais
-3. [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](decisions/2026-06-09-agents-isolated-architecture.md)
-4. [`docs/decisions/2026-06-08-product-pivot-ai-marketing.md`](decisions/2026-06-08-product-pivot-ai-marketing.md)
-5. [`docs/project/`](project/) — arquitetura, fluxos, estado atual
-6. [`docs/agents/`](agents/) — agentes e workflow engine
+**Regras:** [`docs/plans/blister-os/00-execution-rules.md`](plans/blister-os/00-execution-rules.md)
+
+Ordem: [01 Correção + Docs](plans/blister-os/01-correction-and-docs.md) → [02 Frontend](plans/blister-os/02-frontend.md) → [03 Backend](plans/blister-os/03-backend.md)
+
+Plano 2: **zero integração** — UI com fixtures funcionais; API só no Plano 3.
+
+---
+
+## Hierarquia de fontes
+
+| # | Fonte | Uso |
+|---|-------|-----|
+| 1 | [`docs/prd/blister-os-prd.md`](prd/blister-os-prd.md) | Produto e domínio |
+| 2 | [`blister-os-reference.html`](../blister-os-reference.html) | Layout, NAV, fluxos visuais |
+| 3 | [`docs/plans/blister-os/00-execution-rules.md`](plans/blister-os/00-execution-rules.md) | Ordem e sync planos |
+| 4 | [`CLAUDE.md`](../CLAUDE.md) | Regras operacionais código |
+| 5 | [`docs/decisions/2026-06-12-blister-os-pivot.md`](decisions/2026-06-12-blister-os-pivot.md) | ADR pivot |
+| 6 | [`docs/design-system/blister-os-reference.md`](design-system/blister-os-reference.md) | Inventário telas |
+| 7 | [`docs/project/`](project/) | Arquitetura, fluxos, auth, estado |
+| 8 | [`docs/agents/`](agents/) | Agentes + workflow |
+| 9 | [`docs/marketplace/README.md`](marketplace/README.md) | Marketplace e biblioteca |
+
+**Legado:** [`docs/prd/blister-master-prd.md`](prd/blister-master-prd.md) — deprecated.
+
+---
 
 ## Estrutura
 
 ```
 docs/
-├── project/     ← como o produto funciona
-├── prd/         ← requisitos e épicos
-├── agents/      ← documentação por agente
-├── decisions/   ← decisões arquiteturais
-├── archive/     ← LEGADO (Workana, TikTok) — não usar como verdade
-├── design-system/
-├── setup/
-└── skills/
+├── plans/blister-os/   ← planos de execução 01/02/03
+├── prd/                ← blister-os-prd + módulos
+├── project/            ← arquitetura, fluxos, workspace-context
+├── agents/             ← default + marketplace agents
+├── marketplace/        ← catálogo e resgate
+├── decisions/          ← ADRs
+├── design-system/      ← tokens + blister-os-reference
+├── skills/             ← skills IA desenvolvimento
+├── archive/            ← MEI/Workana — NÃO usar como contrato
+└── setup/
 ```
 
-## Produto
+---
 
-Blister oferece **vários agentes** de marketing (estratégia, texto, visual, post completo, …) que rodam **isolados**, com campanha como workspace opcional. RAG + auto-melhoramento por agente.
+## Produto (resumo)
 
-Termos UI: **Campanha**, **Cérebro da Marca**, labels por agente, **Aprovar**. Evitar "peça" e jargão de IA.
+- **Video-first:** Editor, Cortes, Pesquisar (default)
+- **Marketplace:** Edit Styles, templates, agentes extras → Biblioteca
+- **Contexto:** Configurações + Arquivos — sem módulo Brand Brain
+- **Projetos:** workspace operacional — runs isoladas por ferramenta
 
-## Regra geral
+Termos UI: ver [`blister-os-prd.md`](prd/blister-os-prd.md) § Linguagem.
 
-Se docs históricas divergirem do PRD ou código, prevalecem: **código implementado**, **CLAUDE.md**, **blister-master-prd.md**.
+---
 
-`docs/archive/` e `docs/superpowers/` (até migrar) = referência histórica apenas.
+## Regra de conflito
+
+1. Código mergeado em `main`
+2. `blister-os-reference.html`
+3. `blister-os-prd.md`
+4. ADR 2026-06-12
+5. Planos 01/02/03
+
+`docs/archive/` e `docs/superpowers/` = histórico apenas.

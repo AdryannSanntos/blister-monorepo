@@ -161,6 +161,8 @@
     "signOutError": "Erro ao sair da conta.",
     "collapseSidebar": "Recolher sidebar",
     "expandSidebar": "Expandir sidebar",
+    "personalSpace": "Espaço pessoal",
+    "createCompany": "Criar empresa",
     "homePage": {
       "greeting": "Olá, {name}",
       "greetingFallback": "Bem-vindo à Blister",
@@ -243,22 +245,20 @@
     }
   },
   "sidebar": {
+    "home": "Início",
+    "studio": "Estúdio",
+    "content": "Conteúdo",
+    "archive": "Acervo",
+    "settingsGroup": "Configurações",
+    "marketplace": "Marketplace",
+    "library": "Biblioteca",
+    "files": "Arquivos",
     "dashboard": "Dashboard",
     "agents": "Agentes",
     "myAgents": "Meus agentes",
-    "agentStrategist": "Estrategista",
-    "agentCopywriter": "Copywriter",
-    "agentDesigner": "Designer",
-    "agentPost": "Post completo",
-    "generateCopy": "Gerar copy",
-    "generateImage": "Gerar imagem",
-    "createPost": "Criar post",
-    "adaptContent": "Adaptar conteúdo",
-    "createEmail": "Criar email",
     "history": "Histórico",
     "credits": "Créditos",
     "company": "Empresa",
-    "brandBrain": "Cérebro",
     "campaigns": "Campanhas",
     "integrations": "Integrações",
     "workspace": "Workspace",
@@ -267,6 +267,385 @@
     "settings": "Configurações",
     "admin": "Admin",
     "settingsAria": "Configurações"
+  },
+  "home": {
+    "greeting": "Olá, {name}",
+    "subtitle": "Seu estúdio de conteúdo em um só lugar.",
+    "primaryAction": "Editar vídeo",
+    "studioTitle": "Estúdio",
+    "activityTitle": "Atividade recente",
+    "marketplaceNews": "Novidades no Marketplace",
+    "seeAll": "Ver tudo",
+    "stats": {
+      "credits": "Créditos",
+      "creditsHint": "Saldo disponível para resgates",
+      "library": "Biblioteca",
+      "libraryHint": "Itens resgatados",
+      "edits": "Edições",
+      "cuts": "Cortes"
+    }
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "description": "Descubra estilos, packs, templates, assets e agentes para acelerar sua produção.",
+    "filterAria": "Filtrar por tipo",
+    "pricingAria": "Filtrar por preço",
+    "searchPlaceholder": "Buscar por nome, autor ou descrição",
+    "searchAria": "Buscar no marketplace",
+    "sortAria": "Ordenar catálogo",
+    "openLibrary": "Minha biblioteca",
+    "loadingTitle": "Carregando item",
+    "notFound": "Item não encontrado",
+    "notFoundDescription": "Esse item pode ter sido removido ou o link está desatualizado.",
+    "back": "Voltar ao marketplace",
+    "byAuthor": "por {author}",
+    "specs": "Especificações",
+    "includes": "O que está incluso",
+    "related": "Você também pode gostar",
+    "relatedDescription": "Itens parecidos para complementar seu fluxo.",
+    "redeemFree": "Resgatar grátis",
+    "redeemPaid": "Resgatar por {price} créditos",
+    "redeemAria": "Resgatar {name}",
+    "alreadyOwned": "Já na biblioteca",
+    "redeemSuccess": "{name} adicionado à biblioteca",
+    "redeemFailed": "Não foi possível resgatar",
+    "pricing": {
+      "all": "Todos os preços",
+      "free": "Grátis",
+      "paid": "Com créditos"
+    },
+    "sort": {
+      "featured": "Destaques",
+      "priceAsc": "Menor preço",
+      "priceDesc": "Maior preço",
+      "name": "Nome A–Z"
+    },
+    "stats": {
+      "credits": {
+        "label": "Saldo de créditos",
+        "hint": "Usado para resgatar itens premium do catálogo."
+      },
+      "free": {
+        "label": "Itens grátis",
+        "hint": "Recursos disponíveis sem gastar créditos."
+      },
+      "paid": {
+        "label": "Itens premium",
+        "hint": "Packs, estilos e agentes pagos com créditos."
+      },
+      "library": {
+        "label": "Na biblioteca",
+        "hint": "Tudo que você já resgatou ou comprou."
+      }
+    },
+    "creditBanner": {
+      "title": "Você tem {credits} créditos disponíveis",
+      "description": "Resgate itens grátis imediatamente ou use créditos para desbloquear recursos premium.",
+      "lowDescription": "Seu saldo está baixo. Recarregue créditos para continuar resgatando itens premium.",
+      "lowBadge": "Saldo baixo",
+      "action": "Gerenciar créditos"
+    },
+    "sections": {
+      "featured": {
+        "title": "Destaques",
+        "description": "Novidades e picks do time Blister para começar agora."
+      },
+      "free": {
+        "title": "Grátis para resgatar",
+        "description": "Entre no catálogo sem gastar créditos da plataforma."
+      },
+      "paid": {
+        "title": "Premium com créditos",
+        "description": "Recursos avançados desbloqueados com o saldo do workspace."
+      },
+      "owned": {
+        "title": "Já na sua biblioteca",
+        "description": "Itens que você já resgatou ou comprou."
+      }
+    },
+    "empty": {
+      "title": "Nenhum item encontrado",
+      "description": "Ajuste os filtros ou busque por outro termo para explorar o catálogo."
+    },
+    "card": {
+      "free": "Grátis",
+      "credits": "{price} créditos",
+      "owned": "Na biblioteca",
+      "viewDetails": "Ver detalhes",
+      "byAuthor": "por {author}",
+      "openItem": "Abrir {name}",
+      "flags": {
+        "new": "Novo",
+        "featured": "Destaque"
+      }
+    },
+    "detail": {
+      "byAuthor": "por {author}",
+      "yourBalance": "Seu saldo",
+      "afterPurchase": "Saldo após resgate",
+      "alreadyInLibrary": "Este item já está na sua biblioteca.",
+      "openLibrary": "Abrir biblioteca",
+      "insufficientCredits": "Créditos insuficientes para resgatar este item.",
+      "freeHint": "Resgate gratuito — o item vai direto para a biblioteca."
+    },
+    "types": {
+      "all": "Todos",
+      "editStyle": "Edit Styles",
+      "postStyle": "Post Styles",
+      "captionStyle": "Estilos de legenda",
+      "pack": "Packs visuais",
+      "template": "Templates",
+      "asset": "Assets criativos",
+      "agent": "Agentes"
+    },
+    "typeDescriptions": {
+      "editStyle": "Presets de ritmo, legendas e transições para acelerar a edição de vídeos.",
+      "postStyle": "Layouts prontos para posts estáticos e carrosséis nas redes.",
+      "captionStyle": "Estilos de legenda e tipografia para manter consistência visual.",
+      "pack": "Conjuntos visuais com paleta, tipografia e elementos gráficos.",
+      "template": "Modelos reutilizáveis para acelerar a produção recorrente.",
+      "asset": "Recursos criativos isolados para compor suas peças.",
+      "agent": "Fluxos especializados para etapas específicas da produção."
+    },
+    "carousel": {
+      "prev": "Anterior",
+      "next": "Próximo"
+    }
+  },
+  "library": {
+    "title": "Biblioteca",
+    "description": "Tudo que você já resgatou ou comprou.",
+    "filterAria": "Filtrar biblioteca",
+    "emptyTitle": "Biblioteca vazia",
+    "emptyDescription": "Resgate itens no Marketplace para começar.",
+    "browseMarketplace": "Ir ao Marketplace",
+    "openMarketplace": "Explorar marketplace",
+    "useInEditor": "Usar no Editor"
+  },
+  "files": {
+    "title": "Arquivos",
+    "description": "Matéria-prima do estúdio: vídeos, docs e pastas organizadas.",
+    "newFolder": "Nova pasta",
+    "upload": "Enviar arquivo",
+    "uploadTitle": "Enviar arquivo",
+    "breadcrumbAria": "Caminho da pasta",
+    "back": "Voltar",
+    "viewAria": "Modo de visualização",
+    "viewGrid": "Grade",
+    "viewList": "Lista",
+    "extractData": "Extrair dados",
+    "extractQueued": "Extração na fila (demo)",
+    "folderNamePlaceholder": "Nome da pasta",
+    "namePlaceholder": "Nome",
+    "cancel": "Cancelar",
+    "create": "Criar",
+    "save": "Salvar",
+    "rename": "Renomear",
+    "delete": "Excluir",
+    "dropzoneAria": "Área de upload",
+    "dropzoneTitle": "Arraste um arquivo ou clique para selecionar",
+    "dropzoneHint": "Vídeos até 5 GB",
+    "removeSelectedFile": "Remover arquivo selecionado",
+    "foldersSection": "Pastas",
+    "foldersSectionAria": "Pastas neste diretório",
+    "filesSection": "Arquivos",
+    "filesSectionAria": "Arquivos neste diretório",
+    "itemCount": "{count, plural, =0 {Vazia} one {# item} other {# itens}}",
+    "systemFolderBadge": "Sistema",
+    "folderActionsMenu": "Ações da pasta {name}",
+    "fileActionsMenu": "Ações do arquivo {name}",
+    "uploadedOn": "enviado em {date}",
+    "usedIn": "usado em: {label}",
+    "available": "disponível",
+    "openInEditor": "Abrir no Editor",
+    "emptyTitle": "Pasta vazia",
+    "emptyDescription": "Envie vídeos ou crie subpastas para organizar sua matéria-prima.",
+    "renameFolderTitle": "Renomear pasta",
+    "renameFileTitle": "Renomear arquivo",
+    "deleteFolderTitle": "Excluir pasta",
+    "deleteFileTitle": "Excluir arquivo",
+    "deleteFolderDescription": "A pasta \"{name}\" será removida permanentemente. Esta ação não pode ser desfeita.",
+    "deleteFileDescription": "O arquivo \"{name}\" será removido permanentemente. Esta ação não pode ser desfeita.",
+    "cannotRenameFolder": "Pastas do sistema não podem ser renomeadas.",
+    "cannotRenameFile": "Arquivos gerados por ferramentas não podem ser renomeados.",
+    "cannotDeleteFolder": "Esta pasta não pode ser excluída. Pastas do sistema ou com conteúdo estão protegidas.",
+    "cannotDeleteFile": "Este arquivo não pode ser excluído. Arquivos em uso ou gerados por ferramentas estão protegidos.",
+    "cannotCreateFolderHere": "Não é possível criar pastas neste diretório.",
+    "cannotUploadHere": "Não é possível enviar arquivos para este diretório.",
+    "createFolderFailed": "Não foi possível criar a pasta.",
+    "createFolderSuccess": "Pasta \"{name}\" criada.",
+    "renameFolderSuccess": "Pasta renomeada para \"{name}\".",
+    "renameFileSuccess": "Arquivo renomeado para \"{name}\".",
+    "deleteFolderSuccess": "Pasta \"{name}\" excluída.",
+    "deleteFileSuccess": "Arquivo \"{name}\" excluído.",
+    "uploadSuccess": "\"{name}\" enviado com sucesso.",
+    "uploadFailed": "Falha ao enviar o arquivo.",
+    "fileTooLarge": "O arquivo excede o limite de 5 GB.",
+    "loading": "Carregando arquivos...",
+    "loadErrorTitle": "Não foi possível carregar",
+    "loadErrorDescription": "Verifique sua conexão e tente novamente.",
+    "retry": "Tentar novamente",
+    "rootLabel": "Todos os arquivos",
+    "processing": "Processando",
+    "failed": "Falha",
+    "picker": {
+      "title": "Selecionar arquivo",
+      "description": "Navegue pelas pastas e escolha um arquivo disponível.",
+      "selectHint": "Selecione um arquivo da lista para continuar.",
+      "selectedLabel": "Selecionado",
+      "cancel": "Cancelar",
+      "confirm": "Usar arquivo",
+      "confirmDisabled": "Selecione um arquivo disponível para continuar.",
+      "emptyFilteredTitle": "Nenhum arquivo compatível",
+      "emptyFilteredDescription": "Esta pasta não contém arquivos compatíveis com este fluxo. Tente outra pasta.",
+      "noSelectableFiles": "Os arquivos desta pasta ainda não estão disponíveis para seleção.",
+      "blockedFailed": "Falha no processamento",
+      "blockedProcessing": "Processando",
+      "blockedFiltered": "Incompatível",
+      "toastFailed": "Este arquivo falhou no processamento e não pode ser usado.",
+      "toastProcessing": "Aguarde o processamento terminar antes de usar este arquivo.",
+      "toastFiltered": "Este arquivo não é compatível com este fluxo."
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Contexto do workspace, créditos e equipe.",
+    "contextTitle": "Contexto da marca",
+    "contextDescription": "Informações que orientam todos os fluxos de conteúdo.",
+    "creditsTitle": "Créditos",
+    "creditsDescription": "Saldo da empresa para execuções e resgates no Marketplace.",
+    "creditsBalance": "Saldo: {amount} créditos",
+    "creditsHint": "Histórico e recarga na página de créditos.",
+    "openCredits": "Ver créditos",
+    "teamTitle": "Equipe",
+    "teamDescription": "Membros, convites e cargos do workspace.",
+    "permissionsTitle": "Permissões",
+    "permissionsDescription": "Cargos e o que cada perfil pode fazer no workspace.",
+    "teamHint": "Gerencie quem acessa a empresa e o que cada pessoa pode fazer.",
+    "openTeam": "Gerenciar equipe",
+    "openPermissions": "Permissões",
+    "companyTitle": "Dados da empresa",
+    "companyDescription": "Nome, identificação e configurações gerais do workspace.",
+    "openCompany": "Configurações da empresa",
+    "save": "Salvar",
+    "saved": "Configurações salvas",
+    "saveError": "Não foi possível salvar. Tente novamente.",
+    "viewCredits": "Ver créditos",
+    "manageTeam": "Gerenciar equipe",
+    "managePermissions": "Gerenciar permissões",
+    "fields": {
+      "displayName": "Nome do workspace",
+      "niche": "Nicho",
+      "audience": "Público",
+      "voice": "Tom de voz",
+      "positioning": "Posicionamento",
+      "contentPreferences": "Preferências de conteúdo"
+    }
+  },
+  "videoEditor": {
+    "title": "Editor de Vídeo",
+    "description": "Upload, Edit Style e geração da edição.",
+    "fileSelected": "Arquivo selecionado: {name}",
+    "adjustCopy": "Ajustes finais para {file}",
+    "noFile": "nenhum arquivo",
+    "generating": "Gerando edição...",
+    "generated": "Edição pronta (demo)",
+    "resultMock": "Versão final com estilo {style}",
+    "readyToGenerate": "Pronto para gerar",
+    "back": "Voltar",
+    "next": "Continuar",
+    "generate": "Gerar edição",
+    "viewHistory": "Ver histórico"
+  },
+  "cuts": {
+    "title": "Gerador de Cortes",
+    "description": "Cortes curtos a partir de vídeos longos.",
+    "fileSelected": "Arquivo selecionado: {name}",
+    "styleLabel": "Edit Style",
+    "generating": "Gerando cortes...",
+    "generate": "Gerar cortes",
+    "generated": "Cortes priorizados (demo)",
+    "viewHistory": "Ver histórico",
+    "runPreview": "{count} cortes priorizados",
+    "score": "Score {value}",
+    "modal": {
+      "title": "Nova execução de cortes",
+      "startingTitle": "Gerando cortes",
+      "browseFiles": "Escolher dos Arquivos",
+      "selectedFile": "Fonte: {name}",
+      "generating": "Transcrevendo e priorizando cortes...",
+      "starting": "Iniciando...",
+      "start": "Gerar cortes",
+      "submitting": "Salvando validação...",
+      "submitReview": "Confirmar validação",
+      "doneMessage": "{count} cortes prontos para revisão.",
+      "goToResults": "Ver resultados",
+      "fileSelected": "Arquivo selecionado: {name}",
+      "uploading": "Enviando arquivo...",
+      "uploadFailed": "Falha ao enviar o arquivo",
+      "fileTooLarge": "O arquivo excede o limite de 5 GB",
+      "uploadOnGenerateHint": "O arquivo só será enviado ao clicar em Gerar cortes.",
+      "filePickerTitle": "Selecionar vídeo",
+      "filePickerDescription": "Escolha um vídeo da biblioteca. Apenas arquivos disponíveis podem ser usados.",
+      "errorGeneric": "Não foi possível concluir a execução.",
+      "retry": "Tentar novamente",
+      "steps": {
+        "source": "Fonte",
+        "generate": "Gerar",
+        "review": "Validar",
+        "done": "Concluído"
+      }
+    },
+    "review": {
+      "retentionLabel": "Retenção estimada",
+      "approve": "Aceitar",
+      "reject": "Negar"
+    },
+    "statusModal": {
+      "titleSuccess": "Geração iniciada",
+      "titleError": "Falha ao iniciar",
+      "sourceLabel": "Fonte: {name}",
+      "successStarted": "Seu vídeo foi enviado e a geração de cortes começou.",
+      "backgroundHint": "O processamento continua em segundo plano. Acompanhe o progresso em Execuções recentes na visão geral.",
+      "errorGeneric": "Não foi possível enviar o arquivo ou iniciar a geração.",
+      "close": "Fechar",
+      "retry": "Tentar novamente",
+      "viewOverview": "Ver visão geral"
+    },
+    "filePicker": {
+      "title": "Selecionar arquivo",
+      "loading": "Carregando arquivos...",
+      "empty": "Nenhum vídeo encontrado nesta pasta.",
+      "cancel": "Cancelar",
+      "confirm": "Usar arquivo"
+    },
+    "results": {
+      "title": "Resultados",
+      "description": "Cortes gerados e validados.",
+      "latestTitle": "Última execução",
+      "latestDescription": "Cortes da execução mais recente.",
+      "loading": "Carregando resultados...",
+      "empty": "Nenhum corte concluído ainda.",
+      "historyTitle": "Execuções anteriores",
+      "historyDescription": "Histórico de gerações concluídas.",
+      "runSummary": "{approved} aprovados de {total} cortes"
+    }
+  },
+  "research": {
+    "title": "Pesquisar",
+    "description": "Briefing e referências para o próximo conteúdo.",
+    "briefLabel": "O que você quer pesquisar?",
+    "briefPlaceholder": "Ex.: tendências de confeitaria artesanal para Reels",
+    "run": "Pesquisar",
+    "running": "Pesquisando...",
+    "viewHistory": "Ver histórico",
+    "deliverable1": "3 ângulos de gancho para o tema",
+    "deliverable2": "Referências de formato 9:16 no nicho",
+    "deliverable3": "Resumo: {topic}..."
+  },
+  "history": {
+    "title": "Histórico",
+    "description": "Runs e entregas recentes (demo local)."
   },
   "workspace": {
     "team": {
@@ -482,6 +861,15 @@
         "deleteError": "Não foi possível excluir a empresa."
       }
     }
+  },
+  "workspaceSwitcher": {
+    "personalSpace": "Espaço pessoal",
+    "personalType": "Conta pessoal",
+    "companyType": "Empresa",
+    "selectWorkspace": "Selecionar workspace",
+    "switchWorkspace": "Trocar workspace",
+    "workspaces": "Workspaces",
+    "createCompany": "Criar empresa"
   },
   "workspacesHub": {
     "title": "Empresas",
@@ -804,6 +1192,77 @@
     }
   },
   "agents": {
+    "nav": {
+      "overview": "Visão geral",
+      "history": "Histórico",
+      "results": "Resultados",
+      "newGeneration": "Nova execução",
+      "settings": "Configuração"
+    },
+    "settings": {
+      "title": "Configuração — {agent}",
+      "description": "Ajustes específicos desta ferramenta.",
+      "comingSoon": "As configurações desta ferramenta estarão disponíveis em breve.",
+      "cuts": {
+        "title": "Preferências de cortes",
+        "description": "Padrões aplicados a cada geração de cortes.",
+        "durationLabel": "Duração padrão do corte (s)",
+        "durationHint": "Usada como referência ao priorizar os cortes.",
+        "maxCutsLabel": "Máximo de cortes por execução",
+        "autoAcceptLabel": "Aceitar cortes automaticamente",
+        "autoAcceptHint": "Pula a etapa de validação manual após gerar.",
+        "addCaptionsLabel": "Adicionar legendas",
+        "addCaptionsHint": "Aplica um estilo de legenda resgatado no Marketplace.",
+        "captionStyleLabel": "Estilo de legenda",
+        "captionStylePlaceholder": "Selecione um estilo",
+        "deleteSourceLabel": "Excluir fonte após execução",
+        "deleteSourceHint": "Remove o arquivo original dos Arquivos ao concluir.",
+        "save": "Salvar",
+        "saved": "Configuração salva"
+      }
+    },
+    "overview": {
+      "aboutTitle": "Sobre esta ferramenta",
+      "statLabel": "Resumo do período",
+      "recentTitle": "Execuções recentes",
+      "usageTitle": "Uso nos últimos 7 dias",
+      "usageAria": "Gráfico de execuções nos últimos 7 dias",
+      "stats": {
+        "totalRuns": {
+          "label": "Execuções",
+          "hint": "Total de gerações nesta ferramenta"
+        },
+        "completed": {
+          "label": "Concluídas",
+          "hint": "Finalizadas com sucesso"
+        },
+        "approved": {
+          "label": "Aprovadas",
+          "hint": "Revisadas e aprovadas"
+        },
+        "credits": {
+          "label": "Créditos usados",
+          "hint": "Consumo acumulado nesta ferramenta"
+        }
+      }
+    },
+    "historyTable": {
+      "title": "Histórico — {agent}",
+      "description": "Todas as gerações desta ferramenta no workspace.",
+      "count": "{count, plural, one {# execução} other {# execuções}}",
+      "empty": "Nenhuma execução ainda",
+      "emptyHint": "Inicie uma nova geração para ver o histórico aqui.",
+      "columns": {
+        "title": "Pedido",
+        "status": "Status",
+        "date": "Data",
+        "credits": "Créditos"
+      }
+    },
+    "new": {
+      "title": "Nova geração — {agent}",
+      "description": "Configure e inicie uma nova execução."
+    },
     "strategist": "Planejar conteúdo",
     "strategistDescription": "Transforme um briefing em um plano de conteúdo com temas, ângulos e calendário sugerido.",
     "strategistPlaceholder": "Ex.: Quero posts para o Dia das Mães na confeitaria, foco em encomendas antecipadas",
@@ -922,7 +1381,8 @@
       "cancelError": "Não foi possível cancelar",
       "cancelRun": "Cancelar",
       "runNotFound": "Execução não encontrada",
-      "newRun": "Nova execução"
+      "newRun": "Nova execução",
+      "viewHistory": "Ver histórico"
     },
     "output": {
       "failedTitle": "A geração falhou",
@@ -1034,6 +1494,17 @@
         "status": "Status",
         "date": "Data"
       }
+    },
+    "surface": {
+      "notFound": "Agente não encontrado",
+      "goMarketplace": "Ir ao Marketplace",
+      "entitlementRequired": "Resgate este agente no Marketplace para usar.",
+      "redeemAgent": "Resgatar agente",
+      "briefLabel": "Brief",
+      "briefPlaceholder": "Descreva o que precisa...",
+      "run": "Executar",
+      "running": "Executando...",
+      "mockOutput": "{agent}: entrega simulada para \"{brief}\""
     }
   },
   "platformAdmin": {

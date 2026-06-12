@@ -1,60 +1,45 @@
-# Design System Skill — Blister
+# Design System Skill — Blister OS
 
-> Tokens e componentes compartilhados — produto Blister marketing IA. Ver [`docs/design-system/`](../design-system/).
+> Fonte visual: [`blister-os-reference.html`](../../blister-os-reference.html) · Inventário: [`blister-os-reference.md`](../design-system/blister-os-reference.md)
 
 ## Objetivo
 
-Guiar UI, tokens, componentes e rota `/design-system`.
+Portar proto HTML → Tailwind/shadcn em `apps/web` com fidelidade ao reference.
 
-## Direção Visual
+## Tokens
 
-- Light theme como default, dark disponível.
-- Fundo off-white frio puxado para azul.
-- Azul é a cor principal.
-- Dourado é reservado para premium.
-- Lime é reservado para IA ativa/live.
-- Nada de preto absoluto ou branco puro em superfícies principais quando houver token.
-- Visual profissional, tecnológico, premium e levemente editorial.
+- Satoshi (body), Poppins (headings/buttons)
+- `--primary-600` accent
+- Dark via class `.dark` on `<html>` — tokens semantic from `globals.css`
+- No raw `dark:` utilities — use semantic tokens
 
-## Stack
+## Componentes reference → prod
 
-- Tailwind CSS v4 com `@theme inline`
-- shadcn/ui `new-york`
-- Fontes: Geist Sans, Geist Mono, Instrument Serif
-- Ícones: lucide-react
-- next-themes com `defaultTheme="light"`
+| Proto | Prod target |
+|-------|-------------|
+| `PageHeader` | module page headers |
+| `StyleThumb` | marketplace previews |
+| `BlisterStepper` | editor/cuts wizards |
+| `StatCard` | home KPIs |
+| Cards `.card.pad.hov` | shadcn Card variants |
 
-## Tokens Obrigatórios
+## Layout
 
-- Surfaces: `--bg-canvas`, `--bg-base`, `--bg-raised`, `--bg-overlay`, `--bg-sunken`, `--bg-hover`, `--bg-active`
-- Texto: `--fg-primary`, `--fg-secondary`, `--fg-tertiary`, `--fg-quaternary`, `--fg-on-accent`
-- Acento: `--accent`, `--accent-hover`, `--accent-active`, `--accent-soft`, `--accent-soft-hi`
-- Produto: `--premium`, `--premium-soft`, `--ai-live`, `--ai-live-soft`
-- Semânticos: `--success`, `--warning`, `--danger`, `--info`
-- Bordas: `--line-subtle`, `--line-default`, `--line-strong`, `--ring-focus`
-- Charts: `--chart-1` até `--chart-8`
+- Shell: sidebar 18rem / collapsed 4.25rem
+- `.page-inner` max-width 1280px (narrow 1020px)
+- NAV groups collapsible
 
-## Componentes
+## Regras
 
-- Cards sem padding na raiz.
-- Modais com header, content e footer separados.
-- Tabelas para coleções de dados.
-- Badges para status.
-- Avatar com iniciais, borda e fundo sutil.
-- `shadow-glow` só para CTA ou momento intencional de IA.
+- Uma ação principal por tela
+- Loading/empty/error sempre
+- `tw-animate-css` on overlays
+- Não expor metadados internos de IA
 
-## Padrões de Produto
+## Produto copy
 
-- Brain: contexto central da empresa.
-- Agentes: unidades operacionais de IA.
-- Créditos: consumo de IA por company.
-- Integrações: fontes de contexto e canais futuros.
+Settings = "Contexto da marca" — **never** "Cérebro da Marca"
 
-## Checklist
+## Showcase
 
-- [ ] Sem cor raw quando há token
-- [ ] Sem `dark:` utility
-- [ ] Empty/loading/error states tratados
-- [ ] Ação principal clara por tela
-- [ ] Feedback visual em toda ação assíncrona
-- [ ] Linguagem alinhada com Workana AI
+Existing `/design-system` route for primitives — OS screens live under `/dashboard/*`.

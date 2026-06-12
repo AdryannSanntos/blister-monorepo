@@ -1,65 +1,50 @@
-# Backend Skill — Blister
+# Backend Skill — Blister OS
 
-> Source of truth: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`docs/project/architecture.md`](../project/architecture.md)
+> Fonte: [`blister-os-prd.md`](../prd/blister-os-prd.md) · Plano 3: [`03-backend.md`](../plans/blister-os/03-backend.md)
 
-## Objective
+## Objetivo
 
-Guide implementation, refactoring, or review in `apps/api`.
+Implementar API e persistência **após** contrato definido pelo frontend (Plano 3).
 
-## Module structure
+## SDK boundary
 
-```
-apps/api/src/<domain>/
-  <domain>.module.ts
-  <domain>.controller.ts
-  <domain>.service.ts
-  <domain>.service.spec.ts
-  dto/                  ← Zod schemas required
-```
+- Agent logic: **`packages/agent-sdk` only**
+- `apps/api/src/agents/` = controller + adapters + catalog
 
-## Validation (Zod always)
+Ver `.cursor/rules/agent-sdk-monolith.mdc`
 
-- Every body, query, and parsed params pass through Zod in the controller.
-- Agent/LLM outputs validated with Zod before persist or return.
-- Shared schemas live in `packages/types`.
-- Service validates business invariants: `companyId`, status, credit balance.
-
-```typescript
-const parsed = createCampaignSchema.safeParse(body);
-if (!parsed.success) throw new BadRequestException(parsed.error.issues);
-return this.service.create(currentUser.id, parsed.data);
-```
-
-## Existing modules
-
-`auth`, `users`, `platform`, `audit`, `email`, `prisma`
-
-## Target domains (MVP)
+## Módulos alvo Plano 3
 
 | Module | Responsibility |
 |--------|----------------|
-| `company/` | Brand Brain, business profile |
-| `campaigns/` | Optional campaigns + context files |
-| `agents/` | Pluggable registry, workflow engine, 3 MVP agents |
-| `rag/` | Ingestion, pgvector embeddings, rerank, learning |
-| `credits/` | Balance, debit per run, free tier |
-| `ai-catalog/` | Models, providers, markup (admin) |
+| `workspace/` | PersonalSpace, settings, 5 roles |
+| `files/` | Folders, upload, extract → RAG |
+| `marketplace/` | Items, redeem, library |
+| `projects/` | Project workspace CRUD |
+| `agents/` | HTTP run/review — delegates SDK |
+| `rag/` | Index settings, file extract, learning |
+| `credits/` | Exists — scope by workspace |
 
-## Critical rules
+Legado `company/`, `brand/` → migrate to workspace.
 
-- Sensitive reads/mutations always use `@RequirePermission(key)`.
-- Public endpoints always use `@Public()`.
-- `userId` from `req.currentUser.id`, never from body.
-- Resource IDs from `req.params`, never from body.
-- **Zod on every boundary** — no `unknown` in services.
-- Prisma is the only database access.
-- Scope by `companyId` — validate ownership on every mutation.
+## Validation
 
-## Checklist
+Zod em toda fronteira. `userId` de `req.currentUser.id`. `@RequirePermission` sempre.
 
-- [ ] Zod on every DTO and AI output
-- [ ] Business validation in service
-- [ ] `@RequirePermission` on mutations
-- [ ] New permission in `packages/authz` first
-- [ ] `companyId` scope validated
-- [ ] Critical mutations in `AuditLog`
+## StepContext OS
+
+Uses `workspaceSettings` + `project` — not `brandBrain` module.
+
+## Trigger.dev
+
+`agent-run-execute`, RAG index jobs — async.
+
+## Contrato frontend
+
+Toda nova API documentada em Plano 3 § Contrato com o Frontend + changelog.
+
+## Não implementar
+
+- `PipelineOrchestrator`
+- Novos fluxos `ContentPiece` / `/pecas`
+- Agent steps em `apps/api`

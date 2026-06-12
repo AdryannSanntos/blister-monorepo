@@ -1,0 +1,55 @@
+---
+description: Blister OS product rules — video-first, reference HTML, no Brand Brain, Plano 2 zero API
+globs:
+  - apps/web/**
+  - docs/**
+  - blister-os-reference.html
+alwaysApply: true
+---
+
+# Blister OS — Product Rules
+
+## Source hierarchy
+
+1. Merged code on agreed branch
+2. `blister-os-reference.html` — layout, NAV, flows
+3. `docs/prd/blister-os-prd.md` — product domain
+4. `docs/decisions/2026-06-12-blister-os-pivot.md`
+5. `docs/plans/blister-os/00-execution-rules.md`
+
+## Product truths
+
+- **Blister OS** — video-first content OS (creators, mentors, agencies)
+- **User-centric:** Personal Space + Companies (5 roles)
+- **No Brand Brain module** — context in Settings + Files (extract) + integrations
+- **No automatic pipeline** between agents — each `AgentRun` is isolated
+
+## Default agent IDs
+
+`research`, `cuts`, `video_editor`
+
+## Marketplace agent IDs
+
+`planning`, `script`, `thumbnail`, `distribution`
+
+## UI language (PT-BR i18n)
+
+Use operational verbs: Editor de Vídeo, Gerar cortes, Pesquisar, Planejar conteúdo, Marketplace, Biblioteca, Projetos, Arquivos, Configurações.
+
+**Never** expose to users: "agente", "prompt", "LLM", "peça", **"Cérebro da Marca"**.
+
+## Routes
+
+Mirror `docs/design-system/blister-os-reference.md` — Settings replaces `/dashboard/brand`.
+
+## Plano 2 (frontend)
+
+- **Zero product API integration** — fixtures + local state only
+- Functional mocks: redeem, wizards, folders, settings in memory
+- Mark future contracts: `// CONTRACT: see docs/plans/blister-os/03-backend.md#...`
+
+## Do not
+
+- Start product UI without matching reference NAV
+- Add `/dashboard/brand` or Brand Brain copy outside historical notes
+- Wire `apiClient` for Blister OS features during Plano 2

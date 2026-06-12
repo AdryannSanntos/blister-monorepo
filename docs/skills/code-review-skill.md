@@ -1,77 +1,40 @@
-# Code Review Skill — Blister
+# Code Review Skill — Blister OS
 
-> Alinhado a [`.claude/commands/review.md`](../../.claude/commands/review.md) e [`CLAUDE.md`](../../CLAUDE.md) (Regra 17)
+> Fonte: [`CLAUDE.md`](../../CLAUDE.md) · [`00-execution-rules.md`](../plans/blister-os/00-execution-rules.md)
 
-## Objetivo
+## Ordem de revisão
 
-Guiar a revisão de código com foco em segurança, permissões, contratos, stack oficial e **UX**.
+1. **Segurança & authz** — `@RequirePermission`, workspace scope, no `userId` from body
+2. **Contratos** — Zod frontiers, shared types in `packages/types`
+3. **OS alignment** — matches reference routes/NAV? Brand Brain removed?
+4. **SDK boundary** — agent logic not in `apps/api`?
+5. **Plano 2 check** — no product API imports in OS modules?
+6. **Design** — tokens, typography components, animations
+7. **Qualidade** — tests where required (Playwright smoke)
 
-## Regras de codificação (bloqueiam merge se violadas)
+## Red flags
 
-| Regra | Esperado |
-|-------|----------|
-| Zod | **Sempre** — DTOs, formulários, outputs de IA |
-| TanStack Query | Todo dado de servidor via hooks de domínio |
-| RHF | Todo formulário com `zodResolver` |
-| nuqs | Filtros, tabs, paginação na URL |
-| Componentes | `core/modules/<modulo>/components/` ou `core/shared/` |
-| Server Components | Padrão; client só quando necessário |
-| zustand | Estado global de UI — não substituir Query |
-| Playwright | Fluxos UX críticos com cobertura e2e |
+| Flag | Verdict |
+|------|---------|
+| New `/dashboard/brand` or Brand Brain copy | Reject |
+| `PipelineOrchestrator` or auto agent chain | Reject |
+| Agent steps in `apps/api/src/agents/{id}/` | Reject — move to SDK |
+| `apiClient` in Plano 2 OS feature | Reject |
+| `strategist`/`copywriter`/`designer`/`post` new flows | Reject |
+| Missing `feedback-handler.ts` in SDK agent | Reject |
+| Permission used before authz declaration | Reject |
+| Fetch in page component | Reject — use hook |
 
-## Ordem de Análise
+## Plano-aware
 
-1. Segurança e permissões (crítico)
-2. Contratos e dados (alto)
-3. Arquitetura e stack (médio)
-4. Design system e UX (médio)
-5. Qualidade e manutenibilidade (observação)
+- Plano 1: docs consistency
+- Plano 2: fixtures functional, zero HTTP
+- Plano 3: contract in 03-backend.md implemented
 
-## Checklist Crítico — Segurança
+## Linguagem
 
-**Backend:**
-- [ ] `@RequirePermission` em mutações
-- [ ] `@Public()` explícito em endpoints públicos
-- [ ] `userId` de `req.currentUser.id` — nunca do body
-- [ ] IDs de recurso de `req.params`
-- [ ] `companyId` scope validated
+UI strings operational PT-BR; code identifiers English.
 
-**Frontend:**
-- [ ] `<PermissionGate>` em ações sensíveis
-- [ ] Permissões via `useAbility()` — não hardcoded
+## Legado
 
-## Checklist Alto — Contratos
-
-- [ ] Zod em toda fronteira (backend + frontend)
-- [ ] RHF + zodResolver em formulários
-- [ ] Tipos inferidos de Zod — sem `any` arbitrário
-- [ ] Permissões novas em `packages/authz` primeiro
-
-## Checklist Médio — Stack
-
-**Frontend:**
-- [ ] TanStack Query — zero fetch em page/component
-- [ ] nuqs para filtros/tabs/paginação
-- [ ] Server Components por padrão
-- [ ] Componentes no módulo correto
-- [ ] zustand só para UI global
-
-**Backend:**
-- [ ] Lógica no service, não no controller
-- [ ] Prisma único acesso a banco
-
-## Checklist UX — Playwright
-
-- [ ] Fluxo crítico afetado tem spec e2e
-- [ ] Tabs/filtros testáveis via URL (nuqs)
-- [ ] Estados erro/vazio/permissão cobertos quando aplicável
-
-## Severidade
-
-**Bloqueia merge:** mutação sem permissão · userId do body · sem Zod · fetch direto · componente fora do módulo
-
-**Deve corrigir:** formulário sem RHF · filtros sem nuqs · fluxo UX crítico sem Playwright · client desnecessário
-
-## Formato de Saída
-
-Findings primeiro (arquivo + risco + correção), resumo curto se > 5 findings.
+Changes that expand MEI/post/pecas scope need explicit ADR — default reject during OS migration.

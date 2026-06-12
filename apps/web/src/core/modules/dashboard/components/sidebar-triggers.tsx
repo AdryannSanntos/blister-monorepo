@@ -56,8 +56,8 @@ export function UserTrigger({
           type="button"
           className={
             collapsed
-              ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)]"
-              : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-raised)] p-2 text-left"
+              ? "flex size-10 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-canvas)]"
+              : "flex w-full items-center gap-2.5 rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-canvas)] p-2 text-left"
           }
         >
           <Avatar className={collapsed ? "size-8" : "size-9"}>

@@ -6,7 +6,7 @@ export const BrandLogoWhite: React.FC<React.SVGProps<SVGSVGElement>> = ({
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="320 240 1580 480"
+    viewBox="300 190 1640 530"
     className={className}
     aria-hidden
     {...props}

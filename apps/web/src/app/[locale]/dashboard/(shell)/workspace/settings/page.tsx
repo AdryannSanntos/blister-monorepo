@@ -1,5 +1,5 @@
-import { WorkspaceSettingsPage } from "src/core/modules/workspace/pages/settings-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <WorkspaceSettingsPage />;
+export default function WorkspaceSettingsRedirectPage() {
+  redirect("/dashboard/settings");
 }

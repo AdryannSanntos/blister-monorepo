@@ -1,147 +1,110 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
+import { useBlisterOsStore } from "src/core/modules/blister-os/stores/blister-os-store";
+import { simulateDelay } from "src/core/modules/blister-os/utils/simulate-delay";
+import { Button } from "src/core/shared/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "src/core/shared/components/ui/form";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
-import { Tabs, TabsContent } from "src/core/shared/components/ui/tabs";
-import { Button } from "@/core/shared/components/ui/button";
-import { Card, CardContent } from "@/core/shared/components/ui/card";
+import { Paragraph } from "src/core/shared/components/ui/paragraph";
+import { Textarea } from "src/core/shared/components/ui/textarea";
+import { Link } from "@/i18n/routing";
 
-import { AgentHistoryPanel } from "../components/agent-history-panel";
-import { AgentSurfaceTabs } from "../components/agent-surface-tabs";
-import { BlisterAgentChat } from "../components/blister-agent-chat";
-import { BLISTER_TOOL_RENDERERS } from "../components/blister-tool-renderers";
-import { AGENT_UI_CONFIG, type AgentUiId } from "../config/agent-ui-config";
-import { useAgentChatController } from "../hooks/use-agent-chat-controller";
-import { useAgentRuns } from "../hooks/use-agent-runs";
+const briefSchema = z.object({
+  brief: z.string().min(8),
+});
 
-const AGENT_TAB_VALUES = ["agent", "history"] as const;
-type AgentTab = (typeof AGENT_TAB_VALUES)[number];
+type BriefForm = z.infer<typeof briefSchema>;
 
 type AgentSurfacePageProps = {
-  agentId: AgentUiId;
+  agentSlug: string;
 };
 
-export function AgentSurfacePage({ agentId }: AgentSurfacePageProps) {
-  const config = AGENT_UI_CONFIG[agentId];
-  const t = useTranslations("agents");
-  const tChat = useTranslations("agents.chat");
-  const tInput = useTranslations("agents.input");
+export const AgentSurfacePage = ({ agentSlug }: AgentSurfacePageProps) => {
+  const t = useTranslations("agents.surface");
+  const agent = getAgentByRouteSlug(agentSlug);
+  const ownedAgentIds = useBlisterOsStore((state) => state.ownedAgentIds);
+  const [output, setOutput] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [tab, setTab] = useQueryState(
-    "tab",
-    parseAsStringLiteral(AGENT_TAB_VALUES).withDefault("agent"),
-  );
+  const form = useForm<BriefForm>({
+    resolver: zodResolver(briefSchema),
+    mode: "onBlur",
+    defaultValues: { brief: "" },
+  });
 
-  const {
-    runId,
-    messages,
-    status,
-    suggestions,
-    handleSend,
-    handleStop,
-    openRun,
-    startNewRun,
-  } = useAgentChatController(agentId);
+  if (!agent) {
+    return (
+      <PageLayout icon={Sparkles} title={t("notFound")}>
+        <Button asChild variant="outline">
+          <Link href="/dashboard/marketplace">{t("goMarketplace")}</Link>
+        </Button>
+      </PageLayout>
+    );
+  }
 
-  const { data: runsData, isLoading: isLoadingRuns } = useAgentRuns(agentId);
-  const runs = runsData?.runs ?? [];
+  const needsEntitlement = agent.tier === "marketplace";
+  const hasEntitlement = !needsEntitlement || ownedAgentIds.includes(agent.id);
 
-  const handleSelectHistoryRun = (nextRunId: string) => {
-    openRun(nextRunId);
-    void setTab("agent");
-  };
-
-  const handleNewRun = () => {
-    startNewRun();
-    void setTab("agent");
-  };
-
-  const agentLabel = t(config.labelKey);
-  const agentDescription = t(config.descriptionKey);
-  const placeholder = t(config.placeholderKey);
+  const handleSubmit = form.handleSubmit(async (values) => {
+    setIsLoading(true);
+    await simulateDelay(900);
+    setOutput(t("mockOutput", { agent: agent.name, brief: values.brief }));
+    setIsLoading(false);
+  });
 
   return (
     <div data-testid="agent-surface-page">
-      <PageLayout
-        icon={config.icon}
-        title={agentLabel}
-        description={agentDescription}
-        actions={
-          <div className="flex flex-wrap items-center gap-2">
-            {tab === "agent" && runId ? (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleNewRun}
-                className="gap-1.5"
-              >
-                <Plus className="size-4" />
-                {tChat("newChat")}
-              </Button>
-            ) : null}
-            {config.estimatedCredits != null ? (
-              <div className="rounded-full bg-[var(--bg-raised)] px-3 py-1.5 text-[13px] font-medium tabular-nums text-[var(--fg-secondary)]">
-                {tInput("estimatedCost", {
-                  amount: config.estimatedCredits.toFixed(2),
-                })}
-              </div>
-            ) : null}
+      <PageLayout icon={agent.icon} title={agent.name} description={agent.description}>
+        {!hasEntitlement ? (
+          <div className="rounded-[var(--r-lg)] border border-[var(--warning-soft)] bg-[var(--warning-soft)] p-4">
+            <Paragraph>{t("entitlementRequired")}</Paragraph>
+            <Button className="mt-3" asChild>
+              <Link href="/dashboard/marketplace">{t("redeemAgent")}</Link>
+            </Button>
           </div>
-        }
-      >
-        <Tabs
-          value={tab}
-          onValueChange={(value) => void setTab(value as AgentTab)}
-          className="flex w-full flex-col gap-6"
-        >
-          <AgentSurfaceTabs />
-
-          <TabsContent
-            value="agent"
-            data-testid="agent-chat-tab"
-            className="mt-0 animate-in fade-in duration-200 focus-visible:outline-none"
-          >
-            <Card className="overflow-hidden rounded-[var(--r-xl)] border-[var(--line-subtle)] bg-[var(--bg-base)] shadow-[var(--shadow-sm)] hover:border-[var(--line-subtle)]">
-              <div className="h-[calc(100svh-19rem)] min-h-[480px]">
-                <BlisterAgentChat
-                  config={config}
-                  placeholder={placeholder}
-                  messages={messages}
-                  status={status}
-                  suggestions={suggestions}
-                  onSend={handleSend}
-                  onStop={handleStop}
-                  toolRenderers={BLISTER_TOOL_RENDERERS}
-                  showCopyToolbar
-                  className="h-full"
-                />
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent
-            value="history"
-            data-testid="agent-history-tab"
-            className="mt-0 animate-in fade-in duration-200 focus-visible:outline-none"
-          >
-            <Card className="border-[var(--line-default)] bg-[var(--bg-base)]">
-              <CardContent className="p-6">
-                <AgentHistoryPanel
-                  agentId={agentId}
-                  runs={runs}
-                  isLoading={isLoadingRuns}
-                  selectedRunId={runId}
-                  onSelectRun={handleSelectHistoryRun}
-                  onNewRun={handleNewRun}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={handleSubmit} className="flex max-w-2xl flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="brief"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("briefLabel")}</FormLabel>
+                    <FormControl>
+                      <Textarea rows={4} placeholder={t("briefPlaceholder")} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? t("running") : t("run")}
+              </Button>
+            </form>
+          </Form>
+        )}
+        {output ? (
+          <div className="rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-sunken)] p-4">
+            <Paragraph>{output}</Paragraph>
+          </div>
+        ) : null}
       </PageLayout>
     </div>
   );
-}
+};

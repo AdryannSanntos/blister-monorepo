@@ -19,8 +19,7 @@ import {
   useDashboardData,
 } from "src/core/modules/dashboard/hooks/use-dashboard-data";
 import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use-platform-admin";
-import { BrandIcon } from "src/core/shared/components/brand-icon";
-import { BrandLogo } from "src/core/shared/components/brand-logo";
+import { WorkspaceSwitcher } from "src/core/modules/workspaces/components/workspace-switcher";
 import { PageTransition } from "src/core/shared/components/page-transition";
 import {
   AppSidebar,
@@ -46,6 +45,9 @@ import { authClient } from "src/core/shared/utils/auth-client";
 import { queryClient } from "src/core/shared/utils/query-client";
 
 import { Link, useRouter } from "@/i18n/routing";
+import {
+  setPersonalWorkspace,
+} from "src/core/shared/utils/active-workspace";
 
 export type AppShellBreadcrumb = {
   homeLabel: string;
@@ -140,17 +142,9 @@ export function AppShell({
         fullHeight
         className="shrink-0"
         groups={navGroups}
-        workspaceTrigger={(collapsed) =>
-          collapsed ? (
-            <div className="flex h-full items-center justify-center">
-              <BrandIcon className="h-9 w-auto" />
-            </div>
-          ) : (
-            <div className="flex h-full w-full items-center pl-4">
-              <BrandLogo className="h-10 w-auto" />
-            </div>
-          )
-        }
+        workspaceTrigger={(collapsed) => (
+          <WorkspaceSwitcher collapsed={collapsed} />
+        )}
         user={{
           name: displayName,
           email: "",
@@ -236,15 +230,26 @@ export function AppShell({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setPersonalWorkspace();
+                    queryClient.invalidateQueries();
+                    router.push("/dashboard");
+                    router.refresh();
+                  }}
+                >
+                  <User className="size-4" />
+                  {t("personalSpace")}
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/workspaces">
+                  <Link href="/onboarding?new=1">
                     <Building2 className="size-4" />
-                    {t("viewCompanies")}
+                    {t("createCompany")}
                   </Link>
                 </DropdownMenuItem>
                 {canAccessPlatformAdmin ? (
                   <DropdownMenuItem asChild>
-                    <Link href="/workspaces/admin">
+                    <Link href="/admin">
                       <Shield className="size-4" />
                       {t("platformAdminArea")}
                     </Link>

@@ -1,78 +1,122 @@
-# Fluxos de Usuário — Blister (Marketing com IA)
+# User Flows — Blister OS
 
-> **Atualizado:** 2026-06-09 — agentes isolados, revisão por agente. Ver [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md).
+> Alinhado a [`blister-os-reference.html`](../../blister-os-reference.html) e [`blister-os-prd.md`](../prd/blister-os-prd.md).
 
-Princípio: **simplicidade radical** — máx. 2–3 campos para iniciar; labels operacionais por superfície; zero jargão de IA na UI.
+---
 
-## Perfis
-
-| Perfil | Quem é |
-|--------|--------|
-| **BUSINESS** | Dono do negócio / MEI |
-| **ADMIN** | Operador plataforma (`platform_owner` / `platform_admin`) |
-
-## 1. Cadastro e onboarding
+## 1. Onboarding (Plano 3)
 
 ```
-/auth/signup → verify email → /onboarding
-  → Cérebro da Marca (logo + tom + nicho…)
-  → US$ 20 créditos
-  → /dashboard ou /workspaces
+Signup → Espaço Pessoal criado → wizard curto (nome workspace + voz)
+  → créditos free tier → Home OS
 ```
 
-## 2. Jornada — Agente direto (sem campanha)
+Campos máx.: 2–3. Logo opcional no primeiro passo.
+
+---
+
+## 2. Home → Estúdio
 
 ```
-/dashboard ou atalho do agente (ex.: criar texto, gerar imagem)
-  → Input (1 frase)
-  → POST /api/agents/:agentId/run
-  → Pode PAUSAR → retoma mesma run
-  → Preview do output **desse agente**
-  → Aprovar | Negar | Editar | Pedir melhoria | Regenerar (na superfície do agente)
-  → Learning indexado por agentId
+Home (#/home)
+  ├── Card Editor de Vídeo → #/editor → wizard (vídeo + Edit Style + gerar)
+  ├── Card Gerador de Cortes → #/cortes → wizard (fonte + estilo + cortes)
+  └── Card Pesquisar → #/agent/research → input briefing → run → revisão
 ```
 
-## 3. Jornada — Com campanha (workspace)
+Atividade recente e atalhos para Projetos/Marketplace.
+
+---
+
+## 3. Marketplace → Biblioteca
 
 ```
-/dashboard/campanhas → Nova campanha (nome + objetivo)
-  → /dashboard/campanhas/[id]
-  → (Opcional) contexto + arquivos
-  → Usuário escolhe qual agente rodar (estratégia, texto, visual…)
-  → Cada agente: run isolada + revisão na própria aba
-  → Histórico de AgentRuns na campanha
+Marketplace (#/marketplace)
+  → filtrar tipo (Edit Style, Template, …)
+  → Detalhe (#/item/{id})
+  → Resgatar (grátis ou créditos)
+  → owned atualizado
+  → Biblioteca (#/library) lista itens possuídos
+  → Editor/Cortes consomem Edit Style da biblioteca
 ```
 
-**Não** há pipeline automático entre agentes.
+---
 
-## 4. Revisão e auto-melhoramento (por agente)
-
-| Ação | Efeito |
-|------|--------|
-| Aprovar | `AGENT_LEARNING` positivo para aquele `agentId` |
-| Negar | Sinal negativo (+ motivo opcional) |
-| Editar | Diff em `outputPayload` |
-| Pedir melhoria | Nova run do **mesmo** agente |
-| Regenerar | Nova run |
-
-Toast: "Preferência salva — próximas criações vão melhorar"
-
-## 5. Créditos
+## 4. Arquivos → Wizards
 
 ```
-Saldo no header
-  → Débito por step generate_* na run
-  → Saldo zero → bloqueio claro
+Arquivos (#/uploads / #/files)
+  → navegar pastas (breadcrumb)
+  → upload vídeo bruto
+  → (Plano 3) extract assíncrono
+  → "Abrir no Editor" | "Usar em Cortes"
 ```
 
-## 6. Admin plataforma
+---
+
+## 5. Projetos (workspace)
 
 ```
-/workspaces/admin → créditos, AI catalog, catálogo de agentes, RAG
-  → Ajuste saldo por empresa
-  → Reindex RAG
+Projetos (#/projects)
+  → lista projetos (status, peças/runs count)
+  → abrir projeto (futuro: detalhe)
+  → usuário escolhe ferramenta (Editor, Cortes, Planning…)
+  → run isolada — sem pipeline automático
+  → revisão na superfície da ferramenta
 ```
 
-## Fora do MVP
+---
 
-Recarga Stripe, Stories/carrossel, publicação direct post, equipes multi-usuário.
+## 6. Agente marketplace
+
+```
+Sidebar Conteúdo → Planejar / Roteiro
+  → #/agent/planning | #/agent/script
+  → (se não possui) redirect Marketplace
+  → input → run → output → Aprovar | Editar | Negar
+  → feedback → RAG AGENT_LEARNING
+```
+
+---
+
+## 7. Configurações
+
+```
+Configurações (#/settings)
+  ├── Contexto da marca (ex-Brand Brain) → editar identidade
+  ├── Créditos → saldo + histórico
+  ├── Equipe → convites e roles (Empresa)
+  └── Workspace → nome, slug
+```
+
+Copy: **"Contexto da marca"** — nunca "Cérebro da Marca".
+
+---
+
+## 8. Workspace switch (Plano 3)
+
+```
+Header switcher
+  → Espaço Pessoal | Empresa A | Empresa B
+  → troca contexto (créditos, biblioteca, arquivos, permissões)
+```
+
+---
+
+## 9. Revisão por run
+
+```
+Run COMPLETED
+  → preview output (vídeo, cortes list, roteiro texto…)
+  → Aprovar → learning indexado
+  → Editar → PATCH output validado
+  → Negar → feedback + opcional regenerar nova run
+```
+
+Sem módulo global `/pecas`.
+
+---
+
+## Mapa de rotas
+
+Ver [`docs/design-system/blister-os-reference.md`](../design-system/blister-os-reference.md).

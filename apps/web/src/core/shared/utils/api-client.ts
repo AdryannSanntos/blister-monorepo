@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getActiveCompanyId } from "./active-company";
+import { getActiveWorkspaceId } from "./active-workspace";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -12,7 +12,7 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const activeCompanyId = getActiveCompanyId();
+  const activeCompanyId = getActiveWorkspaceId();
   if (activeCompanyId) {
     config.headers.set("x-blister-company-id", activeCompanyId);
   }
@@ -28,7 +28,7 @@ export const apiBaseAxios = axios.create({
 });
 
 apiBaseAxios.interceptors.request.use((config) => {
-  const activeCompanyId = getActiveCompanyId();
+  const activeCompanyId = getActiveWorkspaceId();
   if (activeCompanyId) {
     config.headers.set("x-blister-company-id", activeCompanyId);
   }

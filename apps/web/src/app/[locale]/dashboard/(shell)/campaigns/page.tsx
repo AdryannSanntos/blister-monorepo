@@ -1,5 +1,5 @@
-import { CampaignsPage } from "src/core/modules/agents/pages/campaigns-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <CampaignsPage />;
+export default function CampaignsRedirectPage() {
+  redirect("/dashboard");
 }

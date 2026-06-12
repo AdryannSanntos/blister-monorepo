@@ -8,7 +8,7 @@ import {
 import type { Request } from 'express';
 import type { CurrentUser } from '../auth/session.service';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
-import { CompanyService } from '../company/company.service';
+import { WorkspaceContextService } from '../workspace/workspace-context.service';
 import { CreditService } from './credits.service';
 import { creditHistoryQuerySchema } from './dto/credits.dto';
 
@@ -16,15 +16,20 @@ import { creditHistoryQuerySchema } from './dto/credits.dto';
 export class CreditsController {
   constructor(
     private readonly creditService: CreditService,
-    private readonly companyService: CompanyService,
+    private readonly workspaceContext: WorkspaceContextService,
   ) {}
 
   @Get()
   @RequirePermission('credit.read')
   async getSummary(@Req() req: Request) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
-    const company = await this.companyService.findByOwnerOrThrow(user.id, req);
-    return this.creditService.getSummary(company.id);
+    const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
+
+    if (workspace.type === 'personal') {
+      return this.creditService.getPersonalSummary(workspace.personalSpaceId);
+    }
+
+    return this.creditService.getSummary(workspace.companyId);
   }
 
   @Get('history')
@@ -33,9 +38,18 @@ export class CreditsController {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const parsed = creditHistoryQuerySchema.safeParse(query);
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
-    const company = await this.companyService.findByOwnerOrThrow(user.id, req);
+    const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
+
+    if (workspace.type === 'personal') {
+      return this.creditService.getPersonalHistory(
+        workspace.personalSpaceId,
+        parsed.data.page,
+        parsed.data.pageSize,
+      );
+    }
+
     return this.creditService.getHistory(
-      company.id,
+      workspace.companyId,
       parsed.data.page,
       parsed.data.pageSize,
     );

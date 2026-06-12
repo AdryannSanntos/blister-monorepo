@@ -71,6 +71,39 @@ const STUB_RESPONSES: Record<string, StubLlmResponse> = {
     tokensOutput: 60,
     costUsd: 0.0001,
   },
+  cuts: {
+    content: JSON.stringify({
+      cuts: [
+        {
+          id: 'cut-1',
+          title: 'Gancho polêmico sobre confeitaria',
+          description: 'Abre com pergunta provocativa sobre preço de bolo artesanal',
+          startSec: 120,
+          endSec: 180,
+          viralScore: 92,
+        },
+        {
+          id: 'cut-2',
+          title: 'Depoimento emocionante',
+          description: 'Cliente conta como o bolo virou memória de família',
+          startSec: 240,
+          endSec: 300,
+          viralScore: 85,
+        },
+        {
+          id: 'cut-3',
+          title: 'Bastidor da produção',
+          description: 'Processo rápido mostrando ingredientes premium',
+          startSec: 360,
+          endSec: 420,
+          viralScore: 78,
+        },
+      ],
+    }),
+    tokensInput: 400,
+    tokensOutput: 200,
+    costUsd: 0.0004,
+  },
 };
 
 export function getStubLlmResponse(agentId: string): StubLlmResponse {

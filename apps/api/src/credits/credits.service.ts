@@ -40,6 +40,44 @@ export class CreditService {
     return { balance, ledger };
   }
 
+  async getPersonalBalance(personalSpaceId: string) {
+    const existing = await this.prisma.personalCreditBalance.findUnique({
+      where: { personalSpaceId },
+    });
+    if (existing) return existing;
+
+    const settings = await this.prisma.platformCreditSettings.findUnique({
+      where: { id: 'default' },
+    });
+
+    return this.prisma.personalCreditBalance.create({
+      data: {
+        personalSpaceId,
+        amount: settings?.freeTierAmount ?? 20,
+        currency: 'USD',
+      },
+    });
+  }
+
+  async getPersonalSummary(personalSpaceId: string) {
+    const balance = await this.getPersonalBalance(personalSpaceId);
+    return {
+      balance: {
+        id: balance.id,
+        companyId: balance.personalSpaceId,
+        amount: balance.amount.toString(),
+        currency: balance.currency,
+        updatedAt: balance.updatedAt.toISOString(),
+      },
+      ledger: [],
+    };
+  }
+
+  async getPersonalHistory(personalSpaceId: string, page: number, pageSize: number) {
+    await this.getPersonalBalance(personalSpaceId);
+    return { items: [], total: 0, page, pageSize };
+  }
+
   async getHistory(companyId: string, page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
     const [items, total] = await Promise.all([

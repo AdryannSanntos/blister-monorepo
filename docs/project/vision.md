@@ -1,62 +1,64 @@
-# Visão de Produto — Blister
+# Visão de Produto — Blister OS
 
 ## O que é
 
-Blister é uma ferramenta de **marketing operacional com IA** para MEIs, pequenos negócios e profissionais autônomos no Brasil. O usuário não quer "usar IA" — quer **resolver o problema**: entrar, descrever o que precisa (*"lançamos um sabor novo de bolo"*) e sair com post pronto (imagem, legenda, hashtags).
+**Blister OS** é um sistema operacional de conteúdo **video-first** — não uma ferramenta de post estático para MEI. Creators, mentores e agências operam pesquisa, edição, cortes e planejamento num único workspace, com estilos e agentes extras no Marketplace.
 
 ## Problema
 
 | Dor | Detalhe |
 |-----|---------|
-| **Tempo** | Donos de negócio não têm equipe de marketing |
-| **Orçamento** | Ferramentas "tudo em um" são caras ou exigem especialista |
-| **Complexidade** | ChatGPT gera texto genérico; Canva exige montar design manualmente |
-| **Competição** | Pequenos negócios competem com marcas grandes por atenção |
+| **Tempo** | Edição e cortes consomem a maior parte da produção |
+| **Fragmentação** | Gravação, edição, roteiro e calendário em apps separados |
+| **Contexto** | IA genérica não conhece voz, estilo visual nem arquivos brutos |
+| **Escala** | Agências precisam repetir qualidade sem multiplicar headcount |
 
 ## Público-alvo
 
-- MEIs e microempresas
-- Profissionais autônomos (confeiteiros, salões, consultores, lojas locais)
-- Pequenos negócios que postam no Instagram/TikTok mas não têm designer ou copy
+- Creators e infoprodutores (YouTube, Instagram, TikTok)
+- Mentores e coaches com conteúdo recorrente em vídeo
+- Agências e estúdios enxutos
+- Marcas pessoais com operação video-first
+
+*(MEI/post Instagram permanece usuário secundário — não é narrativa principal.)*
 
 ## Proposta de valor
 
-**Marketing pronto em 1 frase** — com a identidade da marca aplicada automaticamente, sem prompt engineering.
+**Um SO onde a matéria-prima vira conteúdo publicável** — com identidade do workspace, estilos da biblioteca e runs isoladas por ferramenta, sem pipeline oculto.
 
-## Moat competitivo (fosse)
+## Moat competitivo
 
-O diferencial **não é o LLM**. É:
-
-1. **Cérebro da Marca** — logo, tom, cores, regras persistidas
-2. **RAG robusto** — contexto da empresa, campanhas, arquivos, preferências
-3. **Auto-melhoramento** — cada aprovação/negação/edição melhora o próximo output daquele agente
-4. **Orquestração invisível** — Estrategista → Copywriter → Designer sem expor "agentes" ao usuário
+1. **Contexto distribuído** — Configurações + Arquivos (extract) + integrações → RAG
+2. **Marketplace** — Edit Styles, templates, agentes resgatáveis
+3. **Auto-melhoramento** — feedback por run melhora o próximo output daquela ferramenta
+4. **Operação contínua** — Projetos ligam arquivos, runs e revisão num workspace
 
 ## Concorrentes implícitos
 
 | Solução | Limite |
 |---------|--------|
-| ChatGPT puro | Genérico, sem memória de marca, sem visual |
-| Canva + Magic Write | Usuário monta; não orquestra campanha completa |
-| Suites enterprise | Caras, complexas, overkill para MEI |
+| CapCut / Premiere + ChatGPT | Manual; sem memória de workspace |
+| Descript / Opus Clip | Cortes sim; sem SO completo nem marketplace de estilos |
+| Suites enterprise | Caras; overkill para creator solo |
 
 ## Posicionamento
 
-- **B2B leve** — operacional, direto, confiável
-- **Simplicidade radical** — máx. 2 campos para criar campanha; 1 frase para gerar post rápido
-- **Sem jargão de IA** na UI — "Criar post", "Campanha", "Aprovar"
+- **Creator-first** — vídeo no centro, estático como complemento (Post Styles)
+- **Simplicidade radical** — wizards curtos; resgate de estilo em 1 clique
+- **Sem jargão de IA** — verbos operacionais (Editar, Cortar, Pesquisar, Planejar)
 
 ## Princípios de produto
 
-1. O software trabalha; o usuário guia
-2. Campanha opcional — geração rápida sempre disponível
-3. Feedback do usuário = aprendizado persistente
-4. Créditos transparentes — sem surpresa de custo
-5. Admin configura tudo — nada hardcoded em produção
+1. O software trabalha; o usuário guia qual ferramenta rodar
+2. Projeto opcional — geração rápida na home sempre disponível
+3. Feedback do usuário = aprendizado persistente por ferramenta
+4. Créditos transparentes — Marketplace e runs debitam claramente
+5. Espaço Pessoal + Empresas — escala de solo a equipe
 
 ## Métricas norte
 
-- **TTFC** — time to first content (< 2 min após onboarding)
-- **Taxa de aprovação sem edição** — proxy de qualidade
-- **Retenção semanal** — usuário volta a gerar
-- **Custo por geração** — sustentabilidade do free tier
+- **TTFC video** — time to first cut/edit (< 5 min após onboarding)
+- **Taxa de aprovação sem edição** — qualidade por ferramenta
+- **Itens resgatados no Marketplace** — adoção de estilos
+- **Retenção semanal** — creator volta a produzir
+- **Custo por run** — sustentabilidade do free tier

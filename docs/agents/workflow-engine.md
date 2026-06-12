@@ -1,15 +1,40 @@
-# Workflow Engine
+# Workflow Engine — SDK Kernel
 
-> Execução **multi-step dentro de um único agente**. Sem encadeamento entre agentes.
+> Execução **multi-step dentro de um único agente**. Kernel vive em **`packages/agent-sdk`** — não em `apps/api`.
+
+---
+
+## Localização
+
+```
+packages/agent-sdk/src/
+  engine/
+    workflow-engine.ts      ← loop de steps
+    step-registry.ts
+    step-result.ts
+  agents/
+    research/
+    cuts/
+    video_editor/
+    planning/
+    script/
+    …
+```
+
+`apps/api` injeta adapters: Prisma persistence, RAG retrieval, credit debit, storage.
+
+---
 
 ## StepResult
 
 | Status | Comportamento |
 |--------|---------------|
-| `CONTINUE` | Próximo passo do workflow **deste** agente |
+| `CONTINUE` | Próximo step **deste** agente |
 | `PAUSED` | Run `PAUSED`; UI renderiza `pauseFormSchema` |
-| `FAILED` | Run `FAILED`; erro em `AgentRunStep` |
-| `COMPLETE` | Output final em `AgentRun.outputPayload` — **fim desta run** |
+| `FAILED` | Run `FAILED`; erro em step |
+| `COMPLETE` | `outputPayload` finalizado |
+
+---
 
 ## AgentRunStatus
 
@@ -19,50 +44,58 @@ QUEUED → RUNNING → COMPLETED
                 → FAILED
 ```
 
-## StepContext
+---
+
+## StepContext (OS)
 
 ```typescript
 {
-  companyId: string;
+  workspaceId: string;
   agentId: string;
   userInput: string;
-  campaignId?: string;
-  brandBrain: BrandProfile;
-  campaign?: Campaign;
+  projectId?: string;
+  workspaceSettings: WorkspaceSettings;
+  project?: Project;
   ragPack: RagContextPack;
   stepOutputs: Record<string, unknown>;
   agentRunId: string;
 }
 ```
 
+Contexto de marca vem de **Settings + Files** — não `BrandProfile` module.
+
+---
+
 ## Regras
 
-- Pause **retoma mesma run** — nunca spawn nova run para continuar
-- Zod em `validate_output` contra `outputSchema` do agente
+- Pause **retoma mesma run**
+- Zod em `validate_output` contra `outputSchema`
 - Crédito debitado em steps `generate_*`
-- `retrieve_context` com learning boost por `agentId`
-- Output **não** passa automaticamente para outro agente
+- `retrieve_context` boost `AGENT_LEARNING` por `agentId`
+- Output **não** encadeia para outro agente
 
-## Revisão (por agente)
+---
 
-Após `COMPLETED`, usuário revisa na UI do agente:
+## Revisão
+
+Após `COMPLETED`:
 
 - `POST /api/agents/runs/:runId/approve`
 - `POST /api/agents/runs/:runId/reject`
-- `PATCH /api/agents/runs/:runId/output` — validado por `reviewSchema`
+- `PATCH /api/agents/runs/:runId/output`
 
-Feedback → `AGENT_LEARNING` no RAG (Sprint 7).
+Feedback → RAG `AGENT_LEARNING`.
 
-## Serviços
-
-- `workflow-engine.service.ts` — loop de steps de **um** agente
-- `agent-run.service.ts` — start, resume, consulta runs
-- `agent-run-review.service.ts` — approve/reject/edit
+---
 
 ## Execução async
 
-Trigger.dev task `agent-run-execute` — evita timeout HTTP.
+Trigger.dev task `agent-run-execute` — API enfileira; SDK executa.
 
-## Referência
+---
 
-- [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md)
+## Referências
+
+- [`2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md)
+- [`2026-06-12-blister-os-pivot.md`](../decisions/2026-06-12-blister-os-pivot.md)
+- Plano 3: [`docs/plans/blister-os/03-backend.md`](../plans/blister-os/03-backend.md)

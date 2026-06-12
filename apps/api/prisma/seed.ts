@@ -13,6 +13,7 @@ import {
   UserType,
 } from '../src/generated/prisma';
 import { seedAiCatalog } from './seed-ai-catalog';
+import { seedMarketplaceItems } from './seed-marketplace';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -48,11 +49,25 @@ type SeedUserInput = {
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const PIPELINE_AGENTS = [
-  { agentId: 'strategist', sortOrder: 0 },
-  { agentId: 'copywriter', sortOrder: 1 },
-  { agentId: 'designer', sortOrder: 2 },
-  { agentId: 'post', sortOrder: 3 },
+  { agentId: 'research', sortOrder: 0 },
+  { agentId: 'cuts', sortOrder: 1 },
+  { agentId: 'video_editor', sortOrder: 2 },
 ] as const;
+
+const SYSTEM_FOLDERS = [
+  { name: 'Uploads', systemKey: 'uploads' },
+  { name: 'Gerados', systemKey: 'generated' },
+  { name: 'Integrações', systemKey: 'integrations' },
+] as const;
+
+const DEMO_WORKSPACE_PROFILE = {
+  displayName: 'Confeitaria da Paola',
+  niche: 'Confeitaria artesanal · bolos e doces finos',
+  audience: 'Mulheres 28–45 · eventos e presentes',
+  voice: 'Acolhedora, direta, com toque de luxo acessível',
+  positioning: 'Bolos que viram memória — não só sobremesa',
+  contentPreferences: 'Vídeos curtos, depoimentos, bastidores de produção',
+} as const;
 
 const DEMO_BUSINESS = {
   userId: 'seed_business_user',
@@ -80,6 +95,181 @@ const ADMIN_USER = {
   name: 'Admin Blister',
 } as const;
 
+// ─── Blister OS workspace bootstrap ─────────────────────────────────────────
+
+async function seedPersonalSpaceForUser(
+  userId: string,
+  displayName: string,
+  freeTierAmount: Prisma.Decimal,
+  profile?: {
+    niche: string;
+    audience: string;
+    voice: string;
+    positioning: string;
+    contentPreferences: string;
+  },
+) {
+  const existing = await prisma.personalSpace.findUnique({ where: { userId } });
+  if (existing) return existing;
+
+  return prisma.$transaction(async (tx) => {
+    const personalSpace = await tx.personalSpace.create({
+      data: { userId, name: displayName },
+    });
+
+    await tx.workspaceSettings.create({
+      data: {
+        personalSpaceId: personalSpace.id,
+        displayName,
+        ...(profile ?? {}),
+      },
+    });
+
+    await tx.personalCreditBalance.create({
+      data: {
+        personalSpaceId: personalSpace.id,
+        amount: freeTierAmount,
+        currency: 'USD',
+      },
+    });
+
+    for (const folder of SYSTEM_FOLDERS) {
+      await tx.workspaceFolder.create({
+        data: {
+          personalSpaceId: personalSpace.id,
+          name: folder.name,
+          kind: 'SYSTEM',
+          systemKey: folder.systemKey,
+        },
+      });
+    }
+
+    return personalSpace;
+  });
+}
+
+async function ensureCompanyWorkspaceBootstrap(
+  companyId: string,
+  userId: string,
+  profile: {
+    displayName: string;
+    niche: string;
+    audience: string;
+    voice: string;
+    positioning: string;
+    contentPreferences: string;
+  },
+) {
+  await prisma.workspaceSettings.upsert({
+    where: { companyId },
+    update: profile,
+    create: { companyId, ...profile },
+  });
+
+  const ownerRole = await prisma.role.findUnique({ where: { name: 'owner' } });
+  if (ownerRole) {
+    await prisma.companyMember.upsert({
+      where: { companyId_userId: { companyId, userId } },
+      update: { roleId: ownerRole.id },
+      create: { companyId, userId, roleId: ownerRole.id },
+    });
+  }
+
+  for (const folder of SYSTEM_FOLDERS) {
+    const existing = await prisma.workspaceFolder.findFirst({
+      where: { companyId, systemKey: folder.systemKey },
+    });
+    if (!existing) {
+      await prisma.workspaceFolder.create({
+        data: {
+          companyId,
+          name: folder.name,
+          kind: 'SYSTEM',
+          systemKey: folder.systemKey,
+        },
+      });
+    }
+  }
+}
+
+async function seedDemoWorkspaceFiles(companyId: string, companySlug: string) {
+  const uploadsFolder = await prisma.workspaceFolder.findFirst({
+    where: { companyId, systemKey: 'uploads' },
+  });
+  if (!uploadsFolder) return;
+
+  const demoFiles = [
+    {
+      id: 'seed_demo_podcast_mp4',
+      name: 'Podcast Ep. 12 — Confeitaria em casa.mp4',
+      mimeType: 'video/mp4',
+      storageKey: `${companySlug}/uploads/demo/podcast-ep12.mp4`,
+      sizeBytes: 52_428_800,
+      extractedText:
+        'Hoje vamos falar sobre como transformar confeitaria caseira em negócio lucrativo. ' +
+        'O segredo está no posicionamento premium e nos bastidores autênticos. ' +
+        'Quando mostramos o processo real, a retenção dispara nos primeiros três segundos.',
+    },
+    {
+      id: 'seed_demo_live_mp4',
+      name: 'Live Instagram — Bastidores do bolo.mp4',
+      mimeType: 'video/mp4',
+      storageKey: `${companySlug}/uploads/demo/live-bastidores.mp4`,
+      sizeBytes: 31_457_280,
+      extractedText:
+        'Olá pessoal, bem-vindos à live de bastidores. Vou mostrar como montamos o bolo de cenoura ' +
+        'mais pedido da semana. Esse gancho inicial costuma prender quem ama doces artesanais.',
+    },
+  ] as const;
+
+  for (const file of demoFiles) {
+    await prisma.workspaceFile.upsert({
+      where: { id: file.id },
+      update: {
+        name: file.name,
+        extractedText: file.extractedText,
+        status: 'INDEXED',
+      },
+      create: {
+        id: file.id,
+        companyId,
+        folderId: uploadsFolder.id,
+        name: file.name,
+        mimeType: file.mimeType,
+        storageKey: file.storageKey,
+        sizeBytes: file.sizeBytes,
+        extractedText: file.extractedText,
+        status: 'INDEXED',
+        extractData: true,
+        origin: 'UPLOAD',
+      },
+    });
+  }
+}
+  companyId: string,
+  userId: string,
+) {
+  const freeItems = await prisma.marketplaceItem.findMany({
+    where: { price: 0, isActive: true },
+  });
+
+  for (const item of freeItems) {
+    await prisma.workspaceEntitlement.upsert({
+      where: {
+        itemId_companyId: { itemId: item.id, companyId },
+      },
+      update: {},
+      create: {
+        itemId: item.id,
+        companyId,
+        redeemedByUserId: userId,
+      },
+    });
+  }
+
+  return freeItems.length;
+}
+
 // ─── RBAC ───────────────────────────────────────────────────────────────────
 
 async function seedRoles() {
@@ -102,6 +292,18 @@ async function seedRoles() {
 
     console.log(`  • ${roleName}: ${permissions.length} permissões`);
   }
+
+  const legacyMember = await prisma.role.upsert({
+    where: { name: 'member' },
+    update: { isSystem: true },
+    create: { name: 'member', isSystem: true },
+  });
+  const memberPermissions = getDefaultRolePermissions('member');
+  await prisma.rolePermission.deleteMany({ where: { roleId: legacyMember.id } });
+  await prisma.rolePermission.createMany({
+    data: memberPermissions.map((key) => ({ roleId: legacyMember.id, key })),
+  });
+  console.log(`  • member (legacy): ${memberPermissions.length} permissões`);
 
   console.log(`  • Domínio negócio: ${businessPermissionKeys.length} chaves`);
 }
@@ -201,7 +403,7 @@ async function upsertCredentialUser(input: SeedUserInput) {
   return user;
 }
 
-async function seedAdminUser() {
+async function seedAdminUser(freeTierAmount: Prisma.Decimal) {
   console.log('→ Usuário admin (plataforma)...');
 
   const user = await upsertCredentialUser({
@@ -213,6 +415,8 @@ async function seedAdminUser() {
     userType: UserType.ADMIN,
     roleName: 'owner',
   });
+
+  await seedPersonalSpaceForUser(user.id, ADMIN_USER.name, freeTierAmount);
 
   await prisma.platformRoleAssignment.upsert({
     where: { userId_role: { userId: user.id, role: 'platform_owner' } },
@@ -247,8 +451,15 @@ async function seedDemoBusiness() {
     email: DEMO_BUSINESS.email,
     password: DEMO_BUSINESS.password,
     userType: UserType.BUSINESS,
-    roleName: 'member',
+    roleName: 'owner',
   });
+
+  await seedPersonalSpaceForUser(
+    user.id,
+    DEMO_BUSINESS.name,
+    freeTierAmount,
+    DEMO_WORKSPACE_PROFILE,
+  );
 
   const company = await prisma.company.upsert({
     where: { slug: DEMO_BUSINESS.companySlug },
@@ -264,6 +475,22 @@ async function seedDemoBusiness() {
       onboardingCompletedAt: now(),
     },
   });
+
+  await ensureCompanyWorkspaceBootstrap(company.id, user.id, {
+    displayName: DEMO_WORKSPACE_PROFILE.displayName,
+    niche: DEMO_WORKSPACE_PROFILE.niche,
+    audience: DEMO_WORKSPACE_PROFILE.audience,
+    voice: DEMO_WORKSPACE_PROFILE.voice,
+    positioning: DEMO_WORKSPACE_PROFILE.positioning,
+    contentPreferences: DEMO_WORKSPACE_PROFILE.contentPreferences,
+  });
+
+  await seedDemoWorkspaceFiles(company.id, company.slug);
+
+  const entitlementCount = await seedDefaultMarketplaceEntitlements(
+    company.id,
+    user.id,
+  );
 
   const brandContent = [
     DEMO_BUSINESS.companyName,
@@ -402,8 +629,10 @@ async function seedDemoBusiness() {
     },
   });
 
-  console.log(`  • ${DEMO_BUSINESS.email} / ${DEMO_BUSINESS.password} (role: member)`);
-  console.log(`  • Empresa: ${company.name} — US$ ${freeTierAmount} créditos`);
+  console.log(`  • ${DEMO_BUSINESS.email} / ${DEMO_BUSINESS.password} (owner)`);
+  console.log(`  • Espaço pessoal + empresa: ${company.name}`);
+  console.log(`  • Créditos empresa: US$ ${freeTierAmount}`);
+  console.log(`  • Biblioteca: ${entitlementCount} itens grátis resgatados`);
   console.log(`  • Campanha demo: ${campaign.name}`);
 }
 
@@ -415,7 +644,15 @@ async function main() {
   await seedRoles();
   await seedPlatformSettings();
   await seedAiCatalog(prisma);
-  await seedAdminUser();
+  await seedMarketplaceItems(prisma);
+
+  const platformCredits = await prisma.platformCreditSettings.findUnique({
+    where: { id: 'default' },
+  });
+  const freeTierAmount =
+    platformCredits?.freeTierAmount ?? new Prisma.Decimal(20);
+
+  await seedAdminUser(freeTierAmount);
   await seedDemoBusiness();
 
   console.log('\n✅ Seed concluído.\n');

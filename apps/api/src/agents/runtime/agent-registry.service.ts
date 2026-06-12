@@ -150,10 +150,9 @@ export class AgentRegistryService implements OnModuleInit {
 
   private getDefaultSortOrder(agentId: string): number {
     const order: Record<string, number> = {
-      strategist: 1,
-      copywriter: 2,
-      designer: 3,
-      post: 4,
+      research: 0,
+      cuts: 1,
+      video_editor: 2,
     };
     return order[agentId] ?? 999;
   }

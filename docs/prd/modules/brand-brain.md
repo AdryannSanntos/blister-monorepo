@@ -1,5 +1,9 @@
 # Épico: Cérebro da Marca
 
+> ⚠️ **DEPRECATED — 2026-06-12**  
+> Módulo removido no Blister OS. Contexto de marca migra para **Configurações**.  
+> **Substituído por:** [`workspace-settings.md`](workspace-settings.md) · [`../../project/workspace-context.md`](../../project/workspace-context.md)
+
 ## Objetivo
 
 Persistir identidade e contexto permanente da empresa — base para RAG e todos os agentes.

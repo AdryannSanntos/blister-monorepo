@@ -1,4 +1,7 @@
-import { Module } from '@nestjs/common';
+import {
+  Module,
+  forwardRef,
+} from '@nestjs/common';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { StorageModule } from '../storage/storage.module';
@@ -14,7 +17,7 @@ import { CaptionService } from './caption.service';
 import { RagAdminController } from './rag-admin.controller';
 
 @Module({
-  imports: [PrismaModule, AiRuntimeModule, StorageModule],
+  imports: [PrismaModule, AiRuntimeModule, forwardRef(() => StorageModule)],
   controllers: [RagAdminController],
   providers: [
     DocumentService,

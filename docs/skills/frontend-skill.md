@@ -1,104 +1,52 @@
-# Frontend Skill — Blister
+# Frontend Skill — Blister OS
 
-> Fonte de verdade: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`CLAUDE.md`](../../CLAUDE.md) (Regra 17)
+> Fonte: [`blister-os-prd.md`](../prd/blister-os-prd.md) · [`blister-os-reference.md`](../design-system/blister-os-reference.md) · Plano 2: [`02-frontend.md`](../plans/blister-os/02-frontend.md)
 
 ## Objetivo
 
-Guiar implementação, refatoração ou revisão em `apps/web`.
+Implementar UI OS em `apps/web` espelhando `blister-os-reference.html`.
+
+## Plano 2 — zero integração (obrigatório)
+
+| Permitido | Proibido |
+|-----------|----------|
+| Fixtures TS/JSON, Zustand, localStorage | `axios`, `fetch`, `apiClient` para produto |
+| TanStack Query `queryFn` síncrono sobre fixtures | MSW → API real |
+| `setTimeout` simulando loading | Hooks que importam `services/*` reais |
+
+Marcar contratos futuros: `// CONTRACT: docs/plans/blister-os/03-backend.md#...`
 
 ## Estrutura
 
 ```
-apps/web/src/
-  app/                    rotas — Server Components por padrão
-  core/
-    modules/<modulo>/
-      pages/              "use client" quando interativo
-      components/         TODO componente de feature aqui
-      hooks/              hooks de domínio + TanStack Query
-    shared/
-      components/ui/      shadcn
-      components/         reutilizáveis cross-módulo
-      hooks/use-ability.ts
-      utils/api-client.ts
+apps/web/src/core/modules/<feature>/
+  pages/
+  components/
+  hooks/
+  fixtures/          ← Plano 2
 ```
 
-## Regras de codificação (invioláveis)
+Módulos OS: `home`, `agents`, `marketplace`, `library`, `projects`, `files`, `settings`, `shell`
 
-| Regra | Obrigatório |
-|-------|-------------|
-| Validação | **Zod sempre** — formulários, parsers, contratos |
-| Servidor | **TanStack Query** via hooks — nunca fetch em page/component |
-| Formulários | **RHF + zodResolver** — sempre, `mode: 'onBlur'` |
-| Filtros / tabs / URL | **nuqs** — sempre |
-| Componentes | Só em `core/modules/<modulo>/components/` ou `core/shared/` |
-| Renderização | **Server Components** por padrão; client isolado; Server Actions quando couber |
-| Estado global UI | **zustand** quando necessário — não para dados de API |
-| UX | **Playwright** — fluxos críticos e regressão visual/interação |
+## Rotas
 
-## Linguagem UI
+Ver mapa em `blister-os-reference.md`. **Não** criar `/dashboard/brand`.
 
-- **Criar post** (não "Gerar com IA")
-- Campanha, Cérebro da Marca, Peça, Créditos, Aprovar
-- Sem expor "agente", "prompt", "LLM"
+## Regras UI
 
-## Fluxos MVP
+- Sidebar NAV = reference
+- `gap-6` / `gap-4`, `tw-animate-css`
+- Typography: `Display`, `Heading`, `Paragraph`
+- Copy video-first — sem "Cérebro da Marca", "peça", "agente"
 
-1. Onboarding → Cérebro da Marca (mínimo viável)
-2. Geração rápida: 1 frase → peça (PNG + legenda + hashtags)
-3. Campanha opcional → enriquece contexto
-4. Revisão: Aprovar / Negar / Editar / Pedir melhoria / Regenerar
-5. Saldo de créditos visível; bloqueio sem saldo
+## Codificação
 
-## nuqs
+Zod · RHF · nuqs · Server Components default · Playwright smoke rotas OS
 
-```tsx
-import { parseAsString, useQueryState } from 'nuqs';
+## Fixtures globais (copiar padrão reference)
 
-const [tab, setTab] = useQueryState('tab', parseAsString.withDefault('todas'));
-```
+`MKT_ITEMS`, `AGENTS`, `PROJECTS`, `FILES`, `owned`, `credits`
 
-Tabs, filtros de DataTable, paginação e views alternáveis → nuqs, não `useState` solto.
+## Plano 3
 
-## TanStack Query
-
-```tsx
-export function useCampanhas() {
-  return useQuery({
-    queryKey: ['campanhas'],
-    queryFn: async () => {
-      const { data } = await apiClient.get<Campanha[]>('/campanhas');
-      return data;
-    },
-  });
-}
-```
-
-## Playwright
-
-Novas telas e fluxos críticos exigem specs e2e: happy path, erro, permissão, filtros/tabs via URL.
-
-## Rotas alvo
-
-```
-/dashboard                    home operacional
-/dashboard/criar              geração rápida
-/dashboard/campanhas          lista + detalhe
-/dashboard/pecas              revisão/aprovação
-/dashboard/cerebro            Cérebro da Marca
-/dashboard/creditos           saldo
-/system/*                     admin plataforma
-```
-
-## Checklist
-
-- [ ] Zod + RHF em formulários
-- [ ] TanStack Query em dados de servidor
-- [ ] nuqs em filtros/tabs/paginação
-- [ ] Server Component por padrão
-- [ ] Componentes no módulo correto
-- [ ] zustand só para UI global
-- [ ] PermissionGate nas ações sensíveis
-- [ ] DataTable para listagens
-- [ ] Playwright para UX crítica
-- [ ] Tokens do design system
+Substituir fixtures por hooks TanStack Query — um módulo por vez.

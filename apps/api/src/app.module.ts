@@ -17,6 +17,12 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RagModule } from './rag/rag.module';
 import { StorageModule } from './storage/storage.module';
 import { UsersModule } from './users/users.module';
+import { PersonalSpaceModule } from './personal-space/personal-space.module';
+import { WorkspaceSettingsModule } from './workspace-settings/workspace-settings.module';
+import { MarketplaceModule } from './marketplace/marketplace.module';
+import { FilesModule } from './files/files.module';
+import { ProjectsModule } from './projects/projects.module';
+import { WorkspaceModule } from './workspace/workspace.module';
 import { PermissionGuard } from './users/guards/permission.guard';
 
 @Module({
@@ -35,6 +41,12 @@ import { PermissionGuard } from './users/guards/permission.guard';
     AiRuntimeModule,
     RagModule,
     AgentsModule,
+    WorkspaceModule,
+    PersonalSpaceModule,
+    WorkspaceSettingsModule,
+    MarketplaceModule,
+    FilesModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [

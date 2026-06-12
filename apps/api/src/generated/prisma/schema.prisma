@@ -31,6 +31,8 @@ model User {
   sessions        Session[]
   roleAssignments UserRoleAssignment[]
   ownedCompanies  Company[]
+  companyMembers  CompanyMember[]
+  personalSpace   PersonalSpace?
   agentFeedbacks  AgentFeedback[]
 }
 
@@ -84,6 +86,7 @@ model Role {
   updatedAt         DateTime             @updatedAt
   permissions       RolePermission[]
   memberAssignments UserRoleAssignment[]
+  companyMembers    CompanyMember[]
 }
 
 model RolePermission {
@@ -165,19 +168,26 @@ model Company {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  owner          User            @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
-  brandProfile   BrandProfile?
-  campaigns      Campaign[]
-  campaignFiles  CampaignFile[]
-  contentPieces  ContentPiece[]
-  pipelineRuns   PipelineRun[]
-  agentRuns      AgentRun[]
-  agentFeedbacks AgentFeedback[]
-  agentMemories  AgentMemory[]
-  creditBalance  CreditBalance?
-  creditLedger   CreditLedger[]
-  ragDocuments   RagDocument[]
-  ragIndexJobs   RagIndexJob[]
+  owner                  User                    @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  brandProfile           BrandProfile?
+  campaigns              Campaign[]
+  campaignFiles          CampaignFile[]
+  contentPieces          ContentPiece[]
+  pipelineRuns           PipelineRun[]
+  agentRuns              AgentRun[]
+  agentFeedbacks         AgentFeedback[]
+  agentMemories          AgentMemory[]
+  creditBalance          CreditBalance?
+  creditLedger           CreditLedger[]
+  ragDocuments           RagDocument[]
+  ragIndexJobs           RagIndexJob[]
+  members                CompanyMember[]
+  workspaceSettings      WorkspaceSettings?
+  workspaceFolders       WorkspaceFolder[]
+  workspaceFiles         WorkspaceFile[]
+  entitlements           WorkspaceEntitlement[]
+  projects               Project[]
+  agentWorkspaceSettings AgentWorkspaceSetting[]
 
   @@index([ownerUserId])
   @@index([slug])
@@ -650,6 +660,8 @@ model PipelineAgentConfig {
 
 enum RagSourceType {
   BRAND_BRAIN
+  WORKSPACE_SETTINGS
+  WORKSPACE_FILE
   CAMPAIGN
   CAMPAIGN_FILE
   AGENT_LEARNING
@@ -757,4 +769,222 @@ model RagPlatformSettings {
   updatedAt        DateTime @updatedAt
 
   embeddingModel AiModel? @relation(fields: [embeddingModelId], references: [id], onDelete: SetNull)
+}
+
+// ─── Blister OS — Personal Space + Workspace ─────────────────────────────────
+
+model PersonalSpace {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user                   User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  settings               WorkspaceSettings?
+  folders                WorkspaceFolder[]
+  files                  WorkspaceFile[]
+  entitlements           WorkspaceEntitlement[]
+  projects               Project[]
+  creditBalance          PersonalCreditBalance?
+  agentWorkspaceSettings AgentWorkspaceSetting[]
+
+  @@index([userId])
+}
+
+model PersonalCreditBalance {
+  id              String   @id @default(cuid())
+  personalSpaceId String   @unique
+  amount          Decimal  @default(0) @db.Decimal(12, 4)
+  currency        String   @default("USD")
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  personalSpace PersonalSpace @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+}
+
+model CompanyMember {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String
+  roleId    String
+  joinedAt  DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Role    @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, userId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+model WorkspaceSettings {
+  id                 String   @id @default(cuid())
+  personalSpaceId    String?  @unique
+  companyId          String?  @unique
+  displayName        String?
+  niche              String?
+  audience           String?
+  voice              String?
+  positioning        String?
+  contentPreferences String?
+  logoStorageKey     String?
+  palette            Json     @default("[]")
+  timezone           String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+enum MarketplaceItemType {
+  EDIT_STYLE
+  POST_STYLE
+  CAPTION_STYLE
+  PACK
+  TEMPLATE
+  ASSET
+  AGENT
+}
+
+model MarketplaceItem {
+  id          String              @id @default(cuid())
+  slug        String              @unique
+  type        MarketplaceItemType
+  name        String
+  author      String
+  price       Int                 @default(0)
+  flag        String?
+  description String
+  palette     Json                @default("[]")
+  specs       Json                @default("{}")
+  includes    Json                @default("[]")
+  refId       String?
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  entitlements WorkspaceEntitlement[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model WorkspaceEntitlement {
+  id               String   @id @default(cuid())
+  itemId           String
+  personalSpaceId  String?
+  companyId        String?
+  redeemedByUserId String
+  redeemedAt       DateTime @default(now())
+
+  item          MarketplaceItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  personalSpace PersonalSpace?  @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, personalSpaceId])
+  @@unique([itemId, companyId])
+  @@index([personalSpaceId])
+  @@index([companyId])
+}
+
+model AgentWorkspaceSetting {
+  id              String   @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  agentId         String
+  config          Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([personalSpaceId, agentId])
+  @@unique([companyId, agentId])
+  @@index([agentId])
+}
+
+enum WorkspaceFolderKind {
+  SYSTEM
+  USER
+}
+
+model WorkspaceFolder {
+  id              String              @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  parentId        String?
+  name            String
+  kind            WorkspaceFolderKind @default(USER)
+  systemKey       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  personalSpace PersonalSpace?    @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  parent        WorkspaceFolder?  @relation("FolderTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children      WorkspaceFolder[] @relation("FolderTree")
+  files         WorkspaceFile[]
+
+  @@index([personalSpaceId])
+  @@index([companyId])
+  @@index([parentId])
+}
+
+enum WorkspaceFileStatus {
+  PENDING
+  PROCESSING
+  INDEXED
+  FAILED
+}
+
+enum WorkspaceFileOrigin {
+  UPLOAD
+  AGENT_RUN
+  INTEGRATION
+}
+
+model WorkspaceFile {
+  id              String              @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  folderId        String
+  name            String
+  mimeType        String
+  storageKey      String
+  sizeBytes       Int?
+  status          WorkspaceFileStatus @default(PENDING)
+  extractData     Boolean             @default(false)
+  extractedText   String?
+  origin          WorkspaceFileOrigin @default(UPLOAD)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  personalSpace PersonalSpace?  @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  folder        WorkspaceFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@index([personalSpaceId])
+  @@index([companyId])
+  @@index([folderId])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  name            String
+  objective       String
+  linkedAgentIds  String[] @default([])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([personalSpaceId])
+  @@index([companyId])
 }

@@ -15,6 +15,12 @@ export const subjects = [
   'ContentPiece',
   'Credit',
   'Generation',
+  'Workspace',
+  'WorkspaceSettings',
+  'Project',
+  'MarketplaceItem',
+  'LibraryItem',
+  'AgentRun',
 ] as const;
 
 export type AppAction = (typeof actions)[number];
@@ -35,25 +41,41 @@ export type AppPermissionKey =
   | 'role.update'
   | 'role.delete'
   | 'permission.read'
-  // Company / Brand Brain
+  // Company / legacy Brand Brain
   | 'company.read'
   | 'company.update'
   | 'company.delete'
   | 'brand.read'
   | 'brand.update'
-  // Campaigns
+  // Workspace OS
+  | 'workspace.read'
+  | 'workspace.settings.read'
+  | 'workspace.settings.update'
+  // Campaigns (legacy)
   | 'campaign.read'
   | 'campaign.create'
   | 'campaign.update'
   | 'campaign.delete'
   | 'campaign.generate'
-  // Campaign files
+  // Files
   | 'file.create'
+  | 'file.read'
   | 'file.delete'
-  // Content pieces / review
+  // Projects
+  | 'project.read'
+  | 'project.create'
+  | 'project.update'
+  | 'project.delete'
+  // Content pieces / review (legacy)
   | 'piece.read'
   | 'piece.approve'
   | 'piece.update'
+  // Agent runs
+  | 'agentRun.review'
+  // Marketplace
+  | 'marketplace.read'
+  | 'marketplace.redeem'
+  | 'library.read'
   // Credits
   | 'credit.read'
   // Quick generation
@@ -76,16 +98,28 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'company.delete',
   'brand.read',
   'brand.update',
+  'workspace.read',
+  'workspace.settings.read',
+  'workspace.settings.update',
   'campaign.read',
   'campaign.create',
   'campaign.update',
   'campaign.delete',
   'campaign.generate',
   'file.create',
+  'file.read',
   'file.delete',
+  'project.read',
+  'project.create',
+  'project.update',
+  'project.delete',
   'piece.read',
   'piece.approve',
   'piece.update',
+  'agentRun.review',
+  'marketplace.read',
+  'marketplace.redeem',
+  'library.read',
   'credit.read',
   'generation.create',
 ];
@@ -102,7 +136,16 @@ export function isAssignablePermissionKey(value: string): value is AppPermission
   );
 }
 
-export const defaultSystemRoles = ['owner', 'admin', 'member'] as const;
+export const defaultSystemRoles = [
+  'owner',
+  'admin',
+  'creator',
+  'reviewer',
+  'viewer',
+] as const;
+
+/** @deprecated Use `creator` — kept for migration compatibility */
+export const legacyMemberRole = 'member' as const;
 
 export type DefaultSystemRole = (typeof defaultSystemRoles)[number];
 
@@ -123,16 +166,28 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'company.delete': ['delete', 'Company'],
   'brand.read': ['read', 'Brand'],
   'brand.update': ['update', 'Brand'],
+  'workspace.read': ['read', 'Workspace'],
+  'workspace.settings.read': ['read', 'WorkspaceSettings'],
+  'workspace.settings.update': ['update', 'WorkspaceSettings'],
   'campaign.read': ['read', 'Campaign'],
   'campaign.create': ['create', 'Campaign'],
   'campaign.update': ['update', 'Campaign'],
   'campaign.delete': ['delete', 'Campaign'],
   'campaign.generate': ['create', 'Generation'],
   'file.create': ['create', 'File'],
+  'file.read': ['read', 'File'],
   'file.delete': ['delete', 'File'],
+  'project.read': ['read', 'Project'],
+  'project.create': ['create', 'Project'],
+  'project.update': ['update', 'Project'],
+  'project.delete': ['delete', 'Project'],
   'piece.read': ['read', 'ContentPiece'],
   'piece.approve': ['update', 'ContentPiece'],
   'piece.update': ['update', 'ContentPiece'],
+  'agentRun.review': ['update', 'AgentRun'],
+  'marketplace.read': ['read', 'MarketplaceItem'],
+  'marketplace.redeem': ['create', 'MarketplaceItem'],
+  'library.read': ['read', 'LibraryItem'],
   'credit.read': ['read', 'Credit'],
   'generation.create': ['create', 'Generation'],
 };
@@ -144,10 +199,32 @@ export interface PermissionOverride {
   effect: PermissionOverrideEffect;
 }
 
-/** Default business-owner permissions (role `member` in MVP — one user per company). */
-export const businessPermissionKeys: AppPermissionKey[] = [
+export const creatorPermissionKeys: AppPermissionKey[] = [
   'company.read',
   'company.update',
+  'workspace.read',
+  'workspace.settings.read',
+  'workspace.settings.update',
+  'project.read',
+  'project.create',
+  'project.update',
+  'project.delete',
+  'file.create',
+  'file.read',
+  'file.delete',
+  'marketplace.read',
+  'marketplace.redeem',
+  'library.read',
+  'credit.read',
+  'generation.create',
+  'member.read',
+  'role.read',
+  'user.read',
+];
+
+/** @deprecated Use creatorPermissionKeys */
+export const businessPermissionKeys: AppPermissionKey[] = [
+  ...creatorPermissionKeys,
   'brand.read',
   'brand.update',
   'campaign.read',
@@ -155,32 +232,68 @@ export const businessPermissionKeys: AppPermissionKey[] = [
   'campaign.update',
   'campaign.delete',
   'campaign.generate',
-  'file.create',
-  'file.delete',
   'piece.read',
   'piece.approve',
   'piece.update',
-  'credit.read',
-  'generation.create',
-  'user.read',
 ];
 
-export function getDefaultRolePermissions(role: DefaultSystemRole): AppPermissionKey[] {
+export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): AppPermissionKey[] {
   switch (role) {
     case 'owner':
       return [...allPermissionKeys];
     case 'admin':
       return [
-        ...businessPermissionKeys,
-        'member.read',
+        ...creatorPermissionKeys,
         'member.invite',
         'member.update',
         'member.remove',
-        'role.read',
         'permission.read',
+        'brand.read',
+        'brand.update',
+        'campaign.read',
+        'campaign.create',
+        'campaign.update',
+        'campaign.delete',
+        'campaign.generate',
+        'piece.read',
+        'piece.approve',
+        'piece.update',
+        'agentRun.review',
       ];
+    case 'creator':
     case 'member':
-      return [...businessPermissionKeys, 'member.read', 'role.read'];
+      return [...creatorPermissionKeys];
+    case 'reviewer':
+      return [
+        'workspace.read',
+        'workspace.settings.read',
+        'project.read',
+        'file.read',
+        'library.read',
+        'credit.read',
+        'member.read',
+        'role.read',
+        'user.read',
+        'company.read',
+        'agentRun.review',
+        'piece.read',
+        'piece.approve',
+        'piece.update',
+      ];
+    case 'viewer':
+      return [
+        'workspace.read',
+        'workspace.settings.read',
+        'project.read',
+        'file.read',
+        'library.read',
+        'credit.read',
+        'member.read',
+        'role.read',
+        'user.read',
+        'company.read',
+        'piece.read',
+      ];
   }
 }
 

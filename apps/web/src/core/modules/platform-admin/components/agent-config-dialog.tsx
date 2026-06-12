@@ -23,6 +23,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormSwitchItem,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
 import { Switch } from "src/core/shared/components/ui/switch";
@@ -295,15 +296,16 @@ export function AgentConfigDialog({
                 control={form.control}
                 name="policyEnabled"
                 render={({ field }) => (
-                  <FormItem className="flex items-center justify-between gap-3">
-                    <FormLabel className="mt-0">{t("policyEnabledLabel")}</FormLabel>
+                  <FormSwitchItem className="gap-3">
+                    <FormLabel className="mt-0 flex-1">{t("policyEnabledLabel")}</FormLabel>
                     <FormControl>
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        className="shrink-0"
                       />
                     </FormControl>
-                  </FormItem>
+                  </FormSwitchItem>
                 )}
               />
 
@@ -311,17 +313,18 @@ export function AgentConfigDialog({
                 control={form.control}
                 name="pipelineEnabled"
                 render={({ field }) => (
-                  <FormItem className="flex items-center justify-between gap-3">
-                    <FormLabel className="mt-0">
+                  <FormSwitchItem className="gap-3">
+                    <FormLabel className="mt-0 flex-1">
                       {t("pipelineEnabledLabel")}
                     </FormLabel>
                     <FormControl>
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        className="shrink-0"
                       />
                     </FormControl>
-                  </FormItem>
+                  </FormSwitchItem>
                 )}
               />
             </div>

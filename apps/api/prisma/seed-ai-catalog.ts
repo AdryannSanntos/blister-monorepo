@@ -298,7 +298,18 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
     throw new Error('OpenRouter provider not seeded');
   }
 
-  const openRouterModels = await fetchOpenRouterModels();
+  const fetchedOpenRouterModels = await fetchOpenRouterModels();
+  const openRouterModelsById = new Map(
+    fetchedOpenRouterModels.map((model) => [model.externalId, model]),
+  );
+
+  for (const fallback of OPENROUTER_FALLBACK_MODELS) {
+    if (!openRouterModelsById.has(fallback.externalId)) {
+      openRouterModelsById.set(fallback.externalId, fallback);
+    }
+  }
+
+  const openRouterModels = [...openRouterModelsById.values()];
   const openrouterModelIds = await upsertProviderModels(
     prisma,
     openrouterId,
@@ -377,30 +388,28 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   const geminiTextModel = await prisma.aiModel.findFirst({
     where: { providerId: geminiId, externalId: 'gemini-2.5-flash' },
   });
-  const geminiImageModel = await prisma.aiModel.findFirst({
-    where: { providerId: geminiId, externalId: 'gemini-2.5-flash-image' },
-  });
 
-  if (!textModelId || !embeddingModelId) {
-    throw new Error('Required OpenRouter models not seeded');
+  const resolvedTextModelId = textModelId ?? geminiTextModel?.id;
+  const resolvedEmbeddingModelId = embeddingModelId ?? geminiTextModel?.id;
+
+  if (!resolvedTextModelId || !resolvedEmbeddingModelId) {
+    throw new Error('Required text/embedding models not seeded');
   }
 
   const agentPolicies: Record<string, string> = {
-    copywriter: textModelId,
-    strategist: geminiTextModel?.id ?? textModelId,
-    designer: geminiImageModel?.id ?? textModelId,
-    post: textModelId,
+    research: resolvedTextModelId,
+    cuts: resolvedTextModelId,
+    video_editor: resolvedTextModelId,
   };
 
   const pipelineAgents = [
-    { agentId: 'strategist', sortOrder: 0 },
-    { agentId: 'copywriter', sortOrder: 1 },
-    { agentId: 'designer', sortOrder: 2 },
-    { agentId: 'post', sortOrder: 3 },
+    { agentId: 'research', sortOrder: 0 },
+    { agentId: 'cuts', sortOrder: 1 },
+    { agentId: 'video_editor', sortOrder: 2 },
   ] as const;
 
   for (const agent of pipelineAgents) {
-    const modelIdForAgent = agentPolicies[agent.agentId] ?? textModelId;
+    const modelIdForAgent = agentPolicies[agent.agentId] ?? resolvedTextModelId;
     await prisma.agentModelPolicy.upsert({
       where: { agentId: agent.agentId },
       update: {
@@ -419,7 +428,7 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
 
   await prisma.ragPlatformSettings.update({
     where: { id: 'default' },
-    data: { embeddingModelId },
+    data: { embeddingModelId: resolvedEmbeddingModelId },
   });
 
   console.log(`  • OpenRouter: ${openRouterModels.length} modelos`);

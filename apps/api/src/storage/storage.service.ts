@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   CopyObjectCommand,
   GetObjectCommand,
+  PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import type { Readable } from 'node:stream';
 
 @Injectable()
-export class StorageService {
+export class StorageService implements OnModuleInit {
+  private readonly logger = new Logger(StorageService.name);
   private readonly client: S3Client;
   private readonly bucket: string;
 
@@ -28,6 +31,48 @@ export class StorageService {
     });
 
     this.bucket = this.config.getOrThrow<string>('AWS_S3_BUCKET');
+  }
+
+  async onModuleInit(): Promise<void> {
+    await this.ensureBucketCors();
+  }
+
+  async ensureBucketCors(): Promise<void> {
+    const configuredOrigins = process.env.CORS_ORIGIN?.split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+
+    if (!configuredOrigins?.length) {
+      return;
+    }
+
+    try {
+      await this.client.send(
+        new PutBucketCorsCommand({
+          Bucket: this.bucket,
+          CORSConfiguration: {
+            CORSRules: [
+              {
+                AllowedHeaders: ['*'],
+                AllowedMethods: ['GET', 'PUT', 'POST', 'HEAD'],
+                AllowedOrigins: configuredOrigins,
+                ExposeHeaders: ['ETag'],
+                MaxAgeSeconds: 3600,
+              },
+            ],
+          },
+        }),
+      );
+      this.logger.log(
+        `Configured S3 bucket CORS for origins: ${configuredOrigins.join(', ')}`,
+      );
+    } catch (error) {
+      this.logger.warn(
+        `Could not configure S3 bucket CORS automatically: ${
+          error instanceof Error ? error.message : 'unknown error'
+        }`,
+      );
+    }
   }
 
   async getPresignedUploadUrl(
@@ -60,6 +105,23 @@ export class StorageService {
     );
   }
 
+  async uploadObjectStream(
+    key: string,
+    body: Readable,
+    mimeType: string,
+    contentLength?: number,
+  ): Promise<void> {
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: body,
+        ContentType: mimeType,
+        ...(contentLength !== undefined ? { ContentLength: contentLength } : {}),
+      }),
+    );
+  }
+
   async copyObject(sourceKey: string, destinationKey: string): Promise<void> {
     await this.client.send(
       new CopyObjectCommand({
@@ -84,5 +146,15 @@ export class StorageService {
 
     const bytes = await response.Body.transformToByteArray();
     return Buffer.from(bytes);
+  }
+
+  async deleteObject(key: string): Promise<void> {
+    const { DeleteObjectCommand } = await import('@aws-sdk/client-s3');
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }),
+    );
   }
 }

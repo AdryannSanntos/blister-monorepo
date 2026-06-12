@@ -161,6 +161,8 @@
     "signOutError": "Error signing out.",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
+    "personalSpace": "Personal space",
+    "createCompany": "Create company",
     "homePage": {
       "greeting": "Hello, {name}",
       "greetingFallback": "Welcome to Blister",
@@ -243,22 +245,20 @@
     }
   },
   "sidebar": {
+    "home": "Home",
+    "studio": "Studio",
+    "content": "Content",
+    "archive": "Library hub",
+    "settingsGroup": "Settings",
+    "marketplace": "Marketplace",
+    "library": "Library",
+    "files": "Files",
     "dashboard": "Dashboard",
     "agents": "Agents",
     "myAgents": "My agents",
-    "agentStrategist": "Strategist",
-    "agentCopywriter": "Copywriter",
-    "agentDesigner": "Designer",
-    "agentPost": "Full post",
-    "generateCopy": "Generate copy",
-    "generateImage": "Generate image",
-    "createPost": "Create post",
-    "adaptContent": "Adapt content",
-    "createEmail": "Create email",
     "history": "History",
     "credits": "Credits",
     "company": "Company",
-    "brandBrain": "Brain",
     "campaigns": "Campaigns",
     "integrations": "Integrations",
     "workspace": "Workspace",
@@ -267,6 +267,385 @@
     "settings": "Settings",
     "admin": "Admin",
     "settingsAria": "Settings"
+  },
+  "home": {
+    "greeting": "Hello, {name}",
+    "subtitle": "Your content studio in one place.",
+    "primaryAction": "Edit video",
+    "studioTitle": "Studio",
+    "activityTitle": "Recent activity",
+    "marketplaceNews": "Marketplace news",
+    "seeAll": "See all",
+    "stats": {
+      "credits": "Credits",
+      "creditsHint": "Balance available for redemptions",
+      "library": "Library",
+      "libraryHint": "Redeemed items",
+      "edits": "Edits",
+      "cuts": "Cuts"
+    }
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "description": "Discover styles, packs, templates, assets and agents to speed up production.",
+    "filterAria": "Filter by type",
+    "pricingAria": "Filter by price",
+    "searchPlaceholder": "Search by name, author or description",
+    "searchAria": "Search marketplace",
+    "sortAria": "Sort catalog",
+    "openLibrary": "My library",
+    "loadingTitle": "Loading item",
+    "notFound": "Item not found",
+    "notFoundDescription": "This item may have been removed or the link is outdated.",
+    "back": "Back to marketplace",
+    "byAuthor": "by {author}",
+    "specs": "Specifications",
+    "includes": "What's included",
+    "related": "You may also like",
+    "relatedDescription": "Similar items to complement your workflow.",
+    "redeemFree": "Redeem for free",
+    "redeemPaid": "Redeem for {price} credits",
+    "redeemAria": "Redeem {name}",
+    "alreadyOwned": "Already in library",
+    "redeemSuccess": "{name} added to library",
+    "redeemFailed": "Could not redeem",
+    "pricing": {
+      "all": "All prices",
+      "free": "Free",
+      "paid": "With credits"
+    },
+    "sort": {
+      "featured": "Featured",
+      "priceAsc": "Lowest price",
+      "priceDesc": "Highest price",
+      "name": "Name A–Z"
+    },
+    "stats": {
+      "credits": {
+        "label": "Credit balance",
+        "hint": "Used to redeem premium catalog items."
+      },
+      "free": {
+        "label": "Free items",
+        "hint": "Resources available without spending credits."
+      },
+      "paid": {
+        "label": "Premium items",
+        "hint": "Packs, styles and agents unlocked with credits."
+      },
+      "library": {
+        "label": "In library",
+        "hint": "Everything you already redeemed or purchased."
+      }
+    },
+    "creditBanner": {
+      "title": "You have {credits} credits available",
+      "description": "Redeem free items instantly or spend credits to unlock premium resources.",
+      "lowDescription": "Your balance is low. Top up credits to keep redeeming premium items.",
+      "lowBadge": "Low balance",
+      "action": "Manage credits"
+    },
+    "sections": {
+      "featured": {
+        "title": "Featured",
+        "description": "New picks from the Blister team to get started fast."
+      },
+      "free": {
+        "title": "Free to redeem",
+        "description": "Join the catalog without spending platform credits."
+      },
+      "paid": {
+        "title": "Premium with credits",
+        "description": "Advanced resources unlocked with workspace balance."
+      },
+      "owned": {
+        "title": "Already in your library",
+        "description": "Items you already redeemed or purchased."
+      }
+    },
+    "empty": {
+      "title": "No items found",
+      "description": "Adjust filters or try another search term to explore the catalog."
+    },
+    "card": {
+      "free": "Free",
+      "credits": "{price} credits",
+      "owned": "In library",
+      "viewDetails": "View details",
+      "byAuthor": "by {author}",
+      "openItem": "Open {name}",
+      "flags": {
+        "new": "New",
+        "featured": "Featured"
+      }
+    },
+    "detail": {
+      "byAuthor": "by {author}",
+      "yourBalance": "Your balance",
+      "afterPurchase": "Balance after redeem",
+      "alreadyInLibrary": "This item is already in your library.",
+      "openLibrary": "Open library",
+      "insufficientCredits": "Not enough credits to redeem this item.",
+      "freeHint": "Free redeem — the item goes straight to your library."
+    },
+    "types": {
+      "all": "All",
+      "editStyle": "Edit Styles",
+      "postStyle": "Post Styles",
+      "captionStyle": "Caption styles",
+      "pack": "Visual packs",
+      "template": "Templates",
+      "asset": "Creative assets",
+      "agent": "Agents"
+    },
+    "typeDescriptions": {
+      "editStyle": "Pace, caption and transition presets to speed up video editing.",
+      "postStyle": "Ready-made layouts for static posts and social carousels.",
+      "captionStyle": "Caption styles and typography to keep a consistent look.",
+      "pack": "Visual sets with palette, typography and graphic elements.",
+      "template": "Reusable templates to accelerate recurring production.",
+      "asset": "Standalone creative resources to compose your pieces.",
+      "agent": "Specialized flows for specific production stages."
+    },
+    "carousel": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "library": {
+    "title": "Library",
+    "description": "Everything you redeemed or purchased.",
+    "filterAria": "Filter library",
+    "emptyTitle": "Empty library",
+    "emptyDescription": "Redeem items from the Marketplace to get started.",
+    "browseMarketplace": "Go to Marketplace",
+    "openMarketplace": "Browse marketplace",
+    "useInEditor": "Use in Editor"
+  },
+  "files": {
+    "title": "Files",
+    "description": "Studio raw material: videos, docs and organized folders.",
+    "newFolder": "New folder",
+    "upload": "Upload file",
+    "uploadTitle": "Upload file",
+    "breadcrumbAria": "Folder path",
+    "back": "Back",
+    "viewAria": "View mode",
+    "viewGrid": "Grid",
+    "viewList": "List",
+    "extractData": "Extract data",
+    "extractQueued": "Extraction queued (demo)",
+    "folderNamePlaceholder": "Folder name",
+    "namePlaceholder": "Name",
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save",
+    "rename": "Rename",
+    "delete": "Delete",
+    "dropzoneAria": "Upload area",
+    "dropzoneTitle": "Drag a file or click to select",
+    "dropzoneHint": "Videos up to 5 GB",
+    "removeSelectedFile": "Remove selected file",
+    "foldersSection": "Folders",
+    "foldersSectionAria": "Folders in this directory",
+    "filesSection": "Files",
+    "filesSectionAria": "Files in this directory",
+    "itemCount": "{count, plural, =0 {Empty} one {# item} other {# items}}",
+    "systemFolderBadge": "System",
+    "folderActionsMenu": "Folder actions for {name}",
+    "fileActionsMenu": "File actions for {name}",
+    "uploadedOn": "uploaded on {date}",
+    "usedIn": "used in: {label}",
+    "available": "available",
+    "openInEditor": "Open in Editor",
+    "emptyTitle": "Empty folder",
+    "emptyDescription": "Upload videos or create subfolders to organize your raw material.",
+    "renameFolderTitle": "Rename folder",
+    "renameFileTitle": "Rename file",
+    "deleteFolderTitle": "Delete folder",
+    "deleteFileTitle": "Delete file",
+    "deleteFolderDescription": "Folder \"{name}\" will be permanently removed. This action cannot be undone.",
+    "deleteFileDescription": "File \"{name}\" will be permanently removed. This action cannot be undone.",
+    "cannotRenameFolder": "System folders cannot be renamed.",
+    "cannotRenameFile": "Tool-generated files cannot be renamed.",
+    "cannotDeleteFolder": "This folder cannot be deleted. System folders or folders with content are protected.",
+    "cannotDeleteFile": "This file cannot be deleted. Files in use or generated by tools are protected.",
+    "cannotCreateFolderHere": "Cannot create folders in this directory.",
+    "cannotUploadHere": "Cannot upload files to this directory.",
+    "createFolderFailed": "Could not create folder.",
+    "createFolderSuccess": "Folder \"{name}\" created.",
+    "renameFolderSuccess": "Folder renamed to \"{name}\".",
+    "renameFileSuccess": "File renamed to \"{name}\".",
+    "deleteFolderSuccess": "Folder \"{name}\" deleted.",
+    "deleteFileSuccess": "File \"{name}\" deleted.",
+    "uploadSuccess": "\"{name}\" uploaded successfully.",
+    "uploadFailed": "Failed to upload file.",
+    "fileTooLarge": "File exceeds the 5 GB limit.",
+    "loading": "Loading files...",
+    "loadErrorTitle": "Could not load files",
+    "loadErrorDescription": "Check your connection and try again.",
+    "retry": "Try again",
+    "rootLabel": "All files",
+    "processing": "Processing",
+    "failed": "Failed",
+    "picker": {
+      "title": "Select file",
+      "description": "Browse folders and choose an available file.",
+      "selectHint": "Select a file from the list to continue.",
+      "selectedLabel": "Selected",
+      "cancel": "Cancel",
+      "confirm": "Use file",
+      "confirmDisabled": "Select an available file to continue.",
+      "emptyFilteredTitle": "No compatible files",
+      "emptyFilteredDescription": "This folder has no files compatible with this flow. Try another folder.",
+      "noSelectableFiles": "Files in this folder are not available for selection yet.",
+      "blockedFailed": "Processing failed",
+      "blockedProcessing": "Processing",
+      "blockedFiltered": "Incompatible",
+      "toastFailed": "This file failed processing and cannot be used.",
+      "toastProcessing": "Wait for processing to finish before using this file.",
+      "toastFiltered": "This file is not compatible with this flow."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Workspace context, credits and team.",
+    "contextTitle": "Brand context",
+    "contextDescription": "Information that guides all content flows.",
+    "creditsTitle": "Credits",
+    "creditsDescription": "Company balance for runs and Marketplace redemptions.",
+    "creditsBalance": "Balance: {amount} credits",
+    "creditsHint": "History and top-ups on the credits page.",
+    "openCredits": "View credits",
+    "teamTitle": "Team",
+    "teamDescription": "Workspace members, invites and roles.",
+    "permissionsTitle": "Permissions",
+    "permissionsDescription": "Roles and what each profile can do in the workspace.",
+    "teamHint": "Manage who can access the company and what they can do.",
+    "openTeam": "Manage team",
+    "openPermissions": "Permissions",
+    "companyTitle": "Company profile",
+    "companyDescription": "Name, identity and general workspace settings.",
+    "openCompany": "Company settings",
+    "save": "Save",
+    "saved": "Settings saved",
+    "saveError": "We couldn't save. Please try again.",
+    "viewCredits": "View credits",
+    "manageTeam": "Manage team",
+    "managePermissions": "Manage permissions",
+    "fields": {
+      "displayName": "Workspace name",
+      "niche": "Niche",
+      "audience": "Audience",
+      "voice": "Voice",
+      "positioning": "Positioning",
+      "contentPreferences": "Content preferences"
+    }
+  },
+  "videoEditor": {
+    "title": "Video Editor",
+    "description": "Upload, Edit Style and generate the edit.",
+    "fileSelected": "File selected: {name}",
+    "adjustCopy": "Final tweaks for {file}",
+    "noFile": "no file",
+    "generating": "Generating edit...",
+    "generated": "Edit ready (demo)",
+    "resultMock": "Final version with style {style}",
+    "readyToGenerate": "Ready to generate",
+    "back": "Back",
+    "next": "Continue",
+    "generate": "Generate edit",
+    "viewHistory": "View history"
+  },
+  "cuts": {
+    "title": "Cuts Generator",
+    "description": "Short clips from long videos.",
+    "fileSelected": "File selected: {name}",
+    "styleLabel": "Edit Style",
+    "generating": "Generating cuts...",
+    "generate": "Generate cuts",
+    "generated": "Prioritized cuts (demo)",
+    "viewHistory": "View history",
+    "runPreview": "{count} prioritized cuts",
+    "score": "Score {value}",
+    "modal": {
+      "title": "New cuts run",
+      "startingTitle": "Generating cuts",
+      "browseFiles": "Choose from Files",
+      "selectedFile": "Source: {name}",
+      "generating": "Transcribing and ranking cuts...",
+      "starting": "Starting...",
+      "start": "Generate cuts",
+      "submitting": "Saving review...",
+      "submitReview": "Confirm review",
+      "doneMessage": "{count} cuts ready.",
+      "goToResults": "View results",
+      "fileSelected": "File selected: {name}",
+      "uploading": "Uploading file...",
+      "uploadFailed": "Failed to upload file",
+      "fileTooLarge": "File exceeds the 5 GB limit",
+      "uploadOnGenerateHint": "The file is uploaded only when you click Generate cuts.",
+      "filePickerTitle": "Select video",
+      "filePickerDescription": "Choose a video from your library. Only available files can be used.",
+      "errorGeneric": "Could not complete the run.",
+      "retry": "Try again",
+      "steps": {
+        "source": "Source",
+        "generate": "Generate",
+        "review": "Review",
+        "done": "Done"
+      }
+    },
+    "review": {
+      "retentionLabel": "Estimated retention",
+      "approve": "Accept",
+      "reject": "Reject"
+    },
+    "statusModal": {
+      "titleSuccess": "Generation started",
+      "titleError": "Failed to start",
+      "sourceLabel": "Source: {name}",
+      "successStarted": "Your video was uploaded and cut generation has started.",
+      "backgroundHint": "Processing continues in the background. Track progress in Recent runs on the overview.",
+      "errorGeneric": "Could not upload the file or start generation.",
+      "close": "Close",
+      "retry": "Try again",
+      "viewOverview": "View overview"
+    },
+    "filePicker": {
+      "title": "Select file",
+      "loading": "Loading files...",
+      "empty": "No videos found in this folder.",
+      "cancel": "Cancel",
+      "confirm": "Use file"
+    },
+    "results": {
+      "title": "Results",
+      "description": "Generated and reviewed cuts.",
+      "latestTitle": "Latest run",
+      "latestDescription": "Cuts from the most recent run.",
+      "loading": "Loading results...",
+      "empty": "No completed cuts yet.",
+      "historyTitle": "Previous runs",
+      "historyDescription": "History of completed generations.",
+      "runSummary": "{approved} approved of {total} cuts"
+    }
+  },
+  "research": {
+    "title": "Research",
+    "description": "Briefs and references for your next content.",
+    "briefLabel": "What do you want to research?",
+    "briefPlaceholder": "E.g. artisan bakery trends for Reels",
+    "run": "Research",
+    "running": "Researching...",
+    "viewHistory": "View history",
+    "deliverable1": "3 hook angles for the topic",
+    "deliverable2": "9:16 format references in the niche",
+    "deliverable3": "Summary: {topic}..."
+  },
+  "history": {
+    "title": "History",
+    "description": "Recent runs and deliverables (local demo)."
   },
   "workspace": {
     "team": {
@@ -482,6 +861,15 @@
         "deleteError": "Could not delete company."
       }
     }
+  },
+  "workspaceSwitcher": {
+    "personalSpace": "Personal space",
+    "personalType": "Personal account",
+    "companyType": "Company",
+    "selectWorkspace": "Select workspace",
+    "switchWorkspace": "Switch workspace",
+    "workspaces": "Workspaces",
+    "createCompany": "Create company"
   },
   "workspacesHub": {
     "title": "Companies",
@@ -804,6 +1192,77 @@
     }
   },
   "agents": {
+    "nav": {
+      "overview": "Overview",
+      "history": "History",
+      "results": "Results",
+      "newGeneration": "New run",
+      "settings": "Settings"
+    },
+    "settings": {
+      "title": "Settings — {agent}",
+      "description": "Settings specific to this tool.",
+      "comingSoon": "Settings for this tool will be available soon.",
+      "cuts": {
+        "title": "Cuts preferences",
+        "description": "Defaults applied to every cuts generation.",
+        "durationLabel": "Default cut duration (s)",
+        "durationHint": "Used as a reference when ranking cuts.",
+        "maxCutsLabel": "Max cuts per run",
+        "autoAcceptLabel": "Auto-accept cuts",
+        "autoAcceptHint": "Skips manual review after generation.",
+        "addCaptionsLabel": "Add captions",
+        "addCaptionsHint": "Applies a caption style redeemed from Marketplace.",
+        "captionStyleLabel": "Caption style",
+        "captionStylePlaceholder": "Select a style",
+        "deleteSourceLabel": "Delete source after run",
+        "deleteSourceHint": "Removes the original file from Files when done.",
+        "save": "Save",
+        "saved": "Settings saved"
+      }
+    },
+    "overview": {
+      "aboutTitle": "About this tool",
+      "statLabel": "Period summary",
+      "recentTitle": "Recent runs",
+      "usageTitle": "Usage in the last 7 days",
+      "usageAria": "Runs chart for the last 7 days",
+      "stats": {
+        "totalRuns": {
+          "label": "Runs",
+          "hint": "Total generations for this tool"
+        },
+        "completed": {
+          "label": "Completed",
+          "hint": "Finished successfully"
+        },
+        "approved": {
+          "label": "Approved",
+          "hint": "Reviewed and approved"
+        },
+        "credits": {
+          "label": "Credits used",
+          "hint": "Total consumption for this tool"
+        }
+      }
+    },
+    "historyTable": {
+      "title": "History — {agent}",
+      "description": "All generations for this tool in the workspace.",
+      "count": "{count, plural, one {# run} other {# runs}}",
+      "empty": "No runs yet",
+      "emptyHint": "Start a new generation to see history here.",
+      "columns": {
+        "title": "Request",
+        "status": "Status",
+        "date": "Date",
+        "credits": "Credits"
+      }
+    },
+    "new": {
+      "title": "New generation — {agent}",
+      "description": "Configure and start a new run."
+    },
     "strategist": "Plan content",
     "strategistDescription": "Turn a brief into a content plan with themes, angles, and a suggested calendar.",
     "strategistPlaceholder": "E.g.: Mother's Day posts for my bakery, focused on pre-orders",
@@ -922,7 +1381,8 @@
       "cancelError": "Could not cancel",
       "cancelRun": "Cancel",
       "runNotFound": "Run not found",
-      "newRun": "New run"
+      "newRun": "New run",
+      "viewHistory": "View history"
     },
     "output": {
       "failedTitle": "Generation failed",
@@ -1034,6 +1494,17 @@
         "status": "Status",
         "date": "Date"
       }
+    },
+    "surface": {
+      "notFound": "Agent not found",
+      "goMarketplace": "Go to Marketplace",
+      "entitlementRequired": "Redeem this agent in the Marketplace to use it.",
+      "redeemAgent": "Redeem agent",
+      "briefLabel": "Brief",
+      "briefPlaceholder": "Describe what you need...",
+      "run": "Run",
+      "running": "Running...",
+      "mockOutput": "{agent}: simulated output for \"{brief}\""
     }
   },
   "platformAdmin": {

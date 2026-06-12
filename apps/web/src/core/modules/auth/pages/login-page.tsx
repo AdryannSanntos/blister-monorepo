@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { AuthBrandHeader } from "src/core/modules/auth/components/auth-brand-header";
@@ -22,8 +22,6 @@ import { Input } from "src/core/shared/components/ui/input";
 import { PasswordInput } from "src/core/shared/components/ui/password-input";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
-
-import { Link, useRouter } from "@/i18n/routing";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -65,12 +63,13 @@ function AppleIcon({ className }: { className?: string }) {
   );
 }
 
-type LoginFormValues = {
-  email: string;
-  password: string;
-  rememberLogin: boolean;
-};
+const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(1, "Senha é obrigatória"),
+  rememberLogin: z.boolean(),
+});
 
+type LoginFormValues = z.infer<typeof loginSchema>;
 type SocialSignIn = {
   social: (input: {
     provider: "google";
@@ -83,6 +82,16 @@ const rememberedLoginKey = "blister:remembered-login-email";
 function getSafeRedirectPath(value: string | null) {
   if (!value || !value.startsWith("/") || value.startsWith("//")) return null;
   return value;
+}
+
+function getPostLoginRedirectPath(searchParams: {
+  get: (name: string) => string | null;
+}) {
+  return (
+    getSafeRedirectPath(searchParams.get("redirect")) ??
+    getSafeRedirectPath(searchParams.get("next")) ??
+    "/dashboard"
+  );
 }
 
 function getRememberedLoginEmail() {
@@ -104,21 +113,8 @@ function persistRememberedLoginEmail(values: LoginFormValues) {
 export function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const t = useTranslations("auth.login");
-  const tValidation = useTranslations("validation");
-  const tCommon = useTranslations("common");
   const [isLoading, setIsLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<"google" | null>(null);
-
-  const loginSchema = useMemo(
-    () =>
-      z.object({
-        email: z.string().email(tValidation("invalidEmail")),
-        password: z.string().min(1, tValidation("passwordRequired")),
-        rememberLogin: z.boolean(),
-      }),
-    [tValidation],
-  );
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -129,14 +125,6 @@ export function LoginPage() {
       rememberLogin: false,
     },
   });
-
-  function getPostLoginRedirectPath() {
-    return (
-      getSafeRedirectPath(searchParams.get("redirect")) ??
-      getSafeRedirectPath(searchParams.get("next")) ??
-      "/dashboard"
-    );
-  }
 
   useEffect(() => {
     const rememberedEmail = getRememberedLoginEmail();
@@ -153,14 +141,14 @@ export function LoginPage() {
         SocialSignIn;
       const { error } = await signIn.social({
         provider: "google",
-        callbackURL: getPostLoginRedirectPath(),
+        callbackURL: getPostLoginRedirectPath(searchParams),
       });
 
       if (error) {
-        toast.error(error.message ?? t("googleError"));
+        toast.error(error.message ?? "Não foi possível entrar com Google.");
       }
     } catch {
-      toast.error(t("googleUnexpectedError"));
+      toast.error("Erro inesperado ao entrar com Google.");
     } finally {
       setSocialLoading(null);
     }
@@ -180,20 +168,23 @@ export function LoginPage() {
           error.message?.toLowerCase().includes("email not verified") ||
           error.message?.toLowerCase().includes("email não verificado")
         ) {
-          toast.error(t("emailNotVerified"));
+          toast.error(
+            "Seu email ainda não foi verificado. Verifique sua caixa de entrada.",
+          );
           router.push(
             `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
           );
           return;
         }
-        toast.error(error.message ?? t("invalidCredentials"));
+        toast.error(error.message ?? "Email ou senha incorretos.");
         return;
       }
 
       persistRememberedLoginEmail(values);
-      router.push(getPostLoginRedirectPath());
+
+      router.push(getPostLoginRedirectPath(searchParams));
     } catch {
-      toast.error(tCommon("unexpectedError"));
+      toast.error("Erro inesperado. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -205,25 +196,25 @@ export function LoginPage() {
 
       <div className="mb-8">
         <h1 className="text-[22px] font-semibold text-[var(--fg-primary)]">
-          {t("title")}
+          Bem-vindo de volta
         </h1>
         <p className="mt-1 text-[13px] text-[var(--fg-tertiary)]">
-          {t("subtitle")}
+          Entre na sua conta para continuar
         </p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{tCommon("email")}</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder={tCommon("emailPlaceholder")}
+                    placeholder="seu@email.com"
                     autoComplete="email"
                     {...field}
                   />
@@ -238,17 +229,17 @@ export function LoginPage() {
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center justify-between">
-                  <FormLabel>{tCommon("password")}</FormLabel>
+                  <FormLabel>Senha</FormLabel>
                   <Link
                     href="/auth/forgot-password"
                     className="text-[12px] text-[var(--fg-tertiary)] underline-offset-4 hover:text-[var(--fg-secondary)] hover:underline"
                   >
-                    {t("forgotPassword")}
+                    Esqueceu a senha?
                   </Link>
                 </div>
                 <FormControl>
                   <PasswordInput
-                    placeholder={t("passwordPlaceholder")}
+                    placeholder="Sua senha"
                     autoComplete="current-password"
                     {...field}
                   />
@@ -270,14 +261,14 @@ export function LoginPage() {
                   />
                 </FormControl>
                 <FormLabel className="cursor-pointer font-normal text-[13px] text-[var(--fg-secondary)] leading-none">
-                  {t("rememberEmail")}
+                  Lembrar email neste dispositivo
                 </FormLabel>
               </FormItem>
             )}
           />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? t("submitting") : t("submit")}
+            {isLoading ? "Entrando..." : "Entrar"}
           </Button>
         </form>
       </Form>
@@ -285,7 +276,7 @@ export function LoginPage() {
       <div className="my-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-[var(--line-subtle)]" />
         <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--fg-quaternary)]">
-          {tCommon("or")}
+          ou continue com
         </span>
         <div className="h-px flex-1 bg-[var(--line-subtle)]" />
       </div>
@@ -299,27 +290,29 @@ export function LoginPage() {
           onClick={handleGoogleSignIn}
         >
           <GoogleIcon className="size-4 shrink-0" />
-          {socialLoading === "google" ? t("googleConnecting") : t("googleContinue")}
+          {socialLoading === "google"
+            ? "Conectando com Google..."
+            : "Continuar com Google"}
         </Button>
         <Button
           type="button"
           variant="outline"
           className="w-full justify-center border-black bg-black text-white shadow-none hover:bg-black/90 hover:text-white"
           disabled
-          title={t("appleDisabled")}
+          title="Login com Apple ainda não está configurado neste ambiente."
         >
           <AppleIcon className="size-4 shrink-0" />
-          {t("appleContinue")}
+          Continuar com Apple
         </Button>
       </div>
 
       <p className="mt-6 text-center text-[13px] text-[var(--fg-tertiary)]">
-        {t("noAccount")}{" "}
+        Não tem uma conta?{" "}
         <Link
           href="/auth/signup"
           className="text-[var(--fg-primary)] underline-offset-4 hover:underline font-medium"
         >
-          {t("createAccount")}
+          Criar conta
         </Link>
       </p>
     </AuthSplitLayout>

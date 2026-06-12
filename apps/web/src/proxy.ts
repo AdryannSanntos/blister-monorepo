@@ -6,6 +6,7 @@ import { routing } from "./i18n/routing";
 const AUTH_PREFIX = "/auth";
 const DASHBOARD_PREFIX = "/dashboard";
 const WORKSPACES_PREFIX = "/workspaces";
+const ADMIN_PREFIX = "/admin";
 const ONBOARDING_PATH = "/onboarding";
 const AUTH_API_PREFIX = "/api/auth";
 const SYSTEM_PREFIX = "/system";
@@ -17,7 +18,7 @@ const API_BASE_URL = (
   "http://localhost:3001"
 ).replace(/\/$/, "");
 
-type HomeDestination = "onboarding" | "dashboard" | "workspaces";
+type HomeDestination = "onboarding" | "dashboard" | "personal-space";
 
 type HomeDestinationResponse = {
   destination: HomeDestination;
@@ -47,8 +48,7 @@ function destinationToPath(destination: HomeDestination) {
   switch (destination) {
     case "onboarding":
       return ONBOARDING_PATH;
-    case "workspaces":
-      return WORKSPACES_PREFIX;
+    case "personal-space":
     default:
       return DASHBOARD_PREFIX;
   }
@@ -149,6 +149,7 @@ export async function proxy(request: NextRequest) {
     const isAuthRoute = localizedPathname.startsWith(AUTH_PREFIX);
     const isDashboardRoute = localizedPathname.startsWith(DASHBOARD_PREFIX);
     const isWorkspacesRoute = localizedPathname.startsWith(WORKSPACES_PREFIX);
+    const isAdminRoute = localizedPathname.startsWith(ADMIN_PREFIX);
     const isOnboardingRoute = localizedPathname === ONBOARDING_PATH;
     const isNewCompanyOnboarding =
       request.nextUrl.searchParams.get("new") === "1";
@@ -193,39 +194,36 @@ export async function proxy(request: NextRequest) {
       return intlResponse;
     }
 
+    if (isWorkspacesRoute) {
+      if (localizedPathname.startsWith(`${WORKSPACES_PREFIX}/admin`)) {
+        return redirect(request, ADMIN_PREFIX);
+      }
+      return redirect(request, DASHBOARD_PREFIX);
+    }
+
     if (isDashboardRoute) {
       if (!home || home.destination === "onboarding") {
         return redirect(request, ONBOARDING_PATH);
       }
 
-      if (home.destination === "workspaces") {
-        const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
-        if (!activeCompanyId) {
-          return redirect(request, WORKSPACES_PREFIX);
-        }
-
+      const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
+      if (
+        activeCompanyId &&
+        activeCompanyId !== "personal" &&
+        activeCompanyId !== "__personal__"
+      ) {
         const isValid = await companyBelongsToUser(request, activeCompanyId);
         if (!isValid) {
-          return redirect(request, WORKSPACES_PREFIX);
+          const response = intlResponse;
+          response.cookies.delete(ACTIVE_COMPANY_COOKIE);
+          return response;
         }
       }
 
       return intlResponse;
     }
 
-    if (isWorkspacesRoute) {
-      const isAdminRoute = localizedPathname.startsWith(
-        `${WORKSPACES_PREFIX}/admin`,
-      );
-
-      if (isAdminRoute) {
-        return intlResponse;
-      }
-
-      if (home?.destination === "onboarding") {
-        return redirect(request, ONBOARDING_PATH);
-      }
-
+    if (isAdminRoute) {
       return intlResponse;
     }
 

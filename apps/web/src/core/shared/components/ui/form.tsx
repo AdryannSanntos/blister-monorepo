@@ -87,6 +87,25 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+/** Horizontal row for label/description on the left and a Switch on the right. */
+function FormSwitchItem({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <FormItem
+      className={cn("flex-row items-center justify-between gap-4", className)}
+      {...props}
+    />
+  );
+}
+
+function FormSwitchContent({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn("flex min-w-0 flex-1 flex-col gap-0.5", className)}
+      {...props}
+    />
+  );
+}
+
 function FormLabel({
   className,
   required,
@@ -175,6 +194,8 @@ export {
   useFormField,
   Form,
   FormItem,
+  FormSwitchItem,
+  FormSwitchContent,
   FormLabel,
   FormControl,
   FormDescription,

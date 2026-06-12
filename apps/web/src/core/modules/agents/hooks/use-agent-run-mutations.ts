@@ -30,6 +30,8 @@ export function useStartAgentRun(agentId: string) {
       queryClient.invalidateQueries({ queryKey: ["agent-runs", agentId] });
       queryClient.invalidateQueries({ queryKey: ["all-agent-runs"] });
       queryClient.invalidateQueries({ queryKey: ["credits"] });
+      queryClient.invalidateQueries({ queryKey: ["cuts-runs"] });
+      queryClient.invalidateQueries({ queryKey: ["cuts-stats"] });
     },
   });
 }

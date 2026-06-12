@@ -1,0 +1,54 @@
+---
+description: Agent logic lives only in packages/agent-sdk — API is HTTP + adapters
+globs:
+  - packages/agent-sdk/**
+  - apps/api/src/agents/**
+alwaysApply: true
+---
+
+# Agent SDK Monolith
+
+## Rule
+
+**100% of agent business logic** lives in `packages/agent-sdk`.
+
+`apps/api/src/agents/` contains **only**:
+
+- HTTP controllers (`POST /api/agents/:agentId/run`, review endpoints)
+- Registry / loader (`agent-catalog.ts`)
+- Adapters injecting Prisma, RAG, credits, storage into SDK
+
+## Forbidden in apps/api
+
+- Agent workflow steps with LLM calls
+- Step-specific prompt templates
+- `learning/feedback-handler.ts` implementations
+- `if (agentId === 'cuts')` business branches
+
+## Required per agent (SDK)
+
+```
+packages/agent-sdk/src/agents/<agentId>/
+  agent.ts
+  schemas/
+  prompts/
+  learning/feedback-handler.ts   ← mandatory
+```
+
+## Workflow kernel
+
+`WorkflowEngine` runs in SDK — see `docs/agents/workflow-engine.md`.
+
+## Agent IDs (canonical)
+
+Default: `research`, `cuts`, `video_editor`  
+Marketplace: `planning`, `script`, `thumbnail`, `distribution`
+
+## When adding an agent
+
+1. Implement in SDK first
+2. Register in SDK catalog
+3. Thin Nest adapter + permission keys in authz
+4. Doc in `docs/agents/<agentId>/README.md`
+
+Never create `apps/api/src/agents/<agentId>/workflow.ts` with logic.

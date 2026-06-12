@@ -188,6 +188,56 @@ export type RagIndexJob = $Result.DefaultSelection<Prisma.$RagIndexJobPayload>
  * 
  */
 export type RagPlatformSettings = $Result.DefaultSelection<Prisma.$RagPlatformSettingsPayload>
+/**
+ * Model PersonalSpace
+ * 
+ */
+export type PersonalSpace = $Result.DefaultSelection<Prisma.$PersonalSpacePayload>
+/**
+ * Model PersonalCreditBalance
+ * 
+ */
+export type PersonalCreditBalance = $Result.DefaultSelection<Prisma.$PersonalCreditBalancePayload>
+/**
+ * Model CompanyMember
+ * 
+ */
+export type CompanyMember = $Result.DefaultSelection<Prisma.$CompanyMemberPayload>
+/**
+ * Model WorkspaceSettings
+ * 
+ */
+export type WorkspaceSettings = $Result.DefaultSelection<Prisma.$WorkspaceSettingsPayload>
+/**
+ * Model MarketplaceItem
+ * 
+ */
+export type MarketplaceItem = $Result.DefaultSelection<Prisma.$MarketplaceItemPayload>
+/**
+ * Model WorkspaceEntitlement
+ * 
+ */
+export type WorkspaceEntitlement = $Result.DefaultSelection<Prisma.$WorkspaceEntitlementPayload>
+/**
+ * Model AgentWorkspaceSetting
+ * 
+ */
+export type AgentWorkspaceSetting = $Result.DefaultSelection<Prisma.$AgentWorkspaceSettingPayload>
+/**
+ * Model WorkspaceFolder
+ * 
+ */
+export type WorkspaceFolder = $Result.DefaultSelection<Prisma.$WorkspaceFolderPayload>
+/**
+ * Model WorkspaceFile
+ * 
+ */
+export type WorkspaceFile = $Result.DefaultSelection<Prisma.$WorkspaceFilePayload>
+/**
+ * Model Project
+ * 
+ */
+export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 
 /**
  * Enums
@@ -323,6 +373,8 @@ export type CreditLedgerType = (typeof CreditLedgerType)[keyof typeof CreditLedg
 
 export const RagSourceType: {
   BRAND_BRAIN: 'BRAND_BRAIN',
+  WORKSPACE_SETTINGS: 'WORKSPACE_SETTINGS',
+  WORKSPACE_FILE: 'WORKSPACE_FILE',
   CAMPAIGN: 'CAMPAIGN',
   CAMPAIGN_FILE: 'CAMPAIGN_FILE',
   AGENT_LEARNING: 'AGENT_LEARNING',
@@ -350,6 +402,46 @@ export const RagIndexJobStatus: {
 };
 
 export type RagIndexJobStatus = (typeof RagIndexJobStatus)[keyof typeof RagIndexJobStatus]
+
+
+export const MarketplaceItemType: {
+  EDIT_STYLE: 'EDIT_STYLE',
+  POST_STYLE: 'POST_STYLE',
+  CAPTION_STYLE: 'CAPTION_STYLE',
+  PACK: 'PACK',
+  TEMPLATE: 'TEMPLATE',
+  ASSET: 'ASSET',
+  AGENT: 'AGENT'
+};
+
+export type MarketplaceItemType = (typeof MarketplaceItemType)[keyof typeof MarketplaceItemType]
+
+
+export const WorkspaceFolderKind: {
+  SYSTEM: 'SYSTEM',
+  USER: 'USER'
+};
+
+export type WorkspaceFolderKind = (typeof WorkspaceFolderKind)[keyof typeof WorkspaceFolderKind]
+
+
+export const WorkspaceFileStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+export type WorkspaceFileStatus = (typeof WorkspaceFileStatus)[keyof typeof WorkspaceFileStatus]
+
+
+export const WorkspaceFileOrigin: {
+  UPLOAD: 'UPLOAD',
+  AGENT_RUN: 'AGENT_RUN',
+  INTEGRATION: 'INTEGRATION'
+};
+
+export type WorkspaceFileOrigin = (typeof WorkspaceFileOrigin)[keyof typeof WorkspaceFileOrigin]
 
 }
 
@@ -416,6 +508,22 @@ export const RagDocumentStatus: typeof $Enums.RagDocumentStatus
 export type RagIndexJobStatus = $Enums.RagIndexJobStatus
 
 export const RagIndexJobStatus: typeof $Enums.RagIndexJobStatus
+
+export type MarketplaceItemType = $Enums.MarketplaceItemType
+
+export const MarketplaceItemType: typeof $Enums.MarketplaceItemType
+
+export type WorkspaceFolderKind = $Enums.WorkspaceFolderKind
+
+export const WorkspaceFolderKind: typeof $Enums.WorkspaceFolderKind
+
+export type WorkspaceFileStatus = $Enums.WorkspaceFileStatus
+
+export const WorkspaceFileStatus: typeof $Enums.WorkspaceFileStatus
+
+export type WorkspaceFileOrigin = $Enums.WorkspaceFileOrigin
+
+export const WorkspaceFileOrigin: typeof $Enums.WorkspaceFileOrigin
 
 /**
  * ##  Prisma Client ʲˢ
@@ -884,6 +992,106 @@ export class PrismaClient<
     * ```
     */
   get ragPlatformSettings(): Prisma.RagPlatformSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.personalSpace`: Exposes CRUD operations for the **PersonalSpace** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PersonalSpaces
+    * const personalSpaces = await prisma.personalSpace.findMany()
+    * ```
+    */
+  get personalSpace(): Prisma.PersonalSpaceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.personalCreditBalance`: Exposes CRUD operations for the **PersonalCreditBalance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PersonalCreditBalances
+    * const personalCreditBalances = await prisma.personalCreditBalance.findMany()
+    * ```
+    */
+  get personalCreditBalance(): Prisma.PersonalCreditBalanceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.companyMember`: Exposes CRUD operations for the **CompanyMember** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CompanyMembers
+    * const companyMembers = await prisma.companyMember.findMany()
+    * ```
+    */
+  get companyMember(): Prisma.CompanyMemberDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.workspaceSettings`: Exposes CRUD operations for the **WorkspaceSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkspaceSettings
+    * const workspaceSettings = await prisma.workspaceSettings.findMany()
+    * ```
+    */
+  get workspaceSettings(): Prisma.WorkspaceSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.marketplaceItem`: Exposes CRUD operations for the **MarketplaceItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketplaceItems
+    * const marketplaceItems = await prisma.marketplaceItem.findMany()
+    * ```
+    */
+  get marketplaceItem(): Prisma.MarketplaceItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.workspaceEntitlement`: Exposes CRUD operations for the **WorkspaceEntitlement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkspaceEntitlements
+    * const workspaceEntitlements = await prisma.workspaceEntitlement.findMany()
+    * ```
+    */
+  get workspaceEntitlement(): Prisma.WorkspaceEntitlementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.agentWorkspaceSetting`: Exposes CRUD operations for the **AgentWorkspaceSetting** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AgentWorkspaceSettings
+    * const agentWorkspaceSettings = await prisma.agentWorkspaceSetting.findMany()
+    * ```
+    */
+  get agentWorkspaceSetting(): Prisma.AgentWorkspaceSettingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.workspaceFolder`: Exposes CRUD operations for the **WorkspaceFolder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkspaceFolders
+    * const workspaceFolders = await prisma.workspaceFolder.findMany()
+    * ```
+    */
+  get workspaceFolder(): Prisma.WorkspaceFolderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.workspaceFile`: Exposes CRUD operations for the **WorkspaceFile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkspaceFiles
+    * const workspaceFiles = await prisma.workspaceFile.findMany()
+    * ```
+    */
+  get workspaceFile(): Prisma.WorkspaceFileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.project`: Exposes CRUD operations for the **Project** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Projects
+    * const projects = await prisma.project.findMany()
+    * ```
+    */
+  get project(): Prisma.ProjectDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1359,7 +1567,17 @@ export namespace Prisma {
     RagChunk: 'RagChunk',
     RagEmbedding: 'RagEmbedding',
     RagIndexJob: 'RagIndexJob',
-    RagPlatformSettings: 'RagPlatformSettings'
+    RagPlatformSettings: 'RagPlatformSettings',
+    PersonalSpace: 'PersonalSpace',
+    PersonalCreditBalance: 'PersonalCreditBalance',
+    CompanyMember: 'CompanyMember',
+    WorkspaceSettings: 'WorkspaceSettings',
+    MarketplaceItem: 'MarketplaceItem',
+    WorkspaceEntitlement: 'WorkspaceEntitlement',
+    AgentWorkspaceSetting: 'AgentWorkspaceSetting',
+    WorkspaceFolder: 'WorkspaceFolder',
+    WorkspaceFile: 'WorkspaceFile',
+    Project: 'Project'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1378,7 +1596,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentRunBlock" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings"
+      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentRunBlock" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings" | "personalSpace" | "personalCreditBalance" | "companyMember" | "workspaceSettings" | "marketplaceItem" | "workspaceEntitlement" | "agentWorkspaceSetting" | "workspaceFolder" | "workspaceFile" | "project"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3972,6 +4190,746 @@ export namespace Prisma {
           }
         }
       }
+      PersonalSpace: {
+        payload: Prisma.$PersonalSpacePayload<ExtArgs>
+        fields: Prisma.PersonalSpaceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PersonalSpaceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PersonalSpaceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          findFirst: {
+            args: Prisma.PersonalSpaceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PersonalSpaceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          findMany: {
+            args: Prisma.PersonalSpaceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>[]
+          }
+          create: {
+            args: Prisma.PersonalSpaceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          createMany: {
+            args: Prisma.PersonalSpaceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PersonalSpaceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>[]
+          }
+          delete: {
+            args: Prisma.PersonalSpaceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          update: {
+            args: Prisma.PersonalSpaceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          deleteMany: {
+            args: Prisma.PersonalSpaceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PersonalSpaceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PersonalSpaceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>[]
+          }
+          upsert: {
+            args: Prisma.PersonalSpaceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalSpacePayload>
+          }
+          aggregate: {
+            args: Prisma.PersonalSpaceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePersonalSpace>
+          }
+          groupBy: {
+            args: Prisma.PersonalSpaceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PersonalSpaceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PersonalSpaceCountArgs<ExtArgs>
+            result: $Utils.Optional<PersonalSpaceCountAggregateOutputType> | number
+          }
+        }
+      }
+      PersonalCreditBalance: {
+        payload: Prisma.$PersonalCreditBalancePayload<ExtArgs>
+        fields: Prisma.PersonalCreditBalanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PersonalCreditBalanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PersonalCreditBalanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          findFirst: {
+            args: Prisma.PersonalCreditBalanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PersonalCreditBalanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          findMany: {
+            args: Prisma.PersonalCreditBalanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>[]
+          }
+          create: {
+            args: Prisma.PersonalCreditBalanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          createMany: {
+            args: Prisma.PersonalCreditBalanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PersonalCreditBalanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>[]
+          }
+          delete: {
+            args: Prisma.PersonalCreditBalanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          update: {
+            args: Prisma.PersonalCreditBalanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          deleteMany: {
+            args: Prisma.PersonalCreditBalanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PersonalCreditBalanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PersonalCreditBalanceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>[]
+          }
+          upsert: {
+            args: Prisma.PersonalCreditBalanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PersonalCreditBalancePayload>
+          }
+          aggregate: {
+            args: Prisma.PersonalCreditBalanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePersonalCreditBalance>
+          }
+          groupBy: {
+            args: Prisma.PersonalCreditBalanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PersonalCreditBalanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PersonalCreditBalanceCountArgs<ExtArgs>
+            result: $Utils.Optional<PersonalCreditBalanceCountAggregateOutputType> | number
+          }
+        }
+      }
+      CompanyMember: {
+        payload: Prisma.$CompanyMemberPayload<ExtArgs>
+        fields: Prisma.CompanyMemberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CompanyMemberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CompanyMemberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          findFirst: {
+            args: Prisma.CompanyMemberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CompanyMemberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          findMany: {
+            args: Prisma.CompanyMemberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>[]
+          }
+          create: {
+            args: Prisma.CompanyMemberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          createMany: {
+            args: Prisma.CompanyMemberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CompanyMemberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>[]
+          }
+          delete: {
+            args: Prisma.CompanyMemberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          update: {
+            args: Prisma.CompanyMemberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          deleteMany: {
+            args: Prisma.CompanyMemberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CompanyMemberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CompanyMemberUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>[]
+          }
+          upsert: {
+            args: Prisma.CompanyMemberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompanyMemberPayload>
+          }
+          aggregate: {
+            args: Prisma.CompanyMemberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCompanyMember>
+          }
+          groupBy: {
+            args: Prisma.CompanyMemberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CompanyMemberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CompanyMemberCountArgs<ExtArgs>
+            result: $Utils.Optional<CompanyMemberCountAggregateOutputType> | number
+          }
+        }
+      }
+      WorkspaceSettings: {
+        payload: Prisma.$WorkspaceSettingsPayload<ExtArgs>
+        fields: Prisma.WorkspaceSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkspaceSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkspaceSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.WorkspaceSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkspaceSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.WorkspaceSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.WorkspaceSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.WorkspaceSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkspaceSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.WorkspaceSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          update: {
+            args: Prisma.WorkspaceSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkspaceSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkspaceSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WorkspaceSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.WorkspaceSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.WorkspaceSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkspaceSettings>
+          }
+          groupBy: {
+            args: Prisma.WorkspaceSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkspaceSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      MarketplaceItem: {
+        payload: Prisma.$MarketplaceItemPayload<ExtArgs>
+        fields: Prisma.MarketplaceItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketplaceItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketplaceItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketplaceItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketplaceItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          findMany: {
+            args: Prisma.MarketplaceItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>[]
+          }
+          create: {
+            args: Prisma.MarketplaceItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          createMany: {
+            args: Prisma.MarketplaceItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketplaceItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketplaceItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          update: {
+            args: Prisma.MarketplaceItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketplaceItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketplaceItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MarketplaceItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.MarketplaceItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketplaceItemPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketplaceItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketplaceItem>
+          }
+          groupBy: {
+            args: Prisma.MarketplaceItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketplaceItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketplaceItemCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketplaceItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      WorkspaceEntitlement: {
+        payload: Prisma.$WorkspaceEntitlementPayload<ExtArgs>
+        fields: Prisma.WorkspaceEntitlementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkspaceEntitlementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkspaceEntitlementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          findFirst: {
+            args: Prisma.WorkspaceEntitlementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkspaceEntitlementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          findMany: {
+            args: Prisma.WorkspaceEntitlementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>[]
+          }
+          create: {
+            args: Prisma.WorkspaceEntitlementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          createMany: {
+            args: Prisma.WorkspaceEntitlementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkspaceEntitlementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>[]
+          }
+          delete: {
+            args: Prisma.WorkspaceEntitlementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          update: {
+            args: Prisma.WorkspaceEntitlementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkspaceEntitlementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkspaceEntitlementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WorkspaceEntitlementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>[]
+          }
+          upsert: {
+            args: Prisma.WorkspaceEntitlementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceEntitlementPayload>
+          }
+          aggregate: {
+            args: Prisma.WorkspaceEntitlementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkspaceEntitlement>
+          }
+          groupBy: {
+            args: Prisma.WorkspaceEntitlementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceEntitlementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkspaceEntitlementCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceEntitlementCountAggregateOutputType> | number
+          }
+        }
+      }
+      AgentWorkspaceSetting: {
+        payload: Prisma.$AgentWorkspaceSettingPayload<ExtArgs>
+        fields: Prisma.AgentWorkspaceSettingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AgentWorkspaceSettingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AgentWorkspaceSettingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          findFirst: {
+            args: Prisma.AgentWorkspaceSettingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AgentWorkspaceSettingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          findMany: {
+            args: Prisma.AgentWorkspaceSettingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>[]
+          }
+          create: {
+            args: Prisma.AgentWorkspaceSettingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          createMany: {
+            args: Prisma.AgentWorkspaceSettingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AgentWorkspaceSettingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>[]
+          }
+          delete: {
+            args: Prisma.AgentWorkspaceSettingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          update: {
+            args: Prisma.AgentWorkspaceSettingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          deleteMany: {
+            args: Prisma.AgentWorkspaceSettingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AgentWorkspaceSettingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AgentWorkspaceSettingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>[]
+          }
+          upsert: {
+            args: Prisma.AgentWorkspaceSettingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentWorkspaceSettingPayload>
+          }
+          aggregate: {
+            args: Prisma.AgentWorkspaceSettingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentWorkspaceSetting>
+          }
+          groupBy: {
+            args: Prisma.AgentWorkspaceSettingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentWorkspaceSettingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AgentWorkspaceSettingCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentWorkspaceSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      WorkspaceFolder: {
+        payload: Prisma.$WorkspaceFolderPayload<ExtArgs>
+        fields: Prisma.WorkspaceFolderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkspaceFolderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkspaceFolderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          findFirst: {
+            args: Prisma.WorkspaceFolderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkspaceFolderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          findMany: {
+            args: Prisma.WorkspaceFolderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>[]
+          }
+          create: {
+            args: Prisma.WorkspaceFolderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          createMany: {
+            args: Prisma.WorkspaceFolderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkspaceFolderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>[]
+          }
+          delete: {
+            args: Prisma.WorkspaceFolderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          update: {
+            args: Prisma.WorkspaceFolderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkspaceFolderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkspaceFolderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WorkspaceFolderUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>[]
+          }
+          upsert: {
+            args: Prisma.WorkspaceFolderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFolderPayload>
+          }
+          aggregate: {
+            args: Prisma.WorkspaceFolderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkspaceFolder>
+          }
+          groupBy: {
+            args: Prisma.WorkspaceFolderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceFolderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkspaceFolderCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceFolderCountAggregateOutputType> | number
+          }
+        }
+      }
+      WorkspaceFile: {
+        payload: Prisma.$WorkspaceFilePayload<ExtArgs>
+        fields: Prisma.WorkspaceFileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkspaceFileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkspaceFileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          findFirst: {
+            args: Prisma.WorkspaceFileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkspaceFileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          findMany: {
+            args: Prisma.WorkspaceFileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>[]
+          }
+          create: {
+            args: Prisma.WorkspaceFileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          createMany: {
+            args: Prisma.WorkspaceFileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkspaceFileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>[]
+          }
+          delete: {
+            args: Prisma.WorkspaceFileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          update: {
+            args: Prisma.WorkspaceFileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkspaceFileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkspaceFileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WorkspaceFileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>[]
+          }
+          upsert: {
+            args: Prisma.WorkspaceFileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceFilePayload>
+          }
+          aggregate: {
+            args: Prisma.WorkspaceFileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkspaceFile>
+          }
+          groupBy: {
+            args: Prisma.WorkspaceFileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceFileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkspaceFileCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceFileCountAggregateOutputType> | number
+          }
+        }
+      }
+      Project: {
+        payload: Prisma.$ProjectPayload<ExtArgs>
+        fields: Prisma.ProjectFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          findMany: {
+            args: Prisma.ProjectFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+          }
+          create: {
+            args: Prisma.ProjectCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          createMany: {
+            args: Prisma.ProjectCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          update: {
+            args: Prisma.ProjectUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProjectUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProjectUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectPayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProject>
+          }
+          groupBy: {
+            args: Prisma.ProjectGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4103,6 +5061,16 @@ export namespace Prisma {
     ragEmbedding?: RagEmbeddingOmit
     ragIndexJob?: RagIndexJobOmit
     ragPlatformSettings?: RagPlatformSettingsOmit
+    personalSpace?: PersonalSpaceOmit
+    personalCreditBalance?: PersonalCreditBalanceOmit
+    companyMember?: CompanyMemberOmit
+    workspaceSettings?: WorkspaceSettingsOmit
+    marketplaceItem?: MarketplaceItemOmit
+    workspaceEntitlement?: WorkspaceEntitlementOmit
+    agentWorkspaceSetting?: AgentWorkspaceSettingOmit
+    workspaceFolder?: WorkspaceFolderOmit
+    workspaceFile?: WorkspaceFileOmit
+    project?: ProjectOmit
   }
 
   /* Types for Logging */
@@ -4187,6 +5155,7 @@ export namespace Prisma {
     sessions: number
     roleAssignments: number
     ownedCompanies: number
+    companyMembers: number
     agentFeedbacks: number
   }
 
@@ -4195,6 +5164,7 @@ export namespace Prisma {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     roleAssignments?: boolean | UserCountOutputTypeCountRoleAssignmentsArgs
     ownedCompanies?: boolean | UserCountOutputTypeCountOwnedCompaniesArgs
+    companyMembers?: boolean | UserCountOutputTypeCountCompanyMembersArgs
     agentFeedbacks?: boolean | UserCountOutputTypeCountAgentFeedbacksArgs
   }
 
@@ -4240,6 +5210,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountCompanyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyMemberWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountAgentFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentFeedbackWhereInput
   }
@@ -4252,11 +5229,13 @@ export namespace Prisma {
   export type RoleCountOutputType = {
     permissions: number
     memberAssignments: number
+    companyMembers: number
   }
 
   export type RoleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     permissions?: boolean | RoleCountOutputTypeCountPermissionsArgs
     memberAssignments?: boolean | RoleCountOutputTypeCountMemberAssignmentsArgs
+    companyMembers?: boolean | RoleCountOutputTypeCountCompanyMembersArgs
   }
 
   // Custom InputTypes
@@ -4284,6 +5263,13 @@ export namespace Prisma {
     where?: UserRoleAssignmentWhereInput
   }
 
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountCompanyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyMemberWhereInput
+  }
+
 
   /**
    * Count Type CompanyCountOutputType
@@ -4300,6 +5286,12 @@ export namespace Prisma {
     creditLedger: number
     ragDocuments: number
     ragIndexJobs: number
+    members: number
+    workspaceFolders: number
+    workspaceFiles: number
+    entitlements: number
+    projects: number
+    agentWorkspaceSettings: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4313,6 +5305,12 @@ export namespace Prisma {
     creditLedger?: boolean | CompanyCountOutputTypeCountCreditLedgerArgs
     ragDocuments?: boolean | CompanyCountOutputTypeCountRagDocumentsArgs
     ragIndexJobs?: boolean | CompanyCountOutputTypeCountRagIndexJobsArgs
+    members?: boolean | CompanyCountOutputTypeCountMembersArgs
+    workspaceFolders?: boolean | CompanyCountOutputTypeCountWorkspaceFoldersArgs
+    workspaceFiles?: boolean | CompanyCountOutputTypeCountWorkspaceFilesArgs
+    entitlements?: boolean | CompanyCountOutputTypeCountEntitlementsArgs
+    projects?: boolean | CompanyCountOutputTypeCountProjectsArgs
+    agentWorkspaceSettings?: boolean | CompanyCountOutputTypeCountAgentWorkspaceSettingsArgs
   }
 
   // Custom InputTypes
@@ -4394,6 +5392,48 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountRagIndexJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RagIndexJobWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyMemberWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountWorkspaceFoldersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFolderWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountWorkspaceFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFileWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountEntitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceEntitlementWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountAgentWorkspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentWorkspaceSettingWhereInput
   }
 
 
@@ -4767,6 +5807,144 @@ export namespace Prisma {
 
 
   /**
+   * Count Type PersonalSpaceCountOutputType
+   */
+
+  export type PersonalSpaceCountOutputType = {
+    folders: number
+    files: number
+    entitlements: number
+    projects: number
+    agentWorkspaceSettings: number
+  }
+
+  export type PersonalSpaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    folders?: boolean | PersonalSpaceCountOutputTypeCountFoldersArgs
+    files?: boolean | PersonalSpaceCountOutputTypeCountFilesArgs
+    entitlements?: boolean | PersonalSpaceCountOutputTypeCountEntitlementsArgs
+    projects?: boolean | PersonalSpaceCountOutputTypeCountProjectsArgs
+    agentWorkspaceSettings?: boolean | PersonalSpaceCountOutputTypeCountAgentWorkspaceSettingsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpaceCountOutputType
+     */
+    select?: PersonalSpaceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountFoldersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFolderWhereInput
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFileWhereInput
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountEntitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceEntitlementWhereInput
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountAgentWorkspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentWorkspaceSettingWhereInput
+  }
+
+
+  /**
+   * Count Type MarketplaceItemCountOutputType
+   */
+
+  export type MarketplaceItemCountOutputType = {
+    entitlements: number
+  }
+
+  export type MarketplaceItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entitlements?: boolean | MarketplaceItemCountOutputTypeCountEntitlementsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MarketplaceItemCountOutputType without action
+   */
+  export type MarketplaceItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItemCountOutputType
+     */
+    select?: MarketplaceItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MarketplaceItemCountOutputType without action
+   */
+  export type MarketplaceItemCountOutputTypeCountEntitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceEntitlementWhereInput
+  }
+
+
+  /**
+   * Count Type WorkspaceFolderCountOutputType
+   */
+
+  export type WorkspaceFolderCountOutputType = {
+    children: number
+    files: number
+  }
+
+  export type WorkspaceFolderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    children?: boolean | WorkspaceFolderCountOutputTypeCountChildrenArgs
+    files?: boolean | WorkspaceFolderCountOutputTypeCountFilesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WorkspaceFolderCountOutputType without action
+   */
+  export type WorkspaceFolderCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolderCountOutputType
+     */
+    select?: WorkspaceFolderCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceFolderCountOutputType without action
+   */
+  export type WorkspaceFolderCountOutputTypeCountChildrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFolderWhereInput
+  }
+
+  /**
+   * WorkspaceFolderCountOutputType without action
+   */
+  export type WorkspaceFolderCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFileWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -4962,6 +6140,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     roleAssignments?: boolean | User$roleAssignmentsArgs<ExtArgs>
     ownedCompanies?: boolean | User$ownedCompaniesArgs<ExtArgs>
+    companyMembers?: boolean | User$companyMembersArgs<ExtArgs>
+    personalSpace?: boolean | User$personalSpaceArgs<ExtArgs>
     agentFeedbacks?: boolean | User$agentFeedbacksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -5005,6 +6185,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     roleAssignments?: boolean | User$roleAssignmentsArgs<ExtArgs>
     ownedCompanies?: boolean | User$ownedCompaniesArgs<ExtArgs>
+    companyMembers?: boolean | User$companyMembersArgs<ExtArgs>
+    personalSpace?: boolean | User$personalSpaceArgs<ExtArgs>
     agentFeedbacks?: boolean | User$agentFeedbacksArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -5018,6 +6200,8 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       roleAssignments: Prisma.$UserRoleAssignmentPayload<ExtArgs>[]
       ownedCompanies: Prisma.$CompanyPayload<ExtArgs>[]
+      companyMembers: Prisma.$CompanyMemberPayload<ExtArgs>[]
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
       agentFeedbacks: Prisma.$AgentFeedbackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -5427,6 +6611,8 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roleAssignments<T extends User$roleAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$roleAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRoleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ownedCompanies<T extends User$ownedCompaniesArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedCompaniesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    companyMembers<T extends User$companyMembersArgs<ExtArgs> = {}>(args?: Subset<T, User$companyMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    personalSpace<T extends User$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, User$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     agentFeedbacks<T extends User$agentFeedbacksArgs<ExtArgs> = {}>(args?: Subset<T, User$agentFeedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5946,6 +7132,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  }
+
+  /**
+   * User.companyMembers
+   */
+  export type User$companyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    where?: CompanyMemberWhereInput
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    cursor?: CompanyMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * User.personalSpace
+   */
+  export type User$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
   }
 
   /**
@@ -9424,6 +10653,7 @@ export namespace Prisma {
     updatedAt?: boolean
     permissions?: boolean | Role$permissionsArgs<ExtArgs>
     memberAssignments?: boolean | Role$memberAssignmentsArgs<ExtArgs>
+    companyMembers?: boolean | Role$companyMembersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
@@ -9455,6 +10685,7 @@ export namespace Prisma {
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     permissions?: boolean | Role$permissionsArgs<ExtArgs>
     memberAssignments?: boolean | Role$memberAssignmentsArgs<ExtArgs>
+    companyMembers?: boolean | Role$companyMembersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9465,6 +10696,7 @@ export namespace Prisma {
     objects: {
       permissions: Prisma.$RolePermissionPayload<ExtArgs>[]
       memberAssignments: Prisma.$UserRoleAssignmentPayload<ExtArgs>[]
+      companyMembers: Prisma.$CompanyMemberPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9868,6 +11100,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     permissions<T extends Role$permissionsArgs<ExtArgs> = {}>(args?: Subset<T, Role$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     memberAssignments<T extends Role$memberAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Role$memberAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRoleAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    companyMembers<T extends Role$companyMembersArgs<ExtArgs> = {}>(args?: Subset<T, Role$companyMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10335,6 +11568,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserRoleAssignmentScalarFieldEnum | UserRoleAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * Role.companyMembers
+   */
+  export type Role$companyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    where?: CompanyMemberWhereInput
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    cursor?: CompanyMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
   }
 
   /**
@@ -15667,6 +16924,13 @@ export namespace Prisma {
     creditLedger?: boolean | Company$creditLedgerArgs<ExtArgs>
     ragDocuments?: boolean | Company$ragDocumentsArgs<ExtArgs>
     ragIndexJobs?: boolean | Company$ragIndexJobsArgs<ExtArgs>
+    members?: boolean | Company$membersArgs<ExtArgs>
+    workspaceSettings?: boolean | Company$workspaceSettingsArgs<ExtArgs>
+    workspaceFolders?: boolean | Company$workspaceFoldersArgs<ExtArgs>
+    workspaceFiles?: boolean | Company$workspaceFilesArgs<ExtArgs>
+    entitlements?: boolean | Company$entitlementsArgs<ExtArgs>
+    projects?: boolean | Company$projectsArgs<ExtArgs>
+    agentWorkspaceSettings?: boolean | Company$agentWorkspaceSettingsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -15717,6 +16981,13 @@ export namespace Prisma {
     creditLedger?: boolean | Company$creditLedgerArgs<ExtArgs>
     ragDocuments?: boolean | Company$ragDocumentsArgs<ExtArgs>
     ragIndexJobs?: boolean | Company$ragIndexJobsArgs<ExtArgs>
+    members?: boolean | Company$membersArgs<ExtArgs>
+    workspaceSettings?: boolean | Company$workspaceSettingsArgs<ExtArgs>
+    workspaceFolders?: boolean | Company$workspaceFoldersArgs<ExtArgs>
+    workspaceFiles?: boolean | Company$workspaceFilesArgs<ExtArgs>
+    entitlements?: boolean | Company$entitlementsArgs<ExtArgs>
+    projects?: boolean | Company$projectsArgs<ExtArgs>
+    agentWorkspaceSettings?: boolean | Company$agentWorkspaceSettingsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15742,6 +17013,13 @@ export namespace Prisma {
       creditLedger: Prisma.$CreditLedgerPayload<ExtArgs>[]
       ragDocuments: Prisma.$RagDocumentPayload<ExtArgs>[]
       ragIndexJobs: Prisma.$RagIndexJobPayload<ExtArgs>[]
+      members: Prisma.$CompanyMemberPayload<ExtArgs>[]
+      workspaceSettings: Prisma.$WorkspaceSettingsPayload<ExtArgs> | null
+      workspaceFolders: Prisma.$WorkspaceFolderPayload<ExtArgs>[]
+      workspaceFiles: Prisma.$WorkspaceFilePayload<ExtArgs>[]
+      entitlements: Prisma.$WorkspaceEntitlementPayload<ExtArgs>[]
+      projects: Prisma.$ProjectPayload<ExtArgs>[]
+      agentWorkspaceSettings: Prisma.$AgentWorkspaceSettingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16158,6 +17436,13 @@ export namespace Prisma {
     creditLedger<T extends Company$creditLedgerArgs<ExtArgs> = {}>(args?: Subset<T, Company$creditLedgerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ragDocuments<T extends Company$ragDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$ragDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RagDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ragIndexJobs<T extends Company$ragIndexJobsArgs<ExtArgs> = {}>(args?: Subset<T, Company$ragIndexJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RagIndexJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    members<T extends Company$membersArgs<ExtArgs> = {}>(args?: Subset<T, Company$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    workspaceSettings<T extends Company$workspaceSettingsArgs<ExtArgs> = {}>(args?: Subset<T, Company$workspaceSettingsArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    workspaceFolders<T extends Company$workspaceFoldersArgs<ExtArgs> = {}>(args?: Subset<T, Company$workspaceFoldersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    workspaceFiles<T extends Company$workspaceFilesArgs<ExtArgs> = {}>(args?: Subset<T, Company$workspaceFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    entitlements<T extends Company$entitlementsArgs<ExtArgs> = {}>(args?: Subset<T, Company$entitlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    projects<T extends Company$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Company$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    agentWorkspaceSettings<T extends Company$agentWorkspaceSettingsArgs<ExtArgs> = {}>(args?: Subset<T, Company$agentWorkspaceSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16865,6 +18150,169 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RagIndexJobScalarFieldEnum | RagIndexJobScalarFieldEnum[]
+  }
+
+  /**
+   * Company.members
+   */
+  export type Company$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    where?: CompanyMemberWhereInput
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    cursor?: CompanyMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Company.workspaceSettings
+   */
+  export type Company$workspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    where?: WorkspaceSettingsWhereInput
+  }
+
+  /**
+   * Company.workspaceFolders
+   */
+  export type Company$workspaceFoldersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    where?: WorkspaceFolderWhereInput
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    cursor?: WorkspaceFolderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * Company.workspaceFiles
+   */
+  export type Company$workspaceFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    where?: WorkspaceFileWhereInput
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    cursor?: WorkspaceFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * Company.entitlements
+   */
+  export type Company$entitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    where?: WorkspaceEntitlementWhereInput
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * Company.projects
+   */
+  export type Company$projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Company.agentWorkspaceSettings
+   */
+  export type Company$agentWorkspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    where?: AgentWorkspaceSettingWhereInput
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
   }
 
   /**
@@ -45313,6 +46761,11764 @@ export namespace Prisma {
 
 
   /**
+   * Model PersonalSpace
+   */
+
+  export type AggregatePersonalSpace = {
+    _count: PersonalSpaceCountAggregateOutputType | null
+    _min: PersonalSpaceMinAggregateOutputType | null
+    _max: PersonalSpaceMaxAggregateOutputType | null
+  }
+
+  export type PersonalSpaceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PersonalSpaceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PersonalSpaceCountAggregateOutputType = {
+    id: number
+    userId: number
+    name: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PersonalSpaceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PersonalSpaceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PersonalSpaceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PersonalSpaceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PersonalSpace to aggregate.
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalSpaces to fetch.
+     */
+    orderBy?: PersonalSpaceOrderByWithRelationInput | PersonalSpaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PersonalSpaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalSpaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalSpaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PersonalSpaces
+    **/
+    _count?: true | PersonalSpaceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PersonalSpaceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PersonalSpaceMaxAggregateInputType
+  }
+
+  export type GetPersonalSpaceAggregateType<T extends PersonalSpaceAggregateArgs> = {
+        [P in keyof T & keyof AggregatePersonalSpace]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePersonalSpace[P]>
+      : GetScalarType<T[P], AggregatePersonalSpace[P]>
+  }
+
+
+
+
+  export type PersonalSpaceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PersonalSpaceWhereInput
+    orderBy?: PersonalSpaceOrderByWithAggregationInput | PersonalSpaceOrderByWithAggregationInput[]
+    by: PersonalSpaceScalarFieldEnum[] | PersonalSpaceScalarFieldEnum
+    having?: PersonalSpaceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PersonalSpaceCountAggregateInputType | true
+    _min?: PersonalSpaceMinAggregateInputType
+    _max?: PersonalSpaceMaxAggregateInputType
+  }
+
+  export type PersonalSpaceGroupByOutputType = {
+    id: string
+    userId: string
+    name: string
+    createdAt: Date
+    updatedAt: Date
+    _count: PersonalSpaceCountAggregateOutputType | null
+    _min: PersonalSpaceMinAggregateOutputType | null
+    _max: PersonalSpaceMaxAggregateOutputType | null
+  }
+
+  type GetPersonalSpaceGroupByPayload<T extends PersonalSpaceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PersonalSpaceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PersonalSpaceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PersonalSpaceGroupByOutputType[P]>
+            : GetScalarType<T[P], PersonalSpaceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PersonalSpaceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    settings?: boolean | PersonalSpace$settingsArgs<ExtArgs>
+    folders?: boolean | PersonalSpace$foldersArgs<ExtArgs>
+    files?: boolean | PersonalSpace$filesArgs<ExtArgs>
+    entitlements?: boolean | PersonalSpace$entitlementsArgs<ExtArgs>
+    projects?: boolean | PersonalSpace$projectsArgs<ExtArgs>
+    creditBalance?: boolean | PersonalSpace$creditBalanceArgs<ExtArgs>
+    agentWorkspaceSettings?: boolean | PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>
+    _count?: boolean | PersonalSpaceCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalSpace"]>
+
+  export type PersonalSpaceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalSpace"]>
+
+  export type PersonalSpaceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalSpace"]>
+
+  export type PersonalSpaceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PersonalSpaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["personalSpace"]>
+  export type PersonalSpaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    settings?: boolean | PersonalSpace$settingsArgs<ExtArgs>
+    folders?: boolean | PersonalSpace$foldersArgs<ExtArgs>
+    files?: boolean | PersonalSpace$filesArgs<ExtArgs>
+    entitlements?: boolean | PersonalSpace$entitlementsArgs<ExtArgs>
+    projects?: boolean | PersonalSpace$projectsArgs<ExtArgs>
+    creditBalance?: boolean | PersonalSpace$creditBalanceArgs<ExtArgs>
+    agentWorkspaceSettings?: boolean | PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>
+    _count?: boolean | PersonalSpaceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PersonalSpaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PersonalSpaceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PersonalSpacePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PersonalSpace"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      settings: Prisma.$WorkspaceSettingsPayload<ExtArgs> | null
+      folders: Prisma.$WorkspaceFolderPayload<ExtArgs>[]
+      files: Prisma.$WorkspaceFilePayload<ExtArgs>[]
+      entitlements: Prisma.$WorkspaceEntitlementPayload<ExtArgs>[]
+      projects: Prisma.$ProjectPayload<ExtArgs>[]
+      creditBalance: Prisma.$PersonalCreditBalancePayload<ExtArgs> | null
+      agentWorkspaceSettings: Prisma.$AgentWorkspaceSettingPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      name: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["personalSpace"]>
+    composites: {}
+  }
+
+  type PersonalSpaceGetPayload<S extends boolean | null | undefined | PersonalSpaceDefaultArgs> = $Result.GetResult<Prisma.$PersonalSpacePayload, S>
+
+  type PersonalSpaceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PersonalSpaceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PersonalSpaceCountAggregateInputType | true
+    }
+
+  export interface PersonalSpaceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PersonalSpace'], meta: { name: 'PersonalSpace' } }
+    /**
+     * Find zero or one PersonalSpace that matches the filter.
+     * @param {PersonalSpaceFindUniqueArgs} args - Arguments to find a PersonalSpace
+     * @example
+     * // Get one PersonalSpace
+     * const personalSpace = await prisma.personalSpace.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PersonalSpaceFindUniqueArgs>(args: SelectSubset<T, PersonalSpaceFindUniqueArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PersonalSpace that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PersonalSpaceFindUniqueOrThrowArgs} args - Arguments to find a PersonalSpace
+     * @example
+     * // Get one PersonalSpace
+     * const personalSpace = await prisma.personalSpace.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PersonalSpaceFindUniqueOrThrowArgs>(args: SelectSubset<T, PersonalSpaceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PersonalSpace that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceFindFirstArgs} args - Arguments to find a PersonalSpace
+     * @example
+     * // Get one PersonalSpace
+     * const personalSpace = await prisma.personalSpace.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PersonalSpaceFindFirstArgs>(args?: SelectSubset<T, PersonalSpaceFindFirstArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PersonalSpace that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceFindFirstOrThrowArgs} args - Arguments to find a PersonalSpace
+     * @example
+     * // Get one PersonalSpace
+     * const personalSpace = await prisma.personalSpace.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PersonalSpaceFindFirstOrThrowArgs>(args?: SelectSubset<T, PersonalSpaceFindFirstOrThrowArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PersonalSpaces that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PersonalSpaces
+     * const personalSpaces = await prisma.personalSpace.findMany()
+     * 
+     * // Get first 10 PersonalSpaces
+     * const personalSpaces = await prisma.personalSpace.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const personalSpaceWithIdOnly = await prisma.personalSpace.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PersonalSpaceFindManyArgs>(args?: SelectSubset<T, PersonalSpaceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PersonalSpace.
+     * @param {PersonalSpaceCreateArgs} args - Arguments to create a PersonalSpace.
+     * @example
+     * // Create one PersonalSpace
+     * const PersonalSpace = await prisma.personalSpace.create({
+     *   data: {
+     *     // ... data to create a PersonalSpace
+     *   }
+     * })
+     * 
+     */
+    create<T extends PersonalSpaceCreateArgs>(args: SelectSubset<T, PersonalSpaceCreateArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PersonalSpaces.
+     * @param {PersonalSpaceCreateManyArgs} args - Arguments to create many PersonalSpaces.
+     * @example
+     * // Create many PersonalSpaces
+     * const personalSpace = await prisma.personalSpace.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PersonalSpaceCreateManyArgs>(args?: SelectSubset<T, PersonalSpaceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PersonalSpaces and returns the data saved in the database.
+     * @param {PersonalSpaceCreateManyAndReturnArgs} args - Arguments to create many PersonalSpaces.
+     * @example
+     * // Create many PersonalSpaces
+     * const personalSpace = await prisma.personalSpace.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PersonalSpaces and only return the `id`
+     * const personalSpaceWithIdOnly = await prisma.personalSpace.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PersonalSpaceCreateManyAndReturnArgs>(args?: SelectSubset<T, PersonalSpaceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PersonalSpace.
+     * @param {PersonalSpaceDeleteArgs} args - Arguments to delete one PersonalSpace.
+     * @example
+     * // Delete one PersonalSpace
+     * const PersonalSpace = await prisma.personalSpace.delete({
+     *   where: {
+     *     // ... filter to delete one PersonalSpace
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PersonalSpaceDeleteArgs>(args: SelectSubset<T, PersonalSpaceDeleteArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PersonalSpace.
+     * @param {PersonalSpaceUpdateArgs} args - Arguments to update one PersonalSpace.
+     * @example
+     * // Update one PersonalSpace
+     * const personalSpace = await prisma.personalSpace.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PersonalSpaceUpdateArgs>(args: SelectSubset<T, PersonalSpaceUpdateArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PersonalSpaces.
+     * @param {PersonalSpaceDeleteManyArgs} args - Arguments to filter PersonalSpaces to delete.
+     * @example
+     * // Delete a few PersonalSpaces
+     * const { count } = await prisma.personalSpace.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PersonalSpaceDeleteManyArgs>(args?: SelectSubset<T, PersonalSpaceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PersonalSpaces.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PersonalSpaces
+     * const personalSpace = await prisma.personalSpace.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PersonalSpaceUpdateManyArgs>(args: SelectSubset<T, PersonalSpaceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PersonalSpaces and returns the data updated in the database.
+     * @param {PersonalSpaceUpdateManyAndReturnArgs} args - Arguments to update many PersonalSpaces.
+     * @example
+     * // Update many PersonalSpaces
+     * const personalSpace = await prisma.personalSpace.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PersonalSpaces and only return the `id`
+     * const personalSpaceWithIdOnly = await prisma.personalSpace.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PersonalSpaceUpdateManyAndReturnArgs>(args: SelectSubset<T, PersonalSpaceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PersonalSpace.
+     * @param {PersonalSpaceUpsertArgs} args - Arguments to update or create a PersonalSpace.
+     * @example
+     * // Update or create a PersonalSpace
+     * const personalSpace = await prisma.personalSpace.upsert({
+     *   create: {
+     *     // ... data to create a PersonalSpace
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PersonalSpace we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PersonalSpaceUpsertArgs>(args: SelectSubset<T, PersonalSpaceUpsertArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PersonalSpaces.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceCountArgs} args - Arguments to filter PersonalSpaces to count.
+     * @example
+     * // Count the number of PersonalSpaces
+     * const count = await prisma.personalSpace.count({
+     *   where: {
+     *     // ... the filter for the PersonalSpaces we want to count
+     *   }
+     * })
+    **/
+    count<T extends PersonalSpaceCountArgs>(
+      args?: Subset<T, PersonalSpaceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PersonalSpaceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PersonalSpace.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PersonalSpaceAggregateArgs>(args: Subset<T, PersonalSpaceAggregateArgs>): Prisma.PrismaPromise<GetPersonalSpaceAggregateType<T>>
+
+    /**
+     * Group by PersonalSpace.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalSpaceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PersonalSpaceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PersonalSpaceGroupByArgs['orderBy'] }
+        : { orderBy?: PersonalSpaceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PersonalSpaceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPersonalSpaceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PersonalSpace model
+   */
+  readonly fields: PersonalSpaceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PersonalSpace.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PersonalSpaceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    settings<T extends PersonalSpace$settingsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$settingsArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    folders<T extends PersonalSpace$foldersArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$foldersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    files<T extends PersonalSpace$filesArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    entitlements<T extends PersonalSpace$entitlementsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$entitlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    projects<T extends PersonalSpace$projectsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creditBalance<T extends PersonalSpace$creditBalanceArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$creditBalanceArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    agentWorkspaceSettings<T extends PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PersonalSpace model
+   */
+  interface PersonalSpaceFieldRefs {
+    readonly id: FieldRef<"PersonalSpace", 'String'>
+    readonly userId: FieldRef<"PersonalSpace", 'String'>
+    readonly name: FieldRef<"PersonalSpace", 'String'>
+    readonly createdAt: FieldRef<"PersonalSpace", 'DateTime'>
+    readonly updatedAt: FieldRef<"PersonalSpace", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PersonalSpace findUnique
+   */
+  export type PersonalSpaceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalSpace to fetch.
+     */
+    where: PersonalSpaceWhereUniqueInput
+  }
+
+  /**
+   * PersonalSpace findUniqueOrThrow
+   */
+  export type PersonalSpaceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalSpace to fetch.
+     */
+    where: PersonalSpaceWhereUniqueInput
+  }
+
+  /**
+   * PersonalSpace findFirst
+   */
+  export type PersonalSpaceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalSpace to fetch.
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalSpaces to fetch.
+     */
+    orderBy?: PersonalSpaceOrderByWithRelationInput | PersonalSpaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PersonalSpaces.
+     */
+    cursor?: PersonalSpaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalSpaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalSpaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PersonalSpaces.
+     */
+    distinct?: PersonalSpaceScalarFieldEnum | PersonalSpaceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace findFirstOrThrow
+   */
+  export type PersonalSpaceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalSpace to fetch.
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalSpaces to fetch.
+     */
+    orderBy?: PersonalSpaceOrderByWithRelationInput | PersonalSpaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PersonalSpaces.
+     */
+    cursor?: PersonalSpaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalSpaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalSpaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PersonalSpaces.
+     */
+    distinct?: PersonalSpaceScalarFieldEnum | PersonalSpaceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace findMany
+   */
+  export type PersonalSpaceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalSpaces to fetch.
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalSpaces to fetch.
+     */
+    orderBy?: PersonalSpaceOrderByWithRelationInput | PersonalSpaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PersonalSpaces.
+     */
+    cursor?: PersonalSpaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalSpaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalSpaces.
+     */
+    skip?: number
+    distinct?: PersonalSpaceScalarFieldEnum | PersonalSpaceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace create
+   */
+  export type PersonalSpaceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PersonalSpace.
+     */
+    data: XOR<PersonalSpaceCreateInput, PersonalSpaceUncheckedCreateInput>
+  }
+
+  /**
+   * PersonalSpace createMany
+   */
+  export type PersonalSpaceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PersonalSpaces.
+     */
+    data: PersonalSpaceCreateManyInput | PersonalSpaceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PersonalSpace createManyAndReturn
+   */
+  export type PersonalSpaceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * The data used to create many PersonalSpaces.
+     */
+    data: PersonalSpaceCreateManyInput | PersonalSpaceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PersonalSpace update
+   */
+  export type PersonalSpaceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PersonalSpace.
+     */
+    data: XOR<PersonalSpaceUpdateInput, PersonalSpaceUncheckedUpdateInput>
+    /**
+     * Choose, which PersonalSpace to update.
+     */
+    where: PersonalSpaceWhereUniqueInput
+  }
+
+  /**
+   * PersonalSpace updateMany
+   */
+  export type PersonalSpaceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PersonalSpaces.
+     */
+    data: XOR<PersonalSpaceUpdateManyMutationInput, PersonalSpaceUncheckedUpdateManyInput>
+    /**
+     * Filter which PersonalSpaces to update
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * Limit how many PersonalSpaces to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PersonalSpace updateManyAndReturn
+   */
+  export type PersonalSpaceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * The data used to update PersonalSpaces.
+     */
+    data: XOR<PersonalSpaceUpdateManyMutationInput, PersonalSpaceUncheckedUpdateManyInput>
+    /**
+     * Filter which PersonalSpaces to update
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * Limit how many PersonalSpaces to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PersonalSpace upsert
+   */
+  export type PersonalSpaceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PersonalSpace to update in case it exists.
+     */
+    where: PersonalSpaceWhereUniqueInput
+    /**
+     * In case the PersonalSpace found by the `where` argument doesn't exist, create a new PersonalSpace with this data.
+     */
+    create: XOR<PersonalSpaceCreateInput, PersonalSpaceUncheckedCreateInput>
+    /**
+     * In case the PersonalSpace was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PersonalSpaceUpdateInput, PersonalSpaceUncheckedUpdateInput>
+  }
+
+  /**
+   * PersonalSpace delete
+   */
+  export type PersonalSpaceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    /**
+     * Filter which PersonalSpace to delete.
+     */
+    where: PersonalSpaceWhereUniqueInput
+  }
+
+  /**
+   * PersonalSpace deleteMany
+   */
+  export type PersonalSpaceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PersonalSpaces to delete
+     */
+    where?: PersonalSpaceWhereInput
+    /**
+     * Limit how many PersonalSpaces to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PersonalSpace.settings
+   */
+  export type PersonalSpace$settingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    where?: WorkspaceSettingsWhereInput
+  }
+
+  /**
+   * PersonalSpace.folders
+   */
+  export type PersonalSpace$foldersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    where?: WorkspaceFolderWhereInput
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    cursor?: WorkspaceFolderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace.files
+   */
+  export type PersonalSpace$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    where?: WorkspaceFileWhereInput
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    cursor?: WorkspaceFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace.entitlements
+   */
+  export type PersonalSpace$entitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    where?: WorkspaceEntitlementWhereInput
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace.projects
+   */
+  export type PersonalSpace$projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace.creditBalance
+   */
+  export type PersonalSpace$creditBalanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    where?: PersonalCreditBalanceWhereInput
+  }
+
+  /**
+   * PersonalSpace.agentWorkspaceSettings
+   */
+  export type PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    where?: AgentWorkspaceSettingWhereInput
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace without action
+   */
+  export type PersonalSpaceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PersonalCreditBalance
+   */
+
+  export type AggregatePersonalCreditBalance = {
+    _count: PersonalCreditBalanceCountAggregateOutputType | null
+    _avg: PersonalCreditBalanceAvgAggregateOutputType | null
+    _sum: PersonalCreditBalanceSumAggregateOutputType | null
+    _min: PersonalCreditBalanceMinAggregateOutputType | null
+    _max: PersonalCreditBalanceMaxAggregateOutputType | null
+  }
+
+  export type PersonalCreditBalanceAvgAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type PersonalCreditBalanceSumAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type PersonalCreditBalanceMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    amount: Decimal | null
+    currency: string | null
+    updatedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type PersonalCreditBalanceMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    amount: Decimal | null
+    currency: string | null
+    updatedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type PersonalCreditBalanceCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    amount: number
+    currency: number
+    updatedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PersonalCreditBalanceAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type PersonalCreditBalanceSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type PersonalCreditBalanceMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    amount?: true
+    currency?: true
+    updatedAt?: true
+    createdAt?: true
+  }
+
+  export type PersonalCreditBalanceMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    amount?: true
+    currency?: true
+    updatedAt?: true
+    createdAt?: true
+  }
+
+  export type PersonalCreditBalanceCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    amount?: true
+    currency?: true
+    updatedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PersonalCreditBalanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PersonalCreditBalance to aggregate.
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalCreditBalances to fetch.
+     */
+    orderBy?: PersonalCreditBalanceOrderByWithRelationInput | PersonalCreditBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PersonalCreditBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalCreditBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalCreditBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PersonalCreditBalances
+    **/
+    _count?: true | PersonalCreditBalanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PersonalCreditBalanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PersonalCreditBalanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PersonalCreditBalanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PersonalCreditBalanceMaxAggregateInputType
+  }
+
+  export type GetPersonalCreditBalanceAggregateType<T extends PersonalCreditBalanceAggregateArgs> = {
+        [P in keyof T & keyof AggregatePersonalCreditBalance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePersonalCreditBalance[P]>
+      : GetScalarType<T[P], AggregatePersonalCreditBalance[P]>
+  }
+
+
+
+
+  export type PersonalCreditBalanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PersonalCreditBalanceWhereInput
+    orderBy?: PersonalCreditBalanceOrderByWithAggregationInput | PersonalCreditBalanceOrderByWithAggregationInput[]
+    by: PersonalCreditBalanceScalarFieldEnum[] | PersonalCreditBalanceScalarFieldEnum
+    having?: PersonalCreditBalanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PersonalCreditBalanceCountAggregateInputType | true
+    _avg?: PersonalCreditBalanceAvgAggregateInputType
+    _sum?: PersonalCreditBalanceSumAggregateInputType
+    _min?: PersonalCreditBalanceMinAggregateInputType
+    _max?: PersonalCreditBalanceMaxAggregateInputType
+  }
+
+  export type PersonalCreditBalanceGroupByOutputType = {
+    id: string
+    personalSpaceId: string
+    amount: Decimal
+    currency: string
+    updatedAt: Date
+    createdAt: Date
+    _count: PersonalCreditBalanceCountAggregateOutputType | null
+    _avg: PersonalCreditBalanceAvgAggregateOutputType | null
+    _sum: PersonalCreditBalanceSumAggregateOutputType | null
+    _min: PersonalCreditBalanceMinAggregateOutputType | null
+    _max: PersonalCreditBalanceMaxAggregateOutputType | null
+  }
+
+  type GetPersonalCreditBalanceGroupByPayload<T extends PersonalCreditBalanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PersonalCreditBalanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PersonalCreditBalanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PersonalCreditBalanceGroupByOutputType[P]>
+            : GetScalarType<T[P], PersonalCreditBalanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PersonalCreditBalanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    amount?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalCreditBalance"]>
+
+  export type PersonalCreditBalanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    amount?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalCreditBalance"]>
+
+  export type PersonalCreditBalanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    amount?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["personalCreditBalance"]>
+
+  export type PersonalCreditBalanceSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    amount?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type PersonalCreditBalanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "amount" | "currency" | "updatedAt" | "createdAt", ExtArgs["result"]["personalCreditBalance"]>
+  export type PersonalCreditBalanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }
+  export type PersonalCreditBalanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }
+  export type PersonalCreditBalanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | PersonalSpaceDefaultArgs<ExtArgs>
+  }
+
+  export type $PersonalCreditBalancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PersonalCreditBalance"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string
+      amount: Prisma.Decimal
+      currency: string
+      updatedAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["personalCreditBalance"]>
+    composites: {}
+  }
+
+  type PersonalCreditBalanceGetPayload<S extends boolean | null | undefined | PersonalCreditBalanceDefaultArgs> = $Result.GetResult<Prisma.$PersonalCreditBalancePayload, S>
+
+  type PersonalCreditBalanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PersonalCreditBalanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PersonalCreditBalanceCountAggregateInputType | true
+    }
+
+  export interface PersonalCreditBalanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PersonalCreditBalance'], meta: { name: 'PersonalCreditBalance' } }
+    /**
+     * Find zero or one PersonalCreditBalance that matches the filter.
+     * @param {PersonalCreditBalanceFindUniqueArgs} args - Arguments to find a PersonalCreditBalance
+     * @example
+     * // Get one PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PersonalCreditBalanceFindUniqueArgs>(args: SelectSubset<T, PersonalCreditBalanceFindUniqueArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PersonalCreditBalance that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PersonalCreditBalanceFindUniqueOrThrowArgs} args - Arguments to find a PersonalCreditBalance
+     * @example
+     * // Get one PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PersonalCreditBalanceFindUniqueOrThrowArgs>(args: SelectSubset<T, PersonalCreditBalanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PersonalCreditBalance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceFindFirstArgs} args - Arguments to find a PersonalCreditBalance
+     * @example
+     * // Get one PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PersonalCreditBalanceFindFirstArgs>(args?: SelectSubset<T, PersonalCreditBalanceFindFirstArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PersonalCreditBalance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceFindFirstOrThrowArgs} args - Arguments to find a PersonalCreditBalance
+     * @example
+     * // Get one PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PersonalCreditBalanceFindFirstOrThrowArgs>(args?: SelectSubset<T, PersonalCreditBalanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PersonalCreditBalances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PersonalCreditBalances
+     * const personalCreditBalances = await prisma.personalCreditBalance.findMany()
+     * 
+     * // Get first 10 PersonalCreditBalances
+     * const personalCreditBalances = await prisma.personalCreditBalance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const personalCreditBalanceWithIdOnly = await prisma.personalCreditBalance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PersonalCreditBalanceFindManyArgs>(args?: SelectSubset<T, PersonalCreditBalanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PersonalCreditBalance.
+     * @param {PersonalCreditBalanceCreateArgs} args - Arguments to create a PersonalCreditBalance.
+     * @example
+     * // Create one PersonalCreditBalance
+     * const PersonalCreditBalance = await prisma.personalCreditBalance.create({
+     *   data: {
+     *     // ... data to create a PersonalCreditBalance
+     *   }
+     * })
+     * 
+     */
+    create<T extends PersonalCreditBalanceCreateArgs>(args: SelectSubset<T, PersonalCreditBalanceCreateArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PersonalCreditBalances.
+     * @param {PersonalCreditBalanceCreateManyArgs} args - Arguments to create many PersonalCreditBalances.
+     * @example
+     * // Create many PersonalCreditBalances
+     * const personalCreditBalance = await prisma.personalCreditBalance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PersonalCreditBalanceCreateManyArgs>(args?: SelectSubset<T, PersonalCreditBalanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PersonalCreditBalances and returns the data saved in the database.
+     * @param {PersonalCreditBalanceCreateManyAndReturnArgs} args - Arguments to create many PersonalCreditBalances.
+     * @example
+     * // Create many PersonalCreditBalances
+     * const personalCreditBalance = await prisma.personalCreditBalance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PersonalCreditBalances and only return the `id`
+     * const personalCreditBalanceWithIdOnly = await prisma.personalCreditBalance.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PersonalCreditBalanceCreateManyAndReturnArgs>(args?: SelectSubset<T, PersonalCreditBalanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PersonalCreditBalance.
+     * @param {PersonalCreditBalanceDeleteArgs} args - Arguments to delete one PersonalCreditBalance.
+     * @example
+     * // Delete one PersonalCreditBalance
+     * const PersonalCreditBalance = await prisma.personalCreditBalance.delete({
+     *   where: {
+     *     // ... filter to delete one PersonalCreditBalance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PersonalCreditBalanceDeleteArgs>(args: SelectSubset<T, PersonalCreditBalanceDeleteArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PersonalCreditBalance.
+     * @param {PersonalCreditBalanceUpdateArgs} args - Arguments to update one PersonalCreditBalance.
+     * @example
+     * // Update one PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PersonalCreditBalanceUpdateArgs>(args: SelectSubset<T, PersonalCreditBalanceUpdateArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PersonalCreditBalances.
+     * @param {PersonalCreditBalanceDeleteManyArgs} args - Arguments to filter PersonalCreditBalances to delete.
+     * @example
+     * // Delete a few PersonalCreditBalances
+     * const { count } = await prisma.personalCreditBalance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PersonalCreditBalanceDeleteManyArgs>(args?: SelectSubset<T, PersonalCreditBalanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PersonalCreditBalances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PersonalCreditBalances
+     * const personalCreditBalance = await prisma.personalCreditBalance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PersonalCreditBalanceUpdateManyArgs>(args: SelectSubset<T, PersonalCreditBalanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PersonalCreditBalances and returns the data updated in the database.
+     * @param {PersonalCreditBalanceUpdateManyAndReturnArgs} args - Arguments to update many PersonalCreditBalances.
+     * @example
+     * // Update many PersonalCreditBalances
+     * const personalCreditBalance = await prisma.personalCreditBalance.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PersonalCreditBalances and only return the `id`
+     * const personalCreditBalanceWithIdOnly = await prisma.personalCreditBalance.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PersonalCreditBalanceUpdateManyAndReturnArgs>(args: SelectSubset<T, PersonalCreditBalanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PersonalCreditBalance.
+     * @param {PersonalCreditBalanceUpsertArgs} args - Arguments to update or create a PersonalCreditBalance.
+     * @example
+     * // Update or create a PersonalCreditBalance
+     * const personalCreditBalance = await prisma.personalCreditBalance.upsert({
+     *   create: {
+     *     // ... data to create a PersonalCreditBalance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PersonalCreditBalance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PersonalCreditBalanceUpsertArgs>(args: SelectSubset<T, PersonalCreditBalanceUpsertArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PersonalCreditBalances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceCountArgs} args - Arguments to filter PersonalCreditBalances to count.
+     * @example
+     * // Count the number of PersonalCreditBalances
+     * const count = await prisma.personalCreditBalance.count({
+     *   where: {
+     *     // ... the filter for the PersonalCreditBalances we want to count
+     *   }
+     * })
+    **/
+    count<T extends PersonalCreditBalanceCountArgs>(
+      args?: Subset<T, PersonalCreditBalanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PersonalCreditBalanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PersonalCreditBalance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PersonalCreditBalanceAggregateArgs>(args: Subset<T, PersonalCreditBalanceAggregateArgs>): Prisma.PrismaPromise<GetPersonalCreditBalanceAggregateType<T>>
+
+    /**
+     * Group by PersonalCreditBalance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PersonalCreditBalanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PersonalCreditBalanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PersonalCreditBalanceGroupByArgs['orderBy'] }
+        : { orderBy?: PersonalCreditBalanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PersonalCreditBalanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPersonalCreditBalanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PersonalCreditBalance model
+   */
+  readonly fields: PersonalCreditBalanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PersonalCreditBalance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PersonalCreditBalanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends PersonalSpaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpaceDefaultArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PersonalCreditBalance model
+   */
+  interface PersonalCreditBalanceFieldRefs {
+    readonly id: FieldRef<"PersonalCreditBalance", 'String'>
+    readonly personalSpaceId: FieldRef<"PersonalCreditBalance", 'String'>
+    readonly amount: FieldRef<"PersonalCreditBalance", 'Decimal'>
+    readonly currency: FieldRef<"PersonalCreditBalance", 'String'>
+    readonly updatedAt: FieldRef<"PersonalCreditBalance", 'DateTime'>
+    readonly createdAt: FieldRef<"PersonalCreditBalance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PersonalCreditBalance findUnique
+   */
+  export type PersonalCreditBalanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalCreditBalance to fetch.
+     */
+    where: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  /**
+   * PersonalCreditBalance findUniqueOrThrow
+   */
+  export type PersonalCreditBalanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalCreditBalance to fetch.
+     */
+    where: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  /**
+   * PersonalCreditBalance findFirst
+   */
+  export type PersonalCreditBalanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalCreditBalance to fetch.
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalCreditBalances to fetch.
+     */
+    orderBy?: PersonalCreditBalanceOrderByWithRelationInput | PersonalCreditBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PersonalCreditBalances.
+     */
+    cursor?: PersonalCreditBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalCreditBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalCreditBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PersonalCreditBalances.
+     */
+    distinct?: PersonalCreditBalanceScalarFieldEnum | PersonalCreditBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalCreditBalance findFirstOrThrow
+   */
+  export type PersonalCreditBalanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalCreditBalance to fetch.
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalCreditBalances to fetch.
+     */
+    orderBy?: PersonalCreditBalanceOrderByWithRelationInput | PersonalCreditBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PersonalCreditBalances.
+     */
+    cursor?: PersonalCreditBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalCreditBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalCreditBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PersonalCreditBalances.
+     */
+    distinct?: PersonalCreditBalanceScalarFieldEnum | PersonalCreditBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalCreditBalance findMany
+   */
+  export type PersonalCreditBalanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which PersonalCreditBalances to fetch.
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PersonalCreditBalances to fetch.
+     */
+    orderBy?: PersonalCreditBalanceOrderByWithRelationInput | PersonalCreditBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PersonalCreditBalances.
+     */
+    cursor?: PersonalCreditBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PersonalCreditBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PersonalCreditBalances.
+     */
+    skip?: number
+    distinct?: PersonalCreditBalanceScalarFieldEnum | PersonalCreditBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalCreditBalance create
+   */
+  export type PersonalCreditBalanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PersonalCreditBalance.
+     */
+    data: XOR<PersonalCreditBalanceCreateInput, PersonalCreditBalanceUncheckedCreateInput>
+  }
+
+  /**
+   * PersonalCreditBalance createMany
+   */
+  export type PersonalCreditBalanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PersonalCreditBalances.
+     */
+    data: PersonalCreditBalanceCreateManyInput | PersonalCreditBalanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PersonalCreditBalance createManyAndReturn
+   */
+  export type PersonalCreditBalanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * The data used to create many PersonalCreditBalances.
+     */
+    data: PersonalCreditBalanceCreateManyInput | PersonalCreditBalanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PersonalCreditBalance update
+   */
+  export type PersonalCreditBalanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PersonalCreditBalance.
+     */
+    data: XOR<PersonalCreditBalanceUpdateInput, PersonalCreditBalanceUncheckedUpdateInput>
+    /**
+     * Choose, which PersonalCreditBalance to update.
+     */
+    where: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  /**
+   * PersonalCreditBalance updateMany
+   */
+  export type PersonalCreditBalanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PersonalCreditBalances.
+     */
+    data: XOR<PersonalCreditBalanceUpdateManyMutationInput, PersonalCreditBalanceUncheckedUpdateManyInput>
+    /**
+     * Filter which PersonalCreditBalances to update
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * Limit how many PersonalCreditBalances to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PersonalCreditBalance updateManyAndReturn
+   */
+  export type PersonalCreditBalanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * The data used to update PersonalCreditBalances.
+     */
+    data: XOR<PersonalCreditBalanceUpdateManyMutationInput, PersonalCreditBalanceUncheckedUpdateManyInput>
+    /**
+     * Filter which PersonalCreditBalances to update
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * Limit how many PersonalCreditBalances to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PersonalCreditBalance upsert
+   */
+  export type PersonalCreditBalanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PersonalCreditBalance to update in case it exists.
+     */
+    where: PersonalCreditBalanceWhereUniqueInput
+    /**
+     * In case the PersonalCreditBalance found by the `where` argument doesn't exist, create a new PersonalCreditBalance with this data.
+     */
+    create: XOR<PersonalCreditBalanceCreateInput, PersonalCreditBalanceUncheckedCreateInput>
+    /**
+     * In case the PersonalCreditBalance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PersonalCreditBalanceUpdateInput, PersonalCreditBalanceUncheckedUpdateInput>
+  }
+
+  /**
+   * PersonalCreditBalance delete
+   */
+  export type PersonalCreditBalanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+    /**
+     * Filter which PersonalCreditBalance to delete.
+     */
+    where: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  /**
+   * PersonalCreditBalance deleteMany
+   */
+  export type PersonalCreditBalanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PersonalCreditBalances to delete
+     */
+    where?: PersonalCreditBalanceWhereInput
+    /**
+     * Limit how many PersonalCreditBalances to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PersonalCreditBalance without action
+   */
+  export type PersonalCreditBalanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalCreditBalance
+     */
+    select?: PersonalCreditBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalCreditBalance
+     */
+    omit?: PersonalCreditBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalCreditBalanceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CompanyMember
+   */
+
+  export type AggregateCompanyMember = {
+    _count: CompanyMemberCountAggregateOutputType | null
+    _min: CompanyMemberMinAggregateOutputType | null
+    _max: CompanyMemberMaxAggregateOutputType | null
+  }
+
+  export type CompanyMemberMinAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    userId: string | null
+    roleId: string | null
+    joinedAt: Date | null
+  }
+
+  export type CompanyMemberMaxAggregateOutputType = {
+    id: string | null
+    companyId: string | null
+    userId: string | null
+    roleId: string | null
+    joinedAt: Date | null
+  }
+
+  export type CompanyMemberCountAggregateOutputType = {
+    id: number
+    companyId: number
+    userId: number
+    roleId: number
+    joinedAt: number
+    _all: number
+  }
+
+
+  export type CompanyMemberMinAggregateInputType = {
+    id?: true
+    companyId?: true
+    userId?: true
+    roleId?: true
+    joinedAt?: true
+  }
+
+  export type CompanyMemberMaxAggregateInputType = {
+    id?: true
+    companyId?: true
+    userId?: true
+    roleId?: true
+    joinedAt?: true
+  }
+
+  export type CompanyMemberCountAggregateInputType = {
+    id?: true
+    companyId?: true
+    userId?: true
+    roleId?: true
+    joinedAt?: true
+    _all?: true
+  }
+
+  export type CompanyMemberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CompanyMember to aggregate.
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompanyMembers to fetch.
+     */
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CompanyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompanyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompanyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CompanyMembers
+    **/
+    _count?: true | CompanyMemberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CompanyMemberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CompanyMemberMaxAggregateInputType
+  }
+
+  export type GetCompanyMemberAggregateType<T extends CompanyMemberAggregateArgs> = {
+        [P in keyof T & keyof AggregateCompanyMember]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCompanyMember[P]>
+      : GetScalarType<T[P], AggregateCompanyMember[P]>
+  }
+
+
+
+
+  export type CompanyMemberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyMemberWhereInput
+    orderBy?: CompanyMemberOrderByWithAggregationInput | CompanyMemberOrderByWithAggregationInput[]
+    by: CompanyMemberScalarFieldEnum[] | CompanyMemberScalarFieldEnum
+    having?: CompanyMemberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CompanyMemberCountAggregateInputType | true
+    _min?: CompanyMemberMinAggregateInputType
+    _max?: CompanyMemberMaxAggregateInputType
+  }
+
+  export type CompanyMemberGroupByOutputType = {
+    id: string
+    companyId: string
+    userId: string
+    roleId: string
+    joinedAt: Date
+    _count: CompanyMemberCountAggregateOutputType | null
+    _min: CompanyMemberMinAggregateOutputType | null
+    _max: CompanyMemberMaxAggregateOutputType | null
+  }
+
+  type GetCompanyMemberGroupByPayload<T extends CompanyMemberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CompanyMemberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CompanyMemberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CompanyMemberGroupByOutputType[P]>
+            : GetScalarType<T[P], CompanyMemberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CompanyMemberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    userId?: boolean
+    roleId?: boolean
+    joinedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["companyMember"]>
+
+  export type CompanyMemberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    userId?: boolean
+    roleId?: boolean
+    joinedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["companyMember"]>
+
+  export type CompanyMemberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    companyId?: boolean
+    userId?: boolean
+    roleId?: boolean
+    joinedAt?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["companyMember"]>
+
+  export type CompanyMemberSelectScalar = {
+    id?: boolean
+    companyId?: boolean
+    userId?: boolean
+    roleId?: boolean
+    joinedAt?: boolean
+  }
+
+  export type CompanyMemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "userId" | "roleId" | "joinedAt", ExtArgs["result"]["companyMember"]>
+  export type CompanyMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }
+  export type CompanyMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }
+  export type CompanyMemberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    role?: boolean | RoleDefaultArgs<ExtArgs>
+  }
+
+  export type $CompanyMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CompanyMember"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      role: Prisma.$RolePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      companyId: string
+      userId: string
+      roleId: string
+      joinedAt: Date
+    }, ExtArgs["result"]["companyMember"]>
+    composites: {}
+  }
+
+  type CompanyMemberGetPayload<S extends boolean | null | undefined | CompanyMemberDefaultArgs> = $Result.GetResult<Prisma.$CompanyMemberPayload, S>
+
+  type CompanyMemberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CompanyMemberFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CompanyMemberCountAggregateInputType | true
+    }
+
+  export interface CompanyMemberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CompanyMember'], meta: { name: 'CompanyMember' } }
+    /**
+     * Find zero or one CompanyMember that matches the filter.
+     * @param {CompanyMemberFindUniqueArgs} args - Arguments to find a CompanyMember
+     * @example
+     * // Get one CompanyMember
+     * const companyMember = await prisma.companyMember.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CompanyMemberFindUniqueArgs>(args: SelectSubset<T, CompanyMemberFindUniqueArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CompanyMember that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CompanyMemberFindUniqueOrThrowArgs} args - Arguments to find a CompanyMember
+     * @example
+     * // Get one CompanyMember
+     * const companyMember = await prisma.companyMember.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CompanyMemberFindUniqueOrThrowArgs>(args: SelectSubset<T, CompanyMemberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CompanyMember that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberFindFirstArgs} args - Arguments to find a CompanyMember
+     * @example
+     * // Get one CompanyMember
+     * const companyMember = await prisma.companyMember.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CompanyMemberFindFirstArgs>(args?: SelectSubset<T, CompanyMemberFindFirstArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CompanyMember that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberFindFirstOrThrowArgs} args - Arguments to find a CompanyMember
+     * @example
+     * // Get one CompanyMember
+     * const companyMember = await prisma.companyMember.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CompanyMemberFindFirstOrThrowArgs>(args?: SelectSubset<T, CompanyMemberFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CompanyMembers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CompanyMembers
+     * const companyMembers = await prisma.companyMember.findMany()
+     * 
+     * // Get first 10 CompanyMembers
+     * const companyMembers = await prisma.companyMember.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const companyMemberWithIdOnly = await prisma.companyMember.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CompanyMemberFindManyArgs>(args?: SelectSubset<T, CompanyMemberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CompanyMember.
+     * @param {CompanyMemberCreateArgs} args - Arguments to create a CompanyMember.
+     * @example
+     * // Create one CompanyMember
+     * const CompanyMember = await prisma.companyMember.create({
+     *   data: {
+     *     // ... data to create a CompanyMember
+     *   }
+     * })
+     * 
+     */
+    create<T extends CompanyMemberCreateArgs>(args: SelectSubset<T, CompanyMemberCreateArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CompanyMembers.
+     * @param {CompanyMemberCreateManyArgs} args - Arguments to create many CompanyMembers.
+     * @example
+     * // Create many CompanyMembers
+     * const companyMember = await prisma.companyMember.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CompanyMemberCreateManyArgs>(args?: SelectSubset<T, CompanyMemberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CompanyMembers and returns the data saved in the database.
+     * @param {CompanyMemberCreateManyAndReturnArgs} args - Arguments to create many CompanyMembers.
+     * @example
+     * // Create many CompanyMembers
+     * const companyMember = await prisma.companyMember.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CompanyMembers and only return the `id`
+     * const companyMemberWithIdOnly = await prisma.companyMember.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CompanyMemberCreateManyAndReturnArgs>(args?: SelectSubset<T, CompanyMemberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CompanyMember.
+     * @param {CompanyMemberDeleteArgs} args - Arguments to delete one CompanyMember.
+     * @example
+     * // Delete one CompanyMember
+     * const CompanyMember = await prisma.companyMember.delete({
+     *   where: {
+     *     // ... filter to delete one CompanyMember
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CompanyMemberDeleteArgs>(args: SelectSubset<T, CompanyMemberDeleteArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CompanyMember.
+     * @param {CompanyMemberUpdateArgs} args - Arguments to update one CompanyMember.
+     * @example
+     * // Update one CompanyMember
+     * const companyMember = await prisma.companyMember.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CompanyMemberUpdateArgs>(args: SelectSubset<T, CompanyMemberUpdateArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CompanyMembers.
+     * @param {CompanyMemberDeleteManyArgs} args - Arguments to filter CompanyMembers to delete.
+     * @example
+     * // Delete a few CompanyMembers
+     * const { count } = await prisma.companyMember.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CompanyMemberDeleteManyArgs>(args?: SelectSubset<T, CompanyMemberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CompanyMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CompanyMembers
+     * const companyMember = await prisma.companyMember.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CompanyMemberUpdateManyArgs>(args: SelectSubset<T, CompanyMemberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CompanyMembers and returns the data updated in the database.
+     * @param {CompanyMemberUpdateManyAndReturnArgs} args - Arguments to update many CompanyMembers.
+     * @example
+     * // Update many CompanyMembers
+     * const companyMember = await prisma.companyMember.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CompanyMembers and only return the `id`
+     * const companyMemberWithIdOnly = await prisma.companyMember.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CompanyMemberUpdateManyAndReturnArgs>(args: SelectSubset<T, CompanyMemberUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CompanyMember.
+     * @param {CompanyMemberUpsertArgs} args - Arguments to update or create a CompanyMember.
+     * @example
+     * // Update or create a CompanyMember
+     * const companyMember = await prisma.companyMember.upsert({
+     *   create: {
+     *     // ... data to create a CompanyMember
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CompanyMember we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CompanyMemberUpsertArgs>(args: SelectSubset<T, CompanyMemberUpsertArgs<ExtArgs>>): Prisma__CompanyMemberClient<$Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CompanyMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberCountArgs} args - Arguments to filter CompanyMembers to count.
+     * @example
+     * // Count the number of CompanyMembers
+     * const count = await prisma.companyMember.count({
+     *   where: {
+     *     // ... the filter for the CompanyMembers we want to count
+     *   }
+     * })
+    **/
+    count<T extends CompanyMemberCountArgs>(
+      args?: Subset<T, CompanyMemberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CompanyMemberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CompanyMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CompanyMemberAggregateArgs>(args: Subset<T, CompanyMemberAggregateArgs>): Prisma.PrismaPromise<GetCompanyMemberAggregateType<T>>
+
+    /**
+     * Group by CompanyMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompanyMemberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CompanyMemberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CompanyMemberGroupByArgs['orderBy'] }
+        : { orderBy?: CompanyMemberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CompanyMemberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyMemberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CompanyMember model
+   */
+  readonly fields: CompanyMemberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CompanyMember.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CompanyMemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CompanyMember model
+   */
+  interface CompanyMemberFieldRefs {
+    readonly id: FieldRef<"CompanyMember", 'String'>
+    readonly companyId: FieldRef<"CompanyMember", 'String'>
+    readonly userId: FieldRef<"CompanyMember", 'String'>
+    readonly roleId: FieldRef<"CompanyMember", 'String'>
+    readonly joinedAt: FieldRef<"CompanyMember", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CompanyMember findUnique
+   */
+  export type CompanyMemberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which CompanyMember to fetch.
+     */
+    where: CompanyMemberWhereUniqueInput
+  }
+
+  /**
+   * CompanyMember findUniqueOrThrow
+   */
+  export type CompanyMemberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which CompanyMember to fetch.
+     */
+    where: CompanyMemberWhereUniqueInput
+  }
+
+  /**
+   * CompanyMember findFirst
+   */
+  export type CompanyMemberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which CompanyMember to fetch.
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompanyMembers to fetch.
+     */
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CompanyMembers.
+     */
+    cursor?: CompanyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompanyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompanyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CompanyMembers.
+     */
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * CompanyMember findFirstOrThrow
+   */
+  export type CompanyMemberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which CompanyMember to fetch.
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompanyMembers to fetch.
+     */
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CompanyMembers.
+     */
+    cursor?: CompanyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompanyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompanyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CompanyMembers.
+     */
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * CompanyMember findMany
+   */
+  export type CompanyMemberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which CompanyMembers to fetch.
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompanyMembers to fetch.
+     */
+    orderBy?: CompanyMemberOrderByWithRelationInput | CompanyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CompanyMembers.
+     */
+    cursor?: CompanyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompanyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompanyMembers.
+     */
+    skip?: number
+    distinct?: CompanyMemberScalarFieldEnum | CompanyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * CompanyMember create
+   */
+  export type CompanyMemberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CompanyMember.
+     */
+    data: XOR<CompanyMemberCreateInput, CompanyMemberUncheckedCreateInput>
+  }
+
+  /**
+   * CompanyMember createMany
+   */
+  export type CompanyMemberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CompanyMembers.
+     */
+    data: CompanyMemberCreateManyInput | CompanyMemberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CompanyMember createManyAndReturn
+   */
+  export type CompanyMemberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * The data used to create many CompanyMembers.
+     */
+    data: CompanyMemberCreateManyInput | CompanyMemberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CompanyMember update
+   */
+  export type CompanyMemberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CompanyMember.
+     */
+    data: XOR<CompanyMemberUpdateInput, CompanyMemberUncheckedUpdateInput>
+    /**
+     * Choose, which CompanyMember to update.
+     */
+    where: CompanyMemberWhereUniqueInput
+  }
+
+  /**
+   * CompanyMember updateMany
+   */
+  export type CompanyMemberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CompanyMembers.
+     */
+    data: XOR<CompanyMemberUpdateManyMutationInput, CompanyMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which CompanyMembers to update
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * Limit how many CompanyMembers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CompanyMember updateManyAndReturn
+   */
+  export type CompanyMemberUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * The data used to update CompanyMembers.
+     */
+    data: XOR<CompanyMemberUpdateManyMutationInput, CompanyMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which CompanyMembers to update
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * Limit how many CompanyMembers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CompanyMember upsert
+   */
+  export type CompanyMemberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CompanyMember to update in case it exists.
+     */
+    where: CompanyMemberWhereUniqueInput
+    /**
+     * In case the CompanyMember found by the `where` argument doesn't exist, create a new CompanyMember with this data.
+     */
+    create: XOR<CompanyMemberCreateInput, CompanyMemberUncheckedCreateInput>
+    /**
+     * In case the CompanyMember was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CompanyMemberUpdateInput, CompanyMemberUncheckedUpdateInput>
+  }
+
+  /**
+   * CompanyMember delete
+   */
+  export type CompanyMemberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+    /**
+     * Filter which CompanyMember to delete.
+     */
+    where: CompanyMemberWhereUniqueInput
+  }
+
+  /**
+   * CompanyMember deleteMany
+   */
+  export type CompanyMemberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CompanyMembers to delete
+     */
+    where?: CompanyMemberWhereInput
+    /**
+     * Limit how many CompanyMembers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CompanyMember without action
+   */
+  export type CompanyMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyMember
+     */
+    select?: CompanyMemberSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompanyMember
+     */
+    omit?: CompanyMemberOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyMemberInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkspaceSettings
+   */
+
+  export type AggregateWorkspaceSettings = {
+    _count: WorkspaceSettingsCountAggregateOutputType | null
+    _min: WorkspaceSettingsMinAggregateOutputType | null
+    _max: WorkspaceSettingsMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceSettingsMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    displayName: string | null
+    niche: string | null
+    audience: string | null
+    voice: string | null
+    positioning: string | null
+    contentPreferences: string | null
+    logoStorageKey: string | null
+    timezone: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceSettingsMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    displayName: string | null
+    niche: string | null
+    audience: string | null
+    voice: string | null
+    positioning: string | null
+    contentPreferences: string | null
+    logoStorageKey: string | null
+    timezone: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceSettingsCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    companyId: number
+    displayName: number
+    niche: number
+    audience: number
+    voice: number
+    positioning: number
+    contentPreferences: number
+    logoStorageKey: number
+    palette: number
+    timezone: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WorkspaceSettingsMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    displayName?: true
+    niche?: true
+    audience?: true
+    voice?: true
+    positioning?: true
+    contentPreferences?: true
+    logoStorageKey?: true
+    timezone?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceSettingsMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    displayName?: true
+    niche?: true
+    audience?: true
+    voice?: true
+    positioning?: true
+    contentPreferences?: true
+    logoStorageKey?: true
+    timezone?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceSettingsCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    displayName?: true
+    niche?: true
+    audience?: true
+    voice?: true
+    positioning?: true
+    contentPreferences?: true
+    logoStorageKey?: true
+    palette?: true
+    timezone?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WorkspaceSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceSettings to aggregate.
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceSettings to fetch.
+     */
+    orderBy?: WorkspaceSettingsOrderByWithRelationInput | WorkspaceSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkspaceSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkspaceSettings
+    **/
+    _count?: true | WorkspaceSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkspaceSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkspaceSettingsMaxAggregateInputType
+  }
+
+  export type GetWorkspaceSettingsAggregateType<T extends WorkspaceSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkspaceSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkspaceSettings[P]>
+      : GetScalarType<T[P], AggregateWorkspaceSettings[P]>
+  }
+
+
+
+
+  export type WorkspaceSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceSettingsWhereInput
+    orderBy?: WorkspaceSettingsOrderByWithAggregationInput | WorkspaceSettingsOrderByWithAggregationInput[]
+    by: WorkspaceSettingsScalarFieldEnum[] | WorkspaceSettingsScalarFieldEnum
+    having?: WorkspaceSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkspaceSettingsCountAggregateInputType | true
+    _min?: WorkspaceSettingsMinAggregateInputType
+    _max?: WorkspaceSettingsMaxAggregateInputType
+  }
+
+  export type WorkspaceSettingsGroupByOutputType = {
+    id: string
+    personalSpaceId: string | null
+    companyId: string | null
+    displayName: string | null
+    niche: string | null
+    audience: string | null
+    voice: string | null
+    positioning: string | null
+    contentPreferences: string | null
+    logoStorageKey: string | null
+    palette: JsonValue
+    timezone: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WorkspaceSettingsCountAggregateOutputType | null
+    _min: WorkspaceSettingsMinAggregateOutputType | null
+    _max: WorkspaceSettingsMaxAggregateOutputType | null
+  }
+
+  type GetWorkspaceSettingsGroupByPayload<T extends WorkspaceSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkspaceSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkspaceSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkspaceSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkspaceSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkspaceSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    displayName?: boolean
+    niche?: boolean
+    audience?: boolean
+    voice?: boolean
+    positioning?: boolean
+    contentPreferences?: boolean
+    logoStorageKey?: boolean
+    palette?: boolean
+    timezone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceSettings"]>
+
+  export type WorkspaceSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    displayName?: boolean
+    niche?: boolean
+    audience?: boolean
+    voice?: boolean
+    positioning?: boolean
+    contentPreferences?: boolean
+    logoStorageKey?: boolean
+    palette?: boolean
+    timezone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceSettings"]>
+
+  export type WorkspaceSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    displayName?: boolean
+    niche?: boolean
+    audience?: boolean
+    voice?: boolean
+    positioning?: boolean
+    contentPreferences?: boolean
+    logoStorageKey?: boolean
+    palette?: boolean
+    timezone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceSettings"]>
+
+  export type WorkspaceSettingsSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    displayName?: boolean
+    niche?: boolean
+    audience?: boolean
+    voice?: boolean
+    positioning?: boolean
+    contentPreferences?: boolean
+    logoStorageKey?: boolean
+    palette?: boolean
+    timezone?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WorkspaceSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "companyId" | "displayName" | "niche" | "audience" | "voice" | "positioning" | "contentPreferences" | "logoStorageKey" | "palette" | "timezone" | "createdAt" | "updatedAt", ExtArgs["result"]["workspaceSettings"]>
+  export type WorkspaceSettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }
+  export type WorkspaceSettingsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }
+  export type WorkspaceSettingsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceSettings$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceSettings$companyArgs<ExtArgs>
+  }
+
+  export type $WorkspaceSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkspaceSettings"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string | null
+      companyId: string | null
+      displayName: string | null
+      niche: string | null
+      audience: string | null
+      voice: string | null
+      positioning: string | null
+      contentPreferences: string | null
+      logoStorageKey: string | null
+      palette: Prisma.JsonValue
+      timezone: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["workspaceSettings"]>
+    composites: {}
+  }
+
+  type WorkspaceSettingsGetPayload<S extends boolean | null | undefined | WorkspaceSettingsDefaultArgs> = $Result.GetResult<Prisma.$WorkspaceSettingsPayload, S>
+
+  type WorkspaceSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WorkspaceSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WorkspaceSettingsCountAggregateInputType | true
+    }
+
+  export interface WorkspaceSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkspaceSettings'], meta: { name: 'WorkspaceSettings' } }
+    /**
+     * Find zero or one WorkspaceSettings that matches the filter.
+     * @param {WorkspaceSettingsFindUniqueArgs} args - Arguments to find a WorkspaceSettings
+     * @example
+     * // Get one WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkspaceSettingsFindUniqueArgs>(args: SelectSubset<T, WorkspaceSettingsFindUniqueArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WorkspaceSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WorkspaceSettingsFindUniqueOrThrowArgs} args - Arguments to find a WorkspaceSettings
+     * @example
+     * // Get one WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkspaceSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkspaceSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsFindFirstArgs} args - Arguments to find a WorkspaceSettings
+     * @example
+     * // Get one WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkspaceSettingsFindFirstArgs>(args?: SelectSubset<T, WorkspaceSettingsFindFirstArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsFindFirstOrThrowArgs} args - Arguments to find a WorkspaceSettings
+     * @example
+     * // Get one WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkspaceSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkspaceSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WorkspaceSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findMany()
+     * 
+     * // Get first 10 WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workspaceSettingsWithIdOnly = await prisma.workspaceSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkspaceSettingsFindManyArgs>(args?: SelectSubset<T, WorkspaceSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WorkspaceSettings.
+     * @param {WorkspaceSettingsCreateArgs} args - Arguments to create a WorkspaceSettings.
+     * @example
+     * // Create one WorkspaceSettings
+     * const WorkspaceSettings = await prisma.workspaceSettings.create({
+     *   data: {
+     *     // ... data to create a WorkspaceSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkspaceSettingsCreateArgs>(args: SelectSubset<T, WorkspaceSettingsCreateArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WorkspaceSettings.
+     * @param {WorkspaceSettingsCreateManyArgs} args - Arguments to create many WorkspaceSettings.
+     * @example
+     * // Create many WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkspaceSettingsCreateManyArgs>(args?: SelectSubset<T, WorkspaceSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkspaceSettings and returns the data saved in the database.
+     * @param {WorkspaceSettingsCreateManyAndReturnArgs} args - Arguments to create many WorkspaceSettings.
+     * @example
+     * // Create many WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkspaceSettings and only return the `id`
+     * const workspaceSettingsWithIdOnly = await prisma.workspaceSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkspaceSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkspaceSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WorkspaceSettings.
+     * @param {WorkspaceSettingsDeleteArgs} args - Arguments to delete one WorkspaceSettings.
+     * @example
+     * // Delete one WorkspaceSettings
+     * const WorkspaceSettings = await prisma.workspaceSettings.delete({
+     *   where: {
+     *     // ... filter to delete one WorkspaceSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkspaceSettingsDeleteArgs>(args: SelectSubset<T, WorkspaceSettingsDeleteArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WorkspaceSettings.
+     * @param {WorkspaceSettingsUpdateArgs} args - Arguments to update one WorkspaceSettings.
+     * @example
+     * // Update one WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkspaceSettingsUpdateArgs>(args: SelectSubset<T, WorkspaceSettingsUpdateArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WorkspaceSettings.
+     * @param {WorkspaceSettingsDeleteManyArgs} args - Arguments to filter WorkspaceSettings to delete.
+     * @example
+     * // Delete a few WorkspaceSettings
+     * const { count } = await prisma.workspaceSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkspaceSettingsDeleteManyArgs>(args?: SelectSubset<T, WorkspaceSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkspaceSettingsUpdateManyArgs>(args: SelectSubset<T, WorkspaceSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceSettings and returns the data updated in the database.
+     * @param {WorkspaceSettingsUpdateManyAndReturnArgs} args - Arguments to update many WorkspaceSettings.
+     * @example
+     * // Update many WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WorkspaceSettings and only return the `id`
+     * const workspaceSettingsWithIdOnly = await prisma.workspaceSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WorkspaceSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, WorkspaceSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WorkspaceSettings.
+     * @param {WorkspaceSettingsUpsertArgs} args - Arguments to update or create a WorkspaceSettings.
+     * @example
+     * // Update or create a WorkspaceSettings
+     * const workspaceSettings = await prisma.workspaceSettings.upsert({
+     *   create: {
+     *     // ... data to create a WorkspaceSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkspaceSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkspaceSettingsUpsertArgs>(args: SelectSubset<T, WorkspaceSettingsUpsertArgs<ExtArgs>>): Prisma__WorkspaceSettingsClient<$Result.GetResult<Prisma.$WorkspaceSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsCountArgs} args - Arguments to filter WorkspaceSettings to count.
+     * @example
+     * // Count the number of WorkspaceSettings
+     * const count = await prisma.workspaceSettings.count({
+     *   where: {
+     *     // ... the filter for the WorkspaceSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkspaceSettingsCountArgs>(
+      args?: Subset<T, WorkspaceSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkspaceSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkspaceSettingsAggregateArgs>(args: Subset<T, WorkspaceSettingsAggregateArgs>): Prisma.PrismaPromise<GetWorkspaceSettingsAggregateType<T>>
+
+    /**
+     * Group by WorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkspaceSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkspaceSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: WorkspaceSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkspaceSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkspaceSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkspaceSettings model
+   */
+  readonly fields: WorkspaceSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkspaceSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkspaceSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends WorkspaceSettings$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceSettings$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends WorkspaceSettings$companyArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceSettings$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkspaceSettings model
+   */
+  interface WorkspaceSettingsFieldRefs {
+    readonly id: FieldRef<"WorkspaceSettings", 'String'>
+    readonly personalSpaceId: FieldRef<"WorkspaceSettings", 'String'>
+    readonly companyId: FieldRef<"WorkspaceSettings", 'String'>
+    readonly displayName: FieldRef<"WorkspaceSettings", 'String'>
+    readonly niche: FieldRef<"WorkspaceSettings", 'String'>
+    readonly audience: FieldRef<"WorkspaceSettings", 'String'>
+    readonly voice: FieldRef<"WorkspaceSettings", 'String'>
+    readonly positioning: FieldRef<"WorkspaceSettings", 'String'>
+    readonly contentPreferences: FieldRef<"WorkspaceSettings", 'String'>
+    readonly logoStorageKey: FieldRef<"WorkspaceSettings", 'String'>
+    readonly palette: FieldRef<"WorkspaceSettings", 'Json'>
+    readonly timezone: FieldRef<"WorkspaceSettings", 'String'>
+    readonly createdAt: FieldRef<"WorkspaceSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"WorkspaceSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkspaceSettings findUnique
+   */
+  export type WorkspaceSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceSettings to fetch.
+     */
+    where: WorkspaceSettingsWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceSettings findUniqueOrThrow
+   */
+  export type WorkspaceSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceSettings to fetch.
+     */
+    where: WorkspaceSettingsWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceSettings findFirst
+   */
+  export type WorkspaceSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceSettings to fetch.
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceSettings to fetch.
+     */
+    orderBy?: WorkspaceSettingsOrderByWithRelationInput | WorkspaceSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceSettings.
+     */
+    cursor?: WorkspaceSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceSettings.
+     */
+    distinct?: WorkspaceSettingsScalarFieldEnum | WorkspaceSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceSettings findFirstOrThrow
+   */
+  export type WorkspaceSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceSettings to fetch.
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceSettings to fetch.
+     */
+    orderBy?: WorkspaceSettingsOrderByWithRelationInput | WorkspaceSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceSettings.
+     */
+    cursor?: WorkspaceSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceSettings.
+     */
+    distinct?: WorkspaceSettingsScalarFieldEnum | WorkspaceSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceSettings findMany
+   */
+  export type WorkspaceSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceSettings to fetch.
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceSettings to fetch.
+     */
+    orderBy?: WorkspaceSettingsOrderByWithRelationInput | WorkspaceSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkspaceSettings.
+     */
+    cursor?: WorkspaceSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceSettings.
+     */
+    skip?: number
+    distinct?: WorkspaceSettingsScalarFieldEnum | WorkspaceSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceSettings create
+   */
+  export type WorkspaceSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkspaceSettings.
+     */
+    data: XOR<WorkspaceSettingsCreateInput, WorkspaceSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * WorkspaceSettings createMany
+   */
+  export type WorkspaceSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkspaceSettings.
+     */
+    data: WorkspaceSettingsCreateManyInput | WorkspaceSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkspaceSettings createManyAndReturn
+   */
+  export type WorkspaceSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many WorkspaceSettings.
+     */
+    data: WorkspaceSettingsCreateManyInput | WorkspaceSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceSettings update
+   */
+  export type WorkspaceSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkspaceSettings.
+     */
+    data: XOR<WorkspaceSettingsUpdateInput, WorkspaceSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which WorkspaceSettings to update.
+     */
+    where: WorkspaceSettingsWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceSettings updateMany
+   */
+  export type WorkspaceSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkspaceSettings.
+     */
+    data: XOR<WorkspaceSettingsUpdateManyMutationInput, WorkspaceSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceSettings to update
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * Limit how many WorkspaceSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceSettings updateManyAndReturn
+   */
+  export type WorkspaceSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update WorkspaceSettings.
+     */
+    data: XOR<WorkspaceSettingsUpdateManyMutationInput, WorkspaceSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceSettings to update
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * Limit how many WorkspaceSettings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceSettings upsert
+   */
+  export type WorkspaceSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkspaceSettings to update in case it exists.
+     */
+    where: WorkspaceSettingsWhereUniqueInput
+    /**
+     * In case the WorkspaceSettings found by the `where` argument doesn't exist, create a new WorkspaceSettings with this data.
+     */
+    create: XOR<WorkspaceSettingsCreateInput, WorkspaceSettingsUncheckedCreateInput>
+    /**
+     * In case the WorkspaceSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkspaceSettingsUpdateInput, WorkspaceSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkspaceSettings delete
+   */
+  export type WorkspaceSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+    /**
+     * Filter which WorkspaceSettings to delete.
+     */
+    where: WorkspaceSettingsWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceSettings deleteMany
+   */
+  export type WorkspaceSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceSettings to delete
+     */
+    where?: WorkspaceSettingsWhereInput
+    /**
+     * Limit how many WorkspaceSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceSettings.personalSpace
+   */
+  export type WorkspaceSettings$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * WorkspaceSettings.company
+   */
+  export type WorkspaceSettings$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * WorkspaceSettings without action
+   */
+  export type WorkspaceSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceSettings
+     */
+    select?: WorkspaceSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceSettings
+     */
+    omit?: WorkspaceSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceSettingsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MarketplaceItem
+   */
+
+  export type AggregateMarketplaceItem = {
+    _count: MarketplaceItemCountAggregateOutputType | null
+    _avg: MarketplaceItemAvgAggregateOutputType | null
+    _sum: MarketplaceItemSumAggregateOutputType | null
+    _min: MarketplaceItemMinAggregateOutputType | null
+    _max: MarketplaceItemMaxAggregateOutputType | null
+  }
+
+  export type MarketplaceItemAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type MarketplaceItemSumAggregateOutputType = {
+    price: number | null
+  }
+
+  export type MarketplaceItemMinAggregateOutputType = {
+    id: string | null
+    slug: string | null
+    type: $Enums.MarketplaceItemType | null
+    name: string | null
+    author: string | null
+    price: number | null
+    flag: string | null
+    description: string | null
+    refId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MarketplaceItemMaxAggregateOutputType = {
+    id: string | null
+    slug: string | null
+    type: $Enums.MarketplaceItemType | null
+    name: string | null
+    author: string | null
+    price: number | null
+    flag: string | null
+    description: string | null
+    refId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MarketplaceItemCountAggregateOutputType = {
+    id: number
+    slug: number
+    type: number
+    name: number
+    author: number
+    price: number
+    flag: number
+    description: number
+    palette: number
+    specs: number
+    includes: number
+    refId: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MarketplaceItemAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type MarketplaceItemSumAggregateInputType = {
+    price?: true
+  }
+
+  export type MarketplaceItemMinAggregateInputType = {
+    id?: true
+    slug?: true
+    type?: true
+    name?: true
+    author?: true
+    price?: true
+    flag?: true
+    description?: true
+    refId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MarketplaceItemMaxAggregateInputType = {
+    id?: true
+    slug?: true
+    type?: true
+    name?: true
+    author?: true
+    price?: true
+    flag?: true
+    description?: true
+    refId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MarketplaceItemCountAggregateInputType = {
+    id?: true
+    slug?: true
+    type?: true
+    name?: true
+    author?: true
+    price?: true
+    flag?: true
+    description?: true
+    palette?: true
+    specs?: true
+    includes?: true
+    refId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MarketplaceItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketplaceItem to aggregate.
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceItems to fetch.
+     */
+    orderBy?: MarketplaceItemOrderByWithRelationInput | MarketplaceItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketplaceItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketplaceItems
+    **/
+    _count?: true | MarketplaceItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketplaceItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketplaceItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketplaceItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketplaceItemMaxAggregateInputType
+  }
+
+  export type GetMarketplaceItemAggregateType<T extends MarketplaceItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketplaceItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketplaceItem[P]>
+      : GetScalarType<T[P], AggregateMarketplaceItem[P]>
+  }
+
+
+
+
+  export type MarketplaceItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceItemWhereInput
+    orderBy?: MarketplaceItemOrderByWithAggregationInput | MarketplaceItemOrderByWithAggregationInput[]
+    by: MarketplaceItemScalarFieldEnum[] | MarketplaceItemScalarFieldEnum
+    having?: MarketplaceItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketplaceItemCountAggregateInputType | true
+    _avg?: MarketplaceItemAvgAggregateInputType
+    _sum?: MarketplaceItemSumAggregateInputType
+    _min?: MarketplaceItemMinAggregateInputType
+    _max?: MarketplaceItemMaxAggregateInputType
+  }
+
+  export type MarketplaceItemGroupByOutputType = {
+    id: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price: number
+    flag: string | null
+    description: string
+    palette: JsonValue
+    specs: JsonValue
+    includes: JsonValue
+    refId: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: MarketplaceItemCountAggregateOutputType | null
+    _avg: MarketplaceItemAvgAggregateOutputType | null
+    _sum: MarketplaceItemSumAggregateOutputType | null
+    _min: MarketplaceItemMinAggregateOutputType | null
+    _max: MarketplaceItemMaxAggregateOutputType | null
+  }
+
+  type GetMarketplaceItemGroupByPayload<T extends MarketplaceItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketplaceItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketplaceItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketplaceItemGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketplaceItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketplaceItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    type?: boolean
+    name?: boolean
+    author?: boolean
+    price?: boolean
+    flag?: boolean
+    description?: boolean
+    palette?: boolean
+    specs?: boolean
+    includes?: boolean
+    refId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    entitlements?: boolean | MarketplaceItem$entitlementsArgs<ExtArgs>
+    _count?: boolean | MarketplaceItemCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketplaceItem"]>
+
+  export type MarketplaceItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    type?: boolean
+    name?: boolean
+    author?: boolean
+    price?: boolean
+    flag?: boolean
+    description?: boolean
+    palette?: boolean
+    specs?: boolean
+    includes?: boolean
+    refId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["marketplaceItem"]>
+
+  export type MarketplaceItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    type?: boolean
+    name?: boolean
+    author?: boolean
+    price?: boolean
+    flag?: boolean
+    description?: boolean
+    palette?: boolean
+    specs?: boolean
+    includes?: boolean
+    refId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["marketplaceItem"]>
+
+  export type MarketplaceItemSelectScalar = {
+    id?: boolean
+    slug?: boolean
+    type?: boolean
+    name?: boolean
+    author?: boolean
+    price?: boolean
+    flag?: boolean
+    description?: boolean
+    palette?: boolean
+    specs?: boolean
+    includes?: boolean
+    refId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MarketplaceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "type" | "name" | "author" | "price" | "flag" | "description" | "palette" | "specs" | "includes" | "refId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["marketplaceItem"]>
+  export type MarketplaceItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entitlements?: boolean | MarketplaceItem$entitlementsArgs<ExtArgs>
+    _count?: boolean | MarketplaceItemCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketplaceItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type MarketplaceItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $MarketplaceItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketplaceItem"
+    objects: {
+      entitlements: Prisma.$WorkspaceEntitlementPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      slug: string
+      type: $Enums.MarketplaceItemType
+      name: string
+      author: string
+      price: number
+      flag: string | null
+      description: string
+      palette: Prisma.JsonValue
+      specs: Prisma.JsonValue
+      includes: Prisma.JsonValue
+      refId: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["marketplaceItem"]>
+    composites: {}
+  }
+
+  type MarketplaceItemGetPayload<S extends boolean | null | undefined | MarketplaceItemDefaultArgs> = $Result.GetResult<Prisma.$MarketplaceItemPayload, S>
+
+  type MarketplaceItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MarketplaceItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MarketplaceItemCountAggregateInputType | true
+    }
+
+  export interface MarketplaceItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketplaceItem'], meta: { name: 'MarketplaceItem' } }
+    /**
+     * Find zero or one MarketplaceItem that matches the filter.
+     * @param {MarketplaceItemFindUniqueArgs} args - Arguments to find a MarketplaceItem
+     * @example
+     * // Get one MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketplaceItemFindUniqueArgs>(args: SelectSubset<T, MarketplaceItemFindUniqueArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MarketplaceItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MarketplaceItemFindUniqueOrThrowArgs} args - Arguments to find a MarketplaceItem
+     * @example
+     * // Get one MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketplaceItemFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketplaceItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketplaceItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemFindFirstArgs} args - Arguments to find a MarketplaceItem
+     * @example
+     * // Get one MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketplaceItemFindFirstArgs>(args?: SelectSubset<T, MarketplaceItemFindFirstArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketplaceItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemFindFirstOrThrowArgs} args - Arguments to find a MarketplaceItem
+     * @example
+     * // Get one MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketplaceItemFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketplaceItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MarketplaceItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketplaceItems
+     * const marketplaceItems = await prisma.marketplaceItem.findMany()
+     * 
+     * // Get first 10 MarketplaceItems
+     * const marketplaceItems = await prisma.marketplaceItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketplaceItemWithIdOnly = await prisma.marketplaceItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketplaceItemFindManyArgs>(args?: SelectSubset<T, MarketplaceItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MarketplaceItem.
+     * @param {MarketplaceItemCreateArgs} args - Arguments to create a MarketplaceItem.
+     * @example
+     * // Create one MarketplaceItem
+     * const MarketplaceItem = await prisma.marketplaceItem.create({
+     *   data: {
+     *     // ... data to create a MarketplaceItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketplaceItemCreateArgs>(args: SelectSubset<T, MarketplaceItemCreateArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MarketplaceItems.
+     * @param {MarketplaceItemCreateManyArgs} args - Arguments to create many MarketplaceItems.
+     * @example
+     * // Create many MarketplaceItems
+     * const marketplaceItem = await prisma.marketplaceItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketplaceItemCreateManyArgs>(args?: SelectSubset<T, MarketplaceItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketplaceItems and returns the data saved in the database.
+     * @param {MarketplaceItemCreateManyAndReturnArgs} args - Arguments to create many MarketplaceItems.
+     * @example
+     * // Create many MarketplaceItems
+     * const marketplaceItem = await prisma.marketplaceItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketplaceItems and only return the `id`
+     * const marketplaceItemWithIdOnly = await prisma.marketplaceItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketplaceItemCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketplaceItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MarketplaceItem.
+     * @param {MarketplaceItemDeleteArgs} args - Arguments to delete one MarketplaceItem.
+     * @example
+     * // Delete one MarketplaceItem
+     * const MarketplaceItem = await prisma.marketplaceItem.delete({
+     *   where: {
+     *     // ... filter to delete one MarketplaceItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketplaceItemDeleteArgs>(args: SelectSubset<T, MarketplaceItemDeleteArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MarketplaceItem.
+     * @param {MarketplaceItemUpdateArgs} args - Arguments to update one MarketplaceItem.
+     * @example
+     * // Update one MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketplaceItemUpdateArgs>(args: SelectSubset<T, MarketplaceItemUpdateArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MarketplaceItems.
+     * @param {MarketplaceItemDeleteManyArgs} args - Arguments to filter MarketplaceItems to delete.
+     * @example
+     * // Delete a few MarketplaceItems
+     * const { count } = await prisma.marketplaceItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketplaceItemDeleteManyArgs>(args?: SelectSubset<T, MarketplaceItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketplaceItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketplaceItems
+     * const marketplaceItem = await prisma.marketplaceItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketplaceItemUpdateManyArgs>(args: SelectSubset<T, MarketplaceItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketplaceItems and returns the data updated in the database.
+     * @param {MarketplaceItemUpdateManyAndReturnArgs} args - Arguments to update many MarketplaceItems.
+     * @example
+     * // Update many MarketplaceItems
+     * const marketplaceItem = await prisma.marketplaceItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MarketplaceItems and only return the `id`
+     * const marketplaceItemWithIdOnly = await prisma.marketplaceItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MarketplaceItemUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketplaceItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MarketplaceItem.
+     * @param {MarketplaceItemUpsertArgs} args - Arguments to update or create a MarketplaceItem.
+     * @example
+     * // Update or create a MarketplaceItem
+     * const marketplaceItem = await prisma.marketplaceItem.upsert({
+     *   create: {
+     *     // ... data to create a MarketplaceItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketplaceItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketplaceItemUpsertArgs>(args: SelectSubset<T, MarketplaceItemUpsertArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MarketplaceItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemCountArgs} args - Arguments to filter MarketplaceItems to count.
+     * @example
+     * // Count the number of MarketplaceItems
+     * const count = await prisma.marketplaceItem.count({
+     *   where: {
+     *     // ... the filter for the MarketplaceItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketplaceItemCountArgs>(
+      args?: Subset<T, MarketplaceItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketplaceItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketplaceItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketplaceItemAggregateArgs>(args: Subset<T, MarketplaceItemAggregateArgs>): Prisma.PrismaPromise<GetMarketplaceItemAggregateType<T>>
+
+    /**
+     * Group by MarketplaceItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketplaceItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketplaceItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketplaceItemGroupByArgs['orderBy'] }
+        : { orderBy?: MarketplaceItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketplaceItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketplaceItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketplaceItem model
+   */
+  readonly fields: MarketplaceItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketplaceItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketplaceItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    entitlements<T extends MarketplaceItem$entitlementsArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItem$entitlementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketplaceItem model
+   */
+  interface MarketplaceItemFieldRefs {
+    readonly id: FieldRef<"MarketplaceItem", 'String'>
+    readonly slug: FieldRef<"MarketplaceItem", 'String'>
+    readonly type: FieldRef<"MarketplaceItem", 'MarketplaceItemType'>
+    readonly name: FieldRef<"MarketplaceItem", 'String'>
+    readonly author: FieldRef<"MarketplaceItem", 'String'>
+    readonly price: FieldRef<"MarketplaceItem", 'Int'>
+    readonly flag: FieldRef<"MarketplaceItem", 'String'>
+    readonly description: FieldRef<"MarketplaceItem", 'String'>
+    readonly palette: FieldRef<"MarketplaceItem", 'Json'>
+    readonly specs: FieldRef<"MarketplaceItem", 'Json'>
+    readonly includes: FieldRef<"MarketplaceItem", 'Json'>
+    readonly refId: FieldRef<"MarketplaceItem", 'String'>
+    readonly isActive: FieldRef<"MarketplaceItem", 'Boolean'>
+    readonly createdAt: FieldRef<"MarketplaceItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"MarketplaceItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketplaceItem findUnique
+   */
+  export type MarketplaceItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceItem to fetch.
+     */
+    where: MarketplaceItemWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceItem findUniqueOrThrow
+   */
+  export type MarketplaceItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceItem to fetch.
+     */
+    where: MarketplaceItemWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceItem findFirst
+   */
+  export type MarketplaceItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceItem to fetch.
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceItems to fetch.
+     */
+    orderBy?: MarketplaceItemOrderByWithRelationInput | MarketplaceItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketplaceItems.
+     */
+    cursor?: MarketplaceItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketplaceItems.
+     */
+    distinct?: MarketplaceItemScalarFieldEnum | MarketplaceItemScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceItem findFirstOrThrow
+   */
+  export type MarketplaceItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceItem to fetch.
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceItems to fetch.
+     */
+    orderBy?: MarketplaceItemOrderByWithRelationInput | MarketplaceItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketplaceItems.
+     */
+    cursor?: MarketplaceItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketplaceItems.
+     */
+    distinct?: MarketplaceItemScalarFieldEnum | MarketplaceItemScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceItem findMany
+   */
+  export type MarketplaceItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketplaceItems to fetch.
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketplaceItems to fetch.
+     */
+    orderBy?: MarketplaceItemOrderByWithRelationInput | MarketplaceItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketplaceItems.
+     */
+    cursor?: MarketplaceItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketplaceItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketplaceItems.
+     */
+    skip?: number
+    distinct?: MarketplaceItemScalarFieldEnum | MarketplaceItemScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceItem create
+   */
+  export type MarketplaceItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketplaceItem.
+     */
+    data: XOR<MarketplaceItemCreateInput, MarketplaceItemUncheckedCreateInput>
+  }
+
+  /**
+   * MarketplaceItem createMany
+   */
+  export type MarketplaceItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketplaceItems.
+     */
+    data: MarketplaceItemCreateManyInput | MarketplaceItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketplaceItem createManyAndReturn
+   */
+  export type MarketplaceItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many MarketplaceItems.
+     */
+    data: MarketplaceItemCreateManyInput | MarketplaceItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketplaceItem update
+   */
+  export type MarketplaceItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketplaceItem.
+     */
+    data: XOR<MarketplaceItemUpdateInput, MarketplaceItemUncheckedUpdateInput>
+    /**
+     * Choose, which MarketplaceItem to update.
+     */
+    where: MarketplaceItemWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceItem updateMany
+   */
+  export type MarketplaceItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketplaceItems.
+     */
+    data: XOR<MarketplaceItemUpdateManyMutationInput, MarketplaceItemUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketplaceItems to update
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * Limit how many MarketplaceItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketplaceItem updateManyAndReturn
+   */
+  export type MarketplaceItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * The data used to update MarketplaceItems.
+     */
+    data: XOR<MarketplaceItemUpdateManyMutationInput, MarketplaceItemUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketplaceItems to update
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * Limit how many MarketplaceItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketplaceItem upsert
+   */
+  export type MarketplaceItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketplaceItem to update in case it exists.
+     */
+    where: MarketplaceItemWhereUniqueInput
+    /**
+     * In case the MarketplaceItem found by the `where` argument doesn't exist, create a new MarketplaceItem with this data.
+     */
+    create: XOR<MarketplaceItemCreateInput, MarketplaceItemUncheckedCreateInput>
+    /**
+     * In case the MarketplaceItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketplaceItemUpdateInput, MarketplaceItemUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketplaceItem delete
+   */
+  export type MarketplaceItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+    /**
+     * Filter which MarketplaceItem to delete.
+     */
+    where: MarketplaceItemWhereUniqueInput
+  }
+
+  /**
+   * MarketplaceItem deleteMany
+   */
+  export type MarketplaceItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketplaceItems to delete
+     */
+    where?: MarketplaceItemWhereInput
+    /**
+     * Limit how many MarketplaceItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketplaceItem.entitlements
+   */
+  export type MarketplaceItem$entitlementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    where?: WorkspaceEntitlementWhereInput
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * MarketplaceItem without action
+   */
+  export type MarketplaceItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceItem
+     */
+    select?: MarketplaceItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceItem
+     */
+    omit?: MarketplaceItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkspaceEntitlement
+   */
+
+  export type AggregateWorkspaceEntitlement = {
+    _count: WorkspaceEntitlementCountAggregateOutputType | null
+    _min: WorkspaceEntitlementMinAggregateOutputType | null
+    _max: WorkspaceEntitlementMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceEntitlementMinAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    redeemedByUserId: string | null
+    redeemedAt: Date | null
+  }
+
+  export type WorkspaceEntitlementMaxAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    redeemedByUserId: string | null
+    redeemedAt: Date | null
+  }
+
+  export type WorkspaceEntitlementCountAggregateOutputType = {
+    id: number
+    itemId: number
+    personalSpaceId: number
+    companyId: number
+    redeemedByUserId: number
+    redeemedAt: number
+    _all: number
+  }
+
+
+  export type WorkspaceEntitlementMinAggregateInputType = {
+    id?: true
+    itemId?: true
+    personalSpaceId?: true
+    companyId?: true
+    redeemedByUserId?: true
+    redeemedAt?: true
+  }
+
+  export type WorkspaceEntitlementMaxAggregateInputType = {
+    id?: true
+    itemId?: true
+    personalSpaceId?: true
+    companyId?: true
+    redeemedByUserId?: true
+    redeemedAt?: true
+  }
+
+  export type WorkspaceEntitlementCountAggregateInputType = {
+    id?: true
+    itemId?: true
+    personalSpaceId?: true
+    companyId?: true
+    redeemedByUserId?: true
+    redeemedAt?: true
+    _all?: true
+  }
+
+  export type WorkspaceEntitlementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceEntitlement to aggregate.
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceEntitlements to fetch.
+     */
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceEntitlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceEntitlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkspaceEntitlements
+    **/
+    _count?: true | WorkspaceEntitlementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkspaceEntitlementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkspaceEntitlementMaxAggregateInputType
+  }
+
+  export type GetWorkspaceEntitlementAggregateType<T extends WorkspaceEntitlementAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkspaceEntitlement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkspaceEntitlement[P]>
+      : GetScalarType<T[P], AggregateWorkspaceEntitlement[P]>
+  }
+
+
+
+
+  export type WorkspaceEntitlementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceEntitlementWhereInput
+    orderBy?: WorkspaceEntitlementOrderByWithAggregationInput | WorkspaceEntitlementOrderByWithAggregationInput[]
+    by: WorkspaceEntitlementScalarFieldEnum[] | WorkspaceEntitlementScalarFieldEnum
+    having?: WorkspaceEntitlementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkspaceEntitlementCountAggregateInputType | true
+    _min?: WorkspaceEntitlementMinAggregateInputType
+    _max?: WorkspaceEntitlementMaxAggregateInputType
+  }
+
+  export type WorkspaceEntitlementGroupByOutputType = {
+    id: string
+    itemId: string
+    personalSpaceId: string | null
+    companyId: string | null
+    redeemedByUserId: string
+    redeemedAt: Date
+    _count: WorkspaceEntitlementCountAggregateOutputType | null
+    _min: WorkspaceEntitlementMinAggregateOutputType | null
+    _max: WorkspaceEntitlementMaxAggregateOutputType | null
+  }
+
+  type GetWorkspaceEntitlementGroupByPayload<T extends WorkspaceEntitlementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkspaceEntitlementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkspaceEntitlementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkspaceEntitlementGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkspaceEntitlementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkspaceEntitlementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    redeemedByUserId?: boolean
+    redeemedAt?: boolean
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceEntitlement"]>
+
+  export type WorkspaceEntitlementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    redeemedByUserId?: boolean
+    redeemedAt?: boolean
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceEntitlement"]>
+
+  export type WorkspaceEntitlementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    redeemedByUserId?: boolean
+    redeemedAt?: boolean
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceEntitlement"]>
+
+  export type WorkspaceEntitlementSelectScalar = {
+    id?: boolean
+    itemId?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    redeemedByUserId?: boolean
+    redeemedAt?: boolean
+  }
+
+  export type WorkspaceEntitlementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "personalSpaceId" | "companyId" | "redeemedByUserId" | "redeemedAt", ExtArgs["result"]["workspaceEntitlement"]>
+  export type WorkspaceEntitlementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }
+  export type WorkspaceEntitlementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }
+  export type WorkspaceEntitlementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | MarketplaceItemDefaultArgs<ExtArgs>
+    personalSpace?: boolean | WorkspaceEntitlement$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceEntitlement$companyArgs<ExtArgs>
+  }
+
+  export type $WorkspaceEntitlementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkspaceEntitlement"
+    objects: {
+      item: Prisma.$MarketplaceItemPayload<ExtArgs>
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      itemId: string
+      personalSpaceId: string | null
+      companyId: string | null
+      redeemedByUserId: string
+      redeemedAt: Date
+    }, ExtArgs["result"]["workspaceEntitlement"]>
+    composites: {}
+  }
+
+  type WorkspaceEntitlementGetPayload<S extends boolean | null | undefined | WorkspaceEntitlementDefaultArgs> = $Result.GetResult<Prisma.$WorkspaceEntitlementPayload, S>
+
+  type WorkspaceEntitlementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WorkspaceEntitlementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WorkspaceEntitlementCountAggregateInputType | true
+    }
+
+  export interface WorkspaceEntitlementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkspaceEntitlement'], meta: { name: 'WorkspaceEntitlement' } }
+    /**
+     * Find zero or one WorkspaceEntitlement that matches the filter.
+     * @param {WorkspaceEntitlementFindUniqueArgs} args - Arguments to find a WorkspaceEntitlement
+     * @example
+     * // Get one WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkspaceEntitlementFindUniqueArgs>(args: SelectSubset<T, WorkspaceEntitlementFindUniqueArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WorkspaceEntitlement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WorkspaceEntitlementFindUniqueOrThrowArgs} args - Arguments to find a WorkspaceEntitlement
+     * @example
+     * // Get one WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkspaceEntitlementFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkspaceEntitlementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceEntitlement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementFindFirstArgs} args - Arguments to find a WorkspaceEntitlement
+     * @example
+     * // Get one WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkspaceEntitlementFindFirstArgs>(args?: SelectSubset<T, WorkspaceEntitlementFindFirstArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceEntitlement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementFindFirstOrThrowArgs} args - Arguments to find a WorkspaceEntitlement
+     * @example
+     * // Get one WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkspaceEntitlementFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkspaceEntitlementFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WorkspaceEntitlements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkspaceEntitlements
+     * const workspaceEntitlements = await prisma.workspaceEntitlement.findMany()
+     * 
+     * // Get first 10 WorkspaceEntitlements
+     * const workspaceEntitlements = await prisma.workspaceEntitlement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workspaceEntitlementWithIdOnly = await prisma.workspaceEntitlement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkspaceEntitlementFindManyArgs>(args?: SelectSubset<T, WorkspaceEntitlementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WorkspaceEntitlement.
+     * @param {WorkspaceEntitlementCreateArgs} args - Arguments to create a WorkspaceEntitlement.
+     * @example
+     * // Create one WorkspaceEntitlement
+     * const WorkspaceEntitlement = await prisma.workspaceEntitlement.create({
+     *   data: {
+     *     // ... data to create a WorkspaceEntitlement
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkspaceEntitlementCreateArgs>(args: SelectSubset<T, WorkspaceEntitlementCreateArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WorkspaceEntitlements.
+     * @param {WorkspaceEntitlementCreateManyArgs} args - Arguments to create many WorkspaceEntitlements.
+     * @example
+     * // Create many WorkspaceEntitlements
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkspaceEntitlementCreateManyArgs>(args?: SelectSubset<T, WorkspaceEntitlementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkspaceEntitlements and returns the data saved in the database.
+     * @param {WorkspaceEntitlementCreateManyAndReturnArgs} args - Arguments to create many WorkspaceEntitlements.
+     * @example
+     * // Create many WorkspaceEntitlements
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkspaceEntitlements and only return the `id`
+     * const workspaceEntitlementWithIdOnly = await prisma.workspaceEntitlement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkspaceEntitlementCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkspaceEntitlementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WorkspaceEntitlement.
+     * @param {WorkspaceEntitlementDeleteArgs} args - Arguments to delete one WorkspaceEntitlement.
+     * @example
+     * // Delete one WorkspaceEntitlement
+     * const WorkspaceEntitlement = await prisma.workspaceEntitlement.delete({
+     *   where: {
+     *     // ... filter to delete one WorkspaceEntitlement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkspaceEntitlementDeleteArgs>(args: SelectSubset<T, WorkspaceEntitlementDeleteArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WorkspaceEntitlement.
+     * @param {WorkspaceEntitlementUpdateArgs} args - Arguments to update one WorkspaceEntitlement.
+     * @example
+     * // Update one WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkspaceEntitlementUpdateArgs>(args: SelectSubset<T, WorkspaceEntitlementUpdateArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WorkspaceEntitlements.
+     * @param {WorkspaceEntitlementDeleteManyArgs} args - Arguments to filter WorkspaceEntitlements to delete.
+     * @example
+     * // Delete a few WorkspaceEntitlements
+     * const { count } = await prisma.workspaceEntitlement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkspaceEntitlementDeleteManyArgs>(args?: SelectSubset<T, WorkspaceEntitlementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceEntitlements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkspaceEntitlements
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkspaceEntitlementUpdateManyArgs>(args: SelectSubset<T, WorkspaceEntitlementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceEntitlements and returns the data updated in the database.
+     * @param {WorkspaceEntitlementUpdateManyAndReturnArgs} args - Arguments to update many WorkspaceEntitlements.
+     * @example
+     * // Update many WorkspaceEntitlements
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WorkspaceEntitlements and only return the `id`
+     * const workspaceEntitlementWithIdOnly = await prisma.workspaceEntitlement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WorkspaceEntitlementUpdateManyAndReturnArgs>(args: SelectSubset<T, WorkspaceEntitlementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WorkspaceEntitlement.
+     * @param {WorkspaceEntitlementUpsertArgs} args - Arguments to update or create a WorkspaceEntitlement.
+     * @example
+     * // Update or create a WorkspaceEntitlement
+     * const workspaceEntitlement = await prisma.workspaceEntitlement.upsert({
+     *   create: {
+     *     // ... data to create a WorkspaceEntitlement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkspaceEntitlement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkspaceEntitlementUpsertArgs>(args: SelectSubset<T, WorkspaceEntitlementUpsertArgs<ExtArgs>>): Prisma__WorkspaceEntitlementClient<$Result.GetResult<Prisma.$WorkspaceEntitlementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WorkspaceEntitlements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementCountArgs} args - Arguments to filter WorkspaceEntitlements to count.
+     * @example
+     * // Count the number of WorkspaceEntitlements
+     * const count = await prisma.workspaceEntitlement.count({
+     *   where: {
+     *     // ... the filter for the WorkspaceEntitlements we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkspaceEntitlementCountArgs>(
+      args?: Subset<T, WorkspaceEntitlementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkspaceEntitlementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkspaceEntitlement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkspaceEntitlementAggregateArgs>(args: Subset<T, WorkspaceEntitlementAggregateArgs>): Prisma.PrismaPromise<GetWorkspaceEntitlementAggregateType<T>>
+
+    /**
+     * Group by WorkspaceEntitlement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceEntitlementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkspaceEntitlementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkspaceEntitlementGroupByArgs['orderBy'] }
+        : { orderBy?: WorkspaceEntitlementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkspaceEntitlementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkspaceEntitlementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkspaceEntitlement model
+   */
+  readonly fields: WorkspaceEntitlementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkspaceEntitlement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkspaceEntitlementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    item<T extends MarketplaceItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceItemDefaultArgs<ExtArgs>>): Prisma__MarketplaceItemClient<$Result.GetResult<Prisma.$MarketplaceItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    personalSpace<T extends WorkspaceEntitlement$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceEntitlement$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends WorkspaceEntitlement$companyArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceEntitlement$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkspaceEntitlement model
+   */
+  interface WorkspaceEntitlementFieldRefs {
+    readonly id: FieldRef<"WorkspaceEntitlement", 'String'>
+    readonly itemId: FieldRef<"WorkspaceEntitlement", 'String'>
+    readonly personalSpaceId: FieldRef<"WorkspaceEntitlement", 'String'>
+    readonly companyId: FieldRef<"WorkspaceEntitlement", 'String'>
+    readonly redeemedByUserId: FieldRef<"WorkspaceEntitlement", 'String'>
+    readonly redeemedAt: FieldRef<"WorkspaceEntitlement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkspaceEntitlement findUnique
+   */
+  export type WorkspaceEntitlementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceEntitlement to fetch.
+     */
+    where: WorkspaceEntitlementWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceEntitlement findUniqueOrThrow
+   */
+  export type WorkspaceEntitlementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceEntitlement to fetch.
+     */
+    where: WorkspaceEntitlementWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceEntitlement findFirst
+   */
+  export type WorkspaceEntitlementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceEntitlement to fetch.
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceEntitlements to fetch.
+     */
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceEntitlements.
+     */
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceEntitlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceEntitlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceEntitlements.
+     */
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceEntitlement findFirstOrThrow
+   */
+  export type WorkspaceEntitlementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceEntitlement to fetch.
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceEntitlements to fetch.
+     */
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceEntitlements.
+     */
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceEntitlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceEntitlements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceEntitlements.
+     */
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceEntitlement findMany
+   */
+  export type WorkspaceEntitlementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceEntitlements to fetch.
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceEntitlements to fetch.
+     */
+    orderBy?: WorkspaceEntitlementOrderByWithRelationInput | WorkspaceEntitlementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkspaceEntitlements.
+     */
+    cursor?: WorkspaceEntitlementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceEntitlements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceEntitlements.
+     */
+    skip?: number
+    distinct?: WorkspaceEntitlementScalarFieldEnum | WorkspaceEntitlementScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceEntitlement create
+   */
+  export type WorkspaceEntitlementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkspaceEntitlement.
+     */
+    data: XOR<WorkspaceEntitlementCreateInput, WorkspaceEntitlementUncheckedCreateInput>
+  }
+
+  /**
+   * WorkspaceEntitlement createMany
+   */
+  export type WorkspaceEntitlementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkspaceEntitlements.
+     */
+    data: WorkspaceEntitlementCreateManyInput | WorkspaceEntitlementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkspaceEntitlement createManyAndReturn
+   */
+  export type WorkspaceEntitlementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * The data used to create many WorkspaceEntitlements.
+     */
+    data: WorkspaceEntitlementCreateManyInput | WorkspaceEntitlementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceEntitlement update
+   */
+  export type WorkspaceEntitlementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkspaceEntitlement.
+     */
+    data: XOR<WorkspaceEntitlementUpdateInput, WorkspaceEntitlementUncheckedUpdateInput>
+    /**
+     * Choose, which WorkspaceEntitlement to update.
+     */
+    where: WorkspaceEntitlementWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceEntitlement updateMany
+   */
+  export type WorkspaceEntitlementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkspaceEntitlements.
+     */
+    data: XOR<WorkspaceEntitlementUpdateManyMutationInput, WorkspaceEntitlementUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceEntitlements to update
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * Limit how many WorkspaceEntitlements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceEntitlement updateManyAndReturn
+   */
+  export type WorkspaceEntitlementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * The data used to update WorkspaceEntitlements.
+     */
+    data: XOR<WorkspaceEntitlementUpdateManyMutationInput, WorkspaceEntitlementUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceEntitlements to update
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * Limit how many WorkspaceEntitlements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceEntitlement upsert
+   */
+  export type WorkspaceEntitlementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkspaceEntitlement to update in case it exists.
+     */
+    where: WorkspaceEntitlementWhereUniqueInput
+    /**
+     * In case the WorkspaceEntitlement found by the `where` argument doesn't exist, create a new WorkspaceEntitlement with this data.
+     */
+    create: XOR<WorkspaceEntitlementCreateInput, WorkspaceEntitlementUncheckedCreateInput>
+    /**
+     * In case the WorkspaceEntitlement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkspaceEntitlementUpdateInput, WorkspaceEntitlementUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkspaceEntitlement delete
+   */
+  export type WorkspaceEntitlementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+    /**
+     * Filter which WorkspaceEntitlement to delete.
+     */
+    where: WorkspaceEntitlementWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceEntitlement deleteMany
+   */
+  export type WorkspaceEntitlementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceEntitlements to delete
+     */
+    where?: WorkspaceEntitlementWhereInput
+    /**
+     * Limit how many WorkspaceEntitlements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceEntitlement.personalSpace
+   */
+  export type WorkspaceEntitlement$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * WorkspaceEntitlement.company
+   */
+  export type WorkspaceEntitlement$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * WorkspaceEntitlement without action
+   */
+  export type WorkspaceEntitlementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceEntitlement
+     */
+    select?: WorkspaceEntitlementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceEntitlement
+     */
+    omit?: WorkspaceEntitlementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceEntitlementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AgentWorkspaceSetting
+   */
+
+  export type AggregateAgentWorkspaceSetting = {
+    _count: AgentWorkspaceSettingCountAggregateOutputType | null
+    _min: AgentWorkspaceSettingMinAggregateOutputType | null
+    _max: AgentWorkspaceSettingMaxAggregateOutputType | null
+  }
+
+  export type AgentWorkspaceSettingMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    agentId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentWorkspaceSettingMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    agentId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AgentWorkspaceSettingCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    companyId: number
+    agentId: number
+    config: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AgentWorkspaceSettingMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    agentId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentWorkspaceSettingMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    agentId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AgentWorkspaceSettingCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    agentId?: true
+    config?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AgentWorkspaceSettingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentWorkspaceSetting to aggregate.
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentWorkspaceSettings to fetch.
+     */
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentWorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentWorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AgentWorkspaceSettings
+    **/
+    _count?: true | AgentWorkspaceSettingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AgentWorkspaceSettingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AgentWorkspaceSettingMaxAggregateInputType
+  }
+
+  export type GetAgentWorkspaceSettingAggregateType<T extends AgentWorkspaceSettingAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentWorkspaceSetting]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAgentWorkspaceSetting[P]>
+      : GetScalarType<T[P], AggregateAgentWorkspaceSetting[P]>
+  }
+
+
+
+
+  export type AgentWorkspaceSettingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentWorkspaceSettingWhereInput
+    orderBy?: AgentWorkspaceSettingOrderByWithAggregationInput | AgentWorkspaceSettingOrderByWithAggregationInput[]
+    by: AgentWorkspaceSettingScalarFieldEnum[] | AgentWorkspaceSettingScalarFieldEnum
+    having?: AgentWorkspaceSettingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AgentWorkspaceSettingCountAggregateInputType | true
+    _min?: AgentWorkspaceSettingMinAggregateInputType
+    _max?: AgentWorkspaceSettingMaxAggregateInputType
+  }
+
+  export type AgentWorkspaceSettingGroupByOutputType = {
+    id: string
+    personalSpaceId: string | null
+    companyId: string | null
+    agentId: string
+    config: JsonValue
+    createdAt: Date
+    updatedAt: Date
+    _count: AgentWorkspaceSettingCountAggregateOutputType | null
+    _min: AgentWorkspaceSettingMinAggregateOutputType | null
+    _max: AgentWorkspaceSettingMaxAggregateOutputType | null
+  }
+
+  type GetAgentWorkspaceSettingGroupByPayload<T extends AgentWorkspaceSettingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AgentWorkspaceSettingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AgentWorkspaceSettingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AgentWorkspaceSettingGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentWorkspaceSettingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AgentWorkspaceSettingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    agentId?: boolean
+    config?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["agentWorkspaceSetting"]>
+
+  export type AgentWorkspaceSettingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    agentId?: boolean
+    config?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["agentWorkspaceSetting"]>
+
+  export type AgentWorkspaceSettingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    agentId?: boolean
+    config?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["agentWorkspaceSetting"]>
+
+  export type AgentWorkspaceSettingSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    agentId?: boolean
+    config?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AgentWorkspaceSettingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "companyId" | "agentId" | "config" | "createdAt" | "updatedAt", ExtArgs["result"]["agentWorkspaceSetting"]>
+  export type AgentWorkspaceSettingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }
+  export type AgentWorkspaceSettingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }
+  export type AgentWorkspaceSettingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>
+    company?: boolean | AgentWorkspaceSetting$companyArgs<ExtArgs>
+  }
+
+  export type $AgentWorkspaceSettingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentWorkspaceSetting"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string | null
+      companyId: string | null
+      agentId: string
+      config: Prisma.JsonValue
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["agentWorkspaceSetting"]>
+    composites: {}
+  }
+
+  type AgentWorkspaceSettingGetPayload<S extends boolean | null | undefined | AgentWorkspaceSettingDefaultArgs> = $Result.GetResult<Prisma.$AgentWorkspaceSettingPayload, S>
+
+  type AgentWorkspaceSettingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentWorkspaceSettingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentWorkspaceSettingCountAggregateInputType | true
+    }
+
+  export interface AgentWorkspaceSettingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentWorkspaceSetting'], meta: { name: 'AgentWorkspaceSetting' } }
+    /**
+     * Find zero or one AgentWorkspaceSetting that matches the filter.
+     * @param {AgentWorkspaceSettingFindUniqueArgs} args - Arguments to find a AgentWorkspaceSetting
+     * @example
+     * // Get one AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AgentWorkspaceSettingFindUniqueArgs>(args: SelectSubset<T, AgentWorkspaceSettingFindUniqueArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AgentWorkspaceSetting that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AgentWorkspaceSettingFindUniqueOrThrowArgs} args - Arguments to find a AgentWorkspaceSetting
+     * @example
+     * // Get one AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AgentWorkspaceSettingFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentWorkspaceSettingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentWorkspaceSetting that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingFindFirstArgs} args - Arguments to find a AgentWorkspaceSetting
+     * @example
+     * // Get one AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AgentWorkspaceSettingFindFirstArgs>(args?: SelectSubset<T, AgentWorkspaceSettingFindFirstArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentWorkspaceSetting that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingFindFirstOrThrowArgs} args - Arguments to find a AgentWorkspaceSetting
+     * @example
+     * // Get one AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AgentWorkspaceSettingFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentWorkspaceSettingFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AgentWorkspaceSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AgentWorkspaceSettings
+     * const agentWorkspaceSettings = await prisma.agentWorkspaceSetting.findMany()
+     * 
+     * // Get first 10 AgentWorkspaceSettings
+     * const agentWorkspaceSettings = await prisma.agentWorkspaceSetting.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const agentWorkspaceSettingWithIdOnly = await prisma.agentWorkspaceSetting.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AgentWorkspaceSettingFindManyArgs>(args?: SelectSubset<T, AgentWorkspaceSettingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AgentWorkspaceSetting.
+     * @param {AgentWorkspaceSettingCreateArgs} args - Arguments to create a AgentWorkspaceSetting.
+     * @example
+     * // Create one AgentWorkspaceSetting
+     * const AgentWorkspaceSetting = await prisma.agentWorkspaceSetting.create({
+     *   data: {
+     *     // ... data to create a AgentWorkspaceSetting
+     *   }
+     * })
+     * 
+     */
+    create<T extends AgentWorkspaceSettingCreateArgs>(args: SelectSubset<T, AgentWorkspaceSettingCreateArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AgentWorkspaceSettings.
+     * @param {AgentWorkspaceSettingCreateManyArgs} args - Arguments to create many AgentWorkspaceSettings.
+     * @example
+     * // Create many AgentWorkspaceSettings
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AgentWorkspaceSettingCreateManyArgs>(args?: SelectSubset<T, AgentWorkspaceSettingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AgentWorkspaceSettings and returns the data saved in the database.
+     * @param {AgentWorkspaceSettingCreateManyAndReturnArgs} args - Arguments to create many AgentWorkspaceSettings.
+     * @example
+     * // Create many AgentWorkspaceSettings
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AgentWorkspaceSettings and only return the `id`
+     * const agentWorkspaceSettingWithIdOnly = await prisma.agentWorkspaceSetting.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AgentWorkspaceSettingCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentWorkspaceSettingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AgentWorkspaceSetting.
+     * @param {AgentWorkspaceSettingDeleteArgs} args - Arguments to delete one AgentWorkspaceSetting.
+     * @example
+     * // Delete one AgentWorkspaceSetting
+     * const AgentWorkspaceSetting = await prisma.agentWorkspaceSetting.delete({
+     *   where: {
+     *     // ... filter to delete one AgentWorkspaceSetting
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AgentWorkspaceSettingDeleteArgs>(args: SelectSubset<T, AgentWorkspaceSettingDeleteArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AgentWorkspaceSetting.
+     * @param {AgentWorkspaceSettingUpdateArgs} args - Arguments to update one AgentWorkspaceSetting.
+     * @example
+     * // Update one AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AgentWorkspaceSettingUpdateArgs>(args: SelectSubset<T, AgentWorkspaceSettingUpdateArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AgentWorkspaceSettings.
+     * @param {AgentWorkspaceSettingDeleteManyArgs} args - Arguments to filter AgentWorkspaceSettings to delete.
+     * @example
+     * // Delete a few AgentWorkspaceSettings
+     * const { count } = await prisma.agentWorkspaceSetting.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AgentWorkspaceSettingDeleteManyArgs>(args?: SelectSubset<T, AgentWorkspaceSettingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentWorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AgentWorkspaceSettings
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AgentWorkspaceSettingUpdateManyArgs>(args: SelectSubset<T, AgentWorkspaceSettingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentWorkspaceSettings and returns the data updated in the database.
+     * @param {AgentWorkspaceSettingUpdateManyAndReturnArgs} args - Arguments to update many AgentWorkspaceSettings.
+     * @example
+     * // Update many AgentWorkspaceSettings
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AgentWorkspaceSettings and only return the `id`
+     * const agentWorkspaceSettingWithIdOnly = await prisma.agentWorkspaceSetting.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AgentWorkspaceSettingUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentWorkspaceSettingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AgentWorkspaceSetting.
+     * @param {AgentWorkspaceSettingUpsertArgs} args - Arguments to update or create a AgentWorkspaceSetting.
+     * @example
+     * // Update or create a AgentWorkspaceSetting
+     * const agentWorkspaceSetting = await prisma.agentWorkspaceSetting.upsert({
+     *   create: {
+     *     // ... data to create a AgentWorkspaceSetting
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AgentWorkspaceSetting we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AgentWorkspaceSettingUpsertArgs>(args: SelectSubset<T, AgentWorkspaceSettingUpsertArgs<ExtArgs>>): Prisma__AgentWorkspaceSettingClient<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AgentWorkspaceSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingCountArgs} args - Arguments to filter AgentWorkspaceSettings to count.
+     * @example
+     * // Count the number of AgentWorkspaceSettings
+     * const count = await prisma.agentWorkspaceSetting.count({
+     *   where: {
+     *     // ... the filter for the AgentWorkspaceSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends AgentWorkspaceSettingCountArgs>(
+      args?: Subset<T, AgentWorkspaceSettingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AgentWorkspaceSettingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AgentWorkspaceSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AgentWorkspaceSettingAggregateArgs>(args: Subset<T, AgentWorkspaceSettingAggregateArgs>): Prisma.PrismaPromise<GetAgentWorkspaceSettingAggregateType<T>>
+
+    /**
+     * Group by AgentWorkspaceSetting.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentWorkspaceSettingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AgentWorkspaceSettingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AgentWorkspaceSettingGroupByArgs['orderBy'] }
+        : { orderBy?: AgentWorkspaceSettingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AgentWorkspaceSettingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentWorkspaceSettingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AgentWorkspaceSetting model
+   */
+  readonly fields: AgentWorkspaceSettingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AgentWorkspaceSetting.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AgentWorkspaceSettingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends AgentWorkspaceSetting$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, AgentWorkspaceSetting$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends AgentWorkspaceSetting$companyArgs<ExtArgs> = {}>(args?: Subset<T, AgentWorkspaceSetting$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AgentWorkspaceSetting model
+   */
+  interface AgentWorkspaceSettingFieldRefs {
+    readonly id: FieldRef<"AgentWorkspaceSetting", 'String'>
+    readonly personalSpaceId: FieldRef<"AgentWorkspaceSetting", 'String'>
+    readonly companyId: FieldRef<"AgentWorkspaceSetting", 'String'>
+    readonly agentId: FieldRef<"AgentWorkspaceSetting", 'String'>
+    readonly config: FieldRef<"AgentWorkspaceSetting", 'Json'>
+    readonly createdAt: FieldRef<"AgentWorkspaceSetting", 'DateTime'>
+    readonly updatedAt: FieldRef<"AgentWorkspaceSetting", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AgentWorkspaceSetting findUnique
+   */
+  export type AgentWorkspaceSettingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentWorkspaceSetting to fetch.
+     */
+    where: AgentWorkspaceSettingWhereUniqueInput
+  }
+
+  /**
+   * AgentWorkspaceSetting findUniqueOrThrow
+   */
+  export type AgentWorkspaceSettingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentWorkspaceSetting to fetch.
+     */
+    where: AgentWorkspaceSettingWhereUniqueInput
+  }
+
+  /**
+   * AgentWorkspaceSetting findFirst
+   */
+  export type AgentWorkspaceSettingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentWorkspaceSetting to fetch.
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentWorkspaceSettings to fetch.
+     */
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentWorkspaceSettings.
+     */
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentWorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentWorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentWorkspaceSettings.
+     */
+    distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
+  }
+
+  /**
+   * AgentWorkspaceSetting findFirstOrThrow
+   */
+  export type AgentWorkspaceSettingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentWorkspaceSetting to fetch.
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentWorkspaceSettings to fetch.
+     */
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentWorkspaceSettings.
+     */
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentWorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentWorkspaceSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentWorkspaceSettings.
+     */
+    distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
+  }
+
+  /**
+   * AgentWorkspaceSetting findMany
+   */
+  export type AgentWorkspaceSettingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentWorkspaceSettings to fetch.
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentWorkspaceSettings to fetch.
+     */
+    orderBy?: AgentWorkspaceSettingOrderByWithRelationInput | AgentWorkspaceSettingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AgentWorkspaceSettings.
+     */
+    cursor?: AgentWorkspaceSettingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentWorkspaceSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentWorkspaceSettings.
+     */
+    skip?: number
+    distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
+  }
+
+  /**
+   * AgentWorkspaceSetting create
+   */
+  export type AgentWorkspaceSettingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AgentWorkspaceSetting.
+     */
+    data: XOR<AgentWorkspaceSettingCreateInput, AgentWorkspaceSettingUncheckedCreateInput>
+  }
+
+  /**
+   * AgentWorkspaceSetting createMany
+   */
+  export type AgentWorkspaceSettingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AgentWorkspaceSettings.
+     */
+    data: AgentWorkspaceSettingCreateManyInput | AgentWorkspaceSettingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AgentWorkspaceSetting createManyAndReturn
+   */
+  export type AgentWorkspaceSettingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * The data used to create many AgentWorkspaceSettings.
+     */
+    data: AgentWorkspaceSettingCreateManyInput | AgentWorkspaceSettingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentWorkspaceSetting update
+   */
+  export type AgentWorkspaceSettingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AgentWorkspaceSetting.
+     */
+    data: XOR<AgentWorkspaceSettingUpdateInput, AgentWorkspaceSettingUncheckedUpdateInput>
+    /**
+     * Choose, which AgentWorkspaceSetting to update.
+     */
+    where: AgentWorkspaceSettingWhereUniqueInput
+  }
+
+  /**
+   * AgentWorkspaceSetting updateMany
+   */
+  export type AgentWorkspaceSettingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AgentWorkspaceSettings.
+     */
+    data: XOR<AgentWorkspaceSettingUpdateManyMutationInput, AgentWorkspaceSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentWorkspaceSettings to update
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * Limit how many AgentWorkspaceSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentWorkspaceSetting updateManyAndReturn
+   */
+  export type AgentWorkspaceSettingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * The data used to update AgentWorkspaceSettings.
+     */
+    data: XOR<AgentWorkspaceSettingUpdateManyMutationInput, AgentWorkspaceSettingUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentWorkspaceSettings to update
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * Limit how many AgentWorkspaceSettings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentWorkspaceSetting upsert
+   */
+  export type AgentWorkspaceSettingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AgentWorkspaceSetting to update in case it exists.
+     */
+    where: AgentWorkspaceSettingWhereUniqueInput
+    /**
+     * In case the AgentWorkspaceSetting found by the `where` argument doesn't exist, create a new AgentWorkspaceSetting with this data.
+     */
+    create: XOR<AgentWorkspaceSettingCreateInput, AgentWorkspaceSettingUncheckedCreateInput>
+    /**
+     * In case the AgentWorkspaceSetting was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AgentWorkspaceSettingUpdateInput, AgentWorkspaceSettingUncheckedUpdateInput>
+  }
+
+  /**
+   * AgentWorkspaceSetting delete
+   */
+  export type AgentWorkspaceSettingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+    /**
+     * Filter which AgentWorkspaceSetting to delete.
+     */
+    where: AgentWorkspaceSettingWhereUniqueInput
+  }
+
+  /**
+   * AgentWorkspaceSetting deleteMany
+   */
+  export type AgentWorkspaceSettingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentWorkspaceSettings to delete
+     */
+    where?: AgentWorkspaceSettingWhereInput
+    /**
+     * Limit how many AgentWorkspaceSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentWorkspaceSetting.personalSpace
+   */
+  export type AgentWorkspaceSetting$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * AgentWorkspaceSetting.company
+   */
+  export type AgentWorkspaceSetting$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * AgentWorkspaceSetting without action
+   */
+  export type AgentWorkspaceSettingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentWorkspaceSetting
+     */
+    select?: AgentWorkspaceSettingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentWorkspaceSetting
+     */
+    omit?: AgentWorkspaceSettingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentWorkspaceSettingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkspaceFolder
+   */
+
+  export type AggregateWorkspaceFolder = {
+    _count: WorkspaceFolderCountAggregateOutputType | null
+    _min: WorkspaceFolderMinAggregateOutputType | null
+    _max: WorkspaceFolderMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceFolderMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    parentId: string | null
+    name: string | null
+    kind: $Enums.WorkspaceFolderKind | null
+    systemKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceFolderMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    parentId: string | null
+    name: string | null
+    kind: $Enums.WorkspaceFolderKind | null
+    systemKey: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceFolderCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    companyId: number
+    parentId: number
+    name: number
+    kind: number
+    systemKey: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WorkspaceFolderMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    parentId?: true
+    name?: true
+    kind?: true
+    systemKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceFolderMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    parentId?: true
+    name?: true
+    kind?: true
+    systemKey?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceFolderCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    parentId?: true
+    name?: true
+    kind?: true
+    systemKey?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WorkspaceFolderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceFolder to aggregate.
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFolders to fetch.
+     */
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkspaceFolderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFolders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFolders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkspaceFolders
+    **/
+    _count?: true | WorkspaceFolderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkspaceFolderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkspaceFolderMaxAggregateInputType
+  }
+
+  export type GetWorkspaceFolderAggregateType<T extends WorkspaceFolderAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkspaceFolder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkspaceFolder[P]>
+      : GetScalarType<T[P], AggregateWorkspaceFolder[P]>
+  }
+
+
+
+
+  export type WorkspaceFolderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFolderWhereInput
+    orderBy?: WorkspaceFolderOrderByWithAggregationInput | WorkspaceFolderOrderByWithAggregationInput[]
+    by: WorkspaceFolderScalarFieldEnum[] | WorkspaceFolderScalarFieldEnum
+    having?: WorkspaceFolderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkspaceFolderCountAggregateInputType | true
+    _min?: WorkspaceFolderMinAggregateInputType
+    _max?: WorkspaceFolderMaxAggregateInputType
+  }
+
+  export type WorkspaceFolderGroupByOutputType = {
+    id: string
+    personalSpaceId: string | null
+    companyId: string | null
+    parentId: string | null
+    name: string
+    kind: $Enums.WorkspaceFolderKind
+    systemKey: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: WorkspaceFolderCountAggregateOutputType | null
+    _min: WorkspaceFolderMinAggregateOutputType | null
+    _max: WorkspaceFolderMaxAggregateOutputType | null
+  }
+
+  type GetWorkspaceFolderGroupByPayload<T extends WorkspaceFolderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkspaceFolderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkspaceFolderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkspaceFolderGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkspaceFolderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkspaceFolderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    parentId?: boolean
+    name?: boolean
+    kind?: boolean
+    systemKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+    children?: boolean | WorkspaceFolder$childrenArgs<ExtArgs>
+    files?: boolean | WorkspaceFolder$filesArgs<ExtArgs>
+    _count?: boolean | WorkspaceFolderCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFolder"]>
+
+  export type WorkspaceFolderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    parentId?: boolean
+    name?: boolean
+    kind?: boolean
+    systemKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFolder"]>
+
+  export type WorkspaceFolderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    parentId?: boolean
+    name?: boolean
+    kind?: boolean
+    systemKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFolder"]>
+
+  export type WorkspaceFolderSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    parentId?: boolean
+    name?: boolean
+    kind?: boolean
+    systemKey?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WorkspaceFolderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "companyId" | "parentId" | "name" | "kind" | "systemKey" | "createdAt" | "updatedAt", ExtArgs["result"]["workspaceFolder"]>
+  export type WorkspaceFolderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+    children?: boolean | WorkspaceFolder$childrenArgs<ExtArgs>
+    files?: boolean | WorkspaceFolder$filesArgs<ExtArgs>
+    _count?: boolean | WorkspaceFolderCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WorkspaceFolderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+  }
+  export type WorkspaceFolderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFolder$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFolder$companyArgs<ExtArgs>
+    parent?: boolean | WorkspaceFolder$parentArgs<ExtArgs>
+  }
+
+  export type $WorkspaceFolderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkspaceFolder"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      parent: Prisma.$WorkspaceFolderPayload<ExtArgs> | null
+      children: Prisma.$WorkspaceFolderPayload<ExtArgs>[]
+      files: Prisma.$WorkspaceFilePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string | null
+      companyId: string | null
+      parentId: string | null
+      name: string
+      kind: $Enums.WorkspaceFolderKind
+      systemKey: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["workspaceFolder"]>
+    composites: {}
+  }
+
+  type WorkspaceFolderGetPayload<S extends boolean | null | undefined | WorkspaceFolderDefaultArgs> = $Result.GetResult<Prisma.$WorkspaceFolderPayload, S>
+
+  type WorkspaceFolderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WorkspaceFolderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WorkspaceFolderCountAggregateInputType | true
+    }
+
+  export interface WorkspaceFolderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkspaceFolder'], meta: { name: 'WorkspaceFolder' } }
+    /**
+     * Find zero or one WorkspaceFolder that matches the filter.
+     * @param {WorkspaceFolderFindUniqueArgs} args - Arguments to find a WorkspaceFolder
+     * @example
+     * // Get one WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkspaceFolderFindUniqueArgs>(args: SelectSubset<T, WorkspaceFolderFindUniqueArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WorkspaceFolder that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WorkspaceFolderFindUniqueOrThrowArgs} args - Arguments to find a WorkspaceFolder
+     * @example
+     * // Get one WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkspaceFolderFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkspaceFolderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceFolder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderFindFirstArgs} args - Arguments to find a WorkspaceFolder
+     * @example
+     * // Get one WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkspaceFolderFindFirstArgs>(args?: SelectSubset<T, WorkspaceFolderFindFirstArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceFolder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderFindFirstOrThrowArgs} args - Arguments to find a WorkspaceFolder
+     * @example
+     * // Get one WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkspaceFolderFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkspaceFolderFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WorkspaceFolders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkspaceFolders
+     * const workspaceFolders = await prisma.workspaceFolder.findMany()
+     * 
+     * // Get first 10 WorkspaceFolders
+     * const workspaceFolders = await prisma.workspaceFolder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workspaceFolderWithIdOnly = await prisma.workspaceFolder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkspaceFolderFindManyArgs>(args?: SelectSubset<T, WorkspaceFolderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WorkspaceFolder.
+     * @param {WorkspaceFolderCreateArgs} args - Arguments to create a WorkspaceFolder.
+     * @example
+     * // Create one WorkspaceFolder
+     * const WorkspaceFolder = await prisma.workspaceFolder.create({
+     *   data: {
+     *     // ... data to create a WorkspaceFolder
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkspaceFolderCreateArgs>(args: SelectSubset<T, WorkspaceFolderCreateArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WorkspaceFolders.
+     * @param {WorkspaceFolderCreateManyArgs} args - Arguments to create many WorkspaceFolders.
+     * @example
+     * // Create many WorkspaceFolders
+     * const workspaceFolder = await prisma.workspaceFolder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkspaceFolderCreateManyArgs>(args?: SelectSubset<T, WorkspaceFolderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkspaceFolders and returns the data saved in the database.
+     * @param {WorkspaceFolderCreateManyAndReturnArgs} args - Arguments to create many WorkspaceFolders.
+     * @example
+     * // Create many WorkspaceFolders
+     * const workspaceFolder = await prisma.workspaceFolder.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkspaceFolders and only return the `id`
+     * const workspaceFolderWithIdOnly = await prisma.workspaceFolder.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkspaceFolderCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkspaceFolderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WorkspaceFolder.
+     * @param {WorkspaceFolderDeleteArgs} args - Arguments to delete one WorkspaceFolder.
+     * @example
+     * // Delete one WorkspaceFolder
+     * const WorkspaceFolder = await prisma.workspaceFolder.delete({
+     *   where: {
+     *     // ... filter to delete one WorkspaceFolder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkspaceFolderDeleteArgs>(args: SelectSubset<T, WorkspaceFolderDeleteArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WorkspaceFolder.
+     * @param {WorkspaceFolderUpdateArgs} args - Arguments to update one WorkspaceFolder.
+     * @example
+     * // Update one WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkspaceFolderUpdateArgs>(args: SelectSubset<T, WorkspaceFolderUpdateArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WorkspaceFolders.
+     * @param {WorkspaceFolderDeleteManyArgs} args - Arguments to filter WorkspaceFolders to delete.
+     * @example
+     * // Delete a few WorkspaceFolders
+     * const { count } = await prisma.workspaceFolder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkspaceFolderDeleteManyArgs>(args?: SelectSubset<T, WorkspaceFolderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceFolders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkspaceFolders
+     * const workspaceFolder = await prisma.workspaceFolder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkspaceFolderUpdateManyArgs>(args: SelectSubset<T, WorkspaceFolderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceFolders and returns the data updated in the database.
+     * @param {WorkspaceFolderUpdateManyAndReturnArgs} args - Arguments to update many WorkspaceFolders.
+     * @example
+     * // Update many WorkspaceFolders
+     * const workspaceFolder = await prisma.workspaceFolder.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WorkspaceFolders and only return the `id`
+     * const workspaceFolderWithIdOnly = await prisma.workspaceFolder.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WorkspaceFolderUpdateManyAndReturnArgs>(args: SelectSubset<T, WorkspaceFolderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WorkspaceFolder.
+     * @param {WorkspaceFolderUpsertArgs} args - Arguments to update or create a WorkspaceFolder.
+     * @example
+     * // Update or create a WorkspaceFolder
+     * const workspaceFolder = await prisma.workspaceFolder.upsert({
+     *   create: {
+     *     // ... data to create a WorkspaceFolder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkspaceFolder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkspaceFolderUpsertArgs>(args: SelectSubset<T, WorkspaceFolderUpsertArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WorkspaceFolders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderCountArgs} args - Arguments to filter WorkspaceFolders to count.
+     * @example
+     * // Count the number of WorkspaceFolders
+     * const count = await prisma.workspaceFolder.count({
+     *   where: {
+     *     // ... the filter for the WorkspaceFolders we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkspaceFolderCountArgs>(
+      args?: Subset<T, WorkspaceFolderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkspaceFolderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkspaceFolder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkspaceFolderAggregateArgs>(args: Subset<T, WorkspaceFolderAggregateArgs>): Prisma.PrismaPromise<GetWorkspaceFolderAggregateType<T>>
+
+    /**
+     * Group by WorkspaceFolder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFolderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkspaceFolderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkspaceFolderGroupByArgs['orderBy'] }
+        : { orderBy?: WorkspaceFolderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkspaceFolderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkspaceFolderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkspaceFolder model
+   */
+  readonly fields: WorkspaceFolderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkspaceFolder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkspaceFolderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends WorkspaceFolder$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolder$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends WorkspaceFolder$companyArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolder$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parent<T extends WorkspaceFolder$parentArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolder$parentArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    children<T extends WorkspaceFolder$childrenArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolder$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    files<T extends WorkspaceFolder$filesArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolder$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkspaceFolder model
+   */
+  interface WorkspaceFolderFieldRefs {
+    readonly id: FieldRef<"WorkspaceFolder", 'String'>
+    readonly personalSpaceId: FieldRef<"WorkspaceFolder", 'String'>
+    readonly companyId: FieldRef<"WorkspaceFolder", 'String'>
+    readonly parentId: FieldRef<"WorkspaceFolder", 'String'>
+    readonly name: FieldRef<"WorkspaceFolder", 'String'>
+    readonly kind: FieldRef<"WorkspaceFolder", 'WorkspaceFolderKind'>
+    readonly systemKey: FieldRef<"WorkspaceFolder", 'String'>
+    readonly createdAt: FieldRef<"WorkspaceFolder", 'DateTime'>
+    readonly updatedAt: FieldRef<"WorkspaceFolder", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkspaceFolder findUnique
+   */
+  export type WorkspaceFolderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFolder to fetch.
+     */
+    where: WorkspaceFolderWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFolder findUniqueOrThrow
+   */
+  export type WorkspaceFolderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFolder to fetch.
+     */
+    where: WorkspaceFolderWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFolder findFirst
+   */
+  export type WorkspaceFolderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFolder to fetch.
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFolders to fetch.
+     */
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceFolders.
+     */
+    cursor?: WorkspaceFolderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFolders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFolders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceFolders.
+     */
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFolder findFirstOrThrow
+   */
+  export type WorkspaceFolderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFolder to fetch.
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFolders to fetch.
+     */
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceFolders.
+     */
+    cursor?: WorkspaceFolderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFolders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFolders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceFolders.
+     */
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFolder findMany
+   */
+  export type WorkspaceFolderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFolders to fetch.
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFolders to fetch.
+     */
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkspaceFolders.
+     */
+    cursor?: WorkspaceFolderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFolders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFolders.
+     */
+    skip?: number
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFolder create
+   */
+  export type WorkspaceFolderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkspaceFolder.
+     */
+    data: XOR<WorkspaceFolderCreateInput, WorkspaceFolderUncheckedCreateInput>
+  }
+
+  /**
+   * WorkspaceFolder createMany
+   */
+  export type WorkspaceFolderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkspaceFolders.
+     */
+    data: WorkspaceFolderCreateManyInput | WorkspaceFolderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkspaceFolder createManyAndReturn
+   */
+  export type WorkspaceFolderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * The data used to create many WorkspaceFolders.
+     */
+    data: WorkspaceFolderCreateManyInput | WorkspaceFolderCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceFolder update
+   */
+  export type WorkspaceFolderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkspaceFolder.
+     */
+    data: XOR<WorkspaceFolderUpdateInput, WorkspaceFolderUncheckedUpdateInput>
+    /**
+     * Choose, which WorkspaceFolder to update.
+     */
+    where: WorkspaceFolderWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFolder updateMany
+   */
+  export type WorkspaceFolderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkspaceFolders.
+     */
+    data: XOR<WorkspaceFolderUpdateManyMutationInput, WorkspaceFolderUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceFolders to update
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * Limit how many WorkspaceFolders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceFolder updateManyAndReturn
+   */
+  export type WorkspaceFolderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * The data used to update WorkspaceFolders.
+     */
+    data: XOR<WorkspaceFolderUpdateManyMutationInput, WorkspaceFolderUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceFolders to update
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * Limit how many WorkspaceFolders to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceFolder upsert
+   */
+  export type WorkspaceFolderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkspaceFolder to update in case it exists.
+     */
+    where: WorkspaceFolderWhereUniqueInput
+    /**
+     * In case the WorkspaceFolder found by the `where` argument doesn't exist, create a new WorkspaceFolder with this data.
+     */
+    create: XOR<WorkspaceFolderCreateInput, WorkspaceFolderUncheckedCreateInput>
+    /**
+     * In case the WorkspaceFolder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkspaceFolderUpdateInput, WorkspaceFolderUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkspaceFolder delete
+   */
+  export type WorkspaceFolderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    /**
+     * Filter which WorkspaceFolder to delete.
+     */
+    where: WorkspaceFolderWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFolder deleteMany
+   */
+  export type WorkspaceFolderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceFolders to delete
+     */
+    where?: WorkspaceFolderWhereInput
+    /**
+     * Limit how many WorkspaceFolders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceFolder.personalSpace
+   */
+  export type WorkspaceFolder$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * WorkspaceFolder.company
+   */
+  export type WorkspaceFolder$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * WorkspaceFolder.parent
+   */
+  export type WorkspaceFolder$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    where?: WorkspaceFolderWhereInput
+  }
+
+  /**
+   * WorkspaceFolder.children
+   */
+  export type WorkspaceFolder$childrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+    where?: WorkspaceFolderWhereInput
+    orderBy?: WorkspaceFolderOrderByWithRelationInput | WorkspaceFolderOrderByWithRelationInput[]
+    cursor?: WorkspaceFolderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFolderScalarFieldEnum | WorkspaceFolderScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFolder.files
+   */
+  export type WorkspaceFolder$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    where?: WorkspaceFileWhereInput
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    cursor?: WorkspaceFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFolder without action
+   */
+  export type WorkspaceFolderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFolder
+     */
+    select?: WorkspaceFolderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFolder
+     */
+    omit?: WorkspaceFolderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFolderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkspaceFile
+   */
+
+  export type AggregateWorkspaceFile = {
+    _count: WorkspaceFileCountAggregateOutputType | null
+    _avg: WorkspaceFileAvgAggregateOutputType | null
+    _sum: WorkspaceFileSumAggregateOutputType | null
+    _min: WorkspaceFileMinAggregateOutputType | null
+    _max: WorkspaceFileMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceFileAvgAggregateOutputType = {
+    sizeBytes: number | null
+  }
+
+  export type WorkspaceFileSumAggregateOutputType = {
+    sizeBytes: number | null
+  }
+
+  export type WorkspaceFileMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    folderId: string | null
+    name: string | null
+    mimeType: string | null
+    storageKey: string | null
+    sizeBytes: number | null
+    status: $Enums.WorkspaceFileStatus | null
+    extractData: boolean | null
+    extractedText: string | null
+    origin: $Enums.WorkspaceFileOrigin | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceFileMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    folderId: string | null
+    name: string | null
+    mimeType: string | null
+    storageKey: string | null
+    sizeBytes: number | null
+    status: $Enums.WorkspaceFileStatus | null
+    extractData: boolean | null
+    extractedText: string | null
+    origin: $Enums.WorkspaceFileOrigin | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceFileCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    companyId: number
+    folderId: number
+    name: number
+    mimeType: number
+    storageKey: number
+    sizeBytes: number
+    status: number
+    extractData: number
+    extractedText: number
+    origin: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WorkspaceFileAvgAggregateInputType = {
+    sizeBytes?: true
+  }
+
+  export type WorkspaceFileSumAggregateInputType = {
+    sizeBytes?: true
+  }
+
+  export type WorkspaceFileMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    folderId?: true
+    name?: true
+    mimeType?: true
+    storageKey?: true
+    sizeBytes?: true
+    status?: true
+    extractData?: true
+    extractedText?: true
+    origin?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceFileMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    folderId?: true
+    name?: true
+    mimeType?: true
+    storageKey?: true
+    sizeBytes?: true
+    status?: true
+    extractData?: true
+    extractedText?: true
+    origin?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceFileCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    folderId?: true
+    name?: true
+    mimeType?: true
+    storageKey?: true
+    sizeBytes?: true
+    status?: true
+    extractData?: true
+    extractedText?: true
+    origin?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WorkspaceFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceFile to aggregate.
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFiles to fetch.
+     */
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkspaceFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkspaceFiles
+    **/
+    _count?: true | WorkspaceFileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WorkspaceFileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WorkspaceFileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkspaceFileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkspaceFileMaxAggregateInputType
+  }
+
+  export type GetWorkspaceFileAggregateType<T extends WorkspaceFileAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkspaceFile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkspaceFile[P]>
+      : GetScalarType<T[P], AggregateWorkspaceFile[P]>
+  }
+
+
+
+
+  export type WorkspaceFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceFileWhereInput
+    orderBy?: WorkspaceFileOrderByWithAggregationInput | WorkspaceFileOrderByWithAggregationInput[]
+    by: WorkspaceFileScalarFieldEnum[] | WorkspaceFileScalarFieldEnum
+    having?: WorkspaceFileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkspaceFileCountAggregateInputType | true
+    _avg?: WorkspaceFileAvgAggregateInputType
+    _sum?: WorkspaceFileSumAggregateInputType
+    _min?: WorkspaceFileMinAggregateInputType
+    _max?: WorkspaceFileMaxAggregateInputType
+  }
+
+  export type WorkspaceFileGroupByOutputType = {
+    id: string
+    personalSpaceId: string | null
+    companyId: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes: number | null
+    status: $Enums.WorkspaceFileStatus
+    extractData: boolean
+    extractedText: string | null
+    origin: $Enums.WorkspaceFileOrigin
+    createdAt: Date
+    updatedAt: Date
+    _count: WorkspaceFileCountAggregateOutputType | null
+    _avg: WorkspaceFileAvgAggregateOutputType | null
+    _sum: WorkspaceFileSumAggregateOutputType | null
+    _min: WorkspaceFileMinAggregateOutputType | null
+    _max: WorkspaceFileMaxAggregateOutputType | null
+  }
+
+  type GetWorkspaceFileGroupByPayload<T extends WorkspaceFileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkspaceFileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkspaceFileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkspaceFileGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkspaceFileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkspaceFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    folderId?: boolean
+    name?: boolean
+    mimeType?: boolean
+    storageKey?: boolean
+    sizeBytes?: boolean
+    status?: boolean
+    extractData?: boolean
+    extractedText?: boolean
+    origin?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFile"]>
+
+  export type WorkspaceFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    folderId?: boolean
+    name?: boolean
+    mimeType?: boolean
+    storageKey?: boolean
+    sizeBytes?: boolean
+    status?: boolean
+    extractData?: boolean
+    extractedText?: boolean
+    origin?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFile"]>
+
+  export type WorkspaceFileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    folderId?: boolean
+    name?: boolean
+    mimeType?: boolean
+    storageKey?: boolean
+    sizeBytes?: boolean
+    status?: boolean
+    extractData?: boolean
+    extractedText?: boolean
+    origin?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceFile"]>
+
+  export type WorkspaceFileSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    folderId?: boolean
+    name?: boolean
+    mimeType?: boolean
+    storageKey?: boolean
+    sizeBytes?: boolean
+    status?: boolean
+    extractData?: boolean
+    extractedText?: boolean
+    origin?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WorkspaceFileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "companyId" | "folderId" | "name" | "mimeType" | "storageKey" | "sizeBytes" | "status" | "extractData" | "extractedText" | "origin" | "createdAt" | "updatedAt", ExtArgs["result"]["workspaceFile"]>
+  export type WorkspaceFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }
+  export type WorkspaceFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }
+  export type WorkspaceFileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | WorkspaceFile$personalSpaceArgs<ExtArgs>
+    company?: boolean | WorkspaceFile$companyArgs<ExtArgs>
+    folder?: boolean | WorkspaceFolderDefaultArgs<ExtArgs>
+  }
+
+  export type $WorkspaceFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkspaceFile"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      folder: Prisma.$WorkspaceFolderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string | null
+      companyId: string | null
+      folderId: string
+      name: string
+      mimeType: string
+      storageKey: string
+      sizeBytes: number | null
+      status: $Enums.WorkspaceFileStatus
+      extractData: boolean
+      extractedText: string | null
+      origin: $Enums.WorkspaceFileOrigin
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["workspaceFile"]>
+    composites: {}
+  }
+
+  type WorkspaceFileGetPayload<S extends boolean | null | undefined | WorkspaceFileDefaultArgs> = $Result.GetResult<Prisma.$WorkspaceFilePayload, S>
+
+  type WorkspaceFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WorkspaceFileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WorkspaceFileCountAggregateInputType | true
+    }
+
+  export interface WorkspaceFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkspaceFile'], meta: { name: 'WorkspaceFile' } }
+    /**
+     * Find zero or one WorkspaceFile that matches the filter.
+     * @param {WorkspaceFileFindUniqueArgs} args - Arguments to find a WorkspaceFile
+     * @example
+     * // Get one WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkspaceFileFindUniqueArgs>(args: SelectSubset<T, WorkspaceFileFindUniqueArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WorkspaceFile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WorkspaceFileFindUniqueOrThrowArgs} args - Arguments to find a WorkspaceFile
+     * @example
+     * // Get one WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkspaceFileFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkspaceFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceFile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileFindFirstArgs} args - Arguments to find a WorkspaceFile
+     * @example
+     * // Get one WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkspaceFileFindFirstArgs>(args?: SelectSubset<T, WorkspaceFileFindFirstArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WorkspaceFile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileFindFirstOrThrowArgs} args - Arguments to find a WorkspaceFile
+     * @example
+     * // Get one WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkspaceFileFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkspaceFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WorkspaceFiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkspaceFiles
+     * const workspaceFiles = await prisma.workspaceFile.findMany()
+     * 
+     * // Get first 10 WorkspaceFiles
+     * const workspaceFiles = await prisma.workspaceFile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workspaceFileWithIdOnly = await prisma.workspaceFile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkspaceFileFindManyArgs>(args?: SelectSubset<T, WorkspaceFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WorkspaceFile.
+     * @param {WorkspaceFileCreateArgs} args - Arguments to create a WorkspaceFile.
+     * @example
+     * // Create one WorkspaceFile
+     * const WorkspaceFile = await prisma.workspaceFile.create({
+     *   data: {
+     *     // ... data to create a WorkspaceFile
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkspaceFileCreateArgs>(args: SelectSubset<T, WorkspaceFileCreateArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WorkspaceFiles.
+     * @param {WorkspaceFileCreateManyArgs} args - Arguments to create many WorkspaceFiles.
+     * @example
+     * // Create many WorkspaceFiles
+     * const workspaceFile = await prisma.workspaceFile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkspaceFileCreateManyArgs>(args?: SelectSubset<T, WorkspaceFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkspaceFiles and returns the data saved in the database.
+     * @param {WorkspaceFileCreateManyAndReturnArgs} args - Arguments to create many WorkspaceFiles.
+     * @example
+     * // Create many WorkspaceFiles
+     * const workspaceFile = await prisma.workspaceFile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkspaceFiles and only return the `id`
+     * const workspaceFileWithIdOnly = await prisma.workspaceFile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkspaceFileCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkspaceFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WorkspaceFile.
+     * @param {WorkspaceFileDeleteArgs} args - Arguments to delete one WorkspaceFile.
+     * @example
+     * // Delete one WorkspaceFile
+     * const WorkspaceFile = await prisma.workspaceFile.delete({
+     *   where: {
+     *     // ... filter to delete one WorkspaceFile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkspaceFileDeleteArgs>(args: SelectSubset<T, WorkspaceFileDeleteArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WorkspaceFile.
+     * @param {WorkspaceFileUpdateArgs} args - Arguments to update one WorkspaceFile.
+     * @example
+     * // Update one WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkspaceFileUpdateArgs>(args: SelectSubset<T, WorkspaceFileUpdateArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WorkspaceFiles.
+     * @param {WorkspaceFileDeleteManyArgs} args - Arguments to filter WorkspaceFiles to delete.
+     * @example
+     * // Delete a few WorkspaceFiles
+     * const { count } = await prisma.workspaceFile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkspaceFileDeleteManyArgs>(args?: SelectSubset<T, WorkspaceFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkspaceFiles
+     * const workspaceFile = await prisma.workspaceFile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkspaceFileUpdateManyArgs>(args: SelectSubset<T, WorkspaceFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceFiles and returns the data updated in the database.
+     * @param {WorkspaceFileUpdateManyAndReturnArgs} args - Arguments to update many WorkspaceFiles.
+     * @example
+     * // Update many WorkspaceFiles
+     * const workspaceFile = await prisma.workspaceFile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WorkspaceFiles and only return the `id`
+     * const workspaceFileWithIdOnly = await prisma.workspaceFile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WorkspaceFileUpdateManyAndReturnArgs>(args: SelectSubset<T, WorkspaceFileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WorkspaceFile.
+     * @param {WorkspaceFileUpsertArgs} args - Arguments to update or create a WorkspaceFile.
+     * @example
+     * // Update or create a WorkspaceFile
+     * const workspaceFile = await prisma.workspaceFile.upsert({
+     *   create: {
+     *     // ... data to create a WorkspaceFile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkspaceFile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkspaceFileUpsertArgs>(args: SelectSubset<T, WorkspaceFileUpsertArgs<ExtArgs>>): Prisma__WorkspaceFileClient<$Result.GetResult<Prisma.$WorkspaceFilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WorkspaceFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileCountArgs} args - Arguments to filter WorkspaceFiles to count.
+     * @example
+     * // Count the number of WorkspaceFiles
+     * const count = await prisma.workspaceFile.count({
+     *   where: {
+     *     // ... the filter for the WorkspaceFiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkspaceFileCountArgs>(
+      args?: Subset<T, WorkspaceFileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkspaceFileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkspaceFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkspaceFileAggregateArgs>(args: Subset<T, WorkspaceFileAggregateArgs>): Prisma.PrismaPromise<GetWorkspaceFileAggregateType<T>>
+
+    /**
+     * Group by WorkspaceFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceFileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkspaceFileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkspaceFileGroupByArgs['orderBy'] }
+        : { orderBy?: WorkspaceFileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkspaceFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkspaceFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkspaceFile model
+   */
+  readonly fields: WorkspaceFileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkspaceFile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkspaceFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends WorkspaceFile$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFile$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends WorkspaceFile$companyArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFile$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    folder<T extends WorkspaceFolderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceFolderDefaultArgs<ExtArgs>>): Prisma__WorkspaceFolderClient<$Result.GetResult<Prisma.$WorkspaceFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkspaceFile model
+   */
+  interface WorkspaceFileFieldRefs {
+    readonly id: FieldRef<"WorkspaceFile", 'String'>
+    readonly personalSpaceId: FieldRef<"WorkspaceFile", 'String'>
+    readonly companyId: FieldRef<"WorkspaceFile", 'String'>
+    readonly folderId: FieldRef<"WorkspaceFile", 'String'>
+    readonly name: FieldRef<"WorkspaceFile", 'String'>
+    readonly mimeType: FieldRef<"WorkspaceFile", 'String'>
+    readonly storageKey: FieldRef<"WorkspaceFile", 'String'>
+    readonly sizeBytes: FieldRef<"WorkspaceFile", 'Int'>
+    readonly status: FieldRef<"WorkspaceFile", 'WorkspaceFileStatus'>
+    readonly extractData: FieldRef<"WorkspaceFile", 'Boolean'>
+    readonly extractedText: FieldRef<"WorkspaceFile", 'String'>
+    readonly origin: FieldRef<"WorkspaceFile", 'WorkspaceFileOrigin'>
+    readonly createdAt: FieldRef<"WorkspaceFile", 'DateTime'>
+    readonly updatedAt: FieldRef<"WorkspaceFile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkspaceFile findUnique
+   */
+  export type WorkspaceFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFile to fetch.
+     */
+    where: WorkspaceFileWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFile findUniqueOrThrow
+   */
+  export type WorkspaceFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFile to fetch.
+     */
+    where: WorkspaceFileWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFile findFirst
+   */
+  export type WorkspaceFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFile to fetch.
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFiles to fetch.
+     */
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceFiles.
+     */
+    cursor?: WorkspaceFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceFiles.
+     */
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFile findFirstOrThrow
+   */
+  export type WorkspaceFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFile to fetch.
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFiles to fetch.
+     */
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceFiles.
+     */
+    cursor?: WorkspaceFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceFiles.
+     */
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFile findMany
+   */
+  export type WorkspaceFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceFiles to fetch.
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceFiles to fetch.
+     */
+    orderBy?: WorkspaceFileOrderByWithRelationInput | WorkspaceFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkspaceFiles.
+     */
+    cursor?: WorkspaceFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceFiles.
+     */
+    skip?: number
+    distinct?: WorkspaceFileScalarFieldEnum | WorkspaceFileScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceFile create
+   */
+  export type WorkspaceFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkspaceFile.
+     */
+    data: XOR<WorkspaceFileCreateInput, WorkspaceFileUncheckedCreateInput>
+  }
+
+  /**
+   * WorkspaceFile createMany
+   */
+  export type WorkspaceFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkspaceFiles.
+     */
+    data: WorkspaceFileCreateManyInput | WorkspaceFileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkspaceFile createManyAndReturn
+   */
+  export type WorkspaceFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * The data used to create many WorkspaceFiles.
+     */
+    data: WorkspaceFileCreateManyInput | WorkspaceFileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceFile update
+   */
+  export type WorkspaceFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkspaceFile.
+     */
+    data: XOR<WorkspaceFileUpdateInput, WorkspaceFileUncheckedUpdateInput>
+    /**
+     * Choose, which WorkspaceFile to update.
+     */
+    where: WorkspaceFileWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFile updateMany
+   */
+  export type WorkspaceFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkspaceFiles.
+     */
+    data: XOR<WorkspaceFileUpdateManyMutationInput, WorkspaceFileUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceFiles to update
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * Limit how many WorkspaceFiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceFile updateManyAndReturn
+   */
+  export type WorkspaceFileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * The data used to update WorkspaceFiles.
+     */
+    data: XOR<WorkspaceFileUpdateManyMutationInput, WorkspaceFileUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceFiles to update
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * Limit how many WorkspaceFiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceFile upsert
+   */
+  export type WorkspaceFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkspaceFile to update in case it exists.
+     */
+    where: WorkspaceFileWhereUniqueInput
+    /**
+     * In case the WorkspaceFile found by the `where` argument doesn't exist, create a new WorkspaceFile with this data.
+     */
+    create: XOR<WorkspaceFileCreateInput, WorkspaceFileUncheckedCreateInput>
+    /**
+     * In case the WorkspaceFile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkspaceFileUpdateInput, WorkspaceFileUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkspaceFile delete
+   */
+  export type WorkspaceFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+    /**
+     * Filter which WorkspaceFile to delete.
+     */
+    where: WorkspaceFileWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceFile deleteMany
+   */
+  export type WorkspaceFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceFiles to delete
+     */
+    where?: WorkspaceFileWhereInput
+    /**
+     * Limit how many WorkspaceFiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WorkspaceFile.personalSpace
+   */
+  export type WorkspaceFile$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * WorkspaceFile.company
+   */
+  export type WorkspaceFile$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * WorkspaceFile without action
+   */
+  export type WorkspaceFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceFile
+     */
+    select?: WorkspaceFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WorkspaceFile
+     */
+    omit?: WorkspaceFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceFileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Project
+   */
+
+  export type AggregateProject = {
+    _count: ProjectCountAggregateOutputType | null
+    _min: ProjectMinAggregateOutputType | null
+    _max: ProjectMaxAggregateOutputType | null
+  }
+
+  export type ProjectMinAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    name: string | null
+    objective: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectMaxAggregateOutputType = {
+    id: string | null
+    personalSpaceId: string | null
+    companyId: string | null
+    name: string | null
+    objective: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectCountAggregateOutputType = {
+    id: number
+    personalSpaceId: number
+    companyId: number
+    name: number
+    objective: number
+    linkedAgentIds: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProjectMinAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    name?: true
+    objective?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectMaxAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    name?: true
+    objective?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectCountAggregateInputType = {
+    id?: true
+    personalSpaceId?: true
+    companyId?: true
+    name?: true
+    objective?: true
+    linkedAgentIds?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProjectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Project to aggregate.
+     */
+    where?: ProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Projects to fetch.
+     */
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Projects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Projects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Projects
+    **/
+    _count?: true | ProjectCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectMaxAggregateInputType
+  }
+
+  export type GetProjectAggregateType<T extends ProjectAggregateArgs> = {
+        [P in keyof T & keyof AggregateProject]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProject[P]>
+      : GetScalarType<T[P], AggregateProject[P]>
+  }
+
+
+
+
+  export type ProjectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithAggregationInput | ProjectOrderByWithAggregationInput[]
+    by: ProjectScalarFieldEnum[] | ProjectScalarFieldEnum
+    having?: ProjectScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectCountAggregateInputType | true
+    _min?: ProjectMinAggregateInputType
+    _max?: ProjectMaxAggregateInputType
+  }
+
+  export type ProjectGroupByOutputType = {
+    id: string
+    personalSpaceId: string | null
+    companyId: string | null
+    name: string
+    objective: string
+    linkedAgentIds: string[]
+    createdAt: Date
+    updatedAt: Date
+    _count: ProjectCountAggregateOutputType | null
+    _min: ProjectMinAggregateOutputType | null
+    _max: ProjectMaxAggregateOutputType | null
+  }
+
+  type GetProjectGroupByPayload<T extends ProjectGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    name?: boolean
+    objective?: boolean
+    linkedAgentIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["project"]>
+
+  export type ProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    name?: boolean
+    objective?: boolean
+    linkedAgentIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["project"]>
+
+  export type ProjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    name?: boolean
+    objective?: boolean
+    linkedAgentIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }, ExtArgs["result"]["project"]>
+
+  export type ProjectSelectScalar = {
+    id?: boolean
+    personalSpaceId?: boolean
+    companyId?: boolean
+    name?: boolean
+    objective?: boolean
+    linkedAgentIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "personalSpaceId" | "companyId" | "name" | "objective" | "linkedAgentIds" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }
+  export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }
+  export type ProjectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personalSpace?: boolean | Project$personalSpaceArgs<ExtArgs>
+    company?: boolean | Project$companyArgs<ExtArgs>
+  }
+
+  export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Project"
+    objects: {
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personalSpaceId: string | null
+      companyId: string | null
+      name: string
+      objective: string
+      linkedAgentIds: string[]
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["project"]>
+    composites: {}
+  }
+
+  type ProjectGetPayload<S extends boolean | null | undefined | ProjectDefaultArgs> = $Result.GetResult<Prisma.$ProjectPayload, S>
+
+  type ProjectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProjectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProjectCountAggregateInputType | true
+    }
+
+  export interface ProjectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Project'], meta: { name: 'Project' } }
+    /**
+     * Find zero or one Project that matches the filter.
+     * @param {ProjectFindUniqueArgs} args - Arguments to find a Project
+     * @example
+     * // Get one Project
+     * const project = await prisma.project.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectFindUniqueArgs>(args: SelectSubset<T, ProjectFindUniqueArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Project that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProjectFindUniqueOrThrowArgs} args - Arguments to find a Project
+     * @example
+     * // Get one Project
+     * const project = await prisma.project.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Project that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFindFirstArgs} args - Arguments to find a Project
+     * @example
+     * // Get one Project
+     * const project = await prisma.project.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectFindFirstArgs>(args?: SelectSubset<T, ProjectFindFirstArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Project that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFindFirstOrThrowArgs} args - Arguments to find a Project
+     * @example
+     * // Get one Project
+     * const project = await prisma.project.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Projects that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Projects
+     * const projects = await prisma.project.findMany()
+     * 
+     * // Get first 10 Projects
+     * const projects = await prisma.project.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectWithIdOnly = await prisma.project.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectFindManyArgs>(args?: SelectSubset<T, ProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Project.
+     * @param {ProjectCreateArgs} args - Arguments to create a Project.
+     * @example
+     * // Create one Project
+     * const Project = await prisma.project.create({
+     *   data: {
+     *     // ... data to create a Project
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectCreateArgs>(args: SelectSubset<T, ProjectCreateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Projects.
+     * @param {ProjectCreateManyArgs} args - Arguments to create many Projects.
+     * @example
+     * // Create many Projects
+     * const project = await prisma.project.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectCreateManyArgs>(args?: SelectSubset<T, ProjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Projects and returns the data saved in the database.
+     * @param {ProjectCreateManyAndReturnArgs} args - Arguments to create many Projects.
+     * @example
+     * // Create many Projects
+     * const project = await prisma.project.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Projects and only return the `id`
+     * const projectWithIdOnly = await prisma.project.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Project.
+     * @param {ProjectDeleteArgs} args - Arguments to delete one Project.
+     * @example
+     * // Delete one Project
+     * const Project = await prisma.project.delete({
+     *   where: {
+     *     // ... filter to delete one Project
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectDeleteArgs>(args: SelectSubset<T, ProjectDeleteArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Project.
+     * @param {ProjectUpdateArgs} args - Arguments to update one Project.
+     * @example
+     * // Update one Project
+     * const project = await prisma.project.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectUpdateArgs>(args: SelectSubset<T, ProjectUpdateArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Projects.
+     * @param {ProjectDeleteManyArgs} args - Arguments to filter Projects to delete.
+     * @example
+     * // Delete a few Projects
+     * const { count } = await prisma.project.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectDeleteManyArgs>(args?: SelectSubset<T, ProjectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Projects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Projects
+     * const project = await prisma.project.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectUpdateManyArgs>(args: SelectSubset<T, ProjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Projects and returns the data updated in the database.
+     * @param {ProjectUpdateManyAndReturnArgs} args - Arguments to update many Projects.
+     * @example
+     * // Update many Projects
+     * const project = await prisma.project.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Projects and only return the `id`
+     * const projectWithIdOnly = await prisma.project.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProjectUpdateManyAndReturnArgs>(args: SelectSubset<T, ProjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Project.
+     * @param {ProjectUpsertArgs} args - Arguments to update or create a Project.
+     * @example
+     * // Update or create a Project
+     * const project = await prisma.project.upsert({
+     *   create: {
+     *     // ... data to create a Project
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Project we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectUpsertArgs>(args: SelectSubset<T, ProjectUpsertArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Projects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectCountArgs} args - Arguments to filter Projects to count.
+     * @example
+     * // Count the number of Projects
+     * const count = await prisma.project.count({
+     *   where: {
+     *     // ... the filter for the Projects we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectCountArgs>(
+      args?: Subset<T, ProjectCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Project.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectAggregateArgs>(args: Subset<T, ProjectAggregateArgs>): Prisma.PrismaPromise<GetProjectAggregateType<T>>
+
+    /**
+     * Group by Project.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Project model
+   */
+  readonly fields: ProjectFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Project.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personalSpace<T extends Project$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, Project$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    company<T extends Project$companyArgs<ExtArgs> = {}>(args?: Subset<T, Project$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Project model
+   */
+  interface ProjectFieldRefs {
+    readonly id: FieldRef<"Project", 'String'>
+    readonly personalSpaceId: FieldRef<"Project", 'String'>
+    readonly companyId: FieldRef<"Project", 'String'>
+    readonly name: FieldRef<"Project", 'String'>
+    readonly objective: FieldRef<"Project", 'String'>
+    readonly linkedAgentIds: FieldRef<"Project", 'String[]'>
+    readonly createdAt: FieldRef<"Project", 'DateTime'>
+    readonly updatedAt: FieldRef<"Project", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Project findUnique
+   */
+  export type ProjectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which Project to fetch.
+     */
+    where: ProjectWhereUniqueInput
+  }
+
+  /**
+   * Project findUniqueOrThrow
+   */
+  export type ProjectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which Project to fetch.
+     */
+    where: ProjectWhereUniqueInput
+  }
+
+  /**
+   * Project findFirst
+   */
+  export type ProjectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which Project to fetch.
+     */
+    where?: ProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Projects to fetch.
+     */
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Projects.
+     */
+    cursor?: ProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Projects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Projects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Projects.
+     */
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Project findFirstOrThrow
+   */
+  export type ProjectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which Project to fetch.
+     */
+    where?: ProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Projects to fetch.
+     */
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Projects.
+     */
+    cursor?: ProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Projects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Projects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Projects.
+     */
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Project findMany
+   */
+  export type ProjectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which Projects to fetch.
+     */
+    where?: ProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Projects to fetch.
+     */
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Projects.
+     */
+    cursor?: ProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Projects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Projects.
+     */
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Project create
+   */
+  export type ProjectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Project.
+     */
+    data: XOR<ProjectCreateInput, ProjectUncheckedCreateInput>
+  }
+
+  /**
+   * Project createMany
+   */
+  export type ProjectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Projects.
+     */
+    data: ProjectCreateManyInput | ProjectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Project createManyAndReturn
+   */
+  export type ProjectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * The data used to create many Projects.
+     */
+    data: ProjectCreateManyInput | ProjectCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Project update
+   */
+  export type ProjectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Project.
+     */
+    data: XOR<ProjectUpdateInput, ProjectUncheckedUpdateInput>
+    /**
+     * Choose, which Project to update.
+     */
+    where: ProjectWhereUniqueInput
+  }
+
+  /**
+   * Project updateMany
+   */
+  export type ProjectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Projects.
+     */
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which Projects to update
+     */
+    where?: ProjectWhereInput
+    /**
+     * Limit how many Projects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Project updateManyAndReturn
+   */
+  export type ProjectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * The data used to update Projects.
+     */
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which Projects to update
+     */
+    where?: ProjectWhereInput
+    /**
+     * Limit how many Projects to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Project upsert
+   */
+  export type ProjectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Project to update in case it exists.
+     */
+    where: ProjectWhereUniqueInput
+    /**
+     * In case the Project found by the `where` argument doesn't exist, create a new Project with this data.
+     */
+    create: XOR<ProjectCreateInput, ProjectUncheckedCreateInput>
+    /**
+     * In case the Project was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectUpdateInput, ProjectUncheckedUpdateInput>
+  }
+
+  /**
+   * Project delete
+   */
+  export type ProjectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    /**
+     * Filter which Project to delete.
+     */
+    where: ProjectWhereUniqueInput
+  }
+
+  /**
+   * Project deleteMany
+   */
+  export type ProjectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Projects to delete
+     */
+    where?: ProjectWhereInput
+    /**
+     * Limit how many Projects to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Project.personalSpace
+   */
+  export type Project$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
+  }
+
+  /**
+   * Project.company
+   */
+  export type Project$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * Project without action
+   */
+  export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Project
+     */
+    omit?: ProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -45858,6 +59064,155 @@ export namespace Prisma {
   export type RagPlatformSettingsScalarFieldEnum = (typeof RagPlatformSettingsScalarFieldEnum)[keyof typeof RagPlatformSettingsScalarFieldEnum]
 
 
+  export const PersonalSpaceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PersonalSpaceScalarFieldEnum = (typeof PersonalSpaceScalarFieldEnum)[keyof typeof PersonalSpaceScalarFieldEnum]
+
+
+  export const PersonalCreditBalanceScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    amount: 'amount',
+    currency: 'currency',
+    updatedAt: 'updatedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type PersonalCreditBalanceScalarFieldEnum = (typeof PersonalCreditBalanceScalarFieldEnum)[keyof typeof PersonalCreditBalanceScalarFieldEnum]
+
+
+  export const CompanyMemberScalarFieldEnum: {
+    id: 'id',
+    companyId: 'companyId',
+    userId: 'userId',
+    roleId: 'roleId',
+    joinedAt: 'joinedAt'
+  };
+
+  export type CompanyMemberScalarFieldEnum = (typeof CompanyMemberScalarFieldEnum)[keyof typeof CompanyMemberScalarFieldEnum]
+
+
+  export const WorkspaceSettingsScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    displayName: 'displayName',
+    niche: 'niche',
+    audience: 'audience',
+    voice: 'voice',
+    positioning: 'positioning',
+    contentPreferences: 'contentPreferences',
+    logoStorageKey: 'logoStorageKey',
+    palette: 'palette',
+    timezone: 'timezone',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WorkspaceSettingsScalarFieldEnum = (typeof WorkspaceSettingsScalarFieldEnum)[keyof typeof WorkspaceSettingsScalarFieldEnum]
+
+
+  export const MarketplaceItemScalarFieldEnum: {
+    id: 'id',
+    slug: 'slug',
+    type: 'type',
+    name: 'name',
+    author: 'author',
+    price: 'price',
+    flag: 'flag',
+    description: 'description',
+    palette: 'palette',
+    specs: 'specs',
+    includes: 'includes',
+    refId: 'refId',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MarketplaceItemScalarFieldEnum = (typeof MarketplaceItemScalarFieldEnum)[keyof typeof MarketplaceItemScalarFieldEnum]
+
+
+  export const WorkspaceEntitlementScalarFieldEnum: {
+    id: 'id',
+    itemId: 'itemId',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    redeemedByUserId: 'redeemedByUserId',
+    redeemedAt: 'redeemedAt'
+  };
+
+  export type WorkspaceEntitlementScalarFieldEnum = (typeof WorkspaceEntitlementScalarFieldEnum)[keyof typeof WorkspaceEntitlementScalarFieldEnum]
+
+
+  export const AgentWorkspaceSettingScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    agentId: 'agentId',
+    config: 'config',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AgentWorkspaceSettingScalarFieldEnum = (typeof AgentWorkspaceSettingScalarFieldEnum)[keyof typeof AgentWorkspaceSettingScalarFieldEnum]
+
+
+  export const WorkspaceFolderScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    parentId: 'parentId',
+    name: 'name',
+    kind: 'kind',
+    systemKey: 'systemKey',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WorkspaceFolderScalarFieldEnum = (typeof WorkspaceFolderScalarFieldEnum)[keyof typeof WorkspaceFolderScalarFieldEnum]
+
+
+  export const WorkspaceFileScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    folderId: 'folderId',
+    name: 'name',
+    mimeType: 'mimeType',
+    storageKey: 'storageKey',
+    sizeBytes: 'sizeBytes',
+    status: 'status',
+    extractData: 'extractData',
+    extractedText: 'extractedText',
+    origin: 'origin',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WorkspaceFileScalarFieldEnum = (typeof WorkspaceFileScalarFieldEnum)[keyof typeof WorkspaceFileScalarFieldEnum]
+
+
+  export const ProjectScalarFieldEnum: {
+    id: 'id',
+    personalSpaceId: 'personalSpaceId',
+    companyId: 'companyId',
+    name: 'name',
+    objective: 'objective',
+    linkedAgentIds: 'linkedAgentIds',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -46224,6 +59579,62 @@ export namespace Prisma {
    */
   export type ListEnumRagIndexJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RagIndexJobStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'MarketplaceItemType'
+   */
+  export type EnumMarketplaceItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MarketplaceItemType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MarketplaceItemType[]'
+   */
+  export type ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MarketplaceItemType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFolderKind'
+   */
+  export type EnumWorkspaceFolderKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFolderKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFolderKind[]'
+   */
+  export type ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFolderKind[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFileStatus'
+   */
+  export type EnumWorkspaceFileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFileStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFileStatus[]'
+   */
+  export type ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFileStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFileOrigin'
+   */
+  export type EnumWorkspaceFileOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFileOrigin'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceFileOrigin[]'
+   */
+  export type ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceFileOrigin[]'>
+    
   /**
    * Deep Input Types
    */
@@ -46245,6 +59656,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     roleAssignments?: UserRoleAssignmentListRelationFilter
     ownedCompanies?: CompanyListRelationFilter
+    companyMembers?: CompanyMemberListRelationFilter
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
     agentFeedbacks?: AgentFeedbackListRelationFilter
   }
 
@@ -46261,6 +59674,8 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     roleAssignments?: UserRoleAssignmentOrderByRelationAggregateInput
     ownedCompanies?: CompanyOrderByRelationAggregateInput
+    companyMembers?: CompanyMemberOrderByRelationAggregateInput
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
     agentFeedbacks?: AgentFeedbackOrderByRelationAggregateInput
   }
 
@@ -46280,6 +59695,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     roleAssignments?: UserRoleAssignmentListRelationFilter
     ownedCompanies?: CompanyListRelationFilter
+    companyMembers?: CompanyMemberListRelationFilter
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
     agentFeedbacks?: AgentFeedbackListRelationFilter
   }, "id" | "email">
 
@@ -46545,6 +59962,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Role"> | Date | string
     permissions?: RolePermissionListRelationFilter
     memberAssignments?: UserRoleAssignmentListRelationFilter
+    companyMembers?: CompanyMemberListRelationFilter
   }
 
   export type RoleOrderByWithRelationInput = {
@@ -46555,6 +59973,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     permissions?: RolePermissionOrderByRelationAggregateInput
     memberAssignments?: UserRoleAssignmentOrderByRelationAggregateInput
+    companyMembers?: CompanyMemberOrderByRelationAggregateInput
   }
 
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
@@ -46568,6 +59987,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Role"> | Date | string
     permissions?: RolePermissionListRelationFilter
     memberAssignments?: UserRoleAssignmentListRelationFilter
+    companyMembers?: CompanyMemberListRelationFilter
   }, "id" | "name">
 
   export type RoleOrderByWithAggregationInput = {
@@ -46893,6 +60313,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerListRelationFilter
     ragDocuments?: RagDocumentListRelationFilter
     ragIndexJobs?: RagIndexJobListRelationFilter
+    members?: CompanyMemberListRelationFilter
+    workspaceSettings?: XOR<WorkspaceSettingsNullableScalarRelationFilter, WorkspaceSettingsWhereInput> | null
+    workspaceFolders?: WorkspaceFolderListRelationFilter
+    workspaceFiles?: WorkspaceFileListRelationFilter
+    entitlements?: WorkspaceEntitlementListRelationFilter
+    projects?: ProjectListRelationFilter
+    agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -46916,6 +60343,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerOrderByRelationAggregateInput
     ragDocuments?: RagDocumentOrderByRelationAggregateInput
     ragIndexJobs?: RagIndexJobOrderByRelationAggregateInput
+    members?: CompanyMemberOrderByRelationAggregateInput
+    workspaceSettings?: WorkspaceSettingsOrderByWithRelationInput
+    workspaceFolders?: WorkspaceFolderOrderByRelationAggregateInput
+    workspaceFiles?: WorkspaceFileOrderByRelationAggregateInput
+    entitlements?: WorkspaceEntitlementOrderByRelationAggregateInput
+    projects?: ProjectOrderByRelationAggregateInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -46942,6 +60376,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerListRelationFilter
     ragDocuments?: RagDocumentListRelationFilter
     ragIndexJobs?: RagIndexJobListRelationFilter
+    members?: CompanyMemberListRelationFilter
+    workspaceSettings?: XOR<WorkspaceSettingsNullableScalarRelationFilter, WorkspaceSettingsWhereInput> | null
+    workspaceFolders?: WorkspaceFolderListRelationFilter
+    workspaceFiles?: WorkspaceFileListRelationFilter
+    entitlements?: WorkspaceEntitlementListRelationFilter
+    projects?: ProjectListRelationFilter
+    agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
   }, "id" | "slug">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -49075,6 +62516,822 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"RagPlatformSettings"> | Date | string
   }
 
+  export type PersonalSpaceWhereInput = {
+    AND?: PersonalSpaceWhereInput | PersonalSpaceWhereInput[]
+    OR?: PersonalSpaceWhereInput[]
+    NOT?: PersonalSpaceWhereInput | PersonalSpaceWhereInput[]
+    id?: StringFilter<"PersonalSpace"> | string
+    userId?: StringFilter<"PersonalSpace"> | string
+    name?: StringFilter<"PersonalSpace"> | string
+    createdAt?: DateTimeFilter<"PersonalSpace"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonalSpace"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    settings?: XOR<WorkspaceSettingsNullableScalarRelationFilter, WorkspaceSettingsWhereInput> | null
+    folders?: WorkspaceFolderListRelationFilter
+    files?: WorkspaceFileListRelationFilter
+    entitlements?: WorkspaceEntitlementListRelationFilter
+    projects?: ProjectListRelationFilter
+    creditBalance?: XOR<PersonalCreditBalanceNullableScalarRelationFilter, PersonalCreditBalanceWhereInput> | null
+    agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
+  }
+
+  export type PersonalSpaceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    settings?: WorkspaceSettingsOrderByWithRelationInput
+    folders?: WorkspaceFolderOrderByRelationAggregateInput
+    files?: WorkspaceFileOrderByRelationAggregateInput
+    entitlements?: WorkspaceEntitlementOrderByRelationAggregateInput
+    projects?: ProjectOrderByRelationAggregateInput
+    creditBalance?: PersonalCreditBalanceOrderByWithRelationInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingOrderByRelationAggregateInput
+  }
+
+  export type PersonalSpaceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: PersonalSpaceWhereInput | PersonalSpaceWhereInput[]
+    OR?: PersonalSpaceWhereInput[]
+    NOT?: PersonalSpaceWhereInput | PersonalSpaceWhereInput[]
+    name?: StringFilter<"PersonalSpace"> | string
+    createdAt?: DateTimeFilter<"PersonalSpace"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonalSpace"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    settings?: XOR<WorkspaceSettingsNullableScalarRelationFilter, WorkspaceSettingsWhereInput> | null
+    folders?: WorkspaceFolderListRelationFilter
+    files?: WorkspaceFileListRelationFilter
+    entitlements?: WorkspaceEntitlementListRelationFilter
+    projects?: ProjectListRelationFilter
+    creditBalance?: XOR<PersonalCreditBalanceNullableScalarRelationFilter, PersonalCreditBalanceWhereInput> | null
+    agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
+  }, "id" | "userId">
+
+  export type PersonalSpaceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PersonalSpaceCountOrderByAggregateInput
+    _max?: PersonalSpaceMaxOrderByAggregateInput
+    _min?: PersonalSpaceMinOrderByAggregateInput
+  }
+
+  export type PersonalSpaceScalarWhereWithAggregatesInput = {
+    AND?: PersonalSpaceScalarWhereWithAggregatesInput | PersonalSpaceScalarWhereWithAggregatesInput[]
+    OR?: PersonalSpaceScalarWhereWithAggregatesInput[]
+    NOT?: PersonalSpaceScalarWhereWithAggregatesInput | PersonalSpaceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PersonalSpace"> | string
+    userId?: StringWithAggregatesFilter<"PersonalSpace"> | string
+    name?: StringWithAggregatesFilter<"PersonalSpace"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PersonalSpace"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PersonalSpace"> | Date | string
+  }
+
+  export type PersonalCreditBalanceWhereInput = {
+    AND?: PersonalCreditBalanceWhereInput | PersonalCreditBalanceWhereInput[]
+    OR?: PersonalCreditBalanceWhereInput[]
+    NOT?: PersonalCreditBalanceWhereInput | PersonalCreditBalanceWhereInput[]
+    id?: StringFilter<"PersonalCreditBalance"> | string
+    personalSpaceId?: StringFilter<"PersonalCreditBalance"> | string
+    amount?: DecimalFilter<"PersonalCreditBalance"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"PersonalCreditBalance"> | string
+    updatedAt?: DateTimeFilter<"PersonalCreditBalance"> | Date | string
+    createdAt?: DateTimeFilter<"PersonalCreditBalance"> | Date | string
+    personalSpace?: XOR<PersonalSpaceScalarRelationFilter, PersonalSpaceWhereInput>
+  }
+
+  export type PersonalCreditBalanceOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+  }
+
+  export type PersonalCreditBalanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    personalSpaceId?: string
+    AND?: PersonalCreditBalanceWhereInput | PersonalCreditBalanceWhereInput[]
+    OR?: PersonalCreditBalanceWhereInput[]
+    NOT?: PersonalCreditBalanceWhereInput | PersonalCreditBalanceWhereInput[]
+    amount?: DecimalFilter<"PersonalCreditBalance"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"PersonalCreditBalance"> | string
+    updatedAt?: DateTimeFilter<"PersonalCreditBalance"> | Date | string
+    createdAt?: DateTimeFilter<"PersonalCreditBalance"> | Date | string
+    personalSpace?: XOR<PersonalSpaceScalarRelationFilter, PersonalSpaceWhereInput>
+  }, "id" | "personalSpaceId">
+
+  export type PersonalCreditBalanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: PersonalCreditBalanceCountOrderByAggregateInput
+    _avg?: PersonalCreditBalanceAvgOrderByAggregateInput
+    _max?: PersonalCreditBalanceMaxOrderByAggregateInput
+    _min?: PersonalCreditBalanceMinOrderByAggregateInput
+    _sum?: PersonalCreditBalanceSumOrderByAggregateInput
+  }
+
+  export type PersonalCreditBalanceScalarWhereWithAggregatesInput = {
+    AND?: PersonalCreditBalanceScalarWhereWithAggregatesInput | PersonalCreditBalanceScalarWhereWithAggregatesInput[]
+    OR?: PersonalCreditBalanceScalarWhereWithAggregatesInput[]
+    NOT?: PersonalCreditBalanceScalarWhereWithAggregatesInput | PersonalCreditBalanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PersonalCreditBalance"> | string
+    personalSpaceId?: StringWithAggregatesFilter<"PersonalCreditBalance"> | string
+    amount?: DecimalWithAggregatesFilter<"PersonalCreditBalance"> | Decimal | DecimalJsLike | number | string
+    currency?: StringWithAggregatesFilter<"PersonalCreditBalance"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PersonalCreditBalance"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"PersonalCreditBalance"> | Date | string
+  }
+
+  export type CompanyMemberWhereInput = {
+    AND?: CompanyMemberWhereInput | CompanyMemberWhereInput[]
+    OR?: CompanyMemberWhereInput[]
+    NOT?: CompanyMemberWhereInput | CompanyMemberWhereInput[]
+    id?: StringFilter<"CompanyMember"> | string
+    companyId?: StringFilter<"CompanyMember"> | string
+    userId?: StringFilter<"CompanyMember"> | string
+    roleId?: StringFilter<"CompanyMember"> | string
+    joinedAt?: DateTimeFilter<"CompanyMember"> | Date | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+  }
+
+  export type CompanyMemberOrderByWithRelationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
+    roleId?: SortOrder
+    joinedAt?: SortOrder
+    company?: CompanyOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    role?: RoleOrderByWithRelationInput
+  }
+
+  export type CompanyMemberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    companyId_userId?: CompanyMemberCompanyIdUserIdCompoundUniqueInput
+    AND?: CompanyMemberWhereInput | CompanyMemberWhereInput[]
+    OR?: CompanyMemberWhereInput[]
+    NOT?: CompanyMemberWhereInput | CompanyMemberWhereInput[]
+    companyId?: StringFilter<"CompanyMember"> | string
+    userId?: StringFilter<"CompanyMember"> | string
+    roleId?: StringFilter<"CompanyMember"> | string
+    joinedAt?: DateTimeFilter<"CompanyMember"> | Date | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+  }, "id" | "companyId_userId">
+
+  export type CompanyMemberOrderByWithAggregationInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
+    roleId?: SortOrder
+    joinedAt?: SortOrder
+    _count?: CompanyMemberCountOrderByAggregateInput
+    _max?: CompanyMemberMaxOrderByAggregateInput
+    _min?: CompanyMemberMinOrderByAggregateInput
+  }
+
+  export type CompanyMemberScalarWhereWithAggregatesInput = {
+    AND?: CompanyMemberScalarWhereWithAggregatesInput | CompanyMemberScalarWhereWithAggregatesInput[]
+    OR?: CompanyMemberScalarWhereWithAggregatesInput[]
+    NOT?: CompanyMemberScalarWhereWithAggregatesInput | CompanyMemberScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CompanyMember"> | string
+    companyId?: StringWithAggregatesFilter<"CompanyMember"> | string
+    userId?: StringWithAggregatesFilter<"CompanyMember"> | string
+    roleId?: StringWithAggregatesFilter<"CompanyMember"> | string
+    joinedAt?: DateTimeWithAggregatesFilter<"CompanyMember"> | Date | string
+  }
+
+  export type WorkspaceSettingsWhereInput = {
+    AND?: WorkspaceSettingsWhereInput | WorkspaceSettingsWhereInput[]
+    OR?: WorkspaceSettingsWhereInput[]
+    NOT?: WorkspaceSettingsWhereInput | WorkspaceSettingsWhereInput[]
+    id?: StringFilter<"WorkspaceSettings"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    displayName?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    niche?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    audience?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    voice?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    positioning?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    contentPreferences?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    logoStorageKey?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    palette?: JsonFilter<"WorkspaceSettings">
+    timezone?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    createdAt?: DateTimeFilter<"WorkspaceSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceSettings"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }
+
+  export type WorkspaceSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    displayName?: SortOrderInput | SortOrder
+    niche?: SortOrderInput | SortOrder
+    audience?: SortOrderInput | SortOrder
+    voice?: SortOrderInput | SortOrder
+    positioning?: SortOrderInput | SortOrder
+    contentPreferences?: SortOrderInput | SortOrder
+    logoStorageKey?: SortOrderInput | SortOrder
+    palette?: SortOrder
+    timezone?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type WorkspaceSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    personalSpaceId?: string
+    companyId?: string
+    AND?: WorkspaceSettingsWhereInput | WorkspaceSettingsWhereInput[]
+    OR?: WorkspaceSettingsWhereInput[]
+    NOT?: WorkspaceSettingsWhereInput | WorkspaceSettingsWhereInput[]
+    displayName?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    niche?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    audience?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    voice?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    positioning?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    contentPreferences?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    logoStorageKey?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    palette?: JsonFilter<"WorkspaceSettings">
+    timezone?: StringNullableFilter<"WorkspaceSettings"> | string | null
+    createdAt?: DateTimeFilter<"WorkspaceSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceSettings"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }, "id" | "personalSpaceId" | "companyId">
+
+  export type WorkspaceSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    displayName?: SortOrderInput | SortOrder
+    niche?: SortOrderInput | SortOrder
+    audience?: SortOrderInput | SortOrder
+    voice?: SortOrderInput | SortOrder
+    positioning?: SortOrderInput | SortOrder
+    contentPreferences?: SortOrderInput | SortOrder
+    logoStorageKey?: SortOrderInput | SortOrder
+    palette?: SortOrder
+    timezone?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WorkspaceSettingsCountOrderByAggregateInput
+    _max?: WorkspaceSettingsMaxOrderByAggregateInput
+    _min?: WorkspaceSettingsMinOrderByAggregateInput
+  }
+
+  export type WorkspaceSettingsScalarWhereWithAggregatesInput = {
+    AND?: WorkspaceSettingsScalarWhereWithAggregatesInput | WorkspaceSettingsScalarWhereWithAggregatesInput[]
+    OR?: WorkspaceSettingsScalarWhereWithAggregatesInput[]
+    NOT?: WorkspaceSettingsScalarWhereWithAggregatesInput | WorkspaceSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WorkspaceSettings"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    displayName?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    niche?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    audience?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    voice?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    positioning?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    contentPreferences?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    logoStorageKey?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    palette?: JsonWithAggregatesFilter<"WorkspaceSettings">
+    timezone?: StringNullableWithAggregatesFilter<"WorkspaceSettings"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WorkspaceSettings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WorkspaceSettings"> | Date | string
+  }
+
+  export type MarketplaceItemWhereInput = {
+    AND?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
+    OR?: MarketplaceItemWhereInput[]
+    NOT?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
+    id?: StringFilter<"MarketplaceItem"> | string
+    slug?: StringFilter<"MarketplaceItem"> | string
+    type?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    name?: StringFilter<"MarketplaceItem"> | string
+    author?: StringFilter<"MarketplaceItem"> | string
+    price?: IntFilter<"MarketplaceItem"> | number
+    flag?: StringNullableFilter<"MarketplaceItem"> | string | null
+    description?: StringFilter<"MarketplaceItem"> | string
+    palette?: JsonFilter<"MarketplaceItem">
+    specs?: JsonFilter<"MarketplaceItem">
+    includes?: JsonFilter<"MarketplaceItem">
+    refId?: StringNullableFilter<"MarketplaceItem"> | string | null
+    isActive?: BoolFilter<"MarketplaceItem"> | boolean
+    createdAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    entitlements?: WorkspaceEntitlementListRelationFilter
+  }
+
+  export type MarketplaceItemOrderByWithRelationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    type?: SortOrder
+    name?: SortOrder
+    author?: SortOrder
+    price?: SortOrder
+    flag?: SortOrderInput | SortOrder
+    description?: SortOrder
+    palette?: SortOrder
+    specs?: SortOrder
+    includes?: SortOrder
+    refId?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    entitlements?: WorkspaceEntitlementOrderByRelationAggregateInput
+  }
+
+  export type MarketplaceItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    slug?: string
+    AND?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
+    OR?: MarketplaceItemWhereInput[]
+    NOT?: MarketplaceItemWhereInput | MarketplaceItemWhereInput[]
+    type?: EnumMarketplaceItemTypeFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    name?: StringFilter<"MarketplaceItem"> | string
+    author?: StringFilter<"MarketplaceItem"> | string
+    price?: IntFilter<"MarketplaceItem"> | number
+    flag?: StringNullableFilter<"MarketplaceItem"> | string | null
+    description?: StringFilter<"MarketplaceItem"> | string
+    palette?: JsonFilter<"MarketplaceItem">
+    specs?: JsonFilter<"MarketplaceItem">
+    includes?: JsonFilter<"MarketplaceItem">
+    refId?: StringNullableFilter<"MarketplaceItem"> | string | null
+    isActive?: BoolFilter<"MarketplaceItem"> | boolean
+    createdAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceItem"> | Date | string
+    entitlements?: WorkspaceEntitlementListRelationFilter
+  }, "id" | "slug">
+
+  export type MarketplaceItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    type?: SortOrder
+    name?: SortOrder
+    author?: SortOrder
+    price?: SortOrder
+    flag?: SortOrderInput | SortOrder
+    description?: SortOrder
+    palette?: SortOrder
+    specs?: SortOrder
+    includes?: SortOrder
+    refId?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MarketplaceItemCountOrderByAggregateInput
+    _avg?: MarketplaceItemAvgOrderByAggregateInput
+    _max?: MarketplaceItemMaxOrderByAggregateInput
+    _min?: MarketplaceItemMinOrderByAggregateInput
+    _sum?: MarketplaceItemSumOrderByAggregateInput
+  }
+
+  export type MarketplaceItemScalarWhereWithAggregatesInput = {
+    AND?: MarketplaceItemScalarWhereWithAggregatesInput | MarketplaceItemScalarWhereWithAggregatesInput[]
+    OR?: MarketplaceItemScalarWhereWithAggregatesInput[]
+    NOT?: MarketplaceItemScalarWhereWithAggregatesInput | MarketplaceItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    slug?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    type?: EnumMarketplaceItemTypeWithAggregatesFilter<"MarketplaceItem"> | $Enums.MarketplaceItemType
+    name?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    author?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    price?: IntWithAggregatesFilter<"MarketplaceItem"> | number
+    flag?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
+    description?: StringWithAggregatesFilter<"MarketplaceItem"> | string
+    palette?: JsonWithAggregatesFilter<"MarketplaceItem">
+    specs?: JsonWithAggregatesFilter<"MarketplaceItem">
+    includes?: JsonWithAggregatesFilter<"MarketplaceItem">
+    refId?: StringNullableWithAggregatesFilter<"MarketplaceItem"> | string | null
+    isActive?: BoolWithAggregatesFilter<"MarketplaceItem"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"MarketplaceItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MarketplaceItem"> | Date | string
+  }
+
+  export type WorkspaceEntitlementWhereInput = {
+    AND?: WorkspaceEntitlementWhereInput | WorkspaceEntitlementWhereInput[]
+    OR?: WorkspaceEntitlementWhereInput[]
+    NOT?: WorkspaceEntitlementWhereInput | WorkspaceEntitlementWhereInput[]
+    id?: StringFilter<"WorkspaceEntitlement"> | string
+    itemId?: StringFilter<"WorkspaceEntitlement"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    redeemedByUserId?: StringFilter<"WorkspaceEntitlement"> | string
+    redeemedAt?: DateTimeFilter<"WorkspaceEntitlement"> | Date | string
+    item?: XOR<MarketplaceItemScalarRelationFilter, MarketplaceItemWhereInput>
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }
+
+  export type WorkspaceEntitlementOrderByWithRelationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    redeemedByUserId?: SortOrder
+    redeemedAt?: SortOrder
+    item?: MarketplaceItemOrderByWithRelationInput
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type WorkspaceEntitlementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    itemId_personalSpaceId?: WorkspaceEntitlementItemIdPersonalSpaceIdCompoundUniqueInput
+    itemId_companyId?: WorkspaceEntitlementItemIdCompanyIdCompoundUniqueInput
+    AND?: WorkspaceEntitlementWhereInput | WorkspaceEntitlementWhereInput[]
+    OR?: WorkspaceEntitlementWhereInput[]
+    NOT?: WorkspaceEntitlementWhereInput | WorkspaceEntitlementWhereInput[]
+    itemId?: StringFilter<"WorkspaceEntitlement"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    redeemedByUserId?: StringFilter<"WorkspaceEntitlement"> | string
+    redeemedAt?: DateTimeFilter<"WorkspaceEntitlement"> | Date | string
+    item?: XOR<MarketplaceItemScalarRelationFilter, MarketplaceItemWhereInput>
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }, "id" | "itemId_personalSpaceId" | "itemId_companyId">
+
+  export type WorkspaceEntitlementOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    redeemedByUserId?: SortOrder
+    redeemedAt?: SortOrder
+    _count?: WorkspaceEntitlementCountOrderByAggregateInput
+    _max?: WorkspaceEntitlementMaxOrderByAggregateInput
+    _min?: WorkspaceEntitlementMinOrderByAggregateInput
+  }
+
+  export type WorkspaceEntitlementScalarWhereWithAggregatesInput = {
+    AND?: WorkspaceEntitlementScalarWhereWithAggregatesInput | WorkspaceEntitlementScalarWhereWithAggregatesInput[]
+    OR?: WorkspaceEntitlementScalarWhereWithAggregatesInput[]
+    NOT?: WorkspaceEntitlementScalarWhereWithAggregatesInput | WorkspaceEntitlementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WorkspaceEntitlement"> | string
+    itemId?: StringWithAggregatesFilter<"WorkspaceEntitlement"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"WorkspaceEntitlement"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"WorkspaceEntitlement"> | string | null
+    redeemedByUserId?: StringWithAggregatesFilter<"WorkspaceEntitlement"> | string
+    redeemedAt?: DateTimeWithAggregatesFilter<"WorkspaceEntitlement"> | Date | string
+  }
+
+  export type AgentWorkspaceSettingWhereInput = {
+    AND?: AgentWorkspaceSettingWhereInput | AgentWorkspaceSettingWhereInput[]
+    OR?: AgentWorkspaceSettingWhereInput[]
+    NOT?: AgentWorkspaceSettingWhereInput | AgentWorkspaceSettingWhereInput[]
+    id?: StringFilter<"AgentWorkspaceSetting"> | string
+    personalSpaceId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    companyId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    agentId?: StringFilter<"AgentWorkspaceSetting"> | string
+    config?: JsonFilter<"AgentWorkspaceSetting">
+    createdAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }
+
+  export type AgentWorkspaceSettingOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    agentId?: SortOrder
+    config?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type AgentWorkspaceSettingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    personalSpaceId_agentId?: AgentWorkspaceSettingPersonalSpaceIdAgentIdCompoundUniqueInput
+    companyId_agentId?: AgentWorkspaceSettingCompanyIdAgentIdCompoundUniqueInput
+    AND?: AgentWorkspaceSettingWhereInput | AgentWorkspaceSettingWhereInput[]
+    OR?: AgentWorkspaceSettingWhereInput[]
+    NOT?: AgentWorkspaceSettingWhereInput | AgentWorkspaceSettingWhereInput[]
+    personalSpaceId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    companyId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    agentId?: StringFilter<"AgentWorkspaceSetting"> | string
+    config?: JsonFilter<"AgentWorkspaceSetting">
+    createdAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }, "id" | "personalSpaceId_agentId" | "companyId_agentId">
+
+  export type AgentWorkspaceSettingOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    agentId?: SortOrder
+    config?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AgentWorkspaceSettingCountOrderByAggregateInput
+    _max?: AgentWorkspaceSettingMaxOrderByAggregateInput
+    _min?: AgentWorkspaceSettingMinOrderByAggregateInput
+  }
+
+  export type AgentWorkspaceSettingScalarWhereWithAggregatesInput = {
+    AND?: AgentWorkspaceSettingScalarWhereWithAggregatesInput | AgentWorkspaceSettingScalarWhereWithAggregatesInput[]
+    OR?: AgentWorkspaceSettingScalarWhereWithAggregatesInput[]
+    NOT?: AgentWorkspaceSettingScalarWhereWithAggregatesInput | AgentWorkspaceSettingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentWorkspaceSetting"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"AgentWorkspaceSetting"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"AgentWorkspaceSetting"> | string | null
+    agentId?: StringWithAggregatesFilter<"AgentWorkspaceSetting"> | string
+    config?: JsonWithAggregatesFilter<"AgentWorkspaceSetting">
+    createdAt?: DateTimeWithAggregatesFilter<"AgentWorkspaceSetting"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AgentWorkspaceSetting"> | Date | string
+  }
+
+  export type WorkspaceFolderWhereInput = {
+    AND?: WorkspaceFolderWhereInput | WorkspaceFolderWhereInput[]
+    OR?: WorkspaceFolderWhereInput[]
+    NOT?: WorkspaceFolderWhereInput | WorkspaceFolderWhereInput[]
+    id?: StringFilter<"WorkspaceFolder"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    parentId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    name?: StringFilter<"WorkspaceFolder"> | string
+    kind?: EnumWorkspaceFolderKindFilter<"WorkspaceFolder"> | $Enums.WorkspaceFolderKind
+    systemKey?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    createdAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    parent?: XOR<WorkspaceFolderNullableScalarRelationFilter, WorkspaceFolderWhereInput> | null
+    children?: WorkspaceFolderListRelationFilter
+    files?: WorkspaceFileListRelationFilter
+  }
+
+  export type WorkspaceFolderOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    parentId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    kind?: SortOrder
+    systemKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+    parent?: WorkspaceFolderOrderByWithRelationInput
+    children?: WorkspaceFolderOrderByRelationAggregateInput
+    files?: WorkspaceFileOrderByRelationAggregateInput
+  }
+
+  export type WorkspaceFolderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WorkspaceFolderWhereInput | WorkspaceFolderWhereInput[]
+    OR?: WorkspaceFolderWhereInput[]
+    NOT?: WorkspaceFolderWhereInput | WorkspaceFolderWhereInput[]
+    personalSpaceId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    parentId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    name?: StringFilter<"WorkspaceFolder"> | string
+    kind?: EnumWorkspaceFolderKindFilter<"WorkspaceFolder"> | $Enums.WorkspaceFolderKind
+    systemKey?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    createdAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    parent?: XOR<WorkspaceFolderNullableScalarRelationFilter, WorkspaceFolderWhereInput> | null
+    children?: WorkspaceFolderListRelationFilter
+    files?: WorkspaceFileListRelationFilter
+  }, "id">
+
+  export type WorkspaceFolderOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    parentId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    kind?: SortOrder
+    systemKey?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WorkspaceFolderCountOrderByAggregateInput
+    _max?: WorkspaceFolderMaxOrderByAggregateInput
+    _min?: WorkspaceFolderMinOrderByAggregateInput
+  }
+
+  export type WorkspaceFolderScalarWhereWithAggregatesInput = {
+    AND?: WorkspaceFolderScalarWhereWithAggregatesInput | WorkspaceFolderScalarWhereWithAggregatesInput[]
+    OR?: WorkspaceFolderScalarWhereWithAggregatesInput[]
+    NOT?: WorkspaceFolderScalarWhereWithAggregatesInput | WorkspaceFolderScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WorkspaceFolder"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"WorkspaceFolder"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"WorkspaceFolder"> | string | null
+    parentId?: StringNullableWithAggregatesFilter<"WorkspaceFolder"> | string | null
+    name?: StringWithAggregatesFilter<"WorkspaceFolder"> | string
+    kind?: EnumWorkspaceFolderKindWithAggregatesFilter<"WorkspaceFolder"> | $Enums.WorkspaceFolderKind
+    systemKey?: StringNullableWithAggregatesFilter<"WorkspaceFolder"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WorkspaceFolder"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WorkspaceFolder"> | Date | string
+  }
+
+  export type WorkspaceFileWhereInput = {
+    AND?: WorkspaceFileWhereInput | WorkspaceFileWhereInput[]
+    OR?: WorkspaceFileWhereInput[]
+    NOT?: WorkspaceFileWhereInput | WorkspaceFileWhereInput[]
+    id?: StringFilter<"WorkspaceFile"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    folderId?: StringFilter<"WorkspaceFile"> | string
+    name?: StringFilter<"WorkspaceFile"> | string
+    mimeType?: StringFilter<"WorkspaceFile"> | string
+    storageKey?: StringFilter<"WorkspaceFile"> | string
+    sizeBytes?: IntNullableFilter<"WorkspaceFile"> | number | null
+    status?: EnumWorkspaceFileStatusFilter<"WorkspaceFile"> | $Enums.WorkspaceFileStatus
+    extractData?: BoolFilter<"WorkspaceFile"> | boolean
+    extractedText?: StringNullableFilter<"WorkspaceFile"> | string | null
+    origin?: EnumWorkspaceFileOriginFilter<"WorkspaceFile"> | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    folder?: XOR<WorkspaceFolderScalarRelationFilter, WorkspaceFolderWhereInput>
+  }
+
+  export type WorkspaceFileOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    folderId?: SortOrder
+    name?: SortOrder
+    mimeType?: SortOrder
+    storageKey?: SortOrder
+    sizeBytes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    extractData?: SortOrder
+    extractedText?: SortOrderInput | SortOrder
+    origin?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+    folder?: WorkspaceFolderOrderByWithRelationInput
+  }
+
+  export type WorkspaceFileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WorkspaceFileWhereInput | WorkspaceFileWhereInput[]
+    OR?: WorkspaceFileWhereInput[]
+    NOT?: WorkspaceFileWhereInput | WorkspaceFileWhereInput[]
+    personalSpaceId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    folderId?: StringFilter<"WorkspaceFile"> | string
+    name?: StringFilter<"WorkspaceFile"> | string
+    mimeType?: StringFilter<"WorkspaceFile"> | string
+    storageKey?: StringFilter<"WorkspaceFile"> | string
+    sizeBytes?: IntNullableFilter<"WorkspaceFile"> | number | null
+    status?: EnumWorkspaceFileStatusFilter<"WorkspaceFile"> | $Enums.WorkspaceFileStatus
+    extractData?: BoolFilter<"WorkspaceFile"> | boolean
+    extractedText?: StringNullableFilter<"WorkspaceFile"> | string | null
+    origin?: EnumWorkspaceFileOriginFilter<"WorkspaceFile"> | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    folder?: XOR<WorkspaceFolderScalarRelationFilter, WorkspaceFolderWhereInput>
+  }, "id">
+
+  export type WorkspaceFileOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    folderId?: SortOrder
+    name?: SortOrder
+    mimeType?: SortOrder
+    storageKey?: SortOrder
+    sizeBytes?: SortOrderInput | SortOrder
+    status?: SortOrder
+    extractData?: SortOrder
+    extractedText?: SortOrderInput | SortOrder
+    origin?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WorkspaceFileCountOrderByAggregateInput
+    _avg?: WorkspaceFileAvgOrderByAggregateInput
+    _max?: WorkspaceFileMaxOrderByAggregateInput
+    _min?: WorkspaceFileMinOrderByAggregateInput
+    _sum?: WorkspaceFileSumOrderByAggregateInput
+  }
+
+  export type WorkspaceFileScalarWhereWithAggregatesInput = {
+    AND?: WorkspaceFileScalarWhereWithAggregatesInput | WorkspaceFileScalarWhereWithAggregatesInput[]
+    OR?: WorkspaceFileScalarWhereWithAggregatesInput[]
+    NOT?: WorkspaceFileScalarWhereWithAggregatesInput | WorkspaceFileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WorkspaceFile"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"WorkspaceFile"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"WorkspaceFile"> | string | null
+    folderId?: StringWithAggregatesFilter<"WorkspaceFile"> | string
+    name?: StringWithAggregatesFilter<"WorkspaceFile"> | string
+    mimeType?: StringWithAggregatesFilter<"WorkspaceFile"> | string
+    storageKey?: StringWithAggregatesFilter<"WorkspaceFile"> | string
+    sizeBytes?: IntNullableWithAggregatesFilter<"WorkspaceFile"> | number | null
+    status?: EnumWorkspaceFileStatusWithAggregatesFilter<"WorkspaceFile"> | $Enums.WorkspaceFileStatus
+    extractData?: BoolWithAggregatesFilter<"WorkspaceFile"> | boolean
+    extractedText?: StringNullableWithAggregatesFilter<"WorkspaceFile"> | string | null
+    origin?: EnumWorkspaceFileOriginWithAggregatesFilter<"WorkspaceFile"> | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeWithAggregatesFilter<"WorkspaceFile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WorkspaceFile"> | Date | string
+  }
+
+  export type ProjectWhereInput = {
+    AND?: ProjectWhereInput | ProjectWhereInput[]
+    OR?: ProjectWhereInput[]
+    NOT?: ProjectWhereInput | ProjectWhereInput[]
+    id?: StringFilter<"Project"> | string
+    personalSpaceId?: StringNullableFilter<"Project"> | string | null
+    companyId?: StringNullableFilter<"Project"> | string | null
+    name?: StringFilter<"Project"> | string
+    objective?: StringFilter<"Project"> | string
+    linkedAgentIds?: StringNullableListFilter<"Project">
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }
+
+  export type ProjectOrderByWithRelationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    objective?: SortOrder
+    linkedAgentIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type ProjectWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProjectWhereInput | ProjectWhereInput[]
+    OR?: ProjectWhereInput[]
+    NOT?: ProjectWhereInput | ProjectWhereInput[]
+    personalSpaceId?: StringNullableFilter<"Project"> | string | null
+    companyId?: StringNullableFilter<"Project"> | string | null
+    name?: StringFilter<"Project"> | string
+    objective?: StringFilter<"Project"> | string
+    linkedAgentIds?: StringNullableListFilter<"Project">
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+  }, "id">
+
+  export type ProjectOrderByWithAggregationInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
+    companyId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    objective?: SortOrder
+    linkedAgentIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProjectCountOrderByAggregateInput
+    _max?: ProjectMaxOrderByAggregateInput
+    _min?: ProjectMinOrderByAggregateInput
+  }
+
+  export type ProjectScalarWhereWithAggregatesInput = {
+    AND?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
+    OR?: ProjectScalarWhereWithAggregatesInput[]
+    NOT?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Project"> | string
+    personalSpaceId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    companyId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    name?: StringWithAggregatesFilter<"Project"> | string
+    objective?: StringWithAggregatesFilter<"Project"> | string
+    linkedAgentIds?: StringNullableListFilter<"Project">
+    createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -49088,6 +63345,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
   }
 
@@ -49104,6 +63363,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -49120,6 +63381,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
   }
 
@@ -49136,6 +63399,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -49430,6 +63695,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissions?: RolePermissionCreateNestedManyWithoutRoleInput
     memberAssignments?: UserRoleAssignmentCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateInput = {
@@ -49440,6 +63706,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     permissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
     memberAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUpdateInput = {
@@ -49450,6 +63717,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissions?: RolePermissionUpdateManyWithoutRoleNestedInput
     memberAssignments?: UserRoleAssignmentUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
@@ -49460,6 +63728,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
     memberAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleCreateManyInput = {
@@ -49790,6 +64059,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -49812,6 +64088,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -49834,6 +64117,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -49856,6 +64146,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -52187,6 +66484,859 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PersonalSpaceCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceCreateManyInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PersonalSpaceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalSpaceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalCreditBalanceCreateInput = {
+    id?: string
+    amount?: Decimal | DecimalJsLike | number | string
+    currency?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    personalSpace: PersonalSpaceCreateNestedOneWithoutCreditBalanceInput
+  }
+
+  export type PersonalCreditBalanceUncheckedCreateInput = {
+    id?: string
+    personalSpaceId: string
+    amount?: Decimal | DecimalJsLike | number | string
+    currency?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type PersonalCreditBalanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneRequiredWithoutCreditBalanceNestedInput
+  }
+
+  export type PersonalCreditBalanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalCreditBalanceCreateManyInput = {
+    id?: string
+    personalSpaceId: string
+    amount?: Decimal | DecimalJsLike | number | string
+    currency?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type PersonalCreditBalanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalCreditBalanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberCreateInput = {
+    id?: string
+    joinedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutMembersInput
+    user: UserCreateNestedOneWithoutCompanyMembersInput
+    role: RoleCreateNestedOneWithoutCompanyMembersInput
+  }
+
+  export type CompanyMemberUncheckedCreateInput = {
+    id?: string
+    companyId: string
+    userId: string
+    roleId: string
+    joinedAt?: Date | string
+  }
+
+  export type CompanyMemberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutMembersNestedInput
+    user?: UserUpdateOneRequiredWithoutCompanyMembersNestedInput
+    role?: RoleUpdateOneRequiredWithoutCompanyMembersNestedInput
+  }
+
+  export type CompanyMemberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberCreateManyInput = {
+    id?: string
+    companyId: string
+    userId: string
+    roleId: string
+    joinedAt?: Date | string
+  }
+
+  export type CompanyMemberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceSettingsCreateInput = {
+    id?: string
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutSettingsInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceSettingsInput
+  }
+
+  export type WorkspaceSettingsUncheckedCreateInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutSettingsNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceSettingsNestedInput
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceSettingsCreateManyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceItemCreateInput = {
+    id?: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price?: number
+    flag?: string | null
+    description: string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutItemInput
+  }
+
+  export type MarketplaceItemUncheckedCreateInput = {
+    id?: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price?: number
+    flag?: string | null
+    description: string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type MarketplaceItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutItemNestedInput
+  }
+
+  export type MarketplaceItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type MarketplaceItemCreateManyInput = {
+    id?: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price?: number
+    flag?: string | null
+    description: string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementCreateInput = {
+    id?: string
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutEntitlementsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutEntitlementsInput
+    company?: CompanyCreateNestedOneWithoutEntitlementsInput
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateInput = {
+    id?: string
+    itemId: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutEntitlementsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutEntitlementsNestedInput
+    company?: CompanyUpdateOneWithoutEntitlementsNestedInput
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementCreateManyInput = {
+    id?: string
+    itemId: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateInput = {
+    id?: string
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentWorkspaceSettingsInput
+    company?: CompanyCreateNestedOneWithoutAgentWorkspaceSettingsInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedCreateInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentWorkspaceSettingsNestedInput
+    company?: CompanyUpdateOneWithoutAgentWorkspaceSettingsNestedInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateManyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderCreateInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFoldersInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFoldersInput
+    parent?: WorkspaceFolderCreateNestedOneWithoutChildrenInput
+    children?: WorkspaceFolderCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFoldersNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFoldersNestedInput
+    parent?: WorkspaceFolderUpdateOneWithoutChildrenNestedInput
+    children?: WorkspaceFolderUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderCreateManyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFolderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileCreateInput = {
+    id?: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFilesInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFilesInput
+    folder: WorkspaceFolderCreateNestedOneWithoutFilesInput
+  }
+
+  export type WorkspaceFileUncheckedCreateInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFilesNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFilesNestedInput
+    folder?: WorkspaceFolderUpdateOneRequiredWithoutFilesNestedInput
+  }
+
+  export type WorkspaceFileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileCreateManyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectCreateInput = {
+    id?: string
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutProjectsInput
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutProjectsNestedInput
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectCreateManyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -52264,6 +67414,17 @@ export namespace Prisma {
     none?: CompanyWhereInput
   }
 
+  export type CompanyMemberListRelationFilter = {
+    every?: CompanyMemberWhereInput
+    some?: CompanyMemberWhereInput
+    none?: CompanyMemberWhereInput
+  }
+
+  export type PersonalSpaceNullableScalarRelationFilter = {
+    is?: PersonalSpaceWhereInput | null
+    isNot?: PersonalSpaceWhereInput | null
+  }
+
   export type AgentFeedbackListRelationFilter = {
     every?: AgentFeedbackWhereInput
     some?: AgentFeedbackWhereInput
@@ -52288,6 +67449,10 @@ export namespace Prisma {
   }
 
   export type CompanyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CompanyMemberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -52827,6 +67992,41 @@ export namespace Prisma {
     none?: RagIndexJobWhereInput
   }
 
+  export type WorkspaceSettingsNullableScalarRelationFilter = {
+    is?: WorkspaceSettingsWhereInput | null
+    isNot?: WorkspaceSettingsWhereInput | null
+  }
+
+  export type WorkspaceFolderListRelationFilter = {
+    every?: WorkspaceFolderWhereInput
+    some?: WorkspaceFolderWhereInput
+    none?: WorkspaceFolderWhereInput
+  }
+
+  export type WorkspaceFileListRelationFilter = {
+    every?: WorkspaceFileWhereInput
+    some?: WorkspaceFileWhereInput
+    none?: WorkspaceFileWhereInput
+  }
+
+  export type WorkspaceEntitlementListRelationFilter = {
+    every?: WorkspaceEntitlementWhereInput
+    some?: WorkspaceEntitlementWhereInput
+    none?: WorkspaceEntitlementWhereInput
+  }
+
+  export type ProjectListRelationFilter = {
+    every?: ProjectWhereInput
+    some?: ProjectWhereInput
+    none?: ProjectWhereInput
+  }
+
+  export type AgentWorkspaceSettingListRelationFilter = {
+    every?: AgentWorkspaceSettingWhereInput
+    some?: AgentWorkspaceSettingWhereInput
+    none?: AgentWorkspaceSettingWhereInput
+  }
+
   export type CampaignOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -52860,6 +68060,26 @@ export namespace Prisma {
   }
 
   export type RagIndexJobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WorkspaceFolderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WorkspaceFileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WorkspaceEntitlementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AgentWorkspaceSettingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54619,6 +69839,498 @@ export namespace Prisma {
     topK?: SortOrder
   }
 
+  export type PersonalCreditBalanceNullableScalarRelationFilter = {
+    is?: PersonalCreditBalanceWhereInput | null
+    isNot?: PersonalCreditBalanceWhereInput | null
+  }
+
+  export type PersonalSpaceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonalSpaceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonalSpaceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonalSpaceScalarRelationFilter = {
+    is?: PersonalSpaceWhereInput
+    isNot?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalCreditBalanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PersonalCreditBalanceAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type PersonalCreditBalanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PersonalCreditBalanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    amount?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PersonalCreditBalanceSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type CompanyMemberCompanyIdUserIdCompoundUniqueInput = {
+    companyId: string
+    userId: string
+  }
+
+  export type CompanyMemberCountOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
+    roleId?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type CompanyMemberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
+    roleId?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type CompanyMemberMinOrderByAggregateInput = {
+    id?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
+    roleId?: SortOrder
+    joinedAt?: SortOrder
+  }
+
+  export type CompanyNullableScalarRelationFilter = {
+    is?: CompanyWhereInput | null
+    isNot?: CompanyWhereInput | null
+  }
+
+  export type WorkspaceSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    displayName?: SortOrder
+    niche?: SortOrder
+    audience?: SortOrder
+    voice?: SortOrder
+    positioning?: SortOrder
+    contentPreferences?: SortOrder
+    logoStorageKey?: SortOrder
+    palette?: SortOrder
+    timezone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    displayName?: SortOrder
+    niche?: SortOrder
+    audience?: SortOrder
+    voice?: SortOrder
+    positioning?: SortOrder
+    contentPreferences?: SortOrder
+    logoStorageKey?: SortOrder
+    timezone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    displayName?: SortOrder
+    niche?: SortOrder
+    audience?: SortOrder
+    voice?: SortOrder
+    positioning?: SortOrder
+    contentPreferences?: SortOrder
+    logoStorageKey?: SortOrder
+    timezone?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumMarketplaceItemTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MarketplaceItemType | EnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel> | $Enums.MarketplaceItemType
+  }
+
+  export type MarketplaceItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    type?: SortOrder
+    name?: SortOrder
+    author?: SortOrder
+    price?: SortOrder
+    flag?: SortOrder
+    description?: SortOrder
+    palette?: SortOrder
+    specs?: SortOrder
+    includes?: SortOrder
+    refId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MarketplaceItemAvgOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type MarketplaceItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    type?: SortOrder
+    name?: SortOrder
+    author?: SortOrder
+    price?: SortOrder
+    flag?: SortOrder
+    description?: SortOrder
+    refId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MarketplaceItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    type?: SortOrder
+    name?: SortOrder
+    author?: SortOrder
+    price?: SortOrder
+    flag?: SortOrder
+    description?: SortOrder
+    refId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MarketplaceItemSumOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type EnumMarketplaceItemTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MarketplaceItemType | EnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMarketplaceItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.MarketplaceItemType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+    _max?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+  }
+
+  export type MarketplaceItemScalarRelationFilter = {
+    is?: MarketplaceItemWhereInput
+    isNot?: MarketplaceItemWhereInput
+  }
+
+  export type WorkspaceEntitlementItemIdPersonalSpaceIdCompoundUniqueInput = {
+    itemId: string
+    personalSpaceId: string
+  }
+
+  export type WorkspaceEntitlementItemIdCompanyIdCompoundUniqueInput = {
+    itemId: string
+    companyId: string
+  }
+
+  export type WorkspaceEntitlementCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    redeemedByUserId?: SortOrder
+    redeemedAt?: SortOrder
+  }
+
+  export type WorkspaceEntitlementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    redeemedByUserId?: SortOrder
+    redeemedAt?: SortOrder
+  }
+
+  export type WorkspaceEntitlementMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    redeemedByUserId?: SortOrder
+    redeemedAt?: SortOrder
+  }
+
+  export type AgentWorkspaceSettingPersonalSpaceIdAgentIdCompoundUniqueInput = {
+    personalSpaceId: string
+    agentId: string
+  }
+
+  export type AgentWorkspaceSettingCompanyIdAgentIdCompoundUniqueInput = {
+    companyId: string
+    agentId: string
+  }
+
+  export type AgentWorkspaceSettingCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    agentId?: SortOrder
+    config?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentWorkspaceSettingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    agentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentWorkspaceSettingMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    agentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumWorkspaceFolderKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFolderKind | EnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel> | $Enums.WorkspaceFolderKind
+  }
+
+  export type WorkspaceFolderNullableScalarRelationFilter = {
+    is?: WorkspaceFolderWhereInput | null
+    isNot?: WorkspaceFolderWhereInput | null
+  }
+
+  export type WorkspaceFolderCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    parentId?: SortOrder
+    name?: SortOrder
+    kind?: SortOrder
+    systemKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceFolderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    parentId?: SortOrder
+    name?: SortOrder
+    kind?: SortOrder
+    systemKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceFolderMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    parentId?: SortOrder
+    name?: SortOrder
+    kind?: SortOrder
+    systemKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumWorkspaceFolderKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFolderKind | EnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFolderKindWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFolderKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel>
+  }
+
+  export type EnumWorkspaceFileStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileStatus | EnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel> | $Enums.WorkspaceFileStatus
+  }
+
+  export type EnumWorkspaceFileOriginFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileOrigin | EnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel> | $Enums.WorkspaceFileOrigin
+  }
+
+  export type WorkspaceFolderScalarRelationFilter = {
+    is?: WorkspaceFolderWhereInput
+    isNot?: WorkspaceFolderWhereInput
+  }
+
+  export type WorkspaceFileCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    folderId?: SortOrder
+    name?: SortOrder
+    mimeType?: SortOrder
+    storageKey?: SortOrder
+    sizeBytes?: SortOrder
+    status?: SortOrder
+    extractData?: SortOrder
+    extractedText?: SortOrder
+    origin?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceFileAvgOrderByAggregateInput = {
+    sizeBytes?: SortOrder
+  }
+
+  export type WorkspaceFileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    folderId?: SortOrder
+    name?: SortOrder
+    mimeType?: SortOrder
+    storageKey?: SortOrder
+    sizeBytes?: SortOrder
+    status?: SortOrder
+    extractData?: SortOrder
+    extractedText?: SortOrder
+    origin?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceFileMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    folderId?: SortOrder
+    name?: SortOrder
+    mimeType?: SortOrder
+    storageKey?: SortOrder
+    sizeBytes?: SortOrder
+    status?: SortOrder
+    extractData?: SortOrder
+    extractedText?: SortOrder
+    origin?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceFileSumOrderByAggregateInput = {
+    sizeBytes?: SortOrder
+  }
+
+  export type EnumWorkspaceFileStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileStatus | EnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFileStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel>
+  }
+
+  export type EnumWorkspaceFileOriginWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileOrigin | EnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileOriginWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFileOrigin
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel>
+  }
+
+  export type ProjectCountOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    objective?: SortOrder
+    linkedAgentIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    objective?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectMinOrderByAggregateInput = {
+    id?: SortOrder
+    personalSpaceId?: SortOrder
+    companyId?: SortOrder
+    name?: SortOrder
+    objective?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -54645,6 +70357,19 @@ export namespace Prisma {
     connectOrCreate?: CompanyCreateOrConnectWithoutOwnerInput | CompanyCreateOrConnectWithoutOwnerInput[]
     createMany?: CompanyCreateManyOwnerInputEnvelope
     connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  }
+
+  export type CompanyMemberCreateNestedManyWithoutUserInput = {
+    create?: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput> | CompanyMemberCreateWithoutUserInput[] | CompanyMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutUserInput | CompanyMemberCreateOrConnectWithoutUserInput[]
+    createMany?: CompanyMemberCreateManyUserInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutUserInput = {
+    create?: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutUserInput
+    connect?: PersonalSpaceWhereUniqueInput
   }
 
   export type AgentFeedbackCreateNestedManyWithoutUserInput = {
@@ -54680,6 +70405,19 @@ export namespace Prisma {
     connectOrCreate?: CompanyCreateOrConnectWithoutOwnerInput | CompanyCreateOrConnectWithoutOwnerInput[]
     createMany?: CompanyCreateManyOwnerInputEnvelope
     connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  }
+
+  export type CompanyMemberUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput> | CompanyMemberCreateWithoutUserInput[] | CompanyMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutUserInput | CompanyMemberCreateOrConnectWithoutUserInput[]
+    createMany?: CompanyMemberCreateManyUserInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+  }
+
+  export type PersonalSpaceUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutUserInput
+    connect?: PersonalSpaceWhereUniqueInput
   }
 
   export type AgentFeedbackUncheckedCreateNestedManyWithoutUserInput = {
@@ -54765,6 +70503,30 @@ export namespace Prisma {
     deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
   }
 
+  export type CompanyMemberUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput> | CompanyMemberCreateWithoutUserInput[] | CompanyMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutUserInput | CompanyMemberCreateOrConnectWithoutUserInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutUserInput | CompanyMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CompanyMemberCreateManyUserInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutUserInput | CompanyMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutUserInput | CompanyMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+  }
+
+  export type PersonalSpaceUpdateOneWithoutUserNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutUserInput
+    upsert?: PersonalSpaceUpsertWithoutUserInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutUserInput, PersonalSpaceUpdateWithoutUserInput>, PersonalSpaceUncheckedUpdateWithoutUserInput>
+  }
+
   export type AgentFeedbackUpdateManyWithoutUserNestedInput = {
     create?: XOR<AgentFeedbackCreateWithoutUserInput, AgentFeedbackUncheckedCreateWithoutUserInput> | AgentFeedbackCreateWithoutUserInput[] | AgentFeedbackUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AgentFeedbackCreateOrConnectWithoutUserInput | AgentFeedbackCreateOrConnectWithoutUserInput[]
@@ -54835,6 +70597,30 @@ export namespace Prisma {
     deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
   }
 
+  export type CompanyMemberUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput> | CompanyMemberCreateWithoutUserInput[] | CompanyMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutUserInput | CompanyMemberCreateOrConnectWithoutUserInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutUserInput | CompanyMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CompanyMemberCreateManyUserInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutUserInput | CompanyMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutUserInput | CompanyMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+  }
+
+  export type PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutUserInput
+    upsert?: PersonalSpaceUpsertWithoutUserInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutUserInput, PersonalSpaceUpdateWithoutUserInput>, PersonalSpaceUncheckedUpdateWithoutUserInput>
+  }
+
   export type AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AgentFeedbackCreateWithoutUserInput, AgentFeedbackUncheckedCreateWithoutUserInput> | AgentFeedbackCreateWithoutUserInput[] | AgentFeedbackUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AgentFeedbackCreateOrConnectWithoutUserInput | AgentFeedbackCreateOrConnectWithoutUserInput[]
@@ -54895,6 +70681,13 @@ export namespace Prisma {
     connect?: UserRoleAssignmentWhereUniqueInput | UserRoleAssignmentWhereUniqueInput[]
   }
 
+  export type CompanyMemberCreateNestedManyWithoutRoleInput = {
+    create?: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput> | CompanyMemberCreateWithoutRoleInput[] | CompanyMemberUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutRoleInput | CompanyMemberCreateOrConnectWithoutRoleInput[]
+    createMany?: CompanyMemberCreateManyRoleInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+  }
+
   export type RolePermissionUncheckedCreateNestedManyWithoutRoleInput = {
     create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
@@ -54907,6 +70700,13 @@ export namespace Prisma {
     connectOrCreate?: UserRoleAssignmentCreateOrConnectWithoutRoleInput | UserRoleAssignmentCreateOrConnectWithoutRoleInput[]
     createMany?: UserRoleAssignmentCreateManyRoleInputEnvelope
     connect?: UserRoleAssignmentWhereUniqueInput | UserRoleAssignmentWhereUniqueInput[]
+  }
+
+  export type CompanyMemberUncheckedCreateNestedManyWithoutRoleInput = {
+    create?: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput> | CompanyMemberCreateWithoutRoleInput[] | CompanyMemberUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutRoleInput | CompanyMemberCreateOrConnectWithoutRoleInput[]
+    createMany?: CompanyMemberCreateManyRoleInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
   }
 
   export type RolePermissionUpdateManyWithoutRoleNestedInput = {
@@ -54937,6 +70737,20 @@ export namespace Prisma {
     deleteMany?: UserRoleAssignmentScalarWhereInput | UserRoleAssignmentScalarWhereInput[]
   }
 
+  export type CompanyMemberUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput> | CompanyMemberCreateWithoutRoleInput[] | CompanyMemberUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutRoleInput | CompanyMemberCreateOrConnectWithoutRoleInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutRoleInput | CompanyMemberUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: CompanyMemberCreateManyRoleInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutRoleInput | CompanyMemberUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutRoleInput | CompanyMemberUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+  }
+
   export type RolePermissionUncheckedUpdateManyWithoutRoleNestedInput = {
     create?: XOR<RolePermissionCreateWithoutRoleInput, RolePermissionUncheckedCreateWithoutRoleInput> | RolePermissionCreateWithoutRoleInput[] | RolePermissionUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: RolePermissionCreateOrConnectWithoutRoleInput | RolePermissionCreateOrConnectWithoutRoleInput[]
@@ -54963,6 +70777,20 @@ export namespace Prisma {
     update?: UserRoleAssignmentUpdateWithWhereUniqueWithoutRoleInput | UserRoleAssignmentUpdateWithWhereUniqueWithoutRoleInput[]
     updateMany?: UserRoleAssignmentUpdateManyWithWhereWithoutRoleInput | UserRoleAssignmentUpdateManyWithWhereWithoutRoleInput[]
     deleteMany?: UserRoleAssignmentScalarWhereInput | UserRoleAssignmentScalarWhereInput[]
+  }
+
+  export type CompanyMemberUncheckedUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput> | CompanyMemberCreateWithoutRoleInput[] | CompanyMemberUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutRoleInput | CompanyMemberCreateOrConnectWithoutRoleInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutRoleInput | CompanyMemberUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: CompanyMemberCreateManyRoleInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutRoleInput | CompanyMemberUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutRoleInput | CompanyMemberUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
   }
 
   export type RoleCreateNestedOneWithoutPermissionsInput = {
@@ -55095,6 +70923,54 @@ export namespace Prisma {
     connect?: RagIndexJobWhereUniqueInput | RagIndexJobWhereUniqueInput[]
   }
 
+  export type CompanyMemberCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput> | CompanyMemberCreateWithoutCompanyInput[] | CompanyMemberUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutCompanyInput | CompanyMemberCreateOrConnectWithoutCompanyInput[]
+    createMany?: CompanyMemberCreateManyCompanyInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+  }
+
+  export type WorkspaceSettingsCreateNestedOneWithoutCompanyInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutCompanyInput
+    connect?: WorkspaceSettingsWhereUniqueInput
+  }
+
+  export type WorkspaceFolderCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput> | WorkspaceFolderCreateWithoutCompanyInput[] | WorkspaceFolderUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutCompanyInput | WorkspaceFolderCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceFolderCreateManyCompanyInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput> | WorkspaceFileCreateWithoutCompanyInput[] | WorkspaceFileUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutCompanyInput | WorkspaceFileCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceFileCreateManyCompanyInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type WorkspaceEntitlementCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput> | WorkspaceEntitlementCreateWithoutCompanyInput[] | WorkspaceEntitlementUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutCompanyInput | WorkspaceEntitlementCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceEntitlementCreateManyCompanyInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type ProjectCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput> | AgentWorkspaceSettingCreateWithoutCompanyInput[] | AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput | AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput[]
+    createMany?: AgentWorkspaceSettingCreateManyCompanyInputEnvelope
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+  }
+
   export type BrandProfileUncheckedCreateNestedOneWithoutCompanyInput = {
     create?: XOR<BrandProfileCreateWithoutCompanyInput, BrandProfileUncheckedCreateWithoutCompanyInput>
     connectOrCreate?: BrandProfileCreateOrConnectWithoutCompanyInput
@@ -55175,6 +71051,54 @@ export namespace Prisma {
     connectOrCreate?: RagIndexJobCreateOrConnectWithoutCompanyInput | RagIndexJobCreateOrConnectWithoutCompanyInput[]
     createMany?: RagIndexJobCreateManyCompanyInputEnvelope
     connect?: RagIndexJobWhereUniqueInput | RagIndexJobWhereUniqueInput[]
+  }
+
+  export type CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput> | CompanyMemberCreateWithoutCompanyInput[] | CompanyMemberUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutCompanyInput | CompanyMemberCreateOrConnectWithoutCompanyInput[]
+    createMany?: CompanyMemberCreateManyCompanyInputEnvelope
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+  }
+
+  export type WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutCompanyInput
+    connect?: WorkspaceSettingsWhereUniqueInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput> | WorkspaceFolderCreateWithoutCompanyInput[] | WorkspaceFolderUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutCompanyInput | WorkspaceFolderCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceFolderCreateManyCompanyInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput> | WorkspaceFileCreateWithoutCompanyInput[] | WorkspaceFileUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutCompanyInput | WorkspaceFileCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceFileCreateManyCompanyInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput> | WorkspaceEntitlementCreateWithoutCompanyInput[] | WorkspaceEntitlementUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutCompanyInput | WorkspaceEntitlementCreateOrConnectWithoutCompanyInput[]
+    createMany?: WorkspaceEntitlementCreateManyCompanyInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput> | AgentWorkspaceSettingCreateWithoutCompanyInput[] | AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput | AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput[]
+    createMany?: AgentWorkspaceSettingCreateManyCompanyInputEnvelope
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput = {
@@ -55345,6 +71269,100 @@ export namespace Prisma {
     deleteMany?: RagIndexJobScalarWhereInput | RagIndexJobScalarWhereInput[]
   }
 
+  export type CompanyMemberUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput> | CompanyMemberCreateWithoutCompanyInput[] | CompanyMemberUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutCompanyInput | CompanyMemberCreateOrConnectWithoutCompanyInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutCompanyInput | CompanyMemberUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CompanyMemberCreateManyCompanyInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutCompanyInput | CompanyMemberUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutCompanyInput | CompanyMemberUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+  }
+
+  export type WorkspaceSettingsUpdateOneWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutCompanyInput
+    upsert?: WorkspaceSettingsUpsertWithoutCompanyInput
+    disconnect?: WorkspaceSettingsWhereInput | boolean
+    delete?: WorkspaceSettingsWhereInput | boolean
+    connect?: WorkspaceSettingsWhereUniqueInput
+    update?: XOR<XOR<WorkspaceSettingsUpdateToOneWithWhereWithoutCompanyInput, WorkspaceSettingsUpdateWithoutCompanyInput>, WorkspaceSettingsUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput> | WorkspaceFolderCreateWithoutCompanyInput[] | WorkspaceFolderUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutCompanyInput | WorkspaceFolderCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceFolderUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceFolderCreateManyCompanyInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceFolderUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutCompanyInput | WorkspaceFolderUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput> | WorkspaceFileCreateWithoutCompanyInput[] | WorkspaceFileUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutCompanyInput | WorkspaceFileCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceFileUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceFileCreateManyCompanyInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceFileUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutCompanyInput | WorkspaceFileUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput> | WorkspaceEntitlementCreateWithoutCompanyInput[] | WorkspaceEntitlementUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutCompanyInput | WorkspaceEntitlementCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceEntitlementCreateManyCompanyInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutCompanyInput | WorkspaceEntitlementUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type ProjectUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCompanyInput | ProjectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCompanyInput | ProjectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCompanyInput | ProjectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput> | AgentWorkspaceSettingCreateWithoutCompanyInput[] | AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput | AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput[]
+    upsert?: AgentWorkspaceSettingUpsertWithWhereUniqueWithoutCompanyInput | AgentWorkspaceSettingUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AgentWorkspaceSettingCreateManyCompanyInputEnvelope
+    set?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    disconnect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    delete?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    update?: AgentWorkspaceSettingUpdateWithWhereUniqueWithoutCompanyInput | AgentWorkspaceSettingUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AgentWorkspaceSettingUpdateManyWithWhereWithoutCompanyInput | AgentWorkspaceSettingUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+  }
+
   export type BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput = {
     create?: XOR<BrandProfileCreateWithoutCompanyInput, BrandProfileUncheckedCreateWithoutCompanyInput>
     connectOrCreate?: BrandProfileCreateOrConnectWithoutCompanyInput
@@ -55503,6 +71521,100 @@ export namespace Prisma {
     update?: RagIndexJobUpdateWithWhereUniqueWithoutCompanyInput | RagIndexJobUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: RagIndexJobUpdateManyWithWhereWithoutCompanyInput | RagIndexJobUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: RagIndexJobScalarWhereInput | RagIndexJobScalarWhereInput[]
+  }
+
+  export type CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput> | CompanyMemberCreateWithoutCompanyInput[] | CompanyMemberUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: CompanyMemberCreateOrConnectWithoutCompanyInput | CompanyMemberCreateOrConnectWithoutCompanyInput[]
+    upsert?: CompanyMemberUpsertWithWhereUniqueWithoutCompanyInput | CompanyMemberUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: CompanyMemberCreateManyCompanyInputEnvelope
+    set?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    disconnect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    delete?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    connect?: CompanyMemberWhereUniqueInput | CompanyMemberWhereUniqueInput[]
+    update?: CompanyMemberUpdateWithWhereUniqueWithoutCompanyInput | CompanyMemberUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: CompanyMemberUpdateManyWithWhereWithoutCompanyInput | CompanyMemberUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutCompanyInput
+    upsert?: WorkspaceSettingsUpsertWithoutCompanyInput
+    disconnect?: WorkspaceSettingsWhereInput | boolean
+    delete?: WorkspaceSettingsWhereInput | boolean
+    connect?: WorkspaceSettingsWhereUniqueInput
+    update?: XOR<XOR<WorkspaceSettingsUpdateToOneWithWhereWithoutCompanyInput, WorkspaceSettingsUpdateWithoutCompanyInput>, WorkspaceSettingsUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput> | WorkspaceFolderCreateWithoutCompanyInput[] | WorkspaceFolderUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutCompanyInput | WorkspaceFolderCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceFolderUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceFolderCreateManyCompanyInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceFolderUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutCompanyInput | WorkspaceFolderUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput> | WorkspaceFileCreateWithoutCompanyInput[] | WorkspaceFileUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutCompanyInput | WorkspaceFileCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceFileUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceFileCreateManyCompanyInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceFileUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutCompanyInput | WorkspaceFileUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput> | WorkspaceEntitlementCreateWithoutCompanyInput[] | WorkspaceEntitlementUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutCompanyInput | WorkspaceEntitlementCreateOrConnectWithoutCompanyInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutCompanyInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: WorkspaceEntitlementCreateManyCompanyInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutCompanyInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutCompanyInput | WorkspaceEntitlementUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput> | ProjectCreateWithoutCompanyInput[] | ProjectUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCompanyInput | ProjectCreateOrConnectWithoutCompanyInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCompanyInput | ProjectUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ProjectCreateManyCompanyInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCompanyInput | ProjectUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCompanyInput | ProjectUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput> | AgentWorkspaceSettingCreateWithoutCompanyInput[] | AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput | AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput[]
+    upsert?: AgentWorkspaceSettingUpsertWithWhereUniqueWithoutCompanyInput | AgentWorkspaceSettingUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AgentWorkspaceSettingCreateManyCompanyInputEnvelope
+    set?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    disconnect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    delete?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    update?: AgentWorkspaceSettingUpdateWithWhereUniqueWithoutCompanyInput | AgentWorkspaceSettingUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AgentWorkspaceSettingUpdateManyWithWhereWithoutCompanyInput | AgentWorkspaceSettingUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutBrandProfileInput = {
@@ -57040,6 +73152,737 @@ export namespace Prisma {
     update?: XOR<XOR<AiModelUpdateToOneWithWhereWithoutEmbeddingSettingsInput, AiModelUpdateWithoutEmbeddingSettingsInput>, AiModelUncheckedUpdateWithoutEmbeddingSettingsInput>
   }
 
+  export type UserCreateNestedOneWithoutPersonalSpaceInput = {
+    create?: XOR<UserCreateWithoutPersonalSpaceInput, UserUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPersonalSpaceInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
+    connect?: WorkspaceSettingsWhereUniqueInput
+  }
+
+  export type WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFolderCreateWithoutPersonalSpaceInput[] | WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFolderCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFileCreateWithoutPersonalSpaceInput[] | WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFileCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceEntitlementCreateWithoutPersonalSpaceInput[] | WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput | WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceEntitlementCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type ProjectCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput> | ProjectCreateWithoutPersonalSpaceInput[] | ProjectUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutPersonalSpaceInput | ProjectCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: ProjectCreateManyPersonalSpaceInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput = {
+    create?: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: PersonalCreditBalanceCreateOrConnectWithoutPersonalSpaceInput
+    connect?: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  export type AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput> | AgentWorkspaceSettingCreateWithoutPersonalSpaceInput[] | AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput | AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+  }
+
+  export type WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
+    connect?: WorkspaceSettingsWhereUniqueInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFolderCreateWithoutPersonalSpaceInput[] | WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFolderCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFileCreateWithoutPersonalSpaceInput[] | WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFileCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceEntitlementCreateWithoutPersonalSpaceInput[] | WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput | WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceEntitlementCreateManyPersonalSpaceInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput> | ProjectCreateWithoutPersonalSpaceInput[] | ProjectUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutPersonalSpaceInput | ProjectCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: ProjectCreateManyPersonalSpaceInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput = {
+    create?: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: PersonalCreditBalanceCreateOrConnectWithoutPersonalSpaceInput
+    connect?: PersonalCreditBalanceWhereUniqueInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput> | AgentWorkspaceSettingCreateWithoutPersonalSpaceInput[] | AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput | AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutPersonalSpaceNestedInput = {
+    create?: XOR<UserCreateWithoutPersonalSpaceInput, UserUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPersonalSpaceInput
+    upsert?: UserUpsertWithoutPersonalSpaceInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPersonalSpaceInput, UserUpdateWithoutPersonalSpaceInput>, UserUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
+    upsert?: WorkspaceSettingsUpsertWithoutPersonalSpaceInput
+    disconnect?: WorkspaceSettingsWhereInput | boolean
+    delete?: WorkspaceSettingsWhereInput | boolean
+    connect?: WorkspaceSettingsWhereUniqueInput
+    update?: XOR<XOR<WorkspaceSettingsUpdateToOneWithWhereWithoutPersonalSpaceInput, WorkspaceSettingsUpdateWithoutPersonalSpaceInput>, WorkspaceSettingsUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFolderCreateWithoutPersonalSpaceInput[] | WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFolderUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFolderCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFolderUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceFolderUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFileCreateWithoutPersonalSpaceInput[] | WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFileUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFileCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFileUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceFileUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceEntitlementCreateWithoutPersonalSpaceInput[] | WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput | WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceEntitlementCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceEntitlementUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type ProjectUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput> | ProjectCreateWithoutPersonalSpaceInput[] | ProjectUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutPersonalSpaceInput | ProjectCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutPersonalSpaceInput | ProjectUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: ProjectCreateManyPersonalSpaceInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutPersonalSpaceInput | ProjectUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutPersonalSpaceInput | ProjectUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput = {
+    create?: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: PersonalCreditBalanceCreateOrConnectWithoutPersonalSpaceInput
+    upsert?: PersonalCreditBalanceUpsertWithoutPersonalSpaceInput
+    disconnect?: PersonalCreditBalanceWhereInput | boolean
+    delete?: PersonalCreditBalanceWhereInput | boolean
+    connect?: PersonalCreditBalanceWhereUniqueInput
+    update?: XOR<XOR<PersonalCreditBalanceUpdateToOneWithWhereWithoutPersonalSpaceInput, PersonalCreditBalanceUpdateWithoutPersonalSpaceInput>, PersonalCreditBalanceUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput> | AgentWorkspaceSettingCreateWithoutPersonalSpaceInput[] | AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput | AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: AgentWorkspaceSettingUpsertWithWhereUniqueWithoutPersonalSpaceInput | AgentWorkspaceSettingUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope
+    set?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    disconnect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    delete?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    update?: AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
+    upsert?: WorkspaceSettingsUpsertWithoutPersonalSpaceInput
+    disconnect?: WorkspaceSettingsWhereInput | boolean
+    delete?: WorkspaceSettingsWhereInput | boolean
+    connect?: WorkspaceSettingsWhereUniqueInput
+    update?: XOR<XOR<WorkspaceSettingsUpdateToOneWithWhereWithoutPersonalSpaceInput, WorkspaceSettingsUpdateWithoutPersonalSpaceInput>, WorkspaceSettingsUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFolderCreateWithoutPersonalSpaceInput[] | WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFolderUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFolderCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFolderUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceFolderUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceFileCreateWithoutPersonalSpaceInput[] | WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput | WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFileUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceFileCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceFileUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceFileUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput> | WorkspaceEntitlementCreateWithoutPersonalSpaceInput[] | WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput | WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: WorkspaceEntitlementCreateManyPersonalSpaceInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutPersonalSpaceInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutPersonalSpaceInput | WorkspaceEntitlementUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput> | ProjectCreateWithoutPersonalSpaceInput[] | ProjectUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutPersonalSpaceInput | ProjectCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutPersonalSpaceInput | ProjectUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: ProjectCreateManyPersonalSpaceInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutPersonalSpaceInput | ProjectUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutPersonalSpaceInput | ProjectUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput = {
+    create?: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+    connectOrCreate?: PersonalCreditBalanceCreateOrConnectWithoutPersonalSpaceInput
+    upsert?: PersonalCreditBalanceUpsertWithoutPersonalSpaceInput
+    disconnect?: PersonalCreditBalanceWhereInput | boolean
+    delete?: PersonalCreditBalanceWhereInput | boolean
+    connect?: PersonalCreditBalanceWhereUniqueInput
+    update?: XOR<XOR<PersonalCreditBalanceUpdateToOneWithWhereWithoutPersonalSpaceInput, PersonalCreditBalanceUpdateWithoutPersonalSpaceInput>, PersonalCreditBalanceUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput> | AgentWorkspaceSettingCreateWithoutPersonalSpaceInput[] | AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput | AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: AgentWorkspaceSettingUpsertWithWhereUniqueWithoutPersonalSpaceInput | AgentWorkspaceSettingUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope
+    set?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    disconnect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    delete?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+    update?: AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutCreditBalanceInput = {
+    create?: XOR<PersonalSpaceCreateWithoutCreditBalanceInput, PersonalSpaceUncheckedCreateWithoutCreditBalanceInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutCreditBalanceInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type PersonalSpaceUpdateOneRequiredWithoutCreditBalanceNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutCreditBalanceInput, PersonalSpaceUncheckedCreateWithoutCreditBalanceInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutCreditBalanceInput
+    upsert?: PersonalSpaceUpsertWithoutCreditBalanceInput
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutCreditBalanceInput, PersonalSpaceUpdateWithoutCreditBalanceInput>, PersonalSpaceUncheckedUpdateWithoutCreditBalanceInput>
+  }
+
+  export type CompanyCreateNestedOneWithoutMembersInput = {
+    create?: XOR<CompanyCreateWithoutMembersInput, CompanyUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutMembersInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCompanyMembersInput = {
+    create?: XOR<UserCreateWithoutCompanyMembersInput, UserUncheckedCreateWithoutCompanyMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyMembersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type RoleCreateNestedOneWithoutCompanyMembersInput = {
+    create?: XOR<RoleCreateWithoutCompanyMembersInput, RoleUncheckedCreateWithoutCompanyMembersInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutCompanyMembersInput
+    connect?: RoleWhereUniqueInput
+  }
+
+  export type CompanyUpdateOneRequiredWithoutMembersNestedInput = {
+    create?: XOR<CompanyCreateWithoutMembersInput, CompanyUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutMembersInput
+    upsert?: CompanyUpsertWithoutMembersInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutMembersInput, CompanyUpdateWithoutMembersInput>, CompanyUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCompanyMembersNestedInput = {
+    create?: XOR<UserCreateWithoutCompanyMembersInput, UserUncheckedCreateWithoutCompanyMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCompanyMembersInput
+    upsert?: UserUpsertWithoutCompanyMembersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCompanyMembersInput, UserUpdateWithoutCompanyMembersInput>, UserUncheckedUpdateWithoutCompanyMembersInput>
+  }
+
+  export type RoleUpdateOneRequiredWithoutCompanyMembersNestedInput = {
+    create?: XOR<RoleCreateWithoutCompanyMembersInput, RoleUncheckedCreateWithoutCompanyMembersInput>
+    connectOrCreate?: RoleCreateOrConnectWithoutCompanyMembersInput
+    upsert?: RoleUpsertWithoutCompanyMembersInput
+    connect?: RoleWhereUniqueInput
+    update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutCompanyMembersInput, RoleUpdateWithoutCompanyMembersInput>, RoleUncheckedUpdateWithoutCompanyMembersInput>
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutSettingsInput = {
+    create?: XOR<PersonalSpaceCreateWithoutSettingsInput, PersonalSpaceUncheckedCreateWithoutSettingsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutSettingsInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutWorkspaceSettingsInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceSettingsInput, CompanyUncheckedCreateWithoutWorkspaceSettingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceSettingsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type PersonalSpaceUpdateOneWithoutSettingsNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutSettingsInput, PersonalSpaceUncheckedCreateWithoutSettingsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutSettingsInput
+    upsert?: PersonalSpaceUpsertWithoutSettingsInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutSettingsInput, PersonalSpaceUpdateWithoutSettingsInput>, PersonalSpaceUncheckedUpdateWithoutSettingsInput>
+  }
+
+  export type CompanyUpdateOneWithoutWorkspaceSettingsNestedInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceSettingsInput, CompanyUncheckedCreateWithoutWorkspaceSettingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceSettingsInput
+    upsert?: CompanyUpsertWithoutWorkspaceSettingsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutWorkspaceSettingsInput, CompanyUpdateWithoutWorkspaceSettingsInput>, CompanyUncheckedUpdateWithoutWorkspaceSettingsInput>
+  }
+
+  export type WorkspaceEntitlementCreateNestedManyWithoutItemInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput> | WorkspaceEntitlementCreateWithoutItemInput[] | WorkspaceEntitlementUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutItemInput | WorkspaceEntitlementCreateOrConnectWithoutItemInput[]
+    createMany?: WorkspaceEntitlementCreateManyItemInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput> | WorkspaceEntitlementCreateWithoutItemInput[] | WorkspaceEntitlementUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutItemInput | WorkspaceEntitlementCreateOrConnectWithoutItemInput[]
+    createMany?: WorkspaceEntitlementCreateManyItemInputEnvelope
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+  }
+
+  export type EnumMarketplaceItemTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MarketplaceItemType
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithoutItemNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput> | WorkspaceEntitlementCreateWithoutItemInput[] | WorkspaceEntitlementUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutItemInput | WorkspaceEntitlementCreateOrConnectWithoutItemInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutItemInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: WorkspaceEntitlementCreateManyItemInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutItemInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutItemInput | WorkspaceEntitlementUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput> | WorkspaceEntitlementCreateWithoutItemInput[] | WorkspaceEntitlementUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: WorkspaceEntitlementCreateOrConnectWithoutItemInput | WorkspaceEntitlementCreateOrConnectWithoutItemInput[]
+    upsert?: WorkspaceEntitlementUpsertWithWhereUniqueWithoutItemInput | WorkspaceEntitlementUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: WorkspaceEntitlementCreateManyItemInputEnvelope
+    set?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    disconnect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    delete?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    connect?: WorkspaceEntitlementWhereUniqueInput | WorkspaceEntitlementWhereUniqueInput[]
+    update?: WorkspaceEntitlementUpdateWithWhereUniqueWithoutItemInput | WorkspaceEntitlementUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: WorkspaceEntitlementUpdateManyWithWhereWithoutItemInput | WorkspaceEntitlementUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+  }
+
+  export type MarketplaceItemCreateNestedOneWithoutEntitlementsInput = {
+    create?: XOR<MarketplaceItemCreateWithoutEntitlementsInput, MarketplaceItemUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutEntitlementsInput
+    connect?: MarketplaceItemWhereUniqueInput
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutEntitlementsInput = {
+    create?: XOR<PersonalSpaceCreateWithoutEntitlementsInput, PersonalSpaceUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutEntitlementsInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutEntitlementsInput = {
+    create?: XOR<CompanyCreateWithoutEntitlementsInput, CompanyUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutEntitlementsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type MarketplaceItemUpdateOneRequiredWithoutEntitlementsNestedInput = {
+    create?: XOR<MarketplaceItemCreateWithoutEntitlementsInput, MarketplaceItemUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: MarketplaceItemCreateOrConnectWithoutEntitlementsInput
+    upsert?: MarketplaceItemUpsertWithoutEntitlementsInput
+    connect?: MarketplaceItemWhereUniqueInput
+    update?: XOR<XOR<MarketplaceItemUpdateToOneWithWhereWithoutEntitlementsInput, MarketplaceItemUpdateWithoutEntitlementsInput>, MarketplaceItemUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type PersonalSpaceUpdateOneWithoutEntitlementsNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutEntitlementsInput, PersonalSpaceUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutEntitlementsInput
+    upsert?: PersonalSpaceUpsertWithoutEntitlementsInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutEntitlementsInput, PersonalSpaceUpdateWithoutEntitlementsInput>, PersonalSpaceUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type CompanyUpdateOneWithoutEntitlementsNestedInput = {
+    create?: XOR<CompanyCreateWithoutEntitlementsInput, CompanyUncheckedCreateWithoutEntitlementsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutEntitlementsInput
+    upsert?: CompanyUpsertWithoutEntitlementsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutEntitlementsInput, CompanyUpdateWithoutEntitlementsInput>, CompanyUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutAgentWorkspaceSettingsInput = {
+    create?: XOR<PersonalSpaceCreateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutAgentWorkspaceSettingsInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutAgentWorkspaceSettingsInput = {
+    create?: XOR<CompanyCreateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAgentWorkspaceSettingsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type PersonalSpaceUpdateOneWithoutAgentWorkspaceSettingsNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutAgentWorkspaceSettingsInput
+    upsert?: PersonalSpaceUpsertWithoutAgentWorkspaceSettingsInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutAgentWorkspaceSettingsInput, PersonalSpaceUpdateWithoutAgentWorkspaceSettingsInput>, PersonalSpaceUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type CompanyUpdateOneWithoutAgentWorkspaceSettingsNestedInput = {
+    create?: XOR<CompanyCreateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAgentWorkspaceSettingsInput
+    upsert?: CompanyUpsertWithoutAgentWorkspaceSettingsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutAgentWorkspaceSettingsInput, CompanyUpdateWithoutAgentWorkspaceSettingsInput>, CompanyUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutFoldersInput = {
+    create?: XOR<PersonalSpaceCreateWithoutFoldersInput, PersonalSpaceUncheckedCreateWithoutFoldersInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutFoldersInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutWorkspaceFoldersInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceFoldersInput, CompanyUncheckedCreateWithoutWorkspaceFoldersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceFoldersInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type WorkspaceFolderCreateNestedOneWithoutChildrenInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutChildrenInput, WorkspaceFolderUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutChildrenInput
+    connect?: WorkspaceFolderWhereUniqueInput
+  }
+
+  export type WorkspaceFolderCreateNestedManyWithoutParentInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput> | WorkspaceFolderCreateWithoutParentInput[] | WorkspaceFolderUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutParentInput | WorkspaceFolderCreateOrConnectWithoutParentInput[]
+    createMany?: WorkspaceFolderCreateManyParentInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileCreateNestedManyWithoutFolderInput = {
+    create?: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput> | WorkspaceFileCreateWithoutFolderInput[] | WorkspaceFileUncheckedCreateWithoutFolderInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutFolderInput | WorkspaceFileCreateOrConnectWithoutFolderInput[]
+    createMany?: WorkspaceFileCreateManyFolderInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput> | WorkspaceFolderCreateWithoutParentInput[] | WorkspaceFolderUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutParentInput | WorkspaceFolderCreateOrConnectWithoutParentInput[]
+    createMany?: WorkspaceFolderCreateManyParentInputEnvelope
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+  }
+
+  export type WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput = {
+    create?: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput> | WorkspaceFileCreateWithoutFolderInput[] | WorkspaceFileUncheckedCreateWithoutFolderInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutFolderInput | WorkspaceFileCreateOrConnectWithoutFolderInput[]
+    createMany?: WorkspaceFileCreateManyFolderInputEnvelope
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+  }
+
+  export type EnumWorkspaceFolderKindFieldUpdateOperationsInput = {
+    set?: $Enums.WorkspaceFolderKind
+  }
+
+  export type PersonalSpaceUpdateOneWithoutFoldersNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutFoldersInput, PersonalSpaceUncheckedCreateWithoutFoldersInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutFoldersInput
+    upsert?: PersonalSpaceUpsertWithoutFoldersInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutFoldersInput, PersonalSpaceUpdateWithoutFoldersInput>, PersonalSpaceUncheckedUpdateWithoutFoldersInput>
+  }
+
+  export type CompanyUpdateOneWithoutWorkspaceFoldersNestedInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceFoldersInput, CompanyUncheckedCreateWithoutWorkspaceFoldersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceFoldersInput
+    upsert?: CompanyUpsertWithoutWorkspaceFoldersInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutWorkspaceFoldersInput, CompanyUpdateWithoutWorkspaceFoldersInput>, CompanyUncheckedUpdateWithoutWorkspaceFoldersInput>
+  }
+
+  export type WorkspaceFolderUpdateOneWithoutChildrenNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutChildrenInput, WorkspaceFolderUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutChildrenInput
+    upsert?: WorkspaceFolderUpsertWithoutChildrenInput
+    disconnect?: WorkspaceFolderWhereInput | boolean
+    delete?: WorkspaceFolderWhereInput | boolean
+    connect?: WorkspaceFolderWhereUniqueInput
+    update?: XOR<XOR<WorkspaceFolderUpdateToOneWithWhereWithoutChildrenInput, WorkspaceFolderUpdateWithoutChildrenInput>, WorkspaceFolderUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithoutParentNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput> | WorkspaceFolderCreateWithoutParentInput[] | WorkspaceFolderUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutParentInput | WorkspaceFolderCreateOrConnectWithoutParentInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutParentInput | WorkspaceFolderUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: WorkspaceFolderCreateManyParentInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutParentInput | WorkspaceFolderUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutParentInput | WorkspaceFolderUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUpdateManyWithoutFolderNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput> | WorkspaceFileCreateWithoutFolderInput[] | WorkspaceFileUncheckedCreateWithoutFolderInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutFolderInput | WorkspaceFileCreateOrConnectWithoutFolderInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutFolderInput | WorkspaceFileUpsertWithWhereUniqueWithoutFolderInput[]
+    createMany?: WorkspaceFileCreateManyFolderInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutFolderInput | WorkspaceFileUpdateWithWhereUniqueWithoutFolderInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutFolderInput | WorkspaceFileUpdateManyWithWhereWithoutFolderInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput> | WorkspaceFolderCreateWithoutParentInput[] | WorkspaceFolderUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutParentInput | WorkspaceFolderCreateOrConnectWithoutParentInput[]
+    upsert?: WorkspaceFolderUpsertWithWhereUniqueWithoutParentInput | WorkspaceFolderUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: WorkspaceFolderCreateManyParentInputEnvelope
+    set?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    disconnect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    delete?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    connect?: WorkspaceFolderWhereUniqueInput | WorkspaceFolderWhereUniqueInput[]
+    update?: WorkspaceFolderUpdateWithWhereUniqueWithoutParentInput | WorkspaceFolderUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: WorkspaceFolderUpdateManyWithWhereWithoutParentInput | WorkspaceFolderUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput = {
+    create?: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput> | WorkspaceFileCreateWithoutFolderInput[] | WorkspaceFileUncheckedCreateWithoutFolderInput[]
+    connectOrCreate?: WorkspaceFileCreateOrConnectWithoutFolderInput | WorkspaceFileCreateOrConnectWithoutFolderInput[]
+    upsert?: WorkspaceFileUpsertWithWhereUniqueWithoutFolderInput | WorkspaceFileUpsertWithWhereUniqueWithoutFolderInput[]
+    createMany?: WorkspaceFileCreateManyFolderInputEnvelope
+    set?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    disconnect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    delete?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    connect?: WorkspaceFileWhereUniqueInput | WorkspaceFileWhereUniqueInput[]
+    update?: WorkspaceFileUpdateWithWhereUniqueWithoutFolderInput | WorkspaceFileUpdateWithWhereUniqueWithoutFolderInput[]
+    updateMany?: WorkspaceFileUpdateManyWithWhereWithoutFolderInput | WorkspaceFileUpdateManyWithWhereWithoutFolderInput[]
+    deleteMany?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutFilesInput = {
+    create?: XOR<PersonalSpaceCreateWithoutFilesInput, PersonalSpaceUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutFilesInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutWorkspaceFilesInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceFilesInput, CompanyUncheckedCreateWithoutWorkspaceFilesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceFilesInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type WorkspaceFolderCreateNestedOneWithoutFilesInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutFilesInput, WorkspaceFolderUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutFilesInput
+    connect?: WorkspaceFolderWhereUniqueInput
+  }
+
+  export type EnumWorkspaceFileStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WorkspaceFileStatus
+  }
+
+  export type EnumWorkspaceFileOriginFieldUpdateOperationsInput = {
+    set?: $Enums.WorkspaceFileOrigin
+  }
+
+  export type PersonalSpaceUpdateOneWithoutFilesNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutFilesInput, PersonalSpaceUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutFilesInput
+    upsert?: PersonalSpaceUpsertWithoutFilesInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutFilesInput, PersonalSpaceUpdateWithoutFilesInput>, PersonalSpaceUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type CompanyUpdateOneWithoutWorkspaceFilesNestedInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceFilesInput, CompanyUncheckedCreateWithoutWorkspaceFilesInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceFilesInput
+    upsert?: CompanyUpsertWithoutWorkspaceFilesInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutWorkspaceFilesInput, CompanyUpdateWithoutWorkspaceFilesInput>, CompanyUncheckedUpdateWithoutWorkspaceFilesInput>
+  }
+
+  export type WorkspaceFolderUpdateOneRequiredWithoutFilesNestedInput = {
+    create?: XOR<WorkspaceFolderCreateWithoutFilesInput, WorkspaceFolderUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: WorkspaceFolderCreateOrConnectWithoutFilesInput
+    upsert?: WorkspaceFolderUpsertWithoutFilesInput
+    connect?: WorkspaceFolderWhereUniqueInput
+    update?: XOR<XOR<WorkspaceFolderUpdateToOneWithWhereWithoutFilesInput, WorkspaceFolderUpdateWithoutFilesInput>, WorkspaceFolderUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type ProjectCreatelinkedAgentIdsInput = {
+    set: string[]
+  }
+
+  export type PersonalSpaceCreateNestedOneWithoutProjectsInput = {
+    create?: XOR<PersonalSpaceCreateWithoutProjectsInput, PersonalSpaceUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutProjectsInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutProjectsInput = {
+    create?: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProjectsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type ProjectUpdatelinkedAgentIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type PersonalSpaceUpdateOneWithoutProjectsNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutProjectsInput, PersonalSpaceUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutProjectsInput
+    upsert?: PersonalSpaceUpsertWithoutProjectsInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutProjectsInput, PersonalSpaceUpdateWithoutProjectsInput>, PersonalSpaceUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type CompanyUpdateOneWithoutProjectsNestedInput = {
+    create?: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProjectsInput
+    upsert?: CompanyUpsertWithoutProjectsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutProjectsInput, CompanyUpdateWithoutProjectsInput>, CompanyUncheckedUpdateWithoutProjectsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -57629,6 +74472,74 @@ export namespace Prisma {
     _max?: NestedEnumRagIndexJobStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumMarketplaceItemTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MarketplaceItemType | EnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel> | $Enums.MarketplaceItemType
+  }
+
+  export type NestedEnumMarketplaceItemTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MarketplaceItemType | EnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MarketplaceItemType[] | ListEnumMarketplaceItemTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMarketplaceItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.MarketplaceItemType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+    _max?: NestedEnumMarketplaceItemTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWorkspaceFolderKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFolderKind | EnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel> | $Enums.WorkspaceFolderKind
+  }
+
+  export type NestedEnumWorkspaceFolderKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFolderKind | EnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFolderKind[] | ListEnumWorkspaceFolderKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFolderKindWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFolderKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFolderKindFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWorkspaceFileStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileStatus | EnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel> | $Enums.WorkspaceFileStatus
+  }
+
+  export type NestedEnumWorkspaceFileOriginFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileOrigin | EnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel> | $Enums.WorkspaceFileOrigin
+  }
+
+  export type NestedEnumWorkspaceFileStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileStatus | EnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileStatus[] | ListEnumWorkspaceFileStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFileStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFileStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWorkspaceFileOriginWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceFileOrigin | EnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceFileOrigin[] | ListEnumWorkspaceFileOriginFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceFileOriginWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceFileOrigin
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceFileOriginFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutUserInput = {
     id: string
     accountId: string
@@ -57740,6 +74651,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutOwnerInput = {
@@ -57761,6 +74679,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutOwnerInput = {
@@ -57771,6 +74696,63 @@ export namespace Prisma {
   export type CompanyCreateManyOwnerInputEnvelope = {
     data: CompanyCreateManyOwnerInput | CompanyCreateManyOwnerInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CompanyMemberCreateWithoutUserInput = {
+    id?: string
+    joinedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutMembersInput
+    role: RoleCreateNestedOneWithoutCompanyMembersInput
+  }
+
+  export type CompanyMemberUncheckedCreateWithoutUserInput = {
+    id?: string
+    companyId: string
+    roleId: string
+    joinedAt?: Date | string
+  }
+
+  export type CompanyMemberCreateOrConnectWithoutUserInput = {
+    where: CompanyMemberWhereUniqueInput
+    create: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type CompanyMemberCreateManyUserInputEnvelope = {
+    data: CompanyMemberCreateManyUserInput | CompanyMemberCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PersonalSpaceCreateWithoutUserInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutUserInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
   }
 
   export type AgentFeedbackCreateWithoutUserInput = {
@@ -57935,6 +74917,72 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Company"> | Date | string
   }
 
+  export type CompanyMemberUpsertWithWhereUniqueWithoutUserInput = {
+    where: CompanyMemberWhereUniqueInput
+    update: XOR<CompanyMemberUpdateWithoutUserInput, CompanyMemberUncheckedUpdateWithoutUserInput>
+    create: XOR<CompanyMemberCreateWithoutUserInput, CompanyMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type CompanyMemberUpdateWithWhereUniqueWithoutUserInput = {
+    where: CompanyMemberWhereUniqueInput
+    data: XOR<CompanyMemberUpdateWithoutUserInput, CompanyMemberUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CompanyMemberUpdateManyWithWhereWithoutUserInput = {
+    where: CompanyMemberScalarWhereInput
+    data: XOR<CompanyMemberUpdateManyMutationInput, CompanyMemberUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CompanyMemberScalarWhereInput = {
+    AND?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+    OR?: CompanyMemberScalarWhereInput[]
+    NOT?: CompanyMemberScalarWhereInput | CompanyMemberScalarWhereInput[]
+    id?: StringFilter<"CompanyMember"> | string
+    companyId?: StringFilter<"CompanyMember"> | string
+    userId?: StringFilter<"CompanyMember"> | string
+    roleId?: StringFilter<"CompanyMember"> | string
+    joinedAt?: DateTimeFilter<"CompanyMember"> | Date | string
+  }
+
+  export type PersonalSpaceUpsertWithoutUserInput = {
+    update: XOR<PersonalSpaceUpdateWithoutUserInput, PersonalSpaceUncheckedUpdateWithoutUserInput>
+    create: XOR<PersonalSpaceCreateWithoutUserInput, PersonalSpaceUncheckedCreateWithoutUserInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutUserInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutUserInput, PersonalSpaceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
   export type AgentFeedbackUpsertWithWhereUniqueWithoutUserInput = {
     where: AgentFeedbackWhereUniqueInput
     update: XOR<AgentFeedbackUpdateWithoutUserInput, AgentFeedbackUncheckedUpdateWithoutUserInput>
@@ -57981,6 +75029,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
   }
 
@@ -57996,6 +75046,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -58027,6 +75079,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
   }
 
@@ -58042,6 +75096,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -58057,6 +75113,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
   }
 
@@ -58072,6 +75130,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -58103,6 +75163,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
   }
 
@@ -58118,6 +75180,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -58163,6 +75227,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CompanyMemberCreateWithoutRoleInput = {
+    id?: string
+    joinedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutMembersInput
+    user: UserCreateNestedOneWithoutCompanyMembersInput
+  }
+
+  export type CompanyMemberUncheckedCreateWithoutRoleInput = {
+    id?: string
+    companyId: string
+    userId: string
+    joinedAt?: Date | string
+  }
+
+  export type CompanyMemberCreateOrConnectWithoutRoleInput = {
+    where: CompanyMemberWhereUniqueInput
+    create: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput>
+  }
+
+  export type CompanyMemberCreateManyRoleInputEnvelope = {
+    data: CompanyMemberCreateManyRoleInput | CompanyMemberCreateManyRoleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RolePermissionUpsertWithWhereUniqueWithoutRoleInput = {
     where: RolePermissionWhereUniqueInput
     update: XOR<RolePermissionUpdateWithoutRoleInput, RolePermissionUncheckedUpdateWithoutRoleInput>
@@ -58204,6 +75292,22 @@ export namespace Prisma {
     data: XOR<UserRoleAssignmentUpdateManyMutationInput, UserRoleAssignmentUncheckedUpdateManyWithoutRoleInput>
   }
 
+  export type CompanyMemberUpsertWithWhereUniqueWithoutRoleInput = {
+    where: CompanyMemberWhereUniqueInput
+    update: XOR<CompanyMemberUpdateWithoutRoleInput, CompanyMemberUncheckedUpdateWithoutRoleInput>
+    create: XOR<CompanyMemberCreateWithoutRoleInput, CompanyMemberUncheckedCreateWithoutRoleInput>
+  }
+
+  export type CompanyMemberUpdateWithWhereUniqueWithoutRoleInput = {
+    where: CompanyMemberWhereUniqueInput
+    data: XOR<CompanyMemberUpdateWithoutRoleInput, CompanyMemberUncheckedUpdateWithoutRoleInput>
+  }
+
+  export type CompanyMemberUpdateManyWithWhereWithoutRoleInput = {
+    where: CompanyMemberScalarWhereInput
+    data: XOR<CompanyMemberUpdateManyMutationInput, CompanyMemberUncheckedUpdateManyWithoutRoleInput>
+  }
+
   export type RoleCreateWithoutPermissionsInput = {
     id?: string
     name: string
@@ -58211,6 +75315,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     memberAssignments?: UserRoleAssignmentCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutPermissionsInput = {
@@ -58220,6 +75325,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     memberAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutPermissionsInput = {
@@ -58245,6 +75351,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberAssignments?: UserRoleAssignmentUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutPermissionsInput = {
@@ -58254,6 +75361,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type UserCreateWithoutRoleAssignmentsInput = {
@@ -58268,6 +75376,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
   }
 
@@ -58283,6 +75393,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -58298,6 +75410,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     permissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutMemberAssignmentsInput = {
@@ -58307,6 +75420,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     permissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutMemberAssignmentsInput = {
@@ -58337,6 +75451,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
   }
 
@@ -58352,6 +75468,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -58373,6 +75491,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutMemberAssignmentsInput = {
@@ -58382,6 +75501,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     permissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type UserCreateWithoutOwnedCompaniesInput = {
@@ -58396,6 +75516,8 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
   }
 
@@ -58411,6 +75533,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
     agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -58899,6 +76023,229 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CompanyMemberCreateWithoutCompanyInput = {
+    id?: string
+    joinedAt?: Date | string
+    user: UserCreateNestedOneWithoutCompanyMembersInput
+    role: RoleCreateNestedOneWithoutCompanyMembersInput
+  }
+
+  export type CompanyMemberUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    userId: string
+    roleId: string
+    joinedAt?: Date | string
+  }
+
+  export type CompanyMemberCreateOrConnectWithoutCompanyInput = {
+    where: CompanyMemberWhereUniqueInput
+    create: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CompanyMemberCreateManyCompanyInputEnvelope = {
+    data: CompanyMemberCreateManyCompanyInput | CompanyMemberCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceSettingsCreateWithoutCompanyInput = {
+    id?: string
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutSettingsInput
+  }
+
+  export type WorkspaceSettingsUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceSettingsCreateOrConnectWithoutCompanyInput = {
+    where: WorkspaceSettingsWhereUniqueInput
+    create: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFoldersInput
+    parent?: WorkspaceFolderCreateNestedOneWithoutChildrenInput
+    children?: WorkspaceFolderCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderCreateOrConnectWithoutCompanyInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    create: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderCreateManyCompanyInputEnvelope = {
+    data: WorkspaceFolderCreateManyCompanyInput | WorkspaceFolderCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceFileCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFilesInput
+    folder: WorkspaceFolderCreateNestedOneWithoutFilesInput
+  }
+
+  export type WorkspaceFileUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateOrConnectWithoutCompanyInput = {
+    where: WorkspaceFileWhereUniqueInput
+    create: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFileCreateManyCompanyInputEnvelope = {
+    data: WorkspaceFileCreateManyCompanyInput | WorkspaceFileCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceEntitlementCreateWithoutCompanyInput = {
+    id?: string
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutEntitlementsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutEntitlementsInput
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    itemId: string
+    personalSpaceId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementCreateOrConnectWithoutCompanyInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    create: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceEntitlementCreateManyCompanyInputEnvelope = {
+    data: WorkspaceEntitlementCreateManyCompanyInput | WorkspaceEntitlementCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectCreateWithoutCompanyInput = {
+    id?: string
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectCreateOrConnectWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ProjectCreateManyCompanyInputEnvelope = {
+    data: ProjectCreateManyCompanyInput | ProjectCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AgentWorkspaceSettingCreateWithoutCompanyInput = {
+    id?: string
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentWorkspaceSettingsInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateOrConnectWithoutCompanyInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    create: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type AgentWorkspaceSettingCreateManyCompanyInputEnvelope = {
+    data: AgentWorkspaceSettingCreateManyCompanyInput | AgentWorkspaceSettingCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutOwnedCompaniesInput = {
     update: XOR<UserUpdateWithoutOwnedCompaniesInput, UserUncheckedUpdateWithoutOwnedCompaniesInput>
     create: XOR<UserCreateWithoutOwnedCompaniesInput, UserUncheckedCreateWithoutOwnedCompaniesInput>
@@ -58922,6 +76269,8 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
   }
 
@@ -58937,6 +76286,8 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
     agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -59341,6 +76692,219 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"RagIndexJob"> | Date | string
   }
 
+  export type CompanyMemberUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: CompanyMemberWhereUniqueInput
+    update: XOR<CompanyMemberUpdateWithoutCompanyInput, CompanyMemberUncheckedUpdateWithoutCompanyInput>
+    create: XOR<CompanyMemberCreateWithoutCompanyInput, CompanyMemberUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type CompanyMemberUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: CompanyMemberWhereUniqueInput
+    data: XOR<CompanyMemberUpdateWithoutCompanyInput, CompanyMemberUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type CompanyMemberUpdateManyWithWhereWithoutCompanyInput = {
+    where: CompanyMemberScalarWhereInput
+    data: XOR<CompanyMemberUpdateManyMutationInput, CompanyMemberUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type WorkspaceSettingsUpsertWithoutCompanyInput = {
+    update: XOR<WorkspaceSettingsUpdateWithoutCompanyInput, WorkspaceSettingsUncheckedUpdateWithoutCompanyInput>
+    create: XOR<WorkspaceSettingsCreateWithoutCompanyInput, WorkspaceSettingsUncheckedCreateWithoutCompanyInput>
+    where?: WorkspaceSettingsWhereInput
+  }
+
+  export type WorkspaceSettingsUpdateToOneWithWhereWithoutCompanyInput = {
+    where?: WorkspaceSettingsWhereInput
+    data: XOR<WorkspaceSettingsUpdateWithoutCompanyInput, WorkspaceSettingsUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceSettingsUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutSettingsNestedInput
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    update: XOR<WorkspaceFolderUpdateWithoutCompanyInput, WorkspaceFolderUncheckedUpdateWithoutCompanyInput>
+    create: XOR<WorkspaceFolderCreateWithoutCompanyInput, WorkspaceFolderUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    data: XOR<WorkspaceFolderUpdateWithoutCompanyInput, WorkspaceFolderUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithWhereWithoutCompanyInput = {
+    where: WorkspaceFolderScalarWhereInput
+    data: XOR<WorkspaceFolderUpdateManyMutationInput, WorkspaceFolderUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type WorkspaceFolderScalarWhereInput = {
+    AND?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+    OR?: WorkspaceFolderScalarWhereInput[]
+    NOT?: WorkspaceFolderScalarWhereInput | WorkspaceFolderScalarWhereInput[]
+    id?: StringFilter<"WorkspaceFolder"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    parentId?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    name?: StringFilter<"WorkspaceFolder"> | string
+    kind?: EnumWorkspaceFolderKindFilter<"WorkspaceFolder"> | $Enums.WorkspaceFolderKind
+    systemKey?: StringNullableFilter<"WorkspaceFolder"> | string | null
+    createdAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFolder"> | Date | string
+  }
+
+  export type WorkspaceFileUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceFileWhereUniqueInput
+    update: XOR<WorkspaceFileUpdateWithoutCompanyInput, WorkspaceFileUncheckedUpdateWithoutCompanyInput>
+    create: XOR<WorkspaceFileCreateWithoutCompanyInput, WorkspaceFileUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFileUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceFileWhereUniqueInput
+    data: XOR<WorkspaceFileUpdateWithoutCompanyInput, WorkspaceFileUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceFileUpdateManyWithWhereWithoutCompanyInput = {
+    where: WorkspaceFileScalarWhereInput
+    data: XOR<WorkspaceFileUpdateManyMutationInput, WorkspaceFileUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type WorkspaceFileScalarWhereInput = {
+    AND?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+    OR?: WorkspaceFileScalarWhereInput[]
+    NOT?: WorkspaceFileScalarWhereInput | WorkspaceFileScalarWhereInput[]
+    id?: StringFilter<"WorkspaceFile"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceFile"> | string | null
+    folderId?: StringFilter<"WorkspaceFile"> | string
+    name?: StringFilter<"WorkspaceFile"> | string
+    mimeType?: StringFilter<"WorkspaceFile"> | string
+    storageKey?: StringFilter<"WorkspaceFile"> | string
+    sizeBytes?: IntNullableFilter<"WorkspaceFile"> | number | null
+    status?: EnumWorkspaceFileStatusFilter<"WorkspaceFile"> | $Enums.WorkspaceFileStatus
+    extractData?: BoolFilter<"WorkspaceFile"> | boolean
+    extractedText?: StringNullableFilter<"WorkspaceFile"> | string | null
+    origin?: EnumWorkspaceFileOriginFilter<"WorkspaceFile"> | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceFile"> | Date | string
+  }
+
+  export type WorkspaceEntitlementUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    update: XOR<WorkspaceEntitlementUpdateWithoutCompanyInput, WorkspaceEntitlementUncheckedUpdateWithoutCompanyInput>
+    create: XOR<WorkspaceEntitlementCreateWithoutCompanyInput, WorkspaceEntitlementUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type WorkspaceEntitlementUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    data: XOR<WorkspaceEntitlementUpdateWithoutCompanyInput, WorkspaceEntitlementUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithWhereWithoutCompanyInput = {
+    where: WorkspaceEntitlementScalarWhereInput
+    data: XOR<WorkspaceEntitlementUpdateManyMutationInput, WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type WorkspaceEntitlementScalarWhereInput = {
+    AND?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+    OR?: WorkspaceEntitlementScalarWhereInput[]
+    NOT?: WorkspaceEntitlementScalarWhereInput | WorkspaceEntitlementScalarWhereInput[]
+    id?: StringFilter<"WorkspaceEntitlement"> | string
+    itemId?: StringFilter<"WorkspaceEntitlement"> | string
+    personalSpaceId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    companyId?: StringNullableFilter<"WorkspaceEntitlement"> | string | null
+    redeemedByUserId?: StringFilter<"WorkspaceEntitlement"> | string
+    redeemedAt?: DateTimeFilter<"WorkspaceEntitlement"> | Date | string
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutCompanyInput, ProjectUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ProjectCreateWithoutCompanyInput, ProjectUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutCompanyInput, ProjectUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutCompanyInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ProjectScalarWhereInput = {
+    AND?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+    OR?: ProjectScalarWhereInput[]
+    NOT?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+    id?: StringFilter<"Project"> | string
+    personalSpaceId?: StringNullableFilter<"Project"> | string | null
+    companyId?: StringNullableFilter<"Project"> | string | null
+    name?: StringFilter<"Project"> | string
+    objective?: StringFilter<"Project"> | string
+    linkedAgentIds?: StringNullableListFilter<"Project">
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
+  }
+
+  export type AgentWorkspaceSettingUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    update: XOR<AgentWorkspaceSettingUpdateWithoutCompanyInput, AgentWorkspaceSettingUncheckedUpdateWithoutCompanyInput>
+    create: XOR<AgentWorkspaceSettingCreateWithoutCompanyInput, AgentWorkspaceSettingUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type AgentWorkspaceSettingUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    data: XOR<AgentWorkspaceSettingUpdateWithoutCompanyInput, AgentWorkspaceSettingUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type AgentWorkspaceSettingUpdateManyWithWhereWithoutCompanyInput = {
+    where: AgentWorkspaceSettingScalarWhereInput
+    data: XOR<AgentWorkspaceSettingUpdateManyMutationInput, AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type AgentWorkspaceSettingScalarWhereInput = {
+    AND?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+    OR?: AgentWorkspaceSettingScalarWhereInput[]
+    NOT?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+    id?: StringFilter<"AgentWorkspaceSetting"> | string
+    personalSpaceId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    companyId?: StringNullableFilter<"AgentWorkspaceSetting"> | string | null
+    agentId?: StringFilter<"AgentWorkspaceSetting"> | string
+    config?: JsonFilter<"AgentWorkspaceSetting">
+    createdAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+    updatedAt?: DateTimeFilter<"AgentWorkspaceSetting"> | Date | string
+  }
+
   export type CompanyCreateWithoutBrandProfileInput = {
     id?: string
     name: string
@@ -59360,6 +76924,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutBrandProfileInput = {
@@ -59381,6 +76952,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutBrandProfileInput = {
@@ -59418,6 +76996,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutBrandProfileInput = {
@@ -59439,6 +77024,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutCampaignsInput = {
@@ -59460,6 +77052,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCampaignsInput = {
@@ -59481,6 +77080,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCampaignsInput = {
@@ -59686,6 +77292,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCampaignsInput = {
@@ -59707,6 +77320,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CampaignFileUpsertWithWhereUniqueWithoutCampaignInput = {
@@ -59792,6 +77412,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCampaignFilesInput = {
@@ -59813,6 +77440,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCampaignFilesInput = {
@@ -59883,6 +77517,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCampaignFilesInput = {
@@ -59904,6 +77545,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CampaignUpsertWithoutFilesInput = {
@@ -59964,6 +77612,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutContentPiecesInput = {
@@ -59985,6 +77640,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutContentPiecesInput = {
@@ -60193,6 +77855,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutContentPiecesInput = {
@@ -60214,6 +77883,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CampaignUpsertWithoutContentPiecesInput = {
@@ -60398,6 +78074,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPipelineRunsInput = {
@@ -60419,6 +78102,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPipelineRunsInput = {
@@ -60599,6 +78289,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPipelineRunsInput = {
@@ -60620,6 +78317,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CampaignUpsertWithoutPipelineRunsInput = {
@@ -60712,6 +78416,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutAgentRunsInput = {
@@ -60733,6 +78444,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutAgentRunsInput = {
@@ -61141,6 +78859,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutAgentRunsInput = {
@@ -61162,6 +78887,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type PipelineRunUpsertWithoutAgentRunsInput = {
@@ -61758,6 +79490,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutAgentFeedbacksInput = {
@@ -61779,6 +79518,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutAgentFeedbacksInput = {
@@ -61840,6 +79586,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAgentFeedbacksInput = {
@@ -61855,6 +79603,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAgentFeedbacksInput = {
@@ -61983,6 +79733,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutAgentFeedbacksInput = {
@@ -62004,6 +79761,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ContentPieceUpsertWithoutFeedbacksInput = {
@@ -62077,6 +79841,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAgentFeedbacksInput = {
@@ -62092,6 +79858,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type LearningSignalUpsertWithWhereUniqueWithoutFeedbackInput = {
@@ -62289,6 +80057,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutAgentMemoriesInput = {
@@ -62310,6 +80085,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutAgentMemoriesInput = {
@@ -62347,6 +80129,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutAgentMemoriesInput = {
@@ -62368,6 +80157,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutCreditBalanceInput = {
@@ -62389,6 +80185,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCreditBalanceInput = {
@@ -62410,6 +80213,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCreditBalanceInput = {
@@ -62447,6 +80257,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCreditBalanceInput = {
@@ -62468,6 +80285,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutCreditLedgerInput = {
@@ -62489,6 +80313,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCreditLedgerInput = {
@@ -62510,6 +80341,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCreditLedgerInput = {
@@ -62651,6 +80489,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCreditLedgerInput = {
@@ -62672,6 +80517,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type AgentRunStepUpsertWithoutCreditLedgerInput = {
@@ -63240,6 +81092,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRagDocumentsInput = {
@@ -63261,6 +81120,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRagDocumentsInput = {
@@ -63401,6 +81267,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRagDocumentsInput = {
@@ -63422,6 +81295,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CampaignUpsertWithoutRagDocumentsInput = {
@@ -63718,6 +81598,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
     creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRagIndexJobsInput = {
@@ -63739,6 +81626,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
     creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
     ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRagIndexJobsInput = {
@@ -63811,6 +81705,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRagIndexJobsInput = {
@@ -63832,6 +81733,13 @@ export namespace Prisma {
     creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type RagDocumentUpsertWithoutIndexJobsInput = {
@@ -63951,6 +81859,2376 @@ export namespace Prisma {
     agentPolicies?: AgentModelPolicyUncheckedUpdateManyWithoutModelNestedInput
   }
 
+  export type UserCreateWithoutPersonalSpaceInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    userType?: $Enums.UserType
+    createdAt: Date | string
+    updatedAt: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
+    ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberCreateNestedManyWithoutUserInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPersonalSpaceInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    userType?: $Enums.UserType
+    createdAt: Date | string
+    updatedAt: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companyMembers?: CompanyMemberUncheckedCreateNestedManyWithoutUserInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPersonalSpaceInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPersonalSpaceInput, UserUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceSettingsCreateWithoutPersonalSpaceInput = {
+    id?: string
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company?: CompanyCreateNestedOneWithoutWorkspaceSettingsInput
+  }
+
+  export type WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    displayName?: string | null
+    niche?: string | null
+    audience?: string | null
+    voice?: string | null
+    positioning?: string | null
+    contentPreferences?: string | null
+    logoStorageKey?: string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput = {
+    where: WorkspaceSettingsWhereUniqueInput
+    create: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderCreateWithoutPersonalSpaceInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company?: CompanyCreateNestedOneWithoutWorkspaceFoldersInput
+    parent?: WorkspaceFolderCreateNestedOneWithoutChildrenInput
+    children?: WorkspaceFolderCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderCreateOrConnectWithoutPersonalSpaceInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    create: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderCreateManyPersonalSpaceInputEnvelope = {
+    data: WorkspaceFolderCreateManyPersonalSpaceInput | WorkspaceFolderCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceFileCreateWithoutPersonalSpaceInput = {
+    id?: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company?: CompanyCreateNestedOneWithoutWorkspaceFilesInput
+    folder: WorkspaceFolderCreateNestedOneWithoutFilesInput
+  }
+
+  export type WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateOrConnectWithoutPersonalSpaceInput = {
+    where: WorkspaceFileWhereUniqueInput
+    create: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFileCreateManyPersonalSpaceInputEnvelope = {
+    data: WorkspaceFileCreateManyPersonalSpaceInput | WorkspaceFileCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceEntitlementCreateWithoutPersonalSpaceInput = {
+    id?: string
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+    item: MarketplaceItemCreateNestedOneWithoutEntitlementsInput
+    company?: CompanyCreateNestedOneWithoutEntitlementsInput
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    itemId: string
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementCreateOrConnectWithoutPersonalSpaceInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    create: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceEntitlementCreateManyPersonalSpaceInputEnvelope = {
+    data: WorkspaceEntitlementCreateManyPersonalSpaceInput | WorkspaceEntitlementCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectCreateWithoutPersonalSpaceInput = {
+    id?: string
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company?: CompanyCreateNestedOneWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectCreateOrConnectWithoutPersonalSpaceInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type ProjectCreateManyPersonalSpaceInputEnvelope = {
+    data: ProjectCreateManyPersonalSpaceInput | ProjectCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PersonalCreditBalanceCreateWithoutPersonalSpaceInput = {
+    id?: string
+    amount?: Decimal | DecimalJsLike | number | string
+    currency?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    amount?: Decimal | DecimalJsLike | number | string
+    currency?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type PersonalCreditBalanceCreateOrConnectWithoutPersonalSpaceInput = {
+    where: PersonalCreditBalanceWhereUniqueInput
+    create: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingCreateWithoutPersonalSpaceInput = {
+    id?: string
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company?: CompanyCreateNestedOneWithoutAgentWorkspaceSettingsInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    create: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope = {
+    data: AgentWorkspaceSettingCreateManyPersonalSpaceInput | AgentWorkspaceSettingCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutPersonalSpaceInput = {
+    update: XOR<UserUpdateWithoutPersonalSpaceInput, UserUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<UserCreateWithoutPersonalSpaceInput, UserUncheckedCreateWithoutPersonalSpaceInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPersonalSpaceInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPersonalSpaceInput, UserUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type UserUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    userType?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
+    ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUpdateManyWithoutUserNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    userType?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companyMembers?: CompanyMemberUncheckedUpdateManyWithoutUserNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type WorkspaceSettingsUpsertWithoutPersonalSpaceInput = {
+    update: XOR<WorkspaceSettingsUpdateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
+    where?: WorkspaceSettingsWhereInput
+  }
+
+  export type WorkspaceSettingsUpdateToOneWithWhereWithoutPersonalSpaceInput = {
+    where?: WorkspaceSettingsWhereInput
+    data: XOR<WorkspaceSettingsUpdateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceSettingsUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneWithoutWorkspaceSettingsNestedInput
+  }
+
+  export type WorkspaceSettingsUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    displayName?: NullableStringFieldUpdateOperationsInput | string | null
+    niche?: NullableStringFieldUpdateOperationsInput | string | null
+    audience?: NullableStringFieldUpdateOperationsInput | string | null
+    voice?: NullableStringFieldUpdateOperationsInput | string | null
+    positioning?: NullableStringFieldUpdateOperationsInput | string | null
+    contentPreferences?: NullableStringFieldUpdateOperationsInput | string | null
+    logoStorageKey?: NullableStringFieldUpdateOperationsInput | string | null
+    palette?: JsonNullValueInput | InputJsonValue
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    update: XOR<WorkspaceFolderUpdateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<WorkspaceFolderCreateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    data: XOR<WorkspaceFolderUpdateWithoutPersonalSpaceInput, WorkspaceFolderUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: WorkspaceFolderScalarWhereInput
+    data: XOR<WorkspaceFolderUpdateManyMutationInput, WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFileUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceFileWhereUniqueInput
+    update: XOR<WorkspaceFileUpdateWithoutPersonalSpaceInput, WorkspaceFileUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<WorkspaceFileCreateWithoutPersonalSpaceInput, WorkspaceFileUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFileUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceFileWhereUniqueInput
+    data: XOR<WorkspaceFileUpdateWithoutPersonalSpaceInput, WorkspaceFileUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceFileUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: WorkspaceFileScalarWhereInput
+    data: XOR<WorkspaceFileUpdateManyMutationInput, WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceEntitlementUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    update: XOR<WorkspaceEntitlementUpdateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<WorkspaceEntitlementCreateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceEntitlementUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    data: XOR<WorkspaceEntitlementUpdateWithoutPersonalSpaceInput, WorkspaceEntitlementUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: WorkspaceEntitlementScalarWhereInput
+    data: XOR<WorkspaceEntitlementUpdateManyMutationInput, WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutPersonalSpaceInput, ProjectUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<ProjectCreateWithoutPersonalSpaceInput, ProjectUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutPersonalSpaceInput, ProjectUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
+  export type PersonalCreditBalanceUpsertWithoutPersonalSpaceInput = {
+    update: XOR<PersonalCreditBalanceUpdateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<PersonalCreditBalanceCreateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedCreateWithoutPersonalSpaceInput>
+    where?: PersonalCreditBalanceWhereInput
+  }
+
+  export type PersonalCreditBalanceUpdateToOneWithWhereWithoutPersonalSpaceInput = {
+    where?: PersonalCreditBalanceWhereInput
+    data: XOR<PersonalCreditBalanceUpdateWithoutPersonalSpaceInput, PersonalCreditBalanceUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type PersonalCreditBalanceUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalCreditBalanceUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    update: XOR<AgentWorkspaceSettingUpdateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<AgentWorkspaceSettingCreateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: AgentWorkspaceSettingWhereUniqueInput
+    data: XOR<AgentWorkspaceSettingUpdateWithoutPersonalSpaceInput, AgentWorkspaceSettingUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: AgentWorkspaceSettingScalarWhereInput
+    data: XOR<AgentWorkspaceSettingUpdateManyMutationInput, AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
+  export type PersonalSpaceCreateWithoutCreditBalanceInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutCreditBalanceInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutCreditBalanceInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutCreditBalanceInput, PersonalSpaceUncheckedCreateWithoutCreditBalanceInput>
+  }
+
+  export type PersonalSpaceUpsertWithoutCreditBalanceInput = {
+    update: XOR<PersonalSpaceUpdateWithoutCreditBalanceInput, PersonalSpaceUncheckedUpdateWithoutCreditBalanceInput>
+    create: XOR<PersonalSpaceCreateWithoutCreditBalanceInput, PersonalSpaceUncheckedCreateWithoutCreditBalanceInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutCreditBalanceInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutCreditBalanceInput, PersonalSpaceUncheckedUpdateWithoutCreditBalanceInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutCreditBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutCreditBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutMembersInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutMembersInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutMembersInput, CompanyUncheckedCreateWithoutMembersInput>
+  }
+
+  export type UserCreateWithoutCompanyMembersInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    userType?: $Enums.UserType
+    createdAt: Date | string
+    updatedAt: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    roleAssignments?: UserRoleAssignmentCreateNestedManyWithoutUserInput
+    ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutUserInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCompanyMembersInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    userType?: $Enums.UserType
+    createdAt: Date | string
+    updatedAt: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    roleAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutUserInput
+    ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    personalSpace?: PersonalSpaceUncheckedCreateNestedOneWithoutUserInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCompanyMembersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCompanyMembersInput, UserUncheckedCreateWithoutCompanyMembersInput>
+  }
+
+  export type RoleCreateWithoutCompanyMembersInput = {
+    id?: string
+    name: string
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissions?: RolePermissionCreateNestedManyWithoutRoleInput
+    memberAssignments?: UserRoleAssignmentCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleUncheckedCreateWithoutCompanyMembersInput = {
+    id?: string
+    name: string
+    isSystem?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    permissions?: RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+    memberAssignments?: UserRoleAssignmentUncheckedCreateNestedManyWithoutRoleInput
+  }
+
+  export type RoleCreateOrConnectWithoutCompanyMembersInput = {
+    where: RoleWhereUniqueInput
+    create: XOR<RoleCreateWithoutCompanyMembersInput, RoleUncheckedCreateWithoutCompanyMembersInput>
+  }
+
+  export type CompanyUpsertWithoutMembersInput = {
+    update: XOR<CompanyUpdateWithoutMembersInput, CompanyUncheckedUpdateWithoutMembersInput>
+    create: XOR<CompanyCreateWithoutMembersInput, CompanyUncheckedCreateWithoutMembersInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutMembersInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutMembersInput, CompanyUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type CompanyUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type UserUpsertWithoutCompanyMembersInput = {
+    update: XOR<UserUpdateWithoutCompanyMembersInput, UserUncheckedUpdateWithoutCompanyMembersInput>
+    create: XOR<UserCreateWithoutCompanyMembersInput, UserUncheckedCreateWithoutCompanyMembersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCompanyMembersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCompanyMembersInput, UserUncheckedUpdateWithoutCompanyMembersInput>
+  }
+
+  export type UserUpdateWithoutCompanyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    userType?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    roleAssignments?: UserRoleAssignmentUpdateManyWithoutUserNestedInput
+    ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutUserNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCompanyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    userType?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    roleAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutUserNestedInput
+    ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    personalSpace?: PersonalSpaceUncheckedUpdateOneWithoutUserNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type RoleUpsertWithoutCompanyMembersInput = {
+    update: XOR<RoleUpdateWithoutCompanyMembersInput, RoleUncheckedUpdateWithoutCompanyMembersInput>
+    create: XOR<RoleCreateWithoutCompanyMembersInput, RoleUncheckedCreateWithoutCompanyMembersInput>
+    where?: RoleWhereInput
+  }
+
+  export type RoleUpdateToOneWithWhereWithoutCompanyMembersInput = {
+    where?: RoleWhereInput
+    data: XOR<RoleUpdateWithoutCompanyMembersInput, RoleUncheckedUpdateWithoutCompanyMembersInput>
+  }
+
+  export type RoleUpdateWithoutCompanyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissions?: RolePermissionUpdateManyWithoutRoleNestedInput
+    memberAssignments?: UserRoleAssignmentUpdateManyWithoutRoleNestedInput
+  }
+
+  export type RoleUncheckedUpdateWithoutCompanyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isSystem?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    permissions?: RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+    memberAssignments?: UserRoleAssignmentUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type PersonalSpaceCreateWithoutSettingsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutSettingsInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutSettingsInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutSettingsInput, PersonalSpaceUncheckedCreateWithoutSettingsInput>
+  }
+
+  export type CompanyCreateWithoutWorkspaceSettingsInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutWorkspaceSettingsInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutWorkspaceSettingsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutWorkspaceSettingsInput, CompanyUncheckedCreateWithoutWorkspaceSettingsInput>
+  }
+
+  export type PersonalSpaceUpsertWithoutSettingsInput = {
+    update: XOR<PersonalSpaceUpdateWithoutSettingsInput, PersonalSpaceUncheckedUpdateWithoutSettingsInput>
+    create: XOR<PersonalSpaceCreateWithoutSettingsInput, PersonalSpaceUncheckedCreateWithoutSettingsInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutSettingsInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutSettingsInput, PersonalSpaceUncheckedUpdateWithoutSettingsInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutWorkspaceSettingsInput = {
+    update: XOR<CompanyUpdateWithoutWorkspaceSettingsInput, CompanyUncheckedUpdateWithoutWorkspaceSettingsInput>
+    create: XOR<CompanyCreateWithoutWorkspaceSettingsInput, CompanyUncheckedCreateWithoutWorkspaceSettingsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutWorkspaceSettingsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutWorkspaceSettingsInput, CompanyUncheckedUpdateWithoutWorkspaceSettingsInput>
+  }
+
+  export type CompanyUpdateWithoutWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type WorkspaceEntitlementCreateWithoutItemInput = {
+    id?: string
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutEntitlementsInput
+    company?: CompanyCreateNestedOneWithoutEntitlementsInput
+  }
+
+  export type WorkspaceEntitlementUncheckedCreateWithoutItemInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementCreateOrConnectWithoutItemInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    create: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput>
+  }
+
+  export type WorkspaceEntitlementCreateManyItemInputEnvelope = {
+    data: WorkspaceEntitlementCreateManyItemInput | WorkspaceEntitlementCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceEntitlementUpsertWithWhereUniqueWithoutItemInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    update: XOR<WorkspaceEntitlementUpdateWithoutItemInput, WorkspaceEntitlementUncheckedUpdateWithoutItemInput>
+    create: XOR<WorkspaceEntitlementCreateWithoutItemInput, WorkspaceEntitlementUncheckedCreateWithoutItemInput>
+  }
+
+  export type WorkspaceEntitlementUpdateWithWhereUniqueWithoutItemInput = {
+    where: WorkspaceEntitlementWhereUniqueInput
+    data: XOR<WorkspaceEntitlementUpdateWithoutItemInput, WorkspaceEntitlementUncheckedUpdateWithoutItemInput>
+  }
+
+  export type WorkspaceEntitlementUpdateManyWithWhereWithoutItemInput = {
+    where: WorkspaceEntitlementScalarWhereInput
+    data: XOR<WorkspaceEntitlementUpdateManyMutationInput, WorkspaceEntitlementUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type MarketplaceItemCreateWithoutEntitlementsInput = {
+    id?: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price?: number
+    flag?: string | null
+    description: string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceItemUncheckedCreateWithoutEntitlementsInput = {
+    id?: string
+    slug: string
+    type: $Enums.MarketplaceItemType
+    name: string
+    author: string
+    price?: number
+    flag?: string | null
+    description: string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceItemCreateOrConnectWithoutEntitlementsInput = {
+    where: MarketplaceItemWhereUniqueInput
+    create: XOR<MarketplaceItemCreateWithoutEntitlementsInput, MarketplaceItemUncheckedCreateWithoutEntitlementsInput>
+  }
+
+  export type PersonalSpaceCreateWithoutEntitlementsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutEntitlementsInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutEntitlementsInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutEntitlementsInput, PersonalSpaceUncheckedCreateWithoutEntitlementsInput>
+  }
+
+  export type CompanyCreateWithoutEntitlementsInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutEntitlementsInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutEntitlementsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutEntitlementsInput, CompanyUncheckedCreateWithoutEntitlementsInput>
+  }
+
+  export type MarketplaceItemUpsertWithoutEntitlementsInput = {
+    update: XOR<MarketplaceItemUpdateWithoutEntitlementsInput, MarketplaceItemUncheckedUpdateWithoutEntitlementsInput>
+    create: XOR<MarketplaceItemCreateWithoutEntitlementsInput, MarketplaceItemUncheckedCreateWithoutEntitlementsInput>
+    where?: MarketplaceItemWhereInput
+  }
+
+  export type MarketplaceItemUpdateToOneWithWhereWithoutEntitlementsInput = {
+    where?: MarketplaceItemWhereInput
+    data: XOR<MarketplaceItemUpdateWithoutEntitlementsInput, MarketplaceItemUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type MarketplaceItemUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceItemUncheckedUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    type?: EnumMarketplaceItemTypeFieldUpdateOperationsInput | $Enums.MarketplaceItemType
+    name?: StringFieldUpdateOperationsInput | string
+    author?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    flag?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    palette?: JsonNullValueInput | InputJsonValue
+    specs?: JsonNullValueInput | InputJsonValue
+    includes?: JsonNullValueInput | InputJsonValue
+    refId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonalSpaceUpsertWithoutEntitlementsInput = {
+    update: XOR<PersonalSpaceUpdateWithoutEntitlementsInput, PersonalSpaceUncheckedUpdateWithoutEntitlementsInput>
+    create: XOR<PersonalSpaceCreateWithoutEntitlementsInput, PersonalSpaceUncheckedCreateWithoutEntitlementsInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutEntitlementsInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutEntitlementsInput, PersonalSpaceUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutEntitlementsInput = {
+    update: XOR<CompanyUpdateWithoutEntitlementsInput, CompanyUncheckedUpdateWithoutEntitlementsInput>
+    create: XOR<CompanyCreateWithoutEntitlementsInput, CompanyUncheckedCreateWithoutEntitlementsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutEntitlementsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutEntitlementsInput, CompanyUncheckedUpdateWithoutEntitlementsInput>
+  }
+
+  export type CompanyUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutEntitlementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type PersonalSpaceCreateWithoutAgentWorkspaceSettingsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutAgentWorkspaceSettingsInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type CompanyCreateWithoutAgentWorkspaceSettingsInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutAgentWorkspaceSettingsInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutAgentWorkspaceSettingsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type PersonalSpaceUpsertWithoutAgentWorkspaceSettingsInput = {
+    update: XOR<PersonalSpaceUpdateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+    create: XOR<PersonalSpaceCreateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutAgentWorkspaceSettingsInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutAgentWorkspaceSettingsInput, PersonalSpaceUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutAgentWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutAgentWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutAgentWorkspaceSettingsInput = {
+    update: XOR<CompanyUpdateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+    create: XOR<CompanyCreateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedCreateWithoutAgentWorkspaceSettingsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutAgentWorkspaceSettingsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutAgentWorkspaceSettingsInput, CompanyUncheckedUpdateWithoutAgentWorkspaceSettingsInput>
+  }
+
+  export type CompanyUpdateWithoutAgentWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutAgentWorkspaceSettingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type PersonalSpaceCreateWithoutFoldersInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutFoldersInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutFoldersInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutFoldersInput, PersonalSpaceUncheckedCreateWithoutFoldersInput>
+  }
+
+  export type CompanyCreateWithoutWorkspaceFoldersInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutWorkspaceFoldersInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutWorkspaceFoldersInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutWorkspaceFoldersInput, CompanyUncheckedCreateWithoutWorkspaceFoldersInput>
+  }
+
+  export type WorkspaceFolderCreateWithoutChildrenInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFoldersInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFoldersInput
+    parent?: WorkspaceFolderCreateNestedOneWithoutChildrenInput
+    files?: WorkspaceFileCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateWithoutChildrenInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderCreateOrConnectWithoutChildrenInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    create: XOR<WorkspaceFolderCreateWithoutChildrenInput, WorkspaceFolderUncheckedCreateWithoutChildrenInput>
+  }
+
+  export type WorkspaceFolderCreateWithoutParentInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFoldersInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFoldersInput
+    children?: WorkspaceFolderCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateWithoutParentInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutFolderInput
+  }
+
+  export type WorkspaceFolderCreateOrConnectWithoutParentInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    create: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput>
+  }
+
+  export type WorkspaceFolderCreateManyParentInputEnvelope = {
+    data: WorkspaceFolderCreateManyParentInput | WorkspaceFolderCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceFileCreateWithoutFolderInput = {
+    id?: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFilesInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFilesInput
+  }
+
+  export type WorkspaceFileUncheckedCreateWithoutFolderInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateOrConnectWithoutFolderInput = {
+    where: WorkspaceFileWhereUniqueInput
+    create: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput>
+  }
+
+  export type WorkspaceFileCreateManyFolderInputEnvelope = {
+    data: WorkspaceFileCreateManyFolderInput | WorkspaceFileCreateManyFolderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PersonalSpaceUpsertWithoutFoldersInput = {
+    update: XOR<PersonalSpaceUpdateWithoutFoldersInput, PersonalSpaceUncheckedUpdateWithoutFoldersInput>
+    create: XOR<PersonalSpaceCreateWithoutFoldersInput, PersonalSpaceUncheckedCreateWithoutFoldersInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutFoldersInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutFoldersInput, PersonalSpaceUncheckedUpdateWithoutFoldersInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutFoldersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutFoldersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutWorkspaceFoldersInput = {
+    update: XOR<CompanyUpdateWithoutWorkspaceFoldersInput, CompanyUncheckedUpdateWithoutWorkspaceFoldersInput>
+    create: XOR<CompanyCreateWithoutWorkspaceFoldersInput, CompanyUncheckedCreateWithoutWorkspaceFoldersInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutWorkspaceFoldersInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutWorkspaceFoldersInput, CompanyUncheckedUpdateWithoutWorkspaceFoldersInput>
+  }
+
+  export type CompanyUpdateWithoutWorkspaceFoldersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutWorkspaceFoldersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type WorkspaceFolderUpsertWithoutChildrenInput = {
+    update: XOR<WorkspaceFolderUpdateWithoutChildrenInput, WorkspaceFolderUncheckedUpdateWithoutChildrenInput>
+    create: XOR<WorkspaceFolderCreateWithoutChildrenInput, WorkspaceFolderUncheckedCreateWithoutChildrenInput>
+    where?: WorkspaceFolderWhereInput
+  }
+
+  export type WorkspaceFolderUpdateToOneWithWhereWithoutChildrenInput = {
+    where?: WorkspaceFolderWhereInput
+    data: XOR<WorkspaceFolderUpdateWithoutChildrenInput, WorkspaceFolderUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type WorkspaceFolderUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFoldersNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFoldersNestedInput
+    parent?: WorkspaceFolderUpdateOneWithoutChildrenNestedInput
+    files?: WorkspaceFileUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    files?: WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUpsertWithWhereUniqueWithoutParentInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    update: XOR<WorkspaceFolderUpdateWithoutParentInput, WorkspaceFolderUncheckedUpdateWithoutParentInput>
+    create: XOR<WorkspaceFolderCreateWithoutParentInput, WorkspaceFolderUncheckedCreateWithoutParentInput>
+  }
+
+  export type WorkspaceFolderUpdateWithWhereUniqueWithoutParentInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    data: XOR<WorkspaceFolderUpdateWithoutParentInput, WorkspaceFolderUncheckedUpdateWithoutParentInput>
+  }
+
+  export type WorkspaceFolderUpdateManyWithWhereWithoutParentInput = {
+    where: WorkspaceFolderScalarWhereInput
+    data: XOR<WorkspaceFolderUpdateManyMutationInput, WorkspaceFolderUncheckedUpdateManyWithoutParentInput>
+  }
+
+  export type WorkspaceFileUpsertWithWhereUniqueWithoutFolderInput = {
+    where: WorkspaceFileWhereUniqueInput
+    update: XOR<WorkspaceFileUpdateWithoutFolderInput, WorkspaceFileUncheckedUpdateWithoutFolderInput>
+    create: XOR<WorkspaceFileCreateWithoutFolderInput, WorkspaceFileUncheckedCreateWithoutFolderInput>
+  }
+
+  export type WorkspaceFileUpdateWithWhereUniqueWithoutFolderInput = {
+    where: WorkspaceFileWhereUniqueInput
+    data: XOR<WorkspaceFileUpdateWithoutFolderInput, WorkspaceFileUncheckedUpdateWithoutFolderInput>
+  }
+
+  export type WorkspaceFileUpdateManyWithWhereWithoutFolderInput = {
+    where: WorkspaceFileScalarWhereInput
+    data: XOR<WorkspaceFileUpdateManyMutationInput, WorkspaceFileUncheckedUpdateManyWithoutFolderInput>
+  }
+
+  export type PersonalSpaceCreateWithoutFilesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutFilesInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutFilesInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutFilesInput, PersonalSpaceUncheckedCreateWithoutFilesInput>
+  }
+
+  export type CompanyCreateWithoutWorkspaceFilesInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    projects?: ProjectCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutWorkspaceFilesInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutWorkspaceFilesInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutWorkspaceFilesInput, CompanyUncheckedCreateWithoutWorkspaceFilesInput>
+  }
+
+  export type WorkspaceFolderCreateWithoutFilesInput = {
+    id?: string
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutFoldersInput
+    company?: CompanyCreateNestedOneWithoutWorkspaceFoldersInput
+    parent?: WorkspaceFolderCreateNestedOneWithoutChildrenInput
+    children?: WorkspaceFolderCreateNestedManyWithoutParentInput
+  }
+
+  export type WorkspaceFolderUncheckedCreateWithoutFilesInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: WorkspaceFolderUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type WorkspaceFolderCreateOrConnectWithoutFilesInput = {
+    where: WorkspaceFolderWhereUniqueInput
+    create: XOR<WorkspaceFolderCreateWithoutFilesInput, WorkspaceFolderUncheckedCreateWithoutFilesInput>
+  }
+
+  export type PersonalSpaceUpsertWithoutFilesInput = {
+    update: XOR<PersonalSpaceUpdateWithoutFilesInput, PersonalSpaceUncheckedUpdateWithoutFilesInput>
+    create: XOR<PersonalSpaceCreateWithoutFilesInput, PersonalSpaceUncheckedCreateWithoutFilesInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutFilesInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutFilesInput, PersonalSpaceUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutWorkspaceFilesInput = {
+    update: XOR<CompanyUpdateWithoutWorkspaceFilesInput, CompanyUncheckedUpdateWithoutWorkspaceFilesInput>
+    create: XOR<CompanyCreateWithoutWorkspaceFilesInput, CompanyUncheckedCreateWithoutWorkspaceFilesInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutWorkspaceFilesInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutWorkspaceFilesInput, CompanyUncheckedUpdateWithoutWorkspaceFilesInput>
+  }
+
+  export type CompanyUpdateWithoutWorkspaceFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutWorkspaceFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type WorkspaceFolderUpsertWithoutFilesInput = {
+    update: XOR<WorkspaceFolderUpdateWithoutFilesInput, WorkspaceFolderUncheckedUpdateWithoutFilesInput>
+    create: XOR<WorkspaceFolderCreateWithoutFilesInput, WorkspaceFolderUncheckedCreateWithoutFilesInput>
+    where?: WorkspaceFolderWhereInput
+  }
+
+  export type WorkspaceFolderUpdateToOneWithWhereWithoutFilesInput = {
+    where?: WorkspaceFolderWhereInput
+    data: XOR<WorkspaceFolderUpdateWithoutFilesInput, WorkspaceFolderUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type WorkspaceFolderUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFoldersNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFoldersNestedInput
+    parent?: WorkspaceFolderUpdateOneWithoutChildrenNestedInput
+    children?: WorkspaceFolderUpdateManyWithoutParentNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type PersonalSpaceCreateWithoutProjectsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutProjectsInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutProjectsInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutProjectsInput, PersonalSpaceUncheckedCreateWithoutProjectsInput>
+  }
+
+  export type CompanyCreateWithoutProjectsInput = {
+    id?: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    brandProfile?: BrandProfileCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutProjectsInput = {
+    id?: string
+    ownerUserId: string
+    name: string
+    slug: string
+    onboardingCompletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brandProfile?: BrandProfileUncheckedCreateNestedOneWithoutCompanyInput
+    campaigns?: CampaignUncheckedCreateNestedManyWithoutCompanyInput
+    campaignFiles?: CampaignFileUncheckedCreateNestedManyWithoutCompanyInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutCompanyInput
+    pipelineRuns?: PipelineRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutCompanyInput
+    agentFeedbacks?: AgentFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+    agentMemories?: AgentMemoryUncheckedCreateNestedManyWithoutCompanyInput
+    creditBalance?: CreditBalanceUncheckedCreateNestedOneWithoutCompanyInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutCompanyInput
+    ragDocuments?: RagDocumentUncheckedCreateNestedManyWithoutCompanyInput
+    ragIndexJobs?: RagIndexJobUncheckedCreateNestedManyWithoutCompanyInput
+    members?: CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceSettings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutCompanyInput
+    workspaceFolders?: WorkspaceFolderUncheckedCreateNestedManyWithoutCompanyInput
+    workspaceFiles?: WorkspaceFileUncheckedCreateNestedManyWithoutCompanyInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutCompanyInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutProjectsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+  }
+
+  export type PersonalSpaceUpsertWithoutProjectsInput = {
+    update: XOR<PersonalSpaceUpdateWithoutProjectsInput, PersonalSpaceUncheckedUpdateWithoutProjectsInput>
+    create: XOR<PersonalSpaceCreateWithoutProjectsInput, PersonalSpaceUncheckedCreateWithoutProjectsInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutProjectsInput, PersonalSpaceUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type CompanyUpsertWithoutProjectsInput = {
+    update: XOR<CompanyUpdateWithoutProjectsInput, CompanyUncheckedUpdateWithoutProjectsInput>
+    create: XOR<CompanyCreateWithoutProjectsInput, CompanyUncheckedCreateWithoutProjectsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutProjectsInput, CompanyUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type CompanyUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    brandProfile?: BrandProfileUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brandProfile?: BrandProfileUncheckedUpdateOneWithoutCompanyNestedInput
+    campaigns?: CampaignUncheckedUpdateManyWithoutCompanyNestedInput
+    campaignFiles?: CampaignFileUncheckedUpdateManyWithoutCompanyNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutCompanyNestedInput
+    pipelineRuns?: PipelineRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutCompanyNestedInput
+    agentFeedbacks?: AgentFeedbackUncheckedUpdateManyWithoutCompanyNestedInput
+    agentMemories?: AgentMemoryUncheckedUpdateManyWithoutCompanyNestedInput
+    creditBalance?: CreditBalanceUncheckedUpdateOneWithoutCompanyNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
+    ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+    ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
   export type AccountCreateManyUserInput = {
     id: string
     accountId: string
@@ -63989,6 +84267,13 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type CompanyMemberCreateManyUserInput = {
+    id?: string
+    companyId: string
+    roleId: string
+    joinedAt?: Date | string
   }
 
   export type AgentFeedbackCreateManyUserInput = {
@@ -64117,6 +84402,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutOwnerInput = {
@@ -64138,6 +84430,13 @@ export namespace Prisma {
     creditLedger?: CreditLedgerUncheckedUpdateManyWithoutCompanyNestedInput
     ragDocuments?: RagDocumentUncheckedUpdateManyWithoutCompanyNestedInput
     ragIndexJobs?: RagIndexJobUncheckedUpdateManyWithoutCompanyNestedInput
+    members?: CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceSettings?: WorkspaceSettingsUncheckedUpdateOneWithoutCompanyNestedInput
+    workspaceFolders?: WorkspaceFolderUncheckedUpdateManyWithoutCompanyNestedInput
+    workspaceFiles?: WorkspaceFileUncheckedUpdateManyWithoutCompanyNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateManyWithoutOwnerInput = {
@@ -64147,6 +84446,27 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutMembersNestedInput
+    role?: RoleUpdateOneRequiredWithoutCompanyMembersNestedInput
+  }
+
+  export type CompanyMemberUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AgentFeedbackUpdateWithoutUserInput = {
@@ -64206,6 +84526,13 @@ export namespace Prisma {
     assignedAt?: Date | string
   }
 
+  export type CompanyMemberCreateManyRoleInput = {
+    id?: string
+    companyId: string
+    userId: string
+    joinedAt?: Date | string
+  }
+
   export type RolePermissionUpdateWithoutRoleInput = {
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
@@ -64237,6 +84564,27 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUpdateWithoutRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutMembersNestedInput
+    user?: UserUpdateOneRequiredWithoutCompanyMembersNestedInput
+  }
+
+  export type CompanyMemberUncheckedUpdateWithoutRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUncheckedUpdateManyWithoutRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CampaignCreateManyCompanyInput = {
@@ -64378,6 +84726,67 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type CompanyMemberCreateManyCompanyInput = {
+    id?: string
+    userId: string
+    roleId: string
+    joinedAt?: Date | string
+  }
+
+  export type WorkspaceFolderCreateManyCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateManyCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementCreateManyCompanyInput = {
+    id?: string
+    itemId: string
+    personalSpaceId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type ProjectCreateManyCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateManyCompanyInput = {
+    id?: string
+    personalSpaceId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CampaignUpdateWithoutCompanyInput = {
@@ -64833,6 +85242,193 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCompanyMembersNestedInput
+    role?: RoleUpdateOneRequiredWithoutCompanyMembersNestedInput
+  }
+
+  export type CompanyMemberUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyMemberUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleId?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFoldersNestedInput
+    parent?: WorkspaceFolderUpdateOneWithoutChildrenNestedInput
+    children?: WorkspaceFolderUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFilesNestedInput
+    folder?: WorkspaceFolderUpdateOneRequiredWithoutFilesNestedInput
+  }
+
+  export type WorkspaceFileUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutEntitlementsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutEntitlementsNestedInput
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentWorkspaceSettingsNestedInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CampaignFileCreateManyCampaignInput = {
@@ -65995,6 +86591,370 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderCreateManyPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    parentId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateManyPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    folderId: string
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementCreateManyPersonalSpaceInput = {
+    id?: string
+    itemId: string
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type ProjectCreateManyPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    name: string
+    objective: string
+    linkedAgentIds?: ProjectCreatelinkedAgentIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AgentWorkspaceSettingCreateManyPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    agentId: string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFolderUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneWithoutWorkspaceFoldersNestedInput
+    parent?: WorkspaceFolderUpdateOneWithoutChildrenNestedInput
+    children?: WorkspaceFolderUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneWithoutWorkspaceFilesNestedInput
+    folder?: WorkspaceFolderUpdateOneRequiredWithoutFilesNestedInput
+  }
+
+  export type WorkspaceFileUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    folderId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: MarketplaceItemUpdateOneRequiredWithoutEntitlementsNestedInput
+    company?: CompanyUpdateOneWithoutEntitlementsNestedInput
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    linkedAgentIds?: ProjectUpdatelinkedAgentIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneWithoutAgentWorkspaceSettingsNestedInput
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementCreateManyItemInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    redeemedByUserId: string
+    redeemedAt?: Date | string
+  }
+
+  export type WorkspaceEntitlementUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutEntitlementsNestedInput
+    company?: CompanyUpdateOneWithoutEntitlementsNestedInput
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceEntitlementUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByUserId?: StringFieldUpdateOperationsInput | string
+    redeemedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFolderCreateManyParentInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    kind?: $Enums.WorkspaceFolderKind
+    systemKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFileCreateManyFolderInput = {
+    id?: string
+    personalSpaceId?: string | null
+    companyId?: string | null
+    name: string
+    mimeType: string
+    storageKey: string
+    sizeBytes?: number | null
+    status?: $Enums.WorkspaceFileStatus
+    extractData?: boolean
+    extractedText?: string | null
+    origin?: $Enums.WorkspaceFileOrigin
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceFolderUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFoldersNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFoldersNestedInput
+    children?: WorkspaceFolderUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: WorkspaceFolderUncheckedUpdateManyWithoutParentNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutFolderNestedInput
+  }
+
+  export type WorkspaceFolderUncheckedUpdateManyWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    kind?: EnumWorkspaceFolderKindFieldUpdateOperationsInput | $Enums.WorkspaceFolderKind
+    systemKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUpdateWithoutFolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    personalSpace?: PersonalSpaceUpdateOneWithoutFilesNestedInput
+    company?: CompanyUpdateOneWithoutWorkspaceFilesNestedInput
+  }
+
+  export type WorkspaceFileUncheckedUpdateWithoutFolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceFileUncheckedUpdateManyWithoutFolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    storageKey?: StringFieldUpdateOperationsInput | string
+    sizeBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumWorkspaceFileStatusFieldUpdateOperationsInput | $Enums.WorkspaceFileStatus
+    extractData?: BoolFieldUpdateOperationsInput | boolean
+    extractedText?: NullableStringFieldUpdateOperationsInput | string | null
+    origin?: EnumWorkspaceFileOriginFieldUpdateOperationsInput | $Enums.WorkspaceFileOrigin
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

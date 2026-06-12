@@ -1,5 +1,5 @@
-import { BrandPage } from "src/core/modules/brand/pages/brand-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <BrandPage />;
+export default function BrandRedirectPage() {
+  redirect("/dashboard/settings");
 }

@@ -1,5 +1,5 @@
-import { HistoryPage } from "src/core/modules/agents/pages/history-page";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <HistoryPage />;
+export default function PiecesRedirectPage() {
+  redirect("/dashboard/history");
 }

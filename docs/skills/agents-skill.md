@@ -1,59 +1,60 @@
-# Agents Skill — Blister
+# Agents Skill — Blister OS
 
-> Fonte de verdade: [`docs/agents/`](../agents/) · [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md)
+> Fonte: [`docs/agents/README.md`](../agents/README.md) · SDK rule: `.cursor/rules/agent-sdk-monolith.mdc`
 
 ## Objetivo
 
-Guiar implementação de **agentes isolados** — registry, workflow por agente, execução e revisão na `AgentRun`.
+Criar ou alterar agentes **somente** em `packages/agent-sdk`.
 
-Leia antes de mexer em:
+## IDs
 
-- `apps/api/src/agents/**`
-- `apps/api/src/rag/**`
-- UI por agente em `apps/web/src/core/modules/**`
+**Default:** `research`, `cuts`, `video_editor`  
+**Marketplace:** `planning`, `script`, `thumbnail`, `distribution`
 
-## Conceitos
+Deprecated: `strategist`, `copywriter`, `designer`, `post`
 
-| Termo | Definição |
-|-------|-----------|
-| Agent | Módulo plugável com `outputSchema` próprio (estratégia, texto, visual, post, …) |
-| AgentRun | Execução multi-step; output em `outputPayload`; revisão na run |
-| Step | Etapa dentro do workflow **de um** agente |
-| Campanha | Workspace opcional — contexto + arquivos + runs; **não** dispara pipeline |
-
-**Não usar:** peça/post como entidade central; `ContentPiece` em novos fluxos.
-
-## Arquitetura
+## Estrutura SDK obrigatória
 
 ```
-apps/api/src/agents/
-  runtime/          # registry, workflow-engine, agent-run, review
-  <agentId>/        # definition, workflow, steps, learning/
+packages/agent-sdk/src/agents/<agentId>/
+  agent.ts
+  schemas/
+  prompts/
+  learning/feedback-handler.ts
 ```
 
-`POST /api/agents/:agentId/run` — **um agente por request**.
+## Workflow
 
-## Catálogo (não pipeline)
+Multi-step **inside one agent** via SDK `WorkflowEngine`.  
+StepResult: CONTINUE | PAUSED | FAILED | COMPLETE.
 
-Ver [`docs/agents/pipeline-default.md`](../agents/pipeline-default.md).
+## Isolation
 
-## Workflow engine
+- No output auto-feed to another agent
+- User triggers each run explicitly
+- Review on run endpoints after COMPLETE
 
-[`docs/agents/workflow-engine.md`](../agents/workflow-engine.md)
+## RAG
 
-## RAG e learning
+`retrieve_context` filtered by `workspaceId`. Boost `AGENT_LEARNING` per `agentId`.
 
-- Contexto: marca + campanha + `AGENT_LEARNING` por `agentId`
-- Aprovar/negar/editar na run → feedback handler → RAG
+## Credits
 
-## Regras
+Debit on `generate_*` steps.
 
-- **Sem pipeline automático** entre agentes
-- Revisão **por agente** — não `/api/pecas`
-- Campanha opcional na run
-- Créditos por step `generate_*`; Trigger.dev para execução async
-- Labels UI por agente — invisível IDs técnicos
+## API surface (Nest)
 
-## Legado
+```
+POST /api/agents/:agentId/run
+POST /api/agents/runs/:runId/resume
+POST /api/agents/runs/:runId/approve|reject
+PATCH /api/agents/runs/:runId/output
+```
 
-`docs/archive/` = Workana AI — referência técnica apenas.
+## Docs
+
+Each agent: `docs/agents/<agentId>/README.md`
+
+## UI labels
+
+Operational PT-BR — hide technical IDs from users.

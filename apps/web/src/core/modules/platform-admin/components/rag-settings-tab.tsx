@@ -14,6 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormSwitchItem,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
 import { Switch } from "src/core/shared/components/ui/switch";
@@ -249,15 +250,16 @@ export function RagSettingsTab() {
             control={form.control}
             name="rerankEnabled"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3">
-                <FormLabel className="mt-0">{t("rerankEnabledLabel")}</FormLabel>
+              <FormSwitchItem className="gap-3">
+                <FormLabel className="mt-0 flex-1">{t("rerankEnabledLabel")}</FormLabel>
                 <FormControl>
                   <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="shrink-0"
                   />
                 </FormControl>
-              </FormItem>
+              </FormSwitchItem>
             )}
           />
         </section>

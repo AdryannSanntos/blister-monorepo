@@ -15,6 +15,7 @@ export interface ListRunsOptions {
   agentId?: string;
   campaignId?: string;
   status?: AgentRunStatus;
+  reviewStatus?: 'pending';
   limit?: number;
   offset?: number;
 }
@@ -98,6 +99,11 @@ export class AgentRunService {
     if (options.campaignId) where.campaignId = options.campaignId;
     if (options.status) where.status = options.status as PrismaAgentRunStatus;
 
+    if (options.reviewStatus === 'pending') {
+      where.status = 'PAUSED';
+      where.pauseReason = 'awaiting_cut_review';
+    }
+
     const [runs, total] = await Promise.all([
       this.prisma.agentRun.findMany({
         where,
@@ -117,13 +123,14 @@ export class AgentRunService {
   async listByAgent(
     companyId: string,
     agentId: string,
-    options?: { limit?: number; offset?: number },
+    options?: { limit?: number; offset?: number; reviewStatus?: 'pending' },
   ): Promise<{ runs: AgentRunStatusDto[]; total: number }> {
     return this.list({
       companyId,
       agentId,
       limit: options?.limit,
       offset: options?.offset,
+      reviewStatus: options?.reviewStatus,
     });
   }
 

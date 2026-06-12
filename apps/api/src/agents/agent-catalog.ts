@@ -1,16 +1,11 @@
 import type { AgentCapability } from '@company-os/types';
 import { z } from 'zod';
-import { copywriterAgentDefinition } from './copywriter/agent';
-import { copywriterInputZod, copywriterOutputZod } from './copywriter/schemas/output.schema';
-import { designerAgentDefinition } from './designer/agent';
-import { designerInputZod, designerOutputZod } from './designer/schemas/output.schema';
-import { postAgentDefinition } from './post/agent';
-import { postInputZod, postOutputZod, postReviewZod } from './post/schemas/output.schema';
+import type { BuiltAgentDefinition } from '@company-os/agent-sdk';
+import { cutsAgentDefinition } from './cuts/agent';
+import { cutsInputZod, cutsOutputZod } from './cuts/schemas/output.schema';
 import type { RegisteredAgent } from './runtime/agent-registry.service';
-import { strategistAgentDefinition } from './strategist/agent';
-import { strategistInputZod, strategistOutputZod } from './strategist/schemas/output.schema';
 
-const mapCapabilities = (capabilities: string[]): AgentCapability[] => {
+export const mapCapabilities = (capabilities: string[]): AgentCapability[] => {
   const mapped = capabilities
     .map((capability) => {
       switch (capability) {
@@ -36,8 +31,8 @@ const mapCapabilities = (capabilities: string[]): AgentCapability[] => {
   return [...new Set(mapped)];
 };
 
-const toRegisteredAgent = (params: {
-  definition: typeof copywriterAgentDefinition;
+export const toRegisteredAgent = (params: {
+  definition: BuiltAgentDefinition;
   inputSchema: z.ZodType;
   outputSchema: z.ZodType;
   reviewSchema?: z.ZodType;
@@ -63,35 +58,20 @@ const toRegisteredAgent = (params: {
   estimatedCreditCost: params.estimatedCreditCost,
 });
 
+/**
+ * Catálogo de agentes registrados na inicialização.
+ *
+ * Os agentes legados (MEI) foram removidos. Novos agentes devem ser
+ * implementados no SDK (`packages/agent-sdk`) e registrados aqui via
+ * `toRegisteredAgent`. Ver `docs/agents/agent-sdk.md`.
+ */
 export const buildRegisteredAgents = (): RegisteredAgent[] => [
   toRegisteredAgent({
-    definition: strategistAgentDefinition,
-    inputSchema: strategistInputZod,
-    outputSchema: strategistOutputZod,
-    icon: 'compass',
-    estimatedCreditCost: 0.05,
-  }),
-  toRegisteredAgent({
-    definition: copywriterAgentDefinition,
-    inputSchema: copywriterInputZod,
-    outputSchema: copywriterOutputZod,
-    reviewSchema: copywriterOutputZod.pick({ caption: true, hashtags: true }),
-    icon: 'pen-tool',
-    estimatedCreditCost: 0.03,
-  }),
-  toRegisteredAgent({
-    definition: designerAgentDefinition,
-    inputSchema: designerInputZod,
-    outputSchema: designerOutputZod,
-    icon: 'image',
-    estimatedCreditCost: 0.1,
-  }),
-  toRegisteredAgent({
-    definition: postAgentDefinition,
-    inputSchema: postInputZod,
-    outputSchema: postOutputZod,
-    reviewSchema: postReviewZod,
-    icon: 'package',
-    estimatedCreditCost: 0.22,
+    definition: cutsAgentDefinition,
+    inputSchema: cutsInputZod,
+    outputSchema: cutsOutputZod,
+    reviewSchema: cutsOutputZod.pick({ cuts: true }),
+    icon: 'scissors',
+    estimatedCreditCost: 0.08,
   }),
 ];

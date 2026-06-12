@@ -1,0 +1,47 @@
+import type { StepExecutionContext } from '@company-os/agent-sdk';
+import { getCutsSettings } from '../steps/cuts-steps';
+
+export const buildCutsSystemPrompt = (context: StepExecutionContext): string => {
+  const settings = getCutsSettings(context);
+  const voice = context.brandProfile?.brandVoice
+    ? `Workspace voice: ${context.brandProfile.brandVoice}.`
+    : '';
+
+  return [
+    'You are a short-form video editor who turns long recordings into high-retention clips.',
+    `Return up to ${settings.maxCuts} cuts, each around ${settings.cutDurationSec} seconds.`,
+    'Required: strong title, description, startSec, endSec, viralScore from 0 to 100.',
+    'Order cuts from highest to lowest viralScore.',
+    voice,
+  ]
+    .filter(Boolean)
+    .join(' ');
+};
+
+export const buildCutsUserPrompt = (context: StepExecutionContext): string => {
+  const input = context.inputPayload as {
+    userInput?: string;
+    sourceFileId?: string;
+  };
+  const settings = getCutsSettings(context);
+  const analyzeOutput = context.previousStepsOutput.analyze_source as {
+    transcriptText?: string;
+    analyzedSegments?: Array<{ startSec: number; endSec: number; text: string }>;
+  };
+
+  const segmentLines =
+    analyzeOutput?.analyzedSegments?.map(
+      (segment) => `[${segment.startSec}s-${segment.endSec}s] ${segment.text}`,
+    ) ?? [];
+
+  return [
+    `User instructions: ${input.userInput ?? ''}`,
+    `Source file: ${input.sourceFileId ?? ''}`,
+    `Constraints: maxCuts=${settings.maxCuts}, targetDurationSec=${settings.cutDurationSec}`,
+    'Transcript:',
+    analyzeOutput?.transcriptText ?? '',
+    'Segments:',
+    ...segmentLines,
+    'Generate the ranked cut list as JSON.',
+  ].join('\n');
+};

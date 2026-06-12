@@ -548,6 +548,125 @@ exports.Prisma.RagPlatformSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PersonalSpaceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PersonalCreditBalanceScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  amount: 'amount',
+  currency: 'currency',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CompanyMemberScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  userId: 'userId',
+  roleId: 'roleId',
+  joinedAt: 'joinedAt'
+};
+
+exports.Prisma.WorkspaceSettingsScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  displayName: 'displayName',
+  niche: 'niche',
+  audience: 'audience',
+  voice: 'voice',
+  positioning: 'positioning',
+  contentPreferences: 'contentPreferences',
+  logoStorageKey: 'logoStorageKey',
+  palette: 'palette',
+  timezone: 'timezone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MarketplaceItemScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  type: 'type',
+  name: 'name',
+  author: 'author',
+  price: 'price',
+  flag: 'flag',
+  description: 'description',
+  palette: 'palette',
+  specs: 'specs',
+  includes: 'includes',
+  refId: 'refId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WorkspaceEntitlementScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  redeemedByUserId: 'redeemedByUserId',
+  redeemedAt: 'redeemedAt'
+};
+
+exports.Prisma.AgentWorkspaceSettingScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  agentId: 'agentId',
+  config: 'config',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WorkspaceFolderScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  parentId: 'parentId',
+  name: 'name',
+  kind: 'kind',
+  systemKey: 'systemKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WorkspaceFileScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  folderId: 'folderId',
+  name: 'name',
+  mimeType: 'mimeType',
+  storageKey: 'storageKey',
+  sizeBytes: 'sizeBytes',
+  status: 'status',
+  extractData: 'extractData',
+  extractedText: 'extractedText',
+  origin: 'origin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  personalSpaceId: 'personalSpaceId',
+  companyId: 'companyId',
+  name: 'name',
+  objective: 'objective',
+  linkedAgentIds: 'linkedAgentIds',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -668,6 +787,8 @@ exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
 
 exports.RagSourceType = exports.$Enums.RagSourceType = {
   BRAND_BRAIN: 'BRAND_BRAIN',
+  WORKSPACE_SETTINGS: 'WORKSPACE_SETTINGS',
+  WORKSPACE_FILE: 'WORKSPACE_FILE',
   CAMPAIGN: 'CAMPAIGN',
   CAMPAIGN_FILE: 'CAMPAIGN_FILE',
   AGENT_LEARNING: 'AGENT_LEARNING',
@@ -686,6 +807,34 @@ exports.RagIndexJobStatus = exports.$Enums.RagIndexJobStatus = {
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED'
+};
+
+exports.MarketplaceItemType = exports.$Enums.MarketplaceItemType = {
+  EDIT_STYLE: 'EDIT_STYLE',
+  POST_STYLE: 'POST_STYLE',
+  CAPTION_STYLE: 'CAPTION_STYLE',
+  PACK: 'PACK',
+  TEMPLATE: 'TEMPLATE',
+  ASSET: 'ASSET',
+  AGENT: 'AGENT'
+};
+
+exports.WorkspaceFolderKind = exports.$Enums.WorkspaceFolderKind = {
+  SYSTEM: 'SYSTEM',
+  USER: 'USER'
+};
+
+exports.WorkspaceFileStatus = exports.$Enums.WorkspaceFileStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  INDEXED: 'INDEXED',
+  FAILED: 'FAILED'
+};
+
+exports.WorkspaceFileOrigin = exports.$Enums.WorkspaceFileOrigin = {
+  UPLOAD: 'UPLOAD',
+  AGENT_RUN: 'AGENT_RUN',
+  INTEGRATION: 'INTEGRATION'
 };
 
 exports.Prisma.ModelName = {
@@ -723,7 +872,17 @@ exports.Prisma.ModelName = {
   RagChunk: 'RagChunk',
   RagEmbedding: 'RagEmbedding',
   RagIndexJob: 'RagIndexJob',
-  RagPlatformSettings: 'RagPlatformSettings'
+  RagPlatformSettings: 'RagPlatformSettings',
+  PersonalSpace: 'PersonalSpace',
+  PersonalCreditBalance: 'PersonalCreditBalance',
+  CompanyMember: 'CompanyMember',
+  WorkspaceSettings: 'WorkspaceSettings',
+  MarketplaceItem: 'MarketplaceItem',
+  WorkspaceEntitlement: 'WorkspaceEntitlement',
+  AgentWorkspaceSetting: 'AgentWorkspaceSetting',
+  WorkspaceFolder: 'WorkspaceFolder',
+  WorkspaceFile: 'WorkspaceFile',
+  Project: 'Project'
 };
 
 /**

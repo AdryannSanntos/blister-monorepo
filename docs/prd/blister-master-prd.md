@@ -1,7 +1,12 @@
 # PRD Mestre — Blister (Marketing com IA)
 
+> ⚠️ **DEPRECATED — 2026-06-12**  
+> Este PRD descreve o pivô **MEI/post-first** (imagem + legenda + Cérebro da Marca).  
+> **Fonte de verdade atual:** [`blister-os-prd.md`](blister-os-prd.md) — Blister OS video-first.  
+> ADR: [`docs/decisions/2026-06-12-blister-os-pivot.md`](../decisions/2026-06-12-blister-os-pivot.md)
+
 > **Versão:** 1.0 · **Data:** 2026-06-08  
-> **Status:** Aprovado para implementação MVP
+> **Status:** Arquivado — referência histórica apenas
 
 ---
 

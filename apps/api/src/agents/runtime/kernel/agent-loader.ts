@@ -1,15 +1,16 @@
 import type { PrismaClient } from '../../../generated/prisma';
-import { copywriterAgentDefinition } from '../../copywriter/agent';
-import { designerAgentDefinition } from '../../designer/agent';
-import { postAgentDefinition } from '../../post/agent';
-import { strategistAgentDefinition } from '../../strategist/agent';
+import { mapToKernelAgentDefinition } from '../../adapters/to-kernel-definition';
+import { cutsAgentDefinition } from '../../cuts/agent';
 import type { AgentDefinition } from './types';
 
+/**
+ * Definições de agentes carregadas pelo kernel.
+ *
+ * `cuts` é o único agente concreto criado. Novos agentes devem ser registrados
+ * aqui (ou via `registerAgentDefinition`). Ver `docs/agents/agent-sdk.md`.
+ */
 const defaultAgentDefinitions: Record<string, AgentDefinition> = {
-  copywriter: copywriterAgentDefinition,
-  strategist: strategistAgentDefinition,
-  designer: designerAgentDefinition,
-  post: postAgentDefinition,
+  cuts: mapToKernelAgentDefinition(cutsAgentDefinition),
 };
 
 export async function loadAgentDefinition(

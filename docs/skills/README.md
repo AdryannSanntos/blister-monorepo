@@ -1,29 +1,28 @@
-# Habilidades de IA do Projeto — Blister
+# Habilidades de IA — Blister OS
 
-> Fonte de verdade: [`docs/prd/blister-master-prd.md`](../prd/blister-master-prd.md) · [`.claude/commands/`](../../.claude/commands/)
+> Fonte: [`docs/prd/blister-os-prd.md`](../prd/blister-os-prd.md) · Mirrors: [`.claude/commands/`](../../.claude/commands/)
 
-Skills operacionais para IA trabalhar neste monorepo.
-
-## Habilidades Disponíveis
+## Skills disponíveis
 
 | Skill | Uso |
 |-------|-----|
-| `project-engineering-skill.md` | Regras base do monorepo, stack, produto |
-| `frontend-skill.md` | `apps/web` — UI, hooks, fluxos |
-| `backend-skill.md` | `apps/api` — módulos, DTOs, Prisma |
-| `code-review-skill.md` | Revisão técnica |
-| `design-system-skill.md` | Tokens, componentes, `/design-system` |
-| `agents-skill.md` | Agentes plugáveis, workflow, RAG |
+| `project-engineering-skill.md` | Regras monorepo + planos blister-os |
+| `frontend-skill.md` | Reference HTML, Plano 2 zero API |
+| `backend-skill.md` | Plano 3, SDK boundary |
+| `agents-skill.md` | Agentes só no SDK |
+| `design-system-skill.md` | Proto → Tailwind/shadcn |
+| `code-review-skill.md` | Checklist OS |
 
 ## Ordem de leitura
 
-1. `CLAUDE.md` (inclui **Regra 17 — codificação**)
-2. `project-engineering-skill.md`
-3. Skill específica da tarefa
-4. `docs/prd/` ou `docs/agents/` conforme domínio
+1. `docs/prd/blister-os-prd.md`
+2. `docs/plans/blister-os/00-execution-rules.md`
+3. `CLAUDE.md`
+4. Skill da tarefa
+5. `docs/agents/` ou `docs/design-system/blister-os-reference.md`
 
 ## Legado
 
-`docs/archive/` e `docs/superpowers/` = Workana / TikTok Shop — não usar como verdade de produto.
+`blister-master-prd.md` deprecated. `docs/archive/` = MEI/Workana — não usar como contrato.
 
-Mirrors em `.claude/commands/` e `.opencode/agents/` devem estar alinhados com estas skills.
+Mirrors `.claude/commands/` e `.opencode/agents/` devem estar alinhados.
