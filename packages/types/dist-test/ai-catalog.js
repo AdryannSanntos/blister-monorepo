@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.platformCompanySchema = exports.updateRagSettingsSchema = exports.ragPlatformSettingsSchema = exports.updateCreditSettingsSchema = exports.platformCreditSettingsSchema = exports.platformAgentAdminItemSchema = exports.platformAgentPolicyViewSchema = exports.platformAgentStepSchema = exports.updatePipelineSchema = exports.pipelineAgentConfigSchema = exports.updateAgentPolicySchema = exports.agentPolicySchema = exports.updateAiModelSchema = exports.createAiModelSchema = exports.aiModelSchema = exports.addCredentialSchema = exports.updateAiProviderSchema = exports.createAiProviderSchema = exports.aiProviderSchema = void 0;
+exports.platformCompanySchema = exports.updateRagSettingsSchema = exports.ragPlatformSettingsSchema = exports.updateCreditSettingsSchema = exports.platformCreditSettingsSchema = exports.platformAgentAdminItemSchema = exports.platformAgentPolicyViewSchema = exports.updatePipelineSchema = exports.pipelineAgentConfigSchema = exports.platformAgentStepSchema = exports.updateAgentStepPoliciesBatchSchema = exports.AGENT_STEP_TYPES_WITH_MODEL = exports.updateAgentStepPolicySchema = exports.agentStepPolicySchema = exports.updateAgentPolicySchema = exports.agentPolicySchema = exports.updateAiModelSchema = exports.createAiModelSchema = exports.aiModelSchema = exports.addCredentialSchema = exports.updateAiProviderSchema = exports.createAiProviderSchema = exports.aiProviderSchema = void 0;
 const zod_1 = require("zod");
 exports.aiProviderSchema = zod_1.z.object({
     id: zod_1.z.string(),
@@ -57,6 +57,37 @@ exports.updateAgentPolicySchema = zod_1.z.object({
     isEnabled: zod_1.z.boolean().optional(),
     minCostPerRun: zod_1.z.number().positive().nullable().optional(),
 });
+exports.agentStepPolicySchema = zod_1.z.object({
+    agentId: zod_1.z.string(),
+    stepKey: zod_1.z.string(),
+    modelId: zod_1.z.string(),
+    isEnabled: zod_1.z.boolean(),
+});
+exports.updateAgentStepPolicySchema = zod_1.z.object({
+    modelId: zod_1.z.string().nullable().optional(),
+    isEnabled: zod_1.z.boolean().optional(),
+});
+/** Step types that support per-step model override in platform admin. */
+exports.AGENT_STEP_TYPES_WITH_MODEL = [
+    'llm_call',
+    'image_generation',
+    'preparation',
+];
+exports.updateAgentStepPoliciesBatchSchema = zod_1.z.object({
+    steps: zod_1.z.array(zod_1.z.object({
+        stepKey: zod_1.z.string().min(1),
+        modelId: zod_1.z.string().nullable(),
+    })),
+});
+exports.platformAgentStepSchema = zod_1.z.object({
+    key: zod_1.z.string(),
+    label: zod_1.z.string(),
+    type: zod_1.z.string(),
+    modelId: zod_1.z.string().nullable().optional(),
+    modelName: zod_1.z.string().nullable().optional(),
+    modelExternalId: zod_1.z.string().nullable().optional(),
+    usesAgentDefault: zod_1.z.boolean().optional(),
+});
 exports.pipelineAgentConfigSchema = zod_1.z.object({
     agentId: zod_1.z.string(),
     sortOrder: zod_1.z.number(),
@@ -68,11 +99,6 @@ exports.updatePipelineSchema = zod_1.z.object({
         sortOrder: zod_1.z.number().int(),
         isEnabled: zod_1.z.boolean(),
     })),
-});
-exports.platformAgentStepSchema = zod_1.z.object({
-    key: zod_1.z.string(),
-    label: zod_1.z.string(),
-    type: zod_1.z.string(),
 });
 exports.platformAgentPolicyViewSchema = zod_1.z.object({
     modelId: zod_1.z.string(),

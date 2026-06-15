@@ -1,0 +1,125 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - img "Blister" [ref=e8]:
+        - img [ref=e9]
+      - generic [ref=e25]:
+        - list [ref=e30]:
+          - listitem [ref=e31]:
+            - link "Início" [ref=e32] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e34]
+              - generic [ref=e39]: Início
+        - generic [ref=e41]:
+          - generic [ref=e42]: Acervo
+          - list [ref=e45]:
+            - listitem [ref=e46]:
+              - link "Marketplace" [ref=e47] [cursor=pointer]:
+                - /url: /dashboard/marketplace
+                - img [ref=e49]
+                - generic [ref=e53]: Marketplace
+            - listitem [ref=e54]:
+              - link "Biblioteca" [ref=e55] [cursor=pointer]:
+                - /url: /dashboard/library
+                - img [ref=e57]
+                - generic [ref=e59]: Biblioteca
+              - generic:
+                - generic: "2"
+            - listitem [ref=e60]:
+              - link "Arquivos" [ref=e61] [cursor=pointer]:
+                - /url: /dashboard/files
+                - img [ref=e63]
+                - generic [ref=e66]: Arquivos
+        - generic [ref=e68]:
+          - generic [ref=e69] [cursor=pointer]:
+            - text: Agentes
+            - img [ref=e70]
+          - list [ref=e74]:
+            - listitem [ref=e75]:
+              - generic [ref=e76]:
+                - link "Gerador de Cortes" [ref=e78] [cursor=pointer]:
+                  - /url: /dashboard/agents/cuts/overview
+                  - img [ref=e80]
+                  - generic [ref=e86]: Gerador de Cortes
+                - button "Gerador de Cortes" [expanded] [ref=e87]:
+                  - img [ref=e88]
+            - generic [ref=e90]:
+              - listitem [ref=e91]:
+                - link "Visão geral" [ref=e92] [cursor=pointer]:
+                  - /url: /dashboard/agents/cuts/overview
+                  - img [ref=e93]
+                  - generic [ref=e98]: Visão geral
+              - listitem [ref=e99]:
+                - link "Resultados" [ref=e100] [cursor=pointer]:
+                  - /url: /dashboard/agents/cuts/results
+                  - img [ref=e101]
+                  - generic [ref=e105]: Resultados
+              - listitem [ref=e106]:
+                - link "Configuração" [ref=e107] [cursor=pointer]:
+                  - /url: /dashboard/agents/cuts/settings
+                  - img [ref=e108]
+                  - generic [ref=e111]: Configuração
+            - listitem [ref=e112]:
+              - button "Editor de Vídeo" [disabled]:
+                - generic:
+                  - img
+                - generic: Editor de Vídeo
+              - generic:
+                - generic: Em breve
+            - listitem [ref=e113]:
+              - button "Pesquisar" [disabled]:
+                - generic:
+                  - img
+                - generic: Pesquisar
+              - generic:
+                - generic: Em breve
+        - list [ref=e118]:
+          - listitem [ref=e119]:
+            - link "Configurações" [ref=e120] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e122]
+              - generic [ref=e125]: Configurações
+      - button "AB Admin Blister admin@blister.com.br" [ref=e127]:
+        - generic [ref=e129]: AB
+        - generic [ref=e130]:
+          - paragraph [ref=e131]: Admin Blister
+          - paragraph [ref=e132]: admin@blister.com.br
+        - img [ref=e133]
+    - generic [ref=e136]:
+      - banner [ref=e137]:
+        - generic [ref=e138]:
+          - button "Recolher sidebar" [ref=e139]:
+            - img
+          - navigation "breadcrumb" [ref=e140]:
+            - list [ref=e141]:
+              - listitem [ref=e142]:
+                - link "Início" [ref=e143] [cursor=pointer]:
+                  - /url: /dashboard
+              - listitem [ref=e144]:
+                - img [ref=e145]
+              - listitem [ref=e147]:
+                - link "Gerador de Cortes" [disabled] [ref=e148]
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - img [ref=e151]
+            - generic [ref=e156]: —
+          - link "Configurações da conta" [ref=e157] [cursor=pointer]:
+            - /url: /dashboard/account/settings
+            - img
+          - button "Menu do usuário" [ref=e158]:
+            - img
+      - generic [ref=e161]:
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - img [ref=e165]
+            - generic [ref=e171]:
+              - heading "Resultados" [level=1] [ref=e172]
+              - paragraph [ref=e173]: Execuções concluídas do Gerador de Cortes.
+          - button "Nova execução" [ref=e175]:
+            - img
+            - text: Nova execução
+        - paragraph [ref=e177]: Carregando execuções...
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e184] [cursor=pointer]:
+    - img [ref=e185]
+  - alert [ref=e188]

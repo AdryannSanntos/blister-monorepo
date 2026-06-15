@@ -52,3 +52,4 @@ __exportStar(require("./ai-catalog"), exports);
 __exportStar(require("./workspace"), exports);
 __exportStar(require("./agent-message-sequence"), exports);
 __exportStar(require("./blister-os"), exports);
+__exportStar(require("./files/workspace-agent-folders"), exports);

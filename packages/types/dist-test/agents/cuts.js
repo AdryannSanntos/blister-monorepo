@@ -25,6 +25,8 @@ exports.cutOutputSchema = zod_1.z.object({
     durationSec: zod_1.z.number().positive(),
     viralScore: zod_1.z.number().min(0).max(100),
     reviewStatus: exports.cutReviewStatusSchema,
+    /** Rendered clip stored as a workspace file (preferred for preview). */
+    cutFileId: zod_1.z.string().min(1).optional(),
     previewUrl: zod_1.z.string().optional(),
 });
 exports.cutsRunInputSchema = zod_1.z.object({

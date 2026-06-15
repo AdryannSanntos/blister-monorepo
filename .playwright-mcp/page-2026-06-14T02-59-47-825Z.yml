@@ -1,0 +1,212 @@
+- generic [active] [ref=e10]:
+  - generic [ref=e65]:
+    - generic [ref=e67]:
+      - generic [ref=e69]:
+        - img "Blister" [ref=e71]:
+          - img [ref=e72]
+        - button "Trocar workspace" [ref=e83]:
+          - generic [ref=e84]:
+            - img
+          - generic [ref=e85]:
+            - generic [ref=e86]: Admin Blister
+            - generic [ref=e87]: Conta pessoal
+          - img
+      - generic [ref=e88]:
+        - list [ref=e93]:
+          - listitem [ref=e94]:
+            - link "Início" [ref=e95] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e97]
+              - generic [ref=e102]: Início
+        - generic [ref=e104]:
+          - generic [ref=e105]: Acervo
+          - list [ref=e108]:
+            - listitem [ref=e109]:
+              - link "Marketplace" [ref=e110] [cursor=pointer]:
+                - /url: /dashboard/marketplace
+                - img [ref=e112]
+                - generic [ref=e116]: Marketplace
+            - listitem [ref=e117]:
+              - link "Biblioteca" [ref=e118] [cursor=pointer]:
+                - /url: /dashboard/library
+                - img [ref=e120]
+                - generic [ref=e122]: Biblioteca
+              - generic:
+                - generic: "2"
+            - listitem [ref=e123]:
+              - link "Arquivos" [ref=e124] [cursor=pointer]:
+                - /url: /dashboard/files
+                - img [ref=e126]
+                - generic [ref=e129]: Arquivos
+        - generic [ref=e131]:
+          - generic [ref=e132] [cursor=pointer]:
+            - text: Agentes
+            - img [ref=e133]
+          - list [ref=e137]:
+            - listitem [ref=e138]:
+              - generic [ref=e139]:
+                - link "Gerador de Cortes" [ref=e141] [cursor=pointer]:
+                  - /url: /dashboard/agents/cuts/overview
+                  - img [ref=e143]
+                  - generic [ref=e149]: Gerador de Cortes
+                - button "Gerador de Cortes" [ref=e150]:
+                  - img [ref=e151]
+            - listitem [ref=e153]:
+              - button "Editor de Vídeo" [disabled]:
+                - generic:
+                  - img
+                - generic: Editor de Vídeo
+              - generic:
+                - generic: Em breve
+            - listitem [ref=e154]:
+              - button "Pesquisar" [disabled]:
+                - generic:
+                  - img
+                - generic: Pesquisar
+              - generic:
+                - generic: Em breve
+        - list [ref=e159]:
+          - listitem [ref=e160]:
+            - link "Configurações" [ref=e161] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e163]
+              - generic [ref=e166]: Configurações
+          - listitem [ref=e167]:
+            - link "Equipe" [ref=e168] [cursor=pointer]:
+              - /url: /dashboard/workspace/team
+              - img [ref=e170]
+              - generic [ref=e175]: Equipe
+          - listitem [ref=e176]:
+            - link "Permissões" [ref=e177] [cursor=pointer]:
+              - /url: /dashboard/workspace/permissions
+              - img [ref=e179]
+              - generic [ref=e182]: Permissões
+          - listitem [ref=e183]:
+            - link "Créditos" [ref=e184] [cursor=pointer]:
+              - /url: /dashboard/credits
+              - img [ref=e186]
+              - generic [ref=e191]: Créditos
+      - button "AB Admin Blister admin@blister.com.br" [ref=e193]:
+        - generic [ref=e195]: AB
+        - generic [ref=e196]:
+          - paragraph [ref=e197]: Admin Blister
+          - paragraph [ref=e198]: admin@blister.com.br
+        - img [ref=e199]
+    - generic [ref=e202]:
+      - banner [ref=e203]:
+        - generic [ref=e204]:
+          - button "Recolher sidebar" [ref=e205]:
+            - img
+          - navigation "breadcrumb" [ref=e206]:
+            - list [ref=e207]:
+              - listitem [ref=e208]:
+                - link "Início" [disabled] [ref=e209]
+        - generic [ref=e210]:
+          - 'generic "Saldo: US$ 20.00" [ref=e211]':
+            - img [ref=e212]
+            - generic [ref=e217]: US$ 20.00
+          - link "Configurações da conta" [ref=e218] [cursor=pointer]:
+            - /url: /dashboard/account/settings
+            - img
+          - button "Menu do usuário" [ref=e219]:
+            - img
+      - generic [ref=e222]:
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - img [ref=e226]
+            - generic [ref=e231]:
+              - heading "Olá, Confeitaria da Paola" [level=1] [ref=e232]
+              - paragraph [ref=e233]: Seu estúdio de conteúdo em um só lugar.
+          - link "Editar vídeo" [ref=e235] [cursor=pointer]:
+            - /url: /dashboard/agents/video-editor/new
+            - img
+            - text: Editar vídeo
+        - generic [ref=e236]:
+          - generic [ref=e237]:
+            - generic [ref=e238]:
+              - generic [ref=e239]:
+                - generic [ref=e240]: Créditos
+                - generic [ref=e241]: "240"
+              - img [ref=e243]
+            - generic [ref=e248]: Saldo disponível para resgates
+          - generic [ref=e249]:
+            - generic [ref=e250]:
+              - generic [ref=e251]:
+                - generic [ref=e252]: Biblioteca
+                - generic [ref=e253]: "2"
+              - img [ref=e255]
+            - generic [ref=e259]: Itens resgatados
+          - generic [ref=e260]:
+            - generic [ref=e261]:
+              - generic [ref=e262]:
+                - generic [ref=e263]: Edições
+                - generic [ref=e264]: "12"
+              - img [ref=e266]
+            - generic [ref=e271]: 12 edições este mês
+          - generic [ref=e272]:
+            - generic [ref=e273]:
+              - generic [ref=e274]:
+                - generic [ref=e275]: Cortes
+                - generic [ref=e276]: "38"
+              - img [ref=e278]
+            - generic [ref=e284]: 38 cortes gerados
+        - generic [ref=e285]:
+          - generic [ref=e287]:
+            - heading "Estúdio" [level=2] [ref=e288]
+            - generic [ref=e289]:
+              - link "Editor de Vídeo Faça upload de um vídeo, aplique um Edit Style da sua biblioteca e receba a edição pronta." [ref=e290] [cursor=pointer]:
+                - /url: /dashboard/agents/video-editor/overview
+                - img [ref=e291]
+                - heading "Editor de Vídeo" [level=3] [ref=e296]
+                - paragraph [ref=e297]: Faça upload de um vídeo, aplique um Edit Style da sua biblioteca e receba a edição pronta.
+              - link "Gerador de Cortes Transforme lives, podcasts e aulas longas em cortes curtos priorizados por potencial de retenção." [ref=e298] [cursor=pointer]:
+                - /url: /dashboard/agents/cuts/overview
+                - img [ref=e299]
+                - heading "Gerador de Cortes" [level=3] [ref=e305]
+                - paragraph [ref=e306]: Transforme lives, podcasts e aulas longas em cortes curtos priorizados por potencial de retenção.
+              - link "Pesquisar Briefing, tendências e referências para o seu próximo conteúdo, com contexto do workspace." [ref=e307] [cursor=pointer]:
+                - /url: /dashboard/agents/research/overview
+                - img [ref=e308]
+                - heading "Pesquisar" [level=3] [ref=e311]
+                - paragraph [ref=e312]: Briefing, tendências e referências para o seu próximo conteúdo, com contexto do workspace.
+          - generic [ref=e314]:
+            - heading "Atividade recente" [level=2] [ref=e315]
+            - list [ref=e316]:
+              - listitem [ref=e317]:
+                - paragraph [ref=e318]: Editor de Vídeo finalizou "Depoimento Ana — v2" com o estilo Corte Seco
+                - paragraph [ref=e319]: há 40 min
+              - listitem [ref=e320]:
+                - paragraph [ref=e321]: "Gerador de Cortes priorizou 8 cortes do Podcast #41"
+                - paragraph [ref=e322]: há 2 horas
+              - listitem [ref=e323]:
+                - paragraph [ref=e324]: Escrever roteiro entregou 3 roteiros do lançamento para revisão
+                - paragraph [ref=e325]: ontem
+        - generic [ref=e326]:
+          - generic [ref=e327]:
+            - heading "Novidades no Marketplace" [level=2] [ref=e328]
+            - link "Ver tudo" [ref=e329] [cursor=pointer]:
+              - /url: /dashboard/marketplace
+          - generic [ref=e330]:
+            - link "9:16 Corte Seco" [ref=e331] [cursor=pointer]:
+              - /url: /dashboard/marketplace/es-corte-seco
+              - generic [ref=e335]: 9:16
+              - paragraph [ref=e337]: Corte Seco
+            - link "9:16 Podcast Pop" [ref=e338] [cursor=pointer]:
+              - /url: /dashboard/marketplace/es-podcast-pop
+              - generic [ref=e342]: 9:16
+              - paragraph [ref=e344]: Podcast Pop
+            - link "Pack Neon Noir" [ref=e345] [cursor=pointer]:
+              - /url: /dashboard/marketplace/pk-neon-noir
+              - paragraph [ref=e349]: Pack Neon Noir
+            - link "Criar thumbnail" [ref=e350] [cursor=pointer]:
+              - /url: /dashboard/marketplace/agent-thumbnail
+              - paragraph [ref=e354]: Criar thumbnail
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e355] [cursor=pointer]:
+    - generic [ref=e358]:
+      - text: Compiling
+      - generic [ref=e359]:
+        - generic [ref=e360]: .
+        - generic [ref=e361]: .
+        - generic [ref=e362]: .
+  - alert [ref=e64]

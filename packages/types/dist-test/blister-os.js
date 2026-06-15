@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PERSONAL_WORKSPACE_ID = exports.workspaceOptionSchema = exports.personalSpaceSchema = exports.createFolderSchema = exports.fileBrowseResponseSchema = exports.workspaceFolderSchema = exports.workspaceFileSchema = exports.updateProjectSchema = exports.createProjectSchema = exports.projectSchema = exports.redeemMarketplaceSchema = exports.marketplaceItemSchema = exports.marketplaceItemTypeSchema = exports.updateAgentWorkspaceSettingsSchema = exports.agentWorkspaceSettingsResponseSchema = exports.updateWorkspaceSettingsSchema = exports.workspaceProfileSchema = exports.cutsAgentSettingsSchema = void 0;
+exports.PERSONAL_WORKSPACE_ID = exports.workspaceOptionSchema = exports.personalSpaceSchema = exports.filePresignedUploadResponseSchema = exports.filePresignedUploadRequestSchema = exports.updateWorkspaceFileSchema = exports.updateFolderSchema = exports.createFolderSchema = exports.fileBrowseResponseSchema = exports.workspaceFolderSchema = exports.workspaceFileSchema = exports.updateProjectSchema = exports.createProjectSchema = exports.projectSchema = exports.redeemMarketplaceSchema = exports.marketplaceItemSchema = exports.marketplaceItemTypeSchema = exports.updateAgentWorkspaceSettingsSchema = exports.agentWorkspaceSettingsResponseSchema = exports.updateWorkspaceSettingsSchema = exports.workspaceProfileSchema = exports.cutsAgentSettingsSchema = void 0;
 const zod_1 = require("zod");
 const cuts_1 = require("./agents/cuts");
 var cuts_2 = require("./agents/cuts");
@@ -93,6 +93,41 @@ exports.fileBrowseResponseSchema = zod_1.z.object({
 exports.createFolderSchema = zod_1.z.object({
     name: zod_1.z.string().min(1).max(120),
     parentId: zod_1.z.string().optional(),
+});
+exports.updateFolderSchema = zod_1.z
+    .object({
+    name: zod_1.z.string().min(1).max(120).optional(),
+    parentId: zod_1.z.string().nullable().optional(),
+})
+    .refine((value) => value.name !== undefined || value.parentId !== undefined, {
+    message: 'At least one field must be provided',
+});
+exports.updateWorkspaceFileSchema = zod_1.z
+    .object({
+    name: zod_1.z.string().min(1).max(255).optional(),
+    folderId: zod_1.z.string().optional(),
+})
+    .refine((value) => value.name !== undefined || value.folderId !== undefined, {
+    message: 'At least one field must be provided',
+});
+/**
+ * Request a presigned upload URL whose S3 key mirrors the workspace folder
+ * tree. The destination is the explicit `folderId` (must be a user folder, not
+ * an agent folder); when absent the default "Uploads" folder is used.
+ */
+exports.filePresignedUploadRequestSchema = zod_1.z.object({
+    name: zod_1.z.string().min(1).max(255),
+    mimeType: zod_1.z.string().min(1),
+    sizeBytes: zod_1.z.number().int().positive(),
+    folderId: zod_1.z.string().optional(),
+});
+exports.filePresignedUploadResponseSchema = zod_1.z.object({
+    url: zod_1.z.string().url(),
+    key: zod_1.z.string(),
+    folderId: zod_1.z.string(),
+    /** Final (collision-resolved) file name reserved for this upload. */
+    name: zod_1.z.string(),
+    expiresIn: zod_1.z.number(),
 });
 exports.personalSpaceSchema = zod_1.z.object({
     id: zod_1.z.string(),

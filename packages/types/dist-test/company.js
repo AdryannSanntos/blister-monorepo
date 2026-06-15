@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companyListItemSchema = exports.homeDestinationResponseSchema = exports.homeDestinationSchema = exports.onboardingStatusSchema = exports.addBrandAssetSchema = exports.updateLogoSchema = exports.updateBrandProfileSchema = exports.brandProfileResponseSchema = exports.onboardingSchema = exports.visualStyleSchema = exports.visualStyleValues = exports.socialNetworkSchema = exports.socialNetworkValues = exports.marketingObjectiveSchema = exports.marketingObjectiveValues = exports.updateCompanySchema = exports.companyResponseSchema = exports.fileUploadResponseSchema = exports.presignedUploadResponseSchema = exports.presignedUploadRequestSchema = void 0;
+exports.companyListItemSchema = exports.homeDestinationResponseSchema = exports.homeDestinationSchema = exports.onboardingStatusSchema = exports.addBrandAssetSchema = exports.updateLogoSchema = exports.updateBrandProfileSchema = exports.brandProfileResponseSchema = exports.onboardingSchema = exports.visualStyleSchema = exports.visualStyleValues = exports.socialNetworkSchema = exports.socialNetworkValues = exports.marketingObjectiveSchema = exports.marketingObjectiveValues = exports.updateCompanySchema = exports.companyResponseSchema = exports.fileUploadResponseSchema = exports.presignedUploadResponseSchema = exports.presignedUploadRequestSchema = exports.MAX_PRESIGNED_UPLOAD_BYTES = void 0;
 const zod_1 = require("zod");
 const brand_palette_1 = require("./brand-palette");
 const brand_visual_1 = require("./brand-visual");
+/** Max size for workspace video uploads via presigned URL (5 GB). */
+exports.MAX_PRESIGNED_UPLOAD_BYTES = 5 * 1024 * 1024 * 1024;
 exports.presignedUploadRequestSchema = zod_1.z.object({
     key: zod_1.z.string().min(1),
     mimeType: zod_1.z.string().min(1),
-    sizeBytes: zod_1.z.number().int().positive(),
+    sizeBytes: zod_1.z.number().int().positive().max(exports.MAX_PRESIGNED_UPLOAD_BYTES),
 });
 exports.presignedUploadResponseSchema = zod_1.z.object({
     url: zod_1.z.string().url(),

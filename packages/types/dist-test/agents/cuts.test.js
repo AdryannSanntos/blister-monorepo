@@ -59,6 +59,20 @@ const cuts_1 = require("./cuts");
         strict_1.default.equal(parsed.viralScore, 92);
         strict_1.default.equal(parsed.reviewStatus, 'pending');
     });
+    (0, node_test_1.it)('accepts optional cutFileId for rendered clips', () => {
+        const parsed = cuts_1.cutOutputSchema.parse({
+            id: 'cut-1',
+            title: 'Hook',
+            description: 'Strong opening',
+            startSec: 10,
+            endSec: 70,
+            durationSec: 60,
+            viralScore: 92,
+            reviewStatus: 'pending',
+            cutFileId: 'file-cut-1',
+        });
+        strict_1.default.equal(parsed.cutFileId, 'file-cut-1');
+    });
     (0, node_test_1.it)('rejects viralScore above 100', () => {
         const result = cuts_1.cutOutputSchema.safeParse({
             id: 'cut-1',

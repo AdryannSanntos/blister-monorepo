@@ -1,0 +1,269 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - img:
+                - img
+            - generic:
+              - button:
+                - generic:
+                  - img
+                - generic:
+                  - generic: Admin Blister
+                  - generic: Conta pessoal
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /dashboard
+                        - generic:
+                          - img
+                        - generic: Início
+          - generic:
+            - generic:
+              - generic: Acervo
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/marketplace
+                        - generic:
+                          - img
+                        - generic: Marketplace
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/library
+                        - generic:
+                          - img
+                        - generic: Biblioteca
+                      - generic:
+                        - generic: "2"
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/files
+                        - generic:
+                          - img
+                        - generic: Arquivos
+          - generic:
+            - generic:
+              - generic:
+                - text: Agentes
+                - img
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - generic:
+                        - generic:
+                          - link:
+                            - /url: /dashboard/agents/cuts/overview
+                            - generic:
+                              - img
+                            - generic: Gerador de Cortes
+                        - button [expanded]:
+                          - img
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard/agents/cuts/overview
+                          - img
+                          - generic: Visão geral
+                      - listitem:
+                        - link:
+                          - /url: /dashboard/agents/cuts/results
+                          - img
+                          - generic: Resultados
+                      - listitem:
+                        - link:
+                          - /url: /dashboard/agents/cuts/settings
+                          - img
+                          - generic: Configuração
+                    - listitem:
+                      - button [disabled]:
+                        - generic:
+                          - img
+                        - generic: Editor de Vídeo
+                      - generic:
+                        - generic: Em breve
+                    - listitem:
+                      - button [disabled]:
+                        - generic:
+                          - img
+                        - generic: Pesquisar
+                      - generic:
+                        - generic: Em breve
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/settings
+                        - generic:
+                          - img
+                        - generic: Configurações
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/workspace/team
+                        - generic:
+                          - img
+                        - generic: Equipe
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/workspace/permissions
+                        - generic:
+                          - img
+                        - generic: Permissões
+                    - listitem:
+                      - link:
+                        - /url: /dashboard/credits
+                        - generic:
+                          - img
+                        - generic: Créditos
+        - generic:
+          - button:
+            - generic:
+              - generic: AB
+            - generic:
+              - paragraph: Admin Blister
+              - paragraph: admin@blister.com.br
+            - img
+    - generic:
+      - banner:
+        - generic:
+          - button:
+            - img
+          - navigation:
+            - list:
+              - listitem:
+                - link:
+                  - /url: /dashboard
+                  - text: Início
+              - listitem:
+                - img
+              - listitem:
+                - link [disabled]: Gerador de Cortes · Visão geral
+        - generic:
+          - generic:
+            - img
+            - generic: US$ 20.00
+          - link:
+            - /url: /dashboard/account/settings
+            - img
+          - button:
+            - img
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                - generic:
+                  - heading [level=1]: Gerador de Cortes
+                  - paragraph: Transforme lives, podcasts e aulas longas em cortes curtos priorizados por potencial de retenção.
+              - generic:
+                - button:
+                  - img
+                  - text: Nova execução
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Execuções
+                      - generic: "5"
+                    - generic:
+                      - img
+                  - generic: Total de gerações nesta ferramenta
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Concluídas
+                      - generic: "3"
+                    - generic:
+                      - img
+                  - generic: Finalizadas com sucesso
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Aprovadas
+                      - generic: "3"
+                    - generic:
+                      - img
+                  - generic: Revisadas e aprovadas
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Créditos usados
+                      - generic: "0.0"
+                    - generic:
+                      - img
+                  - generic: Consumo acumulado nesta ferramenta
+              - generic:
+                - heading [level=2]: Uso nos últimos 7 dias
+                - img:
+                  - generic:
+                    - generic: "0"
+                    - generic: seg.
+                  - generic:
+                    - generic: "0"
+                    - generic: ter.
+                  - generic:
+                    - generic: "0"
+                    - generic: qua.
+                  - generic:
+                    - generic: "0"
+                    - generic: qui.
+                  - generic:
+                    - generic: "0"
+                    - generic: sex.
+                  - generic:
+                    - generic: "4"
+                    - generic: sáb.
+                  - generic:
+                    - generic: "1"
+                    - generic: dom.
+              - generic:
+                - heading [level=2]: Execuções recentes
+                - list:
+                  - listitem:
+                    - paragraph: Governo Americano Bloqueou Claude.mp4
+                    - paragraph: 5 cortes priorizados
+                  - listitem:
+                    - paragraph: Governo Americano Bloqueou Claude (1).mp4
+                    - paragraph: 1 cortes priorizados
+                  - listitem:
+                    - paragraph: Governo Americano Bloqueou Claude.mp4
+                    - paragraph: 1 cortes priorizados
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e9] [cursor=pointer]:
+    - img [ref=e10]
+  - alert
+  - dialog "Gerar cortes" [ref=e295]:
+    - paragraph [ref=e296]: Gerar cortes
+    - heading "Gerar cortes" [level=2] [ref=e298]
+    - generic [ref=e299]:
+      - button "Área de upload" [active] [ref=e300] [cursor=pointer]:
+        - img [ref=e302]
+        - generic [ref=e305]:
+          - paragraph [ref=e306]: Arraste um arquivo ou clique para selecionar
+          - paragraph [ref=e307]: Vídeos até 5 GB
+        - button "Choose File" [ref=e308]
+      - paragraph [ref=e309]: Envie um vídeo ou escolha da biblioteca.
+      - button "Escolher dos Arquivos" [ref=e310]
+    - generic [ref=e311]:
+      - button "Gerar cortes" [disabled]
+    - button "Close" [ref=e312]:
+      - img
+      - generic [ref=e313]: Close
