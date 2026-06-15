@@ -17,6 +17,7 @@ export const wrapSdkStep = (step: SdkStepExecutor): CustomStepExecutor => {
                   { role: 'user', content: params.user },
                 ],
                 agentId: context.agentId,
+                stepKey: context.stepKey,
                 structuredOutputSchema: params.structuredOutputSchema,
                 maxTokens: params.maxTokens,
                 temperature: params.temperature,
@@ -39,6 +40,7 @@ export const wrapSdkStep = (step: SdkStepExecutor): CustomStepExecutor => {
                         { role: 'user', content: params.user },
                       ],
                       agentId: context.agentId,
+                      stepKey: context.stepKey,
                       structuredOutputSchema: params.structuredOutputSchema,
                       maxTokens: params.maxTokens,
                       temperature: params.temperature,
@@ -63,6 +65,7 @@ export const wrapSdkStep = (step: SdkStepExecutor): CustomStepExecutor => {
               const result = await deps.imageProvider!.generateImage({
                 prompt: String(params.prompt ?? ''),
                 agentId: context.agentId,
+                stepKey: context.stepKey,
               });
 
               return {

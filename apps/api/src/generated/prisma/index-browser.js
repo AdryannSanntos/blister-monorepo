@@ -311,6 +311,7 @@ exports.Prisma.PipelineRunScalarFieldEnum = {
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
+  personalSpaceId: 'personalSpaceId',
   pipelineRunId: 'pipelineRunId',
   campaignId: 'campaignId',
   agentId: 'agentId',
@@ -479,6 +480,15 @@ exports.Prisma.AgentModelPolicyScalarFieldEnum = {
   markupMultiplier: 'markupMultiplier',
   isEnabled: 'isEnabled',
   minCostPerRun: 'minCostPerRun',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AgentStepModelPolicyScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  stepKey: 'stepKey',
+  modelId: 'modelId',
+  isEnabled: 'isEnabled',
   updatedAt: 'updatedAt'
 };
 
@@ -867,6 +877,7 @@ exports.Prisma.ModelName = {
   AiProviderCredential: 'AiProviderCredential',
   AiModel: 'AiModel',
   AgentModelPolicy: 'AgentModelPolicy',
+  AgentStepModelPolicy: 'AgentStepModelPolicy',
   PipelineAgentConfig: 'PipelineAgentConfig',
   RagDocument: 'RagDocument',
   RagChunk: 'RagChunk',

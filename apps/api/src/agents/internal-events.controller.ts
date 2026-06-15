@@ -1,19 +1,19 @@
+import type { AgentRunEventType } from '@company-os/types';
 import {
-  Controller,
-  Post,
-  Param,
   Body,
+  Controller,
   Headers,
-  UnauthorizedException,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { z } from 'zod';
 import { Public } from '../auth/decorators/public.decorator';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentSseService } from './runtime/agent-sse.service';
-import type { AgentRunEventType } from '@company-os/types';
-import { z } from 'zod';
 
 const eventPayloadSchema = z.object({
   type: z.enum([
@@ -58,14 +58,19 @@ export class InternalEventsController {
 
     const run = await this.prisma.agentRun.findUnique({
       where: { id: runId },
-      select: { companyId: true },
+      select: { companyId: true, personalSpaceId: true },
     });
 
     if (!run) {
       return { received: false, error: 'Run not found' };
     }
 
-    this.emitEvent(runId, run.companyId, payload.type as AgentRunEventType, payload.data);
+    this.emitEvent(
+      runId,
+      run.companyId ?? run.personalSpaceId ?? '',
+      payload.type as AgentRunEventType,
+      payload.data,
+    );
 
     return { received: true, runId, type: payload.type };
   }
@@ -123,6 +128,9 @@ export class InternalEventsController {
           data?.pauseFormSchema,
           typeof data?.inputPayload === 'object' && data?.inputPayload !== null
             ? (data.inputPayload as Record<string, unknown>)
+            : undefined,
+          typeof data?.outputPayload === 'object' && data?.outputPayload !== null
+            ? (data.outputPayload as Record<string, unknown>)
             : undefined,
         );
         break;

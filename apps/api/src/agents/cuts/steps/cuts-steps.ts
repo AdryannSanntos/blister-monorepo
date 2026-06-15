@@ -1,6 +1,20 @@
 import type { StepExecutionContext, StepExecutor } from '@company-os/agent-sdk';
+import { validateStepOutput } from '@company-os/agent-sdk';
 import { getCutsRunDeps } from '../ports/cuts-run-deps';
+import { cutsOutputZod } from '../schemas/output.schema';
 
+const buildAnalyzedSegments = (
+  segments: Array<{ startSec: number; endSec: number; text: string }>,
+) =>
+  segments.map((segment, index) => ({
+    id: `seg-${index + 1}`,
+    startSec: segment.startSec,
+    endSec: segment.endSec,
+    text: segment.text,
+    wordCount: segment.text.split(/\s+/).filter(Boolean).length,
+  }));
+
+/** Validates file, transcribes when needed, and prepares segments for the LLM. */
 export const createResolveSourceStep = (): StepExecutor => {
   return async (context): Promise<import('@company-os/agent-sdk').StepResult> => {
     const input = context.inputPayload as {
@@ -28,10 +42,16 @@ export const createResolveSourceStep = (): StepExecutor => {
         : [];
 
       if (!transcriptText) {
-        const transcription = await deps.transcribeSource({ file });
+        const transcription = await deps.transcribeSource({
+          file,
+          agentId: context.agentId,
+          stepKey: context.stepKey,
+        });
         transcriptText = transcription.text;
         segments = transcription.segments;
       }
+
+      const analyzedSegments = buildAnalyzedSegments(segments);
 
       return {
         type: 'CONTINUE',
@@ -40,6 +60,7 @@ export const createResolveSourceStep = (): StepExecutor => {
           sourceFileName: file.name,
           transcriptText,
           segments,
+          analyzedSegments,
         },
       };
     } catch (error) {
@@ -51,30 +72,78 @@ export const createResolveSourceStep = (): StepExecutor => {
   };
 };
 
-export const createAnalyzeSourceStep = (): StepExecutor => {
+/** Renders one workspace file per cut clip (Trigger.dev + FFmpeg in production). */
+export const createRenderCutsStep = (): StepExecutor => {
   return async (context): Promise<import('@company-os/agent-sdk').StepResult> => {
-    const resolveOutput = context.previousStepsOutput.resolve_source as {
-      segments?: Array<{ startSec: number; endSec: number; text: string }>;
-      transcriptText?: string;
+    const rankOutput = context.previousStepsOutput.rank_segments as {
+      cuts?: Array<Record<string, unknown>>;
+      sourceFileId?: string;
+      captionStyleId?: string;
     };
 
-    const segments = resolveOutput?.segments ?? [];
-    const transcriptText = resolveOutput?.transcriptText ?? segments.map((s) => s.text).join(' ');
+    const cuts = rankOutput.cuts;
+    if (!Array.isArray(cuts) || cuts.length === 0) {
+      return {
+        type: 'FAILED',
+        error: 'No cuts available to render',
+      };
+    }
 
-    const analyzedSegments = segments.map((segment, index) => ({
-      id: `seg-${index + 1}`,
-      startSec: segment.startSec,
-      endSec: segment.endSec,
-      text: segment.text,
-      wordCount: segment.text.split(/\s+/).filter(Boolean).length,
-    }));
+    const sourceFileId = rankOutput.sourceFileId;
+    if (!sourceFileId) {
+      return {
+        type: 'FAILED',
+        error: 'sourceFileId is required to render cuts',
+      };
+    }
+
+    try {
+      const deps = getCutsRunDeps();
+      const sourceFile = await deps.resolveSourceFile({
+        sourceFileId,
+        companyId: context.companyId,
+      });
+
+      const rendered = await deps.renderCutClips({
+        runId: context.runId,
+        companyId: context.companyId,
+        personalSpaceId: sourceFile.personalSpaceId,
+        sourceFile,
+        cuts: cuts as import('@company-os/types').CutOutput[],
+      });
+
+      return {
+        type: 'CONTINUE',
+        output: {
+          cuts: rendered.cuts,
+          sourceFileId: rendered.sourceFileId,
+          captionStyleId: rankOutput.captionStyleId,
+        },
+      };
+    } catch (error) {
+      return {
+        type: 'FAILED',
+        error: error instanceof Error ? error.message : 'Failed to render cut clips',
+      };
+    }
+  };
+};
+
+export const createFinalizeCutsStep = (): StepExecutor => {
+  return async (context): Promise<import('@company-os/agent-sdk').StepResult> => {
+    const reviewOutput = context.previousStepsOutput.await_cut_review;
+    const validated = validateStepOutput(cutsOutputZod, reviewOutput ?? {});
+
+    if (!validated.success) {
+      return {
+        type: 'FAILED',
+        error: 'Cut output validation failed',
+      };
+    }
 
     return {
       type: 'CONTINUE',
-      output: {
-        transcriptText,
-        analyzedSegments,
-      },
+      output: validated.data as Record<string, unknown>,
     };
   };
 };

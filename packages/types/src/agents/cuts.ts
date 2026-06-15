@@ -25,6 +25,8 @@ export const cutOutputSchema = z.object({
   durationSec: z.number().positive(),
   viralScore: z.number().min(0).max(100),
   reviewStatus: cutReviewStatusSchema,
+  /** Rendered clip stored as a workspace file (preferred for preview). */
+  cutFileId: z.string().min(1).optional(),
   previewUrl: z.string().optional(),
 });
 

@@ -1,8 +1,9 @@
 import { defineConfig } from "@trigger.dev/sdk";
+import { ffmpeg } from "@trigger.dev/build/extensions/core";
 
 export default defineConfig({
   project: process.env.TRIGGER_PROJECT_ID ?? "proj_kqouuhakfzriyzongafh",
-  maxDuration: 300,
+  maxDuration: 600,
   dirs: ["./trigger"],
   build: {
     external: [
@@ -21,5 +22,6 @@ export default defineConfig({
       // own nested pdfjs-dist + @napi-rs/canvas (with the polyfill intact).
       "pdf-parse",
     ],
+    extensions: [ffmpeg({ version: "7" })],
   },
 });

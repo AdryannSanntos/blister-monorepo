@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from '../../storage/storage.service';
 import { transcribeWithAssemblyAi } from '../../ai-runtime/adapters/assemblyai-stt.adapter';
+import { resolveStepSpeechModel } from '../../ai-runtime/resolve-model';
+import { renderCutClipsWithDeps } from '../cuts/services/render-cut-clips.service';
 import {
   createStubCutsRunDeps,
   setCutsRunDeps,
@@ -31,7 +33,7 @@ export class CutsRunDepsAdapter implements OnModuleInit {
         const file = await this.prisma.workspaceFile.findFirst({
           where: {
             id: sourceFileId,
-            OR: [{ companyId }, { companyId: null }],
+            OR: [{ companyId }, { personalSpaceId: companyId }],
           },
         });
 
@@ -49,7 +51,7 @@ export class CutsRunDepsAdapter implements OnModuleInit {
           name: file.name,
         } satisfies SourceFileRecord;
       },
-      transcribeSource: async ({ file }) => {
+      transcribeSource: async ({ file, agentId, stepKey }) => {
         if (file.extractedText) {
           return {
             text: file.extractedText,
@@ -61,11 +63,19 @@ export class CutsRunDepsAdapter implements OnModuleInit {
           return stub.transcribeSource({ file });
         }
 
+        const speechModelId =
+          agentId && stepKey
+            ? await resolveStepSpeechModel(this.prisma, { agentId, stepKey })
+            : undefined;
+
+        const speechModels = speechModelId ? [speechModelId] : undefined;
+
         const audioUrl = await this.storage.getPresignedDownloadUrl(file.storageKey);
         const result = await transcribeWithAssemblyAi({
           audioUrl,
           apiKey,
           baseUrl: this.config.get<string>('ASSEMBLYAI_BASE_URL'),
+          speechModels,
         });
 
         await this.prisma.workspaceFile.update({
@@ -85,9 +95,14 @@ export class CutsRunDepsAdapter implements OnModuleInit {
           })),
         };
       },
+      renderCutClips: async (params) =>
+        renderCutClipsWithDeps(this.prisma, this.storage, params),
       deleteSourceFile: async ({ sourceFileId, companyId }) => {
         const file = await this.prisma.workspaceFile.findFirst({
-          where: { id: sourceFileId, companyId },
+          where: {
+            id: sourceFileId,
+            OR: [{ companyId }, { personalSpaceId: companyId }],
+          },
         });
         if (!file) return;
 

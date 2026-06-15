@@ -73,6 +73,51 @@ export const updateAgentPolicySchema = z.object({
 });
 export type UpdateAgentPolicyDto = z.infer<typeof updateAgentPolicySchema>;
 
+export const agentStepPolicySchema = z.object({
+  agentId: z.string(),
+  stepKey: z.string(),
+  modelId: z.string(),
+  isEnabled: z.boolean(),
+});
+export type AgentStepPolicy = z.infer<typeof agentStepPolicySchema>;
+
+export const updateAgentStepPolicySchema = z.object({
+  modelId: z.string().nullable().optional(),
+  isEnabled: z.boolean().optional(),
+});
+export type UpdateAgentStepPolicyDto = z.infer<typeof updateAgentStepPolicySchema>;
+
+/** Step types that support per-step model override in platform admin. */
+export const AGENT_STEP_TYPES_WITH_MODEL = [
+  'llm_call',
+  'image_generation',
+  'preparation',
+] as const;
+export type AgentStepTypeWithModel = (typeof AGENT_STEP_TYPES_WITH_MODEL)[number];
+
+export const updateAgentStepPoliciesBatchSchema = z.object({
+  steps: z.array(
+    z.object({
+      stepKey: z.string().min(1),
+      modelId: z.string().nullable(),
+    }),
+  ),
+});
+export type UpdateAgentStepPoliciesBatchDto = z.infer<
+  typeof updateAgentStepPoliciesBatchSchema
+>;
+
+export const platformAgentStepSchema = z.object({
+  key: z.string(),
+  label: z.string(),
+  type: z.string(),
+  modelId: z.string().nullable().optional(),
+  modelName: z.string().nullable().optional(),
+  modelExternalId: z.string().nullable().optional(),
+  usesAgentDefault: z.boolean().optional(),
+});
+export type PlatformAgentStep = z.infer<typeof platformAgentStepSchema>;
+
 export const pipelineAgentConfigSchema = z.object({
   agentId: z.string(),
   sortOrder: z.number(),
@@ -90,13 +135,6 @@ export const updatePipelineSchema = z.object({
   ),
 });
 export type UpdatePipelineDto = z.infer<typeof updatePipelineSchema>;
-
-export const platformAgentStepSchema = z.object({
-  key: z.string(),
-  label: z.string(),
-  type: z.string(),
-});
-export type PlatformAgentStep = z.infer<typeof platformAgentStepSchema>;
 
 export const platformAgentPolicyViewSchema = z.object({
   modelId: z.string(),

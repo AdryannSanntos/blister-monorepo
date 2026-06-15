@@ -58,8 +58,50 @@ describe('cuts agent', () => {
       expect(cut).toHaveProperty('startSec');
       expect(cut).toHaveProperty('endSec');
       expect(cut).toHaveProperty('viralScore');
+      expect(cut).toHaveProperty('cutFileId');
       expect(cut.reviewStatus).toBe('approved');
     }
+  });
+
+  it('generates cuts carrying title, description and computed duration', async () => {
+    const harness = AgentTestHarness.forAgent(cutsAgent).withLlmResponses({
+      rank_segments: mockLlmCuts,
+    });
+
+    const result = await harness.run({ ...baseInput });
+
+    const cuts = result.output?.cuts as Array<Record<string, unknown>>;
+    expect(cuts).toHaveLength(2);
+    // IDs are normalized to stable cut-N regardless of what the model emits.
+    expect(cuts.map((cut) => cut.id)).toEqual(['cut-1', 'cut-2']);
+    expect(cuts[0].title).toBe('Controversial hook');
+    expect(cuts[0].description).toBe('Opens with a polarizing question');
+    // durationSec is derived from the window (180 - 120).
+    expect(cuts[0].durationSec).toBe(60);
+
+    for (const cut of cuts) {
+      expect(typeof cut.title).toBe('string');
+      expect((cut.title as string).length).toBeGreaterThan(0);
+      expect(typeof cut.description).toBe('string');
+    }
+  });
+
+  it('falls back to an empty description when the model omits it', async () => {
+    const harness = AgentTestHarness.forAgent(cutsAgent).withLlmResponses({
+      rank_segments: {
+        cuts: [
+          { id: 'raw', title: 'No description cut', startSec: 0, endSec: 30, viralScore: 70 },
+        ],
+      },
+    });
+
+    const result = await harness.run({ ...baseInput });
+
+    const cuts = result.output?.cuts as Array<Record<string, unknown>>;
+    expect(cuts).toHaveLength(1);
+    expect(cuts[0].title).toBe('No description cut');
+    expect(cuts[0].description).toBe('');
+    expect(cuts[0].durationSec).toBe(30);
   });
 
   it('pauses at await_cut_review when autoAcceptResults is false', async () => {

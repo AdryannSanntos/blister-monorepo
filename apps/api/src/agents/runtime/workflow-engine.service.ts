@@ -10,6 +10,7 @@ import { StorageService } from '../../storage/storage.service';
 import { adaptContextPackService } from '../adapters/context-pack-builder.adapter';
 import { AgentRegistryService } from './agent-registry.service';
 import { AgentRunBlockService } from './agent-run-block.service';
+import type { RunWorkspaceScope } from './agent-run.service';
 import { AgentSseService } from './agent-sse.service';
 import { CreditStepInterceptor } from './credit-step.interceptor';
 import { InProcessEventPublisher } from './in-process-event.publisher';
@@ -20,6 +21,7 @@ import {
   executeRun,
 } from './kernel';
 import type { AssetResolver } from './kernel';
+import { resolveAgentExecutionMode } from './agent-execution-mode';
 
 type AgentRunExecuteTask = typeof agentRunExecute;
 
@@ -27,7 +29,10 @@ type ExecutionMode = 'inline-stub' | 'inline-live' | 'trigger';
 
 export interface StartRunOptions {
   agentId: string;
-  companyId: string;
+  /** Company-scoped run. Mutually exclusive with personalSpaceId. */
+  companyId?: string;
+  /** Personal-space-scoped run. Mutually exclusive with companyId. */
+  personalSpaceId?: string;
   userId: string;
   userInput: string;
   campaignId?: string;
@@ -99,11 +104,10 @@ export class WorkflowEngineService {
    * worker. Override with AGENT_EXECUTION_MODE.
    */
   private resolveExecutionMode(): ExecutionMode {
-    const mode = this.config.get<string>('AGENT_EXECUTION_MODE');
-    if (mode === 'inline-stub' || mode === 'inline-live' || mode === 'trigger') {
-      return mode;
-    }
-    return this.config.get<string>('NODE_ENV') === 'production' ? 'trigger' : 'inline-live';
+    return resolveAgentExecutionMode(
+      this.config.get<string>('AGENT_EXECUTION_MODE'),
+      this.config.get<string>('NODE_ENV'),
+    );
   }
 
   private startInlineExecution(
@@ -148,15 +152,30 @@ export class WorkflowEngineService {
       throw new Error(`Invalid input: ${parsed.error.message}`);
     }
 
-    await this.creditInterceptor.checkBalance(options.companyId, agent.estimatedCreditCost ?? 0.01);
+    const isPersonal = Boolean(options.personalSpaceId) && !options.companyId;
 
-    await this.companyRagSync.ensureSynced(options.companyId, {
-      campaignId: options.campaignId,
-    });
+    if (isPersonal) {
+      // Personal spaces use a separate credit balance and have no company RAG
+      // index to sync; brand context falls back to empty.
+      await this.creditInterceptor.checkPersonalBalance(
+        options.personalSpaceId as string,
+        agent.estimatedCreditCost ?? 0.01,
+      );
+    } else {
+      await this.creditInterceptor.checkBalance(
+        options.companyId as string,
+        agent.estimatedCreditCost ?? 0.01,
+      );
+
+      await this.companyRagSync.ensureSynced(options.companyId as string, {
+        campaignId: options.campaignId,
+      });
+    }
 
     const run = await this.prisma.agentRun.create({
       data: {
-        companyId: options.companyId,
+        companyId: options.companyId ?? null,
+        personalSpaceId: options.personalSpaceId ?? null,
         agentId: options.agentId,
         // Persist the agent version with the run for traceability/reproducibility.
         agentVersion: agent.version,
@@ -272,9 +291,9 @@ export class WorkflowEngineService {
     }
   }
 
-  async cancelRun(runId: string, companyId: string): Promise<RunResult> {
+  async cancelRun(runId: string, scope: RunWorkspaceScope): Promise<RunResult> {
     const run = await this.prisma.agentRun.findFirst({
-      where: { id: runId, companyId },
+      where: { id: runId, ...scope },
     });
 
     if (!run) {
@@ -293,7 +312,11 @@ export class WorkflowEngineService {
       },
     });
 
-    this.sseService.emitRunCancelled(runId, run.companyId, run.agentId);
+    this.sseService.emitRunCancelled(
+      runId,
+      run.companyId ?? run.personalSpaceId ?? '',
+      run.agentId,
+    );
 
     this.logger.log(`Cancelled run: ${runId}`);
 

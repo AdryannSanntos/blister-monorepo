@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, type LucideIcon } from "lucide-react";
+import { type LucideIcon, MoreHorizontal } from "lucide-react";
 import { Button } from "src/core/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -54,7 +54,7 @@ export function TableRowActionsMenu({
             <DropdownMenuItem
               key={item.id}
               disabled={item.disabled}
-              onClick={item.onClick}
+              onSelect={() => item.onClick()}
             >
               {item.icon ? <item.icon className="size-4" /> : null}
               {item.label}
@@ -68,7 +68,7 @@ export function TableRowActionsMenu({
               key={item.id}
               variant="destructive"
               disabled={item.disabled}
-              onClick={item.onClick}
+              onSelect={() => item.onClick()}
             >
               {item.icon ? <item.icon className="size-4" /> : null}
               {item.label}

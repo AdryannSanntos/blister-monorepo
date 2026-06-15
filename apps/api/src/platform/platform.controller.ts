@@ -25,6 +25,18 @@ export class PlatformController {
   constructor(private readonly platformService: PlatformService) {}
 
   /**
+   * GET /platform/me/roles
+   * Returns the authenticated user's platform role assignments.
+   * Any signed-in user may call this (no platform_admin required).
+   */
+  @Get('me/roles')
+  async getMyRoles(@Req() req: Request) {
+    const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
+
+    return this.platformService.getUserPlatformRoles(currentUser.id);
+  }
+
+  /**
    * GET /platform/admins
    * List all platform role assignments (platform_admin+)
    */

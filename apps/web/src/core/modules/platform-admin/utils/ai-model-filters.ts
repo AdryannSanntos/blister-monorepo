@@ -15,3 +15,13 @@ export const filterTextModels = (models: AiModel[]): AiModel[] =>
       capabilities.includes("text") || capabilities.includes("structured_output")
     );
   });
+
+export const filterSpeechModels = (models: AiModel[]): AiModel[] =>
+  filterEnabledModels(models).filter((model) =>
+    model.capabilities?.includes("speech"),
+  );
+
+export const filterImageModels = (models: AiModel[]): AiModel[] =>
+  filterEnabledModels(models).filter((model) =>
+    model.capabilities?.includes("image"),
+  );

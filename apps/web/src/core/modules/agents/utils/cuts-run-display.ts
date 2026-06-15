@@ -1,0 +1,62 @@
+import type { AgentRunStatusDto, AgentRunStepDto, CutOutput } from "@company-os/types";
+
+import { withStableCutIds } from "./cuts-display";
+
+export const readSourceFileId = (
+  inputPayload: Record<string, unknown>,
+): string | null => {
+  const direct = inputPayload.sourceFileId;
+  if (typeof direct === "string" && direct.length > 0) return direct;
+
+  const metadata = inputPayload.metadata;
+  if (metadata && typeof metadata === "object" && metadata !== null) {
+    const nested = (metadata as Record<string, unknown>).sourceFileId;
+    if (typeof nested === "string" && nested.length > 0) return nested;
+  }
+
+  return null;
+};
+
+export const getRunSourceTitle = (
+  inputPayload: Record<string, unknown>,
+): string => {
+  const userInput = inputPayload.userInput;
+  return typeof userInput === "string" && userInput.trim().length > 0
+    ? userInput.trim()
+    : "—";
+};
+
+const readCutsFromPayload = (payload: unknown): CutOutput[] => {
+  if (!payload || typeof payload !== "object") return [];
+  const cuts = (payload as { cuts?: unknown }).cuts;
+  if (!Array.isArray(cuts) || cuts.length === 0) return [];
+  return withStableCutIds(cuts as CutOutput[]);
+};
+
+const readCutsFromStep = (
+  steps: AgentRunStepDto[] | undefined,
+  stepKey: string,
+): CutOutput[] => {
+  const step = steps?.find((item) => item.stepKey === stepKey);
+  return readCutsFromPayload(step?.outputPayload);
+};
+
+/** Reads cuts from run output, render step, or rank step (while paused). */
+export const extractCutsFromRun = (params: {
+  run: AgentRunStatusDto;
+  steps?: AgentRunStepDto[];
+}): CutOutput[] => {
+  const fromOutput = readCutsFromPayload(params.run.outputPayload);
+  if (fromOutput.length > 0) return fromOutput;
+
+  const fromRender = readCutsFromStep(params.steps, "render_cuts");
+  if (fromRender.length > 0) return fromRender;
+
+  return readCutsFromStep(params.steps, "rank_segments");
+};
+
+export const extractCutsFromRunDto = (run: AgentRunStatusDto): CutOutput[] =>
+  extractCutsFromRun({ run });
+
+export const countApprovedCuts = (cuts: CutOutput[]): number =>
+  cuts.filter((cut) => cut.reviewStatus === "approved").length;

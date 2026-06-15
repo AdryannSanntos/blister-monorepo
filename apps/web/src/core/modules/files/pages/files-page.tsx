@@ -16,7 +16,9 @@ import { useFilesExplorer } from "src/core/modules/files/hooks/use-files-explore
 import {
   useCreateFolder,
   useDeleteFile,
+  useDeleteFolder,
   useUpdateFile,
+  useUpdateFolder,
   useUploadWorkspaceFile,
 } from "src/core/modules/files/hooks/use-files-api";
 import type { FileEntry, FileFolder } from "src/core/modules/files/types/files.types";
@@ -26,13 +28,11 @@ import {
   canUploadTo,
 } from "src/core/modules/files/utils/files-rules";
 import { BlisterChipRow } from "src/core/shared/components/blister/blister-chip-row";
-import { FileDropzone } from "src/core/shared/components/blister/file-dropzone";
 import { Button } from "src/core/shared/components/ui/button";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { ConfirmationDialog } from "src/core/shared/components/ui/confirmation-dialog";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { cn } from "src/core/shared/utils";
 
 type DialogTarget =
   | { type: "folder"; item: FileFolder }
@@ -66,6 +66,8 @@ export const FilesPage = () => {
   const uploadFile = useUploadWorkspaceFile();
   const updateFile = useUpdateFile();
   const deleteFileMutation = useDeleteFile();
+  const updateFolder = useUpdateFolder();
+  const deleteFolderMutation = useDeleteFolder();
 
   const {
     currentFolder,
@@ -135,7 +137,17 @@ export const FilesPage = () => {
 
   const handleRename = useCallback(
     async (name: string) => {
-      if (!renameTarget || renameTarget.type !== "file") return;
+      if (!renameTarget) return;
+
+      if (renameTarget.type === "folder") {
+        try {
+          await updateFolder.mutateAsync({ id: renameTarget.item.id, name });
+          toast.success(t("renameFolderSuccess", { name }));
+        } catch {
+          toast.error(t("cannotRenameFolder"));
+        }
+        return;
+      }
 
       try {
         await updateFile.mutateAsync({ id: renameTarget.item.id, name });
@@ -144,11 +156,21 @@ export const FilesPage = () => {
         toast.error(t("cannotRenameFile"));
       }
     },
-    [renameTarget, t, updateFile],
+    [renameTarget, t, updateFile, updateFolder],
   );
 
   const handleDelete = useCallback(async () => {
-    if (!deleteTarget || deleteTarget.type !== "file") return;
+    if (!deleteTarget) return;
+
+    if (deleteTarget.type === "folder") {
+      try {
+        await deleteFolderMutation.mutateAsync(deleteTarget.item.id);
+        toast.success(t("deleteFolderSuccess", { name: deleteTarget.item.name }));
+      } catch {
+        toast.error(t("cannotDeleteFolder"));
+      }
+      return;
+    }
 
     try {
       await deleteFileMutation.mutateAsync(deleteTarget.item.id);
@@ -156,16 +178,24 @@ export const FilesPage = () => {
     } catch {
       toast.error(t("cannotDeleteFile"));
     }
-  }, [deleteFileMutation, deleteTarget, t]);
+  }, [deleteFileMutation, deleteFolderMutation, deleteTarget, t]);
 
-  const renameDialogTitle = t("renameFileTitle");
-  const renameDialogInitialValue =
-    renameTarget?.type === "file" ? renameTarget.item.name : "";
+  const renameDialogTitle =
+    renameTarget?.type === "folder"
+      ? t("renameFolderTitle")
+      : t("renameFileTitle");
+  const renameDialogInitialValue = renameTarget?.item.name ?? "";
 
-  const deleteDialogTitle = t("deleteFileTitle");
-  const deleteDialogDescription = t("deleteFileDescription", {
-    name: deleteTarget?.type === "file" ? deleteTarget.item.name : "",
-  });
+  const deleteDialogTitle =
+    deleteTarget?.type === "folder"
+      ? t("deleteFolderTitle")
+      : t("deleteFileTitle");
+  const deleteDialogDescription =
+    deleteTarget?.type === "folder"
+      ? t("deleteFolderDescription", { name: deleteTarget.item.name })
+      : t("deleteFileDescription", {
+          name: deleteTarget?.type === "file" ? deleteTarget.item.name : "",
+        });
 
   return (
     <div data-testid="files-page">
@@ -229,12 +259,7 @@ export const FilesPage = () => {
         ) : null}
 
         {!isLoading && !isError ? (
-          <div
-            className={cn(
-              "flex flex-col gap-6",
-              isEmpty && permissions.canUpload && "gap-4",
-            )}
-          >
+          <div className="flex flex-col gap-6">
             <FilesFolderGrid
               folders={childFoldersWithCounts}
               onOpen={handleNavigate}
@@ -271,14 +296,6 @@ export const FilesPage = () => {
                 }
               />
             ) : null}
-
-            {isEmpty && permissions.canUpload ? (
-              <FileDropzone
-                onFileSelect={(file) => void handleUploadFile(file)}
-                accept="video/*,audio/*,image/*,.pdf,.md,.txt,.doc,.docx"
-                className="py-10"
-              />
-            ) : null}
           </div>
         ) : null}
       </PageLayout>
@@ -293,7 +310,7 @@ export const FilesPage = () => {
       />
 
       <FilesNameDialog
-        open={Boolean(renameTarget?.type === "file")}
+        open={Boolean(renameTarget)}
         onOpenChange={(open) => {
           if (!open) setRenameTarget(null);
         }}
@@ -313,7 +330,7 @@ export const FilesPage = () => {
       />
 
       <ConfirmationDialog
-        open={Boolean(deleteTarget?.type === "file")}
+        open={Boolean(deleteTarget)}
         onOpenChange={(open) => {
           if (!open) setDeleteTarget(null);
         }}

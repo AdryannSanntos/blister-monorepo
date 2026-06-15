@@ -12,6 +12,7 @@ import type { CheckpointStore } from './checkpoint';
 import type { RunStore } from './run-store';
 import type {
   AssetResolver,
+  AgentContextConfig,
   BrandProfile,
   ContextPack,
   StepExecutionContext,
@@ -35,6 +36,7 @@ export interface AgentDefinitionRuntime {
   steps: AgentStepDefinitionRuntime[];
   capabilities: string[];
   skills?: string[];
+  context?: AgentContextConfig;
   middleware?: AgentMiddleware;
   routing?: RoutingRule[];
 }
@@ -51,6 +53,7 @@ export interface LlmCompletion {
 export interface LlmCompletionParams {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
   agentId: string;
+  stepKey?: string;
   maxTokens?: number;
   temperature?: number;
   structuredOutputSchema?: Record<string, unknown>;
@@ -68,6 +71,7 @@ export interface ImageProviderRuntime {
   generateImage(params: {
     prompt: string;
     agentId: string;
+    stepKey?: string;
   }): Promise<{
     imageUrl?: string;
     base64?: string;
@@ -111,6 +115,7 @@ export interface CreateStepContextParams {
   brandProfile: BrandProfile | null;
   contextPackBuilder: ContextPackBuilder | null;
   previousStepsOutput: Record<string, Record<string, unknown>>;
+  contextConfig?: AgentContextConfig;
 }
 
 export interface PlatformSettings {

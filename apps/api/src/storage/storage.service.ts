@@ -1,14 +1,17 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import type { Readable } from 'node:stream';
 import {
   CopyObjectCommand,
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
+  ListObjectsV2Command,
   PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import type { Readable } from 'node:stream';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class StorageService implements OnModuleInit {
@@ -18,8 +21,7 @@ export class StorageService implements OnModuleInit {
 
   constructor(private readonly config: ConfigService) {
     const endpoint = this.config.get<string>('AWS_S3_ENDPOINT');
-    const forcePathStyle =
-      this.config.get<string>('AWS_S3_FORCE_PATH_STYLE') === 'true';
+    const forcePathStyle = this.config.get<string>('AWS_S3_FORCE_PATH_STYLE') === 'true';
 
     this.client = new S3Client({
       region: this.config.get<string>('AWS_REGION') ?? 'us-east-1',
@@ -63,9 +65,7 @@ export class StorageService implements OnModuleInit {
           },
         }),
       );
-      this.logger.log(
-        `Configured S3 bucket CORS for origins: ${configuredOrigins.join(', ')}`,
-      );
+      this.logger.log(`Configured S3 bucket CORS for origins: ${configuredOrigins.join(', ')}`);
     } catch (error) {
       this.logger.warn(
         `Could not configure S3 bucket CORS automatically: ${
@@ -123,10 +123,13 @@ export class StorageService implements OnModuleInit {
   }
 
   async copyObject(sourceKey: string, destinationKey: string): Promise<void> {
+    // CopySource must be URL-encoded per segment while keeping the path slashes,
+    // otherwise keys containing spaces or accents fail.
+    const encodedSource = sourceKey.split('/').map(encodeURIComponent).join('/');
     await this.client.send(
       new CopyObjectCommand({
         Bucket: this.bucket,
-        CopySource: `${this.bucket}/${sourceKey}`,
+        CopySource: `${this.bucket}/${encodedSource}`,
         Key: destinationKey,
       }),
     );
@@ -149,11 +152,59 @@ export class StorageService implements OnModuleInit {
   }
 
   async deleteObject(key: string): Promise<void> {
-    const { DeleteObjectCommand } = await import('@aws-sdk/client-s3');
     await this.client.send(
       new DeleteObjectCommand({
         Bucket: this.bucket,
         Key: key,
+      }),
+    );
+  }
+
+  /** Lists every object key under a prefix, following pagination. */
+  async listObjectKeys(prefix: string): Promise<string[]> {
+    const keys: string[] = [];
+    let continuationToken: string | undefined;
+
+    do {
+      const response = await this.client.send(
+        new ListObjectsV2Command({
+          Bucket: this.bucket,
+          Prefix: prefix,
+          ContinuationToken: continuationToken,
+        }),
+      );
+
+      for (const item of response.Contents ?? []) {
+        if (item.Key) keys.push(item.Key);
+      }
+
+      continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
+    } while (continuationToken);
+
+    return keys;
+  }
+
+  /** Deletes many objects, batching to the S3 limit of 1000 keys per call. */
+  async deleteObjects(keys: string[]): Promise<void> {
+    const unique = [...new Set(keys)].filter(Boolean);
+    for (let i = 0; i < unique.length; i += 1000) {
+      const batch = unique.slice(i, i + 1000);
+      await this.client.send(
+        new DeleteObjectsCommand({
+          Bucket: this.bucket,
+          Delete: { Objects: batch.map((Key) => ({ Key })) },
+        }),
+      );
+    }
+  }
+
+  /** Writes a zero-byte object (used for folder placeholder markers). */
+  async putEmptyObject(key: string): Promise<void> {
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: '',
       }),
     );
   }

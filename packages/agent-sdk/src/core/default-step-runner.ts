@@ -119,6 +119,7 @@ async function executeLlmStep(
         { role: 'user' as const, content: userPrompt },
       ],
       agentId: context.agentId,
+      stepKey: context.stepKey,
       structuredOutputSchema: agentDef.outputSchema,
     };
 
@@ -157,6 +158,7 @@ async function executeImageStep(
     const result = await imageProvider.generateImage({
       prompt,
       agentId: context.agentId,
+      stepKey: context.stepKey,
     });
 
     return {
@@ -281,9 +283,6 @@ export async function executeStepStub(stepKey: string, agentId: string): Promise
           { startSec: 0, endSec: 45, text: 'Welcome to the show.' },
           { startSec: 45, endSec: 120, text: 'Today we discuss retention hooks.' },
         ],
-      },
-      analyze_source: {
-        transcriptText: 'Welcome to the show. Today we discuss retention hooks.',
         analyzedSegments: [
           { id: 'seg-1', startSec: 0, endSec: 45, text: 'Welcome to the show.', wordCount: 4 },
           {

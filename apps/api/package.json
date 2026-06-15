@@ -24,7 +24,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
-    "db:seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
+    "db:seed": "ts-node -r tsconfig-paths/register prisma/seed.ts",
+    "db:reset-folders": "ts-node -r tsconfig-paths/register prisma/scripts/reset-workspace-folders.ts",
+    "storage:sync": "ts-node -r tsconfig-paths/register prisma/scripts/sync-storage.ts",
+    "postinstall": "node scripts/ensure-ffmpeg-static.cjs"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
@@ -50,6 +53,7 @@
     "@trigger.dev/sdk": "^4.4.6",
     "better-auth": "^1.6.11",
     "cookie-parser": "^1.4.7",
+    "ffmpeg-static": "^5.3.0",
     "jszip": "^3.10.1",
     "pdf-parse": "^2.4.5",
     "reflect-metadata": "^0.2.2",
@@ -63,6 +67,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@trigger.dev/build": "^4.4.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",

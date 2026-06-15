@@ -1,36 +1,26 @@
+import { runAgentRequestSchema } from '@company-os/types';
 import {
-  Controller,
-  Post,
-  Get,
-  Param,
   Body,
-  Query,
-  Req,
+  Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
-import { CompanyService } from '../company/company.service';
-import { WorkspaceContextService } from '../workspace/workspace-context.service';
 import { WorkspaceSettingsService } from '../workspace-settings/workspace-settings.service';
+import { WorkspaceContextService } from '../workspace/workspace-context.service';
+import { AgentRunService, toRunScope } from './runtime/agent-run.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
-import { AgentRunService } from './runtime/agent-run.service';
-import { runAgentRequestSchema } from '@company-os/types';
-
-const emptyRunStats = {
-  totalRuns: 0,
-  completed: 0,
-  failed: 0,
-  running: 0,
-  avgCreditCost: 0,
-};
 
 @Controller('agents')
 export class AgentsController {
   constructor(
-    private readonly companyService: CompanyService,
     private readonly workspaceContext: WorkspaceContextService,
     private readonly workspaceSettings: WorkspaceSettingsService,
     private readonly workflowEngine: WorkflowEngineService,
@@ -40,14 +30,10 @@ export class AgentsController {
   @Post(':agentId/run')
   @RequirePermission('generation.create')
   @HttpCode(HttpStatus.ACCEPTED)
-  async runAgent(
-    @Param('agentId') agentId: string,
-    @Body() body: unknown,
-    @Req() req: Request,
-  ) {
+  async runAgent(@Param('agentId') agentId: string, @Body() body: unknown, @Req() req: Request) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const userId = user.id;
-    const company = await this.companyService.findByOwnerOrThrow(userId, req);
+    const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
     const dto = runAgentRequestSchema.parse(body);
 
     let metadata = dto.metadata;
@@ -63,7 +49,8 @@ export class AgentsController {
 
     const result = await this.workflowEngine.startRun({
       agentId,
-      companyId: company.id,
+      companyId: workspace.type === 'company' ? workspace.companyId : undefined,
+      personalSpaceId: workspace.type === 'personal' ? workspace.personalSpaceId : undefined,
       userId,
       userInput: dto.userInput,
       campaignId: dto.campaignId,
@@ -88,11 +75,7 @@ export class AgentsController {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
 
-    if (workspace.type === 'personal') {
-      return { runs: [], total: 0 };
-    }
-
-    return this.runService.listByAgent(workspace.companyId, agentId, {
+    return this.runService.listByAgent(toRunScope(workspace), agentId, {
       limit: limit ? Number.parseInt(limit, 10) : 20,
       offset: offset ? Number.parseInt(offset, 10) : 0,
       reviewStatus: reviewStatus === 'pending' ? 'pending' : undefined,
@@ -101,17 +84,10 @@ export class AgentsController {
 
   @Get(':agentId/stats')
   @RequirePermission('generation.create')
-  async getAgentStats(
-    @Param('agentId') agentId: string,
-    @Req() req: Request,
-  ) {
+  async getAgentStats(@Param('agentId') agentId: string, @Req() req: Request) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
 
-    if (workspace.type === 'personal') {
-      return emptyRunStats;
-    }
-
-    return this.runService.getRunStats(workspace.companyId, agentId);
+    return this.runService.getRunStats(toRunScope(workspace), agentId);
   }
 }

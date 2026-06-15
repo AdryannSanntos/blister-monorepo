@@ -64,6 +64,8 @@ type AgentModelSelectProps = {
   disabled?: boolean;
   id?: string;
   "aria-invalid"?: boolean;
+  allowDefaultOption?: boolean;
+  defaultOptionLabel?: string;
 };
 
 export function AgentModelSelect({
@@ -77,6 +79,8 @@ export function AgentModelSelect({
   disabled = false,
   id,
   "aria-invalid": ariaInvalid,
+  allowDefaultOption = false,
+  defaultOptionLabel,
 }: AgentModelSelectProps) {
   const [open, setOpen] = useState(false);
 
@@ -100,6 +104,13 @@ export function AgentModelSelect({
     setOpen(false);
   };
 
+  const displayLabel =
+    value === "__default__" && allowDefaultOption
+      ? (defaultOptionLabel ?? placeholder)
+      : selectedModel
+        ? `${selectedProvider?.name ?? ""} — ${selectedModel.name}`
+        : placeholder;
+
   return (
     <Popover open={open} onOpenChange={setOpen} modal={false}>
       <PopoverTrigger asChild>
@@ -114,13 +125,10 @@ export function AgentModelSelect({
           className={cn(
             "h-[var(--control-h-md)] w-full justify-between gap-2 rounded-[var(--r-md)] border-[1.5px] border-[var(--line-default)] bg-[var(--bg-base)] px-3 font-normal shadow-none hover:border-[var(--line-strong)] hover:bg-[var(--bg-base)]",
             !value && "text-[var(--fg-quaternary)]",
+            value === "__default__" && "text-[var(--fg-secondary)]",
           )}
         >
-          <span className="truncate text-left">
-            {selectedModel
-              ? `${selectedProvider?.name ?? ""} — ${selectedModel.name}`
-              : placeholder}
-          </span>
+          <span className="truncate text-left">{displayLabel}</span>
           <ChevronDownIcon
             className={cn(
               "size-4 shrink-0 text-[var(--fg-tertiary)] transition-transform",
@@ -142,6 +150,24 @@ export function AgentModelSelect({
             onWheel={(event) => event.stopPropagation()}
           >
             <CommandEmpty>{emptyLabel}</CommandEmpty>
+            {allowDefaultOption ? (
+              <CommandGroup>
+                <CommandItem
+                  value="__default__"
+                  onSelect={() => handleSelect("__default__")}
+                >
+                  <CheckIcon
+                    className={cn(
+                      "size-4 shrink-0 text-[var(--accent)]",
+                      value === "__default__" ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <span className="text-[var(--fg-secondary)]">
+                    {defaultOptionLabel ?? placeholder}
+                  </span>
+                </CommandItem>
+              </CommandGroup>
+            ) : null}
             {groups.map((group, groupIndex) => (
               <Fragment key={group.provider.id}>
                 {groupIndex > 0 ? <CommandSeparator /> : null}

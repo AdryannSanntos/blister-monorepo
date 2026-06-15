@@ -12,7 +12,8 @@ export type SeedModelDefinition = {
 const DEFAULT_INPUT_COST = '0.000100';
 const DEFAULT_OUTPUT_COST = '0.000400';
 
-export const ASSEMBLYAI_MODELS: SeedModelDefinition[] = [
+/** AssemblyAI LLM Gateway models (chat/completions). Fetched live when API key is set. */
+export const ASSEMBLYAI_LLM_MODELS: SeedModelDefinition[] = [
   { externalId: 'claude-opus-4-7', name: 'Claude Opus 4.7', inputCostPer1k: '0.005000', outputCostPer1k: '0.025000', capabilities: ['text', 'structured_output'] },
   { externalId: 'claude-opus-4-6', name: 'Claude Opus 4.6', inputCostPer1k: '0.005000', outputCostPer1k: '0.025000', capabilities: ['text', 'structured_output'] },
   { externalId: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', inputCostPer1k: '0.003000', outputCostPer1k: '0.015000', capabilities: ['text', 'structured_output'] },
@@ -37,6 +38,27 @@ export const ASSEMBLYAI_MODELS: SeedModelDefinition[] = [
   { externalId: 'qwen3-32B', name: 'Qwen3 32B', inputCostPer1k: '0.000150', outputCostPer1k: '0.000600', capabilities: ['text'] },
   { externalId: 'kimi-k2.5', name: 'Kimi K2.5', inputCostPer1k: '0.000200', outputCostPer1k: '0.000800', capabilities: ['text'] },
 ];
+
+/** Pre-recorded STT models (REST /v2/transcript). Used by the cuts transcriber. */
+export const ASSEMBLYAI_STT_MODELS: SeedModelDefinition[] = [
+  {
+    externalId: 'universal-3-pro',
+    name: 'Universal 3 Pro',
+    inputCostPer1k: '0.000583',
+    outputCostPer1k: '0.000000',
+    capabilities: ['speech'],
+  },
+  {
+    externalId: 'universal-2',
+    name: 'Universal 2',
+    inputCostPer1k: '0.000417',
+    outputCostPer1k: '0.000000',
+    capabilities: ['speech'],
+  },
+];
+
+/** @deprecated Use ASSEMBLYAI_LLM_MODELS */
+export const ASSEMBLYAI_MODELS = ASSEMBLYAI_LLM_MODELS;
 
 export const GEMINI_MODELS: SeedModelDefinition[] = [
   { externalId: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', inputCostPer1k: '0.000075', outputCostPer1k: '0.000300', capabilities: ['text', 'structured_output'] },
@@ -182,6 +204,56 @@ export async function fetchGeminiModels(): Promise<SeedModelDefinition[]> {
   }
 }
 
+export async function fetchAssemblyAiLlmModels(): Promise<SeedModelDefinition[]> {
+  const apiKey = process.env.ASSEMBLYAI_API_KEY;
+  const baseUrl =
+    process.env.ASSEMBLYAI_LLM_GATEWAY_BASE_URL ?? 'https://llm-gateway.assemblyai.com/v1';
+
+  if (!apiKey) {
+    return ASSEMBLYAI_LLM_MODELS;
+  }
+
+  try {
+    const response = await fetch(`${baseUrl}/models`, {
+      headers: { Authorization: apiKey },
+    });
+
+    if (!response.ok) {
+      console.warn(
+        `  ⚠ AssemblyAI LLM models API returned ${response.status}, using static list`,
+      );
+      return ASSEMBLYAI_LLM_MODELS;
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{ id: string; name?: string }>;
+    };
+
+    const models = payload.data ?? [];
+    if (models.length === 0) {
+      return ASSEMBLYAI_LLM_MODELS;
+    }
+
+    const staticById = new Map(
+      ASSEMBLYAI_LLM_MODELS.map((model) => [model.externalId, model]),
+    );
+
+    return models.map((model) => {
+      const fallback = staticById.get(model.id);
+      return {
+        externalId: model.id,
+        name: model.name ?? fallback?.name ?? model.id,
+        inputCostPer1k: fallback?.inputCostPer1k ?? DEFAULT_INPUT_COST,
+        outputCostPer1k: fallback?.outputCostPer1k ?? DEFAULT_OUTPUT_COST,
+        capabilities: fallback?.capabilities ?? ['text', 'structured_output'],
+      };
+    });
+  } catch (error) {
+    console.warn('  ⚠ Failed to fetch AssemblyAI LLM models, using static list', error);
+    return ASSEMBLYAI_LLM_MODELS;
+  }
+}
+
 export async function fetchOpenRouterModels(): Promise<SeedModelDefinition[]> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -272,7 +344,16 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   const providers = [
     { slug: 'openrouter', name: 'OpenRouter', isEnabled: !!process.env.OPENROUTER_API_KEY },
     { slug: 'gemini', name: 'Google Gemini', isEnabled: !!process.env.GEMINI_API_KEY },
-    { slug: 'assemblyai', name: 'AssemblyAI LLM Gateway', isEnabled: !!process.env.ASSEMBLYAI_API_KEY },
+    {
+      slug: 'assemblyai',
+      name: 'AssemblyAI LLM Gateway',
+      isEnabled: !!process.env.ASSEMBLYAI_API_KEY,
+    },
+    {
+      slug: 'assemblyai-stt',
+      name: 'AssemblyAI Transcription',
+      isEnabled: !!process.env.ASSEMBLYAI_API_KEY,
+    },
     { slug: 'openai', name: 'OpenAI', isEnabled: false },
     { slug: 'anthropic', name: 'Anthropic', isEnabled: false },
   ] as const;
@@ -291,6 +372,7 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   const openrouterId = providerIds.get('openrouter');
   const geminiId = providerIds.get('gemini');
   const assemblyaiId = providerIds.get('assemblyai');
+  const assemblyaiSttId = providerIds.get('assemblyai-stt');
   const openaiId = providerIds.get('openai');
   const anthropicId = providerIds.get('anthropic');
 
@@ -328,13 +410,37 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
     console.log(`  • Gemini fetched: ${geminiModels.length} modelos`);
   }
 
+  const assemblyaiEnabled = !!process.env.ASSEMBLYAI_API_KEY;
+  let assemblyaiSttModelIds = new Map<string, string>();
+
   if (assemblyaiId) {
+    const assemblyaiLlmModels = await fetchAssemblyAiLlmModels();
     await upsertProviderModels(
       prisma,
       assemblyaiId,
-      ASSEMBLYAI_MODELS,
-      !!process.env.ASSEMBLYAI_API_KEY,
+      assemblyaiLlmModels,
+      assemblyaiEnabled,
     );
+    console.log(`  • AssemblyAI LLM: ${assemblyaiLlmModels.length} modelos`);
+
+    // Legacy: speech models were seeded under the LLM provider — disable them there.
+    await prisma.aiModel.updateMany({
+      where: {
+        providerId: assemblyaiId,
+        capabilities: { has: 'speech' },
+      },
+      data: { isEnabled: false },
+    });
+  }
+
+  if (assemblyaiSttId) {
+    assemblyaiSttModelIds = await upsertProviderModels(
+      prisma,
+      assemblyaiSttId,
+      ASSEMBLYAI_STT_MODELS,
+      assemblyaiEnabled,
+    );
+    console.log(`  • AssemblyAI STT: ${ASSEMBLYAI_STT_MODELS.length} modelos`);
   }
 
   if (openaiId) {
@@ -426,13 +532,35 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
     });
   }
 
+  const defaultSttModelId =
+    assemblyaiSttModelIds.get('universal-3-pro') ??
+    assemblyaiSttModelIds.get('universal-2');
+
+  if (defaultSttModelId) {
+    await prisma.agentStepModelPolicy.upsert({
+      where: {
+        agentId_stepKey: { agentId: 'cuts', stepKey: 'resolve_source' },
+      },
+      update: {
+        modelId: defaultSttModelId,
+        isEnabled: true,
+      },
+      create: {
+        agentId: 'cuts',
+        stepKey: 'resolve_source',
+        modelId: defaultSttModelId,
+        isEnabled: true,
+      },
+    });
+    console.log('  • Cuts transcriber: universal-3-pro (resolve_source)');
+  }
+
   await prisma.ragPlatformSettings.update({
     where: { id: 'default' },
     data: { embeddingModelId: resolvedEmbeddingModelId },
   });
 
   console.log(`  • OpenRouter: ${openRouterModels.length} modelos`);
-  console.log(`  • AssemblyAI: ${ASSEMBLYAI_MODELS.length} modelos`);
   console.log(`  • OpenAI: ${OPENAI_MODELS.length} modelos (catálogo)`);
   console.log(`  • Anthropic: ${ANTHROPIC_MODELS.length} modelos (catálogo)`);
 }

@@ -44,3 +44,4 @@ export * from './ai-catalog';
 export * from './workspace';
 export * from './agent-message-sequence';
 export * from './blister-os';
+export * from './files/workspace-agent-folders';

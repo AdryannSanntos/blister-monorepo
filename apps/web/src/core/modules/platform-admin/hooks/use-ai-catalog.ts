@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   AgentPolicy,
+  AgentStepPolicy,
   AiModel,
   AiProvider,
   CreateAiModelDto,
@@ -10,6 +11,8 @@ import type {
   PipelineAgentConfig,
   PlatformAgentAdminItem,
   UpdateAgentPolicyDto,
+  UpdateAgentStepPoliciesBatchDto,
+  UpdateAgentStepPolicyDto,
   UpdatePipelineDto,
 } from "@company-os/types";
 
@@ -109,6 +112,44 @@ export function useUpdateAgentPolicy(agentId: string) {
       });
       queryClient.invalidateQueries({
         queryKey: ["platform", "agents", "policies"],
+      });
+    },
+  });
+}
+
+export function useUpdateAgentStepPolicy(agentId: string, stepKey: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<AgentStepPolicy | null, Error, UpdateAgentStepPolicyDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.patch<AgentStepPolicy | null>(
+        `/platform/agents/policies/${agentId}/steps/${stepKey}`,
+        dto,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "overview"],
+      });
+    },
+  });
+}
+
+export function useUpdateAgentStepPoliciesBatch(agentId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, Error, UpdateAgentStepPoliciesBatchDto>({
+    mutationFn: async (dto) => {
+      const { data } = await apiClient.patch(
+        `/platform/agents/policies/${agentId}/steps`,
+        dto,
+      );
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["platform", "agents", "overview"],
       });
     },
   });

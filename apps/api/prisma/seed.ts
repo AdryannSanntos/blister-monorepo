@@ -5,6 +5,7 @@ import {
   getDefaultRolePermissions,
 } from '@company-os/authz';
 import type { DefaultSystemRole } from '@company-os/authz';
+import { WORKSPACE_AGENT_FOLDERS } from '@company-os/types';
 import {
   CampaignStatus,
   CreditLedgerType,
@@ -14,6 +15,7 @@ import {
 } from '../src/generated/prisma';
 import { seedAiCatalog } from './seed-ai-catalog';
 import { seedMarketplaceItems } from './seed-marketplace';
+import { ensureWorkspaceAgentFolders } from '../src/files/workspace-folders.util';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -54,11 +56,10 @@ const PIPELINE_AGENTS = [
   { agentId: 'video_editor', sortOrder: 2 },
 ] as const;
 
-const SYSTEM_FOLDERS = [
-  { name: 'Uploads', systemKey: 'uploads' },
-  { name: 'Gerados', systemKey: 'generated' },
-  { name: 'Integrações', systemKey: 'integrations' },
-] as const;
+const SYSTEM_FOLDERS = WORKSPACE_AGENT_FOLDERS.map((folder) => ({
+  name: folder.name,
+  systemKey: folder.systemKey,
+}));
 
 const DEMO_WORKSPACE_PROFILE = {
   displayName: 'Confeitaria da Paola',
@@ -133,16 +134,9 @@ async function seedPersonalSpaceForUser(
       },
     });
 
-    for (const folder of SYSTEM_FOLDERS) {
-      await tx.workspaceFolder.create({
-        data: {
-          personalSpaceId: personalSpace.id,
-          name: folder.name,
-          kind: 'SYSTEM',
-          systemKey: folder.systemKey,
-        },
-      });
-    }
+    await ensureWorkspaceAgentFolders(tx, {
+      personalSpaceId: personalSpace.id,
+    });
 
     return personalSpace;
   });
@@ -175,28 +169,14 @@ async function ensureCompanyWorkspaceBootstrap(
     });
   }
 
-  for (const folder of SYSTEM_FOLDERS) {
-    const existing = await prisma.workspaceFolder.findFirst({
-      where: { companyId, systemKey: folder.systemKey },
-    });
-    if (!existing) {
-      await prisma.workspaceFolder.create({
-        data: {
-          companyId,
-          name: folder.name,
-          kind: 'SYSTEM',
-          systemKey: folder.systemKey,
-        },
-      });
-    }
-  }
+  await ensureWorkspaceAgentFolders(prisma, { companyId });
 }
 
 async function seedDemoWorkspaceFiles(companyId: string, companySlug: string) {
-  const uploadsFolder = await prisma.workspaceFolder.findFirst({
-    where: { companyId, systemKey: 'uploads' },
+  const cutsFolder = await prisma.workspaceFolder.findFirst({
+    where: { companyId, systemKey: 'agent:cuts' },
   });
-  if (!uploadsFolder) return;
+  if (!cutsFolder) return;
 
   const demoFiles = [
     {
@@ -233,7 +213,7 @@ async function seedDemoWorkspaceFiles(companyId: string, companySlug: string) {
       create: {
         id: file.id,
         companyId,
-        folderId: uploadsFolder.id,
+        folderId: cutsFolder.id,
         name: file.name,
         mimeType: file.mimeType,
         storageKey: file.storageKey,
@@ -246,6 +226,8 @@ async function seedDemoWorkspaceFiles(companyId: string, companySlug: string) {
     });
   }
 }
+
+async function seedDefaultMarketplaceEntitlements(
   companyId: string,
   userId: string,
 ) {

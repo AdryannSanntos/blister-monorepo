@@ -22,6 +22,12 @@ export interface AgentDefinition {
   capabilities: string[];
   /** Skill folder ids under `agents/<agentId>/skills/<id>/`. */
   skills?: string[];
+  context?: {
+    includeBrandBrain?: boolean;
+    includeAgentLearning?: boolean;
+    includeCampaignContext?: boolean;
+    useUserInputAsRetrievalQuery?: boolean;
+  };
 }
 
 export interface ContextChunk {

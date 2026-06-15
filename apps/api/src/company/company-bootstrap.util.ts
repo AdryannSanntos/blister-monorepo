@@ -1,4 +1,5 @@
 import type { Company, PrismaClient } from '../generated/prisma';
+import { ensureWorkspaceAgentFolders } from '../files/workspace-folders.util';
 
 type BootstrapUser = {
   id: string;
@@ -34,20 +35,9 @@ async function ensurePersonalSpace(db: PrismaClient, user: BootstrapUser) {
       },
     });
 
-    for (const folder of [
-      { name: 'Uploads', systemKey: 'uploads' },
-      { name: 'Gerados', systemKey: 'generated' },
-      { name: 'Integrações', systemKey: 'integrations' },
-    ]) {
-      await tx.workspaceFolder.create({
-        data: {
-          personalSpaceId: personalSpace.id,
-          name: folder.name,
-          kind: 'SYSTEM',
-          systemKey: folder.systemKey,
-        },
-      });
-    }
+    await ensureWorkspaceAgentFolders(tx, {
+      personalSpaceId: personalSpace.id,
+    });
 
     return personalSpace;
   });
@@ -139,20 +129,7 @@ export async function createCompanyForUser(
       },
     });
 
-    for (const folder of [
-      { name: 'Uploads', systemKey: 'uploads' },
-      { name: 'Gerados', systemKey: 'generated' },
-      { name: 'Integrações', systemKey: 'integrations' },
-    ]) {
-      await tx.workspaceFolder.create({
-        data: {
-          companyId: company.id,
-          name: folder.name,
-          kind: 'SYSTEM',
-          systemKey: folder.systemKey,
-        },
-      });
-    }
+    await ensureWorkspaceAgentFolders(tx, { companyId: company.id });
 
     const ownerRole = await tx.role.findUnique({ where: { name: 'owner' } });
     if (ownerRole) {

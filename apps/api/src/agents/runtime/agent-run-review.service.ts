@@ -1,16 +1,16 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { AuditService } from '../../audit/audit.service';
-import { AgentRegistryService } from './agent-registry.service';
-import { WorkflowEngineService } from './workflow-engine.service';
-import { RagEventsService } from '../../rag/rag-events.service';
 import type {
-  ReviewStatus,
   ApproveAgentRunDto,
-  RejectAgentRunDto,
   EditAgentRunOutputDto,
   RegenerateAgentRunDto,
+  RejectAgentRunDto,
+  ReviewStatus,
 } from '@company-os/types';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { AuditService } from '../../audit/audit.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { RagEventsService } from '../../rag/rag-events.service';
+import { AgentRegistryService } from './agent-registry.service';
+import { WorkflowEngineService } from './workflow-engine.service';
 
 export interface ReviewResult {
   runId: string;
@@ -30,11 +30,7 @@ export class AgentRunReviewService {
     private readonly ragEvents: RagEventsService,
   ) {}
 
-  async approve(
-    runId: string,
-    userId: string,
-    dto: ApproveAgentRunDto,
-  ): Promise<ReviewResult> {
+  async approve(runId: string, userId: string, dto: ApproveAgentRunDto): Promise<ReviewResult> {
     const run = await this.getCompletedRun(runId);
 
     await this.prisma.agentRun.update({
@@ -68,11 +64,7 @@ export class AgentRunReviewService {
     };
   }
 
-  async reject(
-    runId: string,
-    userId: string,
-    dto: RejectAgentRunDto,
-  ): Promise<ReviewResult> {
+  async reject(runId: string, userId: string, dto: RejectAgentRunDto): Promise<ReviewResult> {
     const run = await this.getCompletedRun(runId);
 
     await this.prisma.agentRun.update({
@@ -148,11 +140,7 @@ export class AgentRunReviewService {
       },
     });
 
-    await this.triggerLearningIndex(
-      { ...run, outputPayload: mergedOutput },
-      'EDITED',
-      dto.reason,
-    );
+    await this.triggerLearningIndex({ ...run, outputPayload: mergedOutput }, 'EDITED', dto.reason);
 
     this.logger.log(`Edited run output: ${runId}`);
 
@@ -180,9 +168,12 @@ export class AgentRunReviewService {
 
     const result = await this.workflowEngine.startRun({
       agentId: run.agentId,
-      companyId: run.companyId,
+      companyId: run.companyId ?? undefined,
+      personalSpaceId: run.personalSpaceId ?? undefined,
       userId,
-      userInput: dto.instruction ? `${userInput}\n\nInstrução adicional: ${dto.instruction}` : userInput,
+      userInput: dto.instruction
+        ? `${userInput}\n\nInstrução adicional: ${dto.instruction}`
+        : userInput,
       campaignId: run.campaignId ?? undefined,
       metadata: {
         regeneratedFrom: runId,
@@ -234,13 +225,16 @@ export class AgentRunReviewService {
   private async triggerLearningIndex(
     run: {
       id: string;
-      companyId: string;
+      companyId: string | null;
       agentId: string;
       outputPayload: unknown;
     },
     status: 'APPROVED' | 'REJECTED' | 'EDITED',
     feedback?: string,
   ): Promise<void> {
+    // RAG learning index is company-scoped; personal-space runs have no index.
+    if (!run.companyId) return;
+
     try {
       await this.ragEvents.triggerAgentLearningIndex(
         run.companyId,

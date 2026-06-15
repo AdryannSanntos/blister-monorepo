@@ -1,57 +1,81 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  type MutableRefObject,
+  type ReactNode,
+  useContext,
+  useMemo,
+  useRef,
+} from "react";
 
-import { CutsSourceModal } from "src/core/modules/agents/components/cuts/cuts-source-modal";
-import { CutsStatusModal } from "src/core/modules/agents/components/cuts/cuts-status-modal";
+import { CutsRunModal } from "src/core/modules/agents/components/cuts/cuts-run-modal";
 import { useCutsRunModal } from "src/core/modules/agents/hooks/use-cuts-run-modal";
 
-type CutsRunModalContextValue = ReturnType<typeof useCutsRunModal>;
+type CutsRunModalActions = Pick<
+  ReturnType<typeof useCutsRunModal>,
+  "handleOpen" | "handleOpenRunDetails" | "handleClose"
+>;
 
-const CutsRunModalContext = createContext<CutsRunModalContextValue | null>(null);
+const CutsRunModalActionsContext =
+  createContext<CutsRunModalActions | null>(null);
 
-export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
+/**
+ * Host isolado: mudanças de estado do modal (SSE, fase, cortes, etc.) ficam
+ * neste subtree e não re-renderizam `{children}`. As ações são publicadas via
+ * ref para um contexto estável que envolve a árvore inteira.
+ */
+const CutsRunModalHost = ({
+  actionsRef,
+}: {
+  actionsRef: MutableRefObject<CutsRunModalActions | null>;
+}) => {
   const modal = useCutsRunModal();
 
-  const handleViewOverview = () => {
-    modal.handleReset();
+  actionsRef.current = {
+    handleOpen: modal.handleOpen,
+    handleOpenRunDetails: modal.handleOpenRunDetails,
+    handleClose: modal.handleClose,
   };
 
+  return <CutsRunModal controller={modal} />;
+};
+
+export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
+  const actionsRef = useRef<CutsRunModalActions | null>(null);
+
+  const stableActions = useMemo<CutsRunModalActions>(
+    () => ({
+      handleOpen: () => {
+        actionsRef.current?.handleOpen();
+      },
+      handleOpenRunDetails: (params) => {
+        actionsRef.current?.handleOpenRunDetails(params);
+      },
+      handleClose: () => {
+        actionsRef.current?.handleClose();
+      },
+    }),
+    [],
+  );
+
   return (
-    <CutsRunModalContext.Provider value={modal}>
+    <CutsRunModalActionsContext.Provider value={stableActions}>
       {children}
-      <CutsSourceModal
-        open={modal.sourceOpen}
-        localFile={modal.localFile}
-        existingFileName={modal.hasExistingSource ? modal.sourceFileName : null}
-        existingFileSize={modal.hasExistingSource ? modal.sourceFileSize : null}
-        sourceFileName={modal.sourceFileName}
-        hasSource={modal.hasSource}
-        isStarting={modal.isStarting}
-        onOpenChange={(nextOpen) => (nextOpen ? modal.handleOpen() : modal.handleCloseSource())}
-        onLocalFileChange={modal.handleLocalFileChange}
-        onSelectExistingFile={modal.handleSelectExistingFile}
-        onStartRun={modal.handleStartRun}
-      />
-      <CutsStatusModal
-        open={modal.statusOpen}
-        phase={modal.statusPhase}
-        sourceFileName={modal.sourceFileName}
-        errorMessage={modal.errorMessage}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) modal.handleCloseStatus();
-        }}
-        onViewOverview={handleViewOverview}
-        onRetry={modal.handleRetry}
-      />
-    </CutsRunModalContext.Provider>
+      <CutsRunModalHost actionsRef={actionsRef} />
+    </CutsRunModalActionsContext.Provider>
   );
 };
 
-export const useCutsRunModalContext = () => {
-  const context = useContext(CutsRunModalContext);
+export const useCutsRunModalActions = () => {
+  const context = useContext(CutsRunModalActionsContext);
   if (!context) {
-    throw new Error("useCutsRunModalContext must be used within CutsRunModalProvider");
+    throw new Error(
+      "useCutsRunModalActions must be used within CutsRunModalProvider",
+    );
   }
   return context;
 };
+
+/** @deprecated Prefer `useCutsRunModalActions` — full modal state is internal to the host. */
+export const useCutsRunModalContext = useCutsRunModalActions;

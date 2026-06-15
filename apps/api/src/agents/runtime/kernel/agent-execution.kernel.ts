@@ -37,6 +37,7 @@ export interface LlmCompletion {
 export interface LlmCompletionParams {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
   agentId: string;
+  stepKey?: string;
   maxTokens?: number;
   temperature?: number;
   structuredOutputSchema?: Record<string, unknown>;
@@ -54,6 +55,7 @@ export interface ImageProvider {
   generateImage(params: {
     prompt: string;
     agentId: string;
+    stepKey?: string;
   }): Promise<{
     imageUrl?: string;
     base64?: string;

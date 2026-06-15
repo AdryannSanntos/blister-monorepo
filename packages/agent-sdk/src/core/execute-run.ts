@@ -285,6 +285,7 @@ export async function executeRun(
         brandProfile: run.brandProfile,
         contextPackBuilder: deps.contextPackBuilder,
         previousStepsOutput,
+        contextConfig: agentDefinition.context,
       });
 
       const onChunk = (delta: string): void => {
@@ -407,11 +408,21 @@ export async function executeRun(
       }
 
       if (stepPaused) {
+        const completedOutputs = await runStore.getCompletedStepOutputs(run.id);
+        const pausedOutput = {
+          ...currentOutput,
+          ...(completedOutputs.render_cuts ?? {}),
+          ...(completedOutputs.rank_segments && !completedOutputs.render_cuts
+            ? completedOutputs.rank_segments
+            : {}),
+        };
+
         await runStore.pauseRun({
           runId: run.id,
           pauseReason: stepResult.pauseReason,
           pauseFormSchema: stepResult.pauseFormSchema,
           creditCost: totalCreditCost,
+          outputPayload: pausedOutput,
         });
 
         await closeMessage();
@@ -424,10 +435,11 @@ export async function executeRun(
             stepResult.pauseReason ?? 'Unknown',
             stepResult.pauseFormSchema,
             run.inputPayload,
+            pausedOutput,
           ),
         );
 
-        await finishRun('PAUSED', totalCreditCost);
+        await finishRun('PAUSED', totalCreditCost, pausedOutput);
         return {
           runId: run.id,
           status: 'PAUSED',

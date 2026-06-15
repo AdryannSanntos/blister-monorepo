@@ -110,6 +110,7 @@ export class AgentSseService {
     reason: string,
     formSchema?: unknown,
     inputPayload?: Record<string, unknown>,
+    outputPayload?: Record<string, unknown>,
   ): void {
     this.emit(runId, companyId, 'run_paused', {
       reason,
@@ -117,6 +118,7 @@ export class AgentSseService {
       formSchema,
       pauseFormSchema: formSchema,
       inputPayload,
+      outputPayload,
     });
   }
 

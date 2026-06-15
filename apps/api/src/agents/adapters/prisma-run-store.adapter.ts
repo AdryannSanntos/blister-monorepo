@@ -7,7 +7,7 @@ const runInclude = {
 } as const;
 
 type RunWithRelations = Prisma.AgentRunGetPayload<{ include: typeof runInclude }>;
-type BrandProfileRow = NonNullable<RunWithRelations['company']['brandProfile']>;
+type BrandProfileRow = NonNullable<NonNullable<RunWithRelations['company']>['brandProfile']>;
 
 const mapBrandProfile = (profile: BrandProfileRow | null): BrandProfile | null => {
   if (!profile) return null;
@@ -35,7 +35,9 @@ const mapBrandProfile = (profile: BrandProfileRow | null): BrandProfile | null =
 const mapRun = (run: RunWithRelations): StoredRun => ({
   id: run.id,
   agentId: run.agentId,
-  companyId: run.companyId,
+  // The SDK uses companyId as an opaque workspace-scope id (label/retrieval key).
+  // Personal-space runs have no company, so we surface the personal space id.
+  companyId: run.companyId ?? run.personalSpaceId ?? '',
   campaignId: run.campaignId,
   status: run.status as StoredRun['status'],
   currentStepKey: run.currentStepKey,
@@ -51,7 +53,7 @@ const mapRun = (run: RunWithRelations): StoredRun => ({
     status: step.status,
     outputPayload: step.outputPayload as Record<string, unknown>,
   })),
-  brandProfile: mapBrandProfile(run.company.brandProfile),
+  brandProfile: mapBrandProfile(run.company?.brandProfile ?? null),
 });
 
 export const createPrismaRunStore = (prisma: PrismaClient): RunStore => ({
@@ -203,6 +205,9 @@ export const createPrismaRunStore = (prisma: PrismaClient): RunStore => ({
         pauseReason: params.pauseReason,
         pauseFormSchema: params.pauseFormSchema
           ? JSON.parse(JSON.stringify(params.pauseFormSchema))
+          : undefined,
+        outputPayload: params.outputPayload
+          ? JSON.parse(JSON.stringify(params.outputPayload))
           : undefined,
         creditCost: new Prisma.Decimal(params.creditCost),
       },

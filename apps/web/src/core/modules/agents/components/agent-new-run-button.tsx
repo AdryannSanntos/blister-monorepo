@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { useCutsRunModalContext } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
+import { useCutsRunModalActions } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
 import { getAgentNewPath } from "src/core/modules/agents/utils/agent-paths";
 import { Button } from "src/core/shared/components/ui/button";
 
@@ -22,7 +22,7 @@ const CutsNewRunButton = ({
   className,
 }: Pick<AgentNewRunButtonProps, "size" | "variant" | "className">) => {
   const t = useTranslations("agents.nav");
-  const cutsModal = useCutsRunModalContext();
+  const { handleOpen } = useCutsRunModalActions();
 
   return (
     <Button
@@ -31,7 +31,7 @@ const CutsNewRunButton = ({
       variant={variant}
       className={className}
       data-testid="cuts-new-run-button"
-      onClick={cutsModal.handleOpen}
+      onClick={handleOpen}
     >
       <Plus className="size-4" aria-hidden />
       {size === "icon" || size === "icon-sm" ? (

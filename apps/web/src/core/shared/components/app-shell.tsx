@@ -19,6 +19,7 @@ import {
   useDashboardData,
 } from "src/core/modules/dashboard/hooks/use-dashboard-data";
 import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use-platform-admin";
+import { useWorkspaceContext } from "src/core/modules/workspaces/hooks/use-workspace-context";
 import { WorkspaceSwitcher } from "src/core/modules/workspaces/components/workspace-switcher";
 import { PageTransition } from "src/core/shared/components/page-transition";
 import {
@@ -80,7 +81,19 @@ export function AppShell({
 }: AppShellProps) {
   const router = useRouter();
   const t = useTranslations("dashboard");
-  const { canAccessPlatformAdmin } = usePlatformRoleAccess();
+  const { canAccessPlatformAdmin, isLoading: isPlatformRoleLoading } =
+    usePlatformRoleAccess();
+  const { data: workspaceContext, isLoading: isWorkspaceLoading } =
+    useWorkspaceContext();
+
+  const isPersonalActive = workspaceContext?.active.type === "personal";
+  const hasCompanies = (workspaceContext?.companies.length ?? 0) > 0;
+  const showPersonalSpace = !isWorkspaceLoading && !isPersonalActive;
+  const showCreateCompany = !isWorkspaceLoading && !hasCompanies;
+  const showPlatformAdmin =
+    !isPlatformRoleLoading && canAccessPlatformAdmin;
+  const showWorkspaceActions =
+    showPersonalSpace || showCreateCompany || showPlatformAdmin;
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     try {
@@ -230,24 +243,28 @@ export function AppShell({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setPersonalWorkspace();
-                    queryClient.invalidateQueries();
-                    router.push("/dashboard");
-                    router.refresh();
-                  }}
-                >
-                  <User className="size-4" />
-                  {t("personalSpace")}
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/onboarding?new=1">
-                    <Building2 className="size-4" />
-                    {t("createCompany")}
-                  </Link>
-                </DropdownMenuItem>
-                {canAccessPlatformAdmin ? (
+                {showPersonalSpace ? (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setPersonalWorkspace();
+                      queryClient.invalidateQueries();
+                      router.push("/dashboard");
+                      router.refresh();
+                    }}
+                  >
+                    <User className="size-4" />
+                    {t("personalSpace")}
+                  </DropdownMenuItem>
+                ) : null}
+                {showCreateCompany ? (
+                  <DropdownMenuItem asChild>
+                    <Link href="/onboarding?new=1">
+                      <Building2 className="size-4" />
+                      {t("createCompany")}
+                    </Link>
+                  </DropdownMenuItem>
+                ) : null}
+                {showPlatformAdmin ? (
                   <DropdownMenuItem asChild>
                     <Link href="/admin">
                       <Shield className="size-4" />
@@ -255,6 +272,7 @@ export function AppShell({
                     </Link>
                   </DropdownMenuItem>
                 ) : null}
+                {showWorkspaceActions ? <DropdownMenuSeparator /> : null}
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard/account/settings">
                     <User className="size-4" />

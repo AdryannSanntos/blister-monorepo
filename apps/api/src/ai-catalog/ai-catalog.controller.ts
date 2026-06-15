@@ -22,6 +22,8 @@ import {
   createProviderSchema,
   platformCompaniesQuerySchema,
   updateAgentPolicySchema,
+  updateAgentStepPoliciesBatchSchema,
+  updateAgentStepPolicySchema,
   updateCreditSettingsSchema,
   updateModelSchema,
   updatePipelineSchema,
@@ -122,6 +124,35 @@ export class AiCatalogController {
     const parsed = updateAgentPolicySchema.safeParse(body);
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
     return this.policies.updatePolicy(agentId, parsed.data);
+  }
+
+  @Patch('agents/policies/:agentId/steps/:stepKey')
+  updateStepPolicy(
+    @Param('agentId') agentId: string,
+    @Param('stepKey') stepKey: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = updateAgentStepPolicySchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.policies.updateStepPolicy(agentId, stepKey, parsed.data);
+  }
+
+  @Patch('agents/policies/:agentId/steps')
+  updateStepPoliciesBatch(
+    @Param('agentId') agentId: string,
+    @Body() body: unknown,
+  ) {
+    const parsed = updateAgentStepPoliciesBatchSchema.safeParse(body);
+    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
+    return this.policies.updateStepPoliciesBatch(agentId, parsed.data);
+  }
+
+  @Delete('agents/policies/:agentId/steps/:stepKey')
+  deleteStepPolicy(
+    @Param('agentId') agentId: string,
+    @Param('stepKey') stepKey: string,
+  ) {
+    return this.policies.deleteStepPolicy(agentId, stepKey);
   }
 
   // ── Pipeline ───────────────────────────────────────────────────────────────

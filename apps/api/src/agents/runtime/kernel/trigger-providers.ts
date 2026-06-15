@@ -8,6 +8,10 @@ import { AssemblyAiAdapter } from '../../../ai-runtime/adapters/assemblyai.adapt
 import { GeminiAdapter } from '../../../ai-runtime/adapters/gemini.adapter';
 import { OpenRouterAdapter } from '../../../ai-runtime/adapters/openrouter.adapter';
 import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
+import {
+  calculateModelCost,
+  resolveStepModel,
+} from '../../../ai-runtime/resolve-model';
 import type { PrismaClient } from '../../../generated/prisma';
 import type { ImageProvider, LlmProvider } from './agent-execution.kernel';
 import type { AssetResolver } from './types';
@@ -17,46 +21,6 @@ class EnvConfigService {
     return (process.env[key] as T | undefined) ?? defaultValue;
   }
 }
-
-interface ResolvedAgentModel {
-  providerSlug: string;
-  externalModelId: string;
-  modelLabel: string;
-  inputCostPer1k: number;
-  outputCostPer1k: number;
-}
-
-const resolveAgentModel = async (
-  prisma: PrismaClient,
-  agentId: string,
-): Promise<ResolvedAgentModel> => {
-  const policy = await prisma.agentModelPolicy.findUnique({
-    where: { agentId },
-    include: {
-      model: {
-        include: { provider: true },
-      },
-    },
-  });
-
-  if (policy?.model?.provider) {
-    return {
-      providerSlug: policy.model.provider.slug,
-      externalModelId: policy.model.externalId,
-      modelLabel: `${policy.model.provider.slug}/${policy.model.externalId}`,
-      inputCostPer1k: Number(policy.model.inputCostPer1k),
-      outputCostPer1k: Number(policy.model.outputCostPer1k),
-    };
-  }
-
-  return {
-    providerSlug: 'openrouter',
-    externalModelId: 'openai/gpt-4o-mini',
-    modelLabel: 'openrouter/openai/gpt-4o-mini',
-    inputCostPer1k: 0.00015,
-    outputCostPer1k: 0.0006,
-  };
-};
 
 const getAdapter = (
   providerSlug: string,
@@ -69,13 +33,6 @@ const getAdapter = (
   return adapter;
 };
 
-const calculateCost = (
-  model: ResolvedAgentModel,
-  tokensInput: number,
-  tokensOutput: number,
-): number =>
-  (tokensInput / 1000) * model.inputCostPer1k + (tokensOutput / 1000) * model.outputCostPer1k;
-
 export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
   const config = new EnvConfigService();
   const adapters: Record<string, AiProviderAdapter> = {
@@ -86,7 +43,11 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
 
   return {
     async complete(params) {
-      const model = await resolveAgentModel(prisma, params.agentId);
+      const model = await resolveStepModel(prisma, {
+        agentId: params.agentId,
+        stepKey: params.stepKey,
+        requiredCapabilities: ['text', 'structured_output'],
+      });
       const adapter = getAdapter(model.providerSlug, adapters);
 
       try {
@@ -103,7 +64,11 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
           model: model.modelLabel,
           tokensInput: result.usage.promptTokens,
           tokensOutput: result.usage.completionTokens,
-          costUsd: calculateCost(model, result.usage.promptTokens, result.usage.completionTokens),
+          costUsd: calculateModelCost(
+            model,
+            result.usage.promptTokens,
+            result.usage.completionTokens,
+          ),
           structuredOutput: result.structuredOutput,
         };
       } catch (error) {
@@ -112,7 +77,11 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
     },
 
     async completeStream(params, onChunk) {
-      const model = await resolveAgentModel(prisma, params.agentId);
+      const model = await resolveStepModel(prisma, {
+        agentId: params.agentId,
+        stepKey: params.stepKey,
+        requiredCapabilities: ['text', 'structured_output'],
+      });
       const adapter = getAdapter(model.providerSlug, adapters);
 
       // Providers without streaming support fall back to a single completion.
@@ -162,7 +131,11 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
           model: model.modelLabel,
           tokensInput: result.usage.promptTokens,
           tokensOutput: result.usage.completionTokens,
-          costUsd: calculateCost(model, result.usage.promptTokens, result.usage.completionTokens),
+          costUsd: calculateModelCost(
+            model,
+            result.usage.promptTokens,
+            result.usage.completionTokens,
+          ),
           structuredOutput: result.structuredOutput,
         };
       } catch (error) {
@@ -222,7 +195,11 @@ export const createTriggerImageProvider = (prisma: PrismaClient): ImageProvider 
 
   return {
     async generateImage(params) {
-      const model = await resolveAgentModel(prisma, params.agentId);
+      const model = await resolveStepModel(prisma, {
+        agentId: params.agentId,
+        stepKey: params.stepKey,
+        requiredCapabilities: ['image'],
+      });
 
       if (model.providerSlug !== 'gemini' || !gemini.generateImage) {
         throw new Error(

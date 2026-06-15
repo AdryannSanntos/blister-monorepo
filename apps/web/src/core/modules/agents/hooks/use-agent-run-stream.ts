@@ -132,6 +132,11 @@ export function useAgentRunStream(
         handleTerminalEvent();
         eventSourceRef.current?.close();
         eventSourceRef.current = null;
+        return;
+      }
+
+      if (payload.type === "run_paused") {
+        void queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
       }
     };
 

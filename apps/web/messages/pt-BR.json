@@ -569,11 +569,12 @@
     "runPreview": "{count} cortes priorizados",
     "score": "Score {value}",
     "modal": {
-      "title": "Nova execução de cortes",
+      "title": "Gerar cortes",
+      "processingTitle": "Processando vídeo",
       "startingTitle": "Gerando cortes",
       "browseFiles": "Escolher dos Arquivos",
       "selectedFile": "Fonte: {name}",
-      "generating": "Transcrevendo e priorizando cortes...",
+      "generating": "Transcrevendo e gerando cortes...",
       "starting": "Iniciando...",
       "start": "Gerar cortes",
       "submitting": "Salvando validação...",
@@ -582,9 +583,11 @@
       "goToResults": "Ver resultados",
       "fileSelected": "Arquivo selecionado: {name}",
       "uploading": "Enviando arquivo...",
+      "uploadProgress": "{progress}% enviado",
+      "doNotCloseHint": "Não feche nem atualize esta página até a conclusão.",
       "uploadFailed": "Falha ao enviar o arquivo",
       "fileTooLarge": "O arquivo excede o limite de 5 GB",
-      "uploadOnGenerateHint": "O arquivo só será enviado ao clicar em Gerar cortes.",
+      "uploadOnGenerateHint": "Envie um vídeo ou escolha da biblioteca.",
       "filePickerTitle": "Selecionar vídeo",
       "filePickerDescription": "Escolha um vídeo da biblioteca. Apenas arquivos disponíveis podem ser usados.",
       "errorGeneric": "Não foi possível concluir a execução.",
@@ -594,10 +597,18 @@
         "generate": "Gerar",
         "review": "Validar",
         "done": "Concluído"
-      }
+      },
+      "close": "Fechar",
+      "submitReviewPending": "Validar ({decided}/{total})",
+      "viewRunTitle": "{count} cortes desta execução"
     },
     "review": {
-      "retentionLabel": "Retenção estimada",
+      "cutsListLabel": "Cortes gerados",
+      "previewLabel": "Pré-visualização",
+      "loadingPreview": "Carregando vídeo...",
+      "selectCutHint": "Selecione um corte para visualizar",
+      "selectCutAria": "Corte {number}: {title}",
+      "viralScore": "{score}% potencial",
       "approve": "Aceitar",
       "reject": "Negar"
     },
@@ -621,14 +632,21 @@
     },
     "results": {
       "title": "Resultados",
-      "description": "Cortes gerados e validados.",
-      "latestTitle": "Última execução",
-      "latestDescription": "Cortes da execução mais recente.",
-      "loading": "Carregando resultados...",
-      "empty": "Nenhum corte concluído ainda.",
-      "historyTitle": "Execuções anteriores",
-      "historyDescription": "Histórico de gerações concluídas.",
-      "runSummary": "{approved} aprovados de {total} cortes"
+      "description": "Execuções concluídas do Gerador de Cortes.",
+      "count": "{count, plural, one {# execução} other {# execuções}}",
+      "loading": "Carregando execuções...",
+      "empty": "Nenhuma execução concluída ainda.",
+      "emptyHint": "Gere cortes a partir de um vídeo para ver os resultados aqui.",
+      "viewCuts": "Ver cortes",
+      "actionsMenu": "Ações para {name}",
+      "columns": {
+        "source": "Fonte",
+        "status": "Status",
+        "cuts": "Cortes",
+        "approved": "Aprovados",
+        "date": "Data",
+        "credits": "Créditos"
+      }
     }
   },
   "research": {
@@ -1371,18 +1389,15 @@
       "approveError": "Não foi possível aprovar o plano"
     },
     "surface": {
-      "subtitle": "Descreva o que precisa e revise o resultado aqui",
-      "promptLabel": "Seu pedido",
-      "startSuccess": "Geração iniciada",
-      "startError": "Não foi possível iniciar a geração",
-      "resumeSuccess": "Continuando a geração",
-      "resumeError": "Não foi possível continuar",
-      "cancelSuccess": "Geração cancelada",
-      "cancelError": "Não foi possível cancelar",
-      "cancelRun": "Cancelar",
-      "runNotFound": "Execução não encontrada",
-      "newRun": "Nova execução",
-      "viewHistory": "Ver histórico"
+      "notFound": "Agente não encontrado",
+      "goMarketplace": "Ir ao Marketplace",
+      "entitlementRequired": "Resgate este agente no Marketplace para usar.",
+      "redeemAgent": "Resgatar agente",
+      "briefLabel": "Brief",
+      "briefPlaceholder": "Descreva o que precisa...",
+      "run": "Executar",
+      "running": "Executando...",
+      "mockOutput": "{agent}: entrega simulada para \"{brief}\""
     },
     "output": {
       "failedTitle": "A geração falhou",
@@ -1494,17 +1509,6 @@
         "status": "Status",
         "date": "Data"
       }
-    },
-    "surface": {
-      "notFound": "Agente não encontrado",
-      "goMarketplace": "Ir ao Marketplace",
-      "entitlementRequired": "Resgate este agente no Marketplace para usar.",
-      "redeemAgent": "Resgatar agente",
-      "briefLabel": "Brief",
-      "briefPlaceholder": "Descreva o que precisa...",
-      "run": "Executar",
-      "running": "Executando...",
-      "mockOutput": "{agent}: entrega simulada para \"{brief}\""
     }
   },
   "platformAdmin": {
@@ -1655,6 +1659,11 @@
       "dialogDescriptionFallback": "Ajuste modelo, custos e disponibilidade deste agente.",
       "estimatedCost": "Custo estimado por execução: US$ {amount}",
       "stepsTitle": "Etapas do fluxo",
+      "stepModelsTitle": "Modelo por etapa",
+      "stepModelsDescription": "Override opcional por etapa. Sem seleção, usa o modelo padrão do agente.",
+      "stepModelPlaceholder": "Selecione um modelo para esta etapa",
+      "stepModelDefaultOption": "Usar modelo padrão do agente",
+      "agentDefaultModelHint": "Modelo padrão quando a etapa não tiver override.",
       "modelLabel": "Modelo de IA",
       "modelPlaceholder": "Selecione um modelo",
       "modelSearchPlaceholder": "Buscar por modelo ou provedor...",

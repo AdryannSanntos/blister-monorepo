@@ -159,6 +159,11 @@ export type AiModel = $Result.DefaultSelection<Prisma.$AiModelPayload>
  */
 export type AgentModelPolicy = $Result.DefaultSelection<Prisma.$AgentModelPolicyPayload>
 /**
+ * Model AgentStepModelPolicy
+ * 
+ */
+export type AgentStepModelPolicy = $Result.DefaultSelection<Prisma.$AgentStepModelPolicyPayload>
+/**
  * Model PipelineAgentConfig
  * 
  */
@@ -934,6 +939,16 @@ export class PrismaClient<
   get agentModelPolicy(): Prisma.AgentModelPolicyDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.agentStepModelPolicy`: Exposes CRUD operations for the **AgentStepModelPolicy** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AgentStepModelPolicies
+    * const agentStepModelPolicies = await prisma.agentStepModelPolicy.findMany()
+    * ```
+    */
+  get agentStepModelPolicy(): Prisma.AgentStepModelPolicyDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.pipelineAgentConfig`: Exposes CRUD operations for the **PipelineAgentConfig** model.
     * Example usage:
     * ```ts
@@ -1562,6 +1577,7 @@ export namespace Prisma {
     AiProviderCredential: 'AiProviderCredential',
     AiModel: 'AiModel',
     AgentModelPolicy: 'AgentModelPolicy',
+    AgentStepModelPolicy: 'AgentStepModelPolicy',
     PipelineAgentConfig: 'PipelineAgentConfig',
     RagDocument: 'RagDocument',
     RagChunk: 'RagChunk',
@@ -1596,7 +1612,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentRunBlock" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings" | "personalSpace" | "personalCreditBalance" | "companyMember" | "workspaceSettings" | "marketplaceItem" | "workspaceEntitlement" | "agentWorkspaceSetting" | "workspaceFolder" | "workspaceFile" | "project"
+      modelProps: "user" | "session" | "account" | "verification" | "role" | "rolePermission" | "userRoleAssignment" | "platformRoleAssignment" | "supportSession" | "auditLog" | "company" | "brandProfile" | "campaign" | "campaignFile" | "contentPiece" | "pipelineRun" | "agentRun" | "agentRunStep" | "agentRunBlock" | "agentFeedback" | "learningSignal" | "agentMemory" | "creditBalance" | "creditLedger" | "platformCreditSettings" | "aiProvider" | "aiProviderCredential" | "aiModel" | "agentModelPolicy" | "agentStepModelPolicy" | "pipelineAgentConfig" | "ragDocument" | "ragChunk" | "ragEmbedding" | "ragIndexJob" | "ragPlatformSettings" | "personalSpace" | "personalCreditBalance" | "companyMember" | "workspaceSettings" | "marketplaceItem" | "workspaceEntitlement" | "agentWorkspaceSetting" | "workspaceFolder" | "workspaceFile" | "project"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3746,6 +3762,80 @@ export namespace Prisma {
           }
         }
       }
+      AgentStepModelPolicy: {
+        payload: Prisma.$AgentStepModelPolicyPayload<ExtArgs>
+        fields: Prisma.AgentStepModelPolicyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AgentStepModelPolicyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AgentStepModelPolicyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          findFirst: {
+            args: Prisma.AgentStepModelPolicyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AgentStepModelPolicyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          findMany: {
+            args: Prisma.AgentStepModelPolicyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>[]
+          }
+          create: {
+            args: Prisma.AgentStepModelPolicyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          createMany: {
+            args: Prisma.AgentStepModelPolicyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AgentStepModelPolicyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>[]
+          }
+          delete: {
+            args: Prisma.AgentStepModelPolicyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          update: {
+            args: Prisma.AgentStepModelPolicyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          deleteMany: {
+            args: Prisma.AgentStepModelPolicyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AgentStepModelPolicyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AgentStepModelPolicyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>[]
+          }
+          upsert: {
+            args: Prisma.AgentStepModelPolicyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentStepModelPolicyPayload>
+          }
+          aggregate: {
+            args: Prisma.AgentStepModelPolicyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentStepModelPolicy>
+          }
+          groupBy: {
+            args: Prisma.AgentStepModelPolicyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentStepModelPolicyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AgentStepModelPolicyCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentStepModelPolicyCountAggregateOutputType> | number
+          }
+        }
+      }
       PipelineAgentConfig: {
         payload: Prisma.$PipelineAgentConfigPayload<ExtArgs>
         fields: Prisma.PipelineAgentConfigFieldRefs
@@ -5055,6 +5145,7 @@ export namespace Prisma {
     aiProviderCredential?: AiProviderCredentialOmit
     aiModel?: AiModelOmit
     agentModelPolicy?: AgentModelPolicyOmit
+    agentStepModelPolicy?: AgentStepModelPolicyOmit
     pipelineAgentConfig?: PipelineAgentConfigOmit
     ragDocument?: RagDocumentOmit
     ragChunk?: RagChunkOmit
@@ -5741,10 +5832,12 @@ export namespace Prisma {
 
   export type AiModelCountOutputType = {
     agentPolicies: number
+    agentStepPolicies: number
   }
 
   export type AiModelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agentPolicies?: boolean | AiModelCountOutputTypeCountAgentPoliciesArgs
+    agentStepPolicies?: boolean | AiModelCountOutputTypeCountAgentStepPoliciesArgs
   }
 
   // Custom InputTypes
@@ -5763,6 +5856,13 @@ export namespace Prisma {
    */
   export type AiModelCountOutputTypeCountAgentPoliciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentModelPolicyWhereInput
+  }
+
+  /**
+   * AiModelCountOutputType without action
+   */
+  export type AiModelCountOutputTypeCountAgentStepPoliciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentStepModelPolicyWhereInput
   }
 
 
@@ -5816,6 +5916,7 @@ export namespace Prisma {
     entitlements: number
     projects: number
     agentWorkspaceSettings: number
+    agentRuns: number
   }
 
   export type PersonalSpaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5824,6 +5925,7 @@ export namespace Prisma {
     entitlements?: boolean | PersonalSpaceCountOutputTypeCountEntitlementsArgs
     projects?: boolean | PersonalSpaceCountOutputTypeCountProjectsArgs
     agentWorkspaceSettings?: boolean | PersonalSpaceCountOutputTypeCountAgentWorkspaceSettingsArgs
+    agentRuns?: boolean | PersonalSpaceCountOutputTypeCountAgentRunsArgs
   }
 
   // Custom InputTypes
@@ -5870,6 +5972,13 @@ export namespace Prisma {
    */
   export type PersonalSpaceCountOutputTypeCountAgentWorkspaceSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentWorkspaceSettingWhereInput
+  }
+
+  /**
+   * PersonalSpaceCountOutputType without action
+   */
+  export type PersonalSpaceCountOutputTypeCountAgentRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentRunWhereInput
   }
 
 
@@ -24572,6 +24681,7 @@ export namespace Prisma {
   export type AgentRunMinAggregateOutputType = {
     id: string | null
     companyId: string | null
+    personalSpaceId: string | null
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string | null
@@ -24592,6 +24702,7 @@ export namespace Prisma {
   export type AgentRunMaxAggregateOutputType = {
     id: string | null
     companyId: string | null
+    personalSpaceId: string | null
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string | null
@@ -24612,6 +24723,7 @@ export namespace Prisma {
   export type AgentRunCountAggregateOutputType = {
     id: number
     companyId: number
+    personalSpaceId: number
     pipelineRunId: number
     campaignId: number
     agentId: number
@@ -24645,6 +24757,7 @@ export namespace Prisma {
   export type AgentRunMinAggregateInputType = {
     id?: true
     companyId?: true
+    personalSpaceId?: true
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
@@ -24665,6 +24778,7 @@ export namespace Prisma {
   export type AgentRunMaxAggregateInputType = {
     id?: true
     companyId?: true
+    personalSpaceId?: true
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
@@ -24685,6 +24799,7 @@ export namespace Prisma {
   export type AgentRunCountAggregateInputType = {
     id?: true
     companyId?: true
+    personalSpaceId?: true
     pipelineRunId?: true
     campaignId?: true
     agentId?: true
@@ -24794,7 +24909,8 @@ export namespace Prisma {
 
   export type AgentRunGroupByOutputType = {
     id: string
-    companyId: string
+    companyId: string | null
+    personalSpaceId: string | null
     pipelineRunId: string | null
     campaignId: string | null
     agentId: string
@@ -24837,6 +24953,7 @@ export namespace Prisma {
   export type AgentRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
+    personalSpaceId?: boolean
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
@@ -24855,7 +24972,8 @@ export namespace Prisma {
     updatedAt?: boolean
     startedAt?: boolean
     completedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     childRuns?: boolean | AgentRun$childRunsArgs<ExtArgs>
@@ -24870,6 +24988,7 @@ export namespace Prisma {
   export type AgentRunSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
+    personalSpaceId?: boolean
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
@@ -24888,7 +25007,8 @@ export namespace Prisma {
     updatedAt?: boolean
     startedAt?: boolean
     completedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
@@ -24897,6 +25017,7 @@ export namespace Prisma {
   export type AgentRunSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     companyId?: boolean
+    personalSpaceId?: boolean
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
@@ -24915,7 +25036,8 @@ export namespace Prisma {
     updatedAt?: boolean
     startedAt?: boolean
     completedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
@@ -24924,6 +25046,7 @@ export namespace Prisma {
   export type AgentRunSelectScalar = {
     id?: boolean
     companyId?: boolean
+    personalSpaceId?: boolean
     pipelineRunId?: boolean
     campaignId?: boolean
     agentId?: boolean
@@ -24944,9 +25067,10 @@ export namespace Prisma {
     completedAt?: boolean
   }
 
-  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "pipelineRunId" | "campaignId" | "agentId" | "agentVersion" | "parentRunId" | "feedbackId" | "status" | "currentStepKey" | "inputPayload" | "outputPayload" | "errorMessage" | "pauseReason" | "pauseFormSchema" | "creditCost" | "createdAt" | "updatedAt" | "startedAt" | "completedAt", ExtArgs["result"]["agentRun"]>
+  export type AgentRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "companyId" | "personalSpaceId" | "pipelineRunId" | "campaignId" | "agentId" | "agentVersion" | "parentRunId" | "feedbackId" | "status" | "currentStepKey" | "inputPayload" | "outputPayload" | "errorMessage" | "pauseReason" | "pauseFormSchema" | "creditCost" | "createdAt" | "updatedAt" | "startedAt" | "completedAt", ExtArgs["result"]["agentRun"]>
   export type AgentRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     childRuns?: boolean | AgentRun$childRunsArgs<ExtArgs>
@@ -24958,13 +25082,15 @@ export namespace Prisma {
     _count?: boolean | AgentRunCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AgentRunIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
   }
   export type AgentRunIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | AgentRun$companyArgs<ExtArgs>
+    personalSpace?: boolean | AgentRun$personalSpaceArgs<ExtArgs>
     pipelineRun?: boolean | AgentRun$pipelineRunArgs<ExtArgs>
     parentRun?: boolean | AgentRun$parentRunArgs<ExtArgs>
     feedback?: boolean | AgentRun$feedbackArgs<ExtArgs>
@@ -24973,7 +25099,8 @@ export namespace Prisma {
   export type $AgentRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AgentRun"
     objects: {
-      company: Prisma.$CompanyPayload<ExtArgs>
+      company: Prisma.$CompanyPayload<ExtArgs> | null
+      personalSpace: Prisma.$PersonalSpacePayload<ExtArgs> | null
       pipelineRun: Prisma.$PipelineRunPayload<ExtArgs> | null
       parentRun: Prisma.$AgentRunPayload<ExtArgs> | null
       childRuns: Prisma.$AgentRunPayload<ExtArgs>[]
@@ -24985,7 +25112,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      companyId: string
+      companyId: string | null
+      personalSpaceId: string | null
       pipelineRunId: string | null
       campaignId: string | null
       agentId: string
@@ -25398,7 +25526,8 @@ export namespace Prisma {
    */
   export interface Prisma__AgentRunClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    company<T extends AgentRun$companyArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    personalSpace<T extends AgentRun$personalSpaceArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$personalSpaceArgs<ExtArgs>>): Prisma__PersonalSpaceClient<$Result.GetResult<Prisma.$PersonalSpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pipelineRun<T extends AgentRun$pipelineRunArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$pipelineRunArgs<ExtArgs>>): Prisma__PipelineRunClient<$Result.GetResult<Prisma.$PipelineRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     parentRun<T extends AgentRun$parentRunArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$parentRunArgs<ExtArgs>>): Prisma__AgentRunClient<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     childRuns<T extends AgentRun$childRunsArgs<ExtArgs> = {}>(args?: Subset<T, AgentRun$childRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -25438,6 +25567,7 @@ export namespace Prisma {
   interface AgentRunFieldRefs {
     readonly id: FieldRef<"AgentRun", 'String'>
     readonly companyId: FieldRef<"AgentRun", 'String'>
+    readonly personalSpaceId: FieldRef<"AgentRun", 'String'>
     readonly pipelineRunId: FieldRef<"AgentRun", 'String'>
     readonly campaignId: FieldRef<"AgentRun", 'String'>
     readonly agentId: FieldRef<"AgentRun", 'String'>
@@ -25849,6 +25979,44 @@ export namespace Prisma {
      * Limit how many AgentRuns to delete.
      */
     limit?: number
+  }
+
+  /**
+   * AgentRun.company
+   */
+  export type AgentRun$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Company
+     */
+    omit?: CompanyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * AgentRun.personalSpace
+   */
+  export type AgentRun$personalSpaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PersonalSpace
+     */
+    select?: PersonalSpaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PersonalSpace
+     */
+    omit?: PersonalSpaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonalSpaceInclude<ExtArgs> | null
+    where?: PersonalSpaceWhereInput
   }
 
   /**
@@ -37816,6 +37984,7 @@ export namespace Prisma {
     updatedAt?: boolean
     provider?: boolean | AiProviderDefaultArgs<ExtArgs>
     agentPolicies?: boolean | AiModel$agentPoliciesArgs<ExtArgs>
+    agentStepPolicies?: boolean | AiModel$agentStepPoliciesArgs<ExtArgs>
     embeddingSettings?: boolean | AiModel$embeddingSettingsArgs<ExtArgs>
     _count?: boolean | AiModelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aiModel"]>
@@ -37868,6 +38037,7 @@ export namespace Prisma {
   export type AiModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     provider?: boolean | AiProviderDefaultArgs<ExtArgs>
     agentPolicies?: boolean | AiModel$agentPoliciesArgs<ExtArgs>
+    agentStepPolicies?: boolean | AiModel$agentStepPoliciesArgs<ExtArgs>
     embeddingSettings?: boolean | AiModel$embeddingSettingsArgs<ExtArgs>
     _count?: boolean | AiModelCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -37883,6 +38053,7 @@ export namespace Prisma {
     objects: {
       provider: Prisma.$AiProviderPayload<ExtArgs>
       agentPolicies: Prisma.$AgentModelPolicyPayload<ExtArgs>[]
+      agentStepPolicies: Prisma.$AgentStepModelPolicyPayload<ExtArgs>[]
       embeddingSettings: Prisma.$RagPlatformSettingsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -38293,6 +38464,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     provider<T extends AiProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AiProviderDefaultArgs<ExtArgs>>): Prisma__AiProviderClient<$Result.GetResult<Prisma.$AiProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     agentPolicies<T extends AiModel$agentPoliciesArgs<ExtArgs> = {}>(args?: Subset<T, AiModel$agentPoliciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentModelPolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    agentStepPolicies<T extends AiModel$agentStepPoliciesArgs<ExtArgs> = {}>(args?: Subset<T, AiModel$agentStepPoliciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     embeddingSettings<T extends AiModel$embeddingSettingsArgs<ExtArgs> = {}>(args?: Subset<T, AiModel$embeddingSettingsArgs<ExtArgs>>): Prisma__RagPlatformSettingsClient<$Result.GetResult<Prisma.$RagPlatformSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -38751,6 +38923,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentModelPolicyScalarFieldEnum | AgentModelPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * AiModel.agentStepPolicies
+   */
+  export type AiModel$agentStepPoliciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    where?: AgentStepModelPolicyWhereInput
+    orderBy?: AgentStepModelPolicyOrderByWithRelationInput | AgentStepModelPolicyOrderByWithRelationInput[]
+    cursor?: AgentStepModelPolicyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentStepModelPolicyScalarFieldEnum | AgentStepModelPolicyScalarFieldEnum[]
   }
 
   /**
@@ -39910,6 +40106,1077 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AgentModelPolicyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AgentStepModelPolicy
+   */
+
+  export type AggregateAgentStepModelPolicy = {
+    _count: AgentStepModelPolicyCountAggregateOutputType | null
+    _min: AgentStepModelPolicyMinAggregateOutputType | null
+    _max: AgentStepModelPolicyMaxAggregateOutputType | null
+  }
+
+  export type AgentStepModelPolicyMinAggregateOutputType = {
+    id: string | null
+    agentId: string | null
+    stepKey: string | null
+    modelId: string | null
+    isEnabled: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type AgentStepModelPolicyMaxAggregateOutputType = {
+    id: string | null
+    agentId: string | null
+    stepKey: string | null
+    modelId: string | null
+    isEnabled: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type AgentStepModelPolicyCountAggregateOutputType = {
+    id: number
+    agentId: number
+    stepKey: number
+    modelId: number
+    isEnabled: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AgentStepModelPolicyMinAggregateInputType = {
+    id?: true
+    agentId?: true
+    stepKey?: true
+    modelId?: true
+    isEnabled?: true
+    updatedAt?: true
+  }
+
+  export type AgentStepModelPolicyMaxAggregateInputType = {
+    id?: true
+    agentId?: true
+    stepKey?: true
+    modelId?: true
+    isEnabled?: true
+    updatedAt?: true
+  }
+
+  export type AgentStepModelPolicyCountAggregateInputType = {
+    id?: true
+    agentId?: true
+    stepKey?: true
+    modelId?: true
+    isEnabled?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AgentStepModelPolicyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentStepModelPolicy to aggregate.
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentStepModelPolicies to fetch.
+     */
+    orderBy?: AgentStepModelPolicyOrderByWithRelationInput | AgentStepModelPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AgentStepModelPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentStepModelPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentStepModelPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AgentStepModelPolicies
+    **/
+    _count?: true | AgentStepModelPolicyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AgentStepModelPolicyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AgentStepModelPolicyMaxAggregateInputType
+  }
+
+  export type GetAgentStepModelPolicyAggregateType<T extends AgentStepModelPolicyAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentStepModelPolicy]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAgentStepModelPolicy[P]>
+      : GetScalarType<T[P], AggregateAgentStepModelPolicy[P]>
+  }
+
+
+
+
+  export type AgentStepModelPolicyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentStepModelPolicyWhereInput
+    orderBy?: AgentStepModelPolicyOrderByWithAggregationInput | AgentStepModelPolicyOrderByWithAggregationInput[]
+    by: AgentStepModelPolicyScalarFieldEnum[] | AgentStepModelPolicyScalarFieldEnum
+    having?: AgentStepModelPolicyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AgentStepModelPolicyCountAggregateInputType | true
+    _min?: AgentStepModelPolicyMinAggregateInputType
+    _max?: AgentStepModelPolicyMaxAggregateInputType
+  }
+
+  export type AgentStepModelPolicyGroupByOutputType = {
+    id: string
+    agentId: string
+    stepKey: string
+    modelId: string
+    isEnabled: boolean
+    updatedAt: Date
+    _count: AgentStepModelPolicyCountAggregateOutputType | null
+    _min: AgentStepModelPolicyMinAggregateOutputType | null
+    _max: AgentStepModelPolicyMaxAggregateOutputType | null
+  }
+
+  type GetAgentStepModelPolicyGroupByPayload<T extends AgentStepModelPolicyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AgentStepModelPolicyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AgentStepModelPolicyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AgentStepModelPolicyGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentStepModelPolicyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AgentStepModelPolicySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentId?: boolean
+    stepKey?: boolean
+    modelId?: boolean
+    isEnabled?: boolean
+    updatedAt?: boolean
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentStepModelPolicy"]>
+
+  export type AgentStepModelPolicySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentId?: boolean
+    stepKey?: boolean
+    modelId?: boolean
+    isEnabled?: boolean
+    updatedAt?: boolean
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentStepModelPolicy"]>
+
+  export type AgentStepModelPolicySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    agentId?: boolean
+    stepKey?: boolean
+    modelId?: boolean
+    isEnabled?: boolean
+    updatedAt?: boolean
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["agentStepModelPolicy"]>
+
+  export type AgentStepModelPolicySelectScalar = {
+    id?: boolean
+    agentId?: boolean
+    stepKey?: boolean
+    modelId?: boolean
+    isEnabled?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AgentStepModelPolicyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "agentId" | "stepKey" | "modelId" | "isEnabled" | "updatedAt", ExtArgs["result"]["agentStepModelPolicy"]>
+  export type AgentStepModelPolicyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }
+  export type AgentStepModelPolicyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }
+  export type AgentStepModelPolicyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    model?: boolean | AiModelDefaultArgs<ExtArgs>
+  }
+
+  export type $AgentStepModelPolicyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentStepModelPolicy"
+    objects: {
+      model: Prisma.$AiModelPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      agentId: string
+      stepKey: string
+      modelId: string
+      isEnabled: boolean
+      updatedAt: Date
+    }, ExtArgs["result"]["agentStepModelPolicy"]>
+    composites: {}
+  }
+
+  type AgentStepModelPolicyGetPayload<S extends boolean | null | undefined | AgentStepModelPolicyDefaultArgs> = $Result.GetResult<Prisma.$AgentStepModelPolicyPayload, S>
+
+  type AgentStepModelPolicyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentStepModelPolicyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentStepModelPolicyCountAggregateInputType | true
+    }
+
+  export interface AgentStepModelPolicyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentStepModelPolicy'], meta: { name: 'AgentStepModelPolicy' } }
+    /**
+     * Find zero or one AgentStepModelPolicy that matches the filter.
+     * @param {AgentStepModelPolicyFindUniqueArgs} args - Arguments to find a AgentStepModelPolicy
+     * @example
+     * // Get one AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AgentStepModelPolicyFindUniqueArgs>(args: SelectSubset<T, AgentStepModelPolicyFindUniqueArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AgentStepModelPolicy that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AgentStepModelPolicyFindUniqueOrThrowArgs} args - Arguments to find a AgentStepModelPolicy
+     * @example
+     * // Get one AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AgentStepModelPolicyFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentStepModelPolicyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentStepModelPolicy that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyFindFirstArgs} args - Arguments to find a AgentStepModelPolicy
+     * @example
+     * // Get one AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AgentStepModelPolicyFindFirstArgs>(args?: SelectSubset<T, AgentStepModelPolicyFindFirstArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AgentStepModelPolicy that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyFindFirstOrThrowArgs} args - Arguments to find a AgentStepModelPolicy
+     * @example
+     * // Get one AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AgentStepModelPolicyFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentStepModelPolicyFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AgentStepModelPolicies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AgentStepModelPolicies
+     * const agentStepModelPolicies = await prisma.agentStepModelPolicy.findMany()
+     * 
+     * // Get first 10 AgentStepModelPolicies
+     * const agentStepModelPolicies = await prisma.agentStepModelPolicy.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const agentStepModelPolicyWithIdOnly = await prisma.agentStepModelPolicy.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AgentStepModelPolicyFindManyArgs>(args?: SelectSubset<T, AgentStepModelPolicyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AgentStepModelPolicy.
+     * @param {AgentStepModelPolicyCreateArgs} args - Arguments to create a AgentStepModelPolicy.
+     * @example
+     * // Create one AgentStepModelPolicy
+     * const AgentStepModelPolicy = await prisma.agentStepModelPolicy.create({
+     *   data: {
+     *     // ... data to create a AgentStepModelPolicy
+     *   }
+     * })
+     * 
+     */
+    create<T extends AgentStepModelPolicyCreateArgs>(args: SelectSubset<T, AgentStepModelPolicyCreateArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AgentStepModelPolicies.
+     * @param {AgentStepModelPolicyCreateManyArgs} args - Arguments to create many AgentStepModelPolicies.
+     * @example
+     * // Create many AgentStepModelPolicies
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AgentStepModelPolicyCreateManyArgs>(args?: SelectSubset<T, AgentStepModelPolicyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AgentStepModelPolicies and returns the data saved in the database.
+     * @param {AgentStepModelPolicyCreateManyAndReturnArgs} args - Arguments to create many AgentStepModelPolicies.
+     * @example
+     * // Create many AgentStepModelPolicies
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AgentStepModelPolicies and only return the `id`
+     * const agentStepModelPolicyWithIdOnly = await prisma.agentStepModelPolicy.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AgentStepModelPolicyCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentStepModelPolicyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AgentStepModelPolicy.
+     * @param {AgentStepModelPolicyDeleteArgs} args - Arguments to delete one AgentStepModelPolicy.
+     * @example
+     * // Delete one AgentStepModelPolicy
+     * const AgentStepModelPolicy = await prisma.agentStepModelPolicy.delete({
+     *   where: {
+     *     // ... filter to delete one AgentStepModelPolicy
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AgentStepModelPolicyDeleteArgs>(args: SelectSubset<T, AgentStepModelPolicyDeleteArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AgentStepModelPolicy.
+     * @param {AgentStepModelPolicyUpdateArgs} args - Arguments to update one AgentStepModelPolicy.
+     * @example
+     * // Update one AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AgentStepModelPolicyUpdateArgs>(args: SelectSubset<T, AgentStepModelPolicyUpdateArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AgentStepModelPolicies.
+     * @param {AgentStepModelPolicyDeleteManyArgs} args - Arguments to filter AgentStepModelPolicies to delete.
+     * @example
+     * // Delete a few AgentStepModelPolicies
+     * const { count } = await prisma.agentStepModelPolicy.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AgentStepModelPolicyDeleteManyArgs>(args?: SelectSubset<T, AgentStepModelPolicyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentStepModelPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AgentStepModelPolicies
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AgentStepModelPolicyUpdateManyArgs>(args: SelectSubset<T, AgentStepModelPolicyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AgentStepModelPolicies and returns the data updated in the database.
+     * @param {AgentStepModelPolicyUpdateManyAndReturnArgs} args - Arguments to update many AgentStepModelPolicies.
+     * @example
+     * // Update many AgentStepModelPolicies
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AgentStepModelPolicies and only return the `id`
+     * const agentStepModelPolicyWithIdOnly = await prisma.agentStepModelPolicy.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AgentStepModelPolicyUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentStepModelPolicyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AgentStepModelPolicy.
+     * @param {AgentStepModelPolicyUpsertArgs} args - Arguments to update or create a AgentStepModelPolicy.
+     * @example
+     * // Update or create a AgentStepModelPolicy
+     * const agentStepModelPolicy = await prisma.agentStepModelPolicy.upsert({
+     *   create: {
+     *     // ... data to create a AgentStepModelPolicy
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AgentStepModelPolicy we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AgentStepModelPolicyUpsertArgs>(args: SelectSubset<T, AgentStepModelPolicyUpsertArgs<ExtArgs>>): Prisma__AgentStepModelPolicyClient<$Result.GetResult<Prisma.$AgentStepModelPolicyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AgentStepModelPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyCountArgs} args - Arguments to filter AgentStepModelPolicies to count.
+     * @example
+     * // Count the number of AgentStepModelPolicies
+     * const count = await prisma.agentStepModelPolicy.count({
+     *   where: {
+     *     // ... the filter for the AgentStepModelPolicies we want to count
+     *   }
+     * })
+    **/
+    count<T extends AgentStepModelPolicyCountArgs>(
+      args?: Subset<T, AgentStepModelPolicyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AgentStepModelPolicyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AgentStepModelPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AgentStepModelPolicyAggregateArgs>(args: Subset<T, AgentStepModelPolicyAggregateArgs>): Prisma.PrismaPromise<GetAgentStepModelPolicyAggregateType<T>>
+
+    /**
+     * Group by AgentStepModelPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AgentStepModelPolicyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AgentStepModelPolicyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AgentStepModelPolicyGroupByArgs['orderBy'] }
+        : { orderBy?: AgentStepModelPolicyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AgentStepModelPolicyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentStepModelPolicyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AgentStepModelPolicy model
+   */
+  readonly fields: AgentStepModelPolicyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AgentStepModelPolicy.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AgentStepModelPolicyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    model<T extends AiModelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AiModelDefaultArgs<ExtArgs>>): Prisma__AiModelClient<$Result.GetResult<Prisma.$AiModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AgentStepModelPolicy model
+   */
+  interface AgentStepModelPolicyFieldRefs {
+    readonly id: FieldRef<"AgentStepModelPolicy", 'String'>
+    readonly agentId: FieldRef<"AgentStepModelPolicy", 'String'>
+    readonly stepKey: FieldRef<"AgentStepModelPolicy", 'String'>
+    readonly modelId: FieldRef<"AgentStepModelPolicy", 'String'>
+    readonly isEnabled: FieldRef<"AgentStepModelPolicy", 'Boolean'>
+    readonly updatedAt: FieldRef<"AgentStepModelPolicy", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AgentStepModelPolicy findUnique
+   */
+  export type AgentStepModelPolicyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentStepModelPolicy to fetch.
+     */
+    where: AgentStepModelPolicyWhereUniqueInput
+  }
+
+  /**
+   * AgentStepModelPolicy findUniqueOrThrow
+   */
+  export type AgentStepModelPolicyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentStepModelPolicy to fetch.
+     */
+    where: AgentStepModelPolicyWhereUniqueInput
+  }
+
+  /**
+   * AgentStepModelPolicy findFirst
+   */
+  export type AgentStepModelPolicyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentStepModelPolicy to fetch.
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentStepModelPolicies to fetch.
+     */
+    orderBy?: AgentStepModelPolicyOrderByWithRelationInput | AgentStepModelPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentStepModelPolicies.
+     */
+    cursor?: AgentStepModelPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentStepModelPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentStepModelPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentStepModelPolicies.
+     */
+    distinct?: AgentStepModelPolicyScalarFieldEnum | AgentStepModelPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * AgentStepModelPolicy findFirstOrThrow
+   */
+  export type AgentStepModelPolicyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentStepModelPolicy to fetch.
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentStepModelPolicies to fetch.
+     */
+    orderBy?: AgentStepModelPolicyOrderByWithRelationInput | AgentStepModelPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AgentStepModelPolicies.
+     */
+    cursor?: AgentStepModelPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentStepModelPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentStepModelPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AgentStepModelPolicies.
+     */
+    distinct?: AgentStepModelPolicyScalarFieldEnum | AgentStepModelPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * AgentStepModelPolicy findMany
+   */
+  export type AgentStepModelPolicyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which AgentStepModelPolicies to fetch.
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AgentStepModelPolicies to fetch.
+     */
+    orderBy?: AgentStepModelPolicyOrderByWithRelationInput | AgentStepModelPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AgentStepModelPolicies.
+     */
+    cursor?: AgentStepModelPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AgentStepModelPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AgentStepModelPolicies.
+     */
+    skip?: number
+    distinct?: AgentStepModelPolicyScalarFieldEnum | AgentStepModelPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * AgentStepModelPolicy create
+   */
+  export type AgentStepModelPolicyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AgentStepModelPolicy.
+     */
+    data: XOR<AgentStepModelPolicyCreateInput, AgentStepModelPolicyUncheckedCreateInput>
+  }
+
+  /**
+   * AgentStepModelPolicy createMany
+   */
+  export type AgentStepModelPolicyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AgentStepModelPolicies.
+     */
+    data: AgentStepModelPolicyCreateManyInput | AgentStepModelPolicyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AgentStepModelPolicy createManyAndReturn
+   */
+  export type AgentStepModelPolicyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * The data used to create many AgentStepModelPolicies.
+     */
+    data: AgentStepModelPolicyCreateManyInput | AgentStepModelPolicyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentStepModelPolicy update
+   */
+  export type AgentStepModelPolicyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AgentStepModelPolicy.
+     */
+    data: XOR<AgentStepModelPolicyUpdateInput, AgentStepModelPolicyUncheckedUpdateInput>
+    /**
+     * Choose, which AgentStepModelPolicy to update.
+     */
+    where: AgentStepModelPolicyWhereUniqueInput
+  }
+
+  /**
+   * AgentStepModelPolicy updateMany
+   */
+  export type AgentStepModelPolicyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AgentStepModelPolicies.
+     */
+    data: XOR<AgentStepModelPolicyUpdateManyMutationInput, AgentStepModelPolicyUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentStepModelPolicies to update
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * Limit how many AgentStepModelPolicies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentStepModelPolicy updateManyAndReturn
+   */
+  export type AgentStepModelPolicyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * The data used to update AgentStepModelPolicies.
+     */
+    data: XOR<AgentStepModelPolicyUpdateManyMutationInput, AgentStepModelPolicyUncheckedUpdateManyInput>
+    /**
+     * Filter which AgentStepModelPolicies to update
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * Limit how many AgentStepModelPolicies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AgentStepModelPolicy upsert
+   */
+  export type AgentStepModelPolicyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AgentStepModelPolicy to update in case it exists.
+     */
+    where: AgentStepModelPolicyWhereUniqueInput
+    /**
+     * In case the AgentStepModelPolicy found by the `where` argument doesn't exist, create a new AgentStepModelPolicy with this data.
+     */
+    create: XOR<AgentStepModelPolicyCreateInput, AgentStepModelPolicyUncheckedCreateInput>
+    /**
+     * In case the AgentStepModelPolicy was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AgentStepModelPolicyUpdateInput, AgentStepModelPolicyUncheckedUpdateInput>
+  }
+
+  /**
+   * AgentStepModelPolicy delete
+   */
+  export type AgentStepModelPolicyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
+    /**
+     * Filter which AgentStepModelPolicy to delete.
+     */
+    where: AgentStepModelPolicyWhereUniqueInput
+  }
+
+  /**
+   * AgentStepModelPolicy deleteMany
+   */
+  export type AgentStepModelPolicyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AgentStepModelPolicies to delete
+     */
+    where?: AgentStepModelPolicyWhereInput
+    /**
+     * Limit how many AgentStepModelPolicies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AgentStepModelPolicy without action
+   */
+  export type AgentStepModelPolicyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentStepModelPolicy
+     */
+    select?: AgentStepModelPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentStepModelPolicy
+     */
+    omit?: AgentStepModelPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentStepModelPolicyInclude<ExtArgs> | null
   }
 
 
@@ -46932,6 +48199,7 @@ export namespace Prisma {
     projects?: boolean | PersonalSpace$projectsArgs<ExtArgs>
     creditBalance?: boolean | PersonalSpace$creditBalanceArgs<ExtArgs>
     agentWorkspaceSettings?: boolean | PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>
+    agentRuns?: boolean | PersonalSpace$agentRunsArgs<ExtArgs>
     _count?: boolean | PersonalSpaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["personalSpace"]>
 
@@ -46971,6 +48239,7 @@ export namespace Prisma {
     projects?: boolean | PersonalSpace$projectsArgs<ExtArgs>
     creditBalance?: boolean | PersonalSpace$creditBalanceArgs<ExtArgs>
     agentWorkspaceSettings?: boolean | PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>
+    agentRuns?: boolean | PersonalSpace$agentRunsArgs<ExtArgs>
     _count?: boolean | PersonalSpaceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PersonalSpaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46991,6 +48260,7 @@ export namespace Prisma {
       projects: Prisma.$ProjectPayload<ExtArgs>[]
       creditBalance: Prisma.$PersonalCreditBalancePayload<ExtArgs> | null
       agentWorkspaceSettings: Prisma.$AgentWorkspaceSettingPayload<ExtArgs>[]
+      agentRuns: Prisma.$AgentRunPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -47400,6 +48670,7 @@ export namespace Prisma {
     projects<T extends PersonalSpace$projectsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     creditBalance<T extends PersonalSpace$creditBalanceArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$creditBalanceArgs<ExtArgs>>): Prisma__PersonalCreditBalanceClient<$Result.GetResult<Prisma.$PersonalCreditBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     agentWorkspaceSettings<T extends PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$agentWorkspaceSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentWorkspaceSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    agentRuns<T extends PersonalSpace$agentRunsArgs<ExtArgs> = {}>(args?: Subset<T, PersonalSpace$agentRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -47985,6 +49256,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentWorkspaceSettingScalarFieldEnum | AgentWorkspaceSettingScalarFieldEnum[]
+  }
+
+  /**
+   * PersonalSpace.agentRuns
+   */
+  export type PersonalSpace$agentRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AgentRun
+     */
+    select?: AgentRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AgentRun
+     */
+    omit?: AgentRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AgentRunInclude<ExtArgs> | null
+    where?: AgentRunWhereInput
+    orderBy?: AgentRunOrderByWithRelationInput | AgentRunOrderByWithRelationInput[]
+    cursor?: AgentRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AgentRunScalarFieldEnum | AgentRunScalarFieldEnum[]
   }
 
   /**
@@ -58770,6 +60065,7 @@ export namespace Prisma {
   export const AgentRunScalarFieldEnum: {
     id: 'id',
     companyId: 'companyId',
+    personalSpaceId: 'personalSpaceId',
     pipelineRunId: 'pipelineRunId',
     campaignId: 'campaignId',
     agentId: 'agentId',
@@ -58978,6 +60274,18 @@ export namespace Prisma {
   };
 
   export type AgentModelPolicyScalarFieldEnum = (typeof AgentModelPolicyScalarFieldEnum)[keyof typeof AgentModelPolicyScalarFieldEnum]
+
+
+  export const AgentStepModelPolicyScalarFieldEnum: {
+    id: 'id',
+    agentId: 'agentId',
+    stepKey: 'stepKey',
+    modelId: 'modelId',
+    isEnabled: 'isEnabled',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AgentStepModelPolicyScalarFieldEnum = (typeof AgentStepModelPolicyScalarFieldEnum)[keyof typeof AgentStepModelPolicyScalarFieldEnum]
 
 
   export const PipelineAgentConfigScalarFieldEnum: {
@@ -60938,7 +62246,8 @@ export namespace Prisma {
     OR?: AgentRunWhereInput[]
     NOT?: AgentRunWhereInput | AgentRunWhereInput[]
     id?: StringFilter<"AgentRun"> | string
-    companyId?: StringFilter<"AgentRun"> | string
+    companyId?: StringNullableFilter<"AgentRun"> | string | null
+    personalSpaceId?: StringNullableFilter<"AgentRun"> | string | null
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
@@ -60957,7 +62266,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AgentRun"> | Date | string
     startedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
     pipelineRun?: XOR<PipelineRunNullableScalarRelationFilter, PipelineRunWhereInput> | null
     parentRun?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
     childRuns?: AgentRunListRelationFilter
@@ -60970,7 +62280,8 @@ export namespace Prisma {
 
   export type AgentRunOrderByWithRelationInput = {
     id?: SortOrder
-    companyId?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
     pipelineRunId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     agentId?: SortOrder
@@ -60990,6 +62301,7 @@ export namespace Prisma {
     startedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
+    personalSpace?: PersonalSpaceOrderByWithRelationInput
     pipelineRun?: PipelineRunOrderByWithRelationInput
     parentRun?: AgentRunOrderByWithRelationInput
     childRuns?: AgentRunOrderByRelationAggregateInput
@@ -61006,7 +62318,8 @@ export namespace Prisma {
     AND?: AgentRunWhereInput | AgentRunWhereInput[]
     OR?: AgentRunWhereInput[]
     NOT?: AgentRunWhereInput | AgentRunWhereInput[]
-    companyId?: StringFilter<"AgentRun"> | string
+    companyId?: StringNullableFilter<"AgentRun"> | string | null
+    personalSpaceId?: StringNullableFilter<"AgentRun"> | string | null
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
@@ -61024,7 +62337,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AgentRun"> | Date | string
     startedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"AgentRun"> | Date | string | null
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
+    personalSpace?: XOR<PersonalSpaceNullableScalarRelationFilter, PersonalSpaceWhereInput> | null
     pipelineRun?: XOR<PipelineRunNullableScalarRelationFilter, PipelineRunWhereInput> | null
     parentRun?: XOR<AgentRunNullableScalarRelationFilter, AgentRunWhereInput> | null
     childRuns?: AgentRunListRelationFilter
@@ -61037,7 +62351,8 @@ export namespace Prisma {
 
   export type AgentRunOrderByWithAggregationInput = {
     id?: SortOrder
-    companyId?: SortOrder
+    companyId?: SortOrderInput | SortOrder
+    personalSpaceId?: SortOrderInput | SortOrder
     pipelineRunId?: SortOrderInput | SortOrder
     campaignId?: SortOrderInput | SortOrder
     agentId?: SortOrder
@@ -61068,7 +62383,8 @@ export namespace Prisma {
     OR?: AgentRunScalarWhereWithAggregatesInput[]
     NOT?: AgentRunScalarWhereWithAggregatesInput | AgentRunScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"AgentRun"> | string
-    companyId?: StringWithAggregatesFilter<"AgentRun"> | string
+    companyId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
+    personalSpaceId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     pipelineRunId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     campaignId?: StringNullableWithAggregatesFilter<"AgentRun"> | string | null
     agentId?: StringWithAggregatesFilter<"AgentRun"> | string
@@ -61928,6 +63244,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AiModel"> | Date | string
     provider?: XOR<AiProviderScalarRelationFilter, AiProviderWhereInput>
     agentPolicies?: AgentModelPolicyListRelationFilter
+    agentStepPolicies?: AgentStepModelPolicyListRelationFilter
     embeddingSettings?: XOR<RagPlatformSettingsNullableScalarRelationFilter, RagPlatformSettingsWhereInput> | null
   }
 
@@ -61945,6 +63262,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     provider?: AiProviderOrderByWithRelationInput
     agentPolicies?: AgentModelPolicyOrderByRelationAggregateInput
+    agentStepPolicies?: AgentStepModelPolicyOrderByRelationAggregateInput
     embeddingSettings?: RagPlatformSettingsOrderByWithRelationInput
   }
 
@@ -61966,6 +63284,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AiModel"> | Date | string
     provider?: XOR<AiProviderScalarRelationFilter, AiProviderWhereInput>
     agentPolicies?: AgentModelPolicyListRelationFilter
+    agentStepPolicies?: AgentStepModelPolicyListRelationFilter
     embeddingSettings?: XOR<RagPlatformSettingsNullableScalarRelationFilter, RagPlatformSettingsWhereInput> | null
   }, "id" | "providerId_externalId">
 
@@ -62070,6 +63389,67 @@ export namespace Prisma {
     isEnabled?: BoolWithAggregatesFilter<"AgentModelPolicy"> | boolean
     minCostPerRun?: DecimalNullableWithAggregatesFilter<"AgentModelPolicy"> | Decimal | DecimalJsLike | number | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"AgentModelPolicy"> | Date | string
+  }
+
+  export type AgentStepModelPolicyWhereInput = {
+    AND?: AgentStepModelPolicyWhereInput | AgentStepModelPolicyWhereInput[]
+    OR?: AgentStepModelPolicyWhereInput[]
+    NOT?: AgentStepModelPolicyWhereInput | AgentStepModelPolicyWhereInput[]
+    id?: StringFilter<"AgentStepModelPolicy"> | string
+    agentId?: StringFilter<"AgentStepModelPolicy"> | string
+    stepKey?: StringFilter<"AgentStepModelPolicy"> | string
+    modelId?: StringFilter<"AgentStepModelPolicy"> | string
+    isEnabled?: BoolFilter<"AgentStepModelPolicy"> | boolean
+    updatedAt?: DateTimeFilter<"AgentStepModelPolicy"> | Date | string
+    model?: XOR<AiModelScalarRelationFilter, AiModelWhereInput>
+  }
+
+  export type AgentStepModelPolicyOrderByWithRelationInput = {
+    id?: SortOrder
+    agentId?: SortOrder
+    stepKey?: SortOrder
+    modelId?: SortOrder
+    isEnabled?: SortOrder
+    updatedAt?: SortOrder
+    model?: AiModelOrderByWithRelationInput
+  }
+
+  export type AgentStepModelPolicyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    agentId_stepKey?: AgentStepModelPolicyAgentIdStepKeyCompoundUniqueInput
+    AND?: AgentStepModelPolicyWhereInput | AgentStepModelPolicyWhereInput[]
+    OR?: AgentStepModelPolicyWhereInput[]
+    NOT?: AgentStepModelPolicyWhereInput | AgentStepModelPolicyWhereInput[]
+    agentId?: StringFilter<"AgentStepModelPolicy"> | string
+    stepKey?: StringFilter<"AgentStepModelPolicy"> | string
+    modelId?: StringFilter<"AgentStepModelPolicy"> | string
+    isEnabled?: BoolFilter<"AgentStepModelPolicy"> | boolean
+    updatedAt?: DateTimeFilter<"AgentStepModelPolicy"> | Date | string
+    model?: XOR<AiModelScalarRelationFilter, AiModelWhereInput>
+  }, "id" | "agentId_stepKey">
+
+  export type AgentStepModelPolicyOrderByWithAggregationInput = {
+    id?: SortOrder
+    agentId?: SortOrder
+    stepKey?: SortOrder
+    modelId?: SortOrder
+    isEnabled?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AgentStepModelPolicyCountOrderByAggregateInput
+    _max?: AgentStepModelPolicyMaxOrderByAggregateInput
+    _min?: AgentStepModelPolicyMinOrderByAggregateInput
+  }
+
+  export type AgentStepModelPolicyScalarWhereWithAggregatesInput = {
+    AND?: AgentStepModelPolicyScalarWhereWithAggregatesInput | AgentStepModelPolicyScalarWhereWithAggregatesInput[]
+    OR?: AgentStepModelPolicyScalarWhereWithAggregatesInput[]
+    NOT?: AgentStepModelPolicyScalarWhereWithAggregatesInput | AgentStepModelPolicyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentStepModelPolicy"> | string
+    agentId?: StringWithAggregatesFilter<"AgentStepModelPolicy"> | string
+    stepKey?: StringWithAggregatesFilter<"AgentStepModelPolicy"> | string
+    modelId?: StringWithAggregatesFilter<"AgentStepModelPolicy"> | string
+    isEnabled?: BoolWithAggregatesFilter<"AgentStepModelPolicy"> | boolean
+    updatedAt?: DateTimeWithAggregatesFilter<"AgentStepModelPolicy"> | Date | string
   }
 
   export type PipelineAgentConfigWhereInput = {
@@ -62533,6 +63913,7 @@ export namespace Prisma {
     projects?: ProjectListRelationFilter
     creditBalance?: XOR<PersonalCreditBalanceNullableScalarRelationFilter, PersonalCreditBalanceWhereInput> | null
     agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
+    agentRuns?: AgentRunListRelationFilter
   }
 
   export type PersonalSpaceOrderByWithRelationInput = {
@@ -62549,6 +63930,7 @@ export namespace Prisma {
     projects?: ProjectOrderByRelationAggregateInput
     creditBalance?: PersonalCreditBalanceOrderByWithRelationInput
     agentWorkspaceSettings?: AgentWorkspaceSettingOrderByRelationAggregateInput
+    agentRuns?: AgentRunOrderByRelationAggregateInput
   }
 
   export type PersonalSpaceWhereUniqueInput = Prisma.AtLeast<{
@@ -62568,6 +63950,7 @@ export namespace Prisma {
     projects?: ProjectListRelationFilter
     creditBalance?: XOR<PersonalCreditBalanceNullableScalarRelationFilter, PersonalCreditBalanceWhereInput> | null
     agentWorkspaceSettings?: AgentWorkspaceSettingListRelationFilter
+    agentRuns?: AgentRunListRelationFilter
   }, "id" | "userId">
 
   export type PersonalSpaceOrderByWithAggregationInput = {
@@ -64786,7 +66169,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -64799,7 +66183,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -64842,7 +66227,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -64855,7 +66241,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -64883,7 +66270,8 @@ export namespace Prisma {
 
   export type AgentRunCreateManyInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -64925,7 +66313,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -65856,6 +67245,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     provider: AiProviderCreateNestedOneWithoutModelsInput
     agentPolicies?: AgentModelPolicyCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -65872,6 +67262,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     agentPolicies?: AgentModelPolicyUncheckedCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsUncheckedCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -65888,6 +67279,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     provider?: AiProviderUpdateOneRequiredWithoutModelsNestedInput
     agentPolicies?: AgentModelPolicyUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -65904,6 +67296,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agentPolicies?: AgentModelPolicyUncheckedUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUncheckedUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -66014,6 +67407,68 @@ export namespace Prisma {
     markupMultiplier?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isEnabled?: BoolFieldUpdateOperationsInput | boolean
     minCostPerRun?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyCreateInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    isEnabled?: boolean
+    updatedAt?: Date | string
+    model: AiModelCreateNestedOneWithoutAgentStepPoliciesInput
+  }
+
+  export type AgentStepModelPolicyUncheckedCreateInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    modelId: string
+    isEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type AgentStepModelPolicyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: AiModelUpdateOneRequiredWithoutAgentStepPoliciesNestedInput
+  }
+
+  export type AgentStepModelPolicyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyCreateManyInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    modelId: string
+    isEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type AgentStepModelPolicyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    modelId?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -66497,6 +67952,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateInput = {
@@ -66512,6 +67968,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUpdateInput = {
@@ -66527,6 +67984,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateInput = {
@@ -66542,6 +68000,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceCreateManyInput = {
@@ -68602,6 +70061,11 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type CompanyNullableScalarRelationFilter = {
+    is?: CompanyWhereInput | null
+    isNot?: CompanyWhereInput | null
+  }
+
   export type AgentFeedbackNullableScalarRelationFilter = {
     is?: AgentFeedbackWhereInput | null
     isNot?: AgentFeedbackWhereInput | null
@@ -68630,6 +70094,7 @@ export namespace Prisma {
   export type AgentRunCountOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
+    personalSpaceId?: SortOrder
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
@@ -68657,6 +70122,7 @@ export namespace Prisma {
   export type AgentRunMaxOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
+    personalSpaceId?: SortOrder
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
@@ -68677,6 +70143,7 @@ export namespace Prisma {
   export type AgentRunMinOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
+    personalSpaceId?: SortOrder
     pipelineRunId?: SortOrder
     campaignId?: SortOrder
     agentId?: SortOrder
@@ -69390,12 +70857,22 @@ export namespace Prisma {
     none?: AgentModelPolicyWhereInput
   }
 
+  export type AgentStepModelPolicyListRelationFilter = {
+    every?: AgentStepModelPolicyWhereInput
+    some?: AgentStepModelPolicyWhereInput
+    none?: AgentStepModelPolicyWhereInput
+  }
+
   export type RagPlatformSettingsNullableScalarRelationFilter = {
     is?: RagPlatformSettingsWhereInput | null
     isNot?: RagPlatformSettingsWhereInput | null
   }
 
   export type AgentModelPolicyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AgentStepModelPolicyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -69499,6 +70976,38 @@ export namespace Prisma {
   export type AgentModelPolicySumOrderByAggregateInput = {
     markupMultiplier?: SortOrder
     minCostPerRun?: SortOrder
+  }
+
+  export type AgentStepModelPolicyAgentIdStepKeyCompoundUniqueInput = {
+    agentId: string
+    stepKey: string
+  }
+
+  export type AgentStepModelPolicyCountOrderByAggregateInput = {
+    id?: SortOrder
+    agentId?: SortOrder
+    stepKey?: SortOrder
+    modelId?: SortOrder
+    isEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentStepModelPolicyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    agentId?: SortOrder
+    stepKey?: SortOrder
+    modelId?: SortOrder
+    isEnabled?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AgentStepModelPolicyMinOrderByAggregateInput = {
+    id?: SortOrder
+    agentId?: SortOrder
+    stepKey?: SortOrder
+    modelId?: SortOrder
+    isEnabled?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PipelineAgentConfigCountOrderByAggregateInput = {
@@ -69935,11 +71444,6 @@ export namespace Prisma {
     userId?: SortOrder
     roleId?: SortOrder
     joinedAt?: SortOrder
-  }
-
-  export type CompanyNullableScalarRelationFilter = {
-    is?: CompanyWhereInput | null
-    isNot?: CompanyWhereInput | null
   }
 
   export type WorkspaceSettingsCountOrderByAggregateInput = {
@@ -72127,6 +73631,12 @@ export namespace Prisma {
     connect?: CompanyWhereUniqueInput
   }
 
+  export type PersonalSpaceCreateNestedOneWithoutAgentRunsInput = {
+    create?: XOR<PersonalSpaceCreateWithoutAgentRunsInput, PersonalSpaceUncheckedCreateWithoutAgentRunsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutAgentRunsInput
+    connect?: PersonalSpaceWhereUniqueInput
+  }
+
   export type PipelineRunCreateNestedOneWithoutAgentRunsInput = {
     create?: XOR<PipelineRunCreateWithoutAgentRunsInput, PipelineRunUncheckedCreateWithoutAgentRunsInput>
     connectOrCreate?: PipelineRunCreateOrConnectWithoutAgentRunsInput
@@ -72219,12 +73729,24 @@ export namespace Prisma {
     set?: $Enums.AgentRunStatus
   }
 
-  export type CompanyUpdateOneRequiredWithoutAgentRunsNestedInput = {
+  export type CompanyUpdateOneWithoutAgentRunsNestedInput = {
     create?: XOR<CompanyCreateWithoutAgentRunsInput, CompanyUncheckedCreateWithoutAgentRunsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutAgentRunsInput
     upsert?: CompanyUpsertWithoutAgentRunsInput
+    disconnect?: CompanyWhereInput | boolean
+    delete?: CompanyWhereInput | boolean
     connect?: CompanyWhereUniqueInput
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutAgentRunsInput, CompanyUpdateWithoutAgentRunsInput>, CompanyUncheckedUpdateWithoutAgentRunsInput>
+  }
+
+  export type PersonalSpaceUpdateOneWithoutAgentRunsNestedInput = {
+    create?: XOR<PersonalSpaceCreateWithoutAgentRunsInput, PersonalSpaceUncheckedCreateWithoutAgentRunsInput>
+    connectOrCreate?: PersonalSpaceCreateOrConnectWithoutAgentRunsInput
+    upsert?: PersonalSpaceUpsertWithoutAgentRunsInput
+    disconnect?: PersonalSpaceWhereInput | boolean
+    delete?: PersonalSpaceWhereInput | boolean
+    connect?: PersonalSpaceWhereUniqueInput
+    update?: XOR<XOR<PersonalSpaceUpdateToOneWithWhereWithoutAgentRunsInput, PersonalSpaceUpdateWithoutAgentRunsInput>, PersonalSpaceUncheckedUpdateWithoutAgentRunsInput>
   }
 
   export type PipelineRunUpdateOneWithoutAgentRunsNestedInput = {
@@ -72826,6 +74348,13 @@ export namespace Prisma {
     connect?: AgentModelPolicyWhereUniqueInput | AgentModelPolicyWhereUniqueInput[]
   }
 
+  export type AgentStepModelPolicyCreateNestedManyWithoutModelInput = {
+    create?: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput> | AgentStepModelPolicyCreateWithoutModelInput[] | AgentStepModelPolicyUncheckedCreateWithoutModelInput[]
+    connectOrCreate?: AgentStepModelPolicyCreateOrConnectWithoutModelInput | AgentStepModelPolicyCreateOrConnectWithoutModelInput[]
+    createMany?: AgentStepModelPolicyCreateManyModelInputEnvelope
+    connect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+  }
+
   export type RagPlatformSettingsCreateNestedOneWithoutEmbeddingModelInput = {
     create?: XOR<RagPlatformSettingsCreateWithoutEmbeddingModelInput, RagPlatformSettingsUncheckedCreateWithoutEmbeddingModelInput>
     connectOrCreate?: RagPlatformSettingsCreateOrConnectWithoutEmbeddingModelInput
@@ -72837,6 +74366,13 @@ export namespace Prisma {
     connectOrCreate?: AgentModelPolicyCreateOrConnectWithoutModelInput | AgentModelPolicyCreateOrConnectWithoutModelInput[]
     createMany?: AgentModelPolicyCreateManyModelInputEnvelope
     connect?: AgentModelPolicyWhereUniqueInput | AgentModelPolicyWhereUniqueInput[]
+  }
+
+  export type AgentStepModelPolicyUncheckedCreateNestedManyWithoutModelInput = {
+    create?: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput> | AgentStepModelPolicyCreateWithoutModelInput[] | AgentStepModelPolicyUncheckedCreateWithoutModelInput[]
+    connectOrCreate?: AgentStepModelPolicyCreateOrConnectWithoutModelInput | AgentStepModelPolicyCreateOrConnectWithoutModelInput[]
+    createMany?: AgentStepModelPolicyCreateManyModelInputEnvelope
+    connect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
   }
 
   export type RagPlatformSettingsUncheckedCreateNestedOneWithoutEmbeddingModelInput = {
@@ -72872,6 +74408,20 @@ export namespace Prisma {
     deleteMany?: AgentModelPolicyScalarWhereInput | AgentModelPolicyScalarWhereInput[]
   }
 
+  export type AgentStepModelPolicyUpdateManyWithoutModelNestedInput = {
+    create?: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput> | AgentStepModelPolicyCreateWithoutModelInput[] | AgentStepModelPolicyUncheckedCreateWithoutModelInput[]
+    connectOrCreate?: AgentStepModelPolicyCreateOrConnectWithoutModelInput | AgentStepModelPolicyCreateOrConnectWithoutModelInput[]
+    upsert?: AgentStepModelPolicyUpsertWithWhereUniqueWithoutModelInput | AgentStepModelPolicyUpsertWithWhereUniqueWithoutModelInput[]
+    createMany?: AgentStepModelPolicyCreateManyModelInputEnvelope
+    set?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    disconnect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    delete?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    connect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    update?: AgentStepModelPolicyUpdateWithWhereUniqueWithoutModelInput | AgentStepModelPolicyUpdateWithWhereUniqueWithoutModelInput[]
+    updateMany?: AgentStepModelPolicyUpdateManyWithWhereWithoutModelInput | AgentStepModelPolicyUpdateManyWithWhereWithoutModelInput[]
+    deleteMany?: AgentStepModelPolicyScalarWhereInput | AgentStepModelPolicyScalarWhereInput[]
+  }
+
   export type RagPlatformSettingsUpdateOneWithoutEmbeddingModelNestedInput = {
     create?: XOR<RagPlatformSettingsCreateWithoutEmbeddingModelInput, RagPlatformSettingsUncheckedCreateWithoutEmbeddingModelInput>
     connectOrCreate?: RagPlatformSettingsCreateOrConnectWithoutEmbeddingModelInput
@@ -72896,6 +74446,20 @@ export namespace Prisma {
     deleteMany?: AgentModelPolicyScalarWhereInput | AgentModelPolicyScalarWhereInput[]
   }
 
+  export type AgentStepModelPolicyUncheckedUpdateManyWithoutModelNestedInput = {
+    create?: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput> | AgentStepModelPolicyCreateWithoutModelInput[] | AgentStepModelPolicyUncheckedCreateWithoutModelInput[]
+    connectOrCreate?: AgentStepModelPolicyCreateOrConnectWithoutModelInput | AgentStepModelPolicyCreateOrConnectWithoutModelInput[]
+    upsert?: AgentStepModelPolicyUpsertWithWhereUniqueWithoutModelInput | AgentStepModelPolicyUpsertWithWhereUniqueWithoutModelInput[]
+    createMany?: AgentStepModelPolicyCreateManyModelInputEnvelope
+    set?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    disconnect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    delete?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    connect?: AgentStepModelPolicyWhereUniqueInput | AgentStepModelPolicyWhereUniqueInput[]
+    update?: AgentStepModelPolicyUpdateWithWhereUniqueWithoutModelInput | AgentStepModelPolicyUpdateWithWhereUniqueWithoutModelInput[]
+    updateMany?: AgentStepModelPolicyUpdateManyWithWhereWithoutModelInput | AgentStepModelPolicyUpdateManyWithWhereWithoutModelInput[]
+    deleteMany?: AgentStepModelPolicyScalarWhereInput | AgentStepModelPolicyScalarWhereInput[]
+  }
+
   export type RagPlatformSettingsUncheckedUpdateOneWithoutEmbeddingModelNestedInput = {
     create?: XOR<RagPlatformSettingsCreateWithoutEmbeddingModelInput, RagPlatformSettingsUncheckedCreateWithoutEmbeddingModelInput>
     connectOrCreate?: RagPlatformSettingsCreateOrConnectWithoutEmbeddingModelInput
@@ -72918,6 +74482,20 @@ export namespace Prisma {
     upsert?: AiModelUpsertWithoutAgentPoliciesInput
     connect?: AiModelWhereUniqueInput
     update?: XOR<XOR<AiModelUpdateToOneWithWhereWithoutAgentPoliciesInput, AiModelUpdateWithoutAgentPoliciesInput>, AiModelUncheckedUpdateWithoutAgentPoliciesInput>
+  }
+
+  export type AiModelCreateNestedOneWithoutAgentStepPoliciesInput = {
+    create?: XOR<AiModelCreateWithoutAgentStepPoliciesInput, AiModelUncheckedCreateWithoutAgentStepPoliciesInput>
+    connectOrCreate?: AiModelCreateOrConnectWithoutAgentStepPoliciesInput
+    connect?: AiModelWhereUniqueInput
+  }
+
+  export type AiModelUpdateOneRequiredWithoutAgentStepPoliciesNestedInput = {
+    create?: XOR<AiModelCreateWithoutAgentStepPoliciesInput, AiModelUncheckedCreateWithoutAgentStepPoliciesInput>
+    connectOrCreate?: AiModelCreateOrConnectWithoutAgentStepPoliciesInput
+    upsert?: AiModelUpsertWithoutAgentStepPoliciesInput
+    connect?: AiModelWhereUniqueInput
+    update?: XOR<XOR<AiModelUpdateToOneWithWhereWithoutAgentStepPoliciesInput, AiModelUpdateWithoutAgentStepPoliciesInput>, AiModelUncheckedUpdateWithoutAgentStepPoliciesInput>
   }
 
   export type CompanyCreateNestedOneWithoutRagDocumentsInput = {
@@ -73205,6 +74783,13 @@ export namespace Prisma {
     connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
   }
 
+  export type AgentRunCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput> | AgentRunCreateWithoutPersonalSpaceInput[] | AgentRunUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutPersonalSpaceInput | AgentRunCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: AgentRunCreateManyPersonalSpaceInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+  }
+
   export type WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput = {
     create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
     connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
@@ -73250,6 +74835,13 @@ export namespace Prisma {
     connectOrCreate?: AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput | AgentWorkspaceSettingCreateOrConnectWithoutPersonalSpaceInput[]
     createMany?: AgentWorkspaceSettingCreateManyPersonalSpaceInputEnvelope
     connect?: AgentWorkspaceSettingWhereUniqueInput | AgentWorkspaceSettingWhereUniqueInput[]
+  }
+
+  export type AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput = {
+    create?: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput> | AgentRunCreateWithoutPersonalSpaceInput[] | AgentRunUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutPersonalSpaceInput | AgentRunCreateOrConnectWithoutPersonalSpaceInput[]
+    createMany?: AgentRunCreateManyPersonalSpaceInputEnvelope
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutPersonalSpaceNestedInput = {
@@ -73350,6 +74942,20 @@ export namespace Prisma {
     deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
   }
 
+  export type AgentRunUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput> | AgentRunCreateWithoutPersonalSpaceInput[] | AgentRunUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutPersonalSpaceInput | AgentRunCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutPersonalSpaceInput | AgentRunUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: AgentRunCreateManyPersonalSpaceInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutPersonalSpaceInput | AgentRunUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutPersonalSpaceInput | AgentRunUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
+  }
+
   export type WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput = {
     create?: XOR<WorkspaceSettingsCreateWithoutPersonalSpaceInput, WorkspaceSettingsUncheckedCreateWithoutPersonalSpaceInput>
     connectOrCreate?: WorkspaceSettingsCreateOrConnectWithoutPersonalSpaceInput
@@ -73438,6 +75044,20 @@ export namespace Prisma {
     update?: AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
     updateMany?: AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput | AgentWorkspaceSettingUpdateManyWithWhereWithoutPersonalSpaceInput[]
     deleteMany?: AgentWorkspaceSettingScalarWhereInput | AgentWorkspaceSettingScalarWhereInput[]
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput = {
+    create?: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput> | AgentRunCreateWithoutPersonalSpaceInput[] | AgentRunUncheckedCreateWithoutPersonalSpaceInput[]
+    connectOrCreate?: AgentRunCreateOrConnectWithoutPersonalSpaceInput | AgentRunCreateOrConnectWithoutPersonalSpaceInput[]
+    upsert?: AgentRunUpsertWithWhereUniqueWithoutPersonalSpaceInput | AgentRunUpsertWithWhereUniqueWithoutPersonalSpaceInput[]
+    createMany?: AgentRunCreateManyPersonalSpaceInputEnvelope
+    set?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    disconnect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    delete?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    connect?: AgentRunWhereUniqueInput | AgentRunWhereUniqueInput[]
+    update?: AgentRunUpdateWithWhereUniqueWithoutPersonalSpaceInput | AgentRunUpdateWithWhereUniqueWithoutPersonalSpaceInput[]
+    updateMany?: AgentRunUpdateManyWithWhereWithoutPersonalSpaceInput | AgentRunUpdateManyWithWhereWithoutPersonalSpaceInput[]
+    deleteMany?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
   }
 
   export type PersonalSpaceCreateNestedOneWithoutCreditBalanceInput = {
@@ -74734,6 +76354,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutUserInput = {
@@ -74748,6 +76369,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutUserInput = {
@@ -74967,6 +76589,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutUserInput = {
@@ -74981,6 +76604,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type AgentFeedbackUpsertWithWhereUniqueWithoutUserInput = {
@@ -75771,6 +77395,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -75783,6 +77408,7 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutCompanyInput = {
     id?: string
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -76499,7 +78125,8 @@ export namespace Prisma {
     OR?: AgentRunScalarWhereInput[]
     NOT?: AgentRunScalarWhereInput | AgentRunScalarWhereInput[]
     id?: StringFilter<"AgentRun"> | string
-    companyId?: StringFilter<"AgentRun"> | string
+    companyId?: StringNullableFilter<"AgentRun"> | string | null
+    personalSpaceId?: StringNullableFilter<"AgentRun"> | string | null
     pipelineRunId?: StringNullableFilter<"AgentRun"> | string | null
     campaignId?: StringNullableFilter<"AgentRun"> | string | null
     agentId?: StringFilter<"AgentRun"> | string
@@ -77741,7 +79368,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -77753,7 +79381,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutContentPiecesInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -78002,7 +79631,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -78014,7 +79644,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutContentPiecesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -78166,7 +79797,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
@@ -78178,7 +79810,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutPipelineRunInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     campaignId?: string | null
     agentId: string
     agentVersion?: string | null
@@ -78458,6 +80091,41 @@ export namespace Prisma {
     create: XOR<CompanyCreateWithoutAgentRunsInput, CompanyUncheckedCreateWithoutAgentRunsInput>
   }
 
+  export type PersonalSpaceCreateWithoutAgentRunsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPersonalSpaceInput
+    settings?: WorkspaceSettingsCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceUncheckedCreateWithoutAgentRunsInput = {
+    id?: string
+    userId: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    settings?: WorkspaceSettingsUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    folders?: WorkspaceFolderUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    files?: WorkspaceFileUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+  }
+
+  export type PersonalSpaceCreateOrConnectWithoutAgentRunsInput = {
+    where: PersonalSpaceWhereUniqueInput
+    create: XOR<PersonalSpaceCreateWithoutAgentRunsInput, PersonalSpaceUncheckedCreateWithoutAgentRunsInput>
+  }
+
   export type PipelineRunCreateWithoutAgentRunsInput = {
     id?: string
     triggeredByUserId: string
@@ -78512,7 +80180,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
@@ -78524,7 +80193,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutChildRunsInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -78571,7 +80241,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
     feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
@@ -78583,7 +80254,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutParentRunInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -78896,6 +80568,47 @@ export namespace Prisma {
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
+  export type PersonalSpaceUpsertWithoutAgentRunsInput = {
+    update: XOR<PersonalSpaceUpdateWithoutAgentRunsInput, PersonalSpaceUncheckedUpdateWithoutAgentRunsInput>
+    create: XOR<PersonalSpaceCreateWithoutAgentRunsInput, PersonalSpaceUncheckedCreateWithoutAgentRunsInput>
+    where?: PersonalSpaceWhereInput
+  }
+
+  export type PersonalSpaceUpdateToOneWithWhereWithoutAgentRunsInput = {
+    where?: PersonalSpaceWhereInput
+    data: XOR<PersonalSpaceUpdateWithoutAgentRunsInput, PersonalSpaceUncheckedUpdateWithoutAgentRunsInput>
+  }
+
+  export type PersonalSpaceUpdateWithoutAgentRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPersonalSpaceNestedInput
+    settings?: WorkspaceSettingsUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
+  export type PersonalSpaceUncheckedUpdateWithoutAgentRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    settings?: WorkspaceSettingsUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    folders?: WorkspaceFolderUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    files?: WorkspaceFileUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+  }
+
   export type PipelineRunUpsertWithoutAgentRunsInput = {
     update: XOR<PipelineRunUpdateWithoutAgentRunsInput, PipelineRunUncheckedUpdateWithoutAgentRunsInput>
     create: XOR<PipelineRunCreateWithoutAgentRunsInput, PipelineRunUncheckedCreateWithoutAgentRunsInput>
@@ -78967,7 +80680,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
@@ -78979,7 +80693,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutChildRunsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -79186,7 +80901,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -79198,7 +80914,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutStepsInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -79294,7 +81011,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -79306,7 +81024,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -79364,7 +81083,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -79376,7 +81096,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutBlocksInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -79434,7 +81155,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -79446,7 +81168,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutBlocksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -79661,7 +81384,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -79673,7 +81397,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutFeedbackInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -79921,7 +81646,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -79933,7 +81659,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutFeedbackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -80417,7 +82144,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutAgentRunsInput
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    personalSpace?: PersonalSpaceCreateNestedOneWithoutAgentRunsInput
     pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
     parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
     childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
@@ -80429,7 +82157,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedCreateWithoutCreditLedgerInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -80605,7 +82334,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -80617,7 +82347,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutCreditLedgerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -80682,6 +82413,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     agentPolicies?: AgentModelPolicyCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -80697,6 +82429,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     agentPolicies?: AgentModelPolicyUncheckedCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsUncheckedCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -80881,6 +82614,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AgentStepModelPolicyCreateWithoutModelInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    isEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type AgentStepModelPolicyUncheckedCreateWithoutModelInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    isEnabled?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type AgentStepModelPolicyCreateOrConnectWithoutModelInput = {
+    where: AgentStepModelPolicyWhereUniqueInput
+    create: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput>
+  }
+
+  export type AgentStepModelPolicyCreateManyModelInputEnvelope = {
+    data: AgentStepModelPolicyCreateManyModelInput | AgentStepModelPolicyCreateManyModelInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RagPlatformSettingsCreateWithoutEmbeddingModelInput = {
     id?: string
     chunkSize?: number
@@ -80966,6 +82725,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"AgentModelPolicy"> | Date | string
   }
 
+  export type AgentStepModelPolicyUpsertWithWhereUniqueWithoutModelInput = {
+    where: AgentStepModelPolicyWhereUniqueInput
+    update: XOR<AgentStepModelPolicyUpdateWithoutModelInput, AgentStepModelPolicyUncheckedUpdateWithoutModelInput>
+    create: XOR<AgentStepModelPolicyCreateWithoutModelInput, AgentStepModelPolicyUncheckedCreateWithoutModelInput>
+  }
+
+  export type AgentStepModelPolicyUpdateWithWhereUniqueWithoutModelInput = {
+    where: AgentStepModelPolicyWhereUniqueInput
+    data: XOR<AgentStepModelPolicyUpdateWithoutModelInput, AgentStepModelPolicyUncheckedUpdateWithoutModelInput>
+  }
+
+  export type AgentStepModelPolicyUpdateManyWithWhereWithoutModelInput = {
+    where: AgentStepModelPolicyScalarWhereInput
+    data: XOR<AgentStepModelPolicyUpdateManyMutationInput, AgentStepModelPolicyUncheckedUpdateManyWithoutModelInput>
+  }
+
+  export type AgentStepModelPolicyScalarWhereInput = {
+    AND?: AgentStepModelPolicyScalarWhereInput | AgentStepModelPolicyScalarWhereInput[]
+    OR?: AgentStepModelPolicyScalarWhereInput[]
+    NOT?: AgentStepModelPolicyScalarWhereInput | AgentStepModelPolicyScalarWhereInput[]
+    id?: StringFilter<"AgentStepModelPolicy"> | string
+    agentId?: StringFilter<"AgentStepModelPolicy"> | string
+    stepKey?: StringFilter<"AgentStepModelPolicy"> | string
+    modelId?: StringFilter<"AgentStepModelPolicy"> | string
+    isEnabled?: BoolFilter<"AgentStepModelPolicy"> | boolean
+    updatedAt?: DateTimeFilter<"AgentStepModelPolicy"> | Date | string
+  }
+
   export type RagPlatformSettingsUpsertWithoutEmbeddingModelInput = {
     update: XOR<RagPlatformSettingsUpdateWithoutEmbeddingModelInput, RagPlatformSettingsUncheckedUpdateWithoutEmbeddingModelInput>
     create: XOR<RagPlatformSettingsCreateWithoutEmbeddingModelInput, RagPlatformSettingsUncheckedCreateWithoutEmbeddingModelInput>
@@ -81009,6 +82796,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     provider: AiProviderCreateNestedOneWithoutModelsInput
+    agentStepPolicies?: AgentStepModelPolicyCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -81024,6 +82812,7 @@ export namespace Prisma {
     capabilities?: AiModelCreatecapabilitiesInput | string[]
     createdAt?: Date | string
     updatedAt?: Date | string
+    agentStepPolicies?: AgentStepModelPolicyUncheckedCreateNestedManyWithoutModelInput
     embeddingSettings?: RagPlatformSettingsUncheckedCreateNestedOneWithoutEmbeddingModelInput
   }
 
@@ -81055,6 +82844,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     provider?: AiProviderUpdateOneRequiredWithoutModelsNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -81070,6 +82860,87 @@ export namespace Prisma {
     capabilities?: AiModelUpdatecapabilitiesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentStepPolicies?: AgentStepModelPolicyUncheckedUpdateManyWithoutModelNestedInput
+    embeddingSettings?: RagPlatformSettingsUncheckedUpdateOneWithoutEmbeddingModelNestedInput
+  }
+
+  export type AiModelCreateWithoutAgentStepPoliciesInput = {
+    id?: string
+    externalId: string
+    name: string
+    isEnabled?: boolean
+    inputCostPer1k: Decimal | DecimalJsLike | number | string
+    outputCostPer1k: Decimal | DecimalJsLike | number | string
+    maxTokens?: number | null
+    capabilities?: AiModelCreatecapabilitiesInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    provider: AiProviderCreateNestedOneWithoutModelsInput
+    agentPolicies?: AgentModelPolicyCreateNestedManyWithoutModelInput
+    embeddingSettings?: RagPlatformSettingsCreateNestedOneWithoutEmbeddingModelInput
+  }
+
+  export type AiModelUncheckedCreateWithoutAgentStepPoliciesInput = {
+    id?: string
+    providerId: string
+    externalId: string
+    name: string
+    isEnabled?: boolean
+    inputCostPer1k: Decimal | DecimalJsLike | number | string
+    outputCostPer1k: Decimal | DecimalJsLike | number | string
+    maxTokens?: number | null
+    capabilities?: AiModelCreatecapabilitiesInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    agentPolicies?: AgentModelPolicyUncheckedCreateNestedManyWithoutModelInput
+    embeddingSettings?: RagPlatformSettingsUncheckedCreateNestedOneWithoutEmbeddingModelInput
+  }
+
+  export type AiModelCreateOrConnectWithoutAgentStepPoliciesInput = {
+    where: AiModelWhereUniqueInput
+    create: XOR<AiModelCreateWithoutAgentStepPoliciesInput, AiModelUncheckedCreateWithoutAgentStepPoliciesInput>
+  }
+
+  export type AiModelUpsertWithoutAgentStepPoliciesInput = {
+    update: XOR<AiModelUpdateWithoutAgentStepPoliciesInput, AiModelUncheckedUpdateWithoutAgentStepPoliciesInput>
+    create: XOR<AiModelCreateWithoutAgentStepPoliciesInput, AiModelUncheckedCreateWithoutAgentStepPoliciesInput>
+    where?: AiModelWhereInput
+  }
+
+  export type AiModelUpdateToOneWithWhereWithoutAgentStepPoliciesInput = {
+    where?: AiModelWhereInput
+    data: XOR<AiModelUpdateWithoutAgentStepPoliciesInput, AiModelUncheckedUpdateWithoutAgentStepPoliciesInput>
+  }
+
+  export type AiModelUpdateWithoutAgentStepPoliciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    inputCostPer1k?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    outputCostPer1k?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    capabilities?: AiModelUpdatecapabilitiesInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    provider?: AiProviderUpdateOneRequiredWithoutModelsNestedInput
+    agentPolicies?: AgentModelPolicyUpdateManyWithoutModelNestedInput
+    embeddingSettings?: RagPlatformSettingsUpdateOneWithoutEmbeddingModelNestedInput
+  }
+
+  export type AiModelUncheckedUpdateWithoutAgentStepPoliciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    inputCostPer1k?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    outputCostPer1k?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    capabilities?: AiModelUpdatecapabilitiesInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    agentPolicies?: AgentModelPolicyUncheckedUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUncheckedUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -81796,6 +83667,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     provider: AiProviderCreateNestedOneWithoutModelsInput
     agentPolicies?: AgentModelPolicyCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyCreateNestedManyWithoutModelInput
   }
 
   export type AiModelUncheckedCreateWithoutEmbeddingSettingsInput = {
@@ -81811,6 +83683,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     agentPolicies?: AgentModelPolicyUncheckedCreateNestedManyWithoutModelInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedCreateNestedManyWithoutModelInput
   }
 
   export type AiModelCreateOrConnectWithoutEmbeddingSettingsInput = {
@@ -81842,6 +83715,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     provider?: AiProviderUpdateOneRequiredWithoutModelsNestedInput
     agentPolicies?: AgentModelPolicyUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUpdateManyWithoutModelNestedInput
   }
 
   export type AiModelUncheckedUpdateWithoutEmbeddingSettingsInput = {
@@ -81857,6 +83731,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agentPolicies?: AgentModelPolicyUncheckedUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedUpdateManyWithoutModelNestedInput
   }
 
   export type UserCreateWithoutPersonalSpaceInput = {
@@ -82118,6 +83993,72 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AgentRunCreateWithoutPersonalSpaceInput = {
+    id?: string
+    campaignId?: string | null
+    agentId: string
+    agentVersion?: string | null
+    status?: $Enums.AgentRunStatus
+    currentStepKey?: string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    pauseReason?: string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    company?: CompanyCreateNestedOneWithoutAgentRunsInput
+    pipelineRun?: PipelineRunCreateNestedOneWithoutAgentRunsInput
+    parentRun?: AgentRunCreateNestedOneWithoutChildRunsInput
+    childRuns?: AgentRunCreateNestedManyWithoutParentRunInput
+    feedback?: AgentFeedbackCreateNestedOneWithoutRegenerationRunInput
+    steps?: AgentRunStepCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockCreateNestedManyWithoutAgentRunInput
+    contentPieces?: ContentPieceCreateNestedManyWithoutAgentRunInput
+    creditLedger?: CreditLedgerCreateNestedManyWithoutAgentRunInput
+  }
+
+  export type AgentRunUncheckedCreateWithoutPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    pipelineRunId?: string | null
+    campaignId?: string | null
+    agentId: string
+    agentVersion?: string | null
+    parentRunId?: string | null
+    feedbackId?: string | null
+    status?: $Enums.AgentRunStatus
+    currentStepKey?: string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    pauseReason?: string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    childRuns?: AgentRunUncheckedCreateNestedManyWithoutParentRunInput
+    steps?: AgentRunStepUncheckedCreateNestedManyWithoutAgentRunInput
+    blocks?: AgentRunBlockUncheckedCreateNestedManyWithoutAgentRunInput
+    contentPieces?: ContentPieceUncheckedCreateNestedManyWithoutAgentRunInput
+    creditLedger?: CreditLedgerUncheckedCreateNestedManyWithoutAgentRunInput
+  }
+
+  export type AgentRunCreateOrConnectWithoutPersonalSpaceInput = {
+    where: AgentRunWhereUniqueInput
+    create: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentRunCreateManyPersonalSpaceInputEnvelope = {
+    data: AgentRunCreateManyPersonalSpaceInput | AgentRunCreateManyPersonalSpaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutPersonalSpaceInput = {
     update: XOR<UserUpdateWithoutPersonalSpaceInput, UserUncheckedUpdateWithoutPersonalSpaceInput>
     create: XOR<UserCreateWithoutPersonalSpaceInput, UserUncheckedCreateWithoutPersonalSpaceInput>
@@ -82313,6 +84254,22 @@ export namespace Prisma {
     data: XOR<AgentWorkspaceSettingUpdateManyMutationInput, AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceInput>
   }
 
+  export type AgentRunUpsertWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: AgentRunWhereUniqueInput
+    update: XOR<AgentRunUpdateWithoutPersonalSpaceInput, AgentRunUncheckedUpdateWithoutPersonalSpaceInput>
+    create: XOR<AgentRunCreateWithoutPersonalSpaceInput, AgentRunUncheckedCreateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentRunUpdateWithWhereUniqueWithoutPersonalSpaceInput = {
+    where: AgentRunWhereUniqueInput
+    data: XOR<AgentRunUpdateWithoutPersonalSpaceInput, AgentRunUncheckedUpdateWithoutPersonalSpaceInput>
+  }
+
+  export type AgentRunUpdateManyWithWhereWithoutPersonalSpaceInput = {
+    where: AgentRunScalarWhereInput
+    data: XOR<AgentRunUpdateManyMutationInput, AgentRunUncheckedUpdateManyWithoutPersonalSpaceInput>
+  }
+
   export type PersonalSpaceCreateWithoutCreditBalanceInput = {
     id?: string
     name: string
@@ -82325,6 +84282,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutCreditBalanceInput = {
@@ -82339,6 +84297,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutCreditBalanceInput = {
@@ -82369,6 +84328,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutCreditBalanceInput = {
@@ -82383,6 +84343,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyCreateWithoutMembersInput = {
@@ -82665,6 +84626,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutSettingsInput = {
@@ -82679,6 +84641,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutSettingsInput = {
@@ -82770,6 +84733,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutSettingsInput = {
@@ -82784,6 +84748,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutWorkspaceSettingsInput = {
@@ -82948,6 +84913,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutEntitlementsInput = {
@@ -82962,6 +84928,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutEntitlementsInput = {
@@ -83100,6 +85067,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutEntitlementsInput = {
@@ -83114,6 +85082,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutEntitlementsInput = {
@@ -83195,6 +85164,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutAgentWorkspaceSettingsInput = {
@@ -83209,6 +85179,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutAgentWorkspaceSettingsInput = {
@@ -83300,6 +85271,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutAgentWorkspaceSettingsInput = {
@@ -83314,6 +85286,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutAgentWorkspaceSettingsInput = {
@@ -83395,6 +85368,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutFoldersInput = {
@@ -83409,6 +85383,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutFoldersInput = {
@@ -83609,6 +85584,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutFoldersInput = {
@@ -83623,6 +85599,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutWorkspaceFoldersInput = {
@@ -83773,6 +85750,7 @@ export namespace Prisma {
     projects?: ProjectCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutFilesInput = {
@@ -83787,6 +85765,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutFilesInput = {
@@ -83909,6 +85888,7 @@ export namespace Prisma {
     projects?: ProjectUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutFilesInput = {
@@ -83923,6 +85903,7 @@ export namespace Prisma {
     projects?: ProjectUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutWorkspaceFilesInput = {
@@ -84041,6 +86022,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceUncheckedCreateWithoutProjectsInput = {
@@ -84055,6 +86037,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedCreateNestedManyWithoutPersonalSpaceInput
     creditBalance?: PersonalCreditBalanceUncheckedCreateNestedOneWithoutPersonalSpaceInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedCreateNestedManyWithoutPersonalSpaceInput
+    agentRuns?: AgentRunUncheckedCreateNestedManyWithoutPersonalSpaceInput
   }
 
   export type PersonalSpaceCreateOrConnectWithoutProjectsInput = {
@@ -84146,6 +86129,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type PersonalSpaceUncheckedUpdateWithoutProjectsInput = {
@@ -84160,6 +86144,7 @@ export namespace Prisma {
     entitlements?: WorkspaceEntitlementUncheckedUpdateManyWithoutPersonalSpaceNestedInput
     creditBalance?: PersonalCreditBalanceUncheckedUpdateOneWithoutPersonalSpaceNestedInput
     agentWorkspaceSettings?: AgentWorkspaceSettingUncheckedUpdateManyWithoutPersonalSpaceNestedInput
+    agentRuns?: AgentRunUncheckedUpdateManyWithoutPersonalSpaceNestedInput
   }
 
   export type CompanyUpsertWithoutProjectsInput = {
@@ -84645,6 +86630,7 @@ export namespace Prisma {
 
   export type AgentRunCreateManyCompanyInput = {
     id?: string
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -84988,6 +86974,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
@@ -85000,6 +86987,7 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -85027,6 +87015,7 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -85739,7 +87728,8 @@ export namespace Prisma {
 
   export type AgentRunCreateManyPipelineRunInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     campaignId?: string | null
     agentId: string
     agentVersion?: string | null
@@ -85793,7 +87783,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
@@ -85805,7 +87796,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutPipelineRunInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85832,7 +87824,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateManyWithoutPipelineRunInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
     agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85907,7 +87900,8 @@ export namespace Prisma {
 
   export type AgentRunCreateManyParentRunInput = {
     id?: string
-    companyId: string
+    companyId?: string | null
+    personalSpaceId?: string | null
     pipelineRunId?: string | null
     campaignId?: string | null
     agentId: string
@@ -86009,7 +88003,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    company?: CompanyUpdateOneRequiredWithoutAgentRunsNestedInput
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    personalSpace?: PersonalSpaceUpdateOneWithoutAgentRunsNestedInput
     pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
     childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
     feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
@@ -86021,7 +88016,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateWithoutParentRunInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -86048,7 +88044,8 @@ export namespace Prisma {
 
   export type AgentRunUncheckedUpdateManyWithoutParentRunInput = {
     id?: StringFieldUpdateOperationsInput | string
-    companyId?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    personalSpaceId?: NullableStringFieldUpdateOperationsInput | string | null
     pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
     campaignId?: NullableStringFieldUpdateOperationsInput | string | null
     agentId?: StringFieldUpdateOperationsInput | string
@@ -86428,6 +88425,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agentPolicies?: AgentModelPolicyUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -86443,6 +88441,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     agentPolicies?: AgentModelPolicyUncheckedUpdateManyWithoutModelNestedInput
+    agentStepPolicies?: AgentStepModelPolicyUncheckedUpdateManyWithoutModelNestedInput
     embeddingSettings?: RagPlatformSettingsUncheckedUpdateOneWithoutEmbeddingModelNestedInput
   }
 
@@ -86465,6 +88464,14 @@ export namespace Prisma {
     markupMultiplier?: Decimal | DecimalJsLike | number | string
     isEnabled?: boolean
     minCostPerRun?: Decimal | DecimalJsLike | number | string | null
+    updatedAt?: Date | string
+  }
+
+  export type AgentStepModelPolicyCreateManyModelInput = {
+    id?: string
+    agentId: string
+    stepKey: string
+    isEnabled?: boolean
     updatedAt?: Date | string
   }
 
@@ -86492,6 +88499,30 @@ export namespace Prisma {
     markupMultiplier?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isEnabled?: BoolFieldUpdateOperationsInput | boolean
     minCostPerRun?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyUpdateWithoutModelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyUncheckedUpdateWithoutModelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentStepModelPolicyUncheckedUpdateManyWithoutModelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    stepKey?: StringFieldUpdateOperationsInput | string
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86645,6 +88676,29 @@ export namespace Prisma {
     config?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AgentRunCreateManyPersonalSpaceInput = {
+    id?: string
+    companyId?: string | null
+    pipelineRunId?: string | null
+    campaignId?: string | null
+    agentId: string
+    agentVersion?: string | null
+    parentRunId?: string | null
+    feedbackId?: string | null
+    status?: $Enums.AgentRunStatus
+    currentStepKey?: string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: string | null
+    pauseReason?: string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
   }
 
   export type WorkspaceFolderUpdateWithoutPersonalSpaceInput = {
@@ -86811,6 +88865,85 @@ export namespace Prisma {
     config?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AgentRunUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
+    currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseReason?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    company?: CompanyUpdateOneWithoutAgentRunsNestedInput
+    pipelineRun?: PipelineRunUpdateOneWithoutAgentRunsNestedInput
+    parentRun?: AgentRunUpdateOneWithoutChildRunsNestedInput
+    childRuns?: AgentRunUpdateManyWithoutParentRunNestedInput
+    feedback?: AgentFeedbackUpdateOneWithoutRegenerationRunNestedInput
+    steps?: AgentRunStepUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUpdateManyWithoutAgentRunNestedInput
+    contentPieces?: ContentPieceUpdateManyWithoutAgentRunNestedInput
+    creditLedger?: CreditLedgerUpdateManyWithoutAgentRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
+    currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseReason?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childRuns?: AgentRunUncheckedUpdateManyWithoutParentRunNestedInput
+    steps?: AgentRunStepUncheckedUpdateManyWithoutAgentRunNestedInput
+    blocks?: AgentRunBlockUncheckedUpdateManyWithoutAgentRunNestedInput
+    contentPieces?: ContentPieceUncheckedUpdateManyWithoutAgentRunNestedInput
+    creditLedger?: CreditLedgerUncheckedUpdateManyWithoutAgentRunNestedInput
+  }
+
+  export type AgentRunUncheckedUpdateManyWithoutPersonalSpaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    agentId?: StringFieldUpdateOperationsInput | string
+    agentVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    parentRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAgentRunStatusFieldUpdateOperationsInput | $Enums.AgentRunStatus
+    currentStepKey?: NullableStringFieldUpdateOperationsInput | string | null
+    inputPayload?: JsonNullValueInput | InputJsonValue
+    outputPayload?: JsonNullValueInput | InputJsonValue
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseReason?: NullableStringFieldUpdateOperationsInput | string | null
+    pauseFormSchema?: NullableJsonNullValueInput | InputJsonValue
+    creditCost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type WorkspaceEntitlementCreateManyItemInput = {

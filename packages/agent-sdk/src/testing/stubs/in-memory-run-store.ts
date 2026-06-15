@@ -111,6 +111,9 @@ export const createInMemoryRunStore = (params: {
     pauseRun: async (p: PauseRunParams) => {
       run.status = 'PAUSED';
       run.creditCost = p.creditCost;
+      if (p.outputPayload) {
+        run.outputPayload = p.outputPayload;
+      }
     },
 
     failRun: async (p: FailRunParams) => {

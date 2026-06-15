@@ -569,11 +569,12 @@
     "runPreview": "{count} prioritized cuts",
     "score": "Score {value}",
     "modal": {
-      "title": "New cuts run",
+      "title": "Generate cuts",
+      "processingTitle": "Processing video",
       "startingTitle": "Generating cuts",
       "browseFiles": "Choose from Files",
       "selectedFile": "Source: {name}",
-      "generating": "Transcribing and ranking cuts...",
+      "generating": "Transcribing and generating cuts...",
       "starting": "Starting...",
       "start": "Generate cuts",
       "submitting": "Saving review...",
@@ -582,9 +583,11 @@
       "goToResults": "View results",
       "fileSelected": "File selected: {name}",
       "uploading": "Uploading file...",
+      "uploadProgress": "{progress}% uploaded",
+      "doNotCloseHint": "Do not close or refresh this page until finished.",
       "uploadFailed": "Failed to upload file",
       "fileTooLarge": "File exceeds the 5 GB limit",
-      "uploadOnGenerateHint": "The file is uploaded only when you click Generate cuts.",
+      "uploadOnGenerateHint": "Upload a video or pick one from your library.",
       "filePickerTitle": "Select video",
       "filePickerDescription": "Choose a video from your library. Only available files can be used.",
       "errorGeneric": "Could not complete the run.",
@@ -594,10 +597,18 @@
         "generate": "Generate",
         "review": "Review",
         "done": "Done"
-      }
+      },
+      "close": "Close",
+      "submitReviewPending": "Review ({decided}/{total})",
+      "viewRunTitle": "{count} cuts from this run"
     },
     "review": {
-      "retentionLabel": "Estimated retention",
+      "cutsListLabel": "Generated cuts",
+      "previewLabel": "Preview",
+      "loadingPreview": "Loading video...",
+      "selectCutHint": "Select a cut to preview",
+      "selectCutAria": "Cut {number}: {title}",
+      "viralScore": "{score}% potential",
       "approve": "Accept",
       "reject": "Reject"
     },
@@ -621,14 +632,21 @@
     },
     "results": {
       "title": "Results",
-      "description": "Generated and reviewed cuts.",
-      "latestTitle": "Latest run",
-      "latestDescription": "Cuts from the most recent run.",
-      "loading": "Loading results...",
-      "empty": "No completed cuts yet.",
-      "historyTitle": "Previous runs",
-      "historyDescription": "History of completed generations.",
-      "runSummary": "{approved} approved of {total} cuts"
+      "description": "Completed runs from the Cut Generator.",
+      "count": "{count, plural, one {# run} other {# runs}}",
+      "loading": "Loading runs...",
+      "empty": "No completed runs yet.",
+      "emptyHint": "Generate cuts from a video to see results here.",
+      "viewCuts": "View cuts",
+      "actionsMenu": "Actions for {name}",
+      "columns": {
+        "source": "Source",
+        "status": "Status",
+        "cuts": "Cuts",
+        "approved": "Approved",
+        "date": "Date",
+        "credits": "Credits"
+      }
     }
   },
   "research": {
@@ -1371,18 +1389,15 @@
       "approveError": "Could not approve the plan"
     },
     "surface": {
-      "subtitle": "Describe what you need and review the result here",
-      "promptLabel": "Your request",
-      "startSuccess": "Generation started",
-      "startError": "Could not start generation",
-      "resumeSuccess": "Resuming generation",
-      "resumeError": "Could not resume",
-      "cancelSuccess": "Generation cancelled",
-      "cancelError": "Could not cancel",
-      "cancelRun": "Cancel",
-      "runNotFound": "Run not found",
-      "newRun": "New run",
-      "viewHistory": "View history"
+      "notFound": "Agent not found",
+      "goMarketplace": "Go to Marketplace",
+      "entitlementRequired": "Redeem this agent in the Marketplace to use it.",
+      "redeemAgent": "Redeem agent",
+      "briefLabel": "Brief",
+      "briefPlaceholder": "Describe what you need...",
+      "run": "Run",
+      "running": "Running...",
+      "mockOutput": "{agent}: simulated output for \"{brief}\""
     },
     "output": {
       "failedTitle": "Generation failed",
@@ -1494,17 +1509,6 @@
         "status": "Status",
         "date": "Date"
       }
-    },
-    "surface": {
-      "notFound": "Agent not found",
-      "goMarketplace": "Go to Marketplace",
-      "entitlementRequired": "Redeem this agent in the Marketplace to use it.",
-      "redeemAgent": "Redeem agent",
-      "briefLabel": "Brief",
-      "briefPlaceholder": "Describe what you need...",
-      "run": "Run",
-      "running": "Running...",
-      "mockOutput": "{agent}: simulated output for \"{brief}\""
     }
   },
   "platformAdmin": {
@@ -1655,6 +1659,11 @@
       "dialogDescriptionFallback": "Adjust model, costs, and availability for this agent.",
       "estimatedCost": "Estimated cost per run: US$ {amount}",
       "stepsTitle": "Workflow steps",
+      "stepModelsTitle": "Model per step",
+      "stepModelsDescription": "Optional override per step. When unset, the agent default model is used.",
+      "stepModelPlaceholder": "Select a model for this step",
+      "stepModelDefaultOption": "Use agent default model",
+      "agentDefaultModelHint": "Default model when a step has no override.",
       "modelLabel": "AI model",
       "modelPlaceholder": "Select a model",
       "modelSearchPlaceholder": "Search by model or provider...",

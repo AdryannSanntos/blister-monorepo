@@ -131,6 +131,8 @@ export interface AgentContextConfig {
   includeBrandBrain?: boolean;
   includeAgentLearning?: boolean;
   includeCampaignContext?: boolean;
+  /** When false, skip vector retrieval even if userInput is present (e.g. filename-only inputs). */
+  useUserInputAsRetrievalQuery?: boolean;
 }
 
 export interface BuiltAgentDefinition {

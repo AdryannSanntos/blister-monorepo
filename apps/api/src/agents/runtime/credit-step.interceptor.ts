@@ -26,6 +26,22 @@ export class CreditStepInterceptor {
     }
   }
 
+  async checkPersonalBalance(personalSpaceId: string, estimatedCost: number): Promise<void> {
+    const settings = await this.prisma.platformCreditSettings.findUnique({
+      where: { id: 'default' },
+    });
+
+    const minCost = settings?.minRunCost ? Number(settings.minRunCost) : 0.01;
+    const requiredBalance = Math.max(estimatedCost, minCost);
+
+    const balance = await this.creditService.getPersonalBalance(personalSpaceId);
+    if (Number(balance.amount) < requiredBalance) {
+      throw new UnprocessableEntityException(
+        'Saldo de créditos insuficiente para executar este agente',
+      );
+    }
+  }
+
   async debitStep(
     companyId: string,
     agentRunId: string,

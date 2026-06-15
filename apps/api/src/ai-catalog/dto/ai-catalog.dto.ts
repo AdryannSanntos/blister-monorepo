@@ -35,6 +35,20 @@ export const updateAgentPolicySchema = z.object({
   minCostPerRun: z.number().positive().nullable().optional(),
 });
 
+export const updateAgentStepPolicySchema = z.object({
+  modelId: z.string().nullable().optional(),
+  isEnabled: z.boolean().optional(),
+});
+
+export const updateAgentStepPoliciesBatchSchema = z.object({
+  steps: z.array(
+    z.object({
+      stepKey: z.string().min(1),
+      modelId: z.string().nullable(),
+    }),
+  ),
+});
+
 export const updatePipelineSchema = z.object({
   agents: z.array(
     z.object({

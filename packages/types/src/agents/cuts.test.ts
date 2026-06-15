@@ -67,6 +67,21 @@ describe('cutOutputSchema', () => {
     assert.equal(parsed.reviewStatus, 'pending');
   });
 
+  it('accepts optional cutFileId for rendered clips', () => {
+    const parsed = cutOutputSchema.parse({
+      id: 'cut-1',
+      title: 'Hook',
+      description: 'Strong opening',
+      startSec: 10,
+      endSec: 70,
+      durationSec: 60,
+      viralScore: 92,
+      reviewStatus: 'pending',
+      cutFileId: 'file-cut-1',
+    });
+    assert.equal(parsed.cutFileId, 'file-cut-1');
+  });
+
   it('rejects viralScore above 100', () => {
     const result = cutOutputSchema.safeParse({
       id: 'cut-1',

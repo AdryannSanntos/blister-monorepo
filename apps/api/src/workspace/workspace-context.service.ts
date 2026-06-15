@@ -11,6 +11,7 @@ import {
   ACTIVE_COMPANY_COOKIE,
   getActiveCompanyIdFromRequest,
 } from '../company/company-context.util';
+import { ensureWorkspaceAgentFolders } from '../files/workspace-folders.util';
 
 export type WorkspaceScope =
   | { type: 'personal'; personalSpaceId: string }
@@ -78,22 +79,9 @@ export class WorkspaceContextService {
         },
       });
 
-      const systemFolders = [
-        { name: 'Uploads', systemKey: 'uploads' },
-        { name: 'Gerados', systemKey: 'generated' },
-        { name: 'Integrações', systemKey: 'integrations' },
-      ];
-
-      for (const folder of systemFolders) {
-        await tx.workspaceFolder.create({
-          data: {
-            personalSpaceId: personalSpace.id,
-            name: folder.name,
-            kind: 'SYSTEM',
-            systemKey: folder.systemKey,
-          },
-        });
-      }
+      await ensureWorkspaceAgentFolders(tx, {
+        personalSpaceId: personalSpace.id,
+      });
 
       return personalSpace;
     });
@@ -150,28 +138,8 @@ export class WorkspaceContextService {
     };
   }
 
-  async ensureCompanySystemFolders(companyId: string) {
-    const existing = await this.prisma.workspaceFolder.findFirst({
-      where: { companyId, kind: 'SYSTEM' },
-    });
-    if (existing) return;
-
-    const systemFolders = [
-      { name: 'Uploads', systemKey: 'uploads' },
-      { name: 'Gerados', systemKey: 'generated' },
-      { name: 'Integrações', systemKey: 'integrations' },
-    ];
-
-    for (const folder of systemFolders) {
-      await this.prisma.workspaceFolder.create({
-        data: {
-          companyId,
-          name: folder.name,
-          kind: 'SYSTEM',
-          systemKey: folder.systemKey,
-        },
-      });
-    }
+  async ensureCompanyAgentFolders(companyId: string) {
+    await ensureWorkspaceAgentFolders(this.prisma, { companyId });
   }
 
   async ensureCompanyWorkspaceSettings(companyId: string, displayName?: string) {

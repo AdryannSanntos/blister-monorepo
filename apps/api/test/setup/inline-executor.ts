@@ -221,7 +221,7 @@ export async function executeRunInline(
       },
     });
 
-    if (stepCreditCost > 0) {
+    if (stepCreditCost > 0 && run.companyId) {
       const creditBalance = await prisma.creditBalance.findUnique({
         where: { companyId: run.companyId },
       });

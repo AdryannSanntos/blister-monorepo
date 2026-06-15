@@ -383,7 +383,8 @@ model PipelineRun {
 
 model AgentRun {
   id              String         @id @default(cuid())
-  companyId       String
+  companyId       String?
+  personalSpaceId String?
   pipelineRunId   String?
   campaignId      String?
   agentId         String
@@ -403,7 +404,8 @@ model AgentRun {
   startedAt       DateTime?
   completedAt     DateTime?
 
-  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
   pipelineRun   PipelineRun?   @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)
   parentRun     AgentRun?      @relation("AgentRunRegeneration", fields: [parentRunId], references: [id], onDelete: SetNull)
   childRuns     AgentRun[]     @relation("AgentRunRegeneration")
@@ -414,6 +416,7 @@ model AgentRun {
   creditLedger  CreditLedger[]
 
   @@index([companyId])
+  @@index([personalSpaceId])
   @@index([pipelineRunId])
   @@index([agentId])
   @@index([status])
@@ -628,9 +631,10 @@ model AiModel {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  provider          AiProvider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  agentPolicies     AgentModelPolicy[]
-  embeddingSettings RagPlatformSettings?
+  provider            AiProvider               @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  agentPolicies       AgentModelPolicy[]
+  agentStepPolicies   AgentStepModelPolicy[]
+  embeddingSettings   RagPlatformSettings?
 
   @@unique([providerId, externalId])
   @@index([providerId])
@@ -646,6 +650,20 @@ model AgentModelPolicy {
   updatedAt        DateTime @updatedAt
 
   model AiModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+}
+
+model AgentStepModelPolicy {
+  id        String   @id @default(cuid())
+  agentId   String
+  stepKey   String
+  modelId   String
+  isEnabled Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  model AiModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+
+  @@unique([agentId, stepKey])
+  @@index([agentId])
 }
 
 model PipelineAgentConfig {
@@ -789,6 +807,7 @@ model PersonalSpace {
   projects     Project[]
   creditBalance PersonalCreditBalance?
   agentWorkspaceSettings AgentWorkspaceSetting[]
+  agentRuns    AgentRun[]
 
   @@index([userId])
 }

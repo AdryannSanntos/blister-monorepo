@@ -62,11 +62,12 @@ export const createRunPausedEvent = (
   pauseReason: string,
   pauseFormSchema?: Record<string, unknown>,
   inputPayload?: Record<string, unknown>,
+  outputPayload?: Record<string, unknown>,
 ): RunEventPayload => ({
   runId,
   agentId,
   companyId,
   type: 'run_paused',
-  data: { pauseReason, pauseFormSchema, inputPayload },
+  data: { pauseReason, pauseFormSchema, inputPayload, outputPayload },
   timestamp: new Date(),
 });

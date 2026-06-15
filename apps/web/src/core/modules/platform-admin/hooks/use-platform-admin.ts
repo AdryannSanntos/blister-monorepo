@@ -27,7 +27,38 @@ function invalidatePlatformAdmins(
   return queryClient.invalidateQueries({ queryKey: ["platform-admins"] });
 }
 
+function invalidateMyPlatformRoles(
+  queryClient: ReturnType<typeof useQueryClient>,
+  userId?: string,
+) {
+  return queryClient.invalidateQueries({
+    queryKey: ["platform-me-roles", userId],
+  });
+}
+
+/** Current user's platform roles — safe for any authenticated user. */
+export function useMyPlatformRoles() {
+  const { data: session } = authClient.useSession();
+  const userId = session?.user?.id;
+
+  return useQuery<PlatformAdminAssignment[]>({
+    queryKey: ["platform-me-roles", userId],
+    queryFn: async () => {
+      const { data } =
+        await apiClient.get<PlatformAdminAssignment[]>("/platform/me/roles");
+      return data;
+    },
+    enabled: Boolean(userId),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function usePlatformAdmins() {
+  const myRoles = useMyPlatformRoles();
+  const roles = (myRoles.data ?? []).map((assignment) => assignment.role);
+  const canListAdmins =
+    roles.includes("platform_owner") || roles.includes("platform_admin");
+
   return useQuery<PlatformAdminAssignment[]>({
     queryKey: ["platform-admins"],
     queryFn: async () => {
@@ -35,18 +66,17 @@ export function usePlatformAdmins() {
         await apiClient.get<PlatformAdminAssignment[]>("/platform/admins");
       return data;
     },
+    enabled: canListAdmins && !myRoles.isLoading,
   });
 }
 
 export function usePlatformRoleAccess() {
-  const { data: session } = authClient.useSession();
-  const admins = usePlatformAdmins();
-  const roles = (admins.data ?? [])
-    .filter((assignment) => assignment.userId === session?.user?.id)
-    .map((assignment) => assignment.role);
+  const myRoles = useMyPlatformRoles();
+  const roles = (myRoles.data ?? []).map((assignment) => assignment.role);
 
   return {
-    ...admins,
+    isLoading: myRoles.isLoading,
+    isError: myRoles.isError,
     roles,
     canAccessPlatformAdmin:
       roles.includes("platform_owner") || roles.includes("platform_admin"),
@@ -78,6 +108,7 @@ export function usePlatformQueryEnabled(): boolean {
 export function useAssignPlatformRole() {
   const queryClient = useQueryClient();
   const t = useTranslations("platformAdmin.toasts");
+  const { data: session } = authClient.useSession();
 
   return useMutation({
     mutationFn: async (payload: { userId: string; role: PlatformRole }) => {
@@ -88,7 +119,10 @@ export function useAssignPlatformRole() {
       return data;
     },
     onSuccess: async () => {
-      await invalidatePlatformAdmins(queryClient);
+      await Promise.all([
+        invalidatePlatformAdmins(queryClient),
+        invalidateMyPlatformRoles(queryClient, session?.user?.id),
+      ]);
       toast.success(t("grantSuccess"));
     },
     onError: () => {
@@ -100,13 +134,17 @@ export function useAssignPlatformRole() {
 export function useRemovePlatformRole() {
   const queryClient = useQueryClient();
   const t = useTranslations("platformAdmin.toasts");
+  const { data: session } = authClient.useSession();
 
   return useMutation({
     mutationFn: async (assignmentId: string) => {
       await apiClient.delete(`/platform/admins/${assignmentId}`);
     },
     onSuccess: async () => {
-      await invalidatePlatformAdmins(queryClient);
+      await Promise.all([
+        invalidatePlatformAdmins(queryClient),
+        invalidateMyPlatformRoles(queryClient, session?.user?.id),
+      ]);
       toast.success(t("removeSuccess"));
     },
     onError: () => {

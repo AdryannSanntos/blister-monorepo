@@ -35,7 +35,8 @@ export const useFilesExplorer = (folderId: string) => {
 
   const breadcrumb = useMemo(() => {
     if (folderId === rootFolder.id) return [rootFolder];
-    return (breadcrumbQuery.data ?? []).map(mapWorkspaceFolder);
+    const trail = (breadcrumbQuery.data ?? []).map(mapWorkspaceFolder);
+    return [rootFolder, ...trail];
   }, [breadcrumbQuery.data, folderId, rootFolder]);
 
   const childFolders = useMemo(

@@ -53,6 +53,7 @@ export interface PauseRunParams {
   pauseReason?: string;
   pauseFormSchema?: Record<string, unknown>;
   creditCost: number;
+  outputPayload?: Record<string, unknown>;
 }
 
 export interface FailRunParams {

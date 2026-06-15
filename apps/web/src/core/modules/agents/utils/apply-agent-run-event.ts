@@ -46,6 +46,11 @@ export function applyAgentRunEvent(
           ? (data.inputPayload as Record<string, unknown>)
           : run.inputPayload;
 
+      const outputPayload =
+        typeof data.outputPayload === "object" && data.outputPayload !== null
+          ? (data.outputPayload as Record<string, unknown>)
+          : run.outputPayload;
+
       return {
         ...current,
         run: {
@@ -54,6 +59,7 @@ export function applyAgentRunEvent(
           pauseReason,
           pauseFormSchema: data.formSchema ?? data.pauseFormSchema ?? run.pauseFormSchema,
           inputPayload,
+          outputPayload,
         },
       };
     }

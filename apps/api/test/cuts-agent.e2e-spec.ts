@@ -60,17 +60,17 @@ describe('Cuts Agent E2E', () => {
 
     session = await loginAsDemoBusiness(app, seedResult.user.email, seedResult.user.password);
 
-    let uploadsFolder = await prisma.workspaceFolder.findFirst({
-      where: { companyId: seedResult.company.id, systemKey: 'uploads' },
+    let cutsFolder = await prisma.workspaceFolder.findFirst({
+      where: { companyId: seedResult.company.id, systemKey: 'agent:cuts' },
     });
 
-    if (!uploadsFolder) {
-      uploadsFolder = await prisma.workspaceFolder.create({
+    if (!cutsFolder) {
+      cutsFolder = await prisma.workspaceFolder.create({
         data: {
           companyId: seedResult.company.id,
-          name: 'Uploads',
+          name: 'Cortes',
           kind: 'SYSTEM',
-          systemKey: 'uploads',
+          systemKey: 'agent:cuts',
         },
       });
     }
@@ -78,7 +78,7 @@ describe('Cuts Agent E2E', () => {
     const file = await prisma.workspaceFile.create({
       data: {
         companyId: seedResult.company.id,
-        folderId: uploadsFolder.id,
+        folderId: cutsFolder.id,
         name: 'test-podcast.mp4',
         mimeType: 'video/mp4',
         storageKey: `${seedResult.company.slug}/uploads/test-podcast.mp4`,
@@ -123,9 +123,12 @@ describe('Cuts Agent E2E', () => {
     const runId = startResponse.body.runId as string;
     const run = await waitForRunStatus(prisma, runId, ['COMPLETED']);
 
-    const cuts = (run.outputPayload as { cuts?: unknown[] }).cuts;
+    const cuts = (run.outputPayload as { cuts?: Array<{ cutFileId?: string }> }).cuts;
     expect(Array.isArray(cuts)).toBe(true);
     expect(cuts?.length).toBeGreaterThan(0);
+    for (const cut of cuts ?? []) {
+      expect(cut.cutFileId).toBeDefined();
+    }
   });
 
   it('should pause for review when autoAcceptResults is false', async () => {

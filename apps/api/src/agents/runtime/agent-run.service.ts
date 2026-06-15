@@ -1,17 +1,27 @@
-import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { AgentRegistryService } from './agent-registry.service';
-import { AgentRunBlockService } from './agent-run-block.service';
 import type {
   AgentRunBlockDto,
   AgentRunStatus,
   AgentRunStatusDto,
   AgentRunStepDto,
 } from '@company-os/types';
-import type { AgentRunStatus as PrismaAgentRunStatus, Prisma } from '../../generated/prisma';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import type { Prisma, AgentRunStatus as PrismaAgentRunStatus } from '../../generated/prisma';
+import { PrismaService } from '../../prisma/prisma.service';
+import type { ResolvedWorkspace } from '../../workspace/workspace-context.service';
+import { AgentRegistryService } from './agent-registry.service';
+import { AgentRunBlockService } from './agent-run-block.service';
+
+/** Workspace scope of an agent run — either a company or a personal space. */
+export type RunWorkspaceScope = { companyId: string } | { personalSpaceId: string };
+
+/** Builds a RunWorkspaceScope from a resolved workspace. */
+export const toRunScope = (workspace: ResolvedWorkspace): RunWorkspaceScope =>
+  workspace.type === 'personal'
+    ? { personalSpaceId: workspace.personalSpaceId }
+    : { companyId: workspace.companyId };
 
 export interface ListRunsOptions {
-  companyId: string;
+  scope: RunWorkspaceScope;
   agentId?: string;
   campaignId?: string;
   status?: AgentRunStatus;
@@ -46,9 +56,12 @@ export class AgentRunService {
     return this.mapRunToDto(run);
   }
 
-  async findByIdForCompany(runId: string, companyId: string): Promise<AgentRunStatusDto | null> {
+  async findByIdForWorkspace(
+    runId: string,
+    scope: RunWorkspaceScope,
+  ): Promise<AgentRunStatusDto | null> {
     const run = await this.prisma.agentRun.findFirst({
-      where: { id: runId, companyId },
+      where: { id: runId, ...scope },
     });
 
     if (!run) return null;
@@ -56,18 +69,16 @@ export class AgentRunService {
     return this.mapRunToDto(run);
   }
 
-  async findByIdOrThrow(runId: string, companyId?: string): Promise<AgentRunStatusDto> {
-    const run = companyId
-      ? await this.findByIdForCompany(runId, companyId)
-      : await this.findById(runId);
+  async findByIdOrThrow(runId: string, scope?: RunWorkspaceScope): Promise<AgentRunStatusDto> {
+    const run = scope ? await this.findByIdForWorkspace(runId, scope) : await this.findById(runId);
     if (!run) throw new NotFoundException('Agent run not found');
     return run;
   }
 
-  async findWithSteps(runId: string, companyId?: string): Promise<RunWithSteps> {
-    const run = companyId
+  async findWithSteps(runId: string, scope?: RunWorkspaceScope): Promise<RunWithSteps> {
+    const run = scope
       ? await this.prisma.agentRun.findFirst({
-          where: { id: runId, companyId },
+          where: { id: runId, ...scope },
           include: {
             steps: { orderBy: { stepIndex: 'asc' } },
           },
@@ -92,7 +103,7 @@ export class AgentRunService {
 
   async list(options: ListRunsOptions): Promise<{ runs: AgentRunStatusDto[]; total: number }> {
     const where: Prisma.AgentRunWhereInput = {
-      companyId: options.companyId,
+      ...options.scope,
     };
 
     if (options.agentId) where.agentId = options.agentId;
@@ -121,12 +132,12 @@ export class AgentRunService {
   }
 
   async listByAgent(
-    companyId: string,
+    scope: RunWorkspaceScope,
     agentId: string,
     options?: { limit?: number; offset?: number; reviewStatus?: 'pending' },
   ): Promise<{ runs: AgentRunStatusDto[]; total: number }> {
     return this.list({
-      companyId,
+      scope,
       agentId,
       limit: options?.limit,
       offset: options?.offset,
@@ -140,29 +151,35 @@ export class AgentRunService {
     options?: { limit?: number; offset?: number },
   ): Promise<{ runs: AgentRunStatusDto[]; total: number }> {
     return this.list({
-      companyId,
+      scope: { companyId },
       campaignId,
       limit: options?.limit,
       offset: options?.offset,
     });
   }
 
-  async assertRunBelongsToCompany(runId: string, companyId: string): Promise<AgentRunStatusDto> {
-    const run = await this.findByIdForCompany(runId, companyId);
+  async assertRunBelongsToWorkspace(
+    runId: string,
+    scope: RunWorkspaceScope,
+  ): Promise<AgentRunStatusDto> {
+    const run = await this.findByIdForWorkspace(runId, scope);
     if (!run) {
-      throw new ForbiddenException('Agent run not found for this company');
+      throw new ForbiddenException('Agent run not found for this workspace');
     }
     return run;
   }
 
-  async getRunStats(companyId: string, agentId?: string): Promise<{
+  async getRunStats(
+    scope: RunWorkspaceScope,
+    agentId?: string,
+  ): Promise<{
     totalRuns: number;
     completed: number;
     failed: number;
     running: number;
     avgCreditCost: number;
   }> {
-    const where: Prisma.AgentRunWhereInput = { companyId };
+    const where: Prisma.AgentRunWhereInput = { ...scope };
     if (agentId) where.agentId = agentId;
 
     const [stats, avgCost] = await Promise.all([
@@ -184,9 +201,9 @@ export class AgentRunService {
 
     return {
       totalRuns: Object.values(statusCounts).reduce((a, b) => a + b, 0),
-      completed: statusCounts['COMPLETED'] ?? 0,
-      failed: statusCounts['FAILED'] ?? 0,
-      running: (statusCounts['QUEUED'] ?? 0) + (statusCounts['RUNNING'] ?? 0),
+      completed: statusCounts.COMPLETED ?? 0,
+      failed: statusCounts.FAILED ?? 0,
+      running: (statusCounts.QUEUED ?? 0) + (statusCounts.RUNNING ?? 0),
       avgCreditCost: Number(avgCost._avg.creditCost ?? 0),
     };
   }
@@ -194,7 +211,8 @@ export class AgentRunService {
   private mapRunToDto(run: {
     id: string;
     agentId: string;
-    companyId: string;
+    companyId: string | null;
+    personalSpaceId?: string | null;
     campaignId: string | null;
     status: string;
     currentStepKey: string | null;
@@ -208,14 +226,13 @@ export class AgentRunService {
     startedAt: Date | null;
     completedAt: Date | null;
   }): AgentRunStatusDto {
-    const rawReviewStatus =
-      (run.outputPayload as { reviewStatus?: string })?.reviewStatus ?? null;
+    const rawReviewStatus = (run.outputPayload as { reviewStatus?: string })?.reviewStatus ?? null;
     const reviewStatus = this.normalizeReviewStatus(rawReviewStatus);
 
     return {
       id: run.id,
       agentId: run.agentId,
-      companyId: run.companyId,
+      companyId: run.companyId ?? run.personalSpaceId ?? '',
       campaignId: run.campaignId,
       status: run.status as AgentRunStatus,
       currentStepKey: run.currentStepKey,

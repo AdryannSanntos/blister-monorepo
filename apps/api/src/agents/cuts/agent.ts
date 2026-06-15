@@ -1,10 +1,8 @@
 import {
   AgentBuilder,
   createLlmCallStep,
-  createOutputStep,
   createPauseStep,
   createRetrieveContextStep,
-  createValidationStep,
 } from '@company-os/agent-sdk';
 import { reviewCutsSchema } from '@company-os/types';
 
@@ -17,8 +15,9 @@ import {
   normalizeCut,
 } from './schemas/output.schema';
 import {
-  createAnalyzeSourceStep,
   createCleanupSourceStep,
+  createFinalizeCutsStep,
+  createRenderCutsStep,
   createResolveSourceStep,
   getCutsSettings,
 } from './steps/cuts-steps';
@@ -50,8 +49,13 @@ const applyCutDecisions = (
 /**
  * Gerador de Cortes — transforma vídeos longos em cortes curtos priorizados
  * por potencial de retenção.
+ *
+ * Pipeline enxuto:
+ * 1. prepare (contexto + vídeo/transcrição)
+ * 2. rank_cuts (LLM)
+ * 3. review + finalize (+ cleanup opcional)
  */
-export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.0.0' })
+export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
   .label('Gerador de Cortes')
   .description(
     'Transforma lives, podcasts e aulas longas em cortes curtos priorizados por potencial de retenção.',
@@ -65,24 +69,20 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.0.0' })
     includeBrandBrain: true,
     includeAgentLearning: true,
     includeCampaignContext: false,
+    useUserInputAsRetrievalQuery: false,
   })
   .addStep('retrieve_context', {
-    label: 'Buscar contexto',
+    label: 'Contexto',
     type: 'preparation',
     run: createRetrieveContextStep(),
   })
   .addStep('resolve_source', {
-    label: 'Preparar fonte',
+    label: 'Transcrever vídeo',
     type: 'preparation',
     run: createResolveSourceStep(),
   })
-  .addStep('analyze_source', {
-    label: 'Analisar transcrição',
-    type: 'preparation',
-    run: createAnalyzeSourceStep(),
-  })
   .addStep('rank_segments', {
-    label: 'Priorizar cortes',
+    label: 'Gerar cortes',
     type: 'llm_call',
     run: createLlmCallStep({
       outputSchema: cutsLlmOutputZod,
@@ -95,7 +95,12 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.0.0' })
         };
         const settings = getCutsSettings(context);
         const autoAccept = settings.autoAcceptResults;
-        const normalized = data.cuts.map((cut) => normalizeCut(cut, autoAccept ? 'approved' : 'pending'));
+        const normalized = data.cuts.map((cut, index) =>
+          normalizeCut(
+            { ...cut, id: `cut-${index + 1}` },
+            autoAccept ? 'approved' : 'pending',
+          ),
+        );
 
         return {
           cuts: normalized,
@@ -105,8 +110,13 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.0.0' })
       },
     }),
   })
+  .addStep('render_cuts', {
+    label: 'Renderizar cortes',
+    type: 'preparation',
+    run: createRenderCutsStep(),
+  })
   .addStep('await_cut_review', {
-    label: 'Validar cortes',
+    label: 'Revisar cortes',
     type: 'form',
     run: createPauseStep({
       pauseType: 'form',
@@ -120,35 +130,30 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.0.0' })
       pauseReason: 'awaiting_cut_review',
       previewBlock: 'output',
       onContinue: (context) => {
-        const rankOutput = context.previousStepsOutput.rank_segments as {
+        const renderOutput = context.previousStepsOutput.render_cuts as {
           cuts?: ReturnType<typeof normalizeCut>[];
           sourceFileId?: string;
           captionStyleId?: string;
         };
         const settings = getCutsSettings(context);
         const cuts = applyCutDecisions(
-          rankOutput.cuts ?? [],
+          renderOutput.cuts ?? [],
           context.inputPayload,
           settings.autoAcceptResults,
         );
 
         return {
           cuts,
-          sourceFileId: rankOutput.sourceFileId ?? '',
-          captionStyleId: rankOutput.captionStyleId,
+          sourceFileId: renderOutput.sourceFileId ?? '',
+          captionStyleId: renderOutput.captionStyleId,
         };
       },
     }),
   })
-  .addStep('validate_output', {
-    label: 'Validar saída',
-    type: 'validation',
-    run: createValidationStep({ schema: cutsOutputZod }),
-  })
   .addStep('finalize_cuts', {
     label: 'Finalizar',
     type: 'output',
-    run: createOutputStep(),
+    run: createFinalizeCutsStep(),
   })
   .addStep('cleanup_source', {
     label: 'Limpar fonte',

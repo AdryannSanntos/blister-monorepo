@@ -57,6 +57,47 @@ export async function debitStepCredits(
   const debitAmount = Math.max(rawAmount, params.minRunCost);
 
   try {
+    // Resolve the run's workspace scope from the run itself rather than trusting
+    // the opaque scope id threaded through the SDK.
+    const run = await prisma.agentRun.findUnique({
+      where: { id: params.agentRunId },
+      select: { companyId: true, personalSpaceId: true },
+    });
+
+    if (run?.personalSpaceId && !run.companyId) {
+      // Personal space: debit the personal balance. CreditLedger is company-only,
+      // so personal runs do not record a ledger entry (MVP limitation).
+      const newBalance = await prisma.$transaction(async (tx) => {
+        const balance = await tx.personalCreditBalance.findUnique({
+          where: { personalSpaceId: run.personalSpaceId as string },
+        });
+
+        if (!balance) {
+          throw new Error('Credit balance not found');
+        }
+
+        const currentBalance = Number(balance.amount);
+        if (currentBalance < debitAmount) {
+          throw new Error('Insufficient credit balance');
+        }
+
+        const updatedBalance = currentBalance - debitAmount;
+
+        await tx.personalCreditBalance.update({
+          where: { personalSpaceId: run.personalSpaceId as string },
+          data: { amount: new Prisma.Decimal(updatedBalance) },
+        });
+
+        return updatedBalance;
+      });
+
+      return {
+        success: true,
+        debitedAmount: debitAmount,
+        newBalance,
+      };
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       const balance = await tx.creditBalance.findUnique({
         where: { companyId: params.companyId },

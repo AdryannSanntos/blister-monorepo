@@ -1,104 +1,194 @@
 "use client";
 
-import type { CutOutput } from "@company-os/types";
-import { useTranslations } from "next-intl";
-import { useMemo } from "react";
+import type { AgentRunStatus, AgentRunStatusDto } from "@company-os/types";
 import { Scissors } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo } from "react";
 
-import { CutReviewCard } from "src/core/modules/agents/components/cuts/cut-review-card";
+import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
+import { CutsViewCutsAction } from "src/core/modules/agents/components/cuts/cuts-view-cuts-action";
 import { useCutsRuns } from "src/core/modules/agents/hooks/use-cuts-runs";
+import {
+  countApprovedCuts,
+  extractCutsFromRunDto,
+  getRunSourceTitle,
+} from "src/core/modules/agents/utils/cuts-run-display";
+import { Badge } from "src/core/shared/components/ui/badge";
+import {
+  type ColumnDef,
+  DataTable,
+} from "src/core/shared/components/ui/data-table";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { SectionCard } from "src/core/shared/components/ui/section-card";
+import { Skeleton } from "src/core/shared/components/ui/skeleton";
 
 type CutsResultsPageProps = {
   agentSlug: string;
 };
 
-const formatRunLabel = (createdAt: string, inputPayload: Record<string, unknown>) => {
-  const title = typeof inputPayload.userInput === "string" ? inputPayload.userInput : null;
-  const date = new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(new Date(createdAt));
-  return title ? `${title} · ${date}` : date;
+const formatRunDate = (value: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+
+type BadgeVariant =
+  | "success"
+  | "warning"
+  | "destructive"
+  | "info"
+  | "secondary";
+
+const statusBadgeVariant = (status: AgentRunStatus): BadgeVariant => {
+  switch (status) {
+    case "COMPLETED":
+      return "success";
+    case "PAUSED":
+      return "warning";
+    case "FAILED":
+      return "destructive";
+    case "RUNNING":
+    case "QUEUED":
+      return "info";
+    default:
+      return "secondary";
+  }
 };
+
+const isViewableRun = (run: AgentRunStatusDto) =>
+  run.status === "COMPLETED" ||
+  run.status === "PAUSED" ||
+  (run.status === "FAILED" && extractCutsFromRunDto(run).length > 0);
 
 export const CutsResultsPage = ({ agentSlug }: CutsResultsPageProps) => {
   const t = useTranslations("cuts.results");
-  const { data, isLoading } = useCutsRuns({ limit: 20 });
+  const tStatus = useTranslations("agents.status");
+  const locale = useLocale();
+  const { data, isLoading } = useCutsRuns({ limit: 50 });
 
-  const runs = data?.runs ?? [];
-
-  const completedRuns = useMemo(
-    () => runs.filter((run) => run.status === "COMPLETED"),
-    [runs],
+  const runs = useMemo(
+    () => (data?.runs ?? []).filter(isViewableRun),
+    [data?.runs],
   );
 
-  const latestApprovedCuts = useMemo(() => {
-    const latest = completedRuns[0];
-    if (!latest) return [];
-
-    const cuts = (latest.outputPayload?.cuts as CutOutput[] | undefined) ?? [];
-    return cuts.filter(
-      (cut) => cut.reviewStatus === "approved" || cut.reviewStatus === "pending",
-    );
-  }, [completedRuns]);
+  const columns = useMemo<ColumnDef<AgentRunStatusDto>[]>(
+    () => [
+      {
+        accessorKey: "title",
+        header: t("columns.source"),
+        cell: ({ row }) => (
+          <div className="min-w-0">
+            <Paragraph className="truncate font-medium">
+              {getRunSourceTitle(row.original.inputPayload)}
+            </Paragraph>
+          </div>
+        ),
+      },
+      {
+        accessorKey: "status",
+        header: t("columns.status"),
+        cell: ({ row }) => (
+          <Badge variant={statusBadgeVariant(row.original.status)}>
+            {tStatus(row.original.status.toLowerCase())}
+          </Badge>
+        ),
+      },
+      {
+        id: "cuts",
+        header: t("columns.cuts"),
+        cell: ({ row }) => {
+          const cuts = extractCutsFromRunDto(row.original);
+          return (
+            <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
+              {cuts.length > 0 ? cuts.length : "—"}
+            </span>
+          );
+        },
+      },
+      {
+        id: "approved",
+        header: t("columns.approved"),
+        cell: ({ row }) => {
+          const cuts = extractCutsFromRunDto(row.original);
+          if (cuts.length === 0) {
+            return (
+              <span className="text-[13px] text-[var(--fg-tertiary)]">—</span>
+            );
+          }
+          return (
+            <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
+              {countApprovedCuts(cuts)}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "createdAt",
+        header: t("columns.date"),
+        cell: ({ row }) => (
+          <span className="whitespace-nowrap text-[13px] text-[var(--fg-tertiary)]">
+            {formatRunDate(row.original.createdAt, locale)}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "creditCost",
+        header: t("columns.credits"),
+        cell: ({ row }) => (
+          <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
+            {row.original.creditCost != null
+              ? row.original.creditCost.toFixed(1)
+              : "—"}
+          </span>
+        ),
+      },
+      {
+        id: "actions",
+        header: "",
+        enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => <CutsViewCutsAction run={row.original} />,
+      },
+    ],
+    [locale, t, tStatus],
+  );
 
   if (agentSlug !== "cuts") return null;
 
   return (
     <div data-testid="cuts-results-page">
-      <PageLayout icon={Scissors} title={t("title")} description={t("description")}>
-        <SectionCard icon={Scissors} title={t("latestTitle")} description={t("latestDescription")}>
-          {isLoading ? <Paragraph tone="tertiary">{t("loading")}</Paragraph> : null}
-          {!isLoading && latestApprovedCuts.length === 0 ? (
-            <Paragraph tone="tertiary">{t("empty")}</Paragraph>
-          ) : null}
-          <div className="flex flex-col gap-4">
-            {latestApprovedCuts.map((cut) => (
-              <CutReviewCard
-                key={cut.id}
-                cut={cut}
-                disabled
-                decision={cut.reviewStatus === "approved" ? "approve" : undefined}
-                onApprove={() => undefined}
-                onReject={() => undefined}
-              />
-            ))}
-          </div>
-        </SectionCard>
+      <PageLayout
+        icon={Scissors}
+        title={t("title")}
+        description={t("description")}
+        actions={<AgentNewRunButton routeSlug="cuts" size="sm" />}
+      >
+        <div className="flex flex-col gap-4">
+          <Paragraph size="p5" tone="tertiary">
+            {isLoading ? t("loading") : t("count", { count: runs.length })}
+          </Paragraph>
 
-        {completedRuns.length > 0 ? (
-          <SectionCard
-            icon={Scissors}
-            title={t("historyTitle")}
-            description={t("historyDescription")}
-            className="mt-6"
-          >
-            <ul className="flex flex-col gap-2">
-              {completedRuns.map((run) => {
-                const cuts = (run.outputPayload?.cuts as CutOutput[] | undefined) ?? [];
-                const approvedCount = cuts.filter((cut) => cut.reviewStatus === "approved").length;
-
-                return (
-                  <li
-                    key={run.id}
-                    className="rounded-[var(--r-lg)] border border-[var(--line-default)] px-4 py-3"
-                    data-testid={`cuts-run-history-${run.id}`}
-                  >
-                    <Paragraph className="font-medium">
-                      {formatRunLabel(run.createdAt, run.inputPayload)}
-                    </Paragraph>
-                    <Paragraph size="p6" tone="tertiary" className="mt-1">
-                      {t("runSummary", { total: cuts.length, approved: approvedCount })}
-                    </Paragraph>
-                  </li>
-                );
-              })}
-            </ul>
-          </SectionCard>
-        ) : null}
+          {isLoading ? (
+            <Skeleton className="h-64 w-full rounded-[var(--r-lg)]" />
+          ) : (
+            <DataTable
+              columns={columns}
+              data={runs}
+              getRowId={(row) => row.id}
+              enablePagination
+              pageSize={10}
+              emptyState={{
+                icon: Scissors,
+                title: t("empty"),
+                description: t("emptyHint"),
+                action: <AgentNewRunButton routeSlug="cuts" size="sm" />,
+              }}
+            />
+          )}
+        </div>
       </PageLayout>
     </div>
   );

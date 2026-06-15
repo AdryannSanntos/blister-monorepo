@@ -1,3 +1,5 @@
+import type { CutOutput } from '@company-os/types';
+
 export type SourceFileRecord = {
   id: string;
   companyId: string | null;
@@ -19,6 +21,20 @@ export type TranscriptionResult = {
   segments: TranscriptSegment[];
 };
 
+export type RenderCutClipsParams = {
+  runId: string;
+  companyId: string;
+  personalSpaceId: string | null;
+  sourceFile: SourceFileRecord;
+  cuts: CutOutput[];
+};
+
+export type RenderCutClipsResult = {
+  cuts: CutOutput[];
+  sourceFileId: string;
+  captionStyleId?: string;
+};
+
 export type CutsRunDeps = {
   resolveSourceFile: (params: {
     sourceFileId: string;
@@ -27,7 +43,10 @@ export type CutsRunDeps = {
   transcribeSource: (params: {
     file: SourceFileRecord;
     language?: string;
+    agentId?: string;
+    stepKey?: string;
   }) => Promise<TranscriptionResult>;
+  renderCutClips: (params: RenderCutClipsParams) => Promise<RenderCutClipsResult>;
   deleteSourceFile: (params: {
     sourceFileId: string;
     companyId: string;
@@ -66,6 +85,13 @@ export const createStubCutsRunDeps = (
     };
   },
   transcribeSource: async () => STUB_TRANSCRIPT,
+  renderCutClips: async ({ cuts, sourceFile, runId }) => ({
+    cuts: cuts.map((cut) => ({
+      ...cut,
+      cutFileId: `stub-file-${runId}-${cut.id}`,
+    })),
+    sourceFileId: sourceFile.id,
+  }),
   deleteSourceFile: async () => {},
   ...overrides,
 });

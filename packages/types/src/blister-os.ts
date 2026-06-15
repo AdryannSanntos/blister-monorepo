@@ -136,6 +136,57 @@ export const createFolderSchema = z.object({
 
 export type CreateFolderDto = z.infer<typeof createFolderSchema>;
 
+export const updateFolderSchema = z
+  .object({
+    name: z.string().min(1).max(120).optional(),
+    parentId: z.string().nullable().optional(),
+  })
+  .refine((value) => value.name !== undefined || value.parentId !== undefined, {
+    message: 'At least one field must be provided',
+  });
+
+export type UpdateFolderDto = z.infer<typeof updateFolderSchema>;
+
+export const updateWorkspaceFileSchema = z
+  .object({
+    name: z.string().min(1).max(255).optional(),
+    folderId: z.string().optional(),
+  })
+  .refine((value) => value.name !== undefined || value.folderId !== undefined, {
+    message: 'At least one field must be provided',
+  });
+
+export type UpdateWorkspaceFileDto = z.infer<typeof updateWorkspaceFileSchema>;
+
+/**
+ * Request a presigned upload URL whose S3 key mirrors the workspace folder
+ * tree. The destination is the explicit `folderId` (must be a user folder, not
+ * an agent folder); when absent the default "Uploads" folder is used.
+ */
+export const filePresignedUploadRequestSchema = z.object({
+  name: z.string().min(1).max(255),
+  mimeType: z.string().min(1),
+  sizeBytes: z.number().int().positive(),
+  folderId: z.string().optional(),
+});
+
+export type FilePresignedUploadRequest = z.infer<
+  typeof filePresignedUploadRequestSchema
+>;
+
+export const filePresignedUploadResponseSchema = z.object({
+  url: z.string().url(),
+  key: z.string(),
+  folderId: z.string(),
+  /** Final (collision-resolved) file name reserved for this upload. */
+  name: z.string(),
+  expiresIn: z.number(),
+});
+
+export type FilePresignedUploadResponse = z.infer<
+  typeof filePresignedUploadResponseSchema
+>;
+
 export const personalSpaceSchema = z.object({
   id: z.string(),
   name: z.string(),

@@ -3,7 +3,7 @@ export type FileFolder = {
   name: string;
   parentId: string | null;
   kind: "system" | "user";
-  systemKey?: "uploads" | "generated" | "integrations" | null;
+  systemKey?: string | null;
 };
 
 export type FileEntry = {

@@ -12,6 +12,7 @@ import {
 } from '../src/agents/runtime/kernel';
 import { createTriggerContextPackBuilder } from '../src/agents/adapters/create-trigger-context-pack-builder';
 import { AgentRunBlockService } from '../src/agents/runtime/agent-run-block.service';
+import { resolveAgentExecutionMode } from '../src/agents/runtime/agent-execution-mode';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 const prisma = new PrismaClient();
@@ -33,14 +34,6 @@ export interface ExecuteResult {
   creditCost?: number;
 }
 
-function getExecutionMode(): 'inline-stub' | 'inline-live' | 'trigger' {
-  const mode = process.env.AGENT_EXECUTION_MODE ?? 'trigger';
-  if (mode === 'inline-stub' || mode === 'inline-live' || mode === 'trigger') {
-    return mode;
-  }
-  return 'trigger';
-}
-
 function hasAnyLlmProviderConfigured(): boolean {
   return Boolean(process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY);
 }
@@ -58,7 +51,7 @@ function createEventPublisher() {
 
 export const agentRunExecute = task({
   id: 'agent-run-execute',
-  maxDuration: 300,
+  maxDuration: 600,
   retry: {
     maxAttempts: 2,
     factor: 2,
@@ -67,7 +60,11 @@ export const agentRunExecute = task({
   },
   run: async (payload: ExecutePayload): Promise<ExecuteResult> => {
     const validated = executePayloadSchema.parse(payload);
-    const mode = getExecutionMode();
+    const mode = resolveAgentExecutionMode(
+      process.env.AGENT_EXECUTION_MODE,
+      process.env.NODE_ENV,
+      'trigger',
+    );
 
     logger.info('Starting agent run execution', {
       runId: validated.runId,

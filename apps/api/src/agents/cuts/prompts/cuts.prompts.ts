@@ -24,13 +24,13 @@ export const buildCutsUserPrompt = (context: StepExecutionContext): string => {
     sourceFileId?: string;
   };
   const settings = getCutsSettings(context);
-  const analyzeOutput = context.previousStepsOutput.analyze_source as {
+  const sourceOutput = context.previousStepsOutput.resolve_source as {
     transcriptText?: string;
     analyzedSegments?: Array<{ startSec: number; endSec: number; text: string }>;
   };
 
   const segmentLines =
-    analyzeOutput?.analyzedSegments?.map(
+    sourceOutput?.analyzedSegments?.map(
       (segment) => `[${segment.startSec}s-${segment.endSec}s] ${segment.text}`,
     ) ?? [];
 
@@ -39,7 +39,7 @@ export const buildCutsUserPrompt = (context: StepExecutionContext): string => {
     `Source file: ${input.sourceFileId ?? ''}`,
     `Constraints: maxCuts=${settings.maxCuts}, targetDurationSec=${settings.cutDurationSec}`,
     'Transcript:',
-    analyzeOutput?.transcriptText ?? '',
+    sourceOutput?.transcriptText ?? '',
     'Segments:',
     ...segmentLines,
     'Generate the ranked cut list as JSON.',
