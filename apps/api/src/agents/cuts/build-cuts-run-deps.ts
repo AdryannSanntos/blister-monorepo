@@ -1,4 +1,3 @@
-import type { ConfigService } from '@nestjs/config';
 import type { PrismaClient } from '../../generated/prisma';
 import { transcribeWithAssemblyAi } from '../../ai-runtime/adapters/assemblyai-stt.adapter';
 import { resolveStepSpeechModel } from '../../ai-runtime/resolve-model';
@@ -18,16 +17,6 @@ export type CutsRunDepsEnv = {
 
 const isVideoMimeType = (mimeType: string): boolean => mimeType.startsWith('video/');
 
-const readEnvConfig = (config: ConfigService | CutsRunDepsEnv): CutsRunDepsEnv => {
-  if ('get' in config && typeof config.get === 'function') {
-    return {
-      assemblyAiApiKey: config.get<string>('ASSEMBLYAI_API_KEY'),
-      assemblyAiBaseUrl: config.get<string>('ASSEMBLYAI_BASE_URL'),
-    };
-  }
-  return config;
-};
-
 /**
  * Builds production cuts dependencies (DB file lookup, AssemblyAI STT, FFmpeg/Trigger render).
  * Used by NestJS on boot and by Trigger.dev workers — never rely on module init in workers.
@@ -35,9 +24,8 @@ const readEnvConfig = (config: ConfigService | CutsRunDepsEnv): CutsRunDepsEnv =
 export const buildCutsRunDeps = (
   prisma: PrismaClient,
   storage: StorageService,
-  config: ConfigService | CutsRunDepsEnv,
+  env: CutsRunDepsEnv,
 ): CutsRunDeps => {
-  const env = readEnvConfig(config);
   const stub = createStubCutsRunDeps();
   const mode = readAgentExecutionMode();
 

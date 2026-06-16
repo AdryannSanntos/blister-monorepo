@@ -14,6 +14,11 @@ export class CutsRunDepsAdapter implements OnModuleInit {
   ) {}
 
   onModuleInit(): void {
-    setCutsRunDeps(buildCutsRunDeps(this.prisma, this.storage, this.config));
+    setCutsRunDeps(
+      buildCutsRunDeps(this.prisma, this.storage, {
+        assemblyAiApiKey: this.config.get<string>('ASSEMBLYAI_API_KEY'),
+        assemblyAiBaseUrl: this.config.get<string>('ASSEMBLYAI_BASE_URL'),
+      }),
+    );
   }
 }
