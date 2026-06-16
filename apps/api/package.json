@@ -10,7 +10,7 @@
     "build": "prisma generate && nest build",
     "format": "biome check --write src test package.json tsconfig.json tsconfig.build.json nest-cli.json prisma/schema.prisma",
     "start": "nest start",
-    "start:dev": "sh -c 'pnpm --filter @company-os/authz build && pnpm --filter @company-os/types build && pnpm --filter @company-os/agent-sdk build && pnpm prisma:generate && nest start --watch'",
+    "start:dev": "pnpm --filter @company-os/authz build && pnpm --filter @company-os/types build && pnpm --filter @company-os/agent-sdk build && pnpm prisma:generate && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main.js",
     "lint": "biome check src test package.json tsconfig.json tsconfig.build.json nest-cli.json prisma/schema.prisma",

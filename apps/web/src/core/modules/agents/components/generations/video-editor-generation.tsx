@@ -11,7 +11,7 @@ import { FileDropzone } from "src/core/shared/components/blister/file-dropzone";
 import { MarketplaceStyleThumb } from "src/core/shared/components/blister/marketplace-style-thumb";
 import { Button } from "src/core/shared/components/ui/button";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { toast } from "sonner";
+import { toast } from "src/core/shared/utils/blister-toast";
 
 import { useRouter } from "@/i18n/routing";
 import { getAgentHistoryPath } from "../../utils/agent-paths";
@@ -76,7 +76,7 @@ export const VideoEditorGeneration = () => {
         <FileDropzone
           onFileSelect={(file) => {
             setFileName(file.name);
-            toast.success(t("fileSelected", { name: file.name }));
+            toast.detail(t("fileSelectedTitle"), file.name);
           }}
         />
       ) : null}

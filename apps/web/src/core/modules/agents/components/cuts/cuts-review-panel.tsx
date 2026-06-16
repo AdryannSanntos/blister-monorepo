@@ -2,6 +2,7 @@
 
 import type { CutOutput } from "@company-os/types";
 import { useTranslations } from "next-intl";
+import { memo } from "react";
 
 import { CutStoryPlayer } from "src/core/modules/agents/components/cuts/cut-story-player";
 import { CutStoryThumb } from "src/core/modules/agents/components/cuts/cut-story-thumb";
@@ -17,6 +18,7 @@ export type CutsReviewPanelProps = {
   cuts: CutOutput[];
   selectedCut: CutOutput | null;
   fallbackPlayerSrc?: string | null;
+  fallbackPlayerResourceKey?: string | null;
   isResolvingSource?: boolean;
   reviewable?: boolean;
   decisions?: Record<string, CutDecision>;
@@ -26,10 +28,11 @@ export type CutsReviewPanelProps = {
   onReject?: (cutId: string) => void;
 };
 
-export const CutsReviewPanel = ({
+export const CutsReviewPanel = memo(function CutsReviewPanel({
   cuts,
   selectedCut,
   fallbackPlayerSrc,
+  fallbackPlayerResourceKey,
   isResolvingSource,
   reviewable = false,
   decisions = {},
@@ -37,7 +40,7 @@ export const CutsReviewPanel = ({
   onSelectCut,
   onApprove,
   onReject,
-}: CutsReviewPanelProps) => {
+}: CutsReviewPanelProps) {
   const t = useTranslations("cuts.review");
 
   return (
@@ -70,7 +73,6 @@ export const CutsReviewPanel = ({
                 cut={cut}
                 index={index}
                 selected={cut.id === selectedCut?.id}
-                fallbackVideoSrc={fallbackPlayerSrc}
                 reviewable={reviewable}
                 compact
                 decision={decisions[cut.id]}
@@ -123,6 +125,7 @@ export const CutsReviewPanel = ({
 
         <CutStoryPlayer
           fallbackSrc={fallbackPlayerSrc}
+          fallbackResourceKey={fallbackPlayerResourceKey}
           cut={selectedCut}
           isResolvingSource={isResolvingSource}
           hideMeta
@@ -131,4 +134,4 @@ export const CutsReviewPanel = ({
       </div>
     </div>
   );
-};
+});

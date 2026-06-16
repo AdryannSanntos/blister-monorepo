@@ -98,17 +98,17 @@ export const FileUploadPicker = ({
     return (
       <div
         className={cn(
-          "overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)]",
+          "w-full min-w-0 max-w-full overflow-hidden rounded-[var(--r-xl)] border border-[var(--line-default)] bg-[var(--bg-base)]",
           disabled && "pointer-events-none opacity-60",
           className,
         )}
         data-testid="file-upload-picker-selected"
       >
-        <div className="relative flex aspect-video items-center justify-center bg-[var(--bg-sunken)]">
+        <div className="relative flex aspect-video w-full min-w-0 items-center justify-center overflow-hidden bg-[var(--bg-sunken)]">
           {previewUrl && previewKind === "video" ? (
             <video
               src={previewUrl}
-              className="size-full object-contain"
+              className="max-h-full max-w-full object-contain"
               muted
               playsInline
               preload="metadata"
@@ -121,7 +121,7 @@ export const FileUploadPicker = ({
             <img
               src={previewUrl}
               alt={value.name}
-              className="size-full object-contain"
+              className="max-h-full max-w-full object-contain"
             />
           ) : previewUrl && previewKind === "audio" ? (
             <div className="flex w-full flex-col items-center gap-4 px-6 py-8">
@@ -169,7 +169,7 @@ export const FileUploadPicker = ({
       aria-label={t("dropzoneAria")}
       aria-disabled={disabled}
       className={cn(
-        "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-[var(--r-xl)] border-2 border-dashed border-[var(--line-strong)] bg-[var(--bg-sunken)] px-6 py-12 text-center transition-colors",
+        "flex w-full min-w-0 max-w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-[var(--r-xl)] border-2 border-dashed border-[var(--line-strong)] bg-[var(--bg-sunken)] px-6 py-12 text-center transition-colors",
         isDragging && "border-[var(--accent)] bg-[var(--accent-soft)]",
         disabled && "pointer-events-none opacity-60",
         className,

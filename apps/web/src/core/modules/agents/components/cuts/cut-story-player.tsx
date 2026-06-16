@@ -3,9 +3,13 @@
 import type { CutOutput } from "@company-os/types";
 import { Film, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
+import { memo, useLayoutEffect, useMemo, useRef } from "react";
 
 import { useCutClipPreviewUrl } from "src/core/modules/agents/hooks/use-cut-clip-preview-url";
+import { useCutSegmentVideo } from "src/core/modules/agents/hooks/use-cut-segment-video";
+import { useStableMediaUrl } from "src/core/modules/agents/hooks/use-stable-media-url";
+import { bindVideoSrc } from "src/core/modules/agents/utils/bind-video-src";
+import { buildSegmentMediaSrc } from "src/core/modules/agents/utils/build-segment-media-src";
 import { formatCutWindow } from "src/core/modules/agents/utils/cuts-display";
 import { viralScoreBadgeVariant } from "src/core/modules/agents/utils/viral-score";
 import { Badge } from "src/core/shared/components/ui/badge";
@@ -13,72 +17,77 @@ import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { cn } from "src/core/shared/utils";
 
 type CutStoryPlayerProps = {
-  /** Legacy fallback when cutFileId is not available yet. */
+  /** Shared source URL while the rendered clip is not ready yet. */
   fallbackSrc?: string | null;
+  /** Stable key for the shared source (usually sourceFileId or blob url). */
+  fallbackResourceKey?: string | null;
   cut: CutOutput | null;
   isResolvingSource?: boolean;
-  /** Hide the title/score/description block — shown elsewhere in the layout. */
   hideMeta?: boolean;
   className?: string;
 };
 
-/** Vertical 9:16 preview — plays rendered clip or loops source within the cut window. */
-export const CutStoryPlayer = ({
+/** Vertical 9:16 preview — one persistent `<video>` per mount. */
+export const CutStoryPlayer = memo(function CutStoryPlayer({
   fallbackSrc,
+  fallbackResourceKey,
   cut,
   isResolvingSource,
   hideMeta = false,
   className,
-}: CutStoryPlayerProps) => {
+}: CutStoryPlayerProps) {
   const t = useTranslations("cuts.review");
   const videoRef = useRef<HTMLVideoElement>(null);
-  const clipPreview = useCutClipPreviewUrl(cut, Boolean(cut));
+  const boundPlaybackSrcRef = useRef<string | null>(null);
+
   const usesRenderedClip = Boolean(cut?.cutFileId);
-  const src = usesRenderedClip
-    ? (clipPreview.data?.url ?? null)
-    : (fallbackSrc ?? null);
-  const isLoading = usesRenderedClip
-    ? clipPreview.isLoading
-    : Boolean(isResolvingSource);
+  const clipPreview = useCutClipPreviewUrl(cut, usesRenderedClip);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !cut || usesRenderedClip) return;
+  const clipUrl = useStableMediaUrl(
+    cut?.cutFileId ?? null,
+    clipPreview.data?.url ?? null,
+  );
+  const sourceUrl = useStableMediaUrl(
+    fallbackResourceKey ?? null,
+    fallbackSrc ?? null,
+  );
 
-    const seekToStart = () => {
-      try {
-        video.currentTime = cut.startSec;
-        void video.play().catch(() => undefined);
-      } catch {
-        /* metadata not ready */
-      }
-    };
+  const hasRenderedClipUrl = usesRenderedClip && Boolean(clipUrl);
+  const segmentMode = Boolean(cut && sourceUrl && !hasRenderedClipUrl);
 
-    if (video.readyState >= 1) {
-      seekToStart();
-    } else {
-      video.addEventListener("loadedmetadata", seekToStart, { once: true });
+  const playbackSrc = useMemo(() => {
+    if (hasRenderedClipUrl && clipUrl) return clipUrl;
+    if (segmentMode && cut && sourceUrl) {
+      return buildSegmentMediaSrc(sourceUrl, cut.startSec, cut.endSec);
     }
+    return sourceUrl;
+  }, [hasRenderedClipUrl, clipUrl, segmentMode, cut, sourceUrl]);
 
-    return () => {
-      video.removeEventListener("loadedmetadata", seekToStart);
-    };
-  }, [cut, src, usesRenderedClip]);
+  const isLoading =
+    !playbackSrc &&
+    (usesRenderedClip
+      ? clipPreview.isLoading
+      : Boolean(isResolvingSource));
 
-  useEffect(() => {
+  const cutId = cut?.id ?? null;
+  const startSec = cut?.startSec ?? 0;
+  const endSec = cut?.endSec ?? 0;
+
+  useCutSegmentVideo({
+    videoRef,
+    enabled: segmentMode,
+    cutId,
+    startSec,
+    endSec,
+  });
+
+  useLayoutEffect(() => {
     const video = videoRef.current;
-    if (!video || !cut || usesRenderedClip) return;
+    if (!video) return;
+    bindVideoSrc(video, playbackSrc ?? null, boundPlaybackSrcRef);
+  }, [playbackSrc]);
 
-    const handleTimeUpdate = () => {
-      if (video.currentTime >= cut.endSec) {
-        video.currentTime = cut.startSec;
-        void video.play().catch(() => undefined);
-      }
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    return () => video.removeEventListener("timeupdate", handleTimeUpdate);
-  }, [cut, usesRenderedClip]);
+  const showOverlay = !playbackSrc || !cut;
 
   return (
     <div
@@ -87,37 +96,41 @@ export const CutStoryPlayer = ({
     >
       <div className="flex min-h-0 flex-1 items-center justify-center rounded-[var(--r-lg)] border border-[var(--line-subtle)] bg-[var(--bg-canvas)] p-4">
         <div className="relative aspect-[9/16] h-full max-h-full w-auto max-w-full overflow-hidden rounded-[var(--r-md)] bg-[var(--bg-canvas)] shadow-[var(--shadow-lg)]">
-          {src && cut ? (
-            <video
-              key={`${src}-${cut.id}`}
-              ref={videoRef}
-              src={src}
-              className="size-full object-cover"
-              controls
-              playsInline
-              preload="metadata"
-              aria-label={cut.title}
-            >
-              <track kind="captions" />
-            </video>
-          ) : isLoading ? (
-            <div className="flex size-full min-h-[280px] min-w-[158px] flex-col items-center justify-center gap-3">
-              <Loader2
-                className="size-8 animate-spin text-[var(--accent)]"
-                aria-hidden
-              />
-              <Paragraph size="p6" tone="tertiary">
-                {t("loadingPreview")}
-              </Paragraph>
-            </div>
-          ) : (
-            <div className="flex size-full min-h-[280px] min-w-[158px] flex-col items-center justify-center gap-2 px-4 text-center">
-              <Film className="size-8 text-[var(--fg-quaternary)]" aria-hidden />
-              <Paragraph size="p6" tone="tertiary">
-                {t("selectCutHint")}
-              </Paragraph>
-            </div>
-          )}
+          <video
+            ref={videoRef}
+            className={cn(
+              "size-full object-cover",
+              showOverlay && "pointer-events-none invisible",
+            )}
+            controls={!showOverlay}
+            playsInline
+            preload={hasRenderedClipUrl ? "auto" : "metadata"}
+            aria-label={cut?.title}
+            aria-hidden={showOverlay}
+          >
+            <track kind="captions" />
+          </video>
+
+          {showOverlay ? (
+            isLoading ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[var(--bg-canvas)]">
+                <Loader2
+                  className="size-8 animate-spin text-[var(--accent)]"
+                  aria-hidden
+                />
+                <Paragraph size="p6" tone="tertiary">
+                  {t("loadingPreview")}
+                </Paragraph>
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[var(--bg-canvas)] px-4 text-center">
+                <Film className="size-8 text-[var(--fg-quaternary)]" aria-hidden />
+                <Paragraph size="p6" tone="tertiary">
+                  {t("selectCutHint")}
+                </Paragraph>
+              </div>
+            )
+          ) : null}
         </div>
       </div>
 
@@ -146,4 +159,4 @@ export const CutStoryPlayer = ({
       ) : null}
     </div>
   );
-};
+});

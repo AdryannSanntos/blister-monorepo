@@ -16,17 +16,3 @@ export const formatCutDuration = (seconds: number) => {
 
 export const formatCutWindow = (startSec: number, endSec: number) =>
   `${formatCutDuration(startSec)} – ${formatCutDuration(endSec)}`;
-
-/**
- * Whether to render a video thumbnail for a cut in the review grid.
- *
- * Rendered clips (their own `cutFileId`) always show a thumbnail — each has a
- * lightweight standalone file. Cuts without a rendered clip fall back to the
- * shared source video, which is only worth loading for the selected cut.
- */
-export const shouldShowCutThumbnail = (params: {
-  hasVideoSrc: boolean;
-  usesRenderedClip: boolean;
-  selected: boolean;
-}): boolean =>
-  params.hasVideoSrc && (params.usesRenderedClip || params.selected);

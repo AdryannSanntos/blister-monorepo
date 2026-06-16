@@ -1,14 +1,16 @@
-import type { AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
+import type { AgentRunStatusDto, AgentRunStepDto, CutOutput } from "@company-os/types";
 import { describe, expect, it } from "vitest";
 
 import {
   AWAITING_CUT_REVIEW,
   countApprovedCuts,
+  cutsContentFingerprint,
   extractCutsFromRun,
   extractCutsFromRunDto,
   getRunSourceTitle,
   isRunAwaitingCutReview,
   readSourceFileId,
+  stabilizeCutsSnapshot,
 } from "./cuts-run-display";
 
 const baseCut = {
@@ -114,6 +116,36 @@ describe("extractCutsFromRun", () => {
     expect(cuts[0]?.description).toBe("Uma análise sobre as restrições.");
     expect(cuts[0]?.viralScore).toBe(85);
     expect(cuts[0]?.cutFileId).toBe("cmqcwiswh0017");
+  });
+});
+
+describe("stabilizeCutsSnapshot", () => {
+  it("reuses the previous array when fingerprint is unchanged", () => {
+    const stableRef = { current: [] as CutOutput[] };
+    const fingerprintRef = { current: "" };
+    const first = stabilizeCutsSnapshot([baseCut], stableRef, fingerprintRef);
+    const second = stabilizeCutsSnapshot(
+      [{ ...baseCut }],
+      stableRef,
+      fingerprintRef,
+    );
+
+    expect(second).toBe(first);
+    expect(cutsContentFingerprint([baseCut])).toBeTruthy();
+  });
+
+  it("returns a new array when cutFileId appears", () => {
+    const stableRef = { current: [] as CutOutput[] };
+    const fingerprintRef = { current: "" };
+    const first = stabilizeCutsSnapshot([baseCut], stableRef, fingerprintRef);
+    const second = stabilizeCutsSnapshot(
+      [{ ...baseCut, cutFileId: "file-clip-1" }],
+      stableRef,
+      fingerprintRef,
+    );
+
+    expect(second).not.toBe(first);
+    expect(second[0]?.cutFileId).toBe("file-clip-1");
   });
 });
 

@@ -14,7 +14,9 @@ const prisma = new PrismaClient();
 
 const payloadSchema = z.object({
   runId: z.string().min(1),
+  runFolderId: z.string().min(1),
   cutId: z.string().min(1),
+  cutIndex: z.number().int().positive(),
   title: z.string().min(1),
   sourceStorageKey: z.string().min(1),
   startSec: z.number().nonnegative(),
@@ -76,6 +78,7 @@ export const cutsRenderClip = task({
     logger.info('Rendering cut clip', {
       runId: validated.runId,
       cutId: validated.cutId,
+      cutIndex: validated.cutIndex,
       startSec: validated.startSec,
       endSec: validated.endSec,
     });
@@ -99,11 +102,11 @@ export const cutsRenderClip = task({
       validated.personalSpaceId,
     );
 
-    const { storageKey } = await buildCutStorageKey(prisma, {
+    const { storageKey, fileName } = await buildCutStorageKey(prisma, {
       scope,
       storageRoot,
-      runId: validated.runId,
-      cutId: validated.cutId,
+      runFolderId: validated.runFolderId,
+      cutIndex: validated.cutIndex,
       title: validated.title,
     });
 
@@ -111,10 +114,10 @@ export const cutsRenderClip = task({
 
     const cutFileId = await registerCutWorkspaceFile(prisma, {
       scope,
-      storageRoot,
-      runId: validated.runId,
-      cutId: validated.cutId,
+      runFolderId: validated.runFolderId,
+      cutIndex: validated.cutIndex,
       title: validated.title,
+      fileName,
       storageKey,
       sizeBytes: clipBuffer.length,
     });

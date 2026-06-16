@@ -210,6 +210,9 @@ export function useFilePreviewUrl(fileId: string | null, enabled = true) {
     },
     enabled: Boolean(fileId) && enabled,
     staleTime: 4 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 }
 

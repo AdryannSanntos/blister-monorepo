@@ -18,9 +18,9 @@
     "typecheck": "turbo typecheck",
     "format": "biome check --write .",
     "format:check": "biome check .",
-    "db:up": "docker compose up -d postgres",
-    "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f postgres",
+    "db:up": "docker compose -f docker-compose.db.yml up -d",
+    "db:down": "docker compose -f docker-compose.db.yml down",
+    "db:logs": "docker compose -f docker-compose.db.yml logs -f postgres",
     "db:seed": "pnpm --dir apps/api db:seed"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@ import { MarketplaceStyleThumb } from "src/core/shared/components/blister/market
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { toast } from "sonner";
+import { toast } from "src/core/shared/utils/blister-toast";
 
 const STEPS = [
   { id: "upload", label: "Upload" },
@@ -65,7 +65,7 @@ export const VideoEditorPage = () => {
           <FileDropzone
             onFileSelect={(file) => {
               setFileName(file.name);
-              toast.success(t("fileSelected", { name: file.name }));
+              toast.detail(t("fileSelectedTitle"), file.name);
             }}
           />
         ) : null}

@@ -62,6 +62,39 @@ export const extractCutsFromRun = (params: {
 export const extractCutsFromRunDto = (run: AgentRunStatusDto): CutOutput[] =>
   extractCutsFromRun({ run });
 
+/** Fingerprint of cut fields that affect preview/review UI. */
+export const cutsContentFingerprint = (cuts: CutOutput[]): string =>
+  cuts
+    .map(
+      (cut) =>
+        [
+          cut.id,
+          cut.cutFileId ?? "",
+          cut.reviewStatus ?? "",
+          cut.startSec,
+          cut.endSec,
+        ].join(":"),
+    )
+    .join("|");
+
+/**
+ * Returns the previous cuts array when poll/SSE payloads are referentially new
+ * but semantically unchanged — prevents video elements from re-seeking.
+ */
+export const stabilizeCutsSnapshot = (
+  next: CutOutput[],
+  stableRef: { current: CutOutput[] },
+  fingerprintRef: { current: string },
+): CutOutput[] => {
+  const fingerprint = cutsContentFingerprint(next);
+  if (fingerprint === fingerprintRef.current && stableRef.current.length > 0) {
+    return stableRef.current;
+  }
+  fingerprintRef.current = fingerprint;
+  stableRef.current = next;
+  return next;
+};
+
 export const countApprovedCuts = (cuts: CutOutput[]): number =>
   cuts.filter((cut) => cut.reviewStatus === "approved").length;
 

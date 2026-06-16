@@ -642,6 +642,61 @@ h6,
   }
 }
 
+/* ─── Sonner / Blister toast ──────────────────────────────────────────────── */
+
+[data-sonner-toaster] {
+  --width: min(360px, calc(100vw - 2rem));
+  font-family:
+    "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif,
+    system-ui, sans-serif;
+  z-index: 100;
+}
+
+[data-sonner-toast] {
+  --normal-bg: var(--bg-raised);
+  --normal-border: var(--line-default);
+  --normal-text: var(--fg-primary);
+}
+
+[data-sonner-toast][data-mounted="true"] {
+  animation: ds-toast-in var(--dur-base) var(--ease-out) both;
+}
+
+[data-sonner-toast][data-removed="true"] {
+  animation: ds-toast-out var(--dur-fast) var(--ease-out) both;
+}
+
+[data-sonner-toast] [data-close-button] {
+  left: auto !important;
+  right: 8px !important;
+  top: 8px !important;
+  transform: none !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+@keyframes ds-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ds-toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
+
 @theme {
   --animate-accordion-down: accordion-down 200ms var(--ease-out);
   --animate-accordion-up: accordion-up 200ms var(--ease-out);
