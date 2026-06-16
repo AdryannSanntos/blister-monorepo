@@ -3,7 +3,7 @@
 import { Edit2, KeyRound, Plus, Shield, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { WorkspaceRole } from "@company-os/types";
 import { PermissionMatrix } from "src/core/modules/workspace/components/permission-matrix";
 import { RoleFormDialog } from "src/core/modules/workspace/components/role-form-dialog";
@@ -158,10 +158,31 @@ export function PermissionsPage() {
     setFormOpen(true);
   };
 
-  const handleOpenEdit = (role: WorkspaceRole) => {
+  const handleOpenEdit = useCallback((role: WorkspaceRole) => {
     setEditingRole(role);
     setFormOpen(true);
-  };
+  }, []);
+
+  const tableColumns = useMemo<ColumnDef<WorkspaceRole>[]>(
+    () => [
+      ...columns,
+      {
+        id: "actions",
+        header: "",
+        enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => (
+          <RoleRowActions
+            role={row.original}
+            onEdit={handleOpenEdit}
+            onDelete={setRoleToDelete}
+            deleteDisabled={deleteRole.isPending}
+          />
+        ),
+      },
+    ],
+    [columns, deleteRole.isPending, handleOpenEdit],
+  );
 
   return (
     <PageLayout
@@ -203,23 +224,7 @@ export function PermissionsPage() {
               className="mt-6 animate-in fade-in duration-200"
             >
               <DataTable
-          columns={[
-            ...columns,
-            {
-              id: "actions",
-              header: "",
-              enableSorting: false,
-              enableHiding: false,
-              cell: ({ row }) => (
-                <RoleRowActions
-                  role={row.original}
-                  onEdit={handleOpenEdit}
-                  onDelete={setRoleToDelete}
-                  deleteDisabled={deleteRole.isPending}
-                />
-              ),
-            },
-          ]}
+          columns={tableColumns}
           data={roles}
           exportOptions={{
             fileName: "workspace-roles",

@@ -4,9 +4,12 @@ import {
   createContext,
   type MutableRefObject,
   type ReactNode,
+  useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 
 import { CutsRunModal } from "src/core/modules/agents/components/cuts/cuts-run-modal";
@@ -27,8 +30,10 @@ const CutsRunModalActionsContext =
  */
 const CutsRunModalHost = ({
   actionsRef,
+  onReady,
 }: {
   actionsRef: MutableRefObject<CutsRunModalActions | null>;
+  onReady: () => void;
 }) => {
   const modal = useCutsRunModal();
 
@@ -38,31 +43,55 @@ const CutsRunModalHost = ({
     handleClose: modal.handleClose,
   };
 
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
+
   return <CutsRunModal controller={modal} />;
 };
 
 export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
   const actionsRef = useRef<CutsRunModalActions | null>(null);
+  const pendingActionRef = useRef<(() => void) | null>(null);
+  const [hostMounted, setHostMounted] = useState(false);
+
+  const flushPendingAction = useCallback(() => {
+    const pending = pendingActionRef.current;
+    if (!pending) return;
+    pendingActionRef.current = null;
+    pending();
+  }, []);
+
+  const mountHostAndRun = useCallback((action: () => void) => {
+    if (actionsRef.current) {
+      action();
+      return;
+    }
+    pendingActionRef.current = action;
+    setHostMounted(true);
+  }, []);
 
   const stableActions = useMemo<CutsRunModalActions>(
     () => ({
       handleOpen: () => {
-        actionsRef.current?.handleOpen();
+        mountHostAndRun(() => actionsRef.current?.handleOpen());
       },
       handleOpenRunDetails: (params) => {
-        actionsRef.current?.handleOpenRunDetails(params);
+        mountHostAndRun(() => actionsRef.current?.handleOpenRunDetails(params));
       },
       handleClose: () => {
         actionsRef.current?.handleClose();
       },
     }),
-    [],
+    [mountHostAndRun],
   );
 
   return (
     <CutsRunModalActionsContext.Provider value={stableActions}>
       {children}
-      <CutsRunModalHost actionsRef={actionsRef} />
+      {hostMounted ? (
+        <CutsRunModalHost actionsRef={actionsRef} onReady={flushPendingAction} />
+      ) : null}
     </CutsRunModalActionsContext.Provider>
   );
 };

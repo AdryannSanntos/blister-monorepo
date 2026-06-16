@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { AppPermissionKey } from "@company-os/authz";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import type { WorkspaceRole } from "@company-os/types";
 import { Button } from "src/core/shared/components/ui/button";
@@ -90,7 +90,10 @@ export function RoleFormDialog({
     onOpenChange(nextOpen);
   };
 
-  const selectedPermissions = form.watch("permissions");
+  const selectedPermissions = useWatch({
+    control: form.control,
+    name: "permissions",
+  });
 
   const handleTogglePermission = (
     permission: AppPermissionKey,

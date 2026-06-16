@@ -14,6 +14,13 @@ import { createTriggerContextPackBuilder } from '../src/agents/adapters/create-t
 import { AgentRunBlockService } from '../src/agents/runtime/agent-run-block.service';
 import { resolveAgentExecutionMode } from '../src/agents/runtime/agent-execution-mode';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { buildCutsRunDepsFromEnv } from '../src/agents/cuts/build-cuts-run-deps';
+import {
+  resetCutsRunDeps,
+  setCutsRunDeps,
+} from '../src/agents/cuts/ports/cuts-run-deps';
+import { ConfigService } from '@nestjs/config';
+import { StorageService } from '../src/storage/storage.service';
 
 const prisma = new PrismaClient();
 
@@ -71,7 +78,16 @@ export const agentRunExecute = task({
       mode,
       hasOpenRouterKey: Boolean(process.env.OPENROUTER_API_KEY),
       hasGeminiKey: Boolean(process.env.GEMINI_API_KEY),
+      hasAssemblyAiKey: Boolean(process.env.ASSEMBLYAI_API_KEY),
     });
+
+    // Trigger workers do not boot NestJS — wire real cuts deps here (not the in-memory stub).
+    if (mode === 'inline-stub') {
+      resetCutsRunDeps();
+    } else {
+      const storage = new StorageService(new ConfigService());
+      setCutsRunDeps(buildCutsRunDepsFromEnv(prisma, storage));
+    }
 
     const useLiveProviders = mode !== 'inline-stub' && hasAnyLlmProviderConfigured();
 

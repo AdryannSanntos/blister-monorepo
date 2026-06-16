@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "src/core/shared/components/ui/button";
@@ -70,8 +70,12 @@ export function RagSettingsTab() {
     },
   });
 
+  const hasHydratedRef = useRef(false);
+
   useEffect(() => {
     if (!settings?.rag) return;
+
+    if (hasHydratedRef.current && form.formState.isDirty) return;
 
     form.reset({
       embeddingModelId: settings.rag.embeddingModelId ?? "",
@@ -81,6 +85,7 @@ export function RagSettingsTab() {
       topK: settings.rag.topK,
       rerankEnabled: settings.rag.rerankEnabled,
     });
+    hasHydratedRef.current = true;
   }, [settings?.rag, form]);
 
   const handleSubmit = async (data: RagSettingsFormOutput) => {

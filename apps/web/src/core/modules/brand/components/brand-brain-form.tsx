@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -261,7 +261,24 @@ export function BrandBrainForm({ company, brand }: BrandBrainFormProps) {
     },
   });
 
+  const hydratedKeyRef = useRef<string | null>(null);
+  const hydrationKey = `${company.id}:${brand.updatedAt ?? "initial"}`;
+
   useEffect(() => {
+    const isFirstHydration = hydratedKeyRef.current !== hydrationKey;
+    const forms = [
+      businessForm,
+      audienceForm,
+      voiceForm,
+      socialForm,
+      visualForm,
+      offerForm,
+    ];
+
+    if (!isFirstHydration && forms.some((entry) => entry.formState.isDirty)) {
+      return;
+    }
+
     businessForm.reset({
       companyName: company.name,
       niche: brand.niche ?? "",
@@ -282,7 +299,20 @@ export function BrandBrainForm({ company, brand }: BrandBrainFormProps) {
       mainProducts: brand.mainProducts ?? "",
       differentiators: brand.differentiators ?? "",
     });
-  }, [company, brand, businessForm, audienceForm, voiceForm, socialForm, visualForm, offerForm, t]);
+
+    hydratedKeyRef.current = hydrationKey;
+  }, [
+    hydrationKey,
+    company.name,
+    brand,
+    businessForm,
+    audienceForm,
+    voiceForm,
+    socialForm,
+    visualForm,
+    offerForm,
+    t,
+  ]);
 
   const tabItems: Array<{
     id: BrandTab;

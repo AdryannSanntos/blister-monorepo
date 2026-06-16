@@ -4,7 +4,7 @@ import type { PlatformCompany } from "@company-os/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "src/core/shared/components/ui/button";
@@ -54,14 +54,19 @@ export function CreditsPlatformTab() {
     defaultValues: { freeTierAmount: 20, markupDefault: 1.2, minRunCost: 0.01 },
   });
 
+  const hasHydratedRef = useRef(false);
+
   useEffect(() => {
-    if (settings?.credits) {
-      form.reset({
-        freeTierAmount: parseFloat(settings.credits.freeTierAmount),
-        markupDefault: parseFloat(settings.credits.markupDefault),
-        minRunCost: parseFloat(settings.credits.minRunCost),
-      });
-    }
+    if (!settings?.credits) return;
+
+    if (hasHydratedRef.current && form.formState.isDirty) return;
+
+    form.reset({
+      freeTierAmount: parseFloat(settings.credits.freeTierAmount),
+      markupDefault: parseFloat(settings.credits.markupDefault),
+      minRunCost: parseFloat(settings.credits.minRunCost),
+    });
+    hasHydratedRef.current = true;
   }, [settings?.credits, form]);
 
   const companyColumns: ColumnDef<PlatformCompany>[] = useMemo(

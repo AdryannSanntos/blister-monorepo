@@ -15,6 +15,8 @@ export function useCredits() {
       return data;
     },
     refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
     staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 }

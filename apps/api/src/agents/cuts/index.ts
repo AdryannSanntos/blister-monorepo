@@ -16,3 +16,4 @@ export {
   resetCutsRunDeps,
   setCutsRunDeps,
 } from './ports/cuts-run-deps';
+export { buildCutsRunDeps, buildCutsRunDepsFromEnv } from './build-cuts-run-deps';

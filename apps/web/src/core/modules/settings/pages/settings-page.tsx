@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Coins, KeyRound, Settings, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -64,7 +64,11 @@ export const SettingsPage = () => {
     defaultValues: emptyDefaults,
   });
 
+  const hasHydratedRef = useRef(false);
+
   useEffect(() => {
+    if (hasHydratedRef.current && form.formState.isDirty) return;
+
     form.reset({
       displayName: settings.displayName,
       niche: settings.niche,
@@ -73,6 +77,7 @@ export const SettingsPage = () => {
       positioning: settings.positioning,
       contentPreferences: settings.contentPreferences,
     });
+    hasHydratedRef.current = true;
   }, [settings, form]);
 
   const handleSubmit = form.handleSubmit((values) => {

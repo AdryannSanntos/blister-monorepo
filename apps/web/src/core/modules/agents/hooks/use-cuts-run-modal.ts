@@ -275,6 +275,7 @@ export const useCutsRunModal = () => {
 
   const handleClose = useCallback(() => {
     setOpen(false);
+    setRunId(null);
     cancelCloseReset();
     closeResetTimerRef.current = window.setTimeout(() => {
       resetState();

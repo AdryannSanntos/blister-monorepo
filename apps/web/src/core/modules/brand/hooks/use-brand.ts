@@ -17,6 +17,8 @@ export function useBrand() {
       );
       return data;
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 }
 

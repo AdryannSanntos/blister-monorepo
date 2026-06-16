@@ -24,4 +24,6 @@ export const useCutsStats = () =>
       );
       return data;
     },
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });

@@ -11,6 +11,8 @@ export const buildCutsSystemPrompt = (context: StepExecutionContext): string => 
     'You are a short-form video editor who turns long recordings into high-retention clips.',
     `Return up to ${settings.maxCuts} cuts, each around ${settings.cutDurationSec} seconds.`,
     'Required: strong title, description, startSec, endSec, viralScore from 0 to 100.',
+    'Use ONLY timestamps that exist in the provided transcript segments — never invent times.',
+    'Titles and descriptions must match the spoken language of the transcript.',
     'Order cuts from highest to lowest viralScore.',
     voice,
   ]

@@ -188,24 +188,31 @@ function AppSidebar({
     return null;
   }
 
-  function canShowItem(item: Item): boolean {
-    if (item.companyOnly) {
-      if (isWorkspaceLoading) return false;
-      if (isPersonalActive) return false;
-    }
-    if (!item.permission) return true;
-    if (abilityLoading) return false;
-    const mapping = permissionMap[item.permission];
-    if (!mapping) return false;
-    return canDo(mapping[0], mapping[1]);
-  }
+  const canShowItem = React.useCallback(
+    (item: Item): boolean => {
+      if (item.companyOnly) {
+        if (isWorkspaceLoading) return false;
+        if (isPersonalActive) return false;
+      }
+      if (!item.permission) return true;
+      if (abilityLoading) return false;
+      const mapping = permissionMap[item.permission];
+      if (!mapping) return false;
+      return canDo(mapping[0], mapping[1]);
+    },
+    [isWorkspaceLoading, isPersonalActive, abilityLoading, canDo],
+  );
 
-  const filteredGroups = groups
-    .map((g) => ({
-      ...g,
-      items: g.items.filter(canShowItem),
-    }))
-    .filter((g) => !g.label || g.items.length > 0 || Boolean(g.emptyState));
+  const filteredGroups = React.useMemo(
+    () =>
+      groups
+        .map((g) => ({
+          ...g,
+          items: g.items.filter(canShowItem),
+        }))
+        .filter((g) => !g.label || g.items.length > 0 || Boolean(g.emptyState)),
+    [groups, canShowItem],
+  );
 
   const isItemActive = React.useCallback(
     (item: Item, path: string): boolean => {

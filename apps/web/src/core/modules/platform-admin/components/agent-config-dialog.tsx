@@ -7,7 +7,7 @@ import {
 } from "@company-os/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Badge } from "src/core/shared/components/ui/badge";
@@ -152,8 +152,16 @@ export function AgentConfigDialog({
     [agent],
   );
 
+  const openedForAgentIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!agent || !open) return;
+    if (!agent || !open) {
+      if (!open) openedForAgentIdRef.current = null;
+      return;
+    }
+
+    const isNewAgentSession = openedForAgentIdRef.current !== agent.id;
+    if (!isNewAgentSession && form.formState.isDirty) return;
 
     const stepModels: Record<string, string> = {};
     for (const step of agent.steps) {
@@ -174,6 +182,7 @@ export function AgentConfigDialog({
       sortOrder: agent.sortOrder,
       stepModels,
     });
+    openedForAgentIdRef.current = agent.id;
   }, [agent, compatibleModels, form, open]);
 
   const handleSubmit = async (data: AgentConfigFormOutput) => {

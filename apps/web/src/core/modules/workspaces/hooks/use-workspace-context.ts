@@ -29,6 +29,8 @@ export function useWorkspaceContext() {
       );
       return data;
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 }
 

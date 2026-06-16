@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { AuthBrandHeader } from "src/core/modules/auth/components/auth-brand-header";
 import { AuthSplitLayout } from "src/core/modules/auth/components/auth-split-layout";
@@ -84,7 +84,10 @@ export function SignupPage() {
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
 
-  const passwordValue = form.watch("password");
+  const passwordValue = useWatch({
+    control: form.control,
+    name: "password",
+  });
 
   async function onSubmit(values: SignupFormValues) {
     setIsLoading(true);

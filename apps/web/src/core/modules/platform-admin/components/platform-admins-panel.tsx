@@ -106,6 +106,29 @@ export function PlatformAdminsPanel({ onGrantAccess }: PlatformAdminsPanelProps)
     [t, tRoles],
   );
 
+  const tableColumns = useMemo<ColumnDef<PlatformAdminAssignment>[]>(
+    () => [
+      ...columns,
+      {
+        id: "actions",
+        header: "",
+        enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setAssignmentToRemove(row.original)}
+            className="text-[var(--danger)] hover:bg-[color-mix(in_oklch,var(--danger)_12%,transparent)] hover:text-[var(--danger)]"
+          >
+            <Trash2 className="size-4" />
+          </Button>
+        ),
+      },
+    ],
+    [columns],
+  );
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-3">
@@ -130,25 +153,7 @@ export function PlatformAdminsPanel({ onGrantAccess }: PlatformAdminsPanelProps)
       </div>
 
       <DataTable
-        columns={[
-          ...columns,
-          {
-            id: "actions",
-            header: "",
-            enableSorting: false,
-            enableHiding: false,
-            cell: ({ row }) => (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setAssignmentToRemove(row.original)}
-                className="text-[var(--danger)] hover:bg-[color-mix(in_oklch,var(--danger)_12%,transparent)] hover:text-[var(--danger)]"
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            ),
-          },
-        ]}
+        columns={tableColumns}
         data={rows}
         filters={filters}
         exportOptions={{

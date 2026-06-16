@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { AuthBrandHeader } from "src/core/modules/auth/components/auth-brand-header";
 import { AuthSplitLayout } from "src/core/modules/auth/components/auth-split-layout";
@@ -64,7 +64,10 @@ export function ResetPasswordPage() {
     defaultValues: { newPassword: "", confirmPassword: "" },
   });
 
-  const passwordValue = form.watch("newPassword");
+  const passwordValue = useWatch({
+    control: form.control,
+    name: "newPassword",
+  });
 
   async function onSubmit(values: ResetPasswordFormValues) {
     if (!token) {

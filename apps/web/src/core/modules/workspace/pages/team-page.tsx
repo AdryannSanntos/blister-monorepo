@@ -169,6 +169,26 @@ export function TeamPage() {
     [roles, t, tRoles],
   );
 
+  const tableColumns = useMemo<ColumnDef<TeamMember>[]>(
+    () => [
+      ...columns,
+      {
+        id: "actions",
+        header: "",
+        enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => (
+          <MemberRowActions
+            member={row.original}
+            onEdit={setEditingMember}
+            onRemove={setMemberToRemove}
+          />
+        ),
+      },
+    ],
+    [columns],
+  );
+
   return (
     <PageLayout
       icon={Users}
@@ -190,22 +210,7 @@ export function TeamPage() {
         </div>
       ) : (
         <DataTable
-          columns={[
-            ...columns,
-            {
-              id: "actions",
-              header: "",
-              enableSorting: false,
-              enableHiding: false,
-              cell: ({ row }) => (
-                <MemberRowActions
-                  member={row.original}
-                  onEdit={setEditingMember}
-                  onRemove={setMemberToRemove}
-                />
-              ),
-            },
-          ]}
+          columns={tableColumns}
           data={members}
           filters={filters}
           exportOptions={{

@@ -18,4 +18,6 @@ export const useCaptionStyles = () =>
       });
       return entitlementsResponseSchema.parse(data);
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });

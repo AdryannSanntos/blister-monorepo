@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { useCompleteOnboarding } from "src/core/modules/company/hooks/use-company";
 import { BrandLogo } from "src/core/shared/components/brand-logo";
@@ -52,6 +52,11 @@ export function OnboardingPage() {
       companyName: "",
       description: "",
     },
+  });
+
+  const companyName = useWatch({
+    control: form.control,
+    name: "companyName",
   });
 
   async function handleSubmit(data: OnboardingFormValues) {
@@ -136,7 +141,7 @@ export function OnboardingPage() {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending || !form.watch("companyName")}
+                disabled={isPending || !companyName}
               >
                 {isPending ? t("submitting") : t("submitButton")}
               </Button>

@@ -17,6 +17,8 @@ export function useCompany() {
       const { data } = await apiClient.get<CompanyResponse>("/company");
       return data;
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 }
 
