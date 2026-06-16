@@ -99,7 +99,7 @@ export async function registerBetterAuth(
             try {
               await bootstrapUserOnSignup(prisma.getClient(), user);
             } catch (err) {
-              logger.error('Failed to bootstrap company after signup', err);
+              logger.error('Failed to bootstrap personal space after signup', err);
             }
           },
         },

@@ -242,7 +242,8 @@
           }
         }
       }
-    }
+    },
+    "platformAdmin": "Admin da plataforma"
   },
   "sidebar": {
     "home": "Início",
@@ -937,41 +938,18 @@
     "successMessage": "Tudo pronto! Bem-vindo ao Blister.",
     "saveError": "Não foi possível salvar. Tente novamente.",
     "validation": {
-      "companyNameMin": "Mínimo 2 caracteres",
-      "nicheMin": "Mínimo 2 caracteres",
-      "descriptionMin": "Mínimo 10 caracteres",
-      "brandVoiceMin": "Mínimo 10 caracteres"
+      "companyNameMin": "Mínimo 2 caracteres"
     },
-    "stepOne": {
-      "title": "Como se chama seu negócio?",
-      "subtitle": "Conte o essencial — o restante você configura depois no Cérebro da Marca.",
-      "companyNameLabel": "Nome do negócio",
-      "companyNamePlaceholder": "Ex: Confeitaria da Ana",
-      "nicheLabel": "Segmento / tipo de negócio",
-      "nichePlaceholder": "Ex: Confeitaria artesanal",
-      "descriptionLabel": "Descrição curta",
-      "descriptionPlaceholder": "Ex: Bolos e doces sob encomenda para festas e datas especiais",
-      "logoLabel": "Logo (opcional)",
-      "logoUploadText": "+ Logo",
-      "logoAlt": "Pré-visualização do logo",
-      "logoChangeText": "Trocar logo",
-      "uploadError": "Não foi possível enviar o logo. Tente outro arquivo.",
-      "uploading": "Enviando...",
-      "nextButton": "Continuar"
-    },
-    "stepTwo": {
-      "title": "Como você se comunica?",
-      "subtitle": "Descreva o jeito que você fala com seus clientes.",
-      "examplesLabel": "Exemplos:",
-      "example1": "Descontraído, próximo, como uma conversa com amigo",
-      "example2": "Profissional e direto ao ponto, sem firulas",
-      "example3": "Caloroso e acolhedor, como receber alguém em casa",
-      "label": "Tom de voz",
-      "placeholder": "Descreva como você fala com seus clientes...",
-      "backButton": "Voltar",
-      "submitting": "Salvando...",
-      "submitButton": "Começar"
-    }
+    "title": "Criar uma empresa",
+    "subtitle": "Comece com o essencial — o resto você ajusta depois nas Configurações.",
+    "companyNameLabel": "Nome da empresa",
+    "companyNamePlaceholder": "Ex: Confeitaria da Ana",
+    "objectiveLabel": "Objetivo (opcional)",
+    "objectivePlaceholder": "Ex: Vender bolos sob encomenda para festas",
+    "objectiveHint": "Em uma frase, o que essa empresa faz.",
+    "skipButton": "Agora não",
+    "submitButton": "Criar empresa",
+    "submitting": "Criando..."
   },
   "brand": {
     "title": "Cérebro da Marca",

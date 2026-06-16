@@ -19,14 +19,6 @@ const API_BASE_URL = (
   "http://localhost:3001"
 ).replace(/\/$/, "");
 
-type HomeDestination = "onboarding" | "dashboard" | "personal-space";
-
-type HomeDestinationResponse = {
-  destination: HomeDestination;
-  companyCount: number;
-  onboardedCount: number;
-};
-
 const handleI18nRouting = createIntlMiddleware(routing);
 
 function redirect(request: NextRequest, pathname: string) {
@@ -43,16 +35,6 @@ function buildLoginRedirectPath(request: NextRequest) {
 
 function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
-
-function destinationToPath(destination: HomeDestination) {
-  switch (destination) {
-    case "onboarding":
-      return ONBOARDING_PATH;
-    case "personal-space":
-    default:
-      return DASHBOARD_PREFIX;
-  }
 }
 
 async function getSession(request: NextRequest) {
@@ -73,32 +55,6 @@ async function getSession(request: NextRequest) {
   }
 
   return response.json();
-}
-
-async function getHomeDestination(
-  request: NextRequest,
-): Promise<HomeDestinationResponse | null> {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/companies/home-destination`,
-      {
-        method: "GET",
-        headers: {
-          cookie: request.headers.get("cookie") ?? "",
-          accept: "application/json",
-        },
-        cache: "no-store",
-      },
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return (await response.json()) as HomeDestinationResponse;
-  } catch {
-    return null;
-  }
 }
 
 async function companyBelongsToUser(
@@ -127,10 +83,7 @@ async function companyBelongsToUser(
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (
-    pathname.startsWith(API_PREFIX) ||
-    pathname.startsWith(SYSTEM_PREFIX)
-  ) {
+  if (pathname.startsWith(API_PREFIX) || pathname.startsWith(SYSTEM_PREFIX)) {
     return NextResponse.next();
   }
 
@@ -151,19 +104,14 @@ export async function proxy(request: NextRequest) {
     const isDashboardRoute = localizedPathname.startsWith(DASHBOARD_PREFIX);
     const isWorkspacesRoute = localizedPathname.startsWith(WORKSPACES_PREFIX);
     const isAdminRoute = localizedPathname.startsWith(ADMIN_PREFIX);
-    const isOnboardingRoute = localizedPathname === ONBOARDING_PATH;
-    const isNewCompanyOnboarding =
-      request.nextUrl.searchParams.get("new") === "1";
 
+    // O destino padrão de todo usuário autenticado é o Espaço Pessoal
+    // (/dashboard). Criar empresa é opcional e fica em /onboarding — nunca
+    // forçamos o onboarding aqui.
     if (localizedPathname === "/") {
-      if (!isAuthenticated) {
-        return redirect(request, `${AUTH_PREFIX}/login`);
-      }
-
-      const home = await getHomeDestination(request);
       return redirect(
         request,
-        home ? destinationToPath(home.destination) : DASHBOARD_PREFIX,
+        isAuthenticated ? DASHBOARD_PREFIX : `${AUTH_PREFIX}/login`,
       );
     }
 
@@ -174,24 +122,13 @@ export async function proxy(request: NextRequest) {
       return intlResponse;
     }
 
-    const home = await getHomeDestination(request);
-    const homePath = home
-      ? destinationToPath(home.destination)
-      : DASHBOARD_PREFIX;
-
     if (isAuthRoute) {
-      return redirect(request, homePath);
+      return redirect(request, DASHBOARD_PREFIX);
     }
 
-    if (isOnboardingRoute) {
-      if (isNewCompanyOnboarding) {
-        return intlResponse;
-      }
-
-      if (home && home.destination !== "onboarding") {
-        return redirect(request, homePath);
-      }
-
+    // /onboarding é o fluxo opt-in de criação de empresa: sempre acessível
+    // para usuários autenticados.
+    if (localizedPathname === ONBOARDING_PATH) {
       return intlResponse;
     }
 
@@ -203,10 +140,8 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isDashboardRoute) {
-      if (!home || home.destination === "onboarding") {
-        return redirect(request, ONBOARDING_PATH);
-      }
-
+      // Limpa o cookie de empresa ativa se apontar para uma empresa que não
+      // pertence mais ao usuário — cai de volta no Espaço Pessoal.
       const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
       if (
         activeCompanyId &&

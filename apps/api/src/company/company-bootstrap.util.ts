@@ -1,5 +1,5 @@
-import type { Company, PrismaClient } from '../generated/prisma';
 import { ensureWorkspaceAgentFolders } from '../files/workspace-folders.util';
+import type { Company, PrismaClient } from '../generated/prisma';
 
 type BootstrapUser = {
   id: string;
@@ -62,10 +62,7 @@ function buildUniqueSlug(db: PrismaClient, email: string): Promise<string> {
   })();
 }
 
-export async function bootstrapUserOnSignup(
-  db: PrismaClient,
-  user: BootstrapUser,
-): Promise<void> {
+export async function bootstrapUserOnSignup(db: PrismaClient, user: BootstrapUser): Promise<void> {
   await db.user.update({
     where: { id: user.id },
     data: { userType: 'BUSINESS' },
@@ -146,17 +143,4 @@ export async function createCompanyForUser(
 
     return company;
   });
-}
-
-/** @deprecated Use bootstrapUserOnSignup + createCompanyForUser during onboarding */
-export async function bootstrapCompanyForUser(
-  db: PrismaClient,
-  user: BootstrapUser,
-): Promise<Company> {
-  await bootstrapUserOnSignup(db, user);
-  return createCompanyForUser(
-    db,
-    user,
-    user.name ?? user.email.split('@')[0],
-  );
 }

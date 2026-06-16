@@ -242,7 +242,8 @@
           }
         }
       }
-    }
+    },
+    "platformAdmin": "Platform admin"
   },
   "sidebar": {
     "home": "Home",
@@ -935,43 +936,20 @@
   },
   "onboarding": {
     "successMessage": "All set! Welcome to Blister.",
-    "saveError": "We couldn't save. Please try again.",
+    "saveError": "Could not save. Please try again.",
     "validation": {
-      "companyNameMin": "At least 2 characters",
-      "nicheMin": "At least 2 characters",
-      "descriptionMin": "At least 10 characters",
-      "brandVoiceMin": "At least 10 characters"
+      "companyNameMin": "Minimum 2 characters"
     },
-    "stepOne": {
-      "title": "What's your business called?",
-      "subtitle": "Share the essentials — you can complete the rest later in Brand Brain.",
-      "companyNameLabel": "Business name",
-      "companyNamePlaceholder": "e.g. Ana's Bakery",
-      "nicheLabel": "Industry / business type",
-      "nichePlaceholder": "e.g. Artisan bakery",
-      "descriptionLabel": "Short description",
-      "descriptionPlaceholder": "e.g. Custom cakes and sweets for parties and special occasions",
-      "logoLabel": "Logo (optional)",
-      "logoUploadText": "+ Logo",
-      "logoAlt": "Logo preview",
-      "logoChangeText": "Change logo",
-      "uploadError": "We couldn't upload the logo. Try another file.",
-      "uploading": "Uploading...",
-      "nextButton": "Continue"
-    },
-    "stepTwo": {
-      "title": "How do you communicate?",
-      "subtitle": "Describe how you talk to your customers.",
-      "examplesLabel": "Examples:",
-      "example1": "Relaxed and friendly, like chatting with a friend",
-      "example2": "Professional and straight to the point",
-      "example3": "Warm and welcoming, like hosting someone at home",
-      "label": "Tone of voice",
-      "placeholder": "Describe how you talk to your customers...",
-      "backButton": "Back",
-      "submitting": "Saving...",
-      "submitButton": "Get started"
-    }
+    "title": "Create a company",
+    "subtitle": "Start with the essentials — you can adjust the rest later in Settings.",
+    "companyNameLabel": "Company name",
+    "companyNamePlaceholder": "e.g. Ana's Bakery",
+    "objectiveLabel": "Objective (optional)",
+    "objectivePlaceholder": "e.g. Sell custom cakes for parties",
+    "objectiveHint": "In one sentence, what this company does.",
+    "skipButton": "Not now",
+    "submitButton": "Create company",
+    "submitting": "Creating..."
   },
   "brand": {
     "title": "Brand Brain",

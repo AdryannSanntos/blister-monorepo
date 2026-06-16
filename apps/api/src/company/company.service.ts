@@ -5,21 +5,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { PrismaService } from '../prisma/prisma.service';
-import { AuditService } from '../audit/audit.service';
-import { StorageService } from '../storage/storage.service';
-import {
-  companyScopePrefix,
-  isKeyInPendingScope,
-} from '../storage/storage-path.util';
 import type { z } from 'zod';
-import type {
-  updateCompanyBodySchema,
-  onboardingBodySchema,
-} from './dto/company.dto';
+import { AuditService } from '../audit/audit.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { CompanyRagSyncService } from '../rag/company-rag-sync.service';
+import { companyScopePrefix, isKeyInPendingScope } from '../storage/storage-path.util';
+import { StorageService } from '../storage/storage.service';
 import { createCompanyForUser } from './company-bootstrap.util';
 import { getActiveCompanyIdFromRequest } from './company-context.util';
-import { CompanyRagSyncService } from '../rag/company-rag-sync.service';
+import type { onboardingBodySchema, updateCompanyBodySchema } from './dto/company.dto';
 
 export type HomeDestination = 'onboarding' | 'dashboard' | 'personal-space';
 
@@ -60,9 +54,7 @@ export class CompanyService {
       map.set(membership.company.id, membership.company);
     }
 
-    return [...map.values()].sort(
-      (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-    );
+    return [...map.values()].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   }
 
   listByOwner(ownerUserId: string): Promise<CompanySummary[]> {
@@ -77,18 +69,13 @@ export class CompanyService {
   }
 
   async getHomeDestination(ownerUserId: string): Promise<HomeDestination> {
+    // Criar empresa é opcional: o usuário sempre tem um Espaço Pessoal e cai
+    // nele por padrão. Onboarding de empresa nunca é forçado — empresas
+    // incompletas (onboarding abandonado) não prendem o usuário.
     const companies = await this.listAccessibleCompanies(ownerUserId);
-    const incomplete = companies.filter((company) => !company.onboardingCompletedAt);
+    const onboarded = companies.filter((company) => company.onboardingCompletedAt);
 
-    if (incomplete.length > 0) {
-      return 'onboarding';
-    }
-
-    if (companies.length === 0) {
-      return 'personal-space';
-    }
-
-    return 'dashboard';
+    return onboarded.length > 0 ? 'dashboard' : 'personal-space';
   }
 
   async resolveActiveCompany(ownerUserId: string, activeCompanyId?: string) {
@@ -122,10 +109,7 @@ export class CompanyService {
   }
 
   resolveActiveCompanyFromRequest(ownerUserId: string, req: Request) {
-    return this.resolveActiveCompany(
-      ownerUserId,
-      getActiveCompanyIdFromRequest(req),
-    );
+    return this.resolveActiveCompany(ownerUserId, getActiveCompanyIdFromRequest(req));
   }
 
   async findByOwnerOrThrow(ownerUserId: string, req?: Request) {
@@ -169,19 +153,12 @@ export class CompanyService {
     return updated;
   }
 
-  async completeOnboarding(
-    ownerUserId: string,
-    dto: z.infer<typeof onboardingBodySchema>,
-  ) {
+  async completeOnboarding(ownerUserId: string, dto: z.infer<typeof onboardingBodySchema>) {
     const user = await this.prisma.user.findUnique({ where: { id: ownerUserId } });
     if (!user) throw new NotFoundException('User not found');
 
-    const incomplete = dto.createNew
-      ? null
-      : await this.findIncompleteByOwner(ownerUserId);
-    const company =
-      incomplete ??
-      (await createCompanyForUser(this.prisma, user, dto.companyName));
+    const incomplete = dto.createNew ? null : await this.findIncompleteByOwner(ownerUserId);
+    const company = incomplete ?? (await createCompanyForUser(this.prisma, user, dto.companyName));
 
     const resolvedLogo = await this.resolveLogoStorageKey(
       ownerUserId,
@@ -213,9 +190,11 @@ export class CompanyService {
         await tx.brandProfile.update({
           where: { companyId: company.id },
           data: {
-            brandVoice: dto.brandVoice,
-            niche: dto.niche,
-            description: dto.description,
+            // Só sobrescreve quando informado — onboarding mínimo não apaga o
+            // que o usuário já preencheu nas Configurações.
+            ...(dto.brandVoice !== undefined ? { brandVoice: dto.brandVoice } : {}),
+            ...(dto.niche !== undefined ? { niche: dto.niche } : {}),
+            ...(dto.description !== undefined ? { description: dto.description } : {}),
             ...logoData,
           },
         });
@@ -223,9 +202,9 @@ export class CompanyService {
         await tx.brandProfile.create({
           data: {
             companyId: company.id,
-            brandVoice: dto.brandVoice,
-            niche: dto.niche,
-            description: dto.description,
+            brandVoice: dto.brandVoice ?? '',
+            niche: dto.niche ?? null,
+            description: dto.description ?? null,
             logoStorageKey: resolvedLogo.logoStorageKey,
             logoVariants: resolvedLogo.logoVariants,
           },
@@ -251,15 +230,8 @@ export class CompanyService {
     });
   }
 
-  async deleteCompany(
-    ownerUserId: string,
-    confirmName: string,
-    req: Request,
-  ) {
-    const activeCompany = await this.resolveActiveCompanyFromRequest(
-      ownerUserId,
-      req,
-    );
+  async deleteCompany(ownerUserId: string, confirmName: string, req: Request) {
+    const activeCompany = await this.resolveActiveCompanyFromRequest(ownerUserId, req);
     const company = await this.prisma.company.findUniqueOrThrow({
       where: { id: activeCompany.id },
     });
@@ -269,9 +241,7 @@ export class CompanyService {
     }
 
     if (company.name.trim() !== confirmName.trim()) {
-      throw new BadRequestException(
-        'O nome digitado não corresponde ao nome da empresa',
-      );
+      throw new BadRequestException('O nome digitado não corresponde ao nome da empresa');
     }
 
     await this.prisma.company.delete({ where: { id: company.id } });

@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  ChevronsUpDown,
-  LogOut,
-  Moon,
-  Sun,
-  User,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut, Moon, Shield, Sun, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use-platform-admin";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import {
   DropdownMenu,
@@ -37,6 +32,7 @@ export function UserTrigger({
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const t = useTranslations("dashboard");
+  const { canAccessPlatformAdmin } = usePlatformRoleAccess();
 
   async function handleSignOut() {
     const { error } = await authClient.signOut();
@@ -81,6 +77,15 @@ export function UserTrigger({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="end" className="w-56">
+        {canAccessPlatformAdmin ? (
+          <>
+            <DropdownMenuItem onClick={() => router.push("/admin")}>
+              <Shield />
+              {t("platformAdmin")}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         <DropdownMenuItem
           onClick={() => router.push("/dashboard/account/settings")}
         >

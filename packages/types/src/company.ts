@@ -1,11 +1,7 @@
 import { z } from 'zod';
 
 import { brandPaletteSchema } from './brand-palette';
-import {
-  brandAssetsSchema,
-  logoVariantSchema,
-  logoVariantsSchema,
-} from './brand-visual';
+import { brandAssetsSchema, logoVariantSchema, logoVariantsSchema } from './brand-visual';
 
 /** Max size for workspace video uploads via presigned URL (5 GB). */
 export const MAX_PRESIGNED_UPLOAD_BYTES = 5 * 1024 * 1024 * 1024;
@@ -63,21 +59,17 @@ export const socialNetworkValues = [
 export const socialNetworkSchema = z.enum(socialNetworkValues);
 export type SocialNetwork = z.infer<typeof socialNetworkSchema>;
 
-export const visualStyleValues = [
-  'minimal',
-  'modern',
-  'traditional',
-  'bold',
-  'elegant',
-] as const;
+export const visualStyleValues = ['minimal', 'modern', 'traditional', 'bold', 'elegant'] as const;
 export const visualStyleSchema = z.enum(visualStyleValues);
 export type VisualStyle = z.infer<typeof visualStyleSchema>;
 
+// Onboarding mínimo: empresa = nome (+ objetivo opcional). Demais campos da
+// marca ficam opcionais e podem ser preenchidos depois nas Configurações.
 export const onboardingSchema = z.object({
   companyName: z.string().min(2).max(120),
-  niche: z.string().min(2).max(200),
-  description: z.string().min(10).max(500),
-  brandVoice: z.string().min(10).max(2000),
+  description: z.string().max(500).optional(),
+  niche: z.string().max(200).optional(),
+  brandVoice: z.string().max(2000).optional(),
   logoStorageKey: z.string().optional(),
   createNew: z.boolean().optional(),
 });
@@ -137,11 +129,7 @@ export const onboardingStatusSchema = z.object({
 });
 export type OnboardingStatus = z.infer<typeof onboardingStatusSchema>;
 
-export const homeDestinationSchema = z.enum([
-  'onboarding',
-  'dashboard',
-  'workspaces',
-]);
+export const homeDestinationSchema = z.enum(['onboarding', 'dashboard', 'workspaces']);
 export type HomeDestination = z.infer<typeof homeDestinationSchema>;
 
 export const homeDestinationResponseSchema = z.object({
@@ -149,9 +137,7 @@ export const homeDestinationResponseSchema = z.object({
   companyCount: z.number().int().nonnegative(),
   onboardedCount: z.number().int().nonnegative(),
 });
-export type HomeDestinationResponse = z.infer<
-  typeof homeDestinationResponseSchema
->;
+export type HomeDestinationResponse = z.infer<typeof homeDestinationResponseSchema>;
 
 export const companyListItemSchema = companyResponseSchema;
 export type CompanyListItem = z.infer<typeof companyListItemSchema>;

@@ -1,31 +1,35 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useCompleteOnboarding } from "src/core/modules/company/hooks/use-company";
 import { BrandLogo } from "src/core/shared/components/brand-logo";
+import { Button } from "src/core/shared/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "src/core/shared/components/ui/form";
+import { Input } from "src/core/shared/components/ui/input";
+import { Textarea } from "src/core/shared/components/ui/textarea";
 import { setActiveCompanyId } from "src/core/shared/utils/active-company";
-import { apiClient } from "src/core/shared/utils/api-client";
-import { queryClient } from "src/core/shared/utils/query-client";
 import { z } from "zod";
 import { useRouter } from "@/i18n/routing";
-import { StepBrandVoice } from "../components/step-brand-voice";
-import { StepBusinessInfo } from "../components/step-business-info";
 
 export type OnboardingFormValues = {
   companyName: string;
-  niche: string;
-  description: string;
-  brandVoice: string;
-  logoStorageKey?: string;
+  description?: string;
 };
 
 export function OnboardingPage() {
   const t = useTranslations("onboarding");
-  const [step, setStep] = useState(0);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isNewCompany = searchParams.get("new") === "1";
@@ -36,10 +40,7 @@ export function OnboardingPage() {
     () =>
       z.object({
         companyName: z.string().min(2, t("validation.companyNameMin")),
-        niche: z.string().min(2, t("validation.nicheMin")),
-        description: z.string().min(10, t("validation.descriptionMin")),
-        brandVoice: z.string().min(10, t("validation.brandVoiceMin")),
-        logoStorageKey: z.string().optional(),
+        description: z.string().max(500).optional(),
       }),
     [t],
   );
@@ -49,38 +50,22 @@ export function OnboardingPage() {
     mode: "onBlur",
     defaultValues: {
       companyName: "",
-      niche: "",
       description: "",
-      brandVoice: "",
-      logoStorageKey: undefined,
     },
   });
 
   async function handleSubmit(data: OnboardingFormValues) {
     try {
       const company = await completeOnboarding({
-        ...data,
+        companyName: data.companyName,
+        ...(data.description ? { description: data.description } : {}),
         ...(isNewCompany ? { createNew: true } : {}),
       });
       toast.success(t("successMessage"));
-
-      const home = await queryClient.fetchQuery({
-        queryKey: ["companies", "home-destination"],
-        queryFn: async () => {
-          const { data: destination } = await apiClient.get<{
-            destination: "onboarding" | "dashboard" | "workspaces";
-          }>("/companies/home-destination");
-          return destination;
-        },
-      });
-
-      if (home.destination === "workspaces") {
-        router.push("/workspaces");
-        return;
-      }
-
+      // Empresa recém-criada vira o workspace ativo e leva direto ao dashboard.
       setActiveCompanyId(company.id);
       router.push("/dashboard");
+      router.refresh();
     } catch {
       toast.error(t("saveError"));
     }
@@ -92,35 +77,72 @@ export function OnboardingPage() {
         <BrandLogo className="h-10 w-auto" />
       </div>
 
-      <div className="w-full max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--bg-base)] p-8 shadow-sm">
-        <div className="mb-6 flex gap-2">
-          {[0, 1].map((i) => (
-            <div
-              key={i}
-              className={`h-1 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-[var(--accent)]" : "bg-[var(--border)]"
-              }`}
-            />
-          ))}
+      <div className="w-full max-w-lg rounded-2xl border border-[var(--line-default)] bg-[var(--bg-base)] p-8 shadow-sm">
+        <div className="mb-6 flex flex-col gap-1">
+          <h1 className="text-xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-[var(--fg-secondary)]">{t("subtitle")}</p>
         </div>
 
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
-            {step === 0 && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-200">
-                <StepBusinessInfo onNext={() => setStep(1)} />
-              </div>
-            )}
-            {step === 1 && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-200">
-                <StepBrandVoice
-                  onBack={() => setStep(0)}
-                  submitting={isPending}
-                />
-              </div>
-            )}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col gap-6"
+          >
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("companyNameLabel")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("companyNamePlaceholder")}
+                      autoFocus
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("objectiveLabel")}</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={t("objectivePlaceholder")}
+                      rows={3}
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>{t("objectiveHint")}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex items-center justify-between gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => router.push("/dashboard")}
+              >
+                {t("skipButton")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending || !form.watch("companyName")}
+              >
+                {isPending ? t("submitting") : t("submitButton")}
+              </Button>
+            </div>
           </form>
-        </FormProvider>
+        </Form>
       </div>
     </div>
   );
