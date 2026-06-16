@@ -39,7 +39,9 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 COPY --from=build /app /app
+COPY apps/api/docker-entrypoint.sh apps/api/docker-entrypoint.sh
+RUN chmod +x apps/api/docker-entrypoint.sh
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "pnpm --filter @company-os/api exec prisma db push && node apps/api/dist/src/main.js"]
+CMD ["apps/api/docker-entrypoint.sh"]

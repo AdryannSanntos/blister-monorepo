@@ -30,7 +30,10 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-blister}:${POSTGRES_PASSWORD:-blister}@postgres:5432/${POSTGRES_DB:-blister}?schema=public
+      POSTGRES_DB: ${POSTGRES_DB:-blister}
+      POSTGRES_USER: ${POSTGRES_USER:-blister}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blister}
+      DATABASE_URL: ${DATABASE_URL:-}
       PORT: 3001
       NODE_ENV: production
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
@@ -71,7 +74,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: 120s
 
   web:
     build:
