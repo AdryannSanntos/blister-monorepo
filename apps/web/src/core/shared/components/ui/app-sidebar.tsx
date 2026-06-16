@@ -15,7 +15,9 @@ import * as React from "react";
 
 import { Link, usePathname } from "@/i18n/routing";
 import { useDashboardNavGroups } from "src/core/modules/dashboard/hooks/use-dashboard-nav-groups";
+import { useWorkspaceContext } from "src/core/modules/workspaces/hooks/use-workspace-context";
 import { useAbility } from "src/core/shared/hooks/use-ability";
+import { useIsMobile } from "src/core/shared/hooks/use-mobile";
 import { BrandLogo } from "src/core/shared/components/brand-logo";
 import { Avatar, AvatarFallback } from "src/core/shared/components/ui/avatar";
 import { Button } from "src/core/shared/components/ui/button";
@@ -24,6 +26,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "src/core/shared/components/ui/collapsible";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "src/core/shared/components/ui/sheet";
 import {
   Sidebar,
   SidebarContent,
@@ -61,6 +70,8 @@ type Item = {
   onSelect?: () => void;
   match?: (pathname: string) => boolean;
   permission?: AppPermissionKey;
+  /** Hidden when the personal workspace is active. */
+  companyOnly?: boolean;
 };
 
 type Group = {
@@ -149,6 +160,9 @@ function AppSidebar({
   const groups = groupsProp ?? defaultGroupsFromHook;
   const pathname = usePathname();
   const { can: canDo, isLoading: abilityLoading } = useAbility();
+  const { data: workspaceContext, isLoading: isWorkspaceLoading } =
+    useWorkspaceContext();
+  const isPersonalActive = workspaceContext?.active.type === "personal";
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const open = openProp ?? internalOpen;
   const setOpen = React.useCallback(
@@ -159,8 +173,26 @@ function AppSidebar({
     [onOpenChange, openProp],
   );
   const collapsed = !open;
+  const isMobile = useIsMobile();
+  const effectiveCollapsed = isMobile ? false : collapsed;
+
+  const prevPathnameRef = React.useRef(pathname);
+  React.useEffect(() => {
+    if (isMobile && open && prevPathnameRef.current !== pathname) {
+      setOpen(false);
+    }
+    prevPathnameRef.current = pathname;
+  }, [pathname, isMobile, open, setOpen]);
+
+  if (isMobile && collapsed) {
+    return null;
+  }
 
   function canShowItem(item: Item): boolean {
+    if (item.companyOnly) {
+      if (isWorkspaceLoading) return false;
+      if (isPersonalActive) return false;
+    }
     if (!item.permission) return true;
     if (abilityLoading) return false;
     const mapping = permissionMap[item.permission];
@@ -298,10 +330,10 @@ function AppSidebar({
 
   const workspaceNode =
     typeof workspaceTrigger === "function"
-      ? workspaceTrigger(collapsed)
+      ? workspaceTrigger(effectiveCollapsed)
       : workspaceTrigger;
   const userNode =
-    typeof userTrigger === "function" ? userTrigger(collapsed) : userTrigger;
+    typeof userTrigger === "function" ? userTrigger(effectiveCollapsed) : userTrigger;
 
   function getBadgeDotToneClass(
     tone?: "accent" | "warning" | "neutral",
@@ -344,19 +376,19 @@ function AppSidebar({
     );
   }
 
-  return (
+  const sidebarTree = (
     <SidebarProvider
       defaultOpen
       open
       onOpenChange={setOpen}
       className={cn(
         "w-auto rounded-r-xl",
-        fullHeight ? "h-svh min-h-0" : "!min-h-0",
+        isMobile ? "h-full" : fullHeight ? "h-svh min-h-0" : "!min-h-0",
         className,
       )}
       style={
         {
-          "--sidebar-width": collapsed
+          "--sidebar-width": effectiveCollapsed
             ? SIDEBAR_WIDTH_COLLAPSED
             : SIDEBAR_WIDTH_EXPANDED,
         } as React.CSSProperties
@@ -368,7 +400,7 @@ function AppSidebar({
         className="h-full rounded-r-xl border-r border-[var(--line-subtle)] bg-[var(--bg-canvas)] transition-[width] duration-[var(--dur-base)] ease-[var(--ease-out)]"
       >
         <SidebarHeader className="shrink-0 gap-2.5 overflow-visible px-3 pt-4 pb-2">
-          {collapsed ? (
+          {effectiveCollapsed ? (
             <div className="flex h-full flex-col items-center justify-center gap-2">
               {showToggle ? (
                 <Button
@@ -444,14 +476,14 @@ function AppSidebar({
             return (
               <Collapsible
                 key={label ?? `group-${groupIndex}`}
-                open={collapsed || !isLabeledGroup || isGroupOpen}
+                open={effectiveCollapsed || !isLabeledGroup || isGroupOpen}
                 onOpenChange={
                   isCollapsible && label ? () => toggleGroup(label) : undefined
                 }
                 className={cn(group.pinBottom && "mt-auto")}
               >
                 <SidebarGroup className="gap-0 p-0">
-                  {!collapsed && isLabeledGroup ? (
+                  {!effectiveCollapsed && isLabeledGroup ? (
                     isCollapsible ? (
                       <CollapsibleTrigger asChild>
                         <SidebarGroupLabel className="flex cursor-pointer items-center justify-between px-2.5 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[var(--fg-quaternary)] transition-colors hover:text-[var(--fg-secondary)]">
@@ -474,7 +506,7 @@ function AppSidebar({
                     <SidebarGroupContent>
                       {group.items.length === 0 &&
                       group.emptyState &&
-                      !collapsed ? (
+                      !effectiveCollapsed ? (
                         <div
                           className={cn(
                             "ml-2 rounded-[var(--r-md)] border border-dashed border-[var(--line-default)] bg-[var(--bg-sunken)] px-3 py-3 text-[12px] text-[var(--fg-tertiary)]",
@@ -487,7 +519,7 @@ function AppSidebar({
                         <SidebarMenu
                           className={cn(
                             "gap-0.5",
-                            isLabeledGroup && !collapsed && "pl-3",
+                            isLabeledGroup && !effectiveCollapsed && "pl-3",
                           )}
                         >
                           {group.items.map((item) => {
@@ -508,7 +540,7 @@ function AppSidebar({
                                 <span className="relative inline-flex">
                                   <Icon className="size-4 shrink-0" />
                                   {item.statusTone ? (
-                                    collapsed ? (
+                                    effectiveCollapsed ? (
                                       <span
                                         className={cn(
                                           "ds-ai-pulse absolute -right-0.5 -top-0.5 size-2 rounded-full ring-2 ring-[var(--bg-canvas)]",
@@ -520,7 +552,7 @@ function AppSidebar({
                                   ) : item.dot ? (
                                     <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-[var(--accent)]" />
                                   ) : null}
-                                  {collapsed && item.badge ? (
+                                  {effectiveCollapsed && item.badge ? (
                                     <span
                                       className={cn(
                                         "absolute -right-1 -top-1 size-2 rounded-full ring-2 ring-[var(--bg-base)]",
@@ -529,7 +561,7 @@ function AppSidebar({
                                     />
                                   ) : null}
                                 </span>
-                                {!collapsed ? (
+                                {!effectiveCollapsed ? (
                                   <span
                                     className={cn(
                                       "flex-1 truncate text-left",
@@ -541,7 +573,7 @@ function AppSidebar({
                                     {item.label}
                                   </span>
                                 ) : null}
-                                {!collapsed && item.statusTone ? (
+                                {!effectiveCollapsed && item.statusTone ? (
                                   <span
                                     className={cn(
                                       "ds-ai-pulse size-2 shrink-0 rounded-full",
@@ -573,7 +605,7 @@ function AppSidebar({
                                   "data-[active=true]:bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] data-[active=true]:font-medium data-[active=true]:text-[var(--primary)] data-[active=true]:[&_svg]:text-[var(--primary)]",
                                   item.soon &&
                                     "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-[var(--fg-secondary)]",
-                                  collapsed && "justify-center px-0",
+                                  effectiveCollapsed && "justify-center px-0",
                                 )}
                               >
                                 {item.href && !item.soon ? (
@@ -594,7 +626,7 @@ function AppSidebar({
                                 }
                               >
                                 <SidebarMenuItem className="relative">
-                                  {collapsed ? (
+                                  {effectiveCollapsed ? (
                                     <Tooltip>
                                       <TooltipTrigger asChild>
                                         {button}
@@ -609,7 +641,7 @@ function AppSidebar({
                                       <div className="min-w-0 flex-1 overflow-hidden">
                                         {button}
                                       </div>
-                                      {!collapsed && (item.badge || item.soon) ? (
+                                      {!effectiveCollapsed && (item.badge || item.soon) ? (
                                         <div className="shrink-0 pl-1.5">
                                           {renderBadge(item)}
                                         </div>
@@ -646,7 +678,7 @@ function AppSidebar({
                                   ) : (
                                     button
                                   )}
-                                  {!collapsed &&
+                                  {!effectiveCollapsed &&
                                   !item.action &&
                                   (item.badge || item.soon) ? (
                                     <SidebarMenuBadge className="pointer-events-none">
@@ -655,7 +687,7 @@ function AppSidebar({
                                   ) : null}
                                 </SidebarMenuItem>
 
-                                {!collapsed && isItemOpen ? (
+                                {!effectiveCollapsed && isItemOpen ? (
                                   <div className="relative ml-[1.15rem] mt-0.5 flex flex-col gap-0.5 border-l border-[var(--line-default)] pl-2.5">
                                     {item.subItems?.map((subItem) => {
                                       const SubIcon = subItem.icon;
@@ -713,7 +745,7 @@ function AppSidebar({
         </SidebarContent>
 
         <SidebarFooter className="border-t border-[var(--line-subtle)] p-2">
-          {collapsed ? (
+          {effectiveCollapsed ? (
             <div className="flex justify-center">
               {userNode ?? (
                 <Avatar className="size-9 ring-2 ring-[var(--accent-soft-hi)]">
@@ -753,6 +785,26 @@ function AppSidebar({
       </Sidebar>
     </SidebarProvider>
   );
+
+  if (isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent
+          side="left"
+          showCloseButton={false}
+          className="w-[18rem] max-w-[85vw] gap-0 border-r border-[var(--line-subtle)] bg-[var(--bg-canvas)] p-0 [&>button]:hidden"
+        >
+          <SheetHeader className="sr-only">
+            <SheetTitle>{tSidebar("home")}</SheetTitle>
+            <SheetDescription>{tDashboard("expandSidebar")}</SheetDescription>
+          </SheetHeader>
+          <div className="flex h-full min-h-0 flex-col">{sidebarTree}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return sidebarTree;
 }
 
 export {

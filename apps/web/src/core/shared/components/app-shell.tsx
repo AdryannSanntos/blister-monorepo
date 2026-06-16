@@ -22,6 +22,7 @@ import { usePlatformRoleAccess } from "src/core/modules/platform-admin/hooks/use
 import { useWorkspaceContext } from "src/core/modules/workspaces/hooks/use-workspace-context";
 import { WorkspaceSwitcher } from "src/core/modules/workspaces/components/workspace-switcher";
 import { PageTransition } from "src/core/shared/components/page-transition";
+import { useIsMobile } from "src/core/shared/hooks/use-mobile";
 import {
   AppSidebar,
   type SidebarGroupDef,
@@ -94,15 +95,23 @@ export function AppShell({
     !isPlatformRoleLoading && canAccessPlatformAdmin;
   const showWorkspaceActions =
     showPersonalSpace || showCreateCompany || showPlatformAdmin;
+  const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     try {
+      if (window.innerWidth < 768) return false;
       const saved = localStorage.getItem("blister:sidebar-open");
       return saved !== null ? JSON.parse(saved) : true;
     } catch {
       return true;
     }
   });
+
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   // Auto-collapse the sidebar whenever the user enters (or switches between)
   // a focus surface such as an agent page. Starts at null so a direct load /
@@ -148,9 +157,14 @@ export function AppShell({
         open={sidebarOpen}
         onOpenChange={(next) => {
           setSidebarOpen(next);
-          try {
-            localStorage.setItem("blister:sidebar-open", JSON.stringify(next));
-          } catch {}
+          if (!isMobile) {
+            try {
+              localStorage.setItem(
+                "blister:sidebar-open",
+                JSON.stringify(next),
+              );
+            } catch {}
+          }
         }}
         fullHeight
         className="shrink-0"
@@ -176,38 +190,48 @@ export function AppShell({
 
       <div
         id={contentId}
-        className="min-w-0 flex-1 overflow-y-auto bg-[var(--bg-base)] pt-3"
+        className="min-w-0 flex-1 overflow-y-auto bg-[var(--bg-base)] pt-1.5 md:pt-3"
       >
-        <header className="sticky top-0 z-20 mx-3 flex h-14 shrink-0 items-center justify-between gap-4 rounded-xl border border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-5">
-          <div className="flex min-w-0 items-center gap-3">
+        <header className="sticky top-0 z-20 mx-2 flex h-12 shrink-0 items-center justify-between gap-2 rounded-xl border border-[var(--line-subtle)] bg-[var(--bg-canvas)] px-2.5 sm:mx-3 sm:h-14 sm:gap-3 sm:px-4 md:px-5">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
             <Button
               variant="ghost"
               size="icon"
+              className="size-8 shrink-0 sm:size-9"
               aria-label={
                 sidebarOpen ? t("collapseSidebar") : t("expandSidebar")
               }
               onClick={() => setSidebarOpen((prev) => !prev)}
             >
-              {sidebarOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
+              {sidebarOpen ? (
+                <PanelLeftClose className="size-4" />
+              ) : (
+                <PanelLeftOpen className="size-4" />
+              )}
             </Button>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
+            <Breadcrumb className="min-w-0">
+              <BreadcrumbList className="flex-nowrap">
+                <BreadcrumbItem className="min-w-0">
                   {breadcrumb.currentPageTitle ? (
                     <BreadcrumbLink asChild>
-                      <Link href={breadcrumb.homeHref}>
+                      <Link
+                        href={breadcrumb.homeHref}
+                        className="max-w-[5.5rem] truncate sm:max-w-none"
+                      >
                         {breadcrumb.homeLabel}
                       </Link>
                     </BreadcrumbLink>
                   ) : (
-                    <BreadcrumbPage>{breadcrumb.homeLabel}</BreadcrumbPage>
+                    <BreadcrumbPage className="max-w-[8rem] truncate sm:max-w-none">
+                      {breadcrumb.homeLabel}
+                    </BreadcrumbPage>
                   )}
                 </BreadcrumbItem>
                 {breadcrumb.currentPageTitle && (
                   <>
                     <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>
+                    <BreadcrumbItem className="min-w-0">
+                      <BreadcrumbPage className="max-w-[7rem] truncate sm:max-w-none">
                         {breadcrumb.currentPageTitle}
                       </BreadcrumbPage>
                     </BreadcrumbItem>
@@ -217,12 +241,13 @@ export function AppShell({
             </Breadcrumb>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
             {headerEnd}
-            <CreditBadge />
+            <CreditBadge compact />
             <Button
               variant="ghost"
               size="icon"
+              className="hidden size-8 sm:inline-flex sm:size-9"
               aria-label={t("accountSettings")}
               asChild
             >
@@ -236,8 +261,8 @@ export function AppShell({
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="size-8 text-[var(--error-600)] hover:text-[var(--error-700)] sm:size-9"
                   aria-label={t("userMenu")}
-                  className="text-[var(--error-600)] hover:text-[var(--error-700)]"
                 >
                   <LogOut className="size-4" />
                 </Button>
@@ -289,7 +314,9 @@ export function AppShell({
           </div>
         </header>
 
-        <PageTransition className="px-6 pt-3 pb-6">{children}</PageTransition>
+        <PageTransition className="px-3 pt-2 pb-4 sm:px-4 md:px-6 md:pt-3 md:pb-6">
+          {children}
+        </PageTransition>
       </div>
     </div>
   );

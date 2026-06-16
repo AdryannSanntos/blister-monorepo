@@ -139,6 +139,7 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
             href: "/dashboard/workspace/team",
             icon: Users,
             permission: "member.read",
+            companyOnly: true,
             match: (pathname: string) =>
               pathname.startsWith("/dashboard/workspace/team"),
           },
@@ -147,6 +148,7 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
             href: "/dashboard/workspace/permissions",
             icon: KeyRound,
             permission: "role.read",
+            companyOnly: true,
             match: (pathname: string) =>
               pathname.startsWith("/dashboard/workspace/permissions"),
           },

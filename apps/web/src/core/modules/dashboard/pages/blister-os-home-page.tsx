@@ -10,6 +10,7 @@ import { AGENTS_CATALOG } from "src/core/modules/blister-os/fixtures/agents-cata
 import { MARKETPLACE_ITEMS } from "src/core/modules/blister-os/fixtures/marketplace-items.fixture";
 import { RECENT_ACTIVITY_FIXTURE } from "src/core/modules/blister-os/fixtures/recent-activity.fixture";
 import { useBlisterOsStore } from "src/core/modules/blister-os/stores/blister-os-store";
+import { useWorkspaceGreetingName } from "src/core/modules/workspaces/hooks/use-workspace-greeting-name";
 import { DashboardStatCard } from "src/core/modules/dashboard/components/dashboard-stat-card";
 import { MarketplaceStyleThumb } from "src/core/shared/components/blister/marketplace-style-thumb";
 import { Button } from "src/core/shared/components/ui/button";
@@ -23,7 +24,7 @@ export const BlisterOsHomePage = () => {
   const t = useTranslations("home");
   const credits = useBlisterOsStore((state) => state.credits);
   const owned = useBlisterOsStore((state) => state.owned);
-  const settings = useBlisterOsStore((state) => state.settings);
+  const { name: greetingName } = useWorkspaceGreetingName();
 
   const news = MARKETPLACE_ITEMS.filter((item) => item.flag).slice(0, 4);
   const cuts = AGENTS_CATALOG.find((agent) => agent.id === "cuts");
@@ -32,7 +33,7 @@ export const BlisterOsHomePage = () => {
     <div data-testid="dashboard-home-page">
       <PageLayout
         icon={LayoutDashboard}
-        title={t("greeting", { name: settings.displayName })}
+        title={t("greeting", { name: greetingName })}
         description={t("subtitle")}
         actions={
           <Button asChild>
