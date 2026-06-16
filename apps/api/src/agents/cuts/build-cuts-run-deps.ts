@@ -97,6 +97,12 @@ export const buildCutsRunDeps = (
     });
 
     if (result.utterances.length === 0) {
+      if (!result.text.trim()) {
+        throw new Error(
+          'Video transcription detected no speech — cannot rank cuts without audio content',
+        );
+      }
+
       throw new Error(
         'Video transcription returned no timed segments — cannot rank cuts without timestamps',
       );

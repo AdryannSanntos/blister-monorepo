@@ -72,6 +72,48 @@ describe('buildCutsRunDeps', () => {
     expect(prisma.workspaceFile.update).toHaveBeenCalled();
   });
 
+  it('accepts timed segments returned by the AssemblyAI adapter fallback', async () => {
+    process.env.AGENT_EXECUTION_MODE = 'trigger';
+
+    const prisma = createPrismaMock();
+    const storage = createStorageMock();
+
+    prisma.workspaceFile.findFirst.mockResolvedValue({
+      id: 'file-1',
+      companyId: 'company-1',
+      personalSpaceId: null,
+      mimeType: 'video/mp4',
+      storageKey: 'company/uploads/source.mp4',
+      extractedText: null,
+      name: 'source.mp4',
+    });
+
+    jest
+      .spyOn(
+        await import('../../ai-runtime/adapters/assemblyai-stt.adapter'),
+        'transcribeWithAssemblyAi',
+      )
+      .mockResolvedValue({
+        text: 'Conteúdo real do vídeo em português.',
+        utterances: [{ start: 12_000, end: 72_000, text: 'Primeiro trecho relevante.' }],
+      });
+
+    const deps = buildCutsRunDeps(prisma as never, storage as never, {
+      assemblyAiApiKey: 'test-key',
+    });
+
+    const file = await deps.resolveSourceFile({
+      sourceFileId: 'file-1',
+      companyId: 'company-1',
+    });
+
+    const transcript = await deps.transcribeSource({ file });
+
+    expect(transcript.segments).toEqual([
+      { startSec: 12, endSec: 72, text: 'Primeiro trecho relevante.' },
+    ]);
+  });
+
   it('falls back to stub transcript only in inline-stub without AssemblyAI key', async () => {
     process.env.AGENT_EXECUTION_MODE = 'inline-stub';
 
