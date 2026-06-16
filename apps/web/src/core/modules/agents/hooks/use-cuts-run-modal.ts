@@ -2,7 +2,7 @@
 
 import type { CutOutput, CutsAgentSettings } from "@company-os/types";
 import { cutsAgentSettingsSchema } from "@company-os/types";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, type Query } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -10,17 +10,25 @@ import {
   useFilePreviewUrl,
   useUploadWorkspaceFile,
 } from "src/core/modules/files/hooks/use-files-api";
-import { useAgentRun } from "./use-agent-run";
+import { shouldKeepRunStreamOpen } from "../utils/apply-agent-run-event";
+import { useAgentRun, type AgentRunWithSteps } from "./use-agent-run";
 import { useResumeAgentRun, useStartAgentRun } from "./use-agent-run-mutations";
 import { useAgentRunStream } from "./use-agent-run-stream";
 import { cutsRunsQueryKey } from "./use-cuts-runs";
 import { cutsSettingsQueryKey, useCutsSettings } from "./use-cuts-settings";
 import { cutsStatsQueryKey } from "./use-cuts-stats";
 import {
+  ACTIVE_RUN_POLL_MS,
+  RESULTS_VISIBLE_POLL_MS,
+  runPollIntervalMs,
+} from "../utils/run-poll-interval";
+import {
   extractCutsFromRun,
   getRunSourceTitle,
   readSourceFileId,
+  stabilizeCutsSnapshot,
 } from "../utils/cuts-run-display";
+import { useStableMediaUrl } from "./use-stable-media-url";
 
 const CUTS_AGENT_ID = "cuts";
 
@@ -67,6 +75,10 @@ export const useCutsRunModal = () => {
 
   const localPreviewUrlRef = useRef<string | null>(null);
   const closeResetTimerRef = useRef<number | null>(null);
+  const sourceFileIdRef = useRef<string | null>(null);
+  const stableCutsRef = useRef<CutOutput[]>([]);
+  const cutsFingerprintRef = useRef("");
+  sourceFileIdRef.current = sourceFileId;
 
   const cancelCloseReset = useCallback(() => {
     if (closeResetTimerRef.current) {
@@ -80,7 +92,28 @@ export const useCutsRunModal = () => {
   const startRun = useStartAgentRun(CUTS_AGENT_ID);
   const resumeRun = useResumeAgentRun(runId, CUTS_AGENT_ID);
 
-  const { data: runData } = useAgentRun(runId);
+  const runPollInterval = useCallback(
+    (query: Query<AgentRunWithSteps>) => {
+      const status = query.state.data?.run.status;
+      const baseInterval = runPollIntervalMs(status);
+      if (baseInterval === false) return false;
+
+      if (phase === "results") {
+        const visibleCuts = extractCuts(query.state.data);
+        if (visibleCuts.length > 0) {
+          const allRendered = visibleCuts.every((cut) => Boolean(cut.cutFileId));
+          return allRendered ? false : RESULTS_VISIBLE_POLL_MS;
+        }
+      }
+
+      return ACTIVE_RUN_POLL_MS;
+    },
+    [phase],
+  );
+
+  const { data: runData } = useAgentRun(runId, {
+    refetchInterval: runPollInterval,
+  });
 
   const runStatus = runData?.run.status ?? null;
   const isTerminalRun =
@@ -88,13 +121,13 @@ export const useCutsRunModal = () => {
     runStatus === "FAILED" ||
     runStatus === "CANCELLED";
 
-  // Live run state (SSE + cached snapshot).
   const shouldStream =
     open &&
     Boolean(runId) &&
     phase !== "error" &&
+    phase !== "results" &&
     intent === "generate" &&
-    !isTerminalRun;
+    shouldKeepRunStreamOpen(runData?.run);
 
   useAgentRunStream(runId, CUTS_AGENT_ID, shouldStream);
 
@@ -110,8 +143,8 @@ export const useCutsRunModal = () => {
 
   const cuts = useMemo(() => {
     const fromRun = extractCuts(runData);
-    if (fromRun.length > 0) return fromRun;
-    return bootstrapCuts;
+    const next = fromRun.length > 0 ? fromRun : bootstrapCuts;
+    return stabilizeCutsSnapshot(next, stableCutsRef, cutsFingerprintRef);
   }, [runData, bootstrapCuts]);
 
   const autoAccept =
@@ -120,6 +153,9 @@ export const useCutsRunModal = () => {
     runStatus === "PAUSED" &&
     runData?.run.pauseReason === "awaiting_cut_review";
   const reviewable = isPausedForReview && !autoAccept;
+  const isRunActive =
+    runStatus === "RUNNING" ||
+    (runStatus === "PAUSED" && !isPausedForReview);
 
   const hasSource = Boolean(sourceFileId || pendingLocalFile);
   const hasExistingSource = Boolean(sourceFileId) && !pendingLocalFile;
@@ -132,7 +168,9 @@ export const useCutsRunModal = () => {
     needsRemotePreview ? sourceFileId : null,
     needsRemotePreview,
   );
-  const playerSrc = localPreviewUrl ?? filePreview.data?.url ?? null;
+  const rawPlayerSrc = localPreviewUrl ?? filePreview.data?.url ?? null;
+  const playerSrcResourceKey = localPreviewUrl ?? sourceFileId;
+  const playerSrc = useStableMediaUrl(playerSrcResourceKey, rawPlayerSrc);
 
   const selectedCut = useMemo(
     () => cuts.find((cut) => cut.id === selectedCutId) ?? cuts[0] ?? null,
@@ -154,7 +192,8 @@ export const useCutsRunModal = () => {
     setLocalPreviewUrl(null);
   }, []);
 
-  // Advance phase as the run progresses.
+  // Advance phase as the run progresses — show results as soon as cuts exist
+  // (e.g. rank_segments done while render_cuts is still running).
   useEffect(() => {
     if (!runId || (phase !== "processing" && phase !== "results")) return;
 
@@ -164,10 +203,14 @@ export const useCutsRunModal = () => {
       return;
     }
 
-    if (runStatus === "COMPLETED" || isPausedForReview) {
+    if (
+      runStatus === "COMPLETED" ||
+      isPausedForReview ||
+      (phase === "processing" && cuts.length > 0)
+    ) {
       setPhase("results");
     }
-  }, [runId, phase, runStatus, isPausedForReview, runData, tModal]);
+  }, [runId, phase, runStatus, isPausedForReview, cuts.length, runData, tModal]);
 
   // Default-select the first cut once results arrive.
   useEffect(() => {
@@ -178,6 +221,8 @@ export const useCutsRunModal = () => {
 
   const resetState = useCallback(() => {
     clearLocalPreview();
+    stableCutsRef.current = [];
+    cutsFingerprintRef.current = "";
     setPhase("source");
     setPendingLocalFile(null);
     setSourceFileId(null);
@@ -248,13 +293,13 @@ export const useCutsRunModal = () => {
         setSourceFileId(null);
         setSourceFileName(file.name);
         setSourceFileSize(null);
-      } else if (!sourceFileId) {
+      } else if (!sourceFileIdRef.current) {
         setSourceFileName(null);
         setSourceFileSize(null);
       }
       setErrorMessage(null);
     },
-    [clearLocalPreview, sourceFileId],
+    [clearLocalPreview],
   );
 
   const handleSelectExistingFile = useCallback(
@@ -409,10 +454,12 @@ export const useCutsRunModal = () => {
     reviewable,
     allDecided,
     playerSrc,
+    playerSrcResourceKey,
     isResolvingSource: filePreview.isLoading,
     isSubmittingReview,
     runStatus,
     runCompleted: runStatus === "COMPLETED",
+    isRunActive,
     errorMessage,
     handleOpen,
     handleOpenRunDetails,

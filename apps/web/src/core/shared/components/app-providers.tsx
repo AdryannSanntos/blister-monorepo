@@ -25,7 +25,7 @@ export function AppProviders({ children }: AppProvidersProps) {
           storageKey="blister-theme"
         >
           <TooltipProvider delayDuration={240}>{children}</TooltipProvider>
-          <Toaster position="top-right" closeButton />
+          <Toaster position="top-right" />
         </ThemeProvider>
       </QueryClientProvider>
     </NuqsAdapter>

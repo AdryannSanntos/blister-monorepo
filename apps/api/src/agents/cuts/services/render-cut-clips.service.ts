@@ -2,6 +2,7 @@ import type { CutOutput } from '@company-os/types';
 import { Logger } from '@nestjs/common';
 import type { PrismaClient } from '../../../generated/prisma';
 import { readAgentExecutionMode } from '../../runtime/agent-execution-mode';
+import { ensureCutRunFolder } from '../../../media/cut-run-folder.util';
 import {
   buildCutStorageKey,
   registerCutWorkspaceFile,
@@ -20,7 +21,6 @@ const logger = new Logger('RenderCutClipsService');
 const shouldAttemptTriggerRender = (): boolean => {
   const mode = readAgentExecutionMode();
   if (mode !== 'trigger') return false;
-  // Local API process without a Trigger worker should render inline.
   return Boolean(process.env.TRIGGER_SECRET_KEY && process.env.TRIGGER_PROJECT_ID);
 };
 
@@ -59,11 +59,23 @@ const resolveScope = (
   throw new Error('Workspace scope is required to render cuts');
 };
 
+const resolveRunStartedAt = async (
+  prisma: PrismaClient,
+  runId: string,
+): Promise<Date | undefined> => {
+  const run = await prisma.agentRun.findUnique({
+    where: { id: runId },
+    select: { startedAt: true, createdAt: true },
+  });
+  return run?.startedAt ?? run?.createdAt;
+};
+
 const renderClipInline = async (
   prisma: PrismaClient,
   storage: StorageService,
   params: {
-    runId: string;
+    runFolderId: string;
+    cutIndex: number;
     cut: CutOutput;
     sourceStorageKey: string;
     scope: WorkspaceScope;
@@ -71,11 +83,11 @@ const renderClipInline = async (
     uploadToStorage: boolean;
   },
 ): Promise<CutOutput> => {
-  const { storageKey } = await buildCutStorageKey(prisma, {
+  const { storageKey, fileName } = await buildCutStorageKey(prisma, {
     scope: params.scope,
     storageRoot: params.storageRoot,
-    runId: params.runId,
-    cutId: params.cut.id,
+    runFolderId: params.runFolderId,
+    cutIndex: params.cutIndex,
     title: params.cut.title,
   });
 
@@ -94,10 +106,10 @@ const renderClipInline = async (
 
   const cutFileId = await registerCutWorkspaceFile(prisma, {
     scope: params.scope,
-    storageRoot: params.storageRoot,
-    runId: params.runId,
-    cutId: params.cut.id,
+    runFolderId: params.runFolderId,
+    cutIndex: params.cutIndex,
     title: params.cut.title,
+    fileName,
     storageKey,
     sizeBytes,
   });
@@ -108,13 +120,16 @@ const renderClipInline = async (
 const renderViaTriggerTasks = async (
   params: RenderCutClipsParams,
   sourceStorageKey: string,
+  runFolderId: string,
 ): Promise<CutOutput[]> => {
   const { cutsRenderClip } = await import('../../../../trigger/cuts-render-clip');
 
-  const payloads = params.cuts.map((cut) => ({
+  const payloads = params.cuts.map((cut, index) => ({
     payload: {
       runId: params.runId,
+      runFolderId,
       cutId: cut.id,
+      cutIndex: index + 1,
       title: cut.title,
       sourceStorageKey,
       startSec: cut.startSec,
@@ -154,7 +169,6 @@ export const renderCutClipsWithDeps = async (
   storage: StorageService,
   params: RenderCutClipsParams,
 ): Promise<RenderCutClipsResult> => {
-  const mode = readAgentExecutionMode();
   const scope = resolveScope(
     params.sourceFile.companyId,
     params.personalSpaceId ?? params.sourceFile.personalSpaceId,
@@ -164,14 +178,24 @@ export const renderCutClipsWithDeps = async (
     params.sourceFile.companyId,
     params.personalSpaceId ?? params.sourceFile.personalSpaceId,
   );
+  const runStartedAt = await resolveRunStartedAt(prisma, params.runId);
+  const runFolderId = await ensureCutRunFolder(prisma, storage, {
+    scope,
+    storageRoot,
+    runId: params.runId,
+    sourceFileName: params.sourceFile.name,
+    runStartedAt,
+  });
 
+  const mode = readAgentExecutionMode();
   let renderedCuts: CutOutput[];
 
   if (mode === 'inline-stub') {
     renderedCuts = await Promise.all(
-      params.cuts.map((cut) =>
+      params.cuts.map((cut, index) =>
         renderClipInline(prisma, storage, {
-          runId: params.runId,
+          runFolderId,
+          cutIndex: index + 1,
           cut,
           sourceStorageKey: params.sourceFile.storageKey,
           scope,
@@ -182,7 +206,11 @@ export const renderCutClipsWithDeps = async (
     );
   } else if (shouldAttemptTriggerRender()) {
     try {
-      renderedCuts = await renderViaTriggerTasks(params, params.sourceFile.storageKey);
+      renderedCuts = await renderViaTriggerTasks(
+        params,
+        params.sourceFile.storageKey,
+        runFolderId,
+      );
     } catch (error) {
       logger.warn(
         `Trigger render failed, falling back to inline FFmpeg: ${
@@ -190,9 +218,10 @@ export const renderCutClipsWithDeps = async (
         }`,
       );
       renderedCuts = await Promise.all(
-        params.cuts.map((cut) =>
+        params.cuts.map((cut, index) =>
           renderClipInline(prisma, storage, {
-            runId: params.runId,
+            runFolderId,
+            cutIndex: index + 1,
             cut,
             sourceStorageKey: params.sourceFile.storageKey,
             scope,
@@ -204,9 +233,10 @@ export const renderCutClipsWithDeps = async (
     }
   } else {
     renderedCuts = await Promise.all(
-      params.cuts.map((cut) =>
+      params.cuts.map((cut, index) =>
         renderClipInline(prisma, storage, {
-          runId: params.runId,
+          runFolderId,
+          cutIndex: index + 1,
           cut,
           sourceStorageKey: params.sourceFile.storageKey,
           scope,

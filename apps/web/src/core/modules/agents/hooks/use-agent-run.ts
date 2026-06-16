@@ -1,7 +1,7 @@
 "use client";
 
 import type { AgentRunBlockDto, AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type Query } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
 
 import type { ChatBlockState } from "../utils/agent-block-reducer";
@@ -15,7 +15,17 @@ export type AgentRunWithSteps = {
   blockChatState?: ChatBlockState;
 };
 
-export function useAgentRun(runId: string | null) {
+export type UseAgentRunOptions = {
+  refetchInterval?:
+    | number
+    | false
+    | ((query: Query<AgentRunWithSteps>) => number | false);
+};
+
+export function useAgentRun(
+  runId: string | null,
+  options?: UseAgentRunOptions,
+) {
   return useQuery<AgentRunWithSteps>({
     queryKey: ["agent-run", runId],
     queryFn: async () => {
@@ -32,6 +42,8 @@ export function useAgentRun(runId: string | null) {
     refetchOnWindowFocus: false,
     // SSE drives live updates; this polls as a fallback so an in-flight run
     // still resolves if the stream never connects or drops mid-run.
-    refetchInterval: (query) => runPollIntervalMs(query.state.data?.run.status),
+    refetchInterval:
+      options?.refetchInterval ??
+      ((query) => runPollIntervalMs(query.state.data?.run.status)),
   });
 }

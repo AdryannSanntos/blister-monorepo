@@ -3,13 +3,8 @@
 import type { CutOutput } from "@company-os/types";
 import { Check, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
 
-import { useCutClipPreviewUrl } from "src/core/modules/agents/hooks/use-cut-clip-preview-url";
-import {
-  formatCutWindow,
-  shouldShowCutThumbnail,
-} from "src/core/modules/agents/utils/cuts-display";
+import { formatCutWindow } from "src/core/modules/agents/utils/cuts-display";
 import { viralScoreBadgeVariant } from "src/core/modules/agents/utils/viral-score";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
@@ -20,21 +15,19 @@ type CutStoryThumbProps = {
   cut: CutOutput;
   index: number;
   selected: boolean;
-  fallbackVideoSrc?: string | null;
   reviewable?: boolean;
   decision?: "approve" | "reject";
-  /** Compact grid cell — metadata below the preview. */
   compact?: boolean;
   onSelect: () => void;
   onApprove?: () => void;
   onReject?: () => void;
 };
 
+/** Grid tile — lightweight poster slot; playback lives in the main player only. */
 export const CutStoryThumb = ({
   cut,
   index,
   selected,
-  fallbackVideoSrc,
   reviewable = false,
   decision,
   compact = false,
@@ -43,40 +36,6 @@ export const CutStoryThumb = ({
   onReject,
 }: CutStoryThumbProps) => {
   const t = useTranslations("cuts.review");
-  const previewRef = useRef<HTMLVideoElement>(null);
-  const usesRenderedClip = Boolean(cut.cutFileId);
-  // Resolve the clip URL for every rendered cut so each tile shows its own
-  // thumbnail, not only the selected one.
-  const clipPreview = useCutClipPreviewUrl(cut, usesRenderedClip || selected);
-  const videoSrc = usesRenderedClip
-    ? (clipPreview.data?.url ?? null)
-    : (fallbackVideoSrc ?? null);
-  const showVideoPreview = shouldShowCutThumbnail({
-    hasVideoSrc: Boolean(videoSrc),
-    usesRenderedClip,
-    selected,
-  });
-
-  useEffect(() => {
-    if (!showVideoPreview || usesRenderedClip) return;
-
-    const video = previewRef.current;
-    if (!video) return;
-
-    const seek = () => {
-      try {
-        video.currentTime = cut.startSec;
-      } catch {
-        /* ignore */
-      }
-    };
-
-    if (video.readyState >= 1) {
-      seek();
-    } else {
-      video.addEventListener("loadedmetadata", seek, { once: true });
-    }
-  }, [showVideoPreview, usesRenderedClip, cut.startSec, cut.id]);
 
   return (
     <div
@@ -100,23 +59,16 @@ export const CutStoryThumb = ({
         )}
       >
         <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[var(--r-sm)] bg-[var(--bg-sunken)]">
-          {showVideoPreview && videoSrc ? (
-            <video
-              ref={previewRef}
-              src={videoSrc}
-              muted
-              playsInline
-              preload="metadata"
-              className="size-full object-cover"
-              aria-hidden
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center">
-              <span className="font-mono text-[13px] font-medium tabular-nums text-[var(--fg-quaternary)]">
-                {index + 1}
+          <div className="flex size-full flex-col items-center justify-center gap-1 px-2 text-center">
+            <span className="font-mono text-lg font-semibold tabular-nums text-[var(--fg-tertiary)]">
+              {index + 1}
+            </span>
+            {cut.cutFileId ? (
+              <span className="text-[10px] font-medium uppercase tracking-wide text-[var(--fg-quaternary)]">
+                {t("clipReady")}
               </span>
-            </div>
-          )}
+            ) : null}
+          </div>
 
           {decision === "approve" ? (
             <span className="absolute top-1.5 right-1.5">

@@ -41,12 +41,14 @@ export const CutsRunModal = ({
     uploadProgress,
     isUploading,
     runStatus,
+    isRunActive,
     cuts,
     selectedCut,
     decisions,
     reviewable,
     allDecided,
     playerSrc,
+    playerSrcResourceKey,
     isResolvingSource,
     isSubmittingReview,
     errorMessage,
@@ -64,7 +66,8 @@ export const CutsRunModal = ({
 
   const isResults = phase === "results";
   const isProcessing = phase === "processing";
-  const isBusy = isProcessing;
+  const isUploadBusy = isProcessing && isUploading;
+  const isBusy = isUploadBusy;
   const contentVisible = intent === "view" || resultsRevealed;
 
   useEffect(() => {
@@ -98,7 +101,7 @@ export const CutsRunModal = ({
             ? "flex max-h-[min(94vh,1000px)] h-[min(94vh,900px)] max-w-[min(97vw,1180px)] flex-col overflow-hidden gap-0 p-0 sm:max-w-[min(97vw,1180px)]"
             : phase === "error"
               ? "max-w-lg gap-6"
-              : "max-w-2xl gap-6",
+              : "max-w-2xl gap-6 overflow-hidden",
         )}
       >
         <DialogDescription className="sr-only">
@@ -148,6 +151,12 @@ export const CutsRunModal = ({
                   ? t("viewRunTitle", { count: cuts.length })
                   : t("doneMessage", { count: cuts.length })}
               </DialogTitle>
+              {isRunActive && intent === "generate" ? (
+                <Paragraph size="p6" tone="tertiary" className="flex items-center gap-2">
+                  <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden />
+                  {cuts.length > 0 ? t("finishingRenders") : t("generating")}
+                </Paragraph>
+              ) : null}
               {sourceFileName ? (
                 <Paragraph size="p6" tone="tertiary" className="truncate">
                   {sourceFileName}
@@ -176,6 +185,7 @@ export const CutsRunModal = ({
                   cuts={cuts}
                   selectedCut={selectedCut}
                   fallbackPlayerSrc={playerSrc}
+                  fallbackPlayerResourceKey={playerSrcResourceKey}
                   isResolvingSource={isResolvingSource}
                   reviewable={reviewable}
                   decisions={decisions}

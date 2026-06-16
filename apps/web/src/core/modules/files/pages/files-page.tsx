@@ -4,7 +4,7 @@ import { FolderPlus, FolderOpen, Loader2, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsStringEnum, parseAsString, useQueryState } from "nuqs";
 import { useCallback, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "src/core/shared/utils/blister-toast";
 
 import { FilesBreadcrumb } from "src/core/modules/files/components/files-breadcrumb";
 import { FilesFolderGrid } from "src/core/modules/files/components/files-folder-grid";
@@ -101,7 +101,7 @@ export const FilesPage = () => {
           folderId: toApiFolderId(folderId),
           extractData: extractOnUpload,
         });
-        toast.success(t("uploadSuccess", { name: file.name }));
+        toast.detail(t("uploadSuccessTitle"), file.name);
       } catch (error) {
         const message =
           error instanceof Error && error.message === "FILE_TOO_LARGE"

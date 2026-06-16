@@ -4,7 +4,7 @@ import { MAX_PRESIGNED_UPLOAD_BYTES } from "@company-os/types";
 import { Clapperboard } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "src/core/shared/utils/blister-toast";
 
 import { FilesPickerModal } from "src/core/modules/files/components/files-picker-modal";
 import { isVideoFileForCuts } from "src/core/modules/files/utils/files-picker-rules";
@@ -42,17 +42,16 @@ export const CutsSourceStep = ({
   const handleSelectExisting = useCallback(
     (fileId: string, fileName: string, fileSize: string) => {
       onSelectExistingFile(fileId, fileName, fileSize);
-      onLocalFileChange(null);
-      toast.success(t("fileSelected", { name: fileName }));
+      toast.detail(t("fileSelectedTitle"), fileName);
     },
-    [onLocalFileChange, onSelectExistingFile, t],
+    [onSelectExistingFile, t],
   );
 
   const showExistingSelection = Boolean(existingFileName) && !localFile;
 
   return (
     <>
-      <div className="flex flex-col gap-4" data-testid="cuts-source-step">
+      <div className="flex min-w-0 flex-col gap-4" data-testid="cuts-source-step">
         <FileUploadPicker
           value={localFile}
           onChange={onLocalFileChange}

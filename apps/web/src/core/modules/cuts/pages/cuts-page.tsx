@@ -11,7 +11,7 @@ import { FileDropzone } from "src/core/shared/components/blister/file-dropzone";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { toast } from "sonner";
+import { toast } from "src/core/shared/utils/blister-toast";
 
 type CutResult = { id: string; title: string; score: number };
 
@@ -45,7 +45,7 @@ export const CutsPage = () => {
         <FileDropzone
           onFileSelect={(file) => {
             setFileName(file.name);
-            toast.success(t("fileSelected", { name: file.name }));
+            toast.detail(t("fileSelectedTitle"), file.name);
           }}
         />
 

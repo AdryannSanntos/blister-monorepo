@@ -1,7 +1,10 @@
 import type { AgentRunStatus } from "@company-os/types";
 
 /** How often to re-fetch an in-flight run as an SSE fallback (ms). */
-const ACTIVE_POLL_MS = 2500;
+export const ACTIVE_RUN_POLL_MS = 2500;
+
+/** Slower poll once cuts are already visible — SSE is the primary channel. */
+export const RESULTS_VISIBLE_POLL_MS = 12_000;
 
 /**
  * Polling interval for an agent run query, used as a safety net when the SSE
@@ -12,5 +15,7 @@ const ACTIVE_POLL_MS = 2500;
 export function runPollIntervalMs(
   status: AgentRunStatus | null | undefined,
 ): number | false {
-  return status === "QUEUED" || status === "RUNNING" ? ACTIVE_POLL_MS : false;
+  return status === "QUEUED" || status === "RUNNING"
+    ? ACTIVE_RUN_POLL_MS
+    : false;
 }

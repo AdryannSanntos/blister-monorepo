@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: blister-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-blister}
+      POSTGRES_USER: ${POSTGRES_USER:-blister}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blister}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - blister-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-blister} -d ${POSTGRES_DB:-blister}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  blister-postgres-data:
