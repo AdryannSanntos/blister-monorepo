@@ -1,13 +1,13 @@
 "use client";
 
-import type { AgentRunFixture } from "src/core/modules/blister-os/fixtures/agent-runs.fixture";
-import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
+import { redirect } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
-
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { useAgentRunsMock } from "src/core/modules/agents/hooks/use-agent-runs-mock";
+import type { AgentRunFixture } from "src/core/modules/blister-os/fixtures/agent-runs.fixture";
+import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import {
   type ColumnDef,
   DataTable,
@@ -49,9 +49,15 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
         header: t("columns.title"),
         cell: ({ row }) => (
           <div className="min-w-0">
-            <Paragraph className="truncate font-medium">{row.original.title}</Paragraph>
+            <Paragraph className="truncate font-medium">
+              {row.original.title}
+            </Paragraph>
             {row.original.preview ? (
-              <Paragraph size="p6" tone="tertiary" className="mt-0.5 line-clamp-1">
+              <Paragraph
+                size="p6"
+                tone="tertiary"
+                className="mt-0.5 line-clamp-1"
+              >
                 {row.original.preview}
               </Paragraph>
             ) : null}
@@ -93,7 +99,7 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
   );
 
   if (!agent) {
-    return null;
+    redirect("/dashboard");
   }
 
   return (
@@ -110,7 +116,11 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
               <Paragraph size="p5" tone="tertiary">
                 {t("count", { count: runs.length })}
               </Paragraph>
-              <AgentNewRunButton routeSlug={agent.routeSlug} variant="outline" size="sm" />
+              <AgentNewRunButton
+                routeSlug={agent.routeSlug}
+                variant="outline"
+                size="sm"
+              />
             </div>
 
             {runs.length === 0 ? (

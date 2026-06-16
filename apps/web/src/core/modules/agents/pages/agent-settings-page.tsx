@@ -1,14 +1,15 @@
 "use client";
 
+import { redirect } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
+import { CutsSettings } from "src/core/modules/agents/components/cuts/cuts-settings-form";
 import {
   type AgentCatalogEntry,
   getAgentByRouteSlug,
 } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
-import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
-import { CutsSettings } from "src/core/modules/agents/components/cuts/cuts-settings-form";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { SectionCard } from "src/core/shared/components/ui/section-card";
-import { useTranslations } from "next-intl";
 
 type AgentSettingsPageProps = {
   agentSlug: string;
@@ -18,7 +19,11 @@ const GenericAgentSettings = ({ agent }: { agent: AgentCatalogEntry }) => {
   const t = useTranslations("agents.settings");
 
   return (
-    <SectionCard icon={agent.icon} title={agent.name} description={agent.description}>
+    <SectionCard
+      icon={agent.icon}
+      title={agent.name}
+      description={agent.description}
+    >
       <Paragraph size="p5" tone="tertiary">
         {t("comingSoon")}
       </Paragraph>
@@ -39,7 +44,7 @@ export const AgentSettingsPage = ({ agentSlug }: AgentSettingsPageProps) => {
   const agent = getAgentByRouteSlug(agentSlug);
 
   if (!agent) {
-    return null;
+    redirect("/dashboard");
   }
 
   return (
@@ -48,7 +53,9 @@ export const AgentSettingsPage = ({ agentSlug }: AgentSettingsPageProps) => {
       data-agent={agent.routeSlug}
       className="flex flex-col gap-6 p-6"
     >
-      <AgentEntitlementGate agent={agent}>{renderSettings(agent)}</AgentEntitlementGate>
+      <AgentEntitlementGate agent={agent}>
+        {renderSettings(agent)}
+      </AgentEntitlementGate>
     </div>
   );
 };

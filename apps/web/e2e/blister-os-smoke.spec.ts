@@ -1,5 +1,7 @@
 import { expect, test } from "./fixtures/auth";
 
+// Cuts é o único agente operacional do produto. Rotas de outros agentes
+// (video-editor, research, etc.) redirecionam para /dashboard.
 const ROUTES = [
   { path: "/dashboard", testId: "dashboard-home-page" },
   { path: "/dashboard/marketplace", testId: "marketplace-page" },
@@ -9,32 +11,12 @@ const ROUTES = [
   { path: "/dashboard/settings", testId: "settings-page" },
   { path: "/dashboard/history", testId: "history-page" },
   {
-    path: "/dashboard/agents/video-editor/overview",
-    testId: "agent-overview-page",
-  },
-  {
-    path: "/dashboard/agents/video-editor/history",
-    testId: "agent-history-page",
-  },
-  {
-    path: "/dashboard/agents/video-editor/new",
-    testId: "video-editor-page",
-  },
-  {
     path: "/dashboard/agents/cuts/overview",
     testId: "agent-overview-page",
   },
   {
     path: "/dashboard/agents/cuts/new",
     testId: "agent-overview-page",
-  },
-  {
-    path: "/dashboard/agents/research/overview",
-    testId: "agent-overview-page",
-  },
-  {
-    path: "/dashboard/agents/research/new",
-    testId: "research-page",
   },
 ] as const;
 
@@ -56,16 +38,24 @@ test.describe("Blister OS smoke routes", () => {
     await expect(page.getByRole("heading", { name: "Equipe" })).toBeVisible();
 
     await page.goto("/dashboard/workspace/permissions");
-    await expect(page.getByRole("heading", { name: "Permissões" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Permissões" }),
+    ).toBeVisible();
   });
 
-  test("marketplace redeem flow updates library", async ({
+  test("marketplace is empty in the cuts-only product", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard/marketplace");
-    await page.getByRole("link", { name: /Documental/i }).first().click();
-    await page.getByRole("button", { name: /Resgatar grátis/i }).click();
-    await page.goto("/dashboard/library");
-    await expect(page.getByText("Documental")).toBeVisible();
+    await expect(page.getByTestId("marketplace-page")).toBeVisible();
+    await expect(page.getByText("Nenhum item encontrado")).toBeVisible();
+  });
+
+  test("a non-cuts agent route redirects to the dashboard home", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/dashboard/agents/video-editor/overview");
+    await expect(page.getByTestId("dashboard-home-page")).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard$/);
   });
 });

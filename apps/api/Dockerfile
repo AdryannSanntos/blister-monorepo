@@ -40,7 +40,9 @@ WORKDIR /app
 
 COPY --from=build /app /app
 COPY apps/api/docker-entrypoint.sh apps/api/docker-entrypoint.sh
-RUN chmod +x apps/api/docker-entrypoint.sh
+COPY apps/api/docker-seed.sh apps/api/docker-seed.sh
+COPY apps/api/scripts/docker-database-url.sh apps/api/scripts/docker-database-url.sh
+RUN chmod +x apps/api/docker-entrypoint.sh apps/api/docker-seed.sh
 
 EXPOSE 3001
 

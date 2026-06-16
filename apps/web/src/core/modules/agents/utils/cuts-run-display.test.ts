@@ -2,10 +2,12 @@ import type { AgentRunStatusDto, AgentRunStepDto } from "@company-os/types";
 import { describe, expect, it } from "vitest";
 
 import {
+  AWAITING_CUT_REVIEW,
   countApprovedCuts,
   extractCutsFromRun,
   extractCutsFromRunDto,
   getRunSourceTitle,
+  isRunAwaitingCutReview,
   readSourceFileId,
 } from "./cuts-run-display";
 
@@ -141,5 +143,53 @@ describe("run display helpers", () => {
       readSourceFileId({ metadata: { sourceFileId: "file-nested" } }),
     ).toBe("file-nested");
     expect(readSourceFileId({})).toBeNull();
+  });
+});
+
+describe("isRunAwaitingCutReview", () => {
+  it("is true only for a run paused awaiting cut review", () => {
+    expect(
+      isRunAwaitingCutReview({
+        status: "PAUSED",
+        pauseReason: AWAITING_CUT_REVIEW,
+      }),
+    ).toBe(true);
+  });
+
+  it("is false for a paused run stopped for any other reason", () => {
+    expect(
+      isRunAwaitingCutReview({ status: "PAUSED", pauseReason: "awaiting_x" }),
+    ).toBe(false);
+    expect(
+      isRunAwaitingCutReview({ status: "PAUSED", pauseReason: null }),
+    ).toBe(false);
+  });
+
+  it("is false for non-paused statuses", () => {
+    expect(
+      isRunAwaitingCutReview({
+        status: "COMPLETED",
+        pauseReason: AWAITING_CUT_REVIEW,
+      }),
+    ).toBe(false);
+    expect(
+      isRunAwaitingCutReview({ status: "RUNNING", pauseReason: null }),
+    ).toBe(false);
+  });
+
+  it("is false for a missing run", () => {
+    expect(isRunAwaitingCutReview(null)).toBe(false);
+    expect(isRunAwaitingCutReview(undefined)).toBe(false);
+  });
+
+  // Regression guard: review visibility must derive from the run's own paused
+  // state — the predicate intentionally takes no workspace setting, so a later
+  // auto-accept toggle can never strand an already-paused run.
+  it("ignores workspace settings entirely (state-driven contract)", () => {
+    const pausedRun = {
+      status: "PAUSED" as const,
+      pauseReason: AWAITING_CUT_REVIEW,
+    };
+    expect(isRunAwaitingCutReview(pausedRun)).toBe(true);
   });
 });

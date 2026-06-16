@@ -1,9 +1,8 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
-
-import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { AgentOverviewStats } from "src/core/modules/agents/components/agent-overview-stats";
@@ -13,6 +12,7 @@ import {
   useAgentStatsMock,
 } from "src/core/modules/agents/hooks/use-agent-runs-mock";
 import { useCutsOverview } from "src/core/modules/agents/hooks/use-cuts-overview";
+import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
@@ -43,7 +43,7 @@ export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
   }, [cutsOverview.recentRuns, isCuts, mockRuns.runs]);
 
   if (!agent) {
-    return null;
+    redirect("/dashboard");
   }
 
   return (
@@ -78,7 +78,11 @@ export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
                     >
                       <Paragraph className="font-medium">{run.title}</Paragraph>
                       {run.preview ? (
-                        <Paragraph size="p6" tone="tertiary" className="mt-1 line-clamp-1">
+                        <Paragraph
+                          size="p6"
+                          tone="tertiary"
+                          className="mt-1 line-clamp-1"
+                        >
                           {run.preview}
                         </Paragraph>
                       ) : null}

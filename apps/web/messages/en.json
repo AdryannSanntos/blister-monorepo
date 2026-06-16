@@ -271,7 +271,7 @@
   "home": {
     "greeting": "Hello, {name}",
     "subtitle": "Your content studio in one place.",
-    "primaryAction": "Edit video",
+    "primaryAction": "Generate cuts",
     "studioTitle": "Studio",
     "activityTitle": "Recent activity",
     "marketplaceNews": "Marketplace news",
@@ -505,7 +505,8 @@
       "toastFailed": "This file failed processing and cannot be used.",
       "toastProcessing": "Wait for processing to finish before using this file.",
       "toastFiltered": "This file is not compatible with this flow."
-    }
+    },
+    "generateCuts": "Generate cuts"
   },
   "settings": {
     "title": "Settings",
@@ -1397,7 +1398,8 @@
       "briefPlaceholder": "Describe what you need...",
       "run": "Run",
       "running": "Running...",
-      "mockOutput": "{agent}: simulated output for \"{brief}\""
+      "mockOutput": "{agent}: simulated output for \"{brief}\"",
+      "viewHistory": "View history"
     },
     "output": {
       "failedTitle": "Generation failed",

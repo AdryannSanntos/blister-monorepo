@@ -11,6 +11,10 @@ import {
 import { useTranslations } from "next-intl";
 
 import type { FileEntry } from "src/core/modules/files/types/files.types";
+import {
+  canDeleteFile,
+  canRenameFile,
+} from "src/core/modules/files/utils/files-rules";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -21,10 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import {
-  canDeleteFile,
-  canRenameFile,
-} from "src/core/modules/files/utils/files-rules";
 import { Link } from "@/i18n/routing";
 
 const fileIconMap = {
@@ -50,7 +50,11 @@ export const FilesGridView = ({
 
   return (
     <section aria-label={t("filesSectionAria")} className="flex flex-col gap-3">
-      <Paragraph size="p6" tone="quaternary" className="font-medium uppercase tracking-[0.12em]">
+      <Paragraph
+        size="p6"
+        tone="quaternary"
+        className="font-medium uppercase tracking-[0.12em]"
+      >
         {t("filesSection")}
       </Paragraph>
 
@@ -82,8 +86,8 @@ export const FilesGridView = ({
                       {file.kind === "video" && file.origin === "upload" ? (
                         <>
                           <DropdownMenuItem asChild>
-                            <Link href="/dashboard/agents/video-editor/new">
-                              {t("openInEditor")}
+                            <Link href="/dashboard/agents/cuts/new">
+                              {t("generateCuts")}
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
@@ -110,7 +114,9 @@ export const FilesGridView = ({
               </div>
 
               <div className="space-y-2 p-3.5">
-                <Paragraph className="truncate font-medium">{file.name}</Paragraph>
+                <Paragraph className="truncate font-medium">
+                  {file.name}
+                </Paragraph>
                 <Paragraph size="p6" tone="tertiary">
                   {file.duration ? `${file.duration} · ` : ""}
                   {file.size}
@@ -120,7 +126,9 @@ export const FilesGridView = ({
                 ) : file.status === "failed" ? (
                   <Badge variant="destructive">{t("failed")}</Badge>
                 ) : file.usedIn ? (
-                  <Badge variant="accent">{t("usedIn", { label: file.usedIn })}</Badge>
+                  <Badge variant="accent">
+                    {t("usedIn", { label: file.usedIn })}
+                  </Badge>
                 ) : (
                   <Badge variant="success">{t("available")}</Badge>
                 )}

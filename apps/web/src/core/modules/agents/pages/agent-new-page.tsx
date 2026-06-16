@@ -1,16 +1,17 @@
 "use client";
 
-import {
-  type AgentCatalogEntry,
-  getAgentByRouteSlug,
-} from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
+import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 
 import { BriefAgentGeneration } from "src/core/modules/agents/components/generations/brief-agent-generation";
 import { ResearchGeneration } from "src/core/modules/agents/components/generations/research-generation";
 import { VideoEditorGeneration } from "src/core/modules/agents/components/generations/video-editor-generation";
-import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { CutsNewRedirect } from "src/core/modules/agents/pages/cuts-new-redirect";
+import {
+  type AgentCatalogEntry,
+  getAgentByRouteSlug,
+} from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 
 type AgentNewPageProps = {
@@ -35,7 +36,7 @@ export const AgentNewPage = ({ agentSlug }: AgentNewPageProps) => {
   const agent = getAgentByRouteSlug(agentSlug);
 
   if (!agent) {
-    return null;
+    redirect("/dashboard");
   }
 
   return (

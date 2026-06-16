@@ -127,7 +127,22 @@ No primeiro boot:
 1. Aplica o schema Prisma no Postgres
 2. Sobe a API NestJS na porta `3001`
 
-## 6. Checklist pós-deploy
+### 6. Rodar seed (dados demo)
+
+No terminal do container **api**:
+
+```bash
+apps/api/docker-seed.sh
+```
+
+Ou manualmente (se ainda não tiver o script):
+
+```bash
+. apps/api/scripts/docker-database-url.sh
+pnpm --filter @company-os/api db:seed
+```
+
+## 7. Checklist pós-deploy
 
 1. `GET https://blister.adryansantoss.dev` carrega o frontend
 2. `GET https://blister.adryansantoss.dev/api/health` retorna `{ "status": "ok", ... }`

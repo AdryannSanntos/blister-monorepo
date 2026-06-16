@@ -10,16 +10,16 @@ import {
 import { useTranslations } from "next-intl";
 
 import type { FileEntry } from "src/core/modules/files/types/files.types";
-import { Badge } from "src/core/shared/components/ui/badge";
-import { Button } from "src/core/shared/components/ui/button";
-import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { TableRowActionsMenu } from "src/core/shared/components/ui/table-row-actions-menu";
 import {
   canDeleteFile,
   canRenameFile,
 } from "src/core/modules/files/utils/files-rules";
-import { Link } from "@/i18n/routing";
+import { Badge } from "src/core/shared/components/ui/badge";
+import { Button } from "src/core/shared/components/ui/button";
+import { Paragraph } from "src/core/shared/components/ui/paragraph";
+import { TableRowActionsMenu } from "src/core/shared/components/ui/table-row-actions-menu";
 import { cn } from "src/core/shared/utils";
+import { Link } from "@/i18n/routing";
 
 const fileIconMap = {
   video: Clapperboard,
@@ -44,7 +44,11 @@ export const FilesListView = ({
 
   return (
     <section aria-label={t("filesSectionAria")} className="flex flex-col gap-3">
-      <Paragraph size="p6" tone="quaternary" className="font-medium uppercase tracking-[0.12em]">
+      <Paragraph
+        size="p6"
+        tone="quaternary"
+        className="font-medium uppercase tracking-[0.12em]"
+      >
         {t("filesSection")}
       </Paragraph>
 
@@ -57,7 +61,8 @@ export const FilesListView = ({
               key={file.id}
               className={cn(
                 "group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-[var(--bg-hover)]",
-                index < files.length - 1 && "border-b border-[var(--line-default)]",
+                index < files.length - 1 &&
+                  "border-b border-[var(--line-default)]",
               )}
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-[var(--r-md)] border border-[var(--line-default)] bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]">
@@ -65,7 +70,9 @@ export const FilesListView = ({
               </span>
 
               <div className="min-w-0 flex-1">
-                <Paragraph className="truncate font-medium">{file.name}</Paragraph>
+                <Paragraph className="truncate font-medium">
+                  {file.name}
+                </Paragraph>
                 <Paragraph size="p6" tone="tertiary" className="mt-0.5">
                   {file.duration ? `${file.duration} · ` : ""}
                   {file.size} · {t("uploadedOn", { date: file.date })}
@@ -91,9 +98,14 @@ export const FilesListView = ({
               )}
 
               {file.kind === "video" && file.origin === "upload" ? (
-                <Button variant="outline" size="sm" className="hidden md:inline-flex" asChild>
-                  <Link href="/dashboard/agents/video-editor/new">
-                    {t("openInEditor")}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden md:inline-flex"
+                  asChild
+                >
+                  <Link href="/dashboard/agents/cuts/new">
+                    {t("generateCuts")}
                   </Link>
                 </Button>
               ) : null}

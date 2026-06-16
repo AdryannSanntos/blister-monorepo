@@ -33,7 +33,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-blister}
       POSTGRES_USER: ${POSTGRES_USER:-blister}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blister}
-      DATABASE_URL: ${DATABASE_URL:-}
       PORT: 3001
       NODE_ENV: production
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}

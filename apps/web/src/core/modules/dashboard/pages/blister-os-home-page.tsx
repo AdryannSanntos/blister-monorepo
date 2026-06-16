@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  Clapperboard,
-  Coins,
-  LayoutDashboard,
-  Scissors,
-  Sparkles,
-  Store,
-} from "lucide-react";
+import { Coins, LayoutDashboard, Scissors, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
-
-import { Link } from "@/i18n/routing";
+import {
+  getAgentNewPath,
+  getAgentOverviewPath,
+} from "src/core/modules/agents/utils/agent-paths";
 import { AGENTS_CATALOG } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
-import { getAgentNewPath, getAgentOverviewPath } from "src/core/modules/agents/utils/agent-paths";
 import { MARKETPLACE_ITEMS } from "src/core/modules/blister-os/fixtures/marketplace-items.fixture";
 import { RECENT_ACTIVITY_FIXTURE } from "src/core/modules/blister-os/fixtures/recent-activity.fixture";
 import { useBlisterOsStore } from "src/core/modules/blister-os/stores/blister-os-store";
@@ -23,6 +17,7 @@ import { Card, CardContent } from "src/core/shared/components/ui/card";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
+import { Link } from "@/i18n/routing";
 
 export const BlisterOsHomePage = () => {
   const t = useTranslations("home");
@@ -31,9 +26,7 @@ export const BlisterOsHomePage = () => {
   const settings = useBlisterOsStore((state) => state.settings);
 
   const news = MARKETPLACE_ITEMS.filter((item) => item.flag).slice(0, 4);
-  const videoEditor = AGENTS_CATALOG.find((agent) => agent.id === "video_editor");
   const cuts = AGENTS_CATALOG.find((agent) => agent.id === "cuts");
-  const research = AGENTS_CATALOG.find((agent) => agent.id === "research");
 
   return (
     <div data-testid="dashboard-home-page">
@@ -43,14 +36,14 @@ export const BlisterOsHomePage = () => {
         description={t("subtitle")}
         actions={
           <Button asChild>
-            <Link href={getAgentNewPath("video-editor")}>
-              <Clapperboard className="size-4" />
+            <Link href={getAgentNewPath("cuts")}>
+              <Scissors className="size-4" />
               {t("primaryAction")}
             </Link>
           </Button>
         }
       >
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
           <DashboardStatCard
             label={t("stats.credits")}
             value={String(credits)}
@@ -64,17 +57,11 @@ export const BlisterOsHomePage = () => {
             icon={Store}
           />
           <DashboardStatCard
-            label={t("stats.edits")}
-            value="12"
-            hint={videoEditor?.stat ?? ""}
-            icon={Clapperboard}
-            tone="success"
-          />
-          <DashboardStatCard
             label={t("stats.cuts")}
             value="38"
             hint={cuts?.stat ?? ""}
             icon={Scissors}
+            tone="success"
           />
         </div>
 
@@ -84,24 +71,26 @@ export const BlisterOsHomePage = () => {
               <Heading level="h5" as="h2">
                 {t("studioTitle")}
               </Heading>
-              <div className="grid gap-4 sm:grid-cols-3">
-                {[videoEditor, cuts, research].map((agent) =>
-                  agent ? (
-                    <Link
-                      key={agent.id}
-                      href={getAgentOverviewPath(agent.routeSlug)}
-                      className="rounded-[var(--r-lg)] border border-[var(--line-default)] p-4 transition-colors hover:bg-[var(--bg-hover)]"
+              <div className="grid gap-4">
+                {cuts ? (
+                  <Link
+                    key={cuts.id}
+                    href={getAgentOverviewPath(cuts.routeSlug)}
+                    className="rounded-[var(--r-lg)] border border-[var(--line-default)] p-4 transition-colors hover:bg-[var(--bg-hover)]"
+                  >
+                    <cuts.icon className="size-5 text-[var(--accent)]" />
+                    <Heading level="h6" as="h3" className="mt-3">
+                      {cuts.name}
+                    </Heading>
+                    <Paragraph
+                      size="p5"
+                      tone="tertiary"
+                      className="mt-1 line-clamp-2"
                     >
-                      <agent.icon className="size-5 text-[var(--accent)]" />
-                      <Heading level="h6" as="h3" className="mt-3">
-                        {agent.name}
-                      </Heading>
-                      <Paragraph size="p5" tone="tertiary" className="mt-1 line-clamp-2">
-                        {agent.description}
-                      </Paragraph>
-                    </Link>
-                  ) : null,
-                )}
+                      {cuts.description}
+                    </Paragraph>
+                  </Link>
+                ) : null}
               </div>
             </CardContent>
           </Card>
@@ -125,30 +114,32 @@ export const BlisterOsHomePage = () => {
           </Card>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-4">
-            <Heading level="h5" as="h2">
-              {t("marketplaceNews")}
-            </Heading>
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard/marketplace">{t("seeAll")}</Link>
-            </Button>
+        {news.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <Heading level="h5" as="h2">
+                {t("marketplaceNews")}
+              </Heading>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/dashboard/marketplace">{t("seeAll")}</Link>
+              </Button>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {news.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/dashboard/marketplace/${item.id}`}
+                  className="overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)]"
+                >
+                  <MarketplaceStyleThumb item={item} />
+                  <div className="p-3">
+                    <Paragraph className="font-medium">{item.name}</Paragraph>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {news.map((item) => (
-              <Link
-                key={item.id}
-                href={`/dashboard/marketplace/${item.id}`}
-                className="overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)]"
-              >
-                <MarketplaceStyleThumb item={item} />
-                <div className="p-3">
-                  <Paragraph className="font-medium">{item.name}</Paragraph>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        ) : null}
       </PageLayout>
     </div>
   );

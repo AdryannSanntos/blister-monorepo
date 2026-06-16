@@ -271,7 +271,7 @@
   "home": {
     "greeting": "Olá, {name}",
     "subtitle": "Seu estúdio de conteúdo em um só lugar.",
-    "primaryAction": "Editar vídeo",
+    "primaryAction": "Gerar cortes",
     "studioTitle": "Estúdio",
     "activityTitle": "Atividade recente",
     "marketplaceNews": "Novidades no Marketplace",
@@ -505,7 +505,8 @@
       "toastFailed": "Este arquivo falhou no processamento e não pode ser usado.",
       "toastProcessing": "Aguarde o processamento terminar antes de usar este arquivo.",
       "toastFiltered": "Este arquivo não é compatível com este fluxo."
-    }
+    },
+    "generateCuts": "Gerar cortes"
   },
   "settings": {
     "title": "Configurações",
@@ -1397,7 +1398,8 @@
       "briefPlaceholder": "Descreva o que precisa...",
       "run": "Executar",
       "running": "Executando...",
-      "mockOutput": "{agent}: entrega simulada para \"{brief}\""
+      "mockOutput": "{agent}: entrega simulada para \"{brief}\"",
+      "viewHistory": "Ver histórico"
     },
     "output": {
       "failedTitle": "A geração falhou",

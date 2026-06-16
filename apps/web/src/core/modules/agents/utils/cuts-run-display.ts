@@ -1,4 +1,8 @@
-import type { AgentRunStatusDto, AgentRunStepDto, CutOutput } from "@company-os/types";
+import type {
+  AgentRunStatusDto,
+  AgentRunStepDto,
+  CutOutput,
+} from "@company-os/types";
 
 import { withStableCutIds } from "./cuts-display";
 
@@ -60,3 +64,18 @@ export const extractCutsFromRunDto = (run: AgentRunStatusDto): CutOutput[] =>
 
 export const countApprovedCuts = (cuts: CutOutput[]): number =>
   cuts.filter((cut) => cut.reviewStatus === "approved").length;
+
+/** Pause reason the cuts agent emits when it stops for manual cut review. */
+export const AWAITING_CUT_REVIEW = "awaiting_cut_review";
+
+/**
+ * A cuts run needs manual review iff the backend paused it for cut review.
+ * That pause is decided once, at run start, only when auto-accept was off — so
+ * review visibility must depend on the run's own state, never on the current
+ * workspace setting (which can be toggled after a run is already paused and
+ * would otherwise strand it with no way to resume).
+ */
+export const isRunAwaitingCutReview = (
+  run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
+): boolean =>
+  run?.status === "PAUSED" && run?.pauseReason === AWAITING_CUT_REVIEW;

@@ -10,17 +10,18 @@ import {
   useFilePreviewUrl,
   useUploadWorkspaceFile,
 } from "src/core/modules/files/hooks/use-files-api";
+import {
+  extractCutsFromRun,
+  getRunSourceTitle,
+  isRunAwaitingCutReview,
+  readSourceFileId,
+} from "../utils/cuts-run-display";
 import { useAgentRun } from "./use-agent-run";
 import { useResumeAgentRun, useStartAgentRun } from "./use-agent-run-mutations";
 import { useAgentRunStream } from "./use-agent-run-stream";
 import { cutsRunsQueryKey } from "./use-cuts-runs";
 import { cutsSettingsQueryKey, useCutsSettings } from "./use-cuts-settings";
 import { cutsStatsQueryKey } from "./use-cuts-stats";
-import {
-  extractCutsFromRun,
-  getRunSourceTitle,
-  readSourceFileId,
-} from "../utils/cuts-run-display";
 
 const CUTS_AGENT_ID = "cuts";
 
@@ -116,10 +117,9 @@ export const useCutsRunModal = () => {
 
   const autoAccept =
     settings?.autoAcceptResults ?? defaultSettings().autoAcceptResults;
-  const isPausedForReview =
-    runStatus === "PAUSED" &&
-    runData?.run.pauseReason === "awaiting_cut_review";
-  const reviewable = isPausedForReview && !autoAccept;
+  // Review visibility is driven by the run's own paused state — see
+  // `isRunAwaitingCutReview`. Never gate it on the live workspace setting.
+  const reviewable = isRunAwaitingCutReview(runData?.run);
 
   const hasSource = Boolean(sourceFileId || pendingLocalFile);
   const hasExistingSource = Boolean(sourceFileId) && !pendingLocalFile;
@@ -164,10 +164,10 @@ export const useCutsRunModal = () => {
       return;
     }
 
-    if (runStatus === "COMPLETED" || isPausedForReview) {
+    if (runStatus === "COMPLETED" || reviewable) {
       setPhase("results");
     }
-  }, [runId, phase, runStatus, isPausedForReview, runData, tModal]);
+  }, [runId, phase, runStatus, reviewable, runData, tModal]);
 
   // Default-select the first cut once results arrive.
   useEffect(() => {

@@ -15,15 +15,14 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
-
+import { useCutsPendingCount } from "src/core/modules/agents/hooks/use-cuts-runs";
+import { buildAgentSidebarItem } from "src/core/modules/agents/utils/build-agent-sidebar-item";
 import {
   AGENTS_CATALOG,
   DEFAULT_AGENT_IDS,
 } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
-import { useCutsPendingCount } from "src/core/modules/agents/hooks/use-cuts-runs";
-import { buildAgentSidebarItem } from "src/core/modules/agents/utils/build-agent-sidebar-item";
 import { useLibraryItems } from "src/core/modules/marketplace/hooks/use-marketplace-mock";
-import { type SidebarGroupDef } from "src/core/shared/components/ui/app-sidebar";
+import type { SidebarGroupDef } from "src/core/shared/components/ui/app-sidebar";
 
 const STUDIO_ICONS = {
   video_editor: Clapperboard,
@@ -78,13 +77,15 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
             icon: Library,
             href: "/dashboard/library",
             badge: { value: String(ownedCount), tone: "neutral" as const },
-            match: (pathname: string) => pathname.startsWith("/dashboard/library"),
+            match: (pathname: string) =>
+              pathname.startsWith("/dashboard/library"),
           },
           {
             label: t("files"),
             icon: Upload,
             href: "/dashboard/files",
-            match: (pathname: string) => pathname.startsWith("/dashboard/files"),
+            match: (pathname: string) =>
+              pathname.startsWith("/dashboard/files"),
           },
         ],
       },
@@ -94,20 +95,14 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
         items: DEFAULT_AGENT_IDS.map((agentId) => {
           const agent = AGENTS_CATALOG.find((entry) => entry.id === agentId);
           if (!agent) return null;
-          const Icon = STUDIO_ICONS[agentId as keyof typeof STUDIO_ICONS] ?? Sparkles;
-          if (agentId === "video_editor" || agentId === "research") {
-            return {
-              id: agent.id,
-              label: agent.name,
-              icon: Icon,
-              soon: true,
-            };
-          }
+          const Icon =
+            STUDIO_ICONS[agentId as keyof typeof STUDIO_ICONS] ?? Sparkles;
           return buildAgentSidebarItem({
             agent,
             icon: Icon,
             tNav,
-            cutsPendingCount: agent.id === "cuts" ? cutsPendingCount : undefined,
+            cutsPendingCount:
+              agent.id === "cuts" ? cutsPendingCount : undefined,
           });
         }).filter(Boolean) as SidebarGroupDef["items"],
       },
@@ -160,7 +155,8 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
             href: "/dashboard/credits",
             icon: Coins,
             permission: "credit.read",
-            match: (pathname: string) => pathname.startsWith("/dashboard/credits"),
+            match: (pathname: string) =>
+              pathname.startsWith("/dashboard/credits"),
           },
         ],
       },
