@@ -9,6 +9,7 @@ const WORKSPACES_PREFIX = "/workspaces";
 const ADMIN_PREFIX = "/admin";
 const ONBOARDING_PATH = "/onboarding";
 const AUTH_API_PREFIX = "/api/auth";
+const API_PREFIX = "/api";
 const SYSTEM_PREFIX = "/system";
 const PUBLIC_ROUTE_PREFIXES = [AUTH_PREFIX, SYSTEM_PREFIX];
 const ACTIVE_COMPANY_COOKIE = "blister-active-company-id";
@@ -127,7 +128,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
-    pathname.startsWith(AUTH_API_PREFIX) ||
+    pathname.startsWith(API_PREFIX) ||
     pathname.startsWith(SYSTEM_PREFIX)
   ) {
     return NextResponse.next();
