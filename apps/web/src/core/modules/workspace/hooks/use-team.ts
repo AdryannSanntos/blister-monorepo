@@ -4,28 +4,41 @@ import type { InviteMemberDto, TeamMember } from "@company-os/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { getActiveWorkspaceId, isPersonalWorkspace } from "src/core/shared/utils/active-workspace";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-function invalidateTeam(queryClient: ReturnType<typeof useQueryClient>) {
+function invalidateTeam(
+  queryClient: ReturnType<typeof useQueryClient>,
+  workspaceId: string | null,
+) {
   return Promise.all([
-    queryClient.invalidateQueries({ queryKey: ["team-members"] }),
-    queryClient.invalidateQueries({ queryKey: ["workspace-roles"] }),
+    queryClient.invalidateQueries({
+      queryKey: ["team-members", workspaceId ?? "default"],
+    }),
+    queryClient.invalidateQueries({
+      queryKey: ["workspace-roles", workspaceId ?? "default"],
+    }),
     queryClient.invalidateQueries({ queryKey: ["user-permissions"] }),
   ]);
 }
 
 export function useTeamMembers() {
+  const workspaceId = getActiveWorkspaceId();
+  const isCompanyWorkspace = !isPersonalWorkspace(workspaceId);
+
   return useQuery<TeamMember[]>({
-    queryKey: ["team-members"],
+    queryKey: ["team-members", workspaceId ?? "default"],
     queryFn: async () => {
       const { data } = await apiClient.get<TeamMember[]>("/members");
       return data;
     },
+    enabled: isCompanyWorkspace,
   });
 }
 
 export function useInviteMember() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.team.toasts");
 
   return useMutation<TeamMember | undefined, Error, InviteMemberDto>({
@@ -37,7 +50,7 @@ export function useInviteMember() {
       return data;
     },
     onSuccess: () => {
-      void invalidateTeam(queryClient);
+      void invalidateTeam(queryClient, workspaceId);
       toast.success(t("inviteSuccess"));
     },
     onError: () => {
@@ -48,6 +61,7 @@ export function useInviteMember() {
 
 export function useAssignMemberRole() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.team.toasts");
 
   return useMutation({
@@ -61,7 +75,7 @@ export function useAssignMemberRole() {
       await apiClient.post(`/members/${userId}/roles/${roleId}`);
     },
     onSuccess: () => {
-      void invalidateTeam(queryClient);
+      void invalidateTeam(queryClient, workspaceId);
       toast.success(t("roleAssigned"));
     },
     onError: () => {
@@ -72,6 +86,7 @@ export function useAssignMemberRole() {
 
 export function useRemoveMemberRole() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.team.toasts");
 
   return useMutation({
@@ -85,7 +100,7 @@ export function useRemoveMemberRole() {
       await apiClient.delete(`/members/${userId}/roles/${roleId}`);
     },
     onSuccess: () => {
-      void invalidateTeam(queryClient);
+      void invalidateTeam(queryClient, workspaceId);
       toast.success(t("roleRemoved"));
     },
     onError: () => {
@@ -96,6 +111,7 @@ export function useRemoveMemberRole() {
 
 export function useRemoveMember() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.team.toasts");
 
   return useMutation({
@@ -103,7 +119,7 @@ export function useRemoveMember() {
       await apiClient.delete(`/members/${userId}`);
     },
     onSuccess: () => {
-      void invalidateTeam(queryClient);
+      void invalidateTeam(queryClient, workspaceId);
       toast.success(t("memberRemoved"));
     },
     onError: () => {

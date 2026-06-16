@@ -20,8 +20,11 @@ export class MembersController {
 
   @Get()
   @RequirePermission('member.read')
-  listMembers() {
-    return this.membersService.listMembers();
+  listMembers(@Req() req: Request) {
+    const currentUser = (req as unknown as Record<string, unknown>)
+      .currentUser as CurrentUser;
+
+    return this.membersService.listMembers(currentUser.id, req);
   }
 
   @Post('invite')
@@ -33,7 +36,7 @@ export class MembersController {
     const currentUser = (req as unknown as Record<string, unknown>)
       .currentUser as CurrentUser;
 
-    return this.membersService.inviteMember(currentUser.id, parsed.data);
+    return this.membersService.inviteMember(currentUser.id, req, parsed.data);
   }
 
   @Post(':userId/roles/:roleId')
@@ -46,7 +49,7 @@ export class MembersController {
     const currentUser = (req as unknown as Record<string, unknown>)
       .currentUser as CurrentUser;
 
-    await this.membersService.assignRole(currentUser.id, userId, roleId);
+    await this.membersService.assignRole(currentUser.id, req, userId, roleId);
     return { success: true };
   }
 
@@ -60,7 +63,7 @@ export class MembersController {
     const currentUser = (req as unknown as Record<string, unknown>)
       .currentUser as CurrentUser;
 
-    await this.membersService.removeRole(currentUser.id, userId, roleId);
+    await this.membersService.removeRole(currentUser.id, req, userId, roleId);
     return { success: true };
   }
 
@@ -70,7 +73,7 @@ export class MembersController {
     const currentUser = (req as unknown as Record<string, unknown>)
       .currentUser as CurrentUser;
 
-    await this.membersService.removeMember(currentUser.id, userId);
+    await this.membersService.removeMember(currentUser.id, req, userId);
     return { success: true };
   }
 }

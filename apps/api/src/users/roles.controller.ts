@@ -21,8 +21,11 @@ export class RolesController {
 
   @Get()
   @RequirePermission('role.read')
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Req() req: Request) {
+    const currentUser = (req as unknown as Record<string, unknown>)
+      .currentUser as CurrentUser;
+
+    return this.rolesService.findAll(currentUser.id, req);
   }
 
   @Get(':id')

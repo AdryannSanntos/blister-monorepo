@@ -8,28 +8,41 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { getActiveWorkspaceId, isPersonalWorkspace } from "src/core/shared/utils/active-workspace";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-function invalidateRoles(queryClient: ReturnType<typeof useQueryClient>) {
+function invalidateRoles(
+  queryClient: ReturnType<typeof useQueryClient>,
+  workspaceId: string | null,
+) {
   return Promise.all([
-    queryClient.invalidateQueries({ queryKey: ["workspace-roles"] }),
-    queryClient.invalidateQueries({ queryKey: ["team-members"] }),
+    queryClient.invalidateQueries({
+      queryKey: ["workspace-roles", workspaceId ?? "default"],
+    }),
+    queryClient.invalidateQueries({
+      queryKey: ["team-members", workspaceId ?? "default"],
+    }),
     queryClient.invalidateQueries({ queryKey: ["user-permissions"] }),
   ]);
 }
 
 export function useWorkspaceRoles() {
+  const workspaceId = getActiveWorkspaceId();
+  const isCompanyWorkspace = !isPersonalWorkspace(workspaceId);
+
   return useQuery<WorkspaceRole[]>({
-    queryKey: ["workspace-roles"],
+    queryKey: ["workspace-roles", workspaceId ?? "default"],
     queryFn: async () => {
       const { data } = await apiClient.get<WorkspaceRole[]>("/roles");
       return data;
     },
+    enabled: isCompanyWorkspace,
   });
 }
 
 export function useCreateRole() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.permissions.toasts");
 
   return useMutation<WorkspaceRole, Error, CreateRoleDto>({
@@ -38,7 +51,7 @@ export function useCreateRole() {
       return data;
     },
     onSuccess: () => {
-      void invalidateRoles(queryClient);
+      void invalidateRoles(queryClient, workspaceId);
       toast.success(t("createSuccess"));
     },
     onError: () => {
@@ -49,6 +62,7 @@ export function useCreateRole() {
 
 export function useUpdateRole() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.permissions.toasts");
 
   return useMutation<
@@ -61,7 +75,7 @@ export function useUpdateRole() {
       return data;
     },
     onSuccess: () => {
-      void invalidateRoles(queryClient);
+      void invalidateRoles(queryClient, workspaceId);
       toast.success(t("updateSuccess"));
     },
     onError: () => {
@@ -72,6 +86,7 @@ export function useUpdateRole() {
 
 export function useDeleteRole() {
   const queryClient = useQueryClient();
+  const workspaceId = getActiveWorkspaceId();
   const t = useTranslations("workspace.permissions.toasts");
 
   return useMutation({
@@ -79,7 +94,7 @@ export function useDeleteRole() {
       await apiClient.delete(`/roles/${id}`);
     },
     onSuccess: () => {
-      void invalidateRoles(queryClient);
+      void invalidateRoles(queryClient, workspaceId);
       toast.success(t("deleteSuccess"));
     },
     onError: () => {

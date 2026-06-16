@@ -10,14 +10,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { WorkspaceContextService } from '../workspace/workspace-context.service';
 
 @Injectable()
 export class RolesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly workspaceContext: WorkspaceContextService,
   ) {}
 
   private serializeRole(
@@ -42,16 +45,44 @@ export class RolesService {
     };
   }
 
-  async findAll() {
+  private async resolveCompanyId(userId: string, req: Request): Promise<string> {
+    const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
+
+    if (workspace.type !== 'company') {
+      throw new BadRequestException(
+        'Role management is only available when a company workspace is selected',
+      );
+    }
+
+    return workspace.companyId;
+  }
+
+  async findAll(userId: string, req: Request) {
+    const companyId = await this.resolveCompanyId(userId, req);
+
     const roles = await this.prisma.role.findMany({
       include: {
         permissions: true,
-        _count: { select: { memberAssignments: true } },
       },
       orderBy: { name: 'asc' },
     });
 
-    return roles.map((role) => this.serializeRole(role));
+    const memberCounts = await this.prisma.companyMember.groupBy({
+      by: ['roleId'],
+      where: { companyId },
+      _count: { roleId: true },
+    });
+
+    const countByRoleId = new Map(
+      memberCounts.map((entry) => [entry.roleId, entry._count.roleId]),
+    );
+
+    return roles.map((role) =>
+      this.serializeRole({
+        ...role,
+        _count: { memberAssignments: countByRoleId.get(role.id) ?? 0 },
+      }),
+    );
   }
 
   async findById(id: string) {
@@ -161,13 +192,16 @@ export class RolesService {
   async deleteRole(actorUserId: string, id: string) {
     const role = await this.prisma.role.findUnique({
       where: { id },
-      include: { _count: { select: { memberAssignments: true } } },
     });
     if (!role) throw new NotFoundException('Cargo não encontrado');
     if (role.isSystem) {
       throw new ForbiddenException('Cargos de sistema não podem ser excluídos');
     }
-    if (role._count.memberAssignments > 0) {
+
+    const companyMemberCount = await this.prisma.companyMember.count({
+      where: { roleId: id },
+    });
+    if (companyMemberCount > 0) {
       throw new ConflictException(
         'Não é possível excluir um cargo atribuído a membros',
       );

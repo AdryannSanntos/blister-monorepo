@@ -1,54 +1,76 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import type { InviteMemberDto } from '@company-os/types';
+import type { Request } from 'express';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { WorkspaceContextService } from '../workspace/workspace-context.service';
 
 @Injectable()
 export class MembersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly workspaceContext: WorkspaceContextService,
   ) {}
 
-  async listMembers() {
-    const users = await this.prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        userType: true,
-        createdAt: true,
-        roleAssignments: {
-          include: {
-            role: {
-              select: { id: true, name: true, isSystem: true },
-            },
+  private async resolveCompanyId(userId: string, req: Request): Promise<string> {
+    const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
+
+    if (workspace.type !== 'company') {
+      throw new BadRequestException(
+        'Team management is only available when a company workspace is selected',
+      );
+    }
+
+    return workspace.companyId;
+  }
+
+  async listMembers(userId: string, req: Request) {
+    const companyId = await this.resolveCompanyId(userId, req);
+
+    const members = await this.prisma.companyMember.findMany({
+      where: { companyId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            userType: true,
           },
         },
+        role: {
+          select: { id: true, name: true, isSystem: true },
+        },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { joinedAt: 'desc' },
     });
 
-    return users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      userType: user.userType,
-      createdAt: user.createdAt.toISOString(),
-      roles: user.roleAssignments.map((assignment) => ({
-        id: assignment.role.id,
-        name: assignment.role.name,
-        isSystem: assignment.role.isSystem,
-      })),
+    return members.map((member) => ({
+      id: member.user.id,
+      name: member.user.name,
+      email: member.user.email,
+      userType: member.user.userType,
+      createdAt: member.joinedAt.toISOString(),
+      roles: [
+        {
+          id: member.role.id,
+          name: member.role.name,
+          isSystem: member.role.isSystem,
+        },
+      ],
     }));
   }
 
-  async inviteMember(actorUserId: string, dto: InviteMemberDto) {
+  async inviteMember(actorUserId: string, req: Request, dto: InviteMemberDto) {
+    const companyId = await this.resolveCompanyId(actorUserId, req);
+
     const user = await this.prisma.user.findFirst({
       where: { email: { equals: dto.email, mode: 'insensitive' } },
     });
@@ -62,148 +84,164 @@ export class MembersService {
     const role = await this.prisma.role.findUnique({ where: { id: dto.roleId } });
     if (!role) throw new NotFoundException('Cargo não encontrado');
 
-    try {
-      await this.prisma.userRoleAssignment.create({
-        data: { userId: user.id, roleId: role.id },
-      });
-    } catch (err) {
-      if (
-        err instanceof Error &&
-        'code' in err &&
-        (err as { code: string }).code === 'P2002'
-      ) {
-        throw new ConflictException('Este usuário já possui este cargo');
-      }
-      throw err;
+    const existingMembership = await this.prisma.companyMember.findUnique({
+      where: { companyId_userId: { companyId, userId: user.id } },
+    });
+
+    if (existingMembership) {
+      throw new ConflictException('Este usuário já faz parte desta empresa');
     }
+
+    await this.prisma.companyMember.create({
+      data: {
+        companyId,
+        userId: user.id,
+        roleId: role.id,
+      },
+    });
 
     await this.audit.write({
       actorUserId,
       targetUserId: user.id,
       action: 'member.invite',
-      resourceType: 'UserRoleAssignment',
+      resourceType: 'CompanyMember',
       resourceId: user.id,
-      metadata: { roleId: role.id, roleName: role.name },
+      metadata: { companyId, roleId: role.id, roleName: role.name },
     });
 
-    return this.listMembers().then((members) =>
+    return this.listMembers(actorUserId, req).then((members) =>
       members.find((member) => member.id === user.id),
     );
   }
 
-  async assignRole(actorUserId: string, userId: string, roleId: string) {
+  async assignRole(
+    actorUserId: string,
+    req: Request,
+    userId: string,
+    roleId: string,
+  ) {
+    const companyId = await this.resolveCompanyId(actorUserId, req);
+
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
     const role = await this.prisma.role.findUnique({ where: { id: roleId } });
     if (!role) throw new NotFoundException('Cargo não encontrado');
 
-    try {
-      await this.prisma.userRoleAssignment.create({
-        data: { userId, roleId },
-      });
-    } catch (err) {
-      if (
-        err instanceof Error &&
-        'code' in err &&
-        (err as { code: string }).code === 'P2002'
-      ) {
-        throw new ConflictException('Este usuário já possui este cargo');
-      }
-      throw err;
+    const membership = await this.prisma.companyMember.findUnique({
+      where: { companyId_userId: { companyId, userId } },
+    });
+
+    if (!membership) {
+      throw new NotFoundException('Membro não encontrado nesta empresa');
     }
+
+    if (membership.roleId === roleId) {
+      throw new ConflictException('Este usuário já possui este cargo');
+    }
+
+    await this.prisma.companyMember.update({
+      where: { companyId_userId: { companyId, userId } },
+      data: { roleId },
+    });
 
     await this.audit.write({
       actorUserId,
       targetUserId: userId,
       action: 'member.update',
-      resourceType: 'UserRoleAssignment',
+      resourceType: 'CompanyMember',
       resourceId: userId,
-      metadata: { roleId, roleName: role.name, action: 'assign' },
+      metadata: {
+        companyId,
+        roleId,
+        roleName: role.name,
+        action: 'assign',
+      },
     });
   }
 
-  async removeRole(actorUserId: string, userId: string, roleId: string) {
-    await this.assertCanRemoveRole(userId, roleId);
+  async removeRole(
+    actorUserId: string,
+    req: Request,
+    userId: string,
+    roleId: string,
+  ) {
+    const companyId = await this.resolveCompanyId(actorUserId, req);
+    await this.assertCanRemoveRole(companyId, userId, roleId);
 
-    const assignment = await this.prisma.userRoleAssignment.findUnique({
-      where: { userId_roleId: { userId, roleId } },
+    const membership = await this.prisma.companyMember.findUnique({
+      where: { companyId_userId: { companyId, userId } },
       include: { role: true },
     });
 
-    if (!assignment) throw new NotFoundException('Atribuição não encontrada');
+    if (!membership || membership.roleId !== roleId) {
+      throw new NotFoundException('Atribuição não encontrada');
+    }
 
-    await this.prisma.userRoleAssignment.delete({
-      where: { userId_roleId: { userId, roleId } },
+    await this.prisma.companyMember.delete({
+      where: { companyId_userId: { companyId, userId } },
     });
 
     await this.audit.write({
       actorUserId,
       targetUserId: userId,
       action: 'member.update',
-      resourceType: 'UserRoleAssignment',
+      resourceType: 'CompanyMember',
       resourceId: userId,
       metadata: {
+        companyId,
         roleId,
-        roleName: assignment.role.name,
+        roleName: membership.role.name,
         action: 'remove',
       },
     });
   }
 
-  async removeMember(actorUserId: string, userId: string) {
-    const assignments = await this.prisma.userRoleAssignment.findMany({
-      where: { userId },
+  async removeMember(actorUserId: string, req: Request, userId: string) {
+    const companyId = await this.resolveCompanyId(actorUserId, req);
+
+    const membership = await this.prisma.companyMember.findUnique({
+      where: { companyId_userId: { companyId, userId } },
       include: { role: true },
     });
 
-    if (assignments.length === 0) {
-      throw new NotFoundException('Usuário sem cargos atribuídos');
+    if (!membership) {
+      throw new NotFoundException('Membro não encontrado nesta empresa');
     }
 
-    for (const assignment of assignments) {
-      await this.assertCanRemoveRole(userId, assignment.roleId);
-    }
+    await this.assertCanRemoveRole(companyId, userId, membership.roleId);
 
-    await this.prisma.userRoleAssignment.deleteMany({ where: { userId } });
+    await this.prisma.companyMember.delete({
+      where: { companyId_userId: { companyId, userId } },
+    });
 
     await this.audit.write({
       actorUserId,
       targetUserId: userId,
       action: 'member.remove',
-      resourceType: 'User',
+      resourceType: 'CompanyMember',
       resourceId: userId,
+      metadata: { companyId, roleId: membership.roleId, roleName: membership.role.name },
     });
   }
 
-  private async assertCanRemoveRole(userId: string, roleId: string) {
+  private async assertCanRemoveRole(
+    companyId: string,
+    userId: string,
+    roleId: string,
+  ) {
     const role = await this.prisma.role.findUnique({ where: { id: roleId } });
     if (!role) throw new NotFoundException('Cargo não encontrado');
 
     if (role.name !== 'owner') return;
 
-    const ownerRole = role;
-    const ownerAssignments = await this.prisma.userRoleAssignment.count({
-      where: { roleId: ownerRole.id },
+    const ownerCount = await this.prisma.companyMember.count({
+      where: { companyId, roleId },
     });
 
-    const userHasOwner = await this.prisma.userRoleAssignment.findUnique({
-      where: { userId_roleId: { userId, roleId: ownerRole.id } },
-    });
-
-    if (userHasOwner && ownerAssignments <= 1) {
+    if (ownerCount <= 1) {
       throw new ForbiddenException(
-        'Não é possível remover o último proprietário da plataforma',
-      );
-    }
-
-    const userAssignments = await this.prisma.userRoleAssignment.count({
-      where: { userId },
-    });
-
-    if (userAssignments <= 1) {
-      throw new ForbiddenException(
-        'Não é possível remover todos os cargos de um membro',
+        'Não é possível remover o último proprietário desta empresa',
       );
     }
   }
