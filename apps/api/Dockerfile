@@ -18,14 +18,16 @@ COPY packages/authz/package.json packages/authz/package.json
 COPY packages/types/package.json packages/types/package.json
 COPY packages/configs/package.json packages/configs/package.json
 
-RUN pnpm install --frozen-lockfile
+# postinstall references apps/api/scripts/* which is not copied yet
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 FROM deps AS build
 
 COPY apps/api apps/api
 COPY packages packages
 
-RUN pnpm --filter @company-os/authz build \
+RUN node apps/api/scripts/ensure-ffmpeg-static.cjs \
+  && pnpm --filter @company-os/authz build \
   && pnpm --filter @company-os/types build \
   && pnpm --filter @company-os/agent-sdk build \
   && pnpm --filter @company-os/api prisma:generate \
