@@ -36,30 +36,21 @@ export const createResolveSourceStep = (): StepExecutor => {
         companyId: context.companyId,
       });
 
-      let transcriptText = file.extractedText ?? '';
-      let segments = transcriptText
-        ? [{ startSec: 0, endSec: 0, text: transcriptText }]
-        : [];
+      const transcription = await deps.transcribeSource({
+        file,
+        agentId: context.agentId,
+        stepKey: context.stepKey,
+      });
 
-      if (!transcriptText) {
-        const transcription = await deps.transcribeSource({
-          file,
-          agentId: context.agentId,
-          stepKey: context.stepKey,
-        });
-        transcriptText = transcription.text;
-        segments = transcription.segments;
-      }
-
-      const analyzedSegments = buildAnalyzedSegments(segments);
+      const analyzedSegments = buildAnalyzedSegments(transcription.segments);
 
       return {
         type: 'CONTINUE',
         output: {
           sourceFileId: file.id,
           sourceFileName: file.name,
-          transcriptText,
-          segments,
+          transcriptText: transcription.text,
+          segments: transcription.segments,
           analyzedSegments,
         },
       };
