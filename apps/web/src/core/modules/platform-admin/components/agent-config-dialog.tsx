@@ -160,7 +160,7 @@ export function AgentConfigDialog({
       return;
     }
 
-    const isNewAgentSession = openedForAgentIdRef.current !== agent.id;
+    const isNewAgentSession = openedForAgentIdRef.current !== agent.agentId;
     if (!isNewAgentSession && form.formState.isDirty) return;
 
     const stepModels: Record<string, string> = {};
@@ -182,7 +182,7 @@ export function AgentConfigDialog({
       sortOrder: agent.sortOrder,
       stepModels,
     });
-    openedForAgentIdRef.current = agent.id;
+    openedForAgentIdRef.current = agent.agentId;
   }, [agent, compatibleModels, form, open]);
 
   const handleSubmit = async (data: AgentConfigFormOutput) => {
