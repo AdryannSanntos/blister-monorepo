@@ -2,6 +2,8 @@
 
 > **Decisão vigente:** agentes **isolados** + SDK monolith. Ver [`2026-06-09-agents-isolated-architecture.md`](../decisions/2026-06-09-agents-isolated-architecture.md) e [`2026-06-12-blister-os-pivot.md`](../decisions/2026-06-12-blister-os-pivot.md).
 
+**Dúvidas sobre o projeto (não é agente de produto):** instruções do assistente **Espaço Blister** em [`blister-space-agent.md`](blister-space-agent.md).
+
 ---
 
 ## MVP de produto (4 agentes)

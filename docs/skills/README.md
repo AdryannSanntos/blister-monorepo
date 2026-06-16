@@ -13,6 +13,8 @@
 | `design-system-skill.md` | Proto → Tailwind/shadcn |
 | `code-review-skill.md` | Checklist OS |
 
+**Agente de dúvidas:** [`docs/agents/blister-space-agent.md`](../agents/blister-space-agent.md) — Espaço Blister (Q&A sobre o projeto). Mirrors: `.cursor/skills/blister-space/`, `.claude/commands/blister-space.md`, `.opencode/agents/blister-space.md`.
+
 ## Ordem de leitura
 
 1. `docs/prd/blister-os-prd.md`
