@@ -1,5 +1,7 @@
 FROM node:22-alpine AS base
 
+RUN apk add --no-cache libc6-compat openssl
+
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 
@@ -11,6 +13,7 @@ FROM base AS deps
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json ./
 COPY apps/api/package.json apps/api/package.json
+COPY packages/agent-sdk/package.json packages/agent-sdk/package.json
 COPY packages/authz/package.json packages/authz/package.json
 COPY packages/types/package.json packages/types/package.json
 COPY packages/configs/package.json packages/configs/package.json
@@ -24,6 +27,7 @@ COPY packages packages
 
 RUN pnpm --filter @company-os/authz build \
   && pnpm --filter @company-os/types build \
+  && pnpm --filter @company-os/agent-sdk build \
   && pnpm --filter @company-os/api prisma:generate \
   && pnpm --filter @company-os/api build
 
@@ -36,4 +40,4 @@ COPY --from=build /app /app
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "pnpm --filter @company-os/api exec prisma db push && node apps/api/dist/main.js"]
+CMD ["sh", "-c", "pnpm --filter @company-os/api exec prisma db push && node apps/api/dist/src/main.js"]
