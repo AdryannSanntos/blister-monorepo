@@ -27,6 +27,8 @@ export const useCutsRuns = (options?: { reviewStatus?: "pending"; limit?: number
       );
       return data;
     },
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 
 export const useCutsPendingCount = () => {

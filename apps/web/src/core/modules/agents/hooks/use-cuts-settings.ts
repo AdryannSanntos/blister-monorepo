@@ -19,6 +19,8 @@ export const useCutsSettings = () =>
       const { data } = await apiClient.get(`/workspace-settings/agents/${CUTS_AGENT_ID}`);
       return agentWorkspaceSettingsResponseSchema.parse(data).config;
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
 export const useUpdateCutsSettings = () => {

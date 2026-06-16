@@ -4,8 +4,8 @@ import { cutsAgentSettingsSchema, type CutsAgentSettings } from "@company-os/typ
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Scissors } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -66,13 +66,27 @@ export const CutsSettings = () => {
     },
   });
 
+  const hasHydratedSettings = useRef(false);
+
   useEffect(() => {
-    if (settings) {
+    if (!settings) return;
+
+    // Hydrate once on load; skip refetches while the user is editing.
+    if (!hasHydratedSettings.current) {
+      form.reset(settings);
+      hasHydratedSettings.current = true;
+      return;
+    }
+
+    if (!form.formState.isDirty) {
       form.reset(settings);
     }
   }, [form, settings]);
 
-  const addCaptions = form.watch("addCaptions");
+  const addCaptions = useWatch({
+    control: form.control,
+    name: "addCaptions",
+  });
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const parsed = cutsAgentSettingsSchema.parse(values);

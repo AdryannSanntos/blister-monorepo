@@ -54,7 +54,11 @@ export function TableRowActionsMenu({
             <DropdownMenuItem
               key={item.id}
               disabled={item.disabled}
-              onSelect={() => item.onClick()}
+              onSelect={() => {
+                // Defer until after Radix closes the menu — opening a Dialog in the
+                // same tick as onSelect caused a focus-scope loop that froze the tab.
+                window.setTimeout(() => item.onClick(), 0);
+              }}
             >
               {item.icon ? <item.icon className="size-4" /> : null}
               {item.label}
@@ -68,7 +72,9 @@ export function TableRowActionsMenu({
               key={item.id}
               variant="destructive"
               disabled={item.disabled}
-              onSelect={() => item.onClick()}
+              onSelect={() => {
+                window.setTimeout(() => item.onClick(), 0);
+              }}
             >
               {item.icon ? <item.icon className="size-4" /> : null}
               {item.label}

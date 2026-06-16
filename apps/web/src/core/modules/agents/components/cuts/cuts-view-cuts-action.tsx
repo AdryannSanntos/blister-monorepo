@@ -3,7 +3,7 @@
 import type { AgentRunStatusDto } from "@company-os/types";
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { memo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 import { useCutsRunModalActions } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
 import {
@@ -33,27 +33,36 @@ export const CutsViewCutsAction = memo(({ run }: CutsViewCutsActionProps) => {
   const t = useTranslations("cuts.results");
   const { handleOpenRunDetails } = useCutsRunModalActions();
 
-  if (!canViewRunCuts(run)) return null;
-
   const sourceTitle = getRunSourceTitle(run.inputPayload);
+  const initialCuts = useMemo(() => extractCutsFromRunDto(run), [run]);
+
+  const handleViewCuts = useCallback(() => {
+    handleOpenRunDetails({
+      runId: run.id,
+      sourceFileId: readSourceFileId(run.inputPayload),
+      sourceFileName: sourceTitle,
+      initialCuts,
+    });
+  }, [handleOpenRunDetails, initialCuts, run.id, run.inputPayload, sourceTitle]);
+
+  const menuItems = useMemo(
+    () => [
+      {
+        id: "view",
+        label: t("viewCuts"),
+        icon: Eye,
+        onClick: handleViewCuts,
+      },
+    ],
+    [handleViewCuts, t],
+  );
+
+  if (!canViewRunCuts(run)) return null;
 
   return (
     <TableRowActionsMenu
       ariaLabel={t("actionsMenu", { name: sourceTitle })}
-      items={[
-        {
-          id: "view",
-          label: t("viewCuts"),
-          icon: Eye,
-          onClick: () =>
-            handleOpenRunDetails({
-              runId: run.id,
-              sourceFileId: readSourceFileId(run.inputPayload),
-              sourceFileName: sourceTitle,
-              initialCuts: extractCutsFromRunDto(run),
-            }),
-        },
-      ]}
+      items={menuItems}
     />
   );
 });

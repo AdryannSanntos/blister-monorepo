@@ -15,7 +15,7 @@ import { useAgentRun, type AgentRunWithSteps } from "./use-agent-run";
 import { useResumeAgentRun, useStartAgentRun } from "./use-agent-run-mutations";
 import { useAgentRunStream } from "./use-agent-run-stream";
 import { cutsRunsQueryKey } from "./use-cuts-runs";
-import { cutsSettingsQueryKey, useCutsSettings } from "./use-cuts-settings";
+import { useCutsSettings } from "./use-cuts-settings";
 import { cutsStatsQueryKey } from "./use-cuts-stats";
 import {
   ACTIVE_RUN_POLL_MS,
@@ -181,7 +181,6 @@ export const useCutsRunModal = () => {
   const invalidateCutsQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: cutsRunsQueryKey() });
     queryClient.invalidateQueries({ queryKey: cutsStatsQueryKey });
-    queryClient.invalidateQueries({ queryKey: cutsSettingsQueryKey });
     queryClient.invalidateQueries({ queryKey: ["agent-runs", CUTS_AGENT_ID] });
   }, [queryClient]);
 
@@ -218,7 +217,7 @@ export const useCutsRunModal = () => {
     if (phase === "results" && !selectedCutId && cuts.length > 0) {
       setSelectedCutId(cuts[0].id);
     }
-  }, [phase, selectedCutId, cuts]);
+  }, [phase, selectedCutId, cuts.length, cuts[0]?.id]);
 
   const resetState = useCallback(() => {
     clearLocalPreview();

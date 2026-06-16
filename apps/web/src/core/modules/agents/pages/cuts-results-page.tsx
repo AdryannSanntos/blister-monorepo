@@ -63,6 +63,22 @@ const isViewableRun = (run: AgentRunStatusDto) =>
   run.status === "PAUSED" ||
   (run.status === "FAILED" && extractCutsFromRunDto(run).length > 0);
 
+type CutsRunRow = AgentRunStatusDto & {
+  cutsCount: number;
+  approvedCount: number;
+  sourceTitle: string;
+};
+
+const buildRunRow = (run: AgentRunStatusDto): CutsRunRow => {
+  const cuts = extractCutsFromRunDto(run);
+  return {
+    ...run,
+    cutsCount: cuts.length,
+    approvedCount: countApprovedCuts(cuts),
+    sourceTitle: getRunSourceTitle(run.inputPayload),
+  };
+};
+
 export const CutsResultsPage = ({ agentSlug }: CutsResultsPageProps) => {
   const t = useTranslations("cuts.results");
   const tStatus = useTranslations("agents.status");
@@ -70,11 +86,11 @@ export const CutsResultsPage = ({ agentSlug }: CutsResultsPageProps) => {
   const { data, isLoading } = useCutsRuns({ limit: 50 });
 
   const runs = useMemo(
-    () => (data?.runs ?? []).filter(isViewableRun),
+    () => (data?.runs ?? []).filter(isViewableRun).map(buildRunRow),
     [data?.runs],
   );
 
-  const columns = useMemo<ColumnDef<AgentRunStatusDto>[]>(
+  const columns = useMemo<ColumnDef<CutsRunRow>[]>(
     () => [
       {
         accessorKey: "title",
@@ -82,7 +98,7 @@ export const CutsResultsPage = ({ agentSlug }: CutsResultsPageProps) => {
         cell: ({ row }) => (
           <div className="min-w-0">
             <Paragraph className="truncate font-medium">
-              {getRunSourceTitle(row.original.inputPayload)}
+              {row.original.sourceTitle}
             </Paragraph>
           </div>
         ),
@@ -99,28 +115,24 @@ export const CutsResultsPage = ({ agentSlug }: CutsResultsPageProps) => {
       {
         id: "cuts",
         header: t("columns.cuts"),
-        cell: ({ row }) => {
-          const cuts = extractCutsFromRunDto(row.original);
-          return (
-            <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
-              {cuts.length > 0 ? cuts.length : "—"}
-            </span>
-          );
-        },
+        cell: ({ row }) => (
+          <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
+            {row.original.cutsCount > 0 ? row.original.cutsCount : "—"}
+          </span>
+        ),
       },
       {
         id: "approved",
         header: t("columns.approved"),
         cell: ({ row }) => {
-          const cuts = extractCutsFromRunDto(row.original);
-          if (cuts.length === 0) {
+          if (row.original.cutsCount === 0) {
             return (
               <span className="text-[13px] text-[var(--fg-tertiary)]">—</span>
             );
           }
           return (
             <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
-              {countApprovedCuts(cuts)}
+              {row.original.approvedCount}
             </span>
           );
         },
