@@ -101,11 +101,12 @@ export const CutsRunModal = ({
         data-phase={phase}
         showCloseButton={!isBusy}
         className={cn(
+          "transition-all duration-500 ease-in-out",
           isResults
             ? "flex max-h-[min(94vh,1000px)] h-[min(94vh,900px)] max-w-[min(97vw,1180px)] flex-col overflow-hidden gap-0 p-0 sm:max-w-[min(97vw,1180px)]"
             : phase === "error"
               ? "max-w-lg gap-6"
-              : "max-w-2xl gap-6 overflow-hidden",
+              : "max-w-lg gap-6 overflow-hidden",
         )}
       >
         <DialogDescription className="sr-only">
@@ -152,7 +153,7 @@ export const CutsRunModal = ({
         ) : null}
 
         {isResults ? (
-          <>
+          <div className={cn("flex min-h-0 flex-1 flex-col", "animate-in fade-in duration-300")}>
             <DialogHeader className="shrink-0 gap-1 border-b border-[var(--line-subtle)] px-5 py-4">
               <DialogTitle className="text-sm font-medium text-[var(--fg-primary)]">
                 {intent === "view"
@@ -198,6 +199,7 @@ export const CutsRunModal = ({
                   isResolvingSource={isResolvingSource}
                   reviewable={reviewable}
                   decisions={decisions}
+                  playerVariant={intent === "view" ? "minimal" : "story"}
                   className="min-h-0 flex-1"
                   onSelectCut={setSelectedCut}
                   onApprove={(cutId) => setDecision(cutId, "approve")}
@@ -259,7 +261,7 @@ export const CutsRunModal = ({
                 </Button>
               ) : null}
             </DialogFooter>
-          </>
+          </div>
         ) : null}
 
         {phase === "error" ? (

@@ -4,7 +4,7 @@ import type { CutOutput } from "@company-os/types";
 import { useTranslations } from "next-intl";
 import { memo } from "react";
 
-import { CutStoryPlayer } from "src/core/modules/agents/components/cuts/cut-story-player";
+import { CutStoryPlayer, type PlayerVariant } from "src/core/modules/agents/components/cuts/cut-story-player";
 import { CutStoryThumb } from "src/core/modules/agents/components/cuts/cut-story-thumb";
 import { formatCutWindow } from "src/core/modules/agents/utils/cuts-display";
 import { viralScoreBadgeVariant } from "src/core/modules/agents/utils/viral-score";
@@ -23,6 +23,7 @@ export type CutsReviewPanelProps = {
   isResolvingSource?: boolean;
   reviewable?: boolean;
   decisions?: Record<string, CutDecision>;
+  playerVariant?: PlayerVariant;
   className?: string;
   onSelectCut: (cutId: string) => void;
   onApprove?: (cutId: string) => void;
@@ -38,6 +39,7 @@ export const CutsReviewPanel = memo(function CutsReviewPanel({
   isResolvingSource,
   reviewable = false,
   decisions = {},
+  playerVariant,
   className,
   onSelectCut,
   onApprove,
@@ -141,6 +143,7 @@ export const CutsReviewPanel = memo(function CutsReviewPanel({
           fallbackSrc={fallbackPlayerSrc}
           fallbackResourceKey={fallbackPlayerResourceKey}
           cut={selectedCut}
+          variant={playerVariant ?? "story"}
           isResolvingSource={isResolvingSource}
           hideMeta
           className="min-h-0 flex-1"
