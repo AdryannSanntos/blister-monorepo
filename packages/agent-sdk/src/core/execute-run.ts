@@ -274,7 +274,6 @@ export async function executeRun(
         runId: run.id,
         agentId: run.agentId,
         companyId: run.companyId,
-        campaignId: run.campaignId,
         stepKey: stepDef.key,
         stepIndex: i,
         inputPayload: {
@@ -282,10 +281,7 @@ export async function executeRun(
           ...currentOutput,
           ...(params.formData ?? {}),
         },
-        brandProfile: run.brandProfile,
-        contextPackBuilder: deps.contextPackBuilder,
         previousStepsOutput,
-        contextConfig: agentDefinition.context,
       });
 
       const onChunk = (delta: string): void => {
@@ -297,7 +293,6 @@ export async function executeRun(
       const stepExecutorDeps = {
         llmProvider: deps.llmProvider,
         imageProvider: deps.imageProvider,
-        assetResolver: deps.assetResolver ?? null,
         message,
       };
 
@@ -411,8 +406,8 @@ export async function executeRun(
         const completedOutputs = await runStore.getCompletedStepOutputs(run.id);
         const pausedOutput = {
           ...currentOutput,
-          ...(completedOutputs.render_cuts ?? {}),
-          ...(completedOutputs.rank_segments && !completedOutputs.render_cuts
+          ...(completedOutputs.dispatch_renders ?? {}),
+          ...(completedOutputs.rank_segments && !completedOutputs.dispatch_renders
             ? completedOutputs.rank_segments
             : {}),
         };
