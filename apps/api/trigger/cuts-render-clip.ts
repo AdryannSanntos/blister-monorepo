@@ -1,7 +1,3 @@
-import { randomUUID } from 'node:crypto';
-import { mkdir, rm } from 'node:fs/promises';
-import { join } from 'node:path';
-import { tmpdir } from 'node:os';
 import { task, logger } from '@trigger.dev/sdk';
 import { z } from 'zod';
 import { PrismaClient } from '../src/generated/prisma';
@@ -25,7 +21,7 @@ const payloadSchema = z.object({
   title: z.string().min(1),
   sourceStorageKey: z.string().min(1),
   startSec: z.number().nonnegative(),
-  endSec: z.number().positive(),
+  endSec: z.number().nonnegative().refine((v) => v > 0, 'endSec must be positive'),
   companyId: z.string().nullable(),
   personalSpaceId: z.string().nullable(),
 });
@@ -38,6 +34,8 @@ export type CutsRenderClipResult = {
   storageKey: string;
   sizeBytes: number;
 };
+
+const buildStorageService = (): StorageService => new StorageService(new ConfigService());
 
 const resolveStorageRoot = async (
   companyId: string | null,
@@ -64,9 +62,34 @@ const resolveStorageRoot = async (
   throw new Error('Workspace scope is required to render a cut');
 };
 
-const buildStorageService = (): StorageService => {
-  const config = new ConfigService();
-  return new StorageService(config);
+const notifyCutRendered = async (
+  runId: string,
+  cutId: string,
+  cutFileId: string,
+  runFolderId: string,
+): Promise<void> => {
+  const apiBaseUrl = process.env.API_BASE_URL;
+  const internalSecret = process.env.INTERNAL_SECRET ?? process.env.TRIGGER_SECRET_KEY ?? '';
+
+  if (!apiBaseUrl) {
+    logger.warn('API_BASE_URL not set — skipping cut-rendered callback');
+    return;
+  }
+
+  const url = `${apiBaseUrl}/internal/agent-runs/cuts/cut-rendered/${runId}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-internal-secret': internalSecret,
+    },
+    body: JSON.stringify({ cutId, cutFileId, runFolderId }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`cut-rendered callback failed: ${response.status} ${text}`);
+  }
 };
 
 export const cutsRenderClip = task({
@@ -81,6 +104,7 @@ export const cutsRenderClip = task({
   },
   run: async (payload: CutsRenderClipPayload): Promise<CutsRenderClipResult> => {
     const validated = payloadSchema.parse(payload);
+
     logger.info('Rendering cut clip', {
       runId: validated.runId,
       cutId: validated.cutId,
@@ -91,32 +115,17 @@ export const cutsRenderClip = task({
 
     const storage = buildStorageService();
     const ffmpegPath = resolveFfmpegPath();
-    logger.info('Resolved FFmpeg binary', {
+
+    const sourceUrl = await storage.getPresignedDownloadUrl(validated.sourceStorageKey);
+
+    logger.info('Got presigned source URL', { sourceStorageKey: validated.sourceStorageKey });
+
+    const clipBuffer = await trimVideoToBuffer({
+      inputUrl: sourceUrl,
+      startSec: validated.startSec,
+      endSec: validated.endSec,
       ffmpegPath,
-      ffmpegPathEnv: process.env.FFMPEG_PATH ?? null,
-      triggerRunId: process.env.TRIGGER_RUN_ID ?? null,
     });
-
-    const sourceWorkDir = join(tmpdir(), `blister-cut-source-${randomUUID()}`);
-    const sourcePath = join(sourceWorkDir, 'source.mp4');
-    await mkdir(sourceWorkDir, { recursive: true });
-
-    let clipBuffer: Buffer;
-    try {
-      logger.info('Downloading source video for trim', {
-        sourceStorageKey: validated.sourceStorageKey,
-      });
-      await storage.downloadObjectToPath(validated.sourceStorageKey, sourcePath);
-
-      clipBuffer = await trimVideoToBuffer({
-        inputPath: sourcePath,
-        startSec: validated.startSec,
-        endSec: validated.endSec,
-        ffmpegPath,
-      });
-    } finally {
-      await rm(sourceWorkDir, { recursive: true, force: true }).catch(() => undefined);
-    }
 
     const scope =
       validated.companyId !== null
@@ -154,6 +163,8 @@ export const cutsRenderClip = task({
       cutFileId,
       sizeBytes: clipBuffer.length,
     });
+
+    await notifyCutRendered(validated.runId, validated.cutId, cutFileId, validated.runFolderId);
 
     return {
       cutId: validated.cutId,
