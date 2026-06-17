@@ -195,7 +195,7 @@ export const useCutsRunModal = () => {
   }, []);
 
   // Advance phase as the run progresses — show results as soon as cuts exist
-  // (e.g. rank_segments done while render_cuts is still running).
+  // (e.g. rank_segments done while dispatch_renders is still running).
   useEffect(() => {
     if (!runId || (phase !== "processing" && phase !== "results")) return;
 

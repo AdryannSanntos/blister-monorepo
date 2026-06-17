@@ -58,11 +58,11 @@ describe("extractCutsFromRun", () => {
     expect(cuts[0]?.id).toBe("cut-1");
   });
 
-  it("falls back to render_cuts step output", () => {
+  it("falls back to dispatch_renders step output", () => {
     const cuts = extractCutsFromRun({
       run: run({}),
       steps: [
-        step("render_cuts", {
+        step("dispatch_renders", {
           cuts: [{ ...baseCut, cutFileId: "file-cut-1" }],
         }),
       ],

@@ -45,7 +45,7 @@ const readCutsFromStep = (
   return readCutsFromPayload(step?.outputPayload);
 };
 
-/** Reads cuts from run output, render step, or rank step (while paused). */
+/** Reads cuts from run output, dispatch_renders step, or rank step (while paused). */
 export const extractCutsFromRun = (params: {
   run: AgentRunStatusDto;
   steps?: AgentRunStepDto[];
@@ -53,8 +53,8 @@ export const extractCutsFromRun = (params: {
   const fromOutput = readCutsFromPayload(params.run.outputPayload);
   if (fromOutput.length > 0) return fromOutput;
 
-  const fromRender = readCutsFromStep(params.steps, "render_cuts");
-  if (fromRender.length > 0) return fromRender;
+  const fromDispatch = readCutsFromStep(params.steps, "dispatch_renders");
+  if (fromDispatch.length > 0) return fromDispatch;
 
   return readCutsFromStep(params.steps, "rank_segments");
 };
