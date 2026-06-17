@@ -191,6 +191,7 @@ export const CutsRunModal = ({
               ) : (
                 <CutsReviewPanel
                   cuts={cuts}
+                  totalCuts={totalCuts}
                   selectedCut={selectedCut}
                   fallbackPlayerSrc={playerSrc}
                   fallbackPlayerResourceKey={playerSrcResourceKey}

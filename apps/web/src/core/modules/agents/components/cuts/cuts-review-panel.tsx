@@ -16,6 +16,7 @@ type CutDecision = "approve" | "reject";
 
 export type CutsReviewPanelProps = {
   cuts: CutOutput[];
+  totalCuts: number;
   selectedCut: CutOutput | null;
   fallbackPlayerSrc?: string | null;
   fallbackPlayerResourceKey?: string | null;
@@ -30,6 +31,7 @@ export type CutsReviewPanelProps = {
 
 export const CutsReviewPanel = memo(function CutsReviewPanel({
   cuts,
+  totalCuts,
   selectedCut,
   fallbackPlayerSrc,
   fallbackPlayerResourceKey,
@@ -67,20 +69,32 @@ export const CutsReviewPanel = memo(function CutsReviewPanel({
             role="listbox"
             aria-label={t("cutsListLabel")}
           >
-            {cuts.map((cut, index) => (
-              <CutStoryThumb
-                key={cut.id}
-                cut={cut}
-                index={index}
-                selected={cut.id === selectedCut?.id}
-                reviewable={reviewable}
-                compact
-                decision={decisions[cut.id]}
-                onSelect={() => onSelectCut(cut.id)}
-                onApprove={onApprove ? () => onApprove(cut.id) : undefined}
-                onReject={onReject ? () => onReject(cut.id) : undefined}
-              />
-            ))}
+            {Array.from({ length: Math.max(cuts.length, totalCuts) }, (_, index) => {
+              const cut = cuts[index];
+              if (cut) {
+                return (
+                  <CutStoryThumb
+                    key={cut.id}
+                    cut={cut}
+                    index={index}
+                    selected={cut.id === selectedCut?.id}
+                    reviewable={reviewable}
+                    compact
+                    decision={decisions[cut.id]}
+                    onSelect={() => onSelectCut(cut.id)}
+                    onApprove={onApprove ? () => onApprove(cut.id) : undefined}
+                    onReject={onReject ? () => onReject(cut.id) : undefined}
+                  />
+                );
+              }
+              return (
+                <div
+                  key={`skeleton-${index}`}
+                  className="aspect-[9/16] animate-pulse rounded-[var(--r-md)] bg-[var(--bg-elevated)]"
+                  aria-hidden
+                />
+              );
+            })}
           </div>
         </div>
 
