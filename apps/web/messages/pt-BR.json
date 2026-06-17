@@ -204,6 +204,8 @@
       "quickActions": {
         "title": "Começar agora",
         "description": "Atalhos para as principais superfícies de criação.",
+        "cutsLabel": "Gerar cortes",
+        "cutsDescription": "Transforme vídeos longos em cortes de alta retenção.",
         "viewCampaigns": "Ver campanhas",
         "viewBrandBrain": "Cérebro da Marca"
       },
@@ -607,7 +609,11 @@
       },
       "close": "Fechar",
       "submitReviewPending": "Validar ({decided}/{total})",
-      "viewRunTitle": "{count} cortes desta execução"
+      "viewRunTitle": "{count} cortes desta execução",
+      "stepTranscribe": "Transcrevendo vídeo",
+      "stepRankCuts": "Gerando cortes",
+      "preparingRender": "Preparando renderização...",
+      "renderingCuts": "Renderizando cortes ({done}/{total})"
     },
     "review": {
       "cutsListLabel": "Cortes gerados",
@@ -1202,6 +1208,8 @@
       "newGeneration": "Nova execução",
       "settings": "Configuração"
     },
+    "cuts": "Gerar cortes",
+    "cutsDescription": "Transforme vídeos longos em cortes de alta retenção.",
     "settings": {
       "title": "Configuração — {agent}",
       "description": "Ajustes específicos desta ferramenta.",

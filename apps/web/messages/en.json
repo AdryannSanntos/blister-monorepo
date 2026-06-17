@@ -204,6 +204,8 @@
       "quickActions": {
         "title": "Get started",
         "description": "Shortcuts to the main creation surfaces.",
+        "cutsLabel": "Generate cuts",
+        "cutsDescription": "Turn long videos into high-retention clips.",
         "viewCampaigns": "View campaigns",
         "viewBrandBrain": "Brand Brain"
       },
@@ -607,7 +609,11 @@
       },
       "close": "Close",
       "submitReviewPending": "Review ({decided}/{total})",
-      "viewRunTitle": "{count} cuts from this run"
+      "viewRunTitle": "{count} cuts from this run",
+      "stepTranscribe": "Transcribing video",
+      "stepRankCuts": "Generating cuts",
+      "preparingRender": "Preparing render...",
+      "renderingCuts": "Rendering cuts ({done}/{total})"
     },
     "review": {
       "cutsListLabel": "Generated cuts",
@@ -1202,6 +1208,8 @@
       "newGeneration": "New run",
       "settings": "Settings"
     },
+    "cuts": "Generate cuts",
+    "cutsDescription": "Turn long videos into high-retention clips.",
     "settings": {
       "title": "Settings — {agent}",
       "description": "Settings specific to this tool.",

@@ -450,6 +450,15 @@ export const useCutsRunModal = () => {
     [clearLocalPreview, cancelCloseReset],
   );
 
+  const resolveSourceDone =
+    runData?.steps.some(
+      (s) => s.stepKey === "resolve_source" && s.status === "COMPLETED",
+    ) ?? false;
+  const rankSegmentsDone =
+    runData?.steps.some(
+      (s) => s.stepKey === "rank_segments" && s.status === "COMPLETED",
+    ) ?? false;
+
   return {
     open,
     phase,
@@ -479,6 +488,8 @@ export const useCutsRunModal = () => {
     errorMessage,
     totalCuts,
     progressiveRenderedCount,
+    resolveSourceDone,
+    rankSegmentsDone,
     handleOpen,
     handleOpenRunDetails,
     handleClose,

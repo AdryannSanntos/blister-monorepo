@@ -52,6 +52,10 @@ export const CutsRunModal = ({
     isResolvingSource,
     isSubmittingReview,
     errorMessage,
+    totalCuts,
+    progressiveRenderedCount,
+    resolveSourceDone,
+    rankSegmentsDone,
     handleClose,
     handleLocalFileChange,
     handleSelectExistingFile,
@@ -139,6 +143,10 @@ export const CutsRunModal = ({
               uploadProgress={uploadProgress}
               sourceFileName={sourceFileName}
               runStatus={runStatus}
+              resolveSourceDone={resolveSourceDone}
+              rankSegmentsDone={rankSegmentsDone}
+              progressiveRenderedCount={progressiveRenderedCount}
+              totalCuts={totalCuts}
             />
           </>
         ) : null}
