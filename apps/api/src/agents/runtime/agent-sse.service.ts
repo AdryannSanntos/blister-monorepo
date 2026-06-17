@@ -146,4 +146,21 @@ export class AgentSseService {
   emitOutputChunk(runId: string, companyId: string, chunk: string): void {
     this.emit(runId, companyId, 'output_chunk', { chunk });
   }
+
+  emitCutRendered(
+    runId: string,
+    companyId: string,
+    data: {
+      cutId: string;
+      cutFileId: string;
+      renderedCount: number;
+      totalCuts: number;
+    },
+  ): void {
+    this.emit(runId, companyId, 'cut_rendered', data);
+  }
+
+  emitAllCutsRendered(runId: string, companyId: string): void {
+    this.emit(runId, companyId, 'all_cuts_rendered', {});
+  }
 }
