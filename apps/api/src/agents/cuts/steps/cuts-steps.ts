@@ -63,63 +63,6 @@ export const createResolveSourceStep = (): StepExecutor => {
   };
 };
 
-/** Renders one workspace file per cut clip (Trigger.dev + FFmpeg in production). */
-export const createRenderCutsStep = (): StepExecutor => {
-  return async (context): Promise<import('@company-os/agent-sdk').StepResult> => {
-    const rankOutput = context.previousStepsOutput.rank_segments as {
-      cuts?: Array<Record<string, unknown>>;
-      sourceFileId?: string;
-      captionStyleId?: string;
-    };
-
-    const cuts = rankOutput.cuts;
-    if (!Array.isArray(cuts) || cuts.length === 0) {
-      return {
-        type: 'FAILED',
-        error: 'No cuts available to render',
-      };
-    }
-
-    const sourceFileId = rankOutput.sourceFileId;
-    if (!sourceFileId) {
-      return {
-        type: 'FAILED',
-        error: 'sourceFileId is required to render cuts',
-      };
-    }
-
-    try {
-      const deps = getCutsRunDeps();
-      const sourceFile = await deps.resolveSourceFile({
-        sourceFileId,
-        companyId: context.companyId,
-      });
-
-      const rendered = await deps.renderCutClips({
-        runId: context.runId,
-        companyId: context.companyId,
-        personalSpaceId: sourceFile.personalSpaceId,
-        sourceFile,
-        cuts: cuts as import('@company-os/types').CutOutput[],
-      });
-
-      return {
-        type: 'CONTINUE',
-        output: {
-          cuts: rendered.cuts,
-          sourceFileId: rendered.sourceFileId,
-          captionStyleId: rankOutput.captionStyleId,
-        },
-      };
-    } catch (error) {
-      return {
-        type: 'FAILED',
-        error: error instanceof Error ? error.message : 'Failed to render cut clips',
-      };
-    }
-  };
-};
-
 export const createFinalizeCutsStep = (): StepExecutor => {
   return async (context): Promise<import('@company-os/agent-sdk').StepResult> => {
     const reviewOutput = context.previousStepsOutput.await_cut_review;

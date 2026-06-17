@@ -2,7 +2,6 @@ import {
   AgentBuilder,
   createLlmCallStep,
   createPauseStep,
-  createRetrieveContextStep,
 } from '@company-os/agent-sdk';
 import { reviewCutsSchema } from '@company-os/types';
 
@@ -17,10 +16,11 @@ import {
 import {
   createCleanupSourceStep,
   createFinalizeCutsStep,
-  createRenderCutsStep,
   createResolveSourceStep,
   getCutsSettings,
 } from './steps/cuts-steps';
+import { createDispatchRendersStep } from './steps/dispatch-renders.step';
+import { createAwaitRendersStep } from './steps/await-renders.step';
 
 const applyCutDecisions = (
   cuts: ReturnType<typeof normalizeCut>[],
@@ -32,9 +32,7 @@ const applyCutDecisions = (
   }
 
   const parsed = reviewCutsSchema.safeParse(formData);
-  if (!parsed.success) {
-    return cuts;
-  }
+  if (!parsed.success) return cuts;
 
   const decisionMap = new Map(parsed.data.cutDecisions.map((d) => [d.cutId, d.decision]));
 
@@ -46,16 +44,7 @@ const applyCutDecisions = (
   });
 };
 
-/**
- * Gerador de Cortes — transforma vídeos longos em cortes curtos priorizados
- * por potencial de retenção.
- *
- * Pipeline enxuto:
- * 1. prepare (contexto + vídeo/transcrição)
- * 2. rank_cuts (LLM)
- * 3. review + finalize (+ cleanup opcional)
- */
-export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
+export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '3.0.0' })
   .label('Gerador de Cortes')
   .description(
     'Transforma lives, podcasts e aulas longas em cortes curtos priorizados por potencial de retenção.',
@@ -65,17 +54,6 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
   .input(cutsInputZod)
   .output(cutsOutputZod)
   .review(reviewCutsSchema)
-  .withContext({
-    includeBrandBrain: true,
-    includeAgentLearning: true,
-    includeCampaignContext: false,
-    useUserInputAsRetrievalQuery: false,
-  })
-  .addStep('retrieve_context', {
-    label: 'Contexto',
-    type: 'preparation',
-    run: createRetrieveContextStep(),
-  })
   .addStep('resolve_source', {
     label: 'Transcrever vídeo',
     type: 'preparation',
@@ -94,14 +72,12 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
           settings?: { captionStyleId?: string; autoAcceptResults?: boolean };
         };
         const settings = getCutsSettings(context);
-        const autoAccept = settings.autoAcceptResults;
         const normalized = data.cuts.map((cut, index) =>
           normalizeCut(
             { ...cut, id: `cut-${index + 1}` },
-            autoAccept ? 'approved' : 'pending',
+            settings.autoAcceptResults ? 'approved' : 'pending',
           ),
         );
-
         return {
           cuts: normalized,
           sourceFileId: input.sourceFileId ?? '',
@@ -110,10 +86,15 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
       },
     }),
   })
-  .addStep('render_cuts', {
-    label: 'Renderizar cortes',
+  .addStep('dispatch_renders', {
+    label: 'Iniciar renderização',
     type: 'preparation',
-    run: createRenderCutsStep(),
+    run: createDispatchRendersStep(),
+  })
+  .addStep('await_renders', {
+    label: 'Aguardando cortes',
+    type: 'form',
+    run: createAwaitRendersStep(),
   })
   .addStep('await_cut_review', {
     label: 'Revisar cortes',
@@ -130,22 +111,21 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '2.1.0' })
       pauseReason: 'awaiting_cut_review',
       previewBlock: 'output',
       onContinue: (context) => {
-        const renderOutput = context.previousStepsOutput.render_cuts as {
+        const awaitsOutput = context.previousStepsOutput.await_renders as {
           cuts?: ReturnType<typeof normalizeCut>[];
           sourceFileId?: string;
           captionStyleId?: string;
         };
         const settings = getCutsSettings(context);
         const cuts = applyCutDecisions(
-          renderOutput.cuts ?? [],
+          awaitsOutput.cuts ?? [],
           context.inputPayload,
           settings.autoAcceptResults,
         );
-
         return {
           cuts,
-          sourceFileId: renderOutput.sourceFileId ?? '',
-          captionStyleId: renderOutput.captionStyleId,
+          sourceFileId: awaitsOutput.sourceFileId ?? '',
+          captionStyleId: awaitsOutput.captionStyleId,
         };
       },
     }),
