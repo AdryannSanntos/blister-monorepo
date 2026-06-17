@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { Public } from '../auth/decorators/public.decorator';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentSseService } from './runtime/agent-sse.service';
+import { WorkflowEngineService } from './runtime/workflow-engine.service';
 
 const eventPayloadSchema = z.object({
   type: z.enum([
@@ -30,16 +31,25 @@ const eventPayloadSchema = z.object({
   timestamp: z.string().optional(),
 });
 
+const cutRenderedBodySchema = z.object({
+  cutId: z.string().min(1),
+  cutFileId: z.string().min(1),
+  runFolderId: z.string().min(1),
+});
+
 @Controller('internal/agent-runs')
 export class InternalEventsController {
   private readonly triggerSecret: string;
+  private readonly internalSecret: string;
 
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
     private readonly sseService: AgentSseService,
+    private readonly workflowEngine: WorkflowEngineService,
   ) {
     this.triggerSecret = this.config.get<string>('TRIGGER_SECRET_KEY') ?? '';
+    this.internalSecret = this.config.get<string>('INTERNAL_SECRET') ?? this.triggerSecret;
   }
 
   @Post(':runId/events')
@@ -73,6 +83,83 @@ export class InternalEventsController {
     );
 
     return { received: true, runId, type: payload.type };
+  }
+
+  @Post('cuts/cut-rendered/:runId')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async cutRendered(
+    @Param('runId') runId: string,
+    @Body() body: unknown,
+    @Headers('x-internal-secret') secret?: string,
+  ): Promise<{ ok: boolean }> {
+    if (this.internalSecret && secret !== this.internalSecret) {
+      throw new UnauthorizedException('Invalid internal secret');
+    }
+
+    const payload = cutRenderedBodySchema.parse(body);
+
+    const run = await this.prisma.agentRun.findUnique({
+      where: { id: runId },
+      select: { companyId: true, personalSpaceId: true, status: true },
+    });
+
+    if (!run) return { ok: false };
+    if (run.status === 'FAILED' || run.status === 'CANCELLED') return { ok: false };
+
+    const scopeId = run.companyId ?? run.personalSpaceId ?? '';
+
+    const updatedStep = await this.prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "AgentRunStep" WHERE "agentRunId" = ${runId} AND "stepKey" = 'dispatch_renders' AND status = 'COMPLETED' FOR UPDATE`;
+
+      const step = await tx.agentRunStep.findFirst({
+        where: { agentRunId: runId, stepKey: 'dispatch_renders', status: 'COMPLETED' },
+      });
+
+      if (!step) return null;
+
+      const output = step.outputPayload as {
+        totalCuts: number;
+        renderedCount: number;
+        cuts: Array<{ id: string; cutFileId?: string; [key: string]: unknown }>;
+        [key: string]: unknown;
+      };
+
+      const updatedCuts = output.cuts.map((cut) =>
+        cut.id === payload.cutId ? { ...cut, cutFileId: payload.cutFileId } : cut,
+      );
+
+      const renderedCount = output.renderedCount + 1;
+
+      await tx.agentRunStep.update({
+        where: { id: step.id },
+        data: {
+          outputPayload: JSON.parse(
+            JSON.stringify({ ...output, renderedCount, cuts: updatedCuts }),
+          ),
+        },
+      });
+
+      return { totalCuts: output.totalCuts, renderedCount };
+    });
+
+    if (!updatedStep) return { ok: false };
+
+    const { totalCuts, renderedCount } = updatedStep;
+
+    this.sseService.emitCutRendered(runId, scopeId, {
+      cutId: payload.cutId,
+      cutFileId: payload.cutFileId,
+      renderedCount,
+      totalCuts,
+    });
+
+    if (renderedCount >= totalCuts) {
+      this.sseService.emitAllCutsRendered(runId, scopeId);
+      await this.workflowEngine.resumeRun({ runId });
+    }
+
+    return { ok: true };
   }
 
   private emitEvent(
