@@ -35,6 +35,20 @@ export type RenderCutClipsResult = {
   captionStyleId?: string;
 };
 
+export type EnsureRunFolderParams = {
+  runId: string;
+  companyId: string;
+  sourceFile: SourceFileRecord;
+};
+
+export type DispatchRenderJobsParams = {
+  runId: string;
+  runFolderId: string;
+  companyId: string;
+  cuts: CutOutput[];
+  sourceFile: SourceFileRecord;
+};
+
 export type CutsRunDeps = {
   resolveSourceFile: (params: {
     sourceFileId: string;
@@ -51,6 +65,8 @@ export type CutsRunDeps = {
     sourceFileId: string;
     companyId: string;
   }) => Promise<void>;
+  ensureRunFolder: (params: EnsureRunFolderParams) => Promise<string>;
+  dispatchRenderJobs: (params: DispatchRenderJobsParams) => Promise<void>;
 };
 
 const STUB_TRANSCRIPT: TranscriptionResult = {
@@ -93,6 +109,8 @@ export const createStubCutsRunDeps = (
     sourceFileId: sourceFile.id,
   }),
   deleteSourceFile: async () => {},
+  ensureRunFolder: async ({ runId }) => `stub-run-folder-${runId}`,
+  dispatchRenderJobs: async () => {},
   ...overrides,
 });
 

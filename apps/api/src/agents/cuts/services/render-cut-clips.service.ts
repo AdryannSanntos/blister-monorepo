@@ -9,12 +9,14 @@ import {
 } from '../../../media/register-cut-file';
 import { trimVideoToBuffer } from '../../../media/trim-video';
 import type { StorageService } from '../../../storage/storage.service';
-import type { WorkspaceStorageRoot } from '../../../files/workspace-storage.util';
 import type { RenderCutClipsParams, RenderCutClipsResult } from '../ports/cuts-run-deps';
-
-type WorkspaceScope =
-  | { personalSpaceId: string; companyId?: never }
-  | { companyId: string; personalSpaceId?: never };
+import {
+  resolveScope,
+  resolveStorageRoot,
+  resolveRunStartedAt,
+  type WorkspaceScope,
+} from './cuts-render-helpers';
+import type { WorkspaceStorageRoot } from '../../../files/workspace-storage.util';
 
 const logger = new Logger('RenderCutClipsService');
 
@@ -22,52 +24,6 @@ const shouldAttemptTriggerRender = (): boolean => {
   const mode = readAgentExecutionMode();
   if (mode !== 'trigger') return false;
   return Boolean(process.env.TRIGGER_SECRET_KEY && process.env.TRIGGER_PROJECT_ID);
-};
-
-const resolveStorageRoot = async (
-  prisma: PrismaClient,
-  companyId: string | null,
-  personalSpaceId: string | null,
-): Promise<WorkspaceStorageRoot> => {
-  if (companyId) {
-    const company = await prisma.company.findUnique({
-      where: { id: companyId },
-      select: { slug: true },
-    });
-    if (!company) throw new Error('Company not found for cut render');
-    return { kind: 'company', slug: company.slug };
-  }
-
-  if (personalSpaceId) {
-    const space = await prisma.personalSpace.findUnique({
-      where: { id: personalSpaceId },
-      select: { userId: true },
-    });
-    if (!space) throw new Error('Personal space not found for cut render');
-    return { kind: 'personal', userId: space.userId };
-  }
-
-  throw new Error('Workspace scope is required to render cuts');
-};
-
-const resolveScope = (
-  companyId: string | null,
-  personalSpaceId: string | null,
-): WorkspaceScope => {
-  if (personalSpaceId) return { personalSpaceId };
-  if (companyId) return { companyId };
-  throw new Error('Workspace scope is required to render cuts');
-};
-
-const resolveRunStartedAt = async (
-  prisma: PrismaClient,
-  runId: string,
-): Promise<Date | undefined> => {
-  const run = await prisma.agentRun.findUnique({
-    where: { id: runId },
-    select: { startedAt: true, createdAt: true },
-  });
-  return run?.startedAt ?? run?.createdAt;
 };
 
 const renderClipInline = async (

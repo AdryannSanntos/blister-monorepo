@@ -9,6 +9,12 @@ import {
   type SourceFileRecord,
 } from './ports/cuts-run-deps';
 import { renderCutClipsWithDeps } from './services/render-cut-clips.service';
+import {
+  resolveScope,
+  resolveStorageRoot,
+  resolveRunStartedAt,
+} from './services/cuts-render-helpers';
+import { ensureCutRunFolder } from '../../media/cut-run-folder.util';
 
 export type CutsRunDepsEnv = {
   assemblyAiApiKey?: string;
@@ -126,6 +132,52 @@ export const buildCutsRunDeps = (
     };
   };
 
+  const ensureRunFolder: CutsRunDeps['ensureRunFolder'] = async ({ runId, sourceFile }) => {
+    const scope = resolveScope(sourceFile.companyId, sourceFile.personalSpaceId);
+    const storageRoot = await resolveStorageRoot(
+      prisma,
+      sourceFile.companyId,
+      sourceFile.personalSpaceId,
+    );
+    const runStartedAt = await resolveRunStartedAt(prisma, runId);
+    return ensureCutRunFolder(prisma, storage, {
+      scope,
+      storageRoot,
+      runId,
+      sourceFileName: sourceFile.name,
+      runStartedAt,
+    });
+  };
+
+  const dispatchRenderJobs: CutsRunDeps['dispatchRenderJobs'] = async ({
+    runId,
+    runFolderId,
+    cuts,
+    sourceFile,
+  }) => {
+    const executionMode = readAgentExecutionMode();
+    if (executionMode === 'inline-stub') return;
+
+    const { cutsRenderClip } = await import('../../../trigger/cuts-render-clip');
+
+    const payloads = cuts.map((cut, index) => ({
+      payload: {
+        runId,
+        runFolderId,
+        cutId: cut.id,
+        cutIndex: index + 1,
+        title: cut.title,
+        sourceStorageKey: sourceFile.storageKey,
+        startSec: cut.startSec,
+        endSec: cut.endSec,
+        companyId: sourceFile.companyId,
+        personalSpaceId: sourceFile.personalSpaceId,
+      },
+    }));
+
+    await cutsRenderClip.batchTrigger(payloads);
+  };
+
   return {
     resolveSourceFile,
     transcribeSource,
@@ -142,6 +194,8 @@ export const buildCutsRunDeps = (
       await storage.deleteObject(file.storageKey);
       await prisma.workspaceFile.delete({ where: { id: file.id } });
     },
+    ensureRunFolder,
+    dispatchRenderJobs,
   };
 };
 
