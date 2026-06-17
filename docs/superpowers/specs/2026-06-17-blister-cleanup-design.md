@@ -159,6 +159,37 @@ Itens identificados na auditoria que não estavam no escopo inicial:
 
 ---
 
+---
+
+## Track 7 — Código Morto Adicional (auditoria profunda)
+
+Achados da segunda rodada de auditoria que não estavam nos tracks anteriores:
+
+**Componentes sem importador — remover:**
+- `apps/web/src/core/shared/components/ui/agent-content-layout.tsx` — layout de chat de agentes, nenhum importador ativo
+- `apps/web/src/core/shared/components/ui/markdown-editor.tsx` — editor markdown com toolbar, nenhum importador ativo
+- `apps/web/src/components/agent-elements/` (diretório inteiro: agent-chat, message-list, input-bar, spiral-loader, text-shimmer, user-message, error-message, icons, image-lightbox, markdown) — componentes de chat UI do produto anterior; único referenciador é `build-agent-messages.ts` (já marcado para remoção)
+- `apps/web/src/core/modules/agents/hooks/use-agent-catalog.ts` — nenhum importador ativo
+- `apps/web/src/core/modules/dashboard/pages/dashboard-home-page.tsx` — não é usado (a home usa `BlisterOsHomePage`); importa brand brain panel, campaigns, AGENT_UI_IDS
+- `apps/web/src/core/modules/dashboard/utils/dashboard-metrics.ts` — usado apenas por `dashboard-home-page.tsx` (que será removida)
+
+**Utils com lógica morta — remover:**
+- `apps/web/src/core/modules/agents/utils/build-agent-messages.ts` — marcado como `@deprecated` no próprio arquivo; referencia "Cérebro da Marca" em string, constrói mensagens para agentes removidos
+- `apps/web/src/core/modules/agents/utils/extract-streaming-text.ts` — usado apenas por `build-agent-messages.ts`
+- `apps/web/src/core/modules/agents/utils/post-onboarding-fields.ts` — fluxo de onboarding do agente `post` (removido)
+- `apps/web/src/core/modules/agents/pages/history-page.tsx` — histórico multi-agente genérico com `AGENT_UI_CONFIG`/`AGENT_UI_IDS`
+
+**Utils — simplificar:**
+- `apps/web/src/core/modules/agents/utils/agent-run-helpers.ts` — contém `StrategistOutput`, `CopywriterOutput`, `DesignerOutput`, `PostSlide`, `parsePostOutput`, `getAgentOutputPreview` (todos de agentes removidos). Manter apenas: `getRunUserInput`, `canReviewRun`, `isRunActive`, `getReviewStatusLabelKey`
+- `apps/web/src/core/modules/agents/hooks/use-agent-run-mutations.ts` — tem 7 mutations; verificar quais o `use-cuts-run-modal.ts` realmente usa e remover as demais
+- `apps/web/src/core/modules/blister-os/utils/simulate-delay.ts` — verificar: usado pelas generations removidas; se `cuts-generation.tsx` também não usar mais, remover
+
+**Utils — verificar antes de remover:**
+- `apps/web/src/core/modules/agents/utils/build-messages-from-blocks.ts` — usado apenas em testes; verificar se alguma página ativa consome
+- `apps/web/src/core/modules/agents/utils/format-agent-output-markdown.ts` — verificar se `build-messages-from-blocks.ts` ainda usa; se não, remover
+
+---
+
 ## Ordem de execução
 
 ```
@@ -168,6 +199,7 @@ Track 3 → commit  (remover agentes não-cuts — frontend)
 Track 4 → commit  (remover brand brain + RAG usage)
 Track 5 → commit  (rotas mortas + módulos órfãos)
 Track 6 → commit  (limpeza de tipos e backend residual)
+Track 7 → commit  (código morto — agent-elements, utils deprecated, hooks sem importador)
 ```
 
 Cada track é independente e pode ser revertido sem afetar os demais.
