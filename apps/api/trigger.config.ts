@@ -22,6 +22,8 @@ export default defineConfig({
       // external so it loads from node_modules at runtime and resolves its
       // own nested pdfjs-dist + @napi-rs/canvas (with the polyfill intact).
       "pdf-parse",
+      // Bundled ffmpeg-static paths break in Trigger workers; use the ffmpeg extension.
+      "ffmpeg-static",
     ],
     extensions: [
       ffmpeg({ version: "7" }),

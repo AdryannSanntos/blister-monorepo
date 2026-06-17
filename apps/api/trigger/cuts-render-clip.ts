@@ -1,6 +1,11 @@
+import { randomUUID } from 'node:crypto';
+import { mkdir, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { task, logger } from '@trigger.dev/sdk';
 import { z } from 'zod';
 import { PrismaClient } from '../src/generated/prisma';
+import { resolveFfmpegPath } from '../src/media/resolve-ffmpeg-path';
 import { trimVideoToBuffer } from '../src/media/trim-video';
 import {
   buildCutStorageKey,
@@ -66,6 +71,7 @@ const buildStorageService = (): StorageService => {
 
 export const cutsRenderClip = task({
   id: 'cuts-render-clip',
+  machine: { preset: 'medium-1x' },
   maxDuration: 600,
   retry: {
     maxAttempts: 2,
@@ -84,13 +90,33 @@ export const cutsRenderClip = task({
     });
 
     const storage = buildStorageService();
-    const sourceUrl = await storage.getPresignedDownloadUrl(validated.sourceStorageKey);
-
-    const clipBuffer = await trimVideoToBuffer({
-      inputUrl: sourceUrl,
-      startSec: validated.startSec,
-      endSec: validated.endSec,
+    const ffmpegPath = resolveFfmpegPath();
+    logger.info('Resolved FFmpeg binary', {
+      ffmpegPath,
+      ffmpegPathEnv: process.env.FFMPEG_PATH ?? null,
+      triggerRunId: process.env.TRIGGER_RUN_ID ?? null,
     });
+
+    const sourceWorkDir = join(tmpdir(), `blister-cut-source-${randomUUID()}`);
+    const sourcePath = join(sourceWorkDir, 'source.mp4');
+    await mkdir(sourceWorkDir, { recursive: true });
+
+    let clipBuffer: Buffer;
+    try {
+      logger.info('Downloading source video for trim', {
+        sourceStorageKey: validated.sourceStorageKey,
+      });
+      await storage.downloadObjectToPath(validated.sourceStorageKey, sourcePath);
+
+      clipBuffer = await trimVideoToBuffer({
+        inputPath: sourcePath,
+        startSec: validated.startSec,
+        endSec: validated.endSec,
+        ffmpegPath,
+      });
+    } finally {
+      await rm(sourceWorkDir, { recursive: true, force: true }).catch(() => undefined);
+    }
 
     const scope =
       validated.companyId !== null

@@ -1,3 +1,5 @@
+import { createWriteStream } from 'node:fs';
+import { pipeline } from 'node:stream/promises';
 import type { Readable } from 'node:stream';
 import {
   CopyObjectCommand,
@@ -133,6 +135,22 @@ export class StorageService implements OnModuleInit {
         Key: destinationKey,
       }),
     );
+  }
+
+  /** Streams an object to a local file without loading it fully into memory. */
+  async downloadObjectToPath(key: string, destPath: string): Promise<void> {
+    const response = await this.client.send(
+      new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }),
+    );
+
+    if (!response.Body) {
+      throw new Error(`Object not found: ${key}`);
+    }
+
+    await pipeline(response.Body as Readable, createWriteStream(destPath));
   }
 
   async getObjectBuffer(key: string): Promise<Buffer> {

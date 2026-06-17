@@ -53,12 +53,9 @@ describe('trimVideoToBuffer', () => {
   it('spawns ffmpeg with segment args and returns output buffer', async () => {
     const spawnMock = spawn as jest.MockedFunction<typeof spawn>;
     spawnMock.mockImplementation(() => {
-      const handlers: Record<string, Array<(value?: unknown) => void>> = {};
       return {
         stderr: { on: jest.fn() },
         on: (event: string, handler: (value?: unknown) => void) => {
-          handlers[event] = handlers[event] ?? [];
-          handlers[event].push(handler);
           if (event === 'close') {
             queueMicrotask(() => handler(0));
           }
@@ -67,7 +64,7 @@ describe('trimVideoToBuffer', () => {
     });
 
     const buffer = await trimVideoToBuffer({
-      inputUrl: 'https://example.com/source.mp4',
+      inputPath: '/tmp/source.mp4',
       startSec: 10,
       endSec: 40,
       ffmpegPath: '/usr/local/bin/ffmpeg',
@@ -76,12 +73,35 @@ describe('trimVideoToBuffer', () => {
     expect(buffer.toString()).toBe('clip-bytes');
     expect(spawnMock).toHaveBeenCalledWith(
       '/usr/local/bin/ffmpeg',
-      expect.arrayContaining(['-ss', '10', '-t', '30']),
+      expect.arrayContaining(['-ss', '10', '-t', '30', '/tmp/source.mp4']),
       expect.any(Object),
     );
     expect(mkdir).toHaveBeenCalled();
     expect(readFile).toHaveBeenCalled();
     expect(rm).toHaveBeenCalled();
+  });
+
+  it('reports signal kills with a helpful message', async () => {
+    const spawnMock = spawn as jest.MockedFunction<typeof spawn>;
+    spawnMock.mockImplementation(() => {
+      return {
+        stderr: { on: jest.fn() },
+        on: (event: string, handler: (code?: number | null, signal?: NodeJS.Signals | null) => void) => {
+          if (event === 'close') {
+            queueMicrotask(() => handler(null, 'SIGKILL'));
+          }
+        },
+      } as unknown as ReturnType<typeof spawn>;
+    });
+
+    await expect(
+      trimVideoToBuffer({
+        inputPath: '/tmp/source.mp4',
+        startSec: 0,
+        endSec: 10,
+        ffmpegPath: '/usr/bin/ffmpeg',
+      }),
+    ).rejects.toThrow(/killed by signal SIGKILL/i);
   });
 
   it('maps ENOENT spawn errors to a clear ffmpeg-not-found message', async () => {

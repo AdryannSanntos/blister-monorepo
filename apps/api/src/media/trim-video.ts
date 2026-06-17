@@ -6,7 +6,10 @@ import { randomUUID } from 'node:crypto';
 import { resolveFfmpegPath } from './resolve-ffmpeg-path';
 
 export type TrimVideoParams = {
-  inputUrl: string;
+  /** Remote HTTP(S) URL — prefer `inputPath` for large local/S3 files. */
+  inputUrl?: string;
+  /** Local filesystem path to the source video. */
+  inputPath?: string;
   startSec: number;
   endSec: number;
   ffmpegPath?: string;
@@ -17,8 +20,36 @@ const buildFfmpegNotFoundError = (ffmpegPath: string): Error =>
     `FFmpeg binary not found at "${ffmpegPath}". Install ffmpeg on PATH, set FFMPEG_PATH, or ensure ffmpeg-static is installed.`,
   );
 
+const buildFfmpegFailureError = (
+  ffmpeg: string,
+  code: number | null,
+  signal: NodeJS.Signals | null,
+  stderr: string,
+): Error => {
+  if (signal) {
+    const hint =
+      signal === 'SIGKILL'
+        ? ' Process was likely killed (out of memory or platform limit). Try a larger Trigger machine or trim from a local file copy.'
+        : '';
+    return new Error(
+      `FFmpeg at "${ffmpeg}" was killed by signal ${signal}.${hint}${
+        stderr.trim() ? ` FFmpeg stderr: ${stderr.trim()}` : ''
+      }`,
+    );
+  }
+
+  return new Error(
+    stderr.trim() || `FFmpeg at "${ffmpeg}" exited with code ${code ?? 'unknown'}`,
+  );
+};
+
 /** Trims a remote or local video segment via FFmpeg (re-encode for stable playback). */
 export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer> => {
+  const input = params.inputPath ?? params.inputUrl;
+  if (!input) {
+    throw new Error('trimVideoToBuffer requires inputPath or inputUrl');
+  }
+
   const workDir = join(tmpdir(), `blister-cut-${randomUUID()}`);
   const outputPath = join(workDir, 'clip.mp4');
   const durationSec = Math.max(0.1, params.endSec - params.startSec);
@@ -36,7 +67,7 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
         '-ss',
         String(params.startSec),
         '-i',
-        params.inputUrl,
+        input,
         '-t',
         String(durationSec),
         '-c:v',
@@ -69,12 +100,12 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
         reject(error);
       });
 
-      proc.on('close', (code) => {
+      proc.on('close', (code, signal) => {
         if (code === 0) {
           resolve();
           return;
         }
-        reject(new Error(stderr.trim() || `FFmpeg exited with code ${code}`));
+        reject(buildFfmpegFailureError(ffmpeg, code, signal, stderr));
       });
     });
 
