@@ -98,13 +98,76 @@ O backend já está limpo (somente `apps/api/src/agents/cuts/` existe). O fronte
 
 ---
 
+---
+
+## Track 5 — Rotas Mortas e Módulos Órfãos (frontend)
+
+Itens identificados na auditoria que não estavam no escopo inicial:
+
+**Rotas mortas — remover:**
+- `apps/web/src/app/[locale]/dashboard/(shell)/campaigns/page.tsx` — redireciona para `/dashboard`, conceito campaigns não existe
+- `apps/web/src/app/[locale]/dashboard/(shell)/pieces/page.tsx` — redireciona para `/dashboard/history`, "peças" não existe
+- `apps/web/src/app/[locale]/dashboard/(shell)/history/page.tsx` — histórico genérico multi-agente; cuts tem seu próprio em `/agents/cuts/history`
+
+**Módulo history genérico — remover:**
+- `apps/web/src/core/modules/history/` (inteiro) — histórico multi-agente substituído pelo histórico do agente cuts
+
+**Hooks fora do escopo — remover:**
+- `apps/web/src/core/modules/agents/hooks/use-campaigns.ts` — store Zustand de campaigns (conceito removido)
+- `apps/web/src/core/modules/agents/hooks/use-caption-styles.ts` — caption styles são do agente video_editor (removido)
+- `apps/web/src/core/modules/agents/hooks/use-agent-runs-mock.ts` — mock para agentes genéricos (não-cuts)
+- `apps/web/src/core/modules/dashboard/hooks/use-company-rag-status.ts` — consulta status de RAG que será removido
+
+**Utilitários fora do escopo — remover:**
+- `apps/web/src/core/modules/agents/utils/format-design-plan-preview.ts` — formata planos do agente designer/post (removidos), referencia "Cérebro da Marca"
+- `apps/web/src/core/modules/agents/utils/build-agent-messages.ts` — verificar; se for para chat UI genérico de agentes, remover
+
+**Componentes do dashboard — limpar:**
+- `dashboard/components/dashboard-quick-actions.tsx` — remover links para `/dashboard/campaigns` e `/dashboard/brand`
+- `dashboard/components/dashboard-recent-activity.tsx` — importa `AGENT_UI_CONFIG` (strategist/copywriter/etc.); reescrever para mostrar apenas runs de cuts
+- `dashboard/config/dashboard-agents.ts` — constrói nav de `AGENT_UI_IDS` (strategist, copywriter, designer, post); arquivo inteiro obsoleto
+
+**Fixtures — limpar:**
+- `blister-os/fixtures/recent-activity.fixture.ts` — remover entradas de `video_editor`, `script`; manter só `cuts`
+- `blister-os/fixtures/agent-runs.fixture.ts` — remover runs de `video_editor`, `research`, `planning`, `script`; manter só `cuts`
+
+**Store — limpar (não remover):**
+- `blister-os/stores/blister-os-store.ts` — remover campo `editorStyleId` (video editor) e inicialização do `agentRuns` com fixture multi-agente; manter o store para files/settings/credits/marketplace
+
+**Páginas de agentes — simplificar:**
+- `agents/pages/agent-new-page.tsx` — remover branches `video_editor`, `research`, `default → BriefAgentGeneration`; manter só cuts
+- `agents/pages/agent-overview-page.tsx` — remover branch `!isCuts` que usa mocks genéricos; simplificar para cuts
+- `agents/pages/agent-settings-page.tsx` — remover branch `default → GenericAgentSettings`; simplificar para cuts
+
+---
+
+## Track 6 — Limpeza de Tipos e Backend Residual
+
+**Backend:**
+- `apps/api/src/ai-catalog/ai-catalog.controller.ts` — remover endpoint `PATCH /platform/settings/rag` e o método `updateRagSettings` do service
+- `apps/api/src/ai-catalog/platform-settings.service.ts` — remover `updateRagSettings`
+
+**Packages/Types:**
+- `packages/types/src/agents.ts` — remover campos `campaignId` dos schemas `runAgentRequestSchema` e `stepContextSchema`; remover `brandProfile` e `contextPack` de `stepContextSchema`
+- `packages/types/src/ai-catalog.ts` — remover `ragPlatformSettingsSchema` e `updateRagSettingsSchema`
+- `packages/types/src/company.ts` — limpar imports de `brandPaletteSchema` e `brandAssetsSchema` (arquivos brand que serão deletados)
+
+**Manter (não remover):**
+- `ai-catalog/` inteiro exceto bloco rag settings — gerencia providers/models/policies para cuts
+- `ai-catalog/platform-companies.service.ts` — admin precisa ver créditos de companies
+- A maior parte de `packages/types/src/agents.ts` — é o contrato do runtime (AgentRunStatusDto, SSE events, etc.)
+
+---
+
 ## Ordem de execução
 
 ```
-Track 1 → commit
-Track 2 → commit  
-Track 3 → commit
-Track 4 → commit
+Track 1 → commit  (fix login mobile)
+Track 2 → commit  (fix freeze modal)
+Track 3 → commit  (remover agentes não-cuts — frontend)
+Track 4 → commit  (remover brand brain + RAG usage)
+Track 5 → commit  (rotas mortas + módulos órfãos)
+Track 6 → commit  (limpeza de tipos e backend residual)
 ```
 
 Cada track é independente e pode ser revertido sem afetar os demais.
