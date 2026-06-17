@@ -125,6 +125,37 @@ export function applyAgentRunEvent(
         },
       };
 
+    case "cut_rendered": {
+      const cutId = typeof data.cutId === "string" ? data.cutId : null;
+      const cutFileId = typeof data.cutFileId === "string" ? data.cutFileId : null;
+      if (!cutId || !cutFileId) return current;
+
+      const currentOutput = (run.outputPayload ?? {}) as Record<string, unknown>;
+      const existingCuts = Array.isArray(currentOutput.cuts)
+        ? (currentOutput.cuts as Array<Record<string, unknown>>)
+        : [];
+
+      const updatedCuts = existingCuts.map((cut) =>
+        cut.id === cutId ? { ...cut, cutFileId } : cut,
+      );
+
+      return {
+        ...current,
+        run: {
+          ...run,
+          outputPayload: {
+            ...currentOutput,
+            cuts: updatedCuts,
+            renderedCount: typeof data.renderedCount === "number" ? data.renderedCount : currentOutput.renderedCount,
+            totalCuts: typeof data.totalCuts === "number" ? data.totalCuts : currentOutput.totalCuts,
+          },
+        },
+      };
+    }
+
+    case "all_cuts_rendered":
+      return current;
+
     default:
       return current;
   }

@@ -73,6 +73,8 @@ export const useCutsRunModal = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [intent, setIntent] = useState<CutsModalIntent>("generate");
   const [bootstrapCuts, setBootstrapCuts] = useState<CutOutput[]>([]);
+  const [totalCuts, setTotalCuts] = useState<number>(0);
+  const [progressiveRenderedCount, setProgressiveRenderedCount] = useState<number>(0);
 
   const localPreviewUrlRef = useRef<string | null>(null);
   const closeResetTimerRef = useRef<number | null>(null);
@@ -203,14 +205,25 @@ export const useCutsRunModal = () => {
       return;
     }
 
+    const outputPayload = runData?.run.outputPayload as Record<string, unknown> | undefined;
+    const outputTotalCuts = typeof outputPayload?.totalCuts === "number" ? outputPayload.totalCuts : 0;
+    const outputRenderedCount = typeof outputPayload?.renderedCount === "number" ? outputPayload.renderedCount : 0;
+
+    if (outputTotalCuts > 0 && totalCuts !== outputTotalCuts) {
+      setTotalCuts(outputTotalCuts);
+    }
+    if (outputRenderedCount > 0 && progressiveRenderedCount !== outputRenderedCount) {
+      setProgressiveRenderedCount(outputRenderedCount);
+    }
+
     if (
       runStatus === "COMPLETED" ||
       reviewable ||
-      (phase === "processing" && cuts.length > 0)
+      (phase === "processing" && (cuts.length > 0 || outputRenderedCount > 0))
     ) {
       setPhase("results");
     }
-  }, [runId, phase, runStatus, reviewable, cuts.length, runData, tModal]);
+  }, [runId, phase, runStatus, reviewable, cuts.length, runData, tModal, totalCuts, progressiveRenderedCount]);
 
   // Default-select the first cut once results arrive.
   useEffect(() => {
@@ -236,6 +249,8 @@ export const useCutsRunModal = () => {
     setErrorMessage(null);
     setIntent("generate");
     setBootstrapCuts([]);
+    setTotalCuts(0);
+    setProgressiveRenderedCount(0);
   }, [clearLocalPreview]);
 
   const handleOpen = useCallback(() => {
@@ -462,6 +477,8 @@ export const useCutsRunModal = () => {
     runCompleted: runStatus === "COMPLETED",
     isRunActive,
     errorMessage,
+    totalCuts,
+    progressiveRenderedCount,
     handleOpen,
     handleOpenRunDetails,
     handleClose,
