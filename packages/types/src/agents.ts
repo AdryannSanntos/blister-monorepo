@@ -234,6 +234,9 @@ export const agentRunEventTypeSchema = z.enum([
   'block_delta',
   'block_end',
   'message_end',
+  // cuts progressive rendering
+  'cut_rendered',
+  'all_cuts_rendered',
 ]);
 
 export const blockTypeSchema = z.enum([
