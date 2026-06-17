@@ -74,12 +74,18 @@ O backend já está limpo (somente `apps/api/src/agents/cuts/` existe). O fronte
 - `apps/web/src/app/[locale]/dashboard/(shell)/brand/page.tsx`
 - `apps/web/src/core/modules/company/hooks/` — hooks de brand context da empresa
 
-**Backend — remover:**
-- `apps/api/src/rag/brand-brain.serializer.ts`
-- `apps/api/src/rag/company-rag-sync.service.ts` (+ spec)
-- Referências a brand brain em `rag/context-pack.service.ts`, `rag/rag-events.service.ts`, `rag/retrieval.service.ts`, `rag/ingestion.service.ts`
-- `apps/api/src/company/brand/` (controller, service, dto)
+**Backend — remover toda utilização do RAG (manter o módulo inativo):**
+- `apps/api/src/rag/brand-brain.serializer.ts` — remover arquivo
+- `apps/api/src/rag/company-rag-sync.service.ts` (+ spec) — remover arquivo
+- `apps/api/src/rag/context-pack.service.ts` — remover arquivo
+- `apps/api/src/rag/rag-events.service.ts` — remover arquivo
+- `apps/api/src/rag/rag-admin.controller.ts` — remover arquivo
+- `apps/api/src/agents/adapters/context-pack-builder.adapter.ts` — remover arquivo
+- `apps/api/src/agents/adapters/create-trigger-context-pack-builder.ts` — remover arquivo
+- `apps/api/src/company/brand/` (controller, service, dto) — remover diretório
 - Remover brand module do `company.module.ts`
+- Limpar todos os imports/injeções de `RagModule`, `ContextPackService`, `CompanyRagSyncService`, `RagEventsService` em outros módulos (agents.module.ts, app.module.ts, etc.) — o módulo RAG pode existir mas nenhum outro módulo deve depender dele
+- Remover listeners de eventos RAG em qualquer controller (internal-events, agents)
 
 **Packages — remover:**
 - `packages/types/src/brand-brain-progress.ts`
@@ -88,7 +94,7 @@ O backend já está limpo (somente `apps/api/src/agents/cuts/` existe). O fronte
 - Limpar exports em `packages/types/src/index.ts`
 - Verificar e limpar referências em `packages/agent-sdk/src/core/types.ts` e `agent-runtime-types.ts`
 
-**Regra:** não mexer no RAG inteiro — apenas remover a parte específica de brand brain. O RAG de workspace (workspaceId-scoped) deve permanecer para uso futuro.
+**Regra sobre o módulo RAG:** `apps/api/src/rag/rag.module.ts` e os serviços restantes (retrieval, ingestion, embedding, chunk, document, caption) devem **existir mas não ser importados** por nenhum outro módulo. O módulo fica dormindo para uso futuro — não exportar nem injetar em nada ativo.
 
 ---
 
