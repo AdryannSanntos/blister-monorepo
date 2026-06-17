@@ -2,161 +2,162 @@
 
 import type { CutOutput } from "@company-os/types";
 import { Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { memo, useEffect, useRef } from "react";
 
-import { formatCutWindow } from "src/core/modules/agents/utils/cuts-display";
-import { viralScoreBadgeVariant } from "src/core/modules/agents/utils/viral-score";
-import { Badge } from "src/core/shared/components/ui/badge";
-import { Button } from "src/core/shared/components/ui/button";
-import { Paragraph } from "src/core/shared/components/ui/paragraph";
+import { useCutClipPreviewUrl } from "src/core/modules/agents/hooks/use-cut-clip-preview-url";
+import { useStableMediaUrl } from "src/core/modules/agents/hooks/use-stable-media-url";
 import { cn } from "src/core/shared/utils";
+
+type CutDecision = "approve" | "reject";
 
 type CutStoryThumbProps = {
   cut: CutOutput;
   index: number;
   selected: boolean;
   reviewable?: boolean;
-  decision?: "approve" | "reject";
   compact?: boolean;
+  decision?: CutDecision;
   onSelect: () => void;
   onApprove?: () => void;
   onReject?: () => void;
 };
 
-/** Grid tile — lightweight poster slot; playback lives in the main player only. */
-export const CutStoryThumb = ({
+function CutSkeleton({ index }: { index: number }) {
+  return (
+    <div className="relative flex aspect-[9/16] w-full flex-col overflow-hidden rounded-[var(--r-md)] bg-[var(--bg-elevated)]">
+      <div className="flex-1 animate-pulse bg-[var(--line-subtle)]" />
+      <div className="p-1.5">
+        <div className="mb-1 h-2 w-3/4 animate-pulse rounded bg-[var(--line-subtle)]" />
+        <div className="h-1.5 w-1/2 animate-pulse rounded bg-[var(--line-subtle)]" />
+      </div>
+      <div className="absolute inset-x-0 top-1 flex items-center justify-center">
+        <span className="text-xs font-medium text-[var(--fg-quaternary)]">{index + 1}</span>
+      </div>
+    </div>
+  );
+}
+
+export const CutStoryThumb = memo(function CutStoryThumb({
   cut,
   index,
   selected,
   reviewable = false,
   decision,
-  compact = false,
   onSelect,
   onApprove,
   onReject,
-}: CutStoryThumbProps) => {
-  const t = useTranslations("cuts.review");
+}: CutStoryThumbProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const hasRendered = Boolean(cut.cutFileId);
+
+  const clipPreview = useCutClipPreviewUrl(hasRendered ? cut : null, hasRendered);
+  const clipUrl = useStableMediaUrl(cut.cutFileId ?? null, clipPreview.data?.url ?? null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !clipUrl) return;
+
+    const handleLoadedData = () => {
+      video.currentTime = 0;
+      video.pause();
+    };
+
+    video.addEventListener("loadeddata", handleLoadedData);
+    return () => video.removeEventListener("loadeddata", handleLoadedData);
+  }, [clipUrl]);
+
+  const isApproved = decision === "approve";
+  const isRejected = decision === "reject";
 
   return (
     <div
-      data-testid={`cut-review-item-${cut.id}`}
+      role="option"
+      aria-selected={selected}
       className={cn(
-        "flex flex-col animate-in fade-in-0 slide-in-from-bottom-1 duration-[var(--dur-base)] ease-[var(--ease-out)]",
-        compact ? "gap-1.5" : "gap-2",
+        "relative cursor-pointer overflow-hidden rounded-[var(--r-md)] transition-all duration-150",
+        "border-2",
+        selected
+          ? "border-[var(--accent)]"
+          : "border-transparent hover:border-[var(--line-subtle)]",
+        isApproved && "ring-2 ring-green-500/60",
+        isRejected && "ring-2 ring-[var(--danger)]/60 opacity-60",
       )}
-      style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
+      onClick={onSelect}
     >
-      <button
-        type="button"
-        onClick={onSelect}
-        aria-pressed={selected}
-        aria-label={t("selectCutAria", { title: cut.title, number: index + 1 })}
-        className={cn(
-          "w-full rounded-[var(--r-md)] border p-1.5 text-left transition-colors duration-[var(--dur-fast)]",
-          selected
-            ? "border-[var(--accent)] bg-[var(--accent-soft)]"
-            : "border-[var(--line-subtle)] bg-[var(--bg-raised)] hover:border-[var(--line-default)] hover:bg-[var(--bg-hover)]",
-        )}
-      >
-        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[var(--r-sm)] bg-[var(--bg-sunken)]">
-          <div className="flex size-full flex-col items-center justify-center gap-1 px-2 text-center">
-            <span className="font-mono text-lg font-semibold tabular-nums text-[var(--fg-tertiary)]">
-              {index + 1}
-            </span>
-            {cut.cutFileId ? (
-              <span className="text-[10px] font-medium uppercase tracking-wide text-[var(--fg-quaternary)]">
-                {t("clipReady")}
-              </span>
-            ) : null}
-          </div>
-
-          {decision === "approve" ? (
-            <span className="absolute top-1.5 right-1.5">
-              <Badge variant="success" className="size-5 rounded-full p-0">
-                <Check className="size-3" aria-hidden />
-              </Badge>
-            </span>
-          ) : null}
-          {decision === "reject" ? (
-            <span className="absolute top-1.5 right-1.5">
-              <Badge variant="destructive" className="size-5 rounded-full p-0">
-                <X className="size-3" aria-hidden />
-              </Badge>
-            </span>
-          ) : null}
-        </div>
-      </button>
-
-      {compact ? (
-        <div className="space-y-1 px-0.5">
-          <Paragraph
-            size="p6"
-            tone="primary"
-            className="line-clamp-2 font-medium leading-snug"
-          >
-            {cut.title}
-          </Paragraph>
-          <div className="flex items-center justify-between gap-1">
-            <Paragraph
-              size="p6"
-              tone="tertiary"
-              className="truncate font-mono tabular-nums"
-            >
-              {formatCutWindow(cut.startSec, cut.endSec)}
-            </Paragraph>
-            <Badge
-              variant={viralScoreBadgeVariant(cut.viralScore)}
-              className="h-5 shrink-0 px-1.5 text-[10px] tabular-nums"
-            >
-              {t("viralScore", { score: cut.viralScore })}
-            </Badge>
-          </div>
-        </div>
+      {!hasRendered ? (
+        <CutSkeleton index={index} />
       ) : (
-        <div className="space-y-1 px-0.5">
-          <Paragraph size="p5" tone="primary" className="line-clamp-2 font-medium">
-            {cut.title}
-          </Paragraph>
-          <div className="flex items-center justify-between gap-2">
-            <Paragraph size="p6" tone="tertiary" className="font-mono tabular-nums">
-              {formatCutWindow(cut.startSec, cut.endSec)}
-            </Paragraph>
-            <Badge
-              variant={viralScoreBadgeVariant(cut.viralScore)}
-              className="h-5 px-1.5 text-[10px] tabular-nums"
-            >
-              {t("viralScore", { score: cut.viralScore })}
-            </Badge>
+        <div className="relative aspect-[9/16] w-full bg-black">
+          {clipUrl ? (
+            <video
+              ref={videoRef}
+              src={clipUrl}
+              className="size-full object-cover"
+              preload="metadata"
+              muted
+              playsInline
+              aria-label={cut.title}
+            />
+          ) : (
+            <div className="size-full animate-pulse bg-[var(--bg-elevated)]" />
+          )}
+
+          {isApproved ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-green-500/20">
+              <Check className="size-6 text-green-400" strokeWidth={3} />
+            </div>
+          ) : isRejected ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-[var(--danger)]/20">
+              <X className="size-6 text-[var(--danger)]" strokeWidth={3} />
+            </div>
+          ) : null}
+
+          <div className="absolute left-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-black/50 text-xs font-medium text-white">
+            {index + 1}
           </div>
+
+          {reviewable && (onApprove || onReject) ? (
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-gradient-to-t from-black/70 to-transparent p-1.5 pt-4">
+              {onReject ? (
+                <button
+                  type="button"
+                  aria-label="Reject"
+                  onClick={(e) => { e.stopPropagation(); onReject(); }}
+                  className={cn(
+                    "flex size-6 items-center justify-center rounded-full transition-colors",
+                    isRejected
+                      ? "bg-[var(--danger)] text-white"
+                      : "bg-white/20 text-white hover:bg-[var(--danger)] hover:text-white",
+                  )}
+                >
+                  <X className="size-3.5" strokeWidth={2.5} />
+                </button>
+              ) : null}
+              {onApprove ? (
+                <button
+                  type="button"
+                  aria-label="Approve"
+                  onClick={(e) => { e.stopPropagation(); onApprove(); }}
+                  className={cn(
+                    "flex size-6 items-center justify-center rounded-full transition-colors",
+                    isApproved
+                      ? "bg-green-500 text-white"
+                      : "bg-white/20 text-white hover:bg-green-500 hover:text-white",
+                  )}
+                >
+                  <Check className="size-3.5" strokeWidth={2.5} />
+                </button>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       )}
 
-      {reviewable && !compact ? (
-        <div className="flex gap-1.5">
-          <Button
-            type="button"
-            variant={decision === "reject" ? "destructive" : "outline"}
-            size="sm"
-            onClick={onReject}
-            className="h-8 flex-1 gap-1 px-2 text-xs"
-            aria-pressed={decision === "reject"}
-          >
-            <X className="size-3.5" aria-hidden />
-            {t("reject")}
-          </Button>
-          <Button
-            type="button"
-            variant={decision === "approve" ? "default" : "outline"}
-            size="sm"
-            onClick={onApprove}
-            className="h-8 flex-1 gap-1 px-2 text-xs"
-            aria-pressed={decision === "approve"}
-          >
-            <Check className="size-3.5" aria-hidden />
-            {t("approve")}
-          </Button>
+      {hasRendered ? (
+        <div className="p-1.5">
+          <p className="line-clamp-1 text-xs font-medium text-[var(--fg-secondary)]">{cut.title}</p>
         </div>
       ) : null}
     </div>
   );
-};
+});
