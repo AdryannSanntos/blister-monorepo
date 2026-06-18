@@ -12,7 +12,6 @@ import type { RoutingRule } from '../routing/routing';
 import { ToolRegistry, type AgentTool } from '../tools/tool-registry';
 import { zodToJsonSchema } from '../schemas/zod-to-json-schema';
 import type {
-  AgentContextConfig,
   AgentStepDefinition,
   AnyStepExecutor,
   BuiltAgent,
@@ -37,7 +36,6 @@ export class AgentBuilder {
   private outputSchema?: z.ZodType;
   private reviewSchema?: z.ZodType;
   private agentCapabilities: string[] = [];
-  private contextConfig?: AgentContextConfig;
   private skillIds: string[] = [];
   private stepDefinitions: AgentStepDefinition[] = [];
   private stepExecutors: Record<string, AnyStepExecutor> = {};
@@ -93,11 +91,6 @@ export class AgentBuilder {
 
   estimatedCost(value: number): this {
     this.estimatedCreditCost = value;
-    return this;
-  }
-
-  withContext(config: AgentContextConfig): this {
-    this.contextConfig = config;
     return this;
   }
 
@@ -172,7 +165,6 @@ export class AgentBuilder {
       reviewSchema: this.reviewSchema ? zodToJsonSchema(this.reviewSchema) : undefined,
       capabilities: this.agentCapabilities,
       steps: this.stepDefinitions,
-      context: this.contextConfig,
       skills: this.skillIds.length > 0 ? this.skillIds : undefined,
       isEnabled: true,
       estimatedCreditCost: this.estimatedCreditCost,
@@ -203,7 +195,6 @@ export const defineAgent = (config: {
   output: z.ZodType;
   review?: z.ZodType;
   capabilities?: string[];
-  context?: AgentContextConfig;
   skills?: string[];
   learning?: LearningHandler;
   steps: Array<{ key: string } & StepRegistration>;
@@ -218,7 +209,6 @@ export const defineAgent = (config: {
   if (config.description) builder = builder.description(config.description);
   if (config.review) builder = builder.review(config.review);
   if (config.capabilities) builder = builder.capabilities(config.capabilities);
-  if (config.context) builder = builder.withContext(config.context);
   if (config.skills) builder = builder.withSkills(config.skills);
   if (config.learning) builder = builder.withLearning(config.learning);
 

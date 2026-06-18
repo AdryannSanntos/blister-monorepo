@@ -65,15 +65,6 @@ export const updateCreditSettingsSchema = z.object({
   minRunCost: z.number().positive().optional(),
 });
 
-export const updateRagSettingsSchema = z.object({
-  chunkSize: z.number().int().positive().optional(),
-  chunkOverlap: z.number().int().min(0).optional(),
-  topK: z.number().int().positive().optional(),
-  rerankEnabled: z.boolean().optional(),
-  embeddingModelId: z.string().nullable().optional(),
-  captionModelId: z.string().nullable().optional(),
-});
-
 export const adjustCompanyCreditSchema = z.object({
   amount: z.number().positive(),
   type: z.enum(['CREDIT', 'DEBIT', 'ADJUST']),

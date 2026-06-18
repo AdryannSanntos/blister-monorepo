@@ -1,6 +1,5 @@
 import type {
   AnyStepExecutor,
-  ContextPack,
   ImageProvider,
   StepExecutionContext,
   StepExecutor,
@@ -9,19 +8,14 @@ import type {
 } from '../core/types';
 import { createStubImageProvider, createStubLlmProvider } from './stubs';
 
-const EMPTY_PACK: ContextPack = { chunks: [], totalFound: 0 };
-
 const baseContext = (overrides: Partial<StepExecutionContext>): StepExecutionContext => ({
   runId: 'step_harness_run',
   agentId: 'harness_agent',
   companyId: 'harness_company',
-  campaignId: null,
   stepKey: 'step',
   stepIndex: 0,
   inputPayload: {},
   previousStepsOutput: {},
-  contextPack: EMPTY_PACK,
-  brandProfile: null,
   ...overrides,
 });
 
@@ -55,12 +49,10 @@ export class StepTestHarness {
     return this;
   }
 
-  async execute(): Promise<StepResult> {
+  async run(): Promise<StepResult> {
     const deps: StepRuntimeDeps = {
       llmProvider: createStubLlmProvider(this.llmResponse),
       imageProvider: this.imageProvider,
-      assetResolver: null,
-      message: null,
     };
 
     if (this.step.length >= 2) {

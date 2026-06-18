@@ -1,4 +1,4 @@
-import type { BrandProfile, StepResultType } from './types';
+import type { StepResultType } from './types';
 
 export type AgentRunStatus = 'QUEUED' | 'RUNNING' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 
@@ -23,7 +23,6 @@ export interface StoredRun {
   creditCost: number;
   startedAt: Date | null;
   steps: StoredRunStep[];
-  brandProfile: BrandProfile | null;
 }
 
 export interface StartStepParams {

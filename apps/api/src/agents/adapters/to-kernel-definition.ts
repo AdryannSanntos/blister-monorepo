@@ -26,5 +26,4 @@ export const mapToKernelAgentDefinition = (definition: BuiltAgentDefinition): Ag
   })),
   capabilities: definition.capabilities,
   skills: definition.skills,
-  context: definition.context,
 });

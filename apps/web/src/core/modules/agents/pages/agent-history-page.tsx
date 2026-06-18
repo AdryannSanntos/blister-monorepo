@@ -1,12 +1,13 @@
 "use client";
 
+import type { AgentRunStatusDto } from "@company-os/types";
 import { redirect } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
-import { useAgentRunsMock } from "src/core/modules/agents/hooks/use-agent-runs-mock";
-import type { AgentRunFixture } from "src/core/modules/blister-os/fixtures/agent-runs.fixture";
+import { useCutsRuns } from "src/core/modules/agents/hooks/use-cuts-runs";
+import { getRunUserInput } from "src/core/modules/agents/utils/agent-run-helpers";
 import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import {
   type ColumnDef,
@@ -28,53 +29,43 @@ const formatRunDate = (value: string, locale: string) =>
     minute: "2-digit",
   }).format(new Date(value));
 
-const getStatusLabelKey = (run: AgentRunFixture) => {
-  if (run.reviewStatus === "approved") return "reviewApproved";
-  if (run.reviewStatus === "pending") return "reviewPending";
-  if (run.reviewStatus === "rejected") return "reviewRejected";
-  return run.status;
-};
-
 export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
   const agent = getAgentByRouteSlug(agentSlug);
   const t = useTranslations("agents.historyTable");
   const tStatus = useTranslations("agents.status");
   const locale = useLocale();
-  const { runs } = useAgentRunsMock(agent?.id ?? "");
+  const { data, isLoading } = useCutsRuns({ limit: 50 });
+  const runs = data?.runs ?? [];
 
-  const columns = useMemo<ColumnDef<AgentRunFixture>[]>(
+  const columns = useMemo<ColumnDef<AgentRunStatusDto>[]>(
     () => [
       {
-        accessorKey: "title",
+        id: "title",
         header: t("columns.title"),
         cell: ({ row }) => (
-          <div className="min-w-0">
-            <Paragraph className="truncate font-medium">
-              {row.original.title}
-            </Paragraph>
-            {row.original.preview ? (
-              <Paragraph
-                size="p6"
-                tone="tertiary"
-                className="mt-0.5 line-clamp-1"
-              >
-                {row.original.preview}
-              </Paragraph>
-            ) : null}
-          </div>
+          <Paragraph className="truncate font-medium">
+            {getRunUserInput(row.original) || t("untitledRun")}
+          </Paragraph>
         ),
       },
       {
         accessorKey: "status",
         header: t("columns.status"),
-        cell: ({ row }) => {
-          const key = getStatusLabelKey(row.original);
-          return (
-            <span className="text-[13px] text-[var(--fg-secondary)]">
-              {tStatus(key)}
-            </span>
-          );
-        },
+        cell: ({ row }) => (
+          <span className="text-[13px] capitalize text-[var(--fg-secondary)]">
+            {row.original.reviewStatus
+              ? tStatus(
+                  row.original.reviewStatus === "PENDING_REVIEW"
+                    ? "reviewPending"
+                    : row.original.reviewStatus === "APPROVED"
+                      ? "reviewApproved"
+                      : row.original.reviewStatus === "REJECTED"
+                        ? "reviewRejected"
+                        : "reviewEdited",
+                )
+              : row.original.status.toLowerCase()}
+          </span>
+        ),
       },
       {
         accessorKey: "createdAt",
@@ -86,11 +77,11 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
         ),
       },
       {
-        accessorKey: "creditsUsed",
+        accessorKey: "creditCost",
         header: t("columns.credits"),
         cell: ({ row }) => (
           <span className="tabular-nums text-[13px] text-[var(--fg-secondary)]">
-            {row.original.creditsUsed?.toFixed(1) ?? "—"}
+            {row.original.creditCost?.toFixed(1) ?? "—"}
           </span>
         ),
       },
@@ -123,7 +114,9 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
               />
             </div>
 
-            {runs.length === 0 ? (
+            {isLoading ? (
+              <div className="h-48 animate-pulse rounded-[var(--r-lg)] bg-[var(--bg-sunken)]" />
+            ) : runs.length === 0 ? (
               <div className="flex flex-col items-center gap-4 rounded-[var(--r-lg)] border border-dashed border-[var(--line-default)] py-16 text-center">
                 <Paragraph className="font-medium">{t("empty")}</Paragraph>
                 <Paragraph size="p5" tone="tertiary">

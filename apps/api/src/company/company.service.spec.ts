@@ -17,7 +17,7 @@ const makeService = (companies: FakeCompany[]) => {
     companyMember: { findMany: jest.fn().mockResolvedValue([]) },
   } as never;
 
-  return new CompanyService(prisma, {} as never, {} as never, {} as never);
+  return new CompanyService(prisma, {} as never, {} as never);
 };
 
 describe('CompanyService.getHomeDestination', () => {

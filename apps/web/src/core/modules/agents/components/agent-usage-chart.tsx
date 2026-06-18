@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import type { AgentUsageDay } from "src/core/modules/agents/hooks/use-agent-runs-mock";
+import type { AgentUsageDay } from "src/core/modules/agents/types/agent-usage";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { cn } from "src/core/shared/utils";
 

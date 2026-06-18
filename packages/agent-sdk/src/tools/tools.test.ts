@@ -10,13 +10,10 @@ const ctx = (): StepExecutionContext => ({
   runId: 'r',
   agentId: 'a',
   companyId: 'c',
-  campaignId: null,
   stepKey: 'tool_step',
   stepIndex: 0,
   inputPayload: { userInput: 'preço do bolo' },
   previousStepsOutput: {},
-  contextPack: { chunks: [], totalFound: 0 },
-  brandProfile: null,
 });
 
 describe('createToolStep', () => {
@@ -42,7 +39,6 @@ describe('createToolStep', () => {
     });
 
     const result = await step(ctx(), {
-      assetResolver: null,
       imageProvider: null,
       llmProvider: {
         complete: async () => ({

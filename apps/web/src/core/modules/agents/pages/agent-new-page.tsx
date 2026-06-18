@@ -3,32 +3,12 @@
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
-
-import { BriefAgentGeneration } from "src/core/modules/agents/components/generations/brief-agent-generation";
-import { ResearchGeneration } from "src/core/modules/agents/components/generations/research-generation";
-import { VideoEditorGeneration } from "src/core/modules/agents/components/generations/video-editor-generation";
 import { CutsNewRedirect } from "src/core/modules/agents/pages/cuts-new-redirect";
-import {
-  type AgentCatalogEntry,
-  getAgentByRouteSlug,
-} from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
+import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 
 type AgentNewPageProps = {
   agentSlug: string;
-};
-
-const renderGeneration = (agent: AgentCatalogEntry) => {
-  switch (agent.id) {
-    case "video_editor":
-      return <VideoEditorGeneration />;
-    case "cuts":
-      return <CutsNewRedirect />;
-    case "research":
-      return <ResearchGeneration />;
-    default:
-      return <BriefAgentGeneration agent={agent} />;
-  }
 };
 
 export const AgentNewPage = ({ agentSlug }: AgentNewPageProps) => {
@@ -47,7 +27,7 @@ export const AgentNewPage = ({ agentSlug }: AgentNewPageProps) => {
         description={t("description")}
       >
         <AgentEntitlementGate agent={agent}>
-          {renderGeneration(agent)}
+          <CutsNewRedirect />
         </AgentEntitlementGate>
       </PageLayout>
     </div>

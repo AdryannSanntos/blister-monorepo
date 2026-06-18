@@ -23,23 +23,44 @@ const loadBundledFfmpegPath = (): string | null => {
   return cachedBundledPath;
 };
 
+/** Path installed by @trigger.dev/build/extensions/core ffmpeg() in cloud workers. */
+const TRIGGER_FFMPEG_PATH = '/usr/bin/ffmpeg';
+
 const isTriggerWorker = (): boolean =>
   Boolean(process.env.TRIGGER_RUN_ID ?? process.env.TRIGGER_ATTEMPT_ID);
 
-/** Resolves the FFmpeg binary — env override, then ffmpeg-static, then PATH. */
+const tryExecutablePath = (candidate: string): string | null => {
+  try {
+    accessSync(candidate, constants.X_OK);
+    return candidate;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Resolves the FFmpeg binary:
+ * 1. FFMPEG_PATH / FFMPEG_BINARY env override
+ * 2. /usr/bin/ffmpeg in Trigger cloud (build extension)
+ * 3. ffmpeg-static (local API + local Trigger dev worker)
+ * 4. `ffmpeg` on PATH
+ */
 export const resolveFfmpegPath = (): string => {
   const fromEnv = process.env.FFMPEG_PATH ?? process.env.FFMPEG_BINARY;
   if (fromEnv && fromEnv.trim().length > 0) {
-    return fromEnv;
+    return fromEnv.trim();
   }
 
-  // ffmpeg-static paths baked into the Trigger bundle often point at a missing
-  // or wrong-arch binary; the ffmpeg build extension installs /usr/bin/ffmpeg.
-  if (!isTriggerWorker()) {
-    const bundled = loadBundledFfmpegPath();
-    if (bundled) {
-      return bundled;
+  if (isTriggerWorker()) {
+    const triggerPath = tryExecutablePath(TRIGGER_FFMPEG_PATH);
+    if (triggerPath) {
+      return triggerPath;
     }
+  }
+
+  const bundled = loadBundledFfmpegPath();
+  if (bundled) {
+    return bundled;
   }
 
   return 'ffmpeg';

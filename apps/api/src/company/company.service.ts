@@ -8,7 +8,6 @@ import type { Request } from 'express';
 import type { z } from 'zod';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { CompanyRagSyncService } from '../rag/company-rag-sync.service';
 import { companyScopePrefix, isKeyInPendingScope } from '../storage/storage-path.util';
 import { StorageService } from '../storage/storage.service';
 import { createCompanyForUser } from './company-bootstrap.util';
@@ -32,7 +31,6 @@ export class CompanyService {
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly storage: StorageService,
-    private readonly companyRagSync: CompanyRagSyncService,
   ) {}
 
   async listAccessibleCompanies(userId: string): Promise<CompanySummary[]> {
@@ -218,12 +216,6 @@ export class CompanyService {
       resourceType: 'Company',
       resourceId: company.id,
     });
-
-    try {
-      await this.companyRagSync.queueSync(company.id);
-    } catch (error) {
-      console.error('Failed to queue initial company RAG sync', error);
-    }
 
     return this.prisma.company.findUniqueOrThrow({
       where: { id: company.id },

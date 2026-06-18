@@ -29,13 +29,11 @@ type BlisterOsStore = {
   settings: WorkspaceSettingsFixture;
   folders: FileFolder[];
   files: FileEntry[];
-  editorStyleId: string | null;
   agentRuns: AgentRunFixture[];
   redeemItem: (itemId: string, price: number, agentId?: string) => boolean;
   addAgentRun: (
     input: Omit<AgentRunFixture, "id" | "createdAt"> & { createdAt?: string },
   ) => AgentRunFixture;
-  setEditorStyleId: (styleId: string | null) => void;
   updateSettings: (patch: Partial<WorkspaceSettingsFixture>) => void;
   createFolder: (name: string, parentId: string) => boolean;
   renameFolder: (folderId: string, name: string) => boolean;
@@ -57,7 +55,6 @@ export const useBlisterOsStore = create<BlisterOsStore>()(
       settings: { ...WORKSPACE_SETTINGS_FIXTURE },
       folders: [...FOLDERS_FIXTURE],
       files: [...FILES_FIXTURE],
-      editorStyleId: "es-corte-seco",
       agentRuns: [...AGENT_RUNS_FIXTURE],
       addAgentRun: (input) => {
         const run: AgentRunFixture = {
@@ -97,7 +94,6 @@ export const useBlisterOsStore = create<BlisterOsStore>()(
 
         return true;
       },
-      setEditorStyleId: (styleId) => set({ editorStyleId: styleId }),
       updateSettings: (patch) =>
         set((state) => ({ settings: { ...state.settings, ...patch } })),
       createFolder: (name, parentId) => {

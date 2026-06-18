@@ -10,11 +10,9 @@ export {
   registerSchemaMatchers,
   toMatchSchema,
 } from './matchers/to-match-schema';
-export { brandProfileFixture, contextPackFixture } from './fixtures';
 export {
   createCollectingEventPublisher,
   createInMemoryBlockStore,
-  createInMemoryContextPackBuilder,
   createInMemoryRunStore,
   createNoOpEventPublisher,
   createStubCreditReporter,

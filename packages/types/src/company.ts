@@ -1,8 +1,5 @@
 import { z } from 'zod';
 
-import { brandPaletteSchema } from './brand-palette';
-import { brandAssetsSchema, logoVariantSchema, logoVariantsSchema } from './brand-visual';
-
 /** Max size for workspace video uploads via presigned URL (5 GB). */
 export const MAX_PRESIGNED_UPLOAD_BYTES = 5 * 1024 * 1024 * 1024;
 
@@ -74,55 +71,6 @@ export const onboardingSchema = z.object({
   createNew: z.boolean().optional(),
 });
 export type OnboardingDto = z.infer<typeof onboardingSchema>;
-
-export const brandProfileResponseSchema = z.object({
-  id: z.string(),
-  companyId: z.string(),
-  logoStorageKey: z.string().nullable(),
-  logoVariants: logoVariantsSchema,
-  brandAssets: brandAssetsSchema,
-  brandVoice: z.string(),
-  palette: brandPaletteSchema,
-  typography: z.string().nullable(),
-  visualStyle: z.string().nullable(),
-  niche: z.string().nullable(),
-  description: z.string().nullable(),
-  targetAudience: z.string().nullable(),
-  marketingObjective: marketingObjectiveSchema.nullable(),
-  socialNetworks: z.array(z.string()),
-  mainProducts: z.string().nullable(),
-  differentiators: z.string().nullable(),
-  updatedAt: z.string(),
-});
-export type BrandProfileResponse = z.infer<typeof brandProfileResponseSchema>;
-
-export const updateBrandProfileSchema = z.object({
-  brandVoice: z.string().min(10).max(2000).optional(),
-  palette: brandPaletteSchema.optional(),
-  typography: z.string().max(200).optional().nullable(),
-  visualStyle: z.string().max(200).optional().nullable(),
-  niche: z.string().max(200).optional().nullable(),
-  description: z.string().max(2000).optional().nullable(),
-  targetAudience: z.string().max(1000).optional().nullable(),
-  marketingObjective: marketingObjectiveSchema.nullable().optional(),
-  socialNetworks: z.array(z.string()).optional(),
-  mainProducts: z.string().max(2000).optional().nullable(),
-  differentiators: z.string().max(2000).optional().nullable(),
-});
-export type UpdateBrandProfileDto = z.infer<typeof updateBrandProfileSchema>;
-
-export const updateLogoSchema = z.object({
-  variant: logoVariantSchema,
-  logoStorageKey: z.string().min(1),
-});
-export type UpdateLogoDto = z.infer<typeof updateLogoSchema>;
-
-export const addBrandAssetSchema = z.object({
-  storageKey: z.string().min(1),
-  name: z.string().min(1).max(120).optional(),
-  mimeType: z.string().max(120).optional(),
-});
-export type AddBrandAssetDto = z.infer<typeof addBrandAssetSchema>;
 
 export const onboardingStatusSchema = z.object({
   completed: z.boolean(),

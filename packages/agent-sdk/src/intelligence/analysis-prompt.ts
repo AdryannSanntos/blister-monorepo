@@ -10,15 +10,7 @@ const describeField = (field: ClarificationField): string => {
   return `- ${field.name}${required}: ${field.label}${options}`;
 };
 
-const describeBrand = (context: StepExecutionContext): string => {
-  const brand = context.brandProfile;
-  if (!brand) return '';
-  const parts: string[] = [];
-  if (brand.niche) parts.push(`Nicho: ${brand.niche}`);
-  if (brand.brandVoice) parts.push(`Tom de voz: ${brand.brandVoice}`);
-  if (brand.targetAudience) parts.push(`Público: ${brand.targetAudience}`);
-  return parts.length ? `\n## Contexto da marca\n${parts.join('\n')}\n` : '';
-};
+const describeBrand = (_context: StepExecutionContext): string => '';
 
 /**
  * System prompt for the request-analysis LLM call. Instructs the model to

@@ -6,52 +6,14 @@ import type { MessageHandle } from '../stream/block-emitter';
 
 export type StepResultType = 'CONTINUE' | 'PAUSED' | 'FAILED' | 'COMPLETE';
 
-export interface ContextChunk {
-  id: string;
-  content: string;
-  sourceType: string;
-  score: number;
-  metadata?: Record<string, unknown>;
-}
-
-export interface ContextPack {
-  chunks: ContextChunk[];
-  totalFound: number;
-  brandContext?: string;
-  learningContext?: string;
-  campaignContext?: string;
-}
-
-export interface BrandProfile {
-  id: string;
-  companyId: string;
-  brandVoice: string | null;
-  niche: string | null;
-  description: string | null;
-  targetAudience: string | null;
-  marketingObjective: string | null;
-  mainProducts: string | null;
-  differentiators: string | null;
-  visualStyle: string | null;
-  palette: unknown;
-  typography: string | null;
-  socialNetworks: string[];
-  logoStorageKey: string | null;
-  logoVariants: unknown;
-  brandAssets: unknown;
-}
-
 export interface StepExecutionContext {
   runId: string;
   agentId: string;
   companyId: string;
-  campaignId: string | null;
   stepKey: string;
   stepIndex: number;
   inputPayload: Record<string, unknown>;
   previousStepsOutput: Record<string, Record<string, unknown>>;
-  contextPack: ContextPack;
-  brandProfile: BrandProfile | null;
 }
 
 export interface StepResult {
@@ -94,12 +56,9 @@ export interface ImageProvider {
   generate(params: Record<string, unknown>): Promise<Record<string, unknown>>;
 }
 
-export type AssetResolver = (storageKeys: string[]) => Promise<Record<string, string>>;
-
 export interface StepRuntimeDeps {
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
-  assetResolver: AssetResolver | null;
   message?: MessageHandle | null;
 }
 
@@ -127,14 +86,6 @@ export interface AgentStepDefinition {
   config?: Record<string, unknown>;
 }
 
-export interface AgentContextConfig {
-  includeBrandBrain?: boolean;
-  includeAgentLearning?: boolean;
-  includeCampaignContext?: boolean;
-  /** When false, skip vector retrieval even if userInput is present (e.g. filename-only inputs). */
-  useUserInputAsRetrievalQuery?: boolean;
-}
-
 export interface BuiltAgentDefinition {
   agentId: string;
   version?: string;
@@ -145,7 +96,6 @@ export interface BuiltAgentDefinition {
   reviewSchema?: Record<string, unknown>;
   capabilities: string[];
   steps: AgentStepDefinition[];
-  context?: AgentContextConfig;
   skills?: string[];
   isEnabled?: boolean;
   estimatedCreditCost?: number;

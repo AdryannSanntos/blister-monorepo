@@ -5,9 +5,7 @@ import type {
   AdjustCreditDto,
   PlatformCompany,
   PlatformCreditSettings,
-  RagPlatformSettings,
   UpdateCreditSettingsDto,
-  UpdateRagSettingsDto,
 } from "@company-os/types";
 
 import { apiClient } from "src/core/shared/utils/api-client";
@@ -19,13 +17,11 @@ export function usePlatformSettings() {
 
   return useQuery<{
     credits: PlatformCreditSettings | null;
-    rag: RagPlatformSettings | null;
   }>({
     queryKey: ["platform", "settings"],
     queryFn: async () => {
       const { data } = await apiClient.get<{
         credits: PlatformCreditSettings | null;
-        rag: RagPlatformSettings | null;
       }>("/platform/settings");
       return data;
     },
@@ -40,22 +36,6 @@ export function useUpdateCreditSettings() {
     mutationFn: async (dto) => {
       const { data } = await apiClient.patch<PlatformCreditSettings>(
         "/platform/settings/credits",
-        dto,
-      );
-      return data;
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["platform", "settings"] }),
-  });
-}
-
-export function useUpdateRagSettings() {
-  const queryClient = useQueryClient();
-
-  return useMutation<RagPlatformSettings, Error, UpdateRagSettingsDto>({
-    mutationFn: async (dto) => {
-      const { data } = await apiClient.patch<RagPlatformSettings>(
-        "/platform/settings/rag",
         dto,
       );
       return data;

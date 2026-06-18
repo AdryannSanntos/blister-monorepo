@@ -25,6 +25,8 @@ describe('resolveFfmpegPath', () => {
     process.env = { ...originalEnv };
     delete process.env.FFMPEG_PATH;
     delete process.env.FFMPEG_BINARY;
+    delete process.env.TRIGGER_RUN_ID;
+    delete process.env.TRIGGER_ATTEMPT_ID;
     resetFfmpegPathCacheForTests();
   });
 
@@ -46,6 +48,19 @@ describe('resolveFfmpegPath', () => {
     }
 
     expect(() => accessSync(path, constants.X_OK)).not.toThrow();
+  });
+
+  it('falls back to ffmpeg-static in local Trigger worker when /usr/bin/ffmpeg is absent', () => {
+    process.env.TRIGGER_RUN_ID = 'run_test';
+
+    const path = resolveFfmpegPath();
+    if (path === 'ffmpeg') {
+      expect(path).toBe('ffmpeg');
+      return;
+    }
+
+    expect(() => accessSync(path, constants.X_OK)).not.toThrow();
+    expect(path).not.toBe('/usr/bin/ffmpeg');
   });
 });
 

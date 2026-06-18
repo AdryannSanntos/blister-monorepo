@@ -17,9 +17,8 @@ import {
 import { debitStepCredits, getPlatformSettings } from './credit-debit.helper';
 import { agentStepRegistry } from './agent-step-registry';
 import type { EventPublisher } from './run-event.publisher';
-import type { ContextPackBuilder } from '@company-os/agent-sdk';
+import { createTriggerLlmProvider } from './trigger-providers';
 import type {
-  AssetResolver,
   RunResult,
   StepExecutionContext,
   StepResult,
@@ -65,19 +64,16 @@ export interface ImageProvider {
 
 export interface ExecutionDependencies {
   prisma: PrismaClient;
-  contextPackBuilder: ContextPackBuilder | null;
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
   eventPublisher: EventPublisher;
   blocks: AgentRunBlockServiceLike;
-  assetResolver?: AssetResolver | null;
   stubMode?: boolean;
 }
 
 export interface StepExecutorDeps {
   llmProvider: LlmProvider | null;
   imageProvider: ImageProvider | null;
-  assetResolver: AssetResolver | null;
   message: MessageHandle;
 }
 
@@ -101,7 +97,6 @@ const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => ({
     const definition = await loadAgentDefinition(deps.prisma, agentId);
     return definition;
   },
-  contextPackBuilder: deps.contextPackBuilder,
   llmProvider: deps.llmProvider,
   imageProvider: deps.imageProvider,
   eventPublisher: deps.eventPublisher,
@@ -111,7 +106,6 @@ const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => ({
     debitStep: (params) => debitStepCredits(deps.prisma, params),
   },
   usage: createUsageReporter(),
-  assetResolver: deps.assetResolver ?? null,
   customStepExecutors: agentStepRegistry as Record<string, SdkCustomStepExecutor>,
   stubMode: deps.stubMode,
   formatProviderError: toUserFacingProviderError,
@@ -125,4 +119,4 @@ export async function executeRun(
   return result;
 }
 
-export { agentStepRegistry };
+export { agentStepRegistry, createTriggerLlmProvider };

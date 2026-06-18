@@ -1,4 +1,4 @@
-import type { AgentRunEventType } from '@company-os/types';
+import { agentRunEventTypeSchema, type AgentRunEventType } from '@company-os/types';
 import {
   Body,
   Controller,
@@ -17,16 +17,7 @@ import { AgentSseService } from './runtime/agent-sse.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
 
 const eventPayloadSchema = z.object({
-  type: z.enum([
-    'run_started',
-    'step_started',
-    'step_completed',
-    'run_completed',
-    'run_failed',
-    'run_paused',
-    'step_failed',
-    'output_chunk',
-  ]),
+  type: agentRunEventTypeSchema,
   data: z.record(z.string(), z.unknown()).optional(),
   timestamp: z.string().optional(),
 });
@@ -168,62 +159,6 @@ export class InternalEventsController {
     type: AgentRunEventType,
     data?: Record<string, unknown>,
   ): void {
-    switch (type) {
-      case 'run_started':
-        this.sseService.emitRunStarted(runId, companyId, (data?.agentId as string) ?? '');
-        break;
-      case 'step_started':
-        this.sseService.emitStepStarted(
-          runId,
-          companyId,
-          (data?.stepKey as string) ?? '',
-          (data?.stepIndex as number) ?? 0,
-        );
-        break;
-      case 'step_completed':
-        this.sseService.emitStepCompleted(
-          runId,
-          companyId,
-          (data?.stepKey as string) ?? '',
-          (data?.output as Record<string, unknown>) ?? {},
-        );
-        break;
-      case 'step_failed':
-        this.sseService.emitStepFailed(
-          runId,
-          companyId,
-          (data?.stepKey as string) ?? '',
-          (data?.error as string) ?? '',
-        );
-        break;
-      case 'run_completed':
-        this.sseService.emitRunCompleted(
-          runId,
-          companyId,
-          (data?.outputPayload as Record<string, unknown>) ?? {},
-          typeof data?.totalCreditCost === 'number' ? data.totalCreditCost : undefined,
-        );
-        break;
-      case 'run_failed':
-        this.sseService.emitRunFailed(runId, companyId, (data?.errorMessage as string) ?? '');
-        break;
-      case 'run_paused':
-        this.sseService.emitRunPaused(
-          runId,
-          companyId,
-          (data?.pauseReason as string) ?? '',
-          data?.pauseFormSchema,
-          typeof data?.inputPayload === 'object' && data?.inputPayload !== null
-            ? (data.inputPayload as Record<string, unknown>)
-            : undefined,
-          typeof data?.outputPayload === 'object' && data?.outputPayload !== null
-            ? (data.outputPayload as Record<string, unknown>)
-            : undefined,
-        );
-        break;
-      case 'output_chunk':
-        this.sseService.emitOutputChunk(runId, companyId, (data?.chunk as string) ?? '');
-        break;
-    }
+    this.sseService.emit(runId, companyId, type, data);
   }
 }

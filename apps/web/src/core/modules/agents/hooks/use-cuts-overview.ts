@@ -3,7 +3,7 @@
 import type { AgentRunStatusDto } from "@company-os/types";
 import { useMemo } from "react";
 
-import type { AgentUsageDay } from "./use-agent-runs-mock";
+import type { AgentUsageDay } from "src/core/modules/agents/types/agent-usage";
 import { useCutsRuns } from "./use-cuts-runs";
 import { useCutsStats } from "./use-cuts-stats";
 

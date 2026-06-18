@@ -9,7 +9,6 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { useCaptionStyles } from "src/core/modules/agents/hooks/use-caption-styles";
 import {
   useCutsSettings,
   useUpdateCutsSettings,
@@ -27,13 +26,6 @@ import {
   FormSwitchItem,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "src/core/shared/components/ui/select";
 import { Switch } from "src/core/shared/components/ui/switch";
 import { SectionCard } from "src/core/shared/components/ui/section-card";
 
@@ -51,7 +43,6 @@ type CutsSettingsValues = z.infer<typeof cutsSettingsFormSchema>;
 export const CutsSettings = () => {
   const t = useTranslations("agents.settings.cuts");
   const { data: settings, isLoading } = useCutsSettings();
-  const { data: captionStyles = [] } = useCaptionStyles();
   const updateSettings = useUpdateCutsSettings();
 
   const form = useForm<CutsSettingsValues>({
@@ -171,32 +162,6 @@ export const CutsSettings = () => {
               </FormSwitchItem>
             )}
           />
-          {addCaptions ? (
-            <FormField
-              control={form.control}
-              name="captionStyleId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("captionStyleLabel")}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("captionStylePlaceholder")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {captionStyles.map((style) => (
-                        <SelectItem key={style.id} value={style.id}>
-                          {style.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ) : null}
           <FormField
             control={form.control}
             name="deleteSourceAfterRun"

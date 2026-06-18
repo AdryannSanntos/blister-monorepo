@@ -1,4 +1,3 @@
-import type { AgentUiId } from "../config/agent-ui-config";
 import {
   parseCopywriterOutput,
   parseDesignerOutput,
@@ -31,7 +30,7 @@ const formatStrategistTopic = (
 };
 
 export function formatAgentOutputMarkdown(
-  agentId: AgentUiId,
+  agentId: string,
   payload: Record<string, unknown>,
 ): string {
   switch (agentId) {

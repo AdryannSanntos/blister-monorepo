@@ -175,26 +175,6 @@ export const updateCreditSettingsSchema = z.object({
 });
 export type UpdateCreditSettingsDto = z.infer<typeof updateCreditSettingsSchema>;
 
-export const ragPlatformSettingsSchema = z.object({
-  chunkSize: z.number(),
-  chunkOverlap: z.number(),
-  topK: z.number(),
-  rerankEnabled: z.boolean(),
-  embeddingModelId: z.string().nullable(),
-  captionModelId: z.string().nullable(),
-});
-export type RagPlatformSettings = z.infer<typeof ragPlatformSettingsSchema>;
-
-export const updateRagSettingsSchema = z.object({
-  chunkSize: z.number().int().positive().optional(),
-  chunkOverlap: z.number().int().min(0).optional(),
-  topK: z.number().int().positive().optional(),
-  rerankEnabled: z.boolean().optional(),
-  embeddingModelId: z.string().nullable().optional(),
-  captionModelId: z.string().nullable().optional(),
-});
-export type UpdateRagSettingsDto = z.infer<typeof updateRagSettingsSchema>;
-
 export const platformCompanySchema = z.object({
   id: z.string(),
   name: z.string(),

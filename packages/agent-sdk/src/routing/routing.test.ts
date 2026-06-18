@@ -13,13 +13,10 @@ const ctx = (overrides: Partial<StepExecutionContext> = {}): StepExecutionContex
   runId: 'r',
   agentId: 'a',
   companyId: 'c',
-  campaignId: null,
   stepKey: 'collect_brief',
   stepIndex: 0,
   inputPayload: {},
   previousStepsOutput: {},
-  contextPack: { chunks: [], totalFound: 0 },
-  brandProfile: null,
   ...overrides,
 });
 
@@ -49,14 +46,12 @@ describe('routing', () => {
     const skipped = await step(ctx({ inputPayload: { run: false } }), {
       llmProvider: null,
       imageProvider: null,
-      assetResolver: null,
     });
     assert.deepEqual(skipped.output, {});
 
     const ran = await step(ctx({ inputPayload: { run: true } }), {
       llmProvider: null,
       imageProvider: null,
-      assetResolver: null,
     });
     assert.deepEqual(ran.output, { ran: true });
   });

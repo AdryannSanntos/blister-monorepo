@@ -1,10 +1,6 @@
-import type {
-  ContextPackBuilder,
-  LlmProviderRuntime,
-  UsageReporter as CreditReporter,
-} from '../../core/agent-runtime-types';
+import type { LlmProviderRuntime, UsageReporter as CreditReporter } from '../../core/agent-runtime-types';
 import type { EventPublisher, RunEventPayload } from '../../stream';
-import type { ContextPack, ImageProvider, LlmProvider } from '../../core/types';
+import type { ImageProvider, LlmProvider } from '../../core/types';
 
 export type LlmResponseMap = Record<string, unknown>;
 
@@ -41,10 +37,6 @@ export const createStubImageProvider = (options?: {
     base64: options?.base64,
     storageKey: options?.storageKey ?? 'stub/generated-image.png',
   }),
-});
-
-export const createInMemoryContextPackBuilder = (pack: ContextPack): ContextPackBuilder => ({
-  buildPack: async () => pack,
 });
 
 export interface CollectingEventPublisher extends EventPublisher {

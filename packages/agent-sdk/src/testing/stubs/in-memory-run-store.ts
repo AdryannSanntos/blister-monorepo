@@ -9,7 +9,6 @@ import type {
   StoredRun,
   StoredRunStep,
 } from '../../core/run-store';
-import type { BrandProfile } from '../../core/types';
 
 export interface InMemoryRunStore extends RunStore {
   current(): StoredRun;
@@ -24,7 +23,6 @@ export const createInMemoryRunStore = (params: {
   companyId: string;
   campaignId?: string | null;
   inputPayload: Record<string, unknown>;
-  brandProfile?: BrandProfile | null;
 }): InMemoryRunStore => {
   const run: StoredRun = {
     id: params.runId,
@@ -39,7 +37,6 @@ export const createInMemoryRunStore = (params: {
     creditCost: 0,
     startedAt: null,
     steps: [],
-    brandProfile: params.brandProfile ?? null,
   };
 
   const findStep = (stepId: string): StoredRunStep | undefined =>

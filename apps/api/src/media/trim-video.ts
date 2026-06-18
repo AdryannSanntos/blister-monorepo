@@ -13,7 +13,11 @@ export type TrimVideoParams = {
   startSec: number;
   endSec: number;
   ffmpegPath?: string;
+  /** Kill FFmpeg if it exceeds this duration (default 15 minutes). */
+  timeoutMs?: number;
 };
+
+const DEFAULT_FFMPEG_TIMEOUT_MS = 15 * 60 * 1000;
 
 const buildFfmpegNotFoundError = (ffmpegPath: string): Error =>
   new Error(
@@ -54,6 +58,7 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
   const outputPath = join(workDir, 'clip.mp4');
   const durationSec = Math.max(0.1, params.endSec - params.startSec);
   const ffmpeg = params.ffmpegPath ?? resolveFfmpegPath();
+  const timeoutMs = params.timeoutMs ?? DEFAULT_FFMPEG_TIMEOUT_MS;
 
   await mkdir(workDir, { recursive: true });
 
@@ -87,12 +92,27 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
 
       const proc = spawn(ffmpeg, args, { stdio: ['ignore', 'ignore', 'pipe'] });
       let stderr = '';
+      let settled = false;
+
+      const timeout = setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        proc.kill('SIGKILL');
+        reject(
+          new Error(
+            `FFmpeg timed out after ${timeoutMs}ms while trimming segment ${params.startSec}s–${params.endSec}s`,
+          ),
+        );
+      }, timeoutMs);
 
       proc.stderr?.on('data', (chunk: Buffer) => {
         stderr += chunk.toString();
       });
 
       proc.on('error', (error) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
           reject(buildFfmpegNotFoundError(ffmpeg));
           return;
@@ -101,6 +121,9 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
       });
 
       proc.on('close', (code, signal) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
         if (code === 0) {
           resolve();
           return;

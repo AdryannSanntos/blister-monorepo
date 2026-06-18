@@ -1,5 +1,3 @@
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type {
   AiProviderAdapter,
   AiRuntimeTextResult,
@@ -13,8 +11,7 @@ import {
   resolveStepModel,
 } from '../../../ai-runtime/resolve-model';
 import type { PrismaClient } from '../../../generated/prisma';
-import type { ImageProvider, LlmProvider } from './agent-execution.kernel';
-import type { AssetResolver } from './types';
+import type { LlmProvider } from './agent-execution.kernel';
 
 class EnvConfigService {
   get<T = string>(key: string, defaultValue?: T): T | undefined {
@@ -137,91 +134,6 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
             result.usage.completionTokens,
           ),
           structuredOutput: result.structuredOutput,
-        };
-      } catch (error) {
-        throw new Error(toUserFacingProviderError(error));
-      }
-    },
-  };
-};
-
-/**
- * Standalone S3-backed asset resolver for the Trigger.dev worker, which runs
- * outside the Nest DI container (no StorageService available). Mirrors
- * StorageService config. Returns null when S3 is not configured so the post
- * generator degrades gracefully.
- */
-export const createTriggerAssetResolver = (): AssetResolver | null => {
-  const bucket = process.env.AWS_S3_BUCKET;
-  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-
-  if (!bucket || !accessKeyId || !secretAccessKey) {
-    return null;
-  }
-
-  const endpoint = process.env.AWS_S3_ENDPOINT;
-  const forcePathStyle = process.env.AWS_S3_FORCE_PATH_STYLE === 'true';
-
-  const client = new S3Client({
-    region: process.env.AWS_REGION ?? 'us-east-1',
-    credentials: { accessKeyId, secretAccessKey },
-    ...(endpoint ? { endpoint, forcePathStyle } : {}),
-  });
-
-  return async (storageKeys) => {
-    const entries = await Promise.all(
-      storageKeys.map(async (key): Promise<[string, string] | null> => {
-        try {
-          const url = await getSignedUrl(
-            client,
-            new GetObjectCommand({ Bucket: bucket, Key: key }),
-            { expiresIn: 3600 },
-          );
-          return [key, url];
-        } catch {
-          return null;
-        }
-      }),
-    );
-
-    return Object.fromEntries(entries.filter((entry): entry is [string, string] => entry !== null));
-  };
-};
-
-export const createTriggerImageProvider = (prisma: PrismaClient): ImageProvider => {
-  const config = new EnvConfigService();
-  const gemini = new GeminiAdapter(config as never);
-
-  return {
-    async generateImage(params) {
-      const model = await resolveStepModel(prisma, {
-        agentId: params.agentId,
-        stepKey: params.stepKey,
-        requiredCapabilities: ['image'],
-      });
-
-      if (model.providerSlug !== 'gemini' || !gemini.generateImage) {
-        throw new Error(
-          'Geração de imagem requer o provedor Google Gemini configurado para este agente.',
-        );
-      }
-
-      try {
-        const result = await gemini.generateImage({
-          prompt: params.prompt,
-          model: model.externalModelId,
-        });
-
-        const image = result.images[0];
-        if (!image) {
-          throw new Error('O provedor não retornou nenhuma imagem.');
-        }
-
-        return {
-          imageUrl:
-            image.url ?? (image.base64 ? `data:image/png;base64,${image.base64}` : undefined),
-          base64: image.base64,
         };
       } catch (error) {
         throw new Error(toUserFacingProviderError(error));

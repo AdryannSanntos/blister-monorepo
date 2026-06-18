@@ -3,9 +3,6 @@ import { getCutsSettings } from '../steps/cuts-steps';
 
 export const buildCutsSystemPrompt = (context: StepExecutionContext): string => {
   const settings = getCutsSettings(context);
-  const voice = context.brandProfile?.brandVoice
-    ? `Workspace voice: ${context.brandProfile.brandVoice}.`
-    : '';
 
   return [
     'You are a short-form video editor who turns long recordings into high-retention clips.',
@@ -14,7 +11,6 @@ export const buildCutsSystemPrompt = (context: StepExecutionContext): string => 
     'Use ONLY timestamps that exist in the provided transcript segments — never invent times.',
     'Titles and descriptions must match the spoken language of the transcript.',
     'Order cuts from highest to lowest viralScore.',
-    voice,
   ]
     .filter(Boolean)
     .join(' ');

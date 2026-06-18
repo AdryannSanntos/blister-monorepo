@@ -4,10 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { tasks } from '@trigger.dev/sdk';
 import type { agentRunExecute } from '../../../trigger/agent-run-execute';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CompanyRagSyncService } from '../../rag/company-rag-sync.service';
-import { ContextPackService } from '../../rag/context-pack.service';
-import { StorageService } from '../../storage/storage.service';
-import { adaptContextPackService } from '../adapters/context-pack-builder.adapter';
 import { AgentRegistryService } from './agent-registry.service';
 import { AgentRunBlockService } from './agent-run-block.service';
 import type { RunWorkspaceScope } from './agent-run.service';
@@ -16,11 +12,9 @@ import { CreditStepInterceptor } from './credit-step.interceptor';
 import { InProcessEventPublisher } from './in-process-event.publisher';
 import {
   type ExecutionDependencies,
-  createTriggerImageProvider,
   createTriggerLlmProvider,
   executeRun,
 } from './kernel';
-import type { AssetResolver } from './kernel';
 import { resolveAgentExecutionMode } from './agent-execution-mode';
 
 type AgentRunExecuteTask = typeof agentRunExecute;
@@ -35,7 +29,6 @@ export interface StartRunOptions {
   personalSpaceId?: string;
   userId: string;
   userInput: string;
-  campaignId?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -61,41 +54,9 @@ export class WorkflowEngineService {
     private readonly registry: AgentRegistryService,
     private readonly creditInterceptor: CreditStepInterceptor,
     private readonly sseService: AgentSseService,
-    private readonly companyRagSync: CompanyRagSyncService,
-    private readonly storage: StorageService,
     private readonly config: ConfigService,
     private readonly agentRunBlockService: AgentRunBlockService,
-    private readonly contextPackService: ContextPackService,
   ) {}
-
-  /**
-   * Resolves brand asset storage keys to signed download URLs for the post
-   * generator. Failures are swallowed per key so one missing asset never breaks
-   * a run.
-   */
-  private buildAssetResolver(): AssetResolver {
-    return async (storageKeys) => {
-      const entries = await Promise.all(
-        storageKeys.map(async (key): Promise<[string, string] | null> => {
-          try {
-            const url = await this.storage.getPresignedDownloadUrl(key);
-            return [key, url];
-          } catch (error) {
-            this.logger.warn(
-              `Failed to resolve asset ${key}: ${
-                error instanceof Error ? error.message : String(error)
-              }`,
-            );
-            return null;
-          }
-        }),
-      );
-
-      return Object.fromEntries(
-        entries.filter((entry): entry is [string, string] => entry !== null),
-      );
-    };
-  }
 
   /**
    * inline-* runs the agent kernel inside this process (no Trigger.dev worker
@@ -117,10 +78,8 @@ export class WorkflowEngineService {
     const stubMode = mode === 'inline-stub';
     const deps: ExecutionDependencies = {
       prisma: this.prisma,
-      contextPackBuilder: stubMode ? null : adaptContextPackService(this.contextPackService),
       llmProvider: stubMode ? null : createTriggerLlmProvider(this.prisma),
-      imageProvider: stubMode ? null : createTriggerImageProvider(this.prisma),
-      assetResolver: stubMode ? null : this.buildAssetResolver(),
+      imageProvider: null,
       eventPublisher: new InProcessEventPublisher(this.sseService),
       blocks: this.agentRunBlockService,
       stubMode,
@@ -155,8 +114,6 @@ export class WorkflowEngineService {
     const isPersonal = Boolean(options.personalSpaceId) && !options.companyId;
 
     if (isPersonal) {
-      // Personal spaces use a separate credit balance and have no company RAG
-      // index to sync; brand context falls back to empty.
       await this.creditInterceptor.checkPersonalBalance(
         options.personalSpaceId as string,
         agent.estimatedCreditCost ?? 0.01,
@@ -166,10 +123,6 @@ export class WorkflowEngineService {
         options.companyId as string,
         agent.estimatedCreditCost ?? 0.01,
       );
-
-      await this.companyRagSync.ensureSynced(options.companyId as string, {
-        campaignId: options.campaignId,
-      });
     }
 
     const run = await this.prisma.agentRun.create({
@@ -179,7 +132,6 @@ export class WorkflowEngineService {
         agentId: options.agentId,
         // Persist the agent version with the run for traceability/reproducibility.
         agentVersion: agent.version,
-        campaignId: options.campaignId,
         status: 'QUEUED',
         inputPayload: JSON.parse(JSON.stringify(parsed.data)),
         outputPayload: {},

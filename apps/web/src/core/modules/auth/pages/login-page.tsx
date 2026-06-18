@@ -183,6 +183,7 @@ export function LoginPage() {
       persistRememberedLoginEmail(values);
 
       router.push(getPostLoginRedirectPath(searchParams));
+      router.refresh();
     } catch {
       toast.error("Erro inesperado. Tente novamente.");
     } finally {

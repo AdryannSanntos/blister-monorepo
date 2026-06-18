@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Clapperboard,
   Coins,
   KeyRound,
   LayoutDashboard,
@@ -25,9 +24,7 @@ import { useLibraryItems } from "src/core/modules/marketplace/hooks/use-marketpl
 import type { SidebarGroupDef } from "src/core/shared/components/ui/app-sidebar";
 
 const STUDIO_ICONS = {
-  video_editor: Clapperboard,
   cuts: Scissors,
-  research: Sparkles,
 } as const;
 
 export function useDashboardNavGroups(): SidebarGroupDef[] {

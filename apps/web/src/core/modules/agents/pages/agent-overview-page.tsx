@@ -1,16 +1,11 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { useLocale } from "next-intl";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { AgentOverviewStats } from "src/core/modules/agents/components/agent-overview-stats";
 import { AgentUsageChart } from "src/core/modules/agents/components/agent-usage-chart";
-import {
-  useAgentRunsMock,
-  useAgentStatsMock,
-} from "src/core/modules/agents/hooks/use-agent-runs-mock";
 import { useCutsOverview } from "src/core/modules/agents/hooks/use-cuts-overview";
 import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { Heading } from "src/core/shared/components/ui/heading";
@@ -23,24 +18,8 @@ type AgentOverviewPageProps = {
 
 export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
   const agent = getAgentByRouteSlug(agentSlug);
-  const t = useTranslations("agents.overview");
   const locale = useLocale();
-
-  const mockRuns = useAgentRunsMock(agent?.id ?? "");
-  const mockStats = useAgentStatsMock(agent?.id ?? "", locale);
-  const cutsOverview = useCutsOverview(locale);
-
-  const isCuts = agentSlug === "cuts";
-
-  const stats = isCuts ? cutsOverview.stats : mockStats;
-  const recentRuns = useMemo(() => {
-    if (isCuts) return cutsOverview.recentRuns;
-    return mockRuns.runs.slice(0, 3).map((run) => ({
-      id: run.id,
-      title: run.title,
-      preview: run.preview,
-    }));
-  }, [cutsOverview.recentRuns, isCuts, mockRuns.runs]);
+  const overview = useCutsOverview(locale);
 
   if (!agent) {
     redirect("/dashboard");
@@ -57,21 +36,19 @@ export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
         <AgentEntitlementGate agent={agent}>
           <div className="flex flex-col gap-6">
             <AgentOverviewStats
-              totalRuns={stats.totalRuns}
-              completedRuns={stats.completedRuns}
-              approvedRuns={stats.approvedRuns}
-              creditsUsed={stats.creditsUsed}
+              totalRuns={overview.stats.totalRuns}
+              completedRuns={overview.stats.completedRuns}
+              approvedRuns={overview.stats.approvedRuns}
+              creditsUsed={overview.stats.creditsUsed}
             />
 
-            <AgentUsageChart data={stats.usageByDay} />
+            <AgentUsageChart data={overview.stats.usageByDay} />
 
-            {recentRuns.length > 0 ? (
+            {overview.recentRuns.length > 0 ? (
               <div className="flex flex-col gap-4">
-                <Heading level="h6" as="h2">
-                  {t("recentTitle")}
-                </Heading>
+                <Heading level="h6" as="h2">Recentes</Heading>
                 <ul className="flex flex-col gap-2">
-                  {recentRuns.map((run) => (
+                  {overview.recentRuns.map((run) => (
                     <li
                       key={run.id}
                       className="rounded-[var(--r-lg)] border border-[var(--line-default)] px-4 py-3"

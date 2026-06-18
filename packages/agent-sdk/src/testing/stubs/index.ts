@@ -9,7 +9,6 @@ export {
 } from './in-memory-block-store';
 export {
   createCollectingEventPublisher,
-  createInMemoryContextPackBuilder,
   createNoOpEventPublisher,
   createStubCreditReporter,
   createStubImageProvider,

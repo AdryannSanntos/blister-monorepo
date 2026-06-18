@@ -83,7 +83,6 @@ export const agentDefinitionSchema = z.object({
 
 export const runAgentRequestSchema = z.object({
   userInput: z.string().trim().min(1).max(10_000),
-  campaignId: z.string().min(1).optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -172,13 +171,10 @@ export const stepContextSchema = z.object({
   runId: z.string(),
   agentId: z.string(),
   companyId: z.string(),
-  campaignId: z.string().nullable(),
   stepKey: z.string(),
   stepIndex: z.number(),
   inputPayload: z.record(z.string(), z.unknown()),
   previousStepsOutput: z.record(z.string(), z.record(z.string(), z.unknown())),
-  contextPack: z.any().nullable(),
-  brandProfile: z.any().nullable(),
 });
 
 export const stepResultSchema = z.object({

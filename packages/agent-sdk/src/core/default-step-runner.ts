@@ -36,8 +36,8 @@ export async function executeStep(
       return {
         type: 'CONTINUE',
         output: {
-          contextRetrieved: true,
-          chunksCount: context.contextPack.chunks.length,
+          contextRetrieved: false,
+          chunksCount: 0,
         },
       };
 
@@ -180,30 +180,9 @@ async function executeImageStep(
 
 function buildSystemPrompt(
   agentDef: AgentDefinitionRuntime,
-  context: StepExecutionContext,
+  _context: StepExecutionContext,
 ): string {
   let prompt = `Você é um assistente especializado em ${agentDef.description}.\n\n`;
-
-  if (context.brandProfile) {
-    prompt += '## Perfil da Marca\n';
-    if (context.brandProfile.brandVoice) {
-      prompt += `Tom de voz: ${context.brandProfile.brandVoice}\n`;
-    }
-    if (context.brandProfile.niche) {
-      prompt += `Nicho: ${context.brandProfile.niche}\n`;
-    }
-    if (context.brandProfile.targetAudience) {
-      prompt += `Público-alvo: ${context.brandProfile.targetAudience}\n`;
-    }
-    prompt += '\n';
-  }
-
-  if (context.contextPack.chunks.length > 0) {
-    prompt += '## Contexto Relevante\n';
-    for (const chunk of context.contextPack.chunks.slice(0, 5)) {
-      prompt += `${chunk.content}\n\n`;
-    }
-  }
 
   prompt += describeOutputContract(agentDef.outputSchema);
 

@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { createHash } from 'node:crypto';
-import type { RagSourceType, RagDocumentStatus } from '@company-os/types';
+import type { RagSourceType, RagDocumentStatus } from '@company-os/types/dist/rag';
 import { PrismaService } from '../prisma/prisma.service';
 import type { RagDocument, Prisma } from '../generated/prisma';
 

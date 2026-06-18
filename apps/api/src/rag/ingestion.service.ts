@@ -1,16 +1,14 @@
+import { createHash } from 'node:crypto';
 import { Injectable, Logger } from '@nestjs/common';
-import type { IngestDocumentDto, RagSourceType } from '@company-os/types';
+import type { IngestDocumentDto, RagSourceType } from '@company-os/types/dist/rag';
 import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from './document.service';
 import { ChunkService } from './chunk.service';
 import { EmbeddingRepository } from './embedding.repository';
 import type { RagDocument, Prisma } from '../generated/prisma';
-import {
-  hashRagContent,
-  serializeBrandBrain,
-  serializeCampaign,
-  type BrandBrainSerializeInput,
-} from './brand-brain.serializer';
+
+const hashRagContent = (content: string): string =>
+  createHash('sha256').update(content).digest('hex').slice(0, 32);
 
 export interface IngestResult {
   documentId: string;
@@ -18,8 +16,6 @@ export interface IngestResult {
   embeddingsCreated: number;
   status: 'created' | 'updated' | 'skipped';
 }
-
-export type BrandBrainContent = BrandBrainSerializeInput;
 
 @Injectable()
 export class IngestionService {
@@ -106,49 +102,6 @@ export class IngestionService {
       this.logger.error(`Ingestion failed for ${document.id}`, error);
       throw error;
     }
-  }
-
-  async ingestBrandBrain(
-    companyId: string,
-    brandProfileId: string,
-    content: BrandBrainContent,
-  ): Promise<IngestResult> {
-    const textContent = serializeBrandBrain(content);
-
-    return this.ingest({
-      companyId,
-      sourceType: 'BRAND_BRAIN',
-      sourceId: brandProfileId,
-      title: 'Cérebro da Marca',
-      content: textContent,
-      forceReindex: true,
-      metadata: {
-        brandProfileId,
-        fields: Object.keys(content).filter(
-          (k) => content[k as keyof BrandBrainContent],
-        ),
-      },
-    });
-  }
-
-  async ingestCampaign(
-    companyId: string,
-    campaignId: string,
-    name: string,
-    objective: string,
-    context?: string | null,
-  ): Promise<IngestResult> {
-    const textContent = serializeCampaign({ name, objective, context: context ?? null });
-
-    return this.ingest({
-      companyId,
-      sourceType: 'CAMPAIGN',
-      sourceId: campaignId,
-      campaignId,
-      title: `Campanha: ${name}`,
-      content: textContent,
-      forceReindex: true,
-    });
   }
 
   async ingestAgentLearning(

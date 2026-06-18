@@ -1,36 +1,11 @@
-import type { BrandProfile, RunStore, StoredRun } from '@company-os/agent-sdk';
+import type { RunStore, StoredRun } from '@company-os/agent-sdk';
 import { Prisma, type PrismaClient } from '../../generated/prisma';
 
 const runInclude = {
   steps: { orderBy: { stepIndex: 'asc' as const } },
-  company: { include: { brandProfile: true } },
 } as const;
 
 type RunWithRelations = Prisma.AgentRunGetPayload<{ include: typeof runInclude }>;
-type BrandProfileRow = NonNullable<NonNullable<RunWithRelations['company']>['brandProfile']>;
-
-const mapBrandProfile = (profile: BrandProfileRow | null): BrandProfile | null => {
-  if (!profile) return null;
-
-  return {
-    id: profile.id,
-    companyId: profile.companyId,
-    brandVoice: profile.brandVoice,
-    niche: profile.niche,
-    description: profile.description,
-    targetAudience: profile.targetAudience,
-    marketingObjective: profile.marketingObjective,
-    mainProducts: profile.mainProducts,
-    differentiators: profile.differentiators,
-    visualStyle: profile.visualStyle,
-    palette: profile.palette,
-    typography: profile.typography,
-    socialNetworks: (profile.socialNetworks as string[]) ?? [],
-    logoStorageKey: profile.logoStorageKey,
-    logoVariants: profile.logoVariants,
-    brandAssets: profile.brandAssets,
-  };
-};
 
 const mapRun = (run: RunWithRelations): StoredRun => ({
   id: run.id,
@@ -53,7 +28,6 @@ const mapRun = (run: RunWithRelations): StoredRun => ({
     status: step.status,
     outputPayload: step.outputPayload as Record<string, unknown>,
   })),
-  brandProfile: mapBrandProfile(run.company?.brandProfile ?? null),
 });
 
 export const createPrismaRunStore = (prisma: PrismaClient): RunStore => ({

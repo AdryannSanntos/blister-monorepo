@@ -6,7 +6,6 @@ import {
   ChartColumn,
   Coins,
   Cpu,
-  Database,
   Headphones,
   Shield,
 } from "lucide-react";
@@ -76,14 +75,6 @@ export function usePlatformAdminNavItems(): PlatformAdminNavItem[] {
         description: t("aiCatalogDescription"),
         titleKey: "aiCatalogPage.title",
         descriptionKey: "aiCatalogPage.description",
-      },
-      {
-        value: "rag",
-        label: t("rag"),
-        icon: Database,
-        description: t("ragDescription"),
-        titleKey: "ragPage.title",
-        descriptionKey: "ragPage.description",
       },
       {
         value: "credits",

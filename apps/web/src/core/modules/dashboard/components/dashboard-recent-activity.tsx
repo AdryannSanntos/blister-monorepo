@@ -1,16 +1,11 @@
 "use client";
 
 import type { AgentRunStatusDto } from "@company-os/types";
-import { History } from "lucide-react";
+import { History, Scissors } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/routing";
 import {
-  AGENT_UI_CONFIG,
-  type AgentUiId,
-} from "src/core/modules/agents/config/agent-ui-config";
-import {
-  getAgentOutputPreview,
   getReviewStatusLabelKey,
   getRunUserInput,
 } from "src/core/modules/agents/utils/agent-run-helpers";
@@ -38,7 +33,6 @@ export function DashboardRecentActivity({
   isLoading = false,
 }: DashboardRecentActivityProps) {
   const t = useTranslations("dashboard.homePage.recentActivity");
-  const tAgents = useTranslations("agents");
   const tStatus = useTranslations("agents.status");
   const locale = useLocale();
 
@@ -64,13 +58,7 @@ export function DashboardRecentActivity({
       ) : (
         <div className="flex flex-col gap-2">
           {recentRuns.map((run) => {
-            const agentId = run.agentId as AgentUiId;
-            const config = AGENT_UI_CONFIG[agentId];
-            const Icon = config?.icon;
             const reviewKey = getReviewStatusLabelKey(run.reviewStatus);
-            const preview = config
-              ? getAgentOutputPreview(agentId, run.outputPayload)
-              : null;
 
             return (
               <div
@@ -78,15 +66,13 @@ export function DashboardRecentActivity({
                 className="flex flex-col gap-3 rounded-[var(--r-md)] border border-[var(--line-subtle)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 items-start gap-3">
-                  {Icon ? (
-                    <div className="rounded-[var(--r-sm)] bg-[var(--accent-soft)] p-1.5">
-                      <Icon className="size-4 text-[var(--accent)]" />
-                    </div>
-                  ) : null}
+                  <div className="rounded-[var(--r-sm)] bg-[var(--accent-soft)] p-1.5">
+                    <Scissors className="size-4 text-[var(--accent)]" />
+                  </div>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-[14px] font-medium text-[var(--fg-primary)]">
-                        {config ? tAgents(agentId) : run.agentId}
+                        {run.agentId}
                       </p>
                       {reviewKey ? (
                         <Badge variant="secondary" className="text-[11px]">
@@ -101,11 +87,6 @@ export function DashboardRecentActivity({
                     <p className="mt-0.5 line-clamp-1 text-[13px] text-[var(--fg-secondary)]">
                       {getRunUserInput(run) || t("untitledRun")}
                     </p>
-                    {preview ? (
-                      <p className="mt-0.5 line-clamp-1 text-[12px] text-[var(--fg-tertiary)]">
-                        {preview}
-                      </p>
-                    ) : null}
                   </div>
                 </div>
 
@@ -127,7 +108,7 @@ export function DashboardRecentActivity({
 
       <div className="mt-4">
         <Button variant="outline" size="sm" asChild>
-          <Link href="/dashboard/pieces">{t("viewAll")}</Link>
+          <Link href="/dashboard/agents/cuts/history">{t("viewAll")}</Link>
         </Button>
       </div>
     </SectionCard>

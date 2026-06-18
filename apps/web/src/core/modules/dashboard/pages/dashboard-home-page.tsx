@@ -4,23 +4,20 @@ import {
   CheckCircle2,
   Coins,
   LayoutDashboard,
-  Library,
   Sparkles,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 import { Link } from "@/i18n/routing";
-import { AGENT_UI_IDS } from "src/core/modules/agents/config/agent-ui-config";
 import { useAllAgentRuns } from "src/core/modules/agents/hooks/use-agent-runs";
-import { useCampaigns } from "src/core/modules/agents/hooks/use-campaigns";
+import { DEFAULT_AGENT_IDS } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import { useCompany } from "src/core/modules/company/hooks/use-company";
 import { useCredits } from "src/core/modules/credits/hooks/use-credits";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Button } from "src/core/shared/components/ui/button";
 
 import { DashboardActivityChart } from "../components/dashboard-activity-chart";
-import { DashboardBrandMemoryPanel } from "../components/dashboard-brand-memory-panel";
 import { DashboardQuickActions } from "../components/dashboard-quick-actions";
 import { DashboardRecentActivity } from "../components/dashboard-recent-activity";
 import { DashboardStatCard } from "../components/dashboard-stat-card";
@@ -39,9 +36,8 @@ export function DashboardHomePage() {
   const { data: company } = useCompany();
   const { data: credits, isLoading: isCreditsLoading } = useCredits();
   const { data: runs = [], isLoading: isRunsLoading } = useAllAgentRuns([
-    ...AGENT_UI_IDS,
+    ...DEFAULT_AGENT_IDS,
   ]);
-  const { campaigns } = useCampaigns();
 
   const metrics = useMemo(() => computeDashboardRunMetrics(runs), [runs]);
 
@@ -106,15 +102,7 @@ export function DashboardHomePage() {
           isLoading={isRunsLoading}
           tone={metrics.pendingReview > 0 ? "warning" : "default"}
         />
-        <DashboardStatCard
-          label={t("kpi.campaigns.label")}
-          value={String(campaigns.length)}
-          hint={t("kpi.campaigns.hint")}
-          icon={Library}
-        />
       </div>
-
-      <DashboardBrandMemoryPanel />
 
       <div className="grid gap-4 xl:grid-cols-3">
         <div className="xl:col-span-2">

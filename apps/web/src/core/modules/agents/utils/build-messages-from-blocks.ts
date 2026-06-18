@@ -7,7 +7,6 @@ import type { UIMessage } from "ai";
 
 import type { QuestionAnswer } from "@/components/agent-elements/question/question-prompt";
 
-import type { AgentUiId } from "../config/agent-ui-config";
 import type { BlockState, MessageState } from "./agent-block-reducer";
 import {
   canReviewRun,
@@ -22,13 +21,12 @@ import type {
 } from "./build-agent-messages";
 import { formatAgentOutputMarkdown } from "./format-agent-output-markdown";
 import {
-  formatDesignPlanPreviewMarkdown,
-  parseDesignPlanPreview,
-} from "./format-design-plan-preview";
-import {
   DESIGN_PLAN_APPROVAL_PAUSE_TYPE,
   isPostDesignPlanAwaitingApproval,
 } from "./post-onboarding-fields";
+
+const parseDesignPlanPreview = (_value: unknown) => null;
+const formatDesignPlanPreviewMarkdown = (_plan: unknown) => "";
 
 const MCP_OUTPUT = "tool-mcp__user-tools__BlisterOutput";
 const MCP_REVIEW = "tool-mcp__user-tools__BlisterReview";
@@ -84,7 +82,7 @@ const buildInteractiveQuestionPart = (
 });
 
 const buildReviewPart = (
-  agentId: AgentUiId,
+  agentId: string,
   run: AgentRunStatusDto,
   reviewCallbacks: ReviewCallbacks,
 ) => {
@@ -140,7 +138,7 @@ const buildPostPart = (
 };
 
 const buildOutputPart = (
-  agentId: AgentUiId,
+  agentId: string,
   outputPayload: Record<string, unknown>,
 ) => {
   const markdown = formatAgentOutputMarkdown(agentId, outputPayload);
@@ -253,7 +251,7 @@ const mapFormQuestionPart = (
 const mapBlockToPart = (
   block: BlockState,
   options: {
-    agentId: AgentUiId;
+    agentId: string;
     run: AgentRunStatusDto;
     reviewCallbacks?: ReviewCallbacks | null;
     clarificationCallbacks?: ClarificationCallbacks | null;
@@ -373,7 +371,7 @@ const mapBlockToPart = (
       const payload = block.payload;
       const agentId =
         typeof payload.agentId === "string"
-          ? (payload.agentId as AgentUiId)
+          ? (payload.agentId as string)
           : options.agentId;
 
       if (agentId === "post") {
@@ -440,7 +438,7 @@ const hasTerminalAssistantBlock = (messages: MessageState[]): boolean =>
 const ensureTerminalAssistantBlocks = (
   messages: MessageState[],
   run: AgentRunStatusDto,
-  agentId: AgentUiId,
+  agentId: string,
 ): MessageState[] => {
   if (hasTerminalAssistantBlock(messages)) return messages;
 
@@ -590,7 +588,7 @@ const classifyUserMessage = (
 };
 
 export type BuildMessagesFromBlocksOptions = {
-  agentId: AgentUiId;
+  agentId: string;
   run: AgentRunStatusDto;
   messages: MessageState[];
   reviewCallbacks?: ReviewCallbacks | null;
@@ -845,7 +843,7 @@ export const buildThreadMessagesFromBlocks = ({
   regenerateQuestion,
   editQuestion,
 }: {
-  agentId: AgentUiId;
+  agentId: string;
   runs: ThreadBlockRunEntry[];
   activeRunId: string | null;
   optimisticUserInput?: string | null;

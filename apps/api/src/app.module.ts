@@ -14,7 +14,6 @@ import { CreditsModule } from './credits/credits.module';
 import { EmailModule } from './email';
 import { PlatformModule } from './platform/platform.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { RagModule } from './rag/rag.module';
 import { StorageModule } from './storage/storage.module';
 import { UsersModule } from './users/users.module';
 import { PersonalSpaceModule } from './personal-space/personal-space.module';
@@ -39,7 +38,6 @@ import { PermissionGuard } from './users/guards/permission.guard';
     CreditsModule,
     AiCatalogModule,
     AiRuntimeModule,
-    RagModule,
     AgentsModule,
     WorkspaceModule,
     PersonalSpaceModule,

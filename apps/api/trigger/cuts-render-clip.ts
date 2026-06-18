@@ -2,7 +2,7 @@ import { task, logger } from '@trigger.dev/sdk';
 import { z } from 'zod';
 import { PrismaClient } from '../src/generated/prisma';
 import { resolveFfmpegPath } from '../src/media/resolve-ffmpeg-path';
-import { trimVideoToBuffer } from '../src/media/trim-video';
+import { trimVideoFromStorageKey } from '../src/media/trim-video-from-storage';
 import {
   buildCutStorageKey,
   registerCutWorkspaceFile,
@@ -95,7 +95,8 @@ const notifyCutRendered = async (
 export const cutsRenderClip = task({
   id: 'cuts-render-clip',
   machine: { preset: 'medium-1x' },
-  maxDuration: 600,
+  queue: { concurrencyLimit: 2 },
+  maxDuration: 1800,
   retry: {
     maxAttempts: 2,
     factor: 2,
@@ -116,15 +117,19 @@ export const cutsRenderClip = task({
     const storage = buildStorageService();
     const ffmpegPath = resolveFfmpegPath();
 
-    const sourceUrl = await storage.getPresignedDownloadUrl(validated.sourceStorageKey);
+    logger.info('Downloading source video', { sourceStorageKey: validated.sourceStorageKey });
 
-    logger.info('Got presigned source URL', { sourceStorageKey: validated.sourceStorageKey });
-
-    const clipBuffer = await trimVideoToBuffer({
-      inputUrl: sourceUrl,
+    const clipBuffer = await trimVideoFromStorageKey({
+      storage,
+      sourceStorageKey: validated.sourceStorageKey,
       startSec: validated.startSec,
       endSec: validated.endSec,
       ffmpegPath,
+    });
+
+    logger.info('Cut clip trimmed', {
+      cutId: validated.cutId,
+      sizeBytes: clipBuffer.length,
     });
 
     const scope =

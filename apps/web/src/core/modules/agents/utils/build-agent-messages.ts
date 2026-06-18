@@ -8,7 +8,6 @@ import type { ChatStatus, UIMessage } from "ai";
 
 import type { QuestionAnswer } from "@/components/agent-elements/question/question-prompt";
 
-import type { AgentUiId } from "../config/agent-ui-config";
 import {
   canReviewRun,
   getRunUserInput,
@@ -18,16 +17,15 @@ import {
 import { extractStreamingText } from "./extract-streaming-text";
 import { formatAgentOutputMarkdown } from "./format-agent-output-markdown";
 import {
-  formatDesignPlanPreviewMarkdown,
-  getDesignPlanStepHint,
-  parseDesignPlanPreview,
-} from "./format-design-plan-preview";
-import {
   formatPostOnboardingAnswer,
   getAnsweredPostOnboardingFields,
   isPostDesignPlanAwaitingApproval,
   isPostOnboardingInProgress,
 } from "./post-onboarding-fields";
+
+const parseDesignPlanPreview = (_value: unknown) => null;
+const formatDesignPlanPreviewMarkdown = (_plan: unknown) => "";
+const getDesignPlanStepHint = (_stepKey: string | null | undefined) => null;
 
 const STEP_LABELS: Record<string, string> = {
   retrieve_context: "Analisando o Cérebro da Marca",
@@ -72,7 +70,7 @@ export type QuestionAnswerHandler = (payload: {
 }) => void;
 
 export type BuildAgentMessagesOptions = {
-  agentId: AgentUiId;
+  agentId: string;
   run: AgentRunStatusDto | null;
   steps: AgentRunStepDto[];
   streamingText?: string;
@@ -215,7 +213,7 @@ function buildClarificationPart(
 }
 
 function buildReviewPart(
-  agentId: AgentUiId,
+  agentId: string,
   run: AgentRunStatusDto,
   reviewCallbacks: ReviewCallbacks,
 ) {
@@ -269,7 +267,7 @@ function buildPostPart(
   };
 }
 
-function buildOutputPart(agentId: AgentUiId, run: AgentRunStatusDto) {
+function buildOutputPart(agentId: string, run: AgentRunStatusDto) {
   const markdown = formatAgentOutputMarkdown(agentId, run.outputPayload);
   return {
     type: MCP_OUTPUT,
@@ -813,7 +811,7 @@ export function buildThreadMessages({
   regenerateQuestion,
   editQuestion,
 }: {
-  agentId: AgentUiId;
+  agentId: string;
   runs: ThreadRunEntry[];
   activeRunId: string | null;
   optimisticUserInput?: string | null;

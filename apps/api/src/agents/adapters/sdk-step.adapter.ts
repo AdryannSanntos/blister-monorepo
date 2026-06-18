@@ -76,7 +76,6 @@ export const wrapSdkStep = (step: SdkStepExecutor): CustomStepExecutor => {
             },
           }
         : null,
-      assetResolver: deps.assetResolver,
       message: deps.message,
     });
   };

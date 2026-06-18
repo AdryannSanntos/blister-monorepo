@@ -7,7 +7,7 @@ import {
   buildCutStorageKey,
   registerCutWorkspaceFile,
 } from '../../../media/register-cut-file';
-import { trimVideoToBuffer } from '../../../media/trim-video';
+import { trimVideoFromStorageKey } from '../../../media/trim-video-from-storage';
 import type { StorageService } from '../../../storage/storage.service';
 import type { RenderCutClipsParams, RenderCutClipsResult } from '../ports/cuts-run-deps';
 import {
@@ -50,9 +50,9 @@ const renderClipInline = async (
   let sizeBytes = 1024;
 
   if (params.uploadToStorage) {
-    const sourceUrl = await storage.getPresignedDownloadUrl(params.sourceStorageKey);
-    const clipBuffer = await trimVideoToBuffer({
-      inputUrl: sourceUrl,
+    const clipBuffer = await trimVideoFromStorageKey({
+      storage,
+      sourceStorageKey: params.sourceStorageKey,
       startSec: params.cut.startSec,
       endSec: params.cut.endSec,
     });

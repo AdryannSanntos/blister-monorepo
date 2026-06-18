@@ -3,7 +3,7 @@ import type {
   RagRetrievalQuery,
   RagRetrievedChunk,
   RagSourceType,
-} from '@company-os/types';
+} from '@company-os/types/dist/rag';
 import { EmbeddingRepository, type VectorSearchResult } from './embedding.repository';
 
 @Injectable()

@@ -7,9 +7,7 @@ import type {
 import { executeRun } from '../core/execute-run';
 import type {
   AnyStepExecutor,
-  BrandProfile,
   BuiltAgent,
-  ContextPack,
   ImageProvider,
   LlmProvider,
   StepExecutionContext,
@@ -23,7 +21,6 @@ import { createCollectingUsageReporter, type UsageEvent } from '../usage/usage-r
 import {
   createCollectingEventPublisher,
   createInMemoryBlockStore,
-  createInMemoryContextPackBuilder,
   createInMemoryRunStore,
   createStubCreditReporter,
   createStubImageProvider,
@@ -55,8 +52,6 @@ export interface HarnessRunResult {
   snapshot?: RunSnapshot;
 }
 
-const EMPTY_PACK: ContextPack = { chunks: [], totalFound: 0 };
-
 const invokeRaw = (
   executor: AnyStepExecutor,
   context: StepExecutionContext,
@@ -71,8 +66,6 @@ let runCounter = 0;
 export class AgentTestHarness {
   private readonly agent: BuiltAgent;
   private llmResponses: Record<string, unknown> = {};
-  private brandProfile: BrandProfile | null = null;
-  private contextPack: ContextPack = EMPTY_PACK;
   private imageProvider: ImageProvider = createStubImageProvider();
   private store?: InMemoryRunStore;
   private pendingResumeData?: Record<string, unknown>;
@@ -88,12 +81,6 @@ export class AgentTestHarness {
 
   withLlmResponses(responses: Record<string, unknown>): this {
     this.llmResponses = responses;
-    return this;
-  }
-
-  withContext(options: { brandProfile?: BrandProfile | null; contextPack?: ContextPack }): this {
-    if (options.brandProfile !== undefined) this.brandProfile = options.brandProfile;
-    if (options.contextPack) this.contextPack = options.contextPack;
     return this;
   }
 
@@ -113,7 +100,6 @@ export class AgentTestHarness {
         invokeRaw(rawStep, context, {
           llmProvider: llm,
           imageProvider: this.imageProvider,
-          assetResolver: deps.assetResolver,
           message: deps.message,
         });
     }
@@ -121,11 +107,14 @@ export class AgentTestHarness {
     return executors;
   }
 
-  private buildDeps(events: ReturnType<typeof createCollectingEventPublisher>, blocks: ReturnType<typeof createInMemoryBlockStore>, usage: ReturnType<typeof createCollectingUsageReporter>): ExecutionKernelDeps {
+  private buildDeps(
+    events: ReturnType<typeof createCollectingEventPublisher>,
+    blocks: ReturnType<typeof createInMemoryBlockStore>,
+    usage: ReturnType<typeof createCollectingUsageReporter>,
+  ): ExecutionKernelDeps {
     return {
       runStore: this.store as InMemoryRunStore,
       loadAgentDefinition: async () => toRuntimeDefinition(this.agent),
-      contextPackBuilder: createInMemoryContextPackBuilder(this.contextPack),
       llmProvider: createStubLlmProviderRuntime({}),
       imageProvider: {
         generateImage: async () => ({
@@ -136,7 +125,6 @@ export class AgentTestHarness {
       eventPublisher: events,
       blocks,
       usageReporter: createStubCreditReporter(),
-      assetResolver: null,
       customStepExecutors: this.buildStepExecutors(),
       usage,
       telemetry: {
@@ -194,7 +182,6 @@ export class AgentTestHarness {
         agentId: this.agent.definition.agentId,
         companyId: 'harness_company',
         inputPayload: input,
-        brandProfile: this.brandProfile,
       });
       return this.execute();
     }

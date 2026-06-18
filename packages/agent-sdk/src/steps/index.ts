@@ -199,48 +199,13 @@ export const createOutputStep = (): StepExecutor => {
   };
 };
 
-export const createRetrieveContextStep = (options?: {
-  emitSearching?: boolean;
-  searchingLabel?: string;
-}): StepExecutor => {
-  return async (context, deps): Promise<StepResult> => {
-    const { contextPack, brandProfile } = context;
-    const emitSearching = options?.emitSearching ?? false;
-
-    if (emitSearching && deps.message) {
-      const results = contextPack.chunks.slice(0, 5).map((chunk, index) => ({
-        title:
-          typeof chunk.metadata?.title === 'string' ? chunk.metadata.title : `Contexto ${index + 1}`,
-        source: chunk.sourceType,
-        date: '',
-      }));
-
-      await deps.message.searching(
-        { resultsCount: contextPack.chunks.length, results },
-        options?.searchingLabel ?? 'Consultando o Cérebro da Marca',
-      );
-    }
-
-    const brandChunks = contextPack.chunks.filter((c) => c.sourceType === 'BRAND_BRAIN');
-    const learningChunks = contextPack.chunks.filter((c) => c.sourceType === 'AGENT_LEARNING');
-    const campaignChunks = contextPack.chunks.filter((c) =>
-      ['CAMPAIGN', 'CAMPAIGN_FILE'].includes(c.sourceType),
-    );
-
+export const createRetrieveContextStep = (): StepExecutor => {
+  return async (): Promise<StepResult> => {
     return {
       type: 'CONTINUE',
       output: {
-        contextRetrieved: true,
-        chunksCount: contextPack.chunks.length,
-        totalFound: contextPack.totalFound,
-        totalChunks: contextPack.chunks.length,
-        brandChunksCount: brandChunks.length,
-        learningChunksCount: learningChunks.length,
-        campaignChunksCount: campaignChunks.length,
-        hasBrandContext: brandChunks.length > 0 || brandProfile !== null,
-        hasLearningContext: learningChunks.length > 0,
-        hasCampaignContext: campaignChunks.length > 0,
-        brandProfileAvailable: brandProfile !== null,
+        contextRetrieved: false,
+        chunksCount: 0,
       },
     };
   };

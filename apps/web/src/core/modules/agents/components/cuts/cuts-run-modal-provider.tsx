@@ -9,7 +9,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 
 import { CutsRunModal } from "src/core/modules/agents/components/cuts/cuts-run-modal";
@@ -52,46 +51,27 @@ const CutsRunModalHost = ({
 
 export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
   const actionsRef = useRef<CutsRunModalActions | null>(null);
-  const pendingActionRef = useRef<(() => void) | null>(null);
-  const [hostMounted, setHostMounted] = useState(false);
-
-  const flushPendingAction = useCallback(() => {
-    const pending = pendingActionRef.current;
-    if (!pending) return;
-    pendingActionRef.current = null;
-    pending();
-  }, []);
-
-  const mountHostAndRun = useCallback((action: () => void) => {
-    if (actionsRef.current) {
-      action();
-      return;
-    }
-    pendingActionRef.current = action;
-    setHostMounted(true);
-  }, []);
+  const handleHostReady = useCallback(() => {}, []);
 
   const stableActions = useMemo<CutsRunModalActions>(
     () => ({
       handleOpen: () => {
-        mountHostAndRun(() => actionsRef.current?.handleOpen());
+        actionsRef.current?.handleOpen();
       },
       handleOpenRunDetails: (params) => {
-        mountHostAndRun(() => actionsRef.current?.handleOpenRunDetails(params));
+        actionsRef.current?.handleOpenRunDetails(params);
       },
       handleClose: () => {
         actionsRef.current?.handleClose();
       },
     }),
-    [mountHostAndRun],
+    [],
   );
 
   return (
     <CutsRunModalActionsContext.Provider value={stableActions}>
       {children}
-      {hostMounted ? (
-        <CutsRunModalHost actionsRef={actionsRef} onReady={flushPendingAction} />
-      ) : null}
+      <CutsRunModalHost actionsRef={actionsRef} onReady={handleHostReady} />
     </CutsRunModalActionsContext.Provider>
   );
 };

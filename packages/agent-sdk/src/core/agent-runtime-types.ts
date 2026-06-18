@@ -10,14 +10,7 @@ import type {
 } from '../stream';
 import type { CheckpointStore } from './checkpoint';
 import type { RunStore } from './run-store';
-import type {
-  AssetResolver,
-  AgentContextConfig,
-  BrandProfile,
-  ContextPack,
-  StepExecutionContext,
-  StepResult,
-} from './types';
+import type { StepExecutionContext, StepResult } from './types';
 
 export interface AgentStepDefinitionRuntime {
   key: string;
@@ -36,7 +29,6 @@ export interface AgentDefinitionRuntime {
   steps: AgentStepDefinitionRuntime[];
   capabilities: string[];
   skills?: string[];
-  context?: AgentContextConfig;
   middleware?: AgentMiddleware;
   routing?: RoutingRule[];
 }
@@ -82,7 +74,6 @@ export interface ImageProviderRuntime {
 export interface StepExecutorRuntimeDeps {
   llmProvider: LlmProviderRuntime | null;
   imageProvider: ImageProviderRuntime | null;
-  assetResolver: AssetResolver | null;
   message: MessageHandle;
 }
 
@@ -92,30 +83,14 @@ export type CustomStepExecutor = (
   onChunk?: (delta: string) => void,
 ) => Promise<StepResult>;
 
-export interface ContextPackBuilder {
-  buildPack(params: {
-    companyId: string;
-    query: string;
-    agentId: string;
-    campaignId?: string;
-    includeBrandBrain?: boolean;
-    includeAgentLearning?: boolean;
-    includeCampaignContext?: boolean;
-  }): Promise<ContextPack>;
-}
-
 export interface CreateStepContextParams {
   runId: string;
   agentId: string;
   companyId: string;
-  campaignId: string | null;
   stepKey: string;
   stepIndex: number;
   inputPayload: Record<string, unknown>;
-  brandProfile: BrandProfile | null;
-  contextPackBuilder: ContextPackBuilder | null;
   previousStepsOutput: Record<string, Record<string, unknown>>;
-  contextConfig?: AgentContextConfig;
 }
 
 export interface PlatformSettings {
@@ -147,13 +122,11 @@ export interface UsageReporter {
 export interface ExecutionKernelDeps {
   runStore: RunStore;
   loadAgentDefinition: (agentId: string) => Promise<AgentDefinitionRuntime | null>;
-  contextPackBuilder: ContextPackBuilder | null;
   llmProvider: LlmProviderRuntime | null;
   imageProvider: ImageProviderRuntime | null;
   eventPublisher: EventPublisher;
   blocks: AgentRunBlockServiceLike;
   usageReporter: UsageReporter;
-  assetResolver?: AssetResolver | null;
   customStepExecutors: Record<string, CustomStepExecutor>;
   stubMode?: boolean;
   formatProviderError?: (error: unknown) => string;

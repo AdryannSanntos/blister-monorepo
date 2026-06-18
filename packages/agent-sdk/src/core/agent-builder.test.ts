@@ -15,7 +15,6 @@ describe('AgentBuilder', () => {
       .input(input)
       .output(output)
       .capabilities(['text', 'structured_output'])
-      .withContext({ includeBrandBrain: true, includeAgentLearning: true })
       .addStep('generate_caption', {
         label: 'Gerar legenda',
         type: 'llm_call',

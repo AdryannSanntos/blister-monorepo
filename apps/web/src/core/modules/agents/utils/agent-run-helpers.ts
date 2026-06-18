@@ -4,8 +4,6 @@ import type {
   ReviewStatus,
 } from "@company-os/types";
 
-import type { AgentUiId } from "../config/agent-ui-config";
-
 export type StrategistTopic = {
   title: string;
   description: string;
@@ -277,7 +275,7 @@ export function getReviewStatusLabelKey(
 }
 
 export function getAgentOutputPreview(
-  agentId: AgentUiId,
+  agentId: string,
   payload: Record<string, unknown>,
 ): string {
   switch (agentId) {

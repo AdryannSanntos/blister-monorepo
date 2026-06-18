@@ -32,12 +32,8 @@ export const createCompanySchema = z.strictObject({
 
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 
-export * from './rag/index';
 export * from './agents';
 export * from './agents/cuts';
-export * from './brand-brain-progress';
-export * from './brand-palette';
-export * from './brand-visual';
 export * from './company';
 export * from './credits';
 export * from './ai-catalog';

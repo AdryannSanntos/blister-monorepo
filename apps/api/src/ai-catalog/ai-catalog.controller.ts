@@ -28,7 +28,6 @@ import {
   updateModelSchema,
   updatePipelineSchema,
   updateProviderSchema,
-  updateRagSettingsSchema,
 } from './dto/ai-catalog.dto';
 import { ModelsService } from './models.service';
 import { PlatformAgentsService } from './platform-agents.service';
@@ -181,14 +180,6 @@ export class AiCatalogController {
     const parsed = updateCreditSettingsSchema.safeParse(body);
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
     return this.settings.updateCreditSettings(user.id, parsed.data);
-  }
-
-  @Patch('settings/rag')
-  updateRagSettings(@Req() req: Request, @Body() body: unknown) {
-    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
-    const parsed = updateRagSettingsSchema.safeParse(body);
-    if (!parsed.success) throw new BadRequestException(parsed.error.issues);
-    return this.settings.updateRagSettings(user.id, parsed.data);
   }
 
   // ── Companies ──────────────────────────────────────────────────────────────

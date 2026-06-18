@@ -53,7 +53,6 @@ export class AgentsController {
       personalSpaceId: workspace.type === 'personal' ? workspace.personalSpaceId : undefined,
       userId,
       userInput: dto.userInput,
-      campaignId: dto.campaignId,
       metadata,
     });
 

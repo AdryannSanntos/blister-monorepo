@@ -878,7 +878,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Naila\\Documents\\blister-monorepo\\apps\\api\\src\\generated\\prisma",
+      "value": "/Users/adryansantos/Documents/PROJETOS/blister-monorepo/apps/api/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -887,7 +887,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       },
       {
@@ -902,7 +902,7 @@ const config = {
     "previewFeatures": [
       "postgresqlExtensions"
     ],
-    "sourceFilePath": "C:\\Users\\Naila\\Documents\\blister-monorepo\\apps\\api\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/adryansantos/Documents/PROJETOS/blister-monorepo/apps/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

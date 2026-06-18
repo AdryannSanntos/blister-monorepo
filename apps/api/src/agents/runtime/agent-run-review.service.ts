@@ -8,7 +8,6 @@ import type {
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AuditService } from '../../audit/audit.service';
 import { PrismaService } from '../../prisma/prisma.service';
-import { RagEventsService } from '../../rag/rag-events.service';
 import { AgentRegistryService } from './agent-registry.service';
 import { WorkflowEngineService } from './workflow-engine.service';
 
@@ -27,7 +26,6 @@ export class AgentRunReviewService {
     private readonly audit: AuditService,
     private readonly registry: AgentRegistryService,
     private readonly workflowEngine: WorkflowEngineService,
-    private readonly ragEvents: RagEventsService,
   ) {}
 
   async approve(runId: string, userId: string, dto: ApproveAgentRunDto): Promise<ReviewResult> {
@@ -174,7 +172,6 @@ export class AgentRunReviewService {
       userInput: dto.instruction
         ? `${userInput}\n\nInstrução adicional: ${dto.instruction}`
         : userInput,
-      campaignId: run.campaignId ?? undefined,
       metadata: {
         regeneratedFrom: runId,
         instruction: dto.instruction,
@@ -223,29 +220,15 @@ export class AgentRunReviewService {
   }
 
   private async triggerLearningIndex(
-    run: {
+    _run: {
       id: string;
       companyId: string | null;
       agentId: string;
       outputPayload: unknown;
     },
-    status: 'APPROVED' | 'REJECTED' | 'EDITED',
-    feedback?: string,
+    _status: 'APPROVED' | 'REJECTED' | 'EDITED',
+    _feedback?: string,
   ): Promise<void> {
-    // RAG learning index is company-scoped; personal-space runs have no index.
-    if (!run.companyId) return;
-
-    try {
-      await this.ragEvents.triggerAgentLearningIndex(
-        run.companyId,
-        run.id,
-        run.agentId,
-        status === 'APPROVED' || status === 'EDITED',
-        run.outputPayload as Record<string, unknown>,
-        feedback,
-      );
-    } catch (error) {
-      this.logger.error('Failed to trigger learning index', error);
-    }
+    return;
   }
 }

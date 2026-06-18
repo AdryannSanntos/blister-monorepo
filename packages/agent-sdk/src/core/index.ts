@@ -10,15 +10,10 @@ export {
   type RunCheckpoint,
 } from './checkpoint';
 export type {
-  AgentContextConfig,
   AgentStepDefinition,
   AnyStepExecutor,
-  AssetResolver,
-  BrandProfile,
   BuiltAgent,
   BuiltAgentDefinition,
-  ContextChunk,
-  ContextPack,
   ImageProvider,
   LegacyStepExecutor,
   LlmCompleteParams,

@@ -1,16 +1,9 @@
-import type { ContextPack } from '../core/types';
-
-/**
- * Frozen, per-run debugging record. Captures the inputs and intermediate
- * artifacts so an irreproducible run can be inspected after the fact.
- */
 export interface RunSnapshot {
   runId: string;
   agentId: string;
   agentVersion?: string;
   companyId: string;
   input: Record<string, unknown>;
-  contextPack?: ContextPack;
   prompts: Array<{ stepKey: string; system?: string; user?: string }>;
   stepOutputs: Array<{ stepKey: string; output: Record<string, unknown> }>;
   llmResponses: Array<{ stepKey: string; model?: string; content?: string }>;
@@ -36,11 +29,6 @@ export class RunSnapshotBuilder {
       stepOutputs: [],
       llmResponses: [],
     };
-  }
-
-  withContextPack(pack: ContextPack): this {
-    this.snapshot.contextPack = pack;
-    return this;
   }
 
   recordStepOutput(stepKey: string, output: Record<string, unknown>): this {

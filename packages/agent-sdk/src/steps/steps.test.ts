@@ -9,13 +9,10 @@ function createContext(overrides: Partial<StepExecutionContext> = {}): StepExecu
     runId: 'run_1',
     agentId: 'copywriter',
     companyId: 'company_1',
-    campaignId: null,
     stepKey: 'generate_caption',
     stepIndex: 0,
     inputPayload: { userInput: 'post sobre bolo de cenoura' },
     previousStepsOutput: {},
-    contextPack: { chunks: [], totalFound: 0 },
-    brandProfile: null,
     ...overrides,
   };
 }
@@ -29,7 +26,6 @@ describe('step primitives', () => {
       {
         llmProvider: null,
         imageProvider: null,
-        assetResolver: null,
       },
     );
     assert.equal(valid.type, 'CONTINUE');
@@ -39,7 +35,6 @@ describe('step primitives', () => {
       {
         llmProvider: null,
         imageProvider: null,
-        assetResolver: null,
       },
     );
     assert.equal(invalid.type, 'FAILED');
@@ -55,7 +50,6 @@ describe('step primitives', () => {
 
     const result = await step(createContext(), {
       imageProvider: null,
-      assetResolver: null,
       llmProvider: {
         complete: async (params) => {
           assert.equal(params.structuredOutputSchema?.type, 'object');
@@ -78,22 +72,13 @@ describe('step primitives', () => {
 
   it('returns context retrieval metadata without requiring an LLM', async () => {
     const step = createRetrieveContextStep();
-    const result = await step(
-      createContext({
-        contextPack: {
-          totalFound: 2,
-          chunks: [
-            { id: '1', content: 'marca', sourceType: 'brand', score: 0.9 },
-            { id: '2', content: 'aprendizado', sourceType: 'learning', score: 0.8 },
-          ],
-        },
-      }),
-      { llmProvider: null, imageProvider: null, assetResolver: null },
-    );
+    const result = await step(createContext(), {
+      llmProvider: null,
+      imageProvider: null,
+    });
 
     assert.equal(result.type, 'CONTINUE');
-    assert.equal(result.output?.contextRetrieved, true);
-    assert.equal(result.output?.chunksCount, 2);
-    assert.equal(result.output?.totalFound, 2);
+    assert.equal(result.output?.contextRetrieved, false);
+    assert.equal(result.output?.chunksCount, 0);
   });
 });

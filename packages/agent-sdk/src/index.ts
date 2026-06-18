@@ -10,15 +10,10 @@ export {
   type RunCheckpoint,
 } from './core/checkpoint';
 export type {
-  AgentContextConfig,
   AgentStepDefinition,
   AnyStepExecutor,
-  AssetResolver,
-  BrandProfile,
   BuiltAgent,
   BuiltAgentDefinition,
-  ContextChunk,
-  ContextPack,
   ImageProvider,
   LegacyStepExecutor,
   LlmCompleteParams,
@@ -161,8 +156,6 @@ export {
   AgentTestHarness,
   StepTestHarness,
   assertMatchesSchema,
-  brandProfileFixture,
-  contextPackFixture,
   registerSchemaMatchers,
   toMatchSchema,
   type HarnessRunResult,
@@ -172,7 +165,6 @@ export { executeRun } from './core/execute-run';
 export type {
   AgentDefinitionRuntime,
   AgentStepDefinitionRuntime,
-  ContextPackBuilder,
   CreateStepContextParams,
   CreditDebitResult,
   CustomStepExecutor,
