@@ -148,11 +148,11 @@ export class WorkspaceSettingsService {
     const parsedConfig = cutsAgentSettingsSchema.parse(dto.config);
 
     if (parsedConfig.addCaptions && parsedConfig.captionStyleId) {
-      const entitlements = await this.marketplace.getEntitlements(userId, req, 'caption-style');
-      const ownsStyle = entitlements.some((item) => item.id === parsedConfig.captionStyleId);
-      if (!ownsStyle) {
-        throw new BadRequestException('Caption style is not owned by this workspace');
-      }
+      await this.assertOwnsTextStyle(userId, req, parsedConfig.captionStyleId);
+    }
+
+    if (parsedConfig.addTitle && parsedConfig.titleStyleId) {
+      await this.assertOwnsTextStyle(userId, req, parsedConfig.titleStyleId);
     }
 
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
@@ -192,5 +192,20 @@ export class WorkspaceSettingsService {
     });
 
     return { agentId, config: cutsAgentSettingsSchema.parse(saved.config) };
+  }
+
+  /** Cuts overlay styles are TEXT_STYLE marketplace items (Remotion specs). */
+  private async assertOwnsTextStyle(
+    userId: string,
+    req: Request,
+    styleId: string,
+  ) {
+    const entitlements = await this.marketplace.getEntitlements(userId, req, 'text-style');
+    const ownsStyle = entitlements.some(
+      (item) => item.id === styleId || item.slug === styleId,
+    );
+    if (!ownsStyle) {
+      throw new BadRequestException('Text style is not owned by this workspace');
+    }
   }
 }

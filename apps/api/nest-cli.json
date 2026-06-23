@@ -6,12 +6,12 @@
     "deleteOutDir": false,
     "assets": [
       {
-        "include": "generated/prisma/**/*",
+        "include": "agents/**/skills/**/*",
         "outDir": "dist/src",
         "watchAssets": true
       },
       {
-        "include": "agents/**/skills/**/*",
+        "include": "video/compositions/**/*",
         "outDir": "dist/src",
         "watchAssets": true
       }

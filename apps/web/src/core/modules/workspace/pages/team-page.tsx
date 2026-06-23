@@ -210,6 +210,8 @@ export function TeamPage() {
         </div>
       ) : (
         <DataTable
+          title={t("title")}
+          icon={Users}
           columns={tableColumns}
           data={members}
           filters={filters}

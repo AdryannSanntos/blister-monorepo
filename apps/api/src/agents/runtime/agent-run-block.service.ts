@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { compareAgentMessageIds } from '@company-os/types';
 import { PrismaService } from '../../prisma/prisma.service';
 import type { AgentRunBlockDto } from '@company-os/types';
-import type { Prisma } from '../../generated/prisma';
+import type { Prisma } from '@company-os/db';
 
 export interface SaveBlockInput {
   agentRunId: string;

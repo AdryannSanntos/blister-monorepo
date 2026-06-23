@@ -153,6 +153,8 @@ export function PlatformAdminsPanel({ onGrantAccess }: PlatformAdminsPanelProps)
       </div>
 
       <DataTable
+        title={t("tableTitle")}
+        icon={Shield}
         columns={tableColumns}
         data={rows}
         filters={filters}

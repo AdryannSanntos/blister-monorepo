@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuditModule } from '../audit/audit.module';
 import { CreditsModule } from '../credits/credits.module';
-import { AiRuntimeModule } from '../ai-runtime/ai-runtime.module';
 import { CompanyModule } from '../company/company.module';
 import { StorageModule } from '../storage/storage.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
@@ -30,7 +29,6 @@ import { InternalEventsController } from './internal-events.controller';
     PrismaModule,
     AuditModule,
     CreditsModule,
-    AiRuntimeModule,
     CompanyModule,
     StorageModule,
     WorkspaceModule,

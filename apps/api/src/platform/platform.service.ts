@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '../generated/prisma';
+import { Prisma } from '@company-os/db';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   PLATFORM_ROLES,

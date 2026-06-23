@@ -1,11 +1,12 @@
-import type { RunEventPayload } from '@company-os/agent-sdk';
+import type { RunEventPayload } from '@company-os/agent-ia-sdk/agents';
 import {
   type EventPublisher,
   createRunCompletedEvent,
   createRunFailedEvent,
   createRunPausedEvent,
   createRunStartedEvent,
-} from '@company-os/agent-sdk';
+} from '@company-os/agent-ia-sdk/agents';
+import { devAgentLogger } from '../dev-agent-logger';
 
 export type { EventPublisher, RunEventPayload };
 
@@ -38,10 +39,17 @@ export class HttpEventPublisher implements EventPublisher {
       });
 
       if (!response.ok) {
-        console.error(`Failed to publish event: ${response.status}`);
+        devAgentLogger.error('Failed to publish agent event', undefined, {
+          runId: event.runId,
+          type: event.type,
+          status: response.status,
+        });
       }
     } catch (error) {
-      console.error('Event publish error:', error);
+      devAgentLogger.error('Event publish error', error, {
+        runId: event.runId,
+        type: event.type,
+      });
     }
   }
 }

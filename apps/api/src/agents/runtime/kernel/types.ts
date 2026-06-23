@@ -1,4 +1,4 @@
-import type { Prisma } from '../../../generated/prisma';
+import type { Prisma } from '@company-os/db';
 
 export type AgentRunStatus = 'QUEUED' | 'RUNNING' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 
@@ -55,7 +55,7 @@ export interface RunResult {
   creditCost: number;
 }
 
-export type { RunEventPayload } from '@company-os/agent-sdk';
+export type { RunEventPayload } from '@company-os/agent-ia-sdk/agents';
 
 export interface PlatformSettings {
   markupDefault: number;

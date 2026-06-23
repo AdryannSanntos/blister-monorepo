@@ -5,12 +5,15 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
 
-const marketplaceKeys = {
+export type MarketplaceItemView = MarketplaceItemDto & { owned?: boolean };
+
+export const marketplaceKeys = {
   all: ["marketplace"] as const,
   items: (type?: string) =>
     [...marketplaceKeys.all, "items", type ?? "all"] as const,
   item: (id: string) => [...marketplaceKeys.all, "item", id] as const,
-  library: () => [...marketplaceKeys.all, "library"] as const,
+  library: (type?: string) =>
+    [...marketplaceKeys.all, "library", type ?? "all"] as const,
 };
 
 export function useMarketplaceItems(type?: string) {
@@ -41,12 +44,15 @@ export function useMarketplaceItem(itemId: string) {
   });
 }
 
-export function useLibraryItems() {
+export function useLibraryItems(type?: string) {
   return useQuery({
-    queryKey: marketplaceKeys.library(),
+    queryKey: marketplaceKeys.library(type),
     queryFn: async () => {
       const { data } = await apiClient.get<MarketplaceItemDto[]>(
         "/marketplace/entitlements",
+        {
+          params: type && type !== "all" ? { type } : undefined,
+        },
       );
       return data;
     },
@@ -75,6 +81,8 @@ export const MARKETPLACE_TYPES = [
   { id: "all", labelKey: "types.all" },
   { id: "edit-style", labelKey: "types.editStyle" },
   { id: "post-style", labelKey: "types.postStyle" },
+  { id: "caption-style", labelKey: "types.captionStyle" },
+  { id: "text-style", labelKey: "types.textStyle" },
   { id: "pack", labelKey: "types.pack" },
   { id: "template", labelKey: "types.template" },
   { id: "asset", labelKey: "types.asset" },

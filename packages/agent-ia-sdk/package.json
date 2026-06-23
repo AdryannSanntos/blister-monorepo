@@ -1,0 +1,53 @@
+{
+  "name": "@company-os/agent-ia-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "ia": ["dist/ia/index.d.ts"],
+      "agents": ["dist/agents/index.d.ts"],
+      "agents/testing": ["dist/agents/testing/index.d.ts"],
+      "agents/stream": ["dist/agents/stream/index.d.ts"]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./ia": {
+      "types": "./dist/ia/index.d.ts",
+      "default": "./dist/ia/index.js"
+    },
+    "./agents": {
+      "types": "./dist/agents/index.d.ts",
+      "default": "./dist/agents/index.js"
+    },
+    "./agents/testing": {
+      "types": "./dist/agents/testing/index.d.ts",
+      "default": "./dist/agents/testing/index.js"
+    },
+    "./agents/stream": {
+      "types": "./dist/agents/stream/index.d.ts",
+      "default": "./dist/agents/stream/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "biome check src package.json tsconfig.json tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@company-os/db": "workspace:^",
+    "@company-os/types": "workspace:^",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "vitest": "^3.0.5"
+  }
+}

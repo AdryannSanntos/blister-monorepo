@@ -1,5 +1,5 @@
-import type { RunStore, StoredRun } from '@company-os/agent-sdk';
-import { Prisma, type PrismaClient } from '../../generated/prisma';
+import type { RunStore, StoredRun } from '@company-os/agent-ia-sdk/agents';
+import { Prisma, type PrismaClient } from '@company-os/db';
 
 const runInclude = {
   steps: { orderBy: { stepIndex: 'asc' as const } },

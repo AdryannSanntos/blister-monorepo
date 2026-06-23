@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AiCatalogModule } from './ai-catalog/ai-catalog.module';
-import { AiRuntimeModule } from './ai-runtime/ai-runtime.module';
+import { AgentIaSdkModule } from './integrations/agent-ia-sdk/agent-ia-sdk.module';
 import { AgentsModule } from './agents/agents.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -26,7 +26,8 @@ import { PermissionGuard } from './users/guards/permission.guard';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: ['../../.env', '.env'], isGlobal: true }),
+    // Local `.env` first; monorepo root `../../.env` overrides (source of truth).
+    ConfigModule.forRoot({ envFilePath: ['.env', '../../.env'], isGlobal: true }),
     PrismaModule,
     AuthModule,
     EmailModule,
@@ -37,7 +38,7 @@ import { PermissionGuard } from './users/guards/permission.guard';
     CompanyModule,
     CreditsModule,
     AiCatalogModule,
-    AiRuntimeModule,
+    AgentIaSdkModule,
     AgentsModule,
     WorkspaceModule,
     PersonalSpaceModule,

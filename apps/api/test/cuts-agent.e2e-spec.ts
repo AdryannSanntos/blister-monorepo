@@ -9,7 +9,8 @@ import {
 } from './setup/test-database';
 import { seedTestDatabase, TestSeedResult } from './setup/test-seed';
 import { loginAsDemoBusiness, AuthenticatedSession } from './setup/auth.helper';
-import type { PrismaClient } from '../src/generated/prisma';
+import { installTriggerTestHarness } from './setup/trigger-test-harness';
+import type { PrismaClient } from '@company-os/db';
 
 const waitForRunStatus = async (
   prisma: PrismaClient,
@@ -92,6 +93,8 @@ describe('Cuts Agent E2E', () => {
     });
 
     sourceFileId = file.id;
+
+    installTriggerTestHarness(prisma);
   });
 
   afterAll(async () => {

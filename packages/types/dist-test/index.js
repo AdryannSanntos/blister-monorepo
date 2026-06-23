@@ -40,12 +40,8 @@ exports.createCompanySchema = zod_1.z.strictObject({
     name: zod_1.z.string().min(2).max(120),
     slug: exports.companySlugSchema,
 });
-__exportStar(require("./rag/index"), exports);
 __exportStar(require("./agents"), exports);
 __exportStar(require("./agents/cuts"), exports);
-__exportStar(require("./brand-brain-progress"), exports);
-__exportStar(require("./brand-palette"), exports);
-__exportStar(require("./brand-visual"), exports);
 __exportStar(require("./company"), exports);
 __exportStar(require("./credits"), exports);
 __exportStar(require("./ai-catalog"), exports);

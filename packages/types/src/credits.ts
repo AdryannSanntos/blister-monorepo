@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+/** 1 credit equals US$1.00. Used across UI labels and cost estimates. */
+export const CREDIT_UNIT_USD = 1;
+
+/** Free tier grant: 20 credits = US$20 of usage (mirrors PlatformCreditSettings.freeTierAmount default). */
+export const FREE_TIER_CREDITS = 20;
+
 export const creditBalanceSchema = z.object({
   id: z.string(),
   companyId: z.string(),
@@ -33,6 +39,19 @@ export const creditHistorySchema = z.object({
   pageSize: z.number(),
 });
 export type CreditHistory = z.infer<typeof creditHistorySchema>;
+
+export const agentSpendItemSchema = z.object({
+  agentId: z.string(),
+  totalSpent: z.string(), // credits (= USD), serialized Decimal
+  runs: z.number(),
+});
+export type AgentSpendItem = z.infer<typeof agentSpendItemSchema>;
+
+export const agentSpendSchema = z.object({
+  windowDays: z.number(),
+  items: z.array(agentSpendItemSchema),
+});
+export type AgentSpend = z.infer<typeof agentSpendSchema>;
 
 export const adjustCreditSchema = z.object({
   amount: z.number().positive(),

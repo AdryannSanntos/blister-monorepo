@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { Prisma } from '../generated/prisma';
+import { Prisma } from '@company-os/db';
 import { PrismaService } from '../prisma/prisma.service';
 import { PlatformService } from './platform.service';
 

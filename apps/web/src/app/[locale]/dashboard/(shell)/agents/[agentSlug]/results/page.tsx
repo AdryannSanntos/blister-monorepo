@@ -1,4 +1,6 @@
-import { CutsResultsPage } from "src/core/modules/agents/pages/cuts-results-page";
+import { redirect } from "next/navigation";
+
+import { getAgentOverviewPath } from "src/core/modules/agents/utils/agent-paths";
 
 type PageProps = {
   params: Promise<{ agentSlug: string }>;
@@ -6,5 +8,5 @@ type PageProps = {
 
 export default async function Page({ params }: PageProps) {
   const { agentSlug } = await params;
-  return <CutsResultsPage agentSlug={agentSlug} />;
+  redirect(getAgentOverviewPath(agentSlug));
 }

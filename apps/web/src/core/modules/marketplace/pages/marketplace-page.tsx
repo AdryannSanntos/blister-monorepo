@@ -1,11 +1,12 @@
 "use client";
 
-import { Library, Store } from "lucide-react";
+import { Library, Settings2, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsString, parseAsStringEnum, useQueryStates } from "nuqs";
 import { useMemo } from "react";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
+import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
 import { Link } from "@/i18n/routing";
 
@@ -14,7 +15,7 @@ import { MarketplaceToolbar } from "../components/marketplace-toolbar";
 import {
   useMarketplaceItems,
   useMarketplaceTypes,
-} from "../hooks/use-marketplace-mock";
+} from "../hooks/use-marketplace";
 import {
   filterMarketplaceItems,
   getMarketplaceTypeLabelKey,
@@ -53,7 +54,7 @@ export const MarketplacePage = () => {
     q: parseAsString.withDefault(""),
   });
 
-  const { data: types = [] } = useMarketplaceTypes();
+  const types = useMarketplaceTypes();
   const { data: items = [], isLoading } = useMarketplaceItems(filters.type);
 
   const typeOptions = types.map((entry) => ({
@@ -81,12 +82,22 @@ export const MarketplacePage = () => {
         title={t("title")}
         description={t("description")}
         actions={
-          <Button variant="outline" asChild>
-            <Link href="/dashboard/library">
-              <Library className="size-4" />
-              {t("openLibrary")}
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <PermissionGate permission="marketplace.manage">
+              <Button variant="outline" asChild>
+                <Link href="/dashboard/marketplace/admin">
+                  <Settings2 className="size-4" />
+                  {t("adminLink")}
+                </Link>
+              </Button>
+            </PermissionGate>
+            <Button variant="outline" asChild>
+              <Link href="/dashboard/library">
+                <Library className="size-4" />
+                {t("openLibrary")}
+              </Link>
+            </Button>
+          </div>
         }
       >
         <MarketplaceToolbar

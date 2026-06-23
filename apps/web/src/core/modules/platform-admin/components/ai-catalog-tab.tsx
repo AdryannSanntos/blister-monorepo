@@ -95,12 +95,13 @@ export function AiCatalogTab() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="flex flex-col gap-4">
-        <h3 className="text-sm font-medium">{t("providersTitle")}</h3>
+      <section>
         {loadingProviders ? (
-          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full rounded-lg" />
         ) : (
           <DataTable
+            title={t("providersTitle")}
+            icon={Cpu}
             columns={providerColumns}
             data={providers ?? []}
             emptyState={{
@@ -112,12 +113,13 @@ export function AiCatalogTab() {
         )}
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h3 className="text-sm font-medium">{t("modelsTitle")}</h3>
+      <section>
         {loadingModels ? (
-          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full rounded-lg" />
         ) : (
           <DataTable
+            title={t("modelsTitle")}
+            icon={Box}
             columns={modelColumns}
             data={models ?? []}
             emptyState={{

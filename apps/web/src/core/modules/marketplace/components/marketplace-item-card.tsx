@@ -15,7 +15,7 @@ import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { cn } from "src/core/shared/utils";
 import { Link } from "@/i18n/routing";
 
-import type { MarketplaceItemView } from "../hooks/use-marketplace-mock";
+import type { MarketplaceItemView } from "../hooks/use-marketplace";
 
 type MarketplaceItemCardProps = {
   item: MarketplaceItemView;
@@ -42,16 +42,11 @@ export const MarketplaceItemCard = ({
 }: MarketplaceItemCardProps) => {
   const t = useTranslations("marketplace.card");
   const owned = Boolean(item.owned);
-  const ownedState = owned
-    ? item.price === 0
-      ? ("redeemed" as const)
-      : ("purchased" as const)
-    : undefined;
   const flagLabel = getFlagLabel(item.flag, t);
 
   return (
     <Link
-      href={`/dashboard/marketplace/${item.id}`}
+      href={`/dashboard/marketplace/${item.slug}`}
       className={cn("group block h-full", className)}
       aria-label={t("openItem", { name: item.name })}
     >
@@ -86,11 +81,7 @@ export const MarketplaceItemCard = ({
             >
               {item.name}
             </CardTitle>
-            <PriceBadge
-              item={item}
-              ownedState={ownedState}
-              size={compact ? "sm" : "default"}
-            />
+            <PriceBadge item={item} owned={owned} size={compact ? "sm" : "default"} />
           </div>
 
           {!compact ? (

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.platformCompanySchema = exports.updateRagSettingsSchema = exports.ragPlatformSettingsSchema = exports.updateCreditSettingsSchema = exports.platformCreditSettingsSchema = exports.platformAgentAdminItemSchema = exports.platformAgentPolicyViewSchema = exports.updatePipelineSchema = exports.pipelineAgentConfigSchema = exports.platformAgentStepSchema = exports.updateAgentStepPoliciesBatchSchema = exports.AGENT_STEP_TYPES_WITH_MODEL = exports.updateAgentStepPolicySchema = exports.agentStepPolicySchema = exports.updateAgentPolicySchema = exports.agentPolicySchema = exports.updateAiModelSchema = exports.createAiModelSchema = exports.aiModelSchema = exports.addCredentialSchema = exports.updateAiProviderSchema = exports.createAiProviderSchema = exports.aiProviderSchema = void 0;
+exports.platformCompanySchema = exports.updateRagSettingsSchema = exports.ragPlatformSettingsSchema = exports.updateCreditSettingsSchema = exports.platformCreditSettingsSchema = exports.platformAgentAdminItemSchema = exports.platformAgentPolicyViewSchema = exports.updatePipelineSchema = exports.pipelineAgentConfigSchema = exports.platformAgentStepSchema = exports.updateAgentStepPoliciesBatchSchema = exports.AGENT_STEP_TYPES_WITH_MODEL = exports.updateAgentStepPolicySchema = exports.agentStepPolicySchema = exports.updateAgentPolicySchema = exports.agentPolicySchema = exports.updateAiModelSchema = exports.createAiModelSchema = exports.aiModelSchema = exports.updateAiProviderSchema = exports.createAiProviderSchema = exports.aiProviderSchema = void 0;
 const zod_1 = require("zod");
 exports.aiProviderSchema = zod_1.z.object({
     id: zod_1.z.string(),
@@ -16,10 +16,6 @@ exports.createAiProviderSchema = zod_1.z.object({
     isEnabled: zod_1.z.boolean().optional().default(true),
 });
 exports.updateAiProviderSchema = exports.createAiProviderSchema.partial();
-exports.addCredentialSchema = zod_1.z.object({
-    label: zod_1.z.string().min(1).max(120),
-    value: zod_1.z.string().min(1),
-});
 exports.aiModelSchema = zod_1.z.object({
     id: zod_1.z.string(),
     providerId: zod_1.z.string(),
@@ -132,20 +128,21 @@ exports.updateCreditSettingsSchema = zod_1.z.object({
     minRunCost: zod_1.z.number().positive().optional(),
 });
 exports.ragPlatformSettingsSchema = zod_1.z.object({
+    embeddingModelId: zod_1.z.string().nullable(),
+    captionModelId: zod_1.z.string().nullable(),
     chunkSize: zod_1.z.number(),
     chunkOverlap: zod_1.z.number(),
     topK: zod_1.z.number(),
     rerankEnabled: zod_1.z.boolean(),
-    embeddingModelId: zod_1.z.string().nullable(),
-    captionModelId: zod_1.z.string().nullable(),
 });
+// Model ids are cuids (not uuids), so validate as non-empty strings.
 exports.updateRagSettingsSchema = zod_1.z.object({
-    chunkSize: zod_1.z.number().int().positive().optional(),
-    chunkOverlap: zod_1.z.number().int().min(0).optional(),
-    topK: zod_1.z.number().int().positive().optional(),
+    embeddingModelId: zod_1.z.string().min(1).optional(),
+    captionModelId: zod_1.z.string().min(1).nullable().optional(),
+    chunkSize: zod_1.z.number().int().min(100).max(8000).optional(),
+    chunkOverlap: zod_1.z.number().int().min(0).max(500).optional(),
+    topK: zod_1.z.number().int().min(1).max(50).optional(),
     rerankEnabled: zod_1.z.boolean().optional(),
-    embeddingModelId: zod_1.z.string().nullable().optional(),
-    captionModelId: zod_1.z.string().nullable().optional(),
 });
 exports.platformCompanySchema = zod_1.z.object({
     id: zod_1.z.string(),

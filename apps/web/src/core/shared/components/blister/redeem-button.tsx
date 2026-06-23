@@ -2,12 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-
-import { useBlisterOsStore } from "src/core/modules/blister-os/stores/blister-os-store";
-import type { MarketplaceItemView } from "src/core/modules/marketplace/hooks/use-marketplace-mock";
-import { useRedeemMarketplaceItem } from "src/core/modules/marketplace/hooks/use-marketplace-mock";
-import { Button } from "src/core/shared/components/ui/button";
 import { toast } from "sonner";
+
+import { useCredits } from "src/core/modules/credits/hooks/use-credits";
+import type { MarketplaceItemView } from "src/core/modules/marketplace/hooks/use-marketplace";
+import { useRedeemMarketplaceItem } from "src/core/modules/marketplace/hooks/use-marketplace";
+import { getCreditBalance } from "src/core/modules/marketplace/utils/marketplace-catalog.utils";
+import { Button } from "src/core/shared/components/ui/button";
 
 type RedeemButtonProps = {
   item: MarketplaceItemView;
@@ -17,19 +18,21 @@ type RedeemButtonProps = {
 
 export const RedeemButton = ({ item, owned = false, className }: RedeemButtonProps) => {
   const t = useTranslations("marketplace");
-  const credits = useBlisterOsStore((state) => state.credits);
+  const { data: creditsData } = useCredits();
   const redeemMutation = useRedeemMarketplaceItem();
   const [isLoading, setIsLoading] = useState(false);
 
-  if (owned || item.owned) {
+  const isOwned = owned || item.owned;
+
+  if (isOwned) {
     return (
       <Button variant="outline" disabled className={className}>
-        {t("alreadyOwned")}
+        {t("installed")}
       </Button>
     );
   }
 
-  const balance = credits;
+  const balance = getCreditBalance(creditsData?.balance.amount);
   const canAfford = item.price === 0 || balance >= item.price;
 
   const handleRedeem = async () => {
@@ -51,7 +54,7 @@ export const RedeemButton = ({ item, owned = false, className }: RedeemButtonPro
       onClick={handleRedeem}
       aria-label={t("redeemAria", { name: item.name })}
     >
-      {item.price === 0 ? t("redeemFree") : t("redeemPaid", { price: item.price })}
+      {item.price === 0 ? t("addToLibrary") : t("redeemPaid", { price: item.price })}
     </Button>
   );
 };

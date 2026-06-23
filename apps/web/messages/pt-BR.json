@@ -256,6 +256,7 @@
     "marketplace": "Marketplace",
     "library": "Biblioteca",
     "files": "Arquivos",
+    "projects": "Projetos",
     "dashboard": "Dashboard",
     "agents": "Agentes",
     "myAgents": "Meus agentes",
@@ -306,10 +307,13 @@
     "includes": "O que está incluso",
     "related": "Você também pode gostar",
     "relatedDescription": "Itens parecidos para complementar seu fluxo.",
-    "redeemFree": "Resgatar grátis",
+    "redeemFree": "Adicionar à Biblioteca",
     "redeemPaid": "Resgatar por {price} créditos",
     "redeemAria": "Resgatar {name}",
-    "alreadyOwned": "Já na biblioteca",
+    "addToLibrary": "Adicionar à Biblioteca",
+    "installed": "Instalado",
+    "alreadyOwned": "Instalado",
+    "adminLink": "Administrar",
     "redeemSuccess": "{name} adicionado à biblioteca",
     "redeemFailed": "Não foi possível resgatar",
     "pricing": {
@@ -373,7 +377,7 @@
     "card": {
       "free": "Grátis",
       "credits": "{price} créditos",
-      "owned": "Na biblioteca",
+      "owned": "Instalado",
       "viewDetails": "Ver detalhes",
       "byAuthor": "por {author}",
       "openItem": "Abrir {name}",
@@ -396,6 +400,7 @@
       "editStyle": "Edit Styles",
       "postStyle": "Post Styles",
       "captionStyle": "Estilos de legenda",
+      "textStyle": "Estilos de Texto",
       "pack": "Packs visuais",
       "template": "Templates",
       "asset": "Assets criativos",
@@ -405,6 +410,7 @@
       "editStyle": "Presets de ritmo, legendas e transições para acelerar a edição de vídeos.",
       "postStyle": "Layouts prontos para posts estáticos e carrosséis nas redes.",
       "captionStyle": "Estilos de legenda e tipografia para manter consistência visual.",
+      "textStyle": "Animações de título e overlay para cortes verticais.",
       "pack": "Conjuntos visuais com paleta, tipografia e elementos gráficos.",
       "template": "Modelos reutilizáveis para acelerar a produção recorrente.",
       "asset": "Recursos criativos isolados para compor suas peças.",
@@ -414,6 +420,42 @@
       "prev": "Anterior",
       "next": "Próximo"
     }
+  },
+  "marketplaceAdmin": {
+    "title": "Admin do Marketplace",
+    "description": "Gerencie itens do catálogo, preços e disponibilidade.",
+    "accessDeniedTitle": "Acesso restrito",
+    "accessDeniedDescription": "Apenas administradores do workspace podem gerenciar o marketplace.",
+    "backToMarketplace": "Voltar ao marketplace",
+    "newItem": "Novo item",
+    "editItem": "Editar item",
+    "createItem": "Criar item",
+    "saveItem": "Salvar",
+    "cancel": "Cancelar",
+    "nameColumn": "Nome",
+    "typeColumn": "Tipo",
+    "priceColumn": "Preço",
+    "statusColumn": "Status",
+    "actionsColumn": "Ações",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "activate": "Ativar",
+    "deactivate": "Desativar",
+    "edit": "Editar",
+    "slug": "Slug",
+    "author": "Autor",
+    "flag": "Flag",
+    "descriptionField": "Descrição",
+    "palette": "Paleta (hex separados por vírgula)",
+    "includes": "Inclusos (um por linha)",
+    "refId": "Ref ID",
+    "isActive": "Ativo no catálogo",
+    "specsJson": "Specs (JSON)",
+    "specsJsonError": "JSON inválido",
+    "createSuccess": "Item criado",
+    "updateSuccess": "Item atualizado",
+    "statusSuccess": "Status atualizado",
+    "saveFailed": "Não foi possível salvar"
   },
   "library": {
     "title": "Biblioteca",
@@ -584,6 +626,7 @@
       "generating": "Transcrevendo e gerando cortes...",
       "finishingRenders": "Finalizando vídeos dos cortes...",
       "starting": "Iniciando...",
+      "waitingInQueue": "Na fila — aguardando worker...",
       "start": "Gerar cortes",
       "submitting": "Salvando validação...",
       "submitReview": "Confirmar validação",
@@ -613,7 +656,30 @@
       "stepTranscribe": "Transcrevendo vídeo",
       "stepRankCuts": "Gerando cortes",
       "preparingRender": "Preparando renderização...",
-      "renderingCuts": "Renderizando cortes ({done}/{total})"
+      "renderingCuts": "Renderizando cortes ({done}/{total})",
+      "options": {
+        "title": "Opções de geração",
+        "modelTierLabel": "Modelo",
+        "comingSoon": "Em breve",
+        "modelTier": {
+          "basic": "Básico",
+          "auto": "Auto",
+          "pro": "Pro"
+        },
+        "genreLabel": "Gênero do vídeo",
+        "genrePlaceholder": "Selecione um gênero (opcional)",
+        "genre": {
+          "podcast": "Podcast",
+          "live": "Live",
+          "tutorial": "Tutorial",
+          "interview": "Entrevista",
+          "vlog": "Vlog",
+          "storytelling": "Storytelling",
+          "other": "Outro"
+        },
+        "timeframeLabel": "Janela de processamento",
+        "timeframeHint": "Limite qual parte do vídeo será analisada."
+      }
     },
     "review": {
       "cutsListLabel": "Cortes gerados",
@@ -624,18 +690,46 @@
       "viralScore": "{score}% potencial",
       "clipReady": "Pronto",
       "approve": "Aceitar",
-      "reject": "Negar"
+      "reject": "Negar",
+      "cutsCount": "{count, plural, =1 {1 corte} other {# cortes}}",
+      "avgScore": "Potencial médio {score}%",
+      "rendering": "Renderizando…",
+      "cutPosition": "Corte {index} de {total}",
+      "scoreLabel": "Potencial viral",
+      "noDescription": "Sem descrição disponível.",
+      "prev": "Corte anterior",
+      "next": "Próximo corte",
+      "decidedProgress": "{decided} de {total} decididos",
+      "transcriptLabel": "Transcrição",
+      "transcriptEmpty": "Sem transcrição disponível para este corte.",
+      "speakerLabel": "Locutor {label}",
+      "tabVideo": "Vídeo",
+      "tabTranscript": "Transcrição",
+      "hintPlay": "play/pausa",
+      "hintCuts": "cortes",
+      "hintLines": "frases"
     },
     "statusModal": {
       "titleSuccess": "Geração iniciada",
       "titleError": "Falha ao iniciar",
       "sourceLabel": "Fonte: {name}",
       "successStarted": "Seu vídeo foi enviado e a geração de cortes começou.",
+      "successDescription": "Seu vídeo foi enviado e a geração de cortes começou. O processamento continua em segundo plano — acompanhe o progresso em Execuções recentes na visão geral.",
       "backgroundHint": "O processamento continua em segundo plano. Acompanhe o progresso em Execuções recentes na visão geral.",
       "errorGeneric": "Não foi possível enviar o arquivo ou iniciar a geração.",
       "close": "Fechar",
       "retry": "Tentar novamente",
-      "viewOverview": "Ver visão geral"
+      "viewOverview": "Ver visão geral",
+      "viewExecution": "Ver execução"
+    },
+    "runDetail": {
+      "title": "Geração de cortes",
+      "sourceLabel": "Fonte: {name}",
+      "back": "Voltar",
+      "loading": "Carregando execução…",
+      "errorLoad": "Não foi possível carregar esta execução.",
+      "reviewError": "Não foi possível salvar sua validação.",
+      "activeHint": "O processamento continua. Você pode sair e voltar depois."
     },
     "filePicker": {
       "title": "Selecionar arquivo",
@@ -643,24 +737,6 @@
       "empty": "Nenhum vídeo encontrado nesta pasta.",
       "cancel": "Cancelar",
       "confirm": "Usar arquivo"
-    },
-    "results": {
-      "title": "Resultados",
-      "description": "Execuções concluídas do Gerador de Cortes.",
-      "count": "{count, plural, one {# execução} other {# execuções}}",
-      "loading": "Carregando execuções...",
-      "empty": "Nenhuma execução concluída ainda.",
-      "emptyHint": "Gere cortes a partir de um vídeo para ver os resultados aqui.",
-      "viewCuts": "Ver cortes",
-      "actionsMenu": "Ações para {name}",
-      "columns": {
-        "source": "Fonte",
-        "status": "Status",
-        "cuts": "Cortes",
-        "approved": "Aprovados",
-        "date": "Data",
-        "credits": "Créditos"
-      }
     }
   },
   "research": {
@@ -677,7 +753,22 @@
   },
   "history": {
     "title": "Histórico",
-    "description": "Runs e entregas recentes (demo local)."
+    "description": "Runs e entregas recentes (demo local).",
+    "listTitle": "Atividade recente",
+    "emptyTitle": "Nenhuma atividade ainda",
+    "emptyDescription": "Suas gerações aparecerão aqui assim que você iniciar uma tarefa.",
+    "untitledRun": "Geração sem título"
+  },
+  "projects": {
+    "title": "Projetos",
+    "description": "Cada projeto agrupa as peças e edições de uma iniciativa.",
+    "listTitle": "Seus projetos",
+    "newProject": "Novo projeto",
+    "meta": "{count, plural, one {# peça} other {# peças}} · atualizado {updatedAt}",
+    "status": {
+      "inProgress": "Em andamento",
+      "draft": "Rascunho"
+    }
   },
   "workspace": {
     "team": {
@@ -1120,7 +1211,7 @@
     "page": {
       "title": "Créditos",
       "description": "Gerencie seu saldo, acompanhe consumo e entenda o custo de cada tipo de geração.",
-      "primaryAction": "Criar post",
+      "primaryAction": "Gerar cortes",
       "lowBalanceAlert": {
         "title": "Saldo baixo",
         "description": "Algumas gerações podem ser bloqueadas. Considere recarregar antes de iniciar novas criações."
@@ -1129,7 +1220,8 @@
         "balance": {
           "label": "Saldo disponível",
           "hint": "Créditos prontos para usar nas suas gerações.",
-          "lowHint": "Saldo crítico. Novas gerações podem ser bloqueadas."
+          "lowHint": "Saldo crítico. Novas gerações podem ser bloqueadas.",
+          "freeTier": "Inclui US$ {amount} de uso grátis"
         },
         "spent": {
           "label": "Consumo (30 dias)",
@@ -1197,6 +1289,16 @@
           "title": "Nenhuma movimentação ainda",
           "description": "Quando você gerar conteúdo ou receber créditos, o histórico aparecerá aqui."
         }
+      },
+      "agentSpend": {
+        "title": "Consumo por agente",
+        "description": "Gasto dos últimos 30 dias agrupado por agente.",
+        "windowLabel": "Últimos 30 dias",
+        "runsLabel": "{count, plural, one {# execução} other {# execuções}}",
+        "empty": {
+          "title": "Nenhum consumo ainda",
+          "description": "Quando você rodar um agente, o gasto aparecerá aqui agrupado por agente."
+        }
       }
     }
   },
@@ -1204,8 +1306,8 @@
     "nav": {
       "overview": "Visão geral",
       "history": "Histórico",
-      "results": "Resultados",
       "newGeneration": "Nova execução",
+      "runDetail": "Execução",
       "settings": "Configuração"
     },
     "cuts": "Gerar cortes",
@@ -1228,8 +1330,26 @@
         "captionStylePlaceholder": "Selecione um estilo",
         "deleteSourceLabel": "Excluir fonte após execução",
         "deleteSourceHint": "Remove o arquivo original dos Arquivos ao concluir.",
+        "modelTierLabel": "Modelo padrão",
+        "modelTierHint": "Somente Básico está disponível hoje. Auto e Pro em breve.",
+        "modelTierBasic": "Básico",
+        "modelTierAuto": "Auto",
+        "modelTierPro": "Pro",
+        "modelTierComingSoon": "Em breve",
         "save": "Salvar",
-        "saved": "Configuração salva"
+        "saved": "Configuração salva",
+        "addTitleLabel": "Adicionar título",
+        "addTitleHint": "Queima um título animado no início do corte.",
+        "titleStyleLabel": "Estilo do título",
+        "titleDurationLabel": "Duração do título (s)",
+        "titleDurationHint": "Por quanto tempo o título aparece (1–10s).",
+        "positioningLabel": "Posicionamento",
+        "positioningHint": "Arraste para posicionar título e legenda.",
+        "positioningDragHint": "T = título · C = legenda",
+        "titleHandle": "Título",
+        "captionHandle": "Legenda",
+        "stylePickerEmpty": "Você ainda não tem estilos de texto.",
+        "stylePickerBrowse": "Escolher no Marketplace"
       }
     },
     "overview": {
@@ -1238,6 +1358,32 @@
       "recentTitle": "Execuções recentes",
       "usageTitle": "Uso nos últimos 7 dias",
       "usageAria": "Gráfico de execuções nos últimos 7 dias",
+      "runsGrid": {
+        "title": "Execuções",
+        "sectionAria": "Execuções do Gerador de Cortes",
+        "description": "Vídeos processados ou em andamento neste workspace.",
+        "count": "{count, plural, one {# execução} other {# execuções}}",
+        "loading": "Carregando execuções...",
+        "empty": "Nenhuma execução ainda.",
+        "emptyHint": "Gere cortes a partir de um vídeo para ver os resultados aqui.",
+        "statusProcessing": "Processando",
+        "statusFailed": "Falhou",
+        "statusReview": "Revisão",
+        "processingProgress": "{percent}% concluído",
+        "failedHint": "Não foi possível concluir esta execução.",
+        "viewCuts": "Ver cortes",
+        "actionsMenu": "Ações para {name}",
+        "cutsCount": "{count, plural, one {# corte} other {# cortes}}",
+        "openPreview": "Abrir {name}",
+        "cardMenu": {
+          "actionsMenu": "Ações para {name}",
+          "saveToStorage": "Salvar no armazenamento",
+          "shareProject": "Compartilhar projeto",
+          "downloadSubtitles": "Baixar legendas",
+          "downloadTranscript": "Baixar transcrição",
+          "delete": "Excluir"
+        }
+      },
       "stats": {
         "totalRuns": {
           "label": "Execuções",
@@ -1259,10 +1405,12 @@
     },
     "historyTable": {
       "title": "Histórico — {agent}",
+      "tableTitle": "Execuções",
       "description": "Todas as gerações desta ferramenta no workspace.",
       "count": "{count, plural, one {# execução} other {# execuções}}",
       "empty": "Nenhuma execução ainda",
       "emptyHint": "Inicie uma nova geração para ver o histórico aqui.",
+      "untitledRun": "Geração sem título",
       "columns": {
         "title": "Pedido",
         "status": "Status",
@@ -1537,7 +1685,9 @@
       "rag": "RAG e IA",
       "ragDescription": "Modelos de IA do sistema e parâmetros de indexação.",
       "credits": "Créditos",
-      "creditsDescription": "Configurações de crédito e saldo das empresas."
+      "creditsDescription": "Configurações de crédito e saldo das empresas.",
+      "systemAi": "IA do sistema",
+      "systemAiDescription": "Modelos de embedding e legenda, chunking e recuperação"
     },
     "agentsPage": {
       "title": "Agentes",
@@ -1557,6 +1707,7 @@
     },
     "adminsPage": {
       "title": "Admins globais",
+      "tableTitle": "Atribuições de acesso",
       "description": "Gerencie quem consegue operar o admin central da plataforma. O ideal é manter esse grupo pequeno, auditável e revisado com frequência.",
       "grantAccess": "Conceder acesso",
       "assignments": "Assignments",
@@ -1635,6 +1786,7 @@
       "submitButton": "Salvar configurações"
     },
     "agentsTab": {
+      "tableTitle": "Agentes",
       "nameColumn": "Agente",
       "modelColumn": "Modelo de IA",
       "noModel": "Sem modelo",
@@ -1688,6 +1840,33 @@
       "balanceColumn": "Saldo",
       "saveSuccess": "Configurações de crédito salvas",
       "saveError": "Erro ao salvar"
+    },
+    "systemAiPage": {
+      "title": "IA do sistema",
+      "description": "Configure embedding, legenda de arquivos e indexação RAG da plataforma"
+    },
+    "systemAiTab": {
+      "modelsTitle": "Modelos",
+      "embeddingLabel": "Embedding do projeto",
+      "embeddingPlaceholder": "Selecione um modelo de embedding",
+      "embeddingHelp": "Usado para indexar e recuperar conteúdo do workspace.",
+      "noEmbeddingModels": "Nenhum modelo de embedding disponível",
+      "captionLabel": "Legenda de arquivos",
+      "captionPlaceholder": "Selecione um modelo (opcional)",
+      "captionHelp": "Gera descrições de arquivos para busca. Opcional.",
+      "noTextModels": "Nenhum modelo de texto disponível",
+      "modelSearchPlaceholder": "Buscar modelo...",
+      "clear": "Limpar",
+      "indexingTitle": "Indexação e recuperação",
+      "chunkSizeLabel": "Tamanho do chunk",
+      "chunkOverlapLabel": "Sobreposição",
+      "topKLabel": "Top-K",
+      "rerankLabel": "Reordenar resultados",
+      "rerankHelp": "Refina a ordem dos trechos recuperados.",
+      "saving": "Salvando...",
+      "submitButton": "Salvar configurações",
+      "saveSuccess": "Configurações salvas",
+      "saveError": "Não foi possível salvar as configurações"
     }
   }
 }

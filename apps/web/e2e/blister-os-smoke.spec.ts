@@ -43,12 +43,21 @@ test.describe("Blister OS smoke routes", () => {
     ).toBeVisible();
   });
 
-  test("marketplace is empty in the cuts-only product", async ({
+  test("marketplace shows text style section", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard/marketplace");
     await expect(page.getByTestId("marketplace-page")).toBeVisible();
-    await expect(page.getByText("Nenhum item encontrado")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Estilos de Texto" }),
+    ).toBeVisible();
+  });
+
+  test("marketplace admin page renders for admin user", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/dashboard/marketplace/admin");
+    await expect(page.getByTestId("marketplace-admin-page")).toBeVisible();
   });
 
   test("a non-cuts agent route redirects to the dashboard home", async ({

@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../src/generated/prisma';
+import { PrismaClient } from '@company-os/db';
 
 let prismaInstance: PrismaClient | null = null;
 

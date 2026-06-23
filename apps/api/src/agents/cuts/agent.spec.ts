@@ -1,7 +1,9 @@
-import { AgentTestHarness } from '@company-os/agent-sdk/testing';
+import { AgentTestHarness } from '@company-os/agent-ia-sdk/agents/testing';
 import { cutsAgent } from './agent';
 import {
   createStubCutsRunDeps,
+} from '../../../test/helpers/stub-cuts-run-deps';
+import {
   resetCutsRunDeps,
   setCutsRunDeps,
 } from './ports/cuts-run-deps';

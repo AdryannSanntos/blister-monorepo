@@ -75,6 +75,7 @@ export type AppPermissionKey =
   // Marketplace
   | 'marketplace.read'
   | 'marketplace.redeem'
+  | 'marketplace.manage'
   | 'library.read'
   // Credits
   | 'credit.read'
@@ -119,6 +120,7 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'agentRun.review',
   'marketplace.read',
   'marketplace.redeem',
+  'marketplace.manage',
   'library.read',
   'credit.read',
   'generation.create',
@@ -187,6 +189,7 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'agentRun.review': ['update', 'AgentRun'],
   'marketplace.read': ['read', 'MarketplaceItem'],
   'marketplace.redeem': ['create', 'MarketplaceItem'],
+  'marketplace.manage': ['manage', 'MarketplaceItem'],
   'library.read': ['read', 'LibraryItem'],
   'credit.read': ['read', 'Credit'],
   'generation.create': ['create', 'Generation'],
@@ -259,6 +262,7 @@ export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): A
         'piece.approve',
         'piece.update',
         'agentRun.review',
+        'marketplace.manage',
       ];
     case 'creator':
     case 'member':

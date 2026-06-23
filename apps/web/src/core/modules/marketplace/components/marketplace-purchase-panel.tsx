@@ -2,7 +2,8 @@
 
 import { CheckCircle2, Coins, Library, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useBlisterOsStore } from "src/core/modules/blister-os/stores/blister-os-store";
+
+import { useCredits } from "src/core/modules/credits/hooks/use-credits";
 import { MarketplaceStyleThumb } from "src/core/shared/components/blister/marketplace-style-thumb";
 import { PriceBadge } from "src/core/shared/components/blister/price-badge";
 import { RedeemButton } from "src/core/shared/components/blister/redeem-button";
@@ -12,7 +13,9 @@ import { Card, CardContent } from "src/core/shared/components/ui/card";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { Link } from "@/i18n/routing";
-import type { MarketplaceItemView } from "../hooks/use-marketplace-mock";
+
+import type { MarketplaceItemView } from "../hooks/use-marketplace";
+import { getCreditBalance } from "../utils/marketplace-catalog.utils";
 
 type MarketplacePurchasePanelProps = {
   item: MarketplaceItemView;
@@ -22,7 +25,8 @@ export const MarketplacePurchasePanel = ({
   item,
 }: MarketplacePurchasePanelProps) => {
   const t = useTranslations("marketplace.detail");
-  const credits = useBlisterOsStore((state) => state.credits);
+  const { data: creditsData } = useCredits();
+  const credits = getCreditBalance(creditsData?.balance.amount);
   const owned = Boolean(item.owned);
   const balanceAfter = item.price > 0 ? credits - item.price : credits;
   const canAfford = item.price === 0 || credits >= item.price;
@@ -34,16 +38,7 @@ export const MarketplacePurchasePanel = ({
 
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <PriceBadge
-              item={item}
-              ownedState={
-                owned
-                  ? item.price === 0
-                    ? "redeemed"
-                    : "purchased"
-                  : undefined
-              }
-            />
+            <PriceBadge item={item} owned={owned} />
             {item.flag ? (
               <Badge variant="outline" className="uppercase">
                 {item.flag}

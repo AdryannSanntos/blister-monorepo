@@ -20,7 +20,7 @@ import {
   AGENTS_CATALOG,
   DEFAULT_AGENT_IDS,
 } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
-import { useLibraryItems } from "src/core/modules/marketplace/hooks/use-marketplace-mock";
+import { useLibraryItems } from "src/core/modules/marketplace/hooks/use-marketplace";
 import type { SidebarGroupDef } from "src/core/shared/components/ui/app-sidebar";
 
 const STUDIO_ICONS = {
@@ -34,8 +34,8 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
   const { data: libraryItems = [] } = useLibraryItems();
   const ownedCount = libraryItems.length;
   const ownedAgentIds = libraryItems
-    .filter((item) => item.type === "agent" && item.agentId)
-    .map((item) => item.agentId as string);
+    .filter((item) => item.type === "agent" && item.refId)
+    .map((item) => item.refId as string);
 
   const marketplaceAgents = useMemo(
     () =>

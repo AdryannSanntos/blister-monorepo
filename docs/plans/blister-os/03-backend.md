@@ -5,13 +5,68 @@
 
 ## Objetivo
 
-Implementar **API, Prisma, RAG, agent-sdk e agentes** seguindo padrões do monorepo (NestJS, CASL, Zod, Trigger.dev).
+Implementar **API, Prisma, agent-sdk e agente `cuts`** seguindo padrões do monorepo (NestJS, CASL, Zod).
 
 **Regra:** implementar o que o **frontend já definiu** — seção [Contrato com o Frontend](#contrato-com-o-frontend) é atualizada pelo Plano 2.
 
 **Contexto:** o Plano 2 entrega UI **sem nenhuma integração** — só dados fake funcionais. Este plano constrói a API e, na Fase 3.7, substitui os mocks.
 
-**SDK monolith:** zero lógica de agente em `apps/api/src/agents/{agentId}/`.
+**Separação hard:** o módulo `ia/` do SDK contém **toda** lógica de IA (LLM, RAG, embedding, model resolver, assemblyai STT, caption, chunk, ingestion, retrieval). O backend não tem nenhuma lógica de IA — só rotas HTTP, guards, DTOs, workflow engine, SSE e créditos.
+
+---
+
+## Fronteira backend ↔ SDK
+
+```
+apps/api/src/           packages/agent-sdk/src/
+──────────────          ──────────────────────────
+controllers/            ia/
+  agents/                 llm/           ← providers, model resolver, platform client
+  files/                  rag/           ← ingestion, retrieval, embedding, chunk
+  marketplace/            stt/           ← assemblyai STT adapter
+  ...                     caption/       ← image caption
+  guards/                 context/       ← ContextPackBuilder implementation
+  dtos/               agents/
+agents/adapters/          cuts/          ← agent.ts, steps, prompts, schemas, learning
+  prisma-run-store       (future: planning, script, thumbnail...)
+  sdk-step              core/            ← kernel, AgentBuilder, executeRun
+  usage-reporter        steps/           ← createLlmCallStep, createPauseStep, ...
+workflow-engine         stream/
+sse/                    testing/
+credits/
+```
+
+**O que NUNCA vai em `apps/api`:** LLM calls, RAG queries, embedding, STT, caption, model selection, prompt building, step logic.
+
+---
+
+## Limpeza obrigatória (executar antes da Fase 3.3)
+
+### Deletar do backend
+
+```
+apps/api/src/ai-runtime/     ← mover todo conteúdo para packages/agent-sdk/src/ia/
+apps/api/src/rag/            ← mover todo conteúdo para packages/agent-sdk/src/ia/rag/
+```
+
+### Adapters que se movem para o SDK
+
+Os seguintes arquivos em `apps/api/src/agents/adapters/` contêm lógica de IA e devem ir para o SDK:
+
+| Arquivo atual (API) | Destino (SDK) |
+|---------------------|---------------|
+| `brand-profile.mapper.ts` | `packages/agent-sdk/src/ia/context/brand-profile.mapper.ts` |
+| `context-pack-builder.adapter.ts` | `packages/agent-sdk/src/ia/context/context-pack-builder.ts` |
+| `asset-resolver.adapter.ts` | `packages/agent-sdk/src/ia/assets/asset-resolver.ts` |
+
+### Ficam no backend (wiring puro, sem IA)
+
+```
+apps/api/src/agents/adapters/
+  prisma-run-store.adapter.ts    ← persiste runs/steps no Prisma
+  sdk-step.adapter.ts            ← wiring step executor → NestJS
+  usage-reporter.adapter.ts      ← débito créditos via CreditService
+```
 
 ---
 
@@ -102,16 +157,16 @@ _Schema: evoluir `Campaign` ou novo `Project` — decidir ao integrar._
 | Approve/reject/edit | POST/PATCH | `/api/agents/runs/:runId/*` | LIVE |
 | Histórico | GET | `/api/agents/:agentId/runs` | LIVE |
 
-**Agent IDs (canônicos):**
+**Agent IDs (MVP — somente `cuts` implementado agora):**
 
-| ID | Tier | UI (Plano 2) |
-|----|------|----------------|
-| `video_editor` | default | wizard 4 steps |
-| `cuts` | default | wizard cortes |
-| `research` | default | brief + entregas |
-| `planning` | marketplace | AgentPage |
-| `script` | marketplace | AgentPage |
-| `thumbnail` | marketplace | AgentPage |
+| ID | Tier | UI (Plano 2) | Status |
+|----|------|----------------|--------|
+| `cuts` | default | wizard cortes | **implementar agora** |
+| `planning` | marketplace | AgentPage | futuro |
+| `script` | marketplace | AgentPage | futuro |
+| `thumbnail` | marketplace | AgentPage | futuro |
+
+> **Nota:** `research` e `video_editor` são IDs reservados para fases futuras — não implementar neste plano.
 
 **Deprecar:** `post`, `strategist`, `copywriter`, `designer` no catálogo ativo.
 
@@ -133,7 +188,7 @@ _Schema: evoluir `Campaign` ou novo `Project` — decidir ao integrar._
 | Data | Mudança | Autor |
 |------|---------|-------|
 | 2026-06-12 | Baseline inicial a partir do plano monólito + reference HTML | — |
-| | | |
+| 2026-06-22 | Separação hard IA→SDK, somente `cuts` no MVP, deletar ai-runtime/rag do backend | — |
 
 ---
 
@@ -179,83 +234,97 @@ Atualizar [`packages/authz`](../../../packages/authz/src/index.ts): 5 roles, per
 
 ---
 
-## Fase 3.2 — Files + extract + RAG
+## Fase 3.2 — Files + extract (SDK ia/)
 
 1. `FilesService` + S3 paths por workspace/folder
-2. Trigger `file-extract-index.ts`
-3. RAG source `WORKSPACE_SETTINGS`, `WORKSPACE_FILE` (renomear `BRAND_BRAIN`)
-4. `ContextPackService` — settings + files + learning
+2. Trigger job `file-extract-index.ts` — chama extratores do SDK
+3. SDK `ia/rag/` expõe: `ingestDocument`, `indexChunks`, `retrieveContext`
+4. SDK `ia/stt/` expõe: `transcribeAudio` (assemblyai)
+5. SDK `ia/caption/` expõe: `captionImage`
+6. `ContextPackService` no SDK — settings + files + learning (lê via interfaces)
 
 Extratores MVP: PDF/TXT/MD, vídeo→STT, imagem→caption, SRT/VTT
 
+**Backend não chama IA diretamente** — enfileira job, SDK executa, persiste resultado via `WorkspaceFile.extractedData`.
+
 ---
 
-## Fase 3.3 — Agent SDK monolith
+## Fase 3.3 — Limpeza IA + SDK monolith
 
-Alinhar [`.cursor/plans/agent_sdk_monolith_ae991433.plan.md`](../../../.cursor/plans/agent_sdk_monolith_ae991433.plan.md).
+Executar a limpeza descrita em [Limpeza obrigatória](#limpeza-obrigatória-executar-antes-da-fase-33).
 
 ### Estrutura `packages/agent-sdk/src/`
 
 ```
+ia/
+  llm/          ← AiRuntimeService, providers (openrouter, gemini), model-resolver
+  rag/          ← ingestion, retrieval, embedding, chunk, document
+  stt/          ← assemblyai STT
+  caption/      ← image caption service
+  context/      ← ContextPackBuilder, brand-profile.mapper
+  assets/       ← asset-resolver
+
 agents/
-  research/, cuts/, video-editor/
-  planning/, script/, thumbnail/
+  cuts/         ← agent.ts, steps/, prompts/, schemas/, learning/
+  (future: planning/, script/, thumbnail/)
   _deprecated/
+
 marketplace/
   catalog.ts, entitlement-resolver.ts, redeem.ts
 ```
 
-### Migrar de `apps/api/src/agents/`
+### Adapters que ficam em `apps/api`
 
-- Toda pasta `{agentId}/` → SDK ou `_deprecated`
-- Manter em API: controllers, adapters, `workflow-engine.service.ts` fino
-
-### Adapters
-
-| Interface SDK | Implementação API |
-|---------------|-------------------|
-| `RunStore` | `prisma-run-store.adapter.ts` |
-| `EntitlementStore` | `prisma-entitlement-store.adapter.ts` |
-| `ContextPackBuilder` | `context-pack-builder.adapter.ts` |
-| `UsageReporter` | `usage-reporter.adapter.ts` → créditos |
-| `EventPublisher` | SSE / internal-events |
+| Interface SDK | Implementação API | Notas |
+|---------------|-------------------|-------|
+| `RunStore` | `prisma-run-store.adapter.ts` | CRUD Prisma puro |
+| `StepExecutor` | `sdk-step.adapter.ts` | wiring NestJS |
+| `UsageReporter` | `usage-reporter.adapter.ts` | débito créditos |
+| `EventPublisher` | `http-event-publisher.ts` (existente) | SSE |
 
 ---
 
-## Fase 3.4 — Agentes
+## Fase 3.4 — Agente `cuts`
 
-### Default (sem entitlement)
+### Steps do agente
 
-| Agente | Steps resumidos |
-|--------|-----------------|
-| `research` | context → analyze_trends → validate |
-| `cuts` | context → transcribe → identify_moments → validate |
-| `video_editor` | context → brief → plan_edit → pause → apply_edit → validate |
+| Step | Primitive SDK |
+|------|---------------|
+| `retrieve_context` | `createRetrieveContextStep()` |
+| `transcribe` | step custom → `ia/stt/transcribeAudio` |
+| `identify_moments` | `createLlmCallStep({ outputSchema: cutsOutputZod })` |
+| `validate_output` | `createValidationStep({ schema: cutsOutputZod })` |
 
-### Marketplace
+### Estrutura no SDK
 
-| Agente | Steps |
-|--------|-------|
-| `planning` | context → build_calendar → validate |
-| `script` | context → brief → write_script → validate |
-| `thumbnail` | context → concepts → variants → validate |
-
-Cada um: `learning/feedback-handler.ts` obrigatório.
+```
+packages/agent-sdk/src/agents/cuts/
+├── agent.ts              ← AgentBuilder: init, contexto, steps, learning
+├── schemas/
+│   ├── output.schema.ts  ← input, output, llmOutput (defineAgentSchemas)
+│   └── cuts.types.ts
+├── steps/
+│   └── transcribe.step.ts
+├── prompts/
+│   └── identify-moments.system.ts
+└── learning/
+    └── feedback-handler.ts   ← obrigatório
+```
 
 ### Integração frontend
 
 - Wizard pause → `POST /runs/:id/resume` com `formData` do step
 - Output files → criar `WorkspaceFile` em `Gerados/` (`origin: AGENT_RUN`)
-- SSE blocks → UI streaming (onde Plano 2 mantiver chat)
+- SSE blocks → UI streaming
 
 ---
 
 ## Fase 3.5 — Marketplace backend
 
-1. Seed `MarketplaceItem` (edit styles do reference + agentes)
+1. Seed `MarketplaceItem` (edit styles do reference + agentes futuros)
 2. `POST /marketplace/redeem` — débito créditos + `WorkspaceEntitlement`
 3. `EntitlementResolver` no SDK antes de `executeRun`
-4. Sync catálogo agentes: `tier` + `refId`
+4. Sync catálogo: somente `cuts` como default; marketplace IDs reservados
 
 ---
 
@@ -263,7 +332,7 @@ Cada um: `learning/feedback-handler.ts` obrigatório.
 
 - `SocialConnection` OAuth
 - Sync vídeos → `WorkspaceFile` em `Integrações/{platform}`
-- Agente `distribution` (marketplace)
+- Agentes futuros: `planning`, `script`, `thumbnail`, `distribution`
 
 ---
 
@@ -278,7 +347,7 @@ Ordem sugerida de trocar mocks por hooks reais (TanStack Query + `apiClient`):
 3. Files browse/upload
 4. Projects
 5. Agent catalog + entitlement gate
-6. Runs (wizards conectados)
+6. Runs — agente `cuts` conectado
 7. Extract + RAG feedback na UI (badges extraction status)
 
 Cada troca: atualizar status na tabela [Contrato](#contrato-com-o-frontend) para `LIVE`.
@@ -297,12 +366,15 @@ Cada troca: atualizar status na tabela [Contrato](#contrato-com-o-frontend) para
 
 - [ ] PersonalSpace + CompanyMember + 5 roles
 - [ ] WorkspaceSettings migrou BrandProfile
-- [ ] Files API + extract + RAG sources
+- [ ] `apps/api/src/ai-runtime/` deletado — conteúdo no SDK `ia/`
+- [ ] `apps/api/src/rag/` deletado — conteúdo no SDK `ia/rag/`
+- [ ] `brand-profile.mapper`, `context-pack-builder`, `asset-resolver` removidos dos adapters API
+- [ ] Files API + extract (SDK executa, backend enfileira)
 - [ ] Marketplace redeem + entitlements
 - [ ] SDK monolith; zero `{agentId}/` na API
-- [ ] 3 default + 3 marketplace agents operacionais
+- [ ] Agente `cuts` operacional (default, sem entitlement)
 - [ ] Contrato com Frontend: todos `LIVE`
-- [ ] Trigger.dev: `agent-run-execute`, `file-extract-index`
+- [ ] Trigger job: `agent-run-execute`, `file-extract-index`
 - [ ] Testes SDK: `pnpm --filter @company-os/agent-sdk test`
 
 ---
@@ -310,10 +382,33 @@ Cada troca: atualizar status na tabela [Contrato](#contrato-com-o-frontend) para
 ## O que não fazer
 
 - Integrar frontend com API **antes** da Fase 3.7 (Plano 2 = fake funcional apenas)
-- Lógica de step/prompt em `apps/api`
+- Qualquer lógica de IA em `apps/api` (LLM, RAG, embedding, STT, caption)
+- Manter `apps/api/src/ai-runtime/` ou `apps/api/src/rag/` após Fase 3.3
+- Implementar `research` ou `video_editor` neste plano — são agentes futuros
 - Novo hub `ContentPiece` / `/api/pecas`
 - `BrandProfile` / módulo `brand/` ativos
 - Endpoints não listados no Contrato sem atualizar Plano 2
+
+---
+
+## Arquitetura alvo (diagrama)
+
+```
+apps/api/                           packages/agent-sdk/
+──────────────────────────────      ──────────────────────────────────
+controllers/ (HTTP, guards, DTOs)   ia/
+agents/                               llm/ (providers, model-resolver)
+  adapters/                           rag/ (ingestion, retrieval, embed)
+    prisma-run-store ──────────────→  stt/ (assemblyai)
+    sdk-step         ──────────────→  caption/
+    usage-reporter   ──────────────→  context/ (ContextPackBuilder)
+workflow-engine ─────────────────→  agents/
+sse/                                  cuts/ (agent.ts, steps, schemas)
+credits/                            core/ (kernel, AgentBuilder)
+                                    steps/ (primitives)
+                                    stream/ (BlockEmitter)
+                                    testing/ (harness, stubs)
+```
 
 ---
 
@@ -323,3 +418,4 @@ Cada troca: atualizar status na tabela [Contrato](#contrato-com-o-frontend) para
 - [`docs/decisions/2026-06-09-agents-isolated-architecture.md`](../../decisions/2026-06-09-agents-isolated-architecture.md)
 - [`docs/skills/backend-skill.md`](../../skills/backend-skill.md)
 - [`docs/skills/agents-skill.md`](../../skills/agents-skill.md)
+- [`.cursor/plans/agent_sdk_monolith_ae991433.plan.md`](../../../.cursor/plans/agent_sdk_monolith_ae991433.plan.md)

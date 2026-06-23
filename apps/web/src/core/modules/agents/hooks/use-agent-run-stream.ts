@@ -135,7 +135,7 @@ export function useAgentRunStream(
         return;
       }
 
-      if (payload.type === "run_paused") {
+      if (payload.type === "run_paused" || payload.type === "step_completed") {
         void queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
       }
     };
@@ -159,6 +159,11 @@ export function useAgentRunStream(
       const eventTypes: AgentRunEvent["type"][] = [
         "run_started",
         "run_paused",
+        "step_started",
+        "step_completed",
+        "step_failed",
+        "cut_rendered",
+        "all_cuts_rendered",
         ...TERMINAL_EVENT_TYPES,
         ...BLOCK_EVENT_TYPES,
       ];

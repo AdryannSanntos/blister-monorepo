@@ -1,4 +1,4 @@
-import type { MemoryProvider } from '@company-os/agent-sdk';
+import type { MemoryProvider } from '@company-os/agent-ia-sdk/agents';
 
 /**
  * Memory provider for stable user/brand preferences (distinct from learning).

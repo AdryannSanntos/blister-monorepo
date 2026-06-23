@@ -1,5 +1,5 @@
 import { ensureWorkspaceAgentFolders } from '../files/workspace-folders.util';
-import type { Company, PrismaClient } from '../generated/prisma';
+import type { Company, PrismaClient } from '@company-os/db';
 
 type BootstrapUser = {
   id: string;

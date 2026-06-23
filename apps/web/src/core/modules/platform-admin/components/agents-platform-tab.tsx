@@ -168,6 +168,8 @@ export function AgentsPlatformTab() {
   return (
     <div className="flex flex-col gap-6">
       <DataTable
+        title={t("tableTitle")}
+        icon={Bot}
         columns={columns}
         data={agents}
         emptyState={{

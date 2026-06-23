@@ -1,43 +1,52 @@
 ---
-description: Agent logic lives only in packages/agent-sdk — API is HTTP + adapters
+description: Agent business logic in apps/api — agent-ia-sdk provides IA infrastructure only
 globs:
-  - packages/agent-sdk/**
+  - packages/agent-ia-sdk/**
   - apps/api/src/agents/**
 alwaysApply: true
 ---
 
-# Agent SDK Monolith
+# Agent architecture — backend + SDK split
 
 ## Rule
 
-**100% of agent business logic** lives in `packages/agent-sdk`.
+**100% of agent business logic** lives in `apps/api/src/agents/<agentId>/`:
 
-`apps/api/src/agents/` contains **only**:
+- Agent definitions (`agent.ts`, step executors, prompts)
+- Schemas and output normalization
+- `learning/feedback-handler.ts` (mandatory per agent)
+- Ports (`CutsRunDeps`, etc.) and Nest adapters that wire Prisma, storage, Trigger
 
-- HTTP controllers (`POST /api/agents/:agentId/run`, review endpoints)
-- Registry / loader (`agent-catalog.ts`)
-- Adapters injecting Prisma, RAG, credits, storage into SDK
+**`packages/agent-ia-sdk`** owns **IA infrastructure only**:
+
+- `ia/` — STT, LLM, image, embedding, RAG (providers + runtime)
+- `agents/` — workflow **kernel** (execute-run, AgentBuilder, generic steps like `createLlmCallStep`)
+
+The SDK must **not** contain agent-specific business logic (no `cuts` steps, prompts, or schemas).
 
 ## Forbidden in apps/api
 
-- Agent workflow steps with LLM calls
-- Step-specific prompt templates
-- `learning/feedback-handler.ts` implementations
-- `if (agentId === 'cuts')` business branches
+- Duplicate IA provider adapters (AssemblyAI, OpenRouter, Gemini) — use `sdk.ia.*` only
+- `ai-runtime/` or inline LLM/STT calls outside the SDK
 
-## Required per agent (SDK)
+## Allowed in apps/api (thin shell)
+
+- HTTP controllers (`POST /api/agents/:agentId/run`, review, SSE)
+- Registry / loader (`agent-catalog.ts`)
+- Adapters: Prisma run store, credits, storage, event publishers, `buildCutsRunDeps`
+- `WorkflowEngineService` orchestration (inline vs Trigger.dev)
+
+## Required per agent (apps/api)
 
 ```
-packages/agent-sdk/src/agents/<agentId>/
+apps/api/src/agents/<agentId>/
   agent.ts
   schemas/
   prompts/
+  steps/
   learning/feedback-handler.ts   ← mandatory
+  ports/                           ← deps interface + adapter wiring
 ```
-
-## Workflow kernel
-
-`WorkflowEngine` runs in SDK — see `docs/agents/workflow-engine.md`.
 
 ## Agent IDs (canonical)
 
@@ -46,9 +55,10 @@ Marketplace: `planning`, `script`, `thumbnail`, `distribution`
 
 ## When adding an agent
 
-1. Implement in SDK first
-2. Register in SDK catalog
-3. Thin Nest adapter + permission keys in authz
-4. Doc in `docs/agents/<agentId>/README.md`
+1. Implement business logic in `apps/api/src/agents/<agentId>/`
+2. Register in `agent-catalog.ts`
+3. Wire deps adapter + permission keys in authz
+4. Use `@company-os/agent-ia-sdk` for all `ia.*` calls
+5. Doc in `docs/agents/<agentId>/README.md`
 
-Never create `apps/api/src/agents/<agentId>/workflow.ts` with logic.
+Never put agent-specific workflow logic in `packages/agent-ia-sdk`.

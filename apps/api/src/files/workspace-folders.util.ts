@@ -2,7 +2,7 @@ import {
   WORKSPACE_AGENT_FOLDERS,
   workspaceAgentFolderSystemKey,
 } from '@company-os/types';
-import type { PrismaClient } from '../generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 
 type WorkspaceScope =
   | { personalSpaceId: string; companyId?: never }

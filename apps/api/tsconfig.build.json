@@ -7,5 +7,5 @@
       "@company-os/types": ["../../packages/types/dist/index.d.ts"]
     }
   },
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "trigger.config.ts", "trigger/**/*"]
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "trigger.config.ts", "trigger/**/*", "src/video/**/*"]
 }

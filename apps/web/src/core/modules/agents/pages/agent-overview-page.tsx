@@ -1,16 +1,13 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { useLocale } from "next-intl";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { AgentOverviewStats } from "src/core/modules/agents/components/agent-overview-stats";
-import { AgentUsageChart } from "src/core/modules/agents/components/agent-usage-chart";
+import { CutsResultsGrid } from "src/core/modules/agents/components/cuts/cuts-results-grid";
 import { useCutsOverview } from "src/core/modules/agents/hooks/use-cuts-overview";
 import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
-import { Heading } from "src/core/shared/components/ui/heading";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
-import { Paragraph } from "src/core/shared/components/ui/paragraph";
 
 type AgentOverviewPageProps = {
   agentSlug: string;
@@ -18,12 +15,13 @@ type AgentOverviewPageProps = {
 
 export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
   const agent = getAgentByRouteSlug(agentSlug);
-  const locale = useLocale();
-  const overview = useCutsOverview(locale);
+  const overview = useCutsOverview();
 
   if (!agent) {
     redirect("/dashboard");
   }
+
+  const isCutsAgent = agent.routeSlug === "cuts";
 
   return (
     <div data-testid="agent-overview-page" data-agent={agent.routeSlug}>
@@ -34,7 +32,7 @@ export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
         actions={<AgentNewRunButton routeSlug={agent.routeSlug} size="sm" />}
       >
         <AgentEntitlementGate agent={agent}>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             <AgentOverviewStats
               totalRuns={overview.stats.totalRuns}
               completedRuns={overview.stats.completedRuns}
@@ -42,31 +40,11 @@ export const AgentOverviewPage = ({ agentSlug }: AgentOverviewPageProps) => {
               creditsUsed={overview.stats.creditsUsed}
             />
 
-            <AgentUsageChart data={overview.stats.usageByDay} />
-
-            {overview.recentRuns.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                <Heading level="h6" as="h2">Recentes</Heading>
-                <ul className="flex flex-col gap-2">
-                  {overview.recentRuns.map((run) => (
-                    <li
-                      key={run.id}
-                      className="rounded-[var(--r-lg)] border border-[var(--line-default)] px-4 py-3"
-                    >
-                      <Paragraph className="font-medium">{run.title}</Paragraph>
-                      {run.preview ? (
-                        <Paragraph
-                          size="p6"
-                          tone="tertiary"
-                          className="mt-1 line-clamp-1"
-                        >
-                          {run.preview}
-                        </Paragraph>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {isCutsAgent ? (
+              <CutsResultsGrid
+                runs={overview.viewableRuns}
+                isLoading={overview.isLoading}
+              />
             ) : null}
           </div>
         </AgentEntitlementGate>

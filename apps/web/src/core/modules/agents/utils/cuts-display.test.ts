@@ -1,5 +1,6 @@
 import { withStableCutIds } from "./cuts-display";
 import type { CutOutput } from "@company-os/types";
+import { describe, expect, it } from "vitest";
 
 describe("withStableCutIds", () => {
   const baseCut = (id: string, index = 0): CutOutput => ({

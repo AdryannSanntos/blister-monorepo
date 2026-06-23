@@ -42,11 +42,42 @@ export const marketplaceItemTypeSchema = z.enum([
   'edit-style',
   'post-style',
   'caption-style',
+  'text-style',
   'pack',
   'template',
   'asset',
   'agent',
 ]);
+
+export type MarketplaceItemType = z.infer<typeof marketplaceItemTypeSchema>;
+
+/** Animation slugs implemented as Remotion compositions (see apps/api/src/video). */
+export const textStyleAnimationSchema = z.enum([
+  'neon-wave',
+  'clean-split',
+  'kinetic-bold',
+  'glass-blur',
+  'broadcast',
+]);
+
+export type TextStyleAnimation = z.infer<typeof textStyleAnimationSchema>;
+
+/**
+ * Render spec carried by a TEXT_STYLE marketplace item (`specs` json). Drives
+ * both the marketplace video preview and the Remotion overlay render.
+ * `fontSize` is the base size in px at 1080×1920 (9:16).
+ */
+export const textStyleSpecSchema = z.object({
+  previewUrl: z.union([z.string().url(), z.string().regex(/^\//)]),
+  animation: textStyleAnimationSchema,
+  fontFamily: z.string(),
+  fontSize: z.number().positive(),
+  color: z.string(),
+  bgColor: z.string().optional(),
+  shadowColor: z.string().optional(),
+});
+
+export type TextStyleSpec = z.infer<typeof textStyleSpecSchema>;
 
 export const marketplaceItemSchema = z.object({
   id: z.string(),
@@ -62,6 +93,8 @@ export const marketplaceItemSchema = z.object({
   includes: z.array(z.string()),
   refId: z.string().nullable(),
   owned: z.boolean().optional(),
+  /** Looping mp4 preview for animated styles (TEXT_STYLE). Absolute or site-relative path. */
+  previewUrl: z.union([z.string().url(), z.string().regex(/^\//)]).optional(),
 });
 
 export type MarketplaceItemDto = z.infer<typeof marketplaceItemSchema>;
@@ -71,6 +104,46 @@ export const redeemMarketplaceSchema = z.object({
 });
 
 export type RedeemMarketplaceDto = z.infer<typeof redeemMarketplaceSchema>;
+
+/** Admin view of a catalog item — includes the moderation `isActive` flag. */
+export const adminMarketplaceItemSchema = marketplaceItemSchema.extend({
+  isActive: z.boolean(),
+});
+
+export type AdminMarketplaceItemDto = z.infer<typeof adminMarketplaceItemSchema>;
+
+/** Create/update payload for the marketplace admin. `specs` is free-form json. */
+export const upsertMarketplaceItemSchema = z.object({
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/, 'slug must be kebab-case'),
+  type: marketplaceItemTypeSchema,
+  name: z.string().min(1),
+  author: z.string().min(1),
+  price: z.number().int().nonnegative().default(0),
+  flag: z.string().nullable().optional(),
+  description: z.string().default(''),
+  palette: z.array(z.string()).default([]),
+  specs: z.record(z.string(), z.unknown()).default({}),
+  includes: z.array(z.string()).default([]),
+  refId: z.string().nullable().optional(),
+  isActive: z.boolean().default(true),
+});
+
+export type UpsertMarketplaceItemDto = z.infer<typeof upsertMarketplaceItemSchema>;
+
+export const updateMarketplaceItemSchema = upsertMarketplaceItemSchema.partial();
+
+export type UpdateMarketplaceItemDto = z.infer<typeof updateMarketplaceItemSchema>;
+
+export const setMarketplaceItemActiveSchema = z.object({
+  isActive: z.boolean(),
+});
+
+export type SetMarketplaceItemActiveDto = z.infer<
+  typeof setMarketplaceItemActiveSchema
+>;
 
 export const projectSchema = z.object({
   id: z.string(),

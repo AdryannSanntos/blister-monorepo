@@ -224,7 +224,9 @@ export function PermissionsPage() {
               className="mt-6 animate-in fade-in duration-200"
             >
               <DataTable
-          columns={tableColumns}
+                title={t("tabs.roles")}
+                icon={Shield}
+                columns={tableColumns}
           data={roles}
           exportOptions={{
             fileName: "workspace-roles",

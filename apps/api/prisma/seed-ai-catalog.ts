@@ -1,4 +1,4 @@
-import { Prisma, type PrismaClient } from '../src/generated/prisma';
+import { Prisma, type PrismaClient } from '@company-os/db';
 
 export type SeedModelDefinition = {
   externalId: string;
@@ -14,6 +14,14 @@ const DEFAULT_OUTPUT_COST = '0.000400';
 
 /** AssemblyAI LLM Gateway models (chat/completions). Fetched live when API key is set. */
 export const ASSEMBLYAI_LLM_MODELS: SeedModelDefinition[] = [
+  {
+    externalId: 'gemini-1.5-flash',
+    name: 'Gemini 1.5 Flash (deprecated)',
+    inputCostPer1k: '0.000075',
+    outputCostPer1k: '0.000300',
+    capabilities: ['text', 'structured_output'],
+    isEnabled: false,
+  },
   { externalId: 'claude-opus-4-7', name: 'Claude Opus 4.7', inputCostPer1k: '0.005000', outputCostPer1k: '0.025000', capabilities: ['text', 'structured_output'] },
   { externalId: 'claude-opus-4-6', name: 'Claude Opus 4.6', inputCostPer1k: '0.005000', outputCostPer1k: '0.025000', capabilities: ['text', 'structured_output'] },
   { externalId: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', inputCostPer1k: '0.003000', outputCostPer1k: '0.015000', capabilities: ['text', 'structured_output'] },
@@ -159,6 +167,21 @@ function inferGeminiCapabilities(model: {
   return [...capabilities];
 }
 
+function mergeStaticModels(
+  fetched: SeedModelDefinition[],
+  staticModels: SeedModelDefinition[],
+): SeedModelDefinition[] {
+  const byId = new Map(fetched.map((model) => [model.externalId, model]));
+
+  for (const fallback of staticModels) {
+    if (!byId.has(fallback.externalId)) {
+      byId.set(fallback.externalId, fallback);
+    }
+  }
+
+  return [...byId.values()];
+}
+
 export async function fetchGeminiModels(): Promise<SeedModelDefinition[]> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -188,7 +211,7 @@ export async function fetchGeminiModels(): Promise<SeedModelDefinition[]> {
       return GEMINI_MODELS;
     }
 
-    return models.map((model) => {
+    const fetched = models.map((model) => {
       const externalId = model.name.replace(/^models\//, '');
       return {
         externalId,
@@ -198,6 +221,8 @@ export async function fetchGeminiModels(): Promise<SeedModelDefinition[]> {
         capabilities: inferGeminiCapabilities(model),
       };
     });
+
+    return mergeStaticModels(fetched, GEMINI_MODELS);
   } catch (error) {
     console.warn('  ⚠ Failed to fetch Gemini models, using static list', error);
     return GEMINI_MODELS;
@@ -238,7 +263,7 @@ export async function fetchAssemblyAiLlmModels(): Promise<SeedModelDefinition[]>
       ASSEMBLYAI_LLM_MODELS.map((model) => [model.externalId, model]),
     );
 
-    return models.map((model) => {
+    const fetched = models.map((model) => {
       const fallback = staticById.get(model.id);
       return {
         externalId: model.id,
@@ -248,6 +273,8 @@ export async function fetchAssemblyAiLlmModels(): Promise<SeedModelDefinition[]>
         capabilities: fallback?.capabilities ?? ['text', 'structured_output'],
       };
     });
+
+    return mergeStaticModels(fetched, ASSEMBLYAI_LLM_MODELS);
   } catch (error) {
     console.warn('  ⚠ Failed to fetch AssemblyAI LLM models, using static list', error);
     return ASSEMBLYAI_LLM_MODELS;
@@ -284,13 +311,15 @@ export async function fetchOpenRouterModels(): Promise<SeedModelDefinition[]> {
       return OPENROUTER_FALLBACK_MODELS;
     }
 
-    return models.map((model) => ({
+    const fetched = models.map((model) => ({
       externalId: model.id,
       name: model.name ?? model.id,
       inputCostPer1k: model.pricing?.prompt ?? DEFAULT_INPUT_COST,
       outputCostPer1k: model.pricing?.completion ?? DEFAULT_OUTPUT_COST,
       capabilities: inferOpenRouterCapabilities(model),
     }));
+
+    return mergeStaticModels(fetched, OPENROUTER_FALLBACK_MODELS);
   } catch (error) {
     console.warn('  ⚠ Failed to fetch OpenRouter models, using fallback list', error);
     return OPENROUTER_FALLBACK_MODELS;
@@ -338,6 +367,22 @@ async function upsertProviderModels(
   return modelIds;
 }
 
+async function requireModelId(
+  prisma: PrismaClient,
+  providerId: string,
+  externalId: string,
+): Promise<string> {
+  const model = await prisma.aiModel.findFirst({
+    where: { providerId, externalId },
+  });
+
+  if (!model) {
+    throw new Error(`Model "${externalId}" not seeded for provider ${providerId}`);
+  }
+
+  return model.id;
+}
+
 export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   console.log('→ Catálogo de IA...');
 
@@ -376,72 +421,52 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   const openaiId = providerIds.get('openai');
   const anthropicId = providerIds.get('anthropic');
 
-  if (!openrouterId) {
-    throw new Error('OpenRouter provider not seeded');
+  if (!openrouterId || !assemblyaiId || !assemblyaiSttId || !geminiId) {
+    throw new Error('Required AI providers not seeded');
   }
 
-  const fetchedOpenRouterModels = await fetchOpenRouterModels();
-  const openRouterModelsById = new Map(
-    fetchedOpenRouterModels.map((model) => [model.externalId, model]),
-  );
-
-  for (const fallback of OPENROUTER_FALLBACK_MODELS) {
-    if (!openRouterModelsById.has(fallback.externalId)) {
-      openRouterModelsById.set(fallback.externalId, fallback);
-    }
-  }
-
-  const openRouterModels = [...openRouterModelsById.values()];
-  const openrouterModelIds = await upsertProviderModels(
+  const openRouterModels = await fetchOpenRouterModels();
+  await upsertProviderModels(
     prisma,
     openrouterId,
     openRouterModels,
     !!process.env.OPENROUTER_API_KEY,
   );
 
-  if (geminiId) {
-    const geminiModels = await fetchGeminiModels();
-    await upsertProviderModels(
-      prisma,
-      geminiId,
-      geminiModels,
-      !!process.env.GEMINI_API_KEY,
-    );
-    console.log(`  • Gemini fetched: ${geminiModels.length} modelos`);
-  }
+  const geminiModels = await fetchGeminiModels();
+  await upsertProviderModels(
+    prisma,
+    geminiId,
+    geminiModels,
+    !!process.env.GEMINI_API_KEY,
+  );
+  console.log(`  • Gemini: ${geminiModels.length} modelos`);
 
   const assemblyaiEnabled = !!process.env.ASSEMBLYAI_API_KEY;
-  let assemblyaiSttModelIds = new Map<string, string>();
+  const assemblyaiLlmModels = await fetchAssemblyAiLlmModels();
+  await upsertProviderModels(
+    prisma,
+    assemblyaiId,
+    assemblyaiLlmModels,
+    assemblyaiEnabled,
+  );
+  console.log(`  • AssemblyAI LLM: ${assemblyaiLlmModels.length} modelos`);
 
-  if (assemblyaiId) {
-    const assemblyaiLlmModels = await fetchAssemblyAiLlmModels();
-    await upsertProviderModels(
-      prisma,
-      assemblyaiId,
-      assemblyaiLlmModels,
-      assemblyaiEnabled,
-    );
-    console.log(`  • AssemblyAI LLM: ${assemblyaiLlmModels.length} modelos`);
+  await prisma.aiModel.updateMany({
+    where: {
+      providerId: assemblyaiId,
+      capabilities: { has: 'speech' },
+    },
+    data: { isEnabled: false },
+  });
 
-    // Legacy: speech models were seeded under the LLM provider — disable them there.
-    await prisma.aiModel.updateMany({
-      where: {
-        providerId: assemblyaiId,
-        capabilities: { has: 'speech' },
-      },
-      data: { isEnabled: false },
-    });
-  }
-
-  if (assemblyaiSttId) {
-    assemblyaiSttModelIds = await upsertProviderModels(
-      prisma,
-      assemblyaiSttId,
-      ASSEMBLYAI_STT_MODELS,
-      assemblyaiEnabled,
-    );
-    console.log(`  • AssemblyAI STT: ${ASSEMBLYAI_STT_MODELS.length} modelos`);
-  }
+  const assemblyaiSttModelIds = await upsertProviderModels(
+    prisma,
+    assemblyaiSttId,
+    ASSEMBLYAI_STT_MODELS,
+    assemblyaiEnabled,
+  );
+  console.log(`  • AssemblyAI STT: ${ASSEMBLYAI_STT_MODELS.length} modelos`);
 
   if (openaiId) {
     await upsertProviderModels(prisma, openaiId, OPENAI_MODELS, false);
@@ -451,33 +476,17 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
     await upsertProviderModels(prisma, anthropicId, ANTHROPIC_MODELS, false);
   }
 
-  const textModel =
-    (openrouterModelIds.get('openai/gpt-4o-mini')
-      ? { id: openrouterModelIds.get('openai/gpt-4o-mini')! }
-      : null) ??
-    (await prisma.aiModel.findFirst({
-      where: {
-        providerId: openrouterId,
-        externalId: 'openai/gpt-4o-mini',
-      },
-    })) ??
-    (await prisma.aiModel.findFirst({
-      where: {
-        providerId: openrouterId,
-        capabilities: { has: 'text' },
-        NOT: { capabilities: { has: 'embedding' } },
-      },
-      orderBy: { inputCostPer1k: 'asc' },
-    }));
-
   const embeddingModel =
-    (openrouterModelIds.get('openai/text-embedding-3-small')
-      ? { id: openrouterModelIds.get('openai/text-embedding-3-small')! }
-      : null) ??
     (await prisma.aiModel.findFirst({
       where: {
         providerId: openrouterId,
         externalId: 'openai/text-embedding-3-small',
+      },
+    })) ??
+    (await prisma.aiModel.findFirst({
+      where: {
+        providerId: geminiId,
+        externalId: 'gemini-embedding-001',
       },
     })) ??
     (await prisma.aiModel.findFirst({
@@ -488,79 +497,60 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
       orderBy: { inputCostPer1k: 'asc' },
     }));
 
-  const textModelId = textModel?.id;
-  const embeddingModelId = embeddingModel?.id;
+  if (!embeddingModel) {
+    throw new Error('Required embedding model not seeded');
+  }
 
-  const geminiTextModel = await prisma.aiModel.findFirst({
-    where: { providerId: geminiId, externalId: 'gemini-2.5-flash' },
+  const cutsDefaultModelId = await requireModelId(
+    prisma,
+    assemblyaiId,
+    'gemini-2.5-flash-lite',
+  );
+  const cutsTranscriberModelId =
+    assemblyaiSttModelIds.get('universal-2') ??
+    (await requireModelId(prisma, assemblyaiSttId, 'universal-2'));
+
+  await prisma.agentModelPolicy.upsert({
+    where: { agentId: 'cuts' },
+    update: {
+      modelId: cutsDefaultModelId,
+      markupMultiplier: new Prisma.Decimal(1.2),
+      minCostPerRun: null,
+      isEnabled: true,
+    },
+    create: {
+      agentId: 'cuts',
+      modelId: cutsDefaultModelId,
+      markupMultiplier: new Prisma.Decimal(1.2),
+      minCostPerRun: null,
+      isEnabled: true,
+    },
   });
 
-  const resolvedTextModelId = textModelId ?? geminiTextModel?.id;
-  const resolvedEmbeddingModelId = embeddingModelId ?? geminiTextModel?.id;
-
-  if (!resolvedTextModelId || !resolvedEmbeddingModelId) {
-    throw new Error('Required text/embedding models not seeded');
-  }
-
-  const agentPolicies: Record<string, string> = {
-    research: resolvedTextModelId,
-    cuts: resolvedTextModelId,
-    video_editor: resolvedTextModelId,
-  };
-
-  const pipelineAgents = [
-    { agentId: 'research', sortOrder: 0 },
-    { agentId: 'cuts', sortOrder: 1 },
-    { agentId: 'video_editor', sortOrder: 2 },
-  ] as const;
-
-  for (const agent of pipelineAgents) {
-    const modelIdForAgent = agentPolicies[agent.agentId] ?? resolvedTextModelId;
-    await prisma.agentModelPolicy.upsert({
-      where: { agentId: agent.agentId },
-      update: {
-        modelId: modelIdForAgent,
-        markupMultiplier: new Prisma.Decimal(1.2),
-        isEnabled: true,
-      },
-      create: {
-        agentId: agent.agentId,
-        modelId: modelIdForAgent,
-        markupMultiplier: new Prisma.Decimal(1.2),
-        isEnabled: true,
-      },
-    });
-  }
-
-  const defaultSttModelId =
-    assemblyaiSttModelIds.get('universal-3-pro') ??
-    assemblyaiSttModelIds.get('universal-2');
-
-  if (defaultSttModelId) {
-    await prisma.agentStepModelPolicy.upsert({
-      where: {
-        agentId_stepKey: { agentId: 'cuts', stepKey: 'resolve_source' },
-      },
-      update: {
-        modelId: defaultSttModelId,
-        isEnabled: true,
-      },
-      create: {
-        agentId: 'cuts',
-        stepKey: 'resolve_source',
-        modelId: defaultSttModelId,
-        isEnabled: true,
-      },
-    });
-    console.log('  • Cuts transcriber: universal-3-pro (resolve_source)');
-  }
+  await prisma.agentStepModelPolicy.upsert({
+    where: {
+      agentId_stepKey: { agentId: 'cuts', stepKey: 'resolve_source' },
+    },
+    update: {
+      modelId: cutsTranscriberModelId,
+      isEnabled: true,
+    },
+    create: {
+      agentId: 'cuts',
+      stepKey: 'resolve_source',
+      modelId: cutsTranscriberModelId,
+      isEnabled: true,
+    },
+  });
 
   await prisma.ragPlatformSettings.update({
     where: { id: 'default' },
-    data: { embeddingModelId: resolvedEmbeddingModelId },
+    data: { embeddingModelId: embeddingModel.id },
   });
 
   console.log(`  • OpenRouter: ${openRouterModels.length} modelos`);
   console.log(`  • OpenAI: ${OPENAI_MODELS.length} modelos (catálogo)`);
   console.log(`  • Anthropic: ${ANTHROPIC_MODELS.length} modelos (catálogo)`);
+  console.log('  • Cuts default: gemini-2.5-flash-lite (AssemblyAI LLM Gateway)');
+  console.log('  • Cuts transcriber: universal-2 (resolve_source)');
 }

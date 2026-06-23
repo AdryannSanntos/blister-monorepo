@@ -61,6 +61,11 @@ export class CreditService {
 
   async getPersonalSummary(personalSpaceId: string) {
     const balance = await this.getPersonalBalance(personalSpaceId);
+    const ledger = await this.prisma.personalCreditLedger.findMany({
+      where: { personalSpaceId },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
     return {
       balance: {
         id: balance.id,
@@ -69,13 +74,79 @@ export class CreditService {
         currency: balance.currency,
         updatedAt: balance.updatedAt.toISOString(),
       },
-      ledger: [],
+      ledger,
     };
   }
 
   async getPersonalHistory(personalSpaceId: string, page: number, pageSize: number) {
     await this.getPersonalBalance(personalSpaceId);
-    return { items: [], total: 0, page, pageSize };
+    const skip = (page - 1) * pageSize;
+    const [items, total] = await Promise.all([
+      this.prisma.personalCreditLedger.findMany({
+        where: { personalSpaceId },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+      this.prisma.personalCreditLedger.count({ where: { personalSpaceId } }),
+    ]);
+    return { items, total, page, pageSize };
+  }
+
+  /**
+   * Spend grouped by agent over the last `days` window (DEBIT entries linked to
+   * an agent run). Works for both company and personal workspaces. Sorted by
+   * total spent, descending. Amounts are serialized as strings (USD = credits).
+   */
+  async getAgentSpend(
+    workspace:
+      | { type: 'company'; companyId: string }
+      | { type: 'personal'; personalSpaceId: string },
+    days = 30,
+  ) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    const rows =
+      workspace.type === 'company'
+        ? await this.prisma.creditLedger.findMany({
+            where: {
+              companyId: workspace.companyId,
+              type: 'DEBIT',
+              createdAt: { gte: since },
+              agentRunId: { not: null },
+            },
+            select: { amount: true, agentRunId: true, agentRun: { select: { agentId: true } } },
+          })
+        : await this.prisma.personalCreditLedger.findMany({
+            where: {
+              personalSpaceId: workspace.personalSpaceId,
+              type: 'DEBIT',
+              createdAt: { gte: since },
+              agentRunId: { not: null },
+            },
+            select: { amount: true, agentRunId: true, agentRun: { select: { agentId: true } } },
+          });
+
+    const byAgent = new Map<string, { total: number; runs: Set<string> }>();
+    for (const row of rows) {
+      const agentId = row.agentRun?.agentId;
+      if (!agentId) continue;
+      const entry = byAgent.get(agentId) ?? { total: 0, runs: new Set<string>() };
+      entry.total += Number(row.amount);
+      if (row.agentRunId) entry.runs.add(row.agentRunId);
+      byAgent.set(agentId, entry);
+    }
+
+    return {
+      windowDays: days,
+      items: Array.from(byAgent.entries())
+        .map(([agentId, { total, runs }]) => ({
+          agentId,
+          totalSpent: total.toFixed(4),
+          runs: runs.size,
+        }))
+        .sort((a, b) => Number(b.totalSpent) - Number(a.totalSpent)),
+    };
   }
 
   async getHistory(companyId: string, page: number, pageSize: number) {

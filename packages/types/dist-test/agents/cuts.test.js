@@ -14,6 +14,7 @@ const cuts_1 = require("./cuts");
         strict_1.default.equal(parsed.deleteSourceAfterRun, false);
         strict_1.default.equal(parsed.addCaptions, false);
         strict_1.default.equal(parsed.autoAcceptResults, true);
+        strict_1.default.equal(parsed.modelTier, 'basic');
     });
     (0, node_test_1.it)('requires captionStyleId when addCaptions is true', () => {
         const result = cuts_1.cutsAgentSettingsSchema.safeParse({
@@ -42,6 +43,42 @@ const cuts_1 = require("./cuts");
         });
         strict_1.default.equal(parsed.sourceFileId, 'file-123');
         strict_1.default.equal(parsed.settings.maxCuts, 5);
+        strict_1.default.equal(parsed.settings.modelTier, 'basic');
+    });
+    (0, node_test_1.it)('accepts optional run options', () => {
+        const parsed = cuts_1.cutsRunInputSchema.parse({
+            userInput: 'Generate cuts',
+            sourceFileId: 'file-123',
+            settings: {},
+            options: {
+                videoGenre: 'podcast',
+                processingTimeframe: { startSec: 0, endSec: 600 },
+            },
+        });
+        strict_1.default.equal(parsed.options?.videoGenre, 'podcast');
+        strict_1.default.equal(parsed.options?.processingTimeframe?.endSec, 600);
+    });
+});
+(0, node_test_1.describe)('normalizeCutsModelTier', () => {
+    (0, node_test_1.it)('keeps basic tier', () => {
+        strict_1.default.equal((0, cuts_1.normalizeCutsModelTier)('basic'), 'basic');
+    });
+    (0, node_test_1.it)('normalizes auto and pro to basic', () => {
+        strict_1.default.equal((0, cuts_1.normalizeCutsModelTier)('auto'), 'basic');
+        strict_1.default.equal((0, cuts_1.normalizeCutsModelTier)('pro'), 'basic');
+    });
+});
+(0, node_test_1.describe)('cutsRunOptionsSchema', () => {
+    (0, node_test_1.it)('accepts empty options', () => {
+        const parsed = cuts_1.cutsRunOptionsSchema.parse({});
+        strict_1.default.equal(parsed.videoGenre, undefined);
+    });
+    (0, node_test_1.it)('rejects invalid timeframe window via processingTimeframe', () => {
+        const result = cuts_1.cutsProcessingTimeframeSchema.safeParse({
+            startSec: 100,
+            endSec: 50,
+        });
+        strict_1.default.equal(result.success, false);
     });
 });
 (0, node_test_1.describe)('cutOutputSchema', () => {

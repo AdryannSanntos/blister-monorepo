@@ -14,5 +14,8 @@
     "src/**/*.ts",
     "test/**/*.ts",
     "trigger.config.ts"
+  ],
+  "exclude": [
+    "src/video/**/*"
   ]
 }

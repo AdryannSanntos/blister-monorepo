@@ -1,0 +1,50 @@
+---
+description: Use shared StatusModal for success, error, and alert feedback — never ad-hoc status dialogs
+globs: apps/web/**/*
+alwaysApply: false
+---
+
+# Status feedback — use StatusModal
+
+When showing **success**, **error**, or **alert/warning** outcome to the user (after an action, submission, or background job start):
+
+- Use `StatusModal` from `src/core/shared/components/ui/status-modal.tsx`
+- Do **not** create feature-specific status dialogs (no duplicate modal markup)
+- Do **not** use inline alerts alone when the outcome deserves a dedicated modal (e.g. run started, upload failed)
+
+## Variants
+
+| Variant | Use when |
+|---------|----------|
+| `success` | Action completed or started successfully |
+| `error` | Action failed; offer retry when applicable |
+| `alert` | Non-blocking warning or attention needed |
+
+## Layout
+
+1. **Surface icon** — colored by variant (`success` green, `error` red, `alert` yellow) via `SurfaceIcon`
+2. **Title** + **description**
+3. **Optional content** (`children`) — omit when title + description are enough (e.g. agent run started)
+4. **Footer actions** — primary + secondary buttons
+
+## Pattern
+
+```tsx
+import { StatusModal } from "src/core/shared/components/ui/status-modal";
+
+<StatusModal
+  open={open}
+  variant="success"
+  title={t("title")}
+  description={t("description")}
+  onClose={handleClose}
+  secondaryAction={{ label: t("close"), onClick: handleClose }}
+  primaryAction={{ label: t("continue"), onClick: handleContinue }}
+>
+  {/* optional — only when extra body is needed */}
+</StatusModal>
+```
+
+Feature modules may wrap `StatusModal` with domain i18n (see `cuts-run-status-modal.tsx`) — the shared component owns surface icon, layout, and footer actions. Agent status modals should **not** pass `children`.
+
+Reference: `confirmation-dialog.tsx` for dialog conventions; `dialog.tsx` primitives.

@@ -8,6 +8,7 @@ import {
   Cpu,
   Headphones,
   Shield,
+  Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -75,6 +76,14 @@ export function usePlatformAdminNavItems(): PlatformAdminNavItem[] {
         description: t("aiCatalogDescription"),
         titleKey: "aiCatalogPage.title",
         descriptionKey: "aiCatalogPage.description",
+      },
+      {
+        value: "system-ai",
+        label: t("systemAi"),
+        icon: Sparkles,
+        description: t("systemAiDescription"),
+        titleKey: "systemAiPage.title",
+        descriptionKey: "systemAiPage.description",
       },
       {
         value: "credits",

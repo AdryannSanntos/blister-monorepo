@@ -1,4 +1,4 @@
-import { Prisma } from '../../src/generated/prisma';
+import { Prisma } from '@company-os/db';
 import { getTestPrisma } from './test-database';
 import { createHash } from 'crypto';
 
@@ -28,14 +28,13 @@ export interface TestSeedResult {
     minRunCost: number;
   };
   providers: {
-    openrouterId: string;
+    assemblyaiId: string;
     geminiId: string;
   };
   models: {
-    gpt4oMiniId: string;
+    cutsDefaultModelId: string;
     embeddingModelId: string;
-    geminiFlashId: string;
-    geminiEmbeddingId: string;
+    cutsTranscriberModelId: string;
   };
 }
 
@@ -138,38 +137,35 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
     },
   });
 
-  const openrouterProvider = await prisma.aiProvider.findUnique({
-    where: { slug: 'openrouter' },
+  const assemblyaiProvider = await prisma.aiProvider.findUnique({
+    where: { slug: 'assemblyai' },
+  });
+  const assemblyaiSttProvider = await prisma.aiProvider.findUnique({
+    where: { slug: 'assemblyai-stt' },
   });
   const geminiProvider = await prisma.aiProvider.findUnique({
     where: { slug: 'gemini' },
   });
 
-  const gpt4oMini = openrouterProvider
+  const cutsDefaultModel = assemblyaiProvider
     ? await prisma.aiModel.findFirst({
         where: {
-          providerId: openrouterProvider.id,
-          externalId: 'openai/gpt-4o-mini',
+          providerId: assemblyaiProvider.id,
+          externalId: 'gemini-2.5-flash-lite',
         },
       })
     : null;
 
-  const embeddingModel = openrouterProvider
+  const cutsTranscriberModel = assemblyaiSttProvider
     ? await prisma.aiModel.findFirst({
         where: {
-          providerId: openrouterProvider.id,
-          externalId: 'openai/text-embedding-3-small',
+          providerId: assemblyaiSttProvider.id,
+          externalId: 'universal-2',
         },
       })
     : null;
 
-  let geminiFlash = geminiProvider
-    ? await prisma.aiModel.findFirst({
-        where: { providerId: geminiProvider.id, externalId: 'gemini-2.5-flash' },
-      })
-    : null;
-
-  let geminiEmbedding = geminiProvider
+  const embeddingModel = geminiProvider
     ? await prisma.aiModel.findFirst({
         where: {
           providerId: geminiProvider.id,
@@ -177,34 +173,6 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
         },
       })
     : null;
-
-  if (geminiProvider && !geminiFlash) {
-    geminiFlash = await prisma.aiModel.create({
-      data: {
-        providerId: geminiProvider.id,
-        externalId: 'gemini-2.5-flash',
-        name: 'Gemini 2.5 Flash',
-        isEnabled: true,
-        inputCostPer1k: new Prisma.Decimal('0.000075'),
-        outputCostPer1k: new Prisma.Decimal('0.00030'),
-        capabilities: ['text', 'structured_output'],
-      },
-    });
-  }
-
-  if (geminiProvider && !geminiEmbedding) {
-    geminiEmbedding = await prisma.aiModel.create({
-      data: {
-        providerId: geminiProvider.id,
-        externalId: 'gemini-embedding-001',
-        name: 'Gemini Embedding',
-        isEnabled: true,
-        inputCostPer1k: new Prisma.Decimal('0.000025'),
-        outputCostPer1k: new Prisma.Decimal('0'),
-        capabilities: ['embedding'],
-      },
-    });
-  }
 
   return {
     company: {
@@ -230,14 +198,13 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
         : 0.01,
     },
     providers: {
-      openrouterId: openrouterProvider?.id ?? '',
+      assemblyaiId: assemblyaiProvider?.id ?? '',
       geminiId: geminiProvider?.id ?? '',
     },
     models: {
-      gpt4oMiniId: gpt4oMini?.id ?? '',
+      cutsDefaultModelId: cutsDefaultModel?.id ?? '',
       embeddingModelId: embeddingModel?.id ?? '',
-      geminiFlashId: geminiFlash?.id ?? '',
-      geminiEmbeddingId: geminiEmbedding?.id ?? '',
+      cutsTranscriberModelId: cutsTranscriberModel?.id ?? '',
     },
   };
 }

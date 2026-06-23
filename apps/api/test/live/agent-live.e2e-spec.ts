@@ -11,7 +11,7 @@ import { seedTestDatabase, TestSeedResult } from '../setup/test-seed';
 import { loginAsDemoBusiness, AuthenticatedSession } from '../setup/auth.helper';
 import { getCreditSnapshot, assertCreditLedger } from '../helpers/assert-credit-ledger';
 import { assertAgentLearningIndexed } from '../helpers/assert-rag-indexed';
-import type { PrismaClient } from '../../src/generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 
 const LIVE_TIMEOUT = 120000;
 

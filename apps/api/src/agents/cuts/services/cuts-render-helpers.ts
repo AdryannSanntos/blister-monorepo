@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../../../generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 import type { WorkspaceStorageRoot } from '../../../files/workspace-storage.util';
 
 export type WorkspaceScope =

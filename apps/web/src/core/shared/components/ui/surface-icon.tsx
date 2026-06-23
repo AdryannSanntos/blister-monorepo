@@ -3,9 +3,8 @@ import type * as React from "react";
 
 import { cn } from "src/core/shared/utils";
 
-type SurfaceIconProps = {
+type SurfaceIconProps = React.ComponentProps<"div"> & {
   icon: LucideIcon;
-  className?: string;
   iconClassName?: string;
 };
 
@@ -13,9 +12,11 @@ export function SurfaceIcon({
   icon: Icon,
   className,
   iconClassName,
+  ...props
 }: SurfaceIconProps) {
   return (
     <div
+      {...props}
       className={cn(
         "flex size-12 shrink-0 items-center justify-center rounded-[var(--r-md)] bg-[var(--accent-soft)] text-[var(--accent)]",
         className,

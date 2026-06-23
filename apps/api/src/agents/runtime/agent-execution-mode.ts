@@ -1,24 +1,15 @@
-export type AgentExecutionMode = 'inline-stub' | 'inline-live' | 'trigger';
+export type AgentExecutionMode = 'trigger';
 
-/** Shared execution mode resolution — must match WorkflowEngineService defaults. */
+/** All agent runs execute via Trigger.dev workers. */
 export const resolveAgentExecutionMode = (
   configuredMode?: string | null,
-  nodeEnv: string = process.env.NODE_ENV ?? 'development',
-  fallback?: AgentExecutionMode,
 ): AgentExecutionMode => {
-  if (
-    configuredMode === 'inline-stub' ||
-    configuredMode === 'inline-live' ||
-    configuredMode === 'trigger'
-  ) {
-    return configuredMode;
+  if (configuredMode && configuredMode !== 'trigger') {
+    throw new Error(
+      `Unsupported AGENT_EXECUTION_MODE="${configuredMode}". Only "trigger" is supported.`,
+    );
   }
-
-  if (fallback) {
-    return fallback;
-  }
-
-  return nodeEnv === 'production' ? 'trigger' : 'inline-live';
+  return 'trigger';
 };
 
 export const readAgentExecutionMode = (): AgentExecutionMode =>

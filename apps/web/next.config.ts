@@ -11,9 +11,23 @@ const internalApiBaseUrl = (
 ).replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@company-os/authz", "@company-os/types"],
+  transpilePackages: ["@company-os/authz", "@company-os/types", "@vidstack/react"],
   turbopack: {
     root: path.join(__dirname, "../.."),
+  },
+  async redirects() {
+    return [
+      {
+        source: "/:locale/dashboard/brand",
+        destination: "/:locale/dashboard/settings",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/brand",
+        destination: "/dashboard/settings",
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     return [

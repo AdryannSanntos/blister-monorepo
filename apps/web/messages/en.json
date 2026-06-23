@@ -256,6 +256,7 @@
     "marketplace": "Marketplace",
     "library": "Library",
     "files": "Files",
+    "projects": "Projects",
     "dashboard": "Dashboard",
     "agents": "Agents",
     "myAgents": "My agents",
@@ -306,10 +307,13 @@
     "includes": "What's included",
     "related": "You may also like",
     "relatedDescription": "Similar items to complement your workflow.",
-    "redeemFree": "Redeem for free",
+    "redeemFree": "Add to library",
     "redeemPaid": "Redeem for {price} credits",
     "redeemAria": "Redeem {name}",
-    "alreadyOwned": "Already in library",
+    "addToLibrary": "Add to library",
+    "installed": "Installed",
+    "alreadyOwned": "Installed",
+    "adminLink": "Manage",
     "redeemSuccess": "{name} added to library",
     "redeemFailed": "Could not redeem",
     "pricing": {
@@ -373,7 +377,7 @@
     "card": {
       "free": "Free",
       "credits": "{price} credits",
-      "owned": "In library",
+      "owned": "Installed",
       "viewDetails": "View details",
       "byAuthor": "by {author}",
       "openItem": "Open {name}",
@@ -396,6 +400,7 @@
       "editStyle": "Edit Styles",
       "postStyle": "Post Styles",
       "captionStyle": "Caption styles",
+      "textStyle": "Text styles",
       "pack": "Visual packs",
       "template": "Templates",
       "asset": "Creative assets",
@@ -405,6 +410,7 @@
       "editStyle": "Pace, caption and transition presets to speed up video editing.",
       "postStyle": "Ready-made layouts for static posts and social carousels.",
       "captionStyle": "Caption styles and typography to keep a consistent look.",
+      "textStyle": "Title and overlay animations for vertical cuts.",
       "pack": "Visual sets with palette, typography and graphic elements.",
       "template": "Reusable templates to accelerate recurring production.",
       "asset": "Standalone creative resources to compose your pieces.",
@@ -414,6 +420,42 @@
       "prev": "Previous",
       "next": "Next"
     }
+  },
+  "marketplaceAdmin": {
+    "title": "Marketplace admin",
+    "description": "Manage catalog items, pricing and availability.",
+    "accessDeniedTitle": "Restricted access",
+    "accessDeniedDescription": "Only workspace administrators can manage the marketplace.",
+    "backToMarketplace": "Back to marketplace",
+    "newItem": "New item",
+    "editItem": "Edit item",
+    "createItem": "Create item",
+    "saveItem": "Save",
+    "cancel": "Cancel",
+    "nameColumn": "Name",
+    "typeColumn": "Type",
+    "priceColumn": "Price",
+    "statusColumn": "Status",
+    "actionsColumn": "Actions",
+    "active": "Active",
+    "inactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "edit": "Edit",
+    "slug": "Slug",
+    "author": "Author",
+    "flag": "Flag",
+    "descriptionField": "Description",
+    "palette": "Palette (comma-separated hex)",
+    "includes": "Includes (one per line)",
+    "refId": "Ref ID",
+    "isActive": "Active in catalog",
+    "specsJson": "Specs (JSON)",
+    "specsJsonError": "Invalid JSON",
+    "createSuccess": "Item created",
+    "updateSuccess": "Item updated",
+    "statusSuccess": "Status updated",
+    "saveFailed": "Could not save"
   },
   "library": {
     "title": "Library",
@@ -584,6 +626,7 @@
       "generating": "Transcribing and generating cuts...",
       "finishingRenders": "Finishing cut videos...",
       "starting": "Starting...",
+      "waitingInQueue": "Queued — waiting for worker...",
       "start": "Generate cuts",
       "submitting": "Saving review...",
       "submitReview": "Confirm review",
@@ -613,7 +656,30 @@
       "stepTranscribe": "Transcribing video",
       "stepRankCuts": "Generating cuts",
       "preparingRender": "Preparing render...",
-      "renderingCuts": "Rendering cuts ({done}/{total})"
+      "renderingCuts": "Rendering cuts ({done}/{total})",
+      "options": {
+        "title": "Generation options",
+        "modelTierLabel": "Model",
+        "comingSoon": "Coming soon",
+        "modelTier": {
+          "basic": "Basic",
+          "auto": "Auto",
+          "pro": "Pro"
+        },
+        "genreLabel": "Video genre",
+        "genrePlaceholder": "Select a genre (optional)",
+        "genre": {
+          "podcast": "Podcast",
+          "live": "Live",
+          "tutorial": "Tutorial",
+          "interview": "Interview",
+          "vlog": "Vlog",
+          "storytelling": "Storytelling",
+          "other": "Other"
+        },
+        "timeframeLabel": "Processing window",
+        "timeframeHint": "Limit which part of the video is analyzed."
+      }
     },
     "review": {
       "cutsListLabel": "Generated cuts",
@@ -624,18 +690,46 @@
       "viralScore": "{score}% potential",
       "clipReady": "Ready",
       "approve": "Accept",
-      "reject": "Reject"
+      "reject": "Reject",
+      "cutsCount": "{count, plural, =1 {1 cut} other {# cuts}}",
+      "avgScore": "Avg. potential {score}%",
+      "rendering": "Rendering…",
+      "cutPosition": "Cut {index} of {total}",
+      "scoreLabel": "Viral potential",
+      "noDescription": "No description available.",
+      "prev": "Previous cut",
+      "next": "Next cut",
+      "decidedProgress": "{decided} of {total} decided",
+      "transcriptLabel": "Transcript",
+      "transcriptEmpty": "No transcript available for this cut.",
+      "speakerLabel": "Speaker {label}",
+      "tabVideo": "Video",
+      "tabTranscript": "Transcript",
+      "hintPlay": "play",
+      "hintCuts": "cuts",
+      "hintLines": "lines"
     },
     "statusModal": {
       "titleSuccess": "Generation started",
       "titleError": "Failed to start",
       "sourceLabel": "Source: {name}",
       "successStarted": "Your video was uploaded and cut generation has started.",
+      "successDescription": "Your video was uploaded and cut generation has started. Processing continues in the background — track progress in Recent runs on the overview.",
       "backgroundHint": "Processing continues in the background. Track progress in Recent runs on the overview.",
       "errorGeneric": "Could not upload the file or start generation.",
       "close": "Close",
       "retry": "Try again",
-      "viewOverview": "View overview"
+      "viewOverview": "View overview",
+      "viewExecution": "View execution"
+    },
+    "runDetail": {
+      "title": "Cut generation",
+      "sourceLabel": "Source: {name}",
+      "back": "Back",
+      "loading": "Loading run…",
+      "errorLoad": "Could not load this run.",
+      "reviewError": "Could not save your review.",
+      "activeHint": "Processing continues. You can leave and come back later."
     },
     "filePicker": {
       "title": "Select file",
@@ -643,24 +737,6 @@
       "empty": "No videos found in this folder.",
       "cancel": "Cancel",
       "confirm": "Use file"
-    },
-    "results": {
-      "title": "Results",
-      "description": "Completed runs from the Cut Generator.",
-      "count": "{count, plural, one {# run} other {# runs}}",
-      "loading": "Loading runs...",
-      "empty": "No completed runs yet.",
-      "emptyHint": "Generate cuts from a video to see results here.",
-      "viewCuts": "View cuts",
-      "actionsMenu": "Actions for {name}",
-      "columns": {
-        "source": "Source",
-        "status": "Status",
-        "cuts": "Cuts",
-        "approved": "Approved",
-        "date": "Date",
-        "credits": "Credits"
-      }
     }
   },
   "research": {
@@ -677,7 +753,22 @@
   },
   "history": {
     "title": "History",
-    "description": "Recent runs and deliverables (local demo)."
+    "description": "Recent runs and deliverables (local demo).",
+    "listTitle": "Recent activity",
+    "emptyTitle": "No activity yet",
+    "emptyDescription": "Your generations will show up here once you start a task.",
+    "untitledRun": "Untitled generation"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Each project groups the pieces and edits for one initiative.",
+    "listTitle": "Your projects",
+    "newProject": "New project",
+    "meta": "{count, plural, one {# piece} other {# pieces}} · updated {updatedAt}",
+    "status": {
+      "inProgress": "In progress",
+      "draft": "Draft"
+    }
   },
   "workspace": {
     "team": {
@@ -1120,7 +1211,7 @@
     "page": {
       "title": "Credits",
       "description": "Manage your balance, track usage, and understand the cost of each generation type.",
-      "primaryAction": "Create post",
+      "primaryAction": "Generate cuts",
       "lowBalanceAlert": {
         "title": "Low balance",
         "description": "Some generations may be blocked. Consider recharging before starting new creations."
@@ -1129,7 +1220,8 @@
         "balance": {
           "label": "Available balance",
           "hint": "Credits ready to use for your generations.",
-          "lowHint": "Critical balance. New generations may be blocked."
+          "lowHint": "Critical balance. New generations may be blocked.",
+          "freeTier": "Includes US$ {amount} of free usage"
         },
         "spent": {
           "label": "Usage (30 days)",
@@ -1197,6 +1289,16 @@
           "title": "No transactions yet",
           "description": "When you generate content or receive credits, history will appear here."
         }
+      },
+      "agentSpend": {
+        "title": "Spend by agent",
+        "description": "Last 30 days of usage grouped by agent.",
+        "windowLabel": "Last 30 days",
+        "runsLabel": "{count, plural, one {# run} other {# runs}}",
+        "empty": {
+          "title": "No usage yet",
+          "description": "Once you run an agent, its spend will show up here grouped by agent."
+        }
       }
     }
   },
@@ -1204,8 +1306,8 @@
     "nav": {
       "overview": "Overview",
       "history": "History",
-      "results": "Results",
       "newGeneration": "New run",
+      "runDetail": "Run",
       "settings": "Settings"
     },
     "cuts": "Generate cuts",
@@ -1228,8 +1330,26 @@
         "captionStylePlaceholder": "Select a style",
         "deleteSourceLabel": "Delete source after run",
         "deleteSourceHint": "Removes the original file from Files when done.",
+        "modelTierLabel": "Default model",
+        "modelTierHint": "Only Basic is available today. Auto and Pro are coming soon.",
+        "modelTierBasic": "Basic",
+        "modelTierAuto": "Auto",
+        "modelTierPro": "Pro",
+        "modelTierComingSoon": "Coming soon",
         "save": "Save",
-        "saved": "Settings saved"
+        "saved": "Settings saved",
+        "addTitleLabel": "Add title",
+        "addTitleHint": "Burns an animated title at the start of the cut.",
+        "titleStyleLabel": "Title style",
+        "titleDurationLabel": "Title duration (s)",
+        "titleDurationHint": "How long the title stays on screen (1–10s).",
+        "positioningLabel": "Positioning",
+        "positioningHint": "Drag to position the title and caption.",
+        "positioningDragHint": "T = title · C = caption",
+        "titleHandle": "Title",
+        "captionHandle": "Caption",
+        "stylePickerEmpty": "You don't have any text styles yet.",
+        "stylePickerBrowse": "Browse the Marketplace"
       }
     },
     "overview": {
@@ -1238,6 +1358,32 @@
       "recentTitle": "Recent runs",
       "usageTitle": "Usage in the last 7 days",
       "usageAria": "Runs chart for the last 7 days",
+      "runsGrid": {
+        "title": "Runs",
+        "sectionAria": "Runs from the Cuts generator",
+        "description": "Videos processed or in progress in this workspace.",
+        "count": "{count, plural, one {# run} other {# runs}}",
+        "loading": "Loading runs...",
+        "empty": "No runs yet.",
+        "emptyHint": "Generate cuts from a video to see results here.",
+        "statusProcessing": "Processing",
+        "statusFailed": "Failed",
+        "statusReview": "Review",
+        "processingProgress": "{percent}% complete",
+        "failedHint": "This run could not be completed.",
+        "viewCuts": "View cuts",
+        "actionsMenu": "Actions for {name}",
+        "cutsCount": "{count, plural, one {# cut} other {# cuts}}",
+        "openPreview": "Open {name}",
+        "cardMenu": {
+          "actionsMenu": "Actions for {name}",
+          "saveToStorage": "Save to storage",
+          "shareProject": "Share project",
+          "downloadSubtitles": "Download subtitles",
+          "downloadTranscript": "Download transcript",
+          "delete": "Delete"
+        }
+      },
       "stats": {
         "totalRuns": {
           "label": "Runs",
@@ -1259,10 +1405,12 @@
     },
     "historyTable": {
       "title": "History — {agent}",
+      "tableTitle": "Runs",
       "description": "All generations for this tool in the workspace.",
       "count": "{count, plural, one {# run} other {# runs}}",
       "empty": "No runs yet",
       "emptyHint": "Start a new generation to see history here.",
+      "untitledRun": "Untitled generation",
       "columns": {
         "title": "Request",
         "status": "Status",
@@ -1537,7 +1685,9 @@
       "rag": "RAG & AI",
       "ragDescription": "System AI models and indexing parameters.",
       "credits": "Credits",
-      "creditsDescription": "Credit settings and company balances."
+      "creditsDescription": "Credit settings and company balances.",
+      "systemAi": "System AI",
+      "systemAiDescription": "Embedding & caption models, chunking and retrieval"
     },
     "agentsPage": {
       "title": "Agents",
@@ -1557,6 +1707,7 @@
     },
     "adminsPage": {
       "title": "Global admins",
+      "tableTitle": "Access assignments",
       "description": "Manage who can operate the central platform admin. Keep this group small, auditable, and reviewed frequently.",
       "grantAccess": "Grant access",
       "assignments": "Assignments",
@@ -1635,6 +1786,7 @@
       "submitButton": "Save settings"
     },
     "agentsTab": {
+      "tableTitle": "Agents",
       "nameColumn": "Agent",
       "modelColumn": "AI model",
       "noModel": "No model",
@@ -1688,6 +1840,33 @@
       "balanceColumn": "Balance",
       "saveSuccess": "Credit settings saved",
       "saveError": "Error saving"
+    },
+    "systemAiPage": {
+      "title": "System AI",
+      "description": "Configure platform embedding, file captioning and RAG indexing"
+    },
+    "systemAiTab": {
+      "modelsTitle": "Models",
+      "embeddingLabel": "Project embedding",
+      "embeddingPlaceholder": "Select an embedding model",
+      "embeddingHelp": "Used to index and retrieve workspace content.",
+      "noEmbeddingModels": "No embedding models available",
+      "captionLabel": "File captioning",
+      "captionPlaceholder": "Select a model (optional)",
+      "captionHelp": "Generates file descriptions for search. Optional.",
+      "noTextModels": "No text models available",
+      "modelSearchPlaceholder": "Search model...",
+      "clear": "Clear",
+      "indexingTitle": "Indexing and retrieval",
+      "chunkSizeLabel": "Chunk size",
+      "chunkOverlapLabel": "Overlap",
+      "topKLabel": "Top-K",
+      "rerankLabel": "Rerank results",
+      "rerankHelp": "Refines the order of retrieved chunks.",
+      "saving": "Saving...",
+      "submitButton": "Save settings",
+      "saveSuccess": "Settings saved",
+      "saveError": "Could not save settings"
     }
   }
 }

@@ -1,9 +1,8 @@
-import type { MarketplaceItem } from "src/core/modules/blister-os/types/marketplace";
 import { Card, CardContent } from "src/core/shared/components/ui/card";
 import { Heading } from "src/core/shared/components/ui/heading";
 
 type MarketplaceItemSpecsCardProps = {
-  specs: NonNullable<MarketplaceItem["specs"]>;
+  specs: Record<string, string>;
   title: string;
 };
 

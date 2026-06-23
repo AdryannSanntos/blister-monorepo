@@ -47,6 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "src/core/shared/components/ui/dropdown-menu";
 import { TableEmptyState } from "src/core/shared/components/ui/empty-state";
+import { SurfaceIcon } from "src/core/shared/components/ui/surface-icon";
 import {
   Table,
   TableBody,
@@ -103,6 +104,10 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
   className?: string;
   containerClassName?: string;
+  /** Integrated panel title — rendered with `icon` inside the table container header. */
+  title: string;
+  icon: LucideIcon;
+  description?: string;
   toolbarStart?: React.ReactNode;
   toolbarEnd?: React.ReactNode;
   filters?: DataTableFilter<TData>[];
@@ -175,6 +180,9 @@ function DataTable<TData, TValue>({
   data,
   className,
   containerClassName,
+  title,
+  description,
+  icon,
   toolbarStart,
   toolbarEnd,
   filters = [],
@@ -306,7 +314,9 @@ function DataTable<TData, TValue>({
   const columnToggleItems = table
     .getAllLeafColumns()
     .filter((column) => column.getCanHide() && column.id !== "select" && column.id !== "actions");
-  const hasToolbar = Boolean(filters.length || toolbarStart || toolbarEnd || columnToggleItems.length);
+  const hasPanelHeader = Boolean(
+    title || description || filters.length || toolbarStart || toolbarEnd || columnToggleItems.length,
+  );
   const defaultBulkActions: DataTableBulkAction<TData>[] = exportOptions
     ? [
         { id: "export-csv", label: "Exportar CSV", icon: Download, variant: "ghost", onClick: (rows) => exportCsv(rows, exportOptions) },
@@ -316,71 +326,108 @@ function DataTable<TData, TValue>({
   const footerActions = [...defaultBulkActions, ...bulkActions];
   const EmptyIcon = emptyState?.icon ?? Inbox;
 
+  const panelControls = (
+    <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2">
+      {toolbarStart}
+      {filters.length ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Filtrar tabela">
+              <SlidersHorizontal className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Filtros</DropdownMenuLabel>
+            {filters.map((filter) => (
+              <DropdownMenuSub key={filter.id}>
+                <DropdownMenuSubTrigger>{filter.label}</DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuRadioGroup
+                    value={resolvedFilters[filter.id] ?? filter.defaultValue ?? "all"}
+                    onValueChange={(value) => updateFilters(filter.id, value)}
+                  >
+                    <DropdownMenuRadioItem value="all">Todos</DropdownMenuRadioItem>
+                    {filter.options.map((option) => (
+                      <DropdownMenuRadioItem key={option.value} value={option.value}>
+                        {option.label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null}
+      {toolbarEnd}
+      {columnToggleItems.length ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Configurar colunas">
+              <Columns3 className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Colunas</DropdownMenuLabel>
+            {columnToggleItems.map((column) => (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(Boolean(value))}
+              >
+                {getColumnLabel<TData>(column)}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null}
+    </div>
+  );
+
   return (
     <div data-slot="data-table" className={cn("relative flex flex-col gap-3", className)}>
-      {hasToolbar ? (
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {filters.length ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Filtrar tabela">
-                    <SlidersHorizontal className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuLabel>Filtros</DropdownMenuLabel>
-                  {filters.map((filter) => (
-                    <DropdownMenuSub key={filter.id}>
-                      <DropdownMenuSubTrigger>{filter.label}</DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup
-                          value={resolvedFilters[filter.id] ?? filter.defaultValue ?? "all"}
-                          onValueChange={(value) => updateFilters(filter.id, value)}
-                        >
-                          <DropdownMenuRadioItem value="all">Todos</DropdownMenuRadioItem>
-                          {filter.options.map((option) => (
-                            <DropdownMenuRadioItem key={option.value} value={option.value}>
-                              {option.label}
-                            </DropdownMenuRadioItem>
-                          ))}
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : null}
-            {toolbarStart}
+      <div
+        data-testid="data-table-panel"
+        data-has-panel-header={hasPanelHeader ? "true" : undefined}
+        className={cn(
+          "overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]",
+          hasPanelHeader &&
+            "[&_[data-slot=table-head]]:first:rounded-tl-none [&_[data-slot=table-head]]:last:rounded-tr-none",
+          containerClassName,
+        )}
+      >
+        {hasPanelHeader ? (
+          <div
+            data-testid="data-table-panel-header"
+            className="flex flex-col gap-3 border-b border-[var(--line-default)] bg-[var(--bg-base)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            {title || icon || description ? (
+              <div
+                data-testid="data-table-heading"
+                className="flex min-w-0 items-center gap-3"
+              >
+                <SurfaceIcon
+                  icon={icon}
+                  data-testid="data-table-surface-icon"
+                  className="size-9 rounded-[var(--r-sm)]"
+                  iconClassName="size-4"
+                />
+                <div className="min-w-0">
+                  <h3 className="truncate text-[14px] font-semibold text-[var(--fg-primary)]">
+                    {title}
+                  </h3>
+                  {description ? (
+                    <p className="mt-0.5 text-[12px] text-[var(--fg-tertiary)]">{description}</p>
+                  ) : null}
+                </div>
+              </div>
+            ) : (
+              <div className="hidden sm:block" aria-hidden />
+            )}
+            {panelControls}
           </div>
-          <div className="flex items-center gap-2">
-            {toolbarEnd}
-            {columnToggleItems.length ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Configurar colunas">
-                    <Columns3 className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Colunas</DropdownMenuLabel>
-                  {columnToggleItems.map((column) => (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(Boolean(value))}
-                    >
-                      {getColumnLabel<TData>(column)}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      <div className={cn("overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]", containerClassName)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

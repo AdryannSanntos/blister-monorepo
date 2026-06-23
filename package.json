@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@10.11.0",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.0.0 <25"
   },
   "scripts": {
     "dev": "turbo dev",
@@ -16,12 +16,14 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "typecheck": "turbo typecheck",
+    "check:ai-boundaries": "node scripts/check-ai-boundaries.mjs",
     "format": "biome check --write .",
     "format:check": "biome check .",
     "db:up": "docker compose -f docker-compose.db.yml up -d",
     "db:down": "docker compose -f docker-compose.db.yml down",
     "db:logs": "docker compose -f docker-compose.db.yml logs -f postgres",
-    "db:seed": "pnpm --dir apps/api db:seed"
+    "db:seed": "pnpm --dir apps/api db:seed",
+    "generate:style-previews": "pnpm --dir apps/api generate:style-previews"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

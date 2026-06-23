@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import type { MarketplaceItemView } from "../hooks/use-marketplace-mock";
+import type { MarketplaceItemView } from "../hooks/use-marketplace";
 import { MarketplaceItemCard } from "./marketplace-item-card";
 import { MarketplaceSection } from "./marketplace-section";
 

@@ -430,7 +430,13 @@ function AppSidebar({
           ) : (
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between gap-2 overflow-visible pl-1">
-                <BrandLogo className="h-10" />
+                <Link
+                  href="/dashboard"
+                  aria-label={tSidebar("home")}
+                  className="inline-flex shrink-0 rounded-[var(--r-md)] transition-opacity duration-[var(--dur-fast)] hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)]"
+                >
+                  <BrandLogo className="h-10" />
+                </Link>
                 {showToggle ? (
                   <Button
                     variant="ghost"

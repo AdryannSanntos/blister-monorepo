@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../src/generated/prisma';
+import { PrismaClient } from '@company-os/db';
 import { resetWorkspaceFoldersAndFiles } from '../../src/files/workspace-folders.util';
 
 const prisma = new PrismaClient();

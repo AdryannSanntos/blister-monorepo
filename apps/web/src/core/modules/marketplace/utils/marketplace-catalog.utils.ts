@@ -1,4 +1,4 @@
-import type { MarketplaceItemView } from "../hooks/use-marketplace-mock";
+import type { MarketplaceItemView } from "../hooks/use-marketplace";
 
 export type MarketplacePricingFilter = "all" | "free" | "paid";
 export type MarketplaceSort = "featured" | "price-asc" | "price-desc" | "name";
@@ -106,6 +106,7 @@ export const MARKETPLACE_TYPE_ORDER = [
   "edit-style",
   "post-style",
   "caption-style",
+  "text-style",
   "pack",
   "template",
   "asset",
@@ -130,6 +131,7 @@ export const getMarketplaceTypeLabelKey = (typeId: string) => {
   if (typeId === "edit-style") return "types.editStyle" as const;
   if (typeId === "post-style") return "types.postStyle" as const;
   if (typeId === "caption-style") return "types.captionStyle" as const;
+  if (typeId === "text-style") return "types.textStyle" as const;
   return `types.${typeId}` as
     | "types.all"
     | "types.pack"
@@ -142,9 +144,16 @@ export const getMarketplaceTypeDescriptionKey = (typeId: string) => {
   if (typeId === "edit-style") return "typeDescriptions.editStyle" as const;
   if (typeId === "post-style") return "typeDescriptions.postStyle" as const;
   if (typeId === "caption-style") return "typeDescriptions.captionStyle" as const;
+  if (typeId === "text-style") return "typeDescriptions.textStyle" as const;
   return `typeDescriptions.${typeId}` as
     | "typeDescriptions.pack"
     | "typeDescriptions.template"
     | "typeDescriptions.asset"
     | "typeDescriptions.agent";
+};
+
+export const getCreditBalance = (amount?: string | null) => {
+  if (!amount) return 0;
+  const parsed = Number.parseFloat(amount);
+  return Number.isFinite(parsed) ? Math.floor(parsed) : 0;
 };

@@ -10,10 +10,5 @@ export {
 } from './schemas/output.schema';
 export { cutOutputSchema } from '@company-os/types';
 export { cutsLearningHandler } from './learning/feedback-handler';
-export {
-  createStubCutsRunDeps,
-  getCutsRunDeps,
-  resetCutsRunDeps,
-  setCutsRunDeps,
-} from './ports/cuts-run-deps';
+export { getCutsRunDeps, resetCutsRunDeps, setCutsRunDeps } from './ports/cuts-run-deps';
 export { buildCutsRunDeps, buildCutsRunDepsFromEnv } from './build-cuts-run-deps';

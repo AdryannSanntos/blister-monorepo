@@ -35,6 +35,10 @@ const SCROLL_EDGE_THRESHOLD = 2;
 
 export const marketplaceSectionCarouselItemClass = CAROUSEL_ITEM_CLASS;
 
+/** Narrow column for vertical 9:16 style previews in the marketplace carousel. */
+export const marketplaceTextStyleCarouselItemClass =
+  "w-[12.5rem] shrink-0 snap-start";
+
 export const MarketplaceSectionCarousel = ({
   title,
   description,

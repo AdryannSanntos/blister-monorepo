@@ -125,7 +125,12 @@ export const AgentHistoryPage = ({ agentSlug }: AgentHistoryPageProps) => {
                 <AgentNewRunButton routeSlug={agent.routeSlug} size="sm" />
               </div>
             ) : (
-              <DataTable columns={columns} data={runs} />
+              <DataTable
+                title={t("tableTitle")}
+                icon={agent.icon}
+                columns={columns}
+                data={runs}
+              />
             )}
           </div>
         </AgentEntitlementGate>

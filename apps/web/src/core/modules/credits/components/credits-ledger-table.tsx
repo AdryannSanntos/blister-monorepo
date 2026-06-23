@@ -10,7 +10,6 @@ import {
   DataTable,
 } from "src/core/shared/components/ui/data-table";
 import { Badge } from "src/core/shared/components/ui/badge";
-import { SectionCard } from "src/core/shared/components/ui/section-card";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
 import { cn } from "src/core/shared/utils";
 import {
@@ -113,15 +112,14 @@ export function CreditsLedgerTable({
   );
 
   return (
-    <SectionCard
-      icon={Receipt}
-      title={t("title")}
-      description={t("description")}
-    >
+    <div className="flex flex-col gap-4">
       {isLoading ? (
         <Skeleton className="h-64 w-full rounded-[var(--r-lg)]" />
       ) : (
         <DataTable
+          title={t("title")}
+          icon={Receipt}
+          description={t("description")}
           columns={columns}
           data={ledger}
           emptyState={{
@@ -131,6 +129,6 @@ export function CreditsLedgerTable({
           }}
         />
       )}
-    </SectionCard>
+    </div>
   );
 }

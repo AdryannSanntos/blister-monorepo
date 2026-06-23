@@ -186,9 +186,10 @@ export function CreditsPlatformTab() {
         )}
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h3 className="text-sm font-medium">{t("companiesTitle")}</h3>
+      <section>
         <DataTable
+          title={t("companiesTitle")}
+          icon={Building2}
           columns={companyColumns}
           data={companies?.items ?? []}
           emptyState={{

@@ -1,4 +1,4 @@
-import type { BuiltAgent } from '@company-os/agent-sdk';
+import type { BuiltAgent } from '@company-os/agent-ia-sdk/agents';
 import type { CustomStepExecutor } from '../runtime/kernel/agent-execution.kernel';
 import { wrapSdkStep } from './sdk-step.adapter';
 

@@ -2,6 +2,7 @@ import type {
   AgentRunStatusDto,
   AgentRunStepDto,
   CutOutput,
+  CutsTranscriptSegment,
 } from "@company-os/types";
 
 import { withStableCutIds } from "./cuts-display";
@@ -62,18 +63,59 @@ export const extractCutsFromRun = (params: {
 export const extractCutsFromRunDto = (run: AgentRunStatusDto): CutOutput[] =>
   extractCutsFromRun({ run });
 
+const isTimedSegment = (value: unknown): value is CutsTranscriptSegment => {
+  if (!value || typeof value !== "object") return false;
+  const segment = value as Record<string, unknown>;
+  return (
+    typeof segment.startSec === "number" &&
+    typeof segment.endSec === "number" &&
+    typeof segment.text === "string"
+  );
+};
+
+/**
+ * Reads the timed transcript (speaker, timestamps, text) the cuts agent emits
+ * from its `resolve_source` step. Prefers `analyzedSegments` (carry id +
+ * speaker), falling back to raw `segments`. Times are relative to the source.
+ */
+export const extractTranscriptFromRun = (params: {
+  steps?: AgentRunStepDto[];
+}): CutsTranscriptSegment[] => {
+  const step = params.steps?.find((item) => item.stepKey === "resolve_source");
+  if (!step) return [];
+
+  const payload = step.outputPayload as {
+    analyzedSegments?: unknown;
+    segments?: unknown;
+  };
+
+  const source = Array.isArray(payload.analyzedSegments)
+    ? payload.analyzedSegments
+    : Array.isArray(payload.segments)
+      ? payload.segments
+      : [];
+
+  return source.filter(isTimedSegment).map((segment, index) => ({
+    id: segment.id ?? `seg-${index + 1}`,
+    startSec: segment.startSec,
+    endSec: segment.endSec,
+    text: segment.text.trim(),
+    speaker: segment.speaker,
+    words: segment.words,
+  }));
+};
+
 /** Fingerprint of cut fields that affect preview/review UI. */
 export const cutsContentFingerprint = (cuts: CutOutput[]): string =>
   cuts
-    .map(
-      (cut) =>
-        [
-          cut.id,
-          cut.cutFileId ?? "",
-          cut.reviewStatus ?? "",
-          cut.startSec,
-          cut.endSec,
-        ].join(":"),
+    .map((cut) =>
+      [
+        cut.id,
+        cut.cutFileId ?? "",
+        cut.reviewStatus ?? "",
+        cut.startSec,
+        cut.endSec,
+      ].join(":"),
     )
     .join("|");
 
@@ -101,6 +143,49 @@ export const countApprovedCuts = (cuts: CutOutput[]): number =>
 /** Pause reason the cuts agent emits when it stops for manual cut review. */
 export const AWAITING_CUT_REVIEW = "awaiting_cut_review";
 
+/** Pause reason while clip renders are still in flight. */
+export const AWAITING_RENDERS = "awaiting_renders";
+
+const readNumberFromPayload = (
+  payload: unknown,
+  key: string,
+): number | undefined => {
+  if (!payload || typeof payload !== "object") return undefined;
+  const value = (payload as Record<string, unknown>)[key];
+  return typeof value === "number" ? value : undefined;
+};
+
+/** Reads render progress from run output, dispatch step, and cut file ids. */
+export const extractRenderProgressFromRun = (params: {
+  run: AgentRunStatusDto;
+  steps?: AgentRunStepDto[];
+}): { totalCuts: number; renderedCount: number } => {
+  const outputTotalCuts =
+    readNumberFromPayload(params.run.outputPayload, "totalCuts") ?? 0;
+  const outputRenderedCount =
+    readNumberFromPayload(params.run.outputPayload, "renderedCount") ?? 0;
+
+  const dispatchStep = params.steps?.find(
+    (item) => item.stepKey === "dispatch_renders",
+  );
+  const dispatchTotalCuts =
+    readNumberFromPayload(dispatchStep?.outputPayload, "totalCuts") ?? 0;
+  const dispatchRenderedCount =
+    readNumberFromPayload(dispatchStep?.outputPayload, "renderedCount") ?? 0;
+
+  const cuts = extractCutsFromRun(params);
+  const cutsWithFileId = cuts.filter((cut) => Boolean(cut.cutFileId)).length;
+
+  const totalCuts = Math.max(outputTotalCuts, dispatchTotalCuts, cuts.length);
+  const renderedCount = Math.max(
+    outputRenderedCount,
+    dispatchRenderedCount,
+    cutsWithFileId,
+  );
+
+  return { totalCuts, renderedCount };
+};
+
 /**
  * A cuts run needs manual review iff the backend paused it for cut review.
  * That pause is decided once, at run start, only when auto-accept was off — so
@@ -112,3 +197,7 @@ export const isRunAwaitingCutReview = (
   run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
 ): boolean =>
   run?.status === "PAUSED" && run?.pauseReason === AWAITING_CUT_REVIEW;
+
+export const isRunAwaitingRenders = (
+  run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
+): boolean => run?.status === "PAUSED" && run?.pauseReason === AWAITING_RENDERS;

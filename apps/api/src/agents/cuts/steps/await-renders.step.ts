@@ -1,4 +1,4 @@
-import { createPauseStep } from '@company-os/agent-sdk';
+import { createPauseStep } from '@company-os/agent-ia-sdk/agents';
 
 type DispatchRendersOutput = {
   totalCuts?: number;

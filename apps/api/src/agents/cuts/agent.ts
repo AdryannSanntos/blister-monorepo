@@ -1,15 +1,12 @@
 import {
   AgentBuilder,
-  createLlmCallStep,
   createPauseStep,
-} from '@company-os/agent-sdk';
+} from '@company-os/agent-ia-sdk/agents';
 import { reviewCutsSchema } from '@company-os/types';
 
 import { cutsLearningHandler } from './learning/feedback-handler';
-import { buildCutsSystemPrompt, buildCutsUserPrompt } from './prompts/cuts.prompts';
 import {
   cutsInputZod,
-  cutsLlmOutputZod,
   cutsOutputZod,
   normalizeCut,
 } from './schemas/output.schema';
@@ -21,6 +18,7 @@ import {
 } from './steps/cuts-steps';
 import { createDispatchRendersStep } from './steps/dispatch-renders.step';
 import { createAwaitRendersStep } from './steps/await-renders.step';
+import { createRankSegmentsStep } from './steps/rank-segments.step';
 
 const applyCutDecisions = (
   cuts: ReturnType<typeof normalizeCut>[],
@@ -62,29 +60,7 @@ export const cutsAgent = AgentBuilder.create({ id: 'cuts', version: '3.0.0' })
   .addStep('rank_segments', {
     label: 'Gerar cortes',
     type: 'llm_call',
-    run: createLlmCallStep({
-      outputSchema: cutsLlmOutputZod,
-      buildSystem: buildCutsSystemPrompt,
-      buildUser: buildCutsUserPrompt,
-      transformOutput: (data, context) => {
-        const input = context.inputPayload as {
-          sourceFileId?: string;
-          settings?: { captionStyleId?: string; autoAcceptResults?: boolean };
-        };
-        const settings = getCutsSettings(context);
-        const normalized = data.cuts.map((cut, index) =>
-          normalizeCut(
-            { ...cut, id: `cut-${index + 1}` },
-            settings.autoAcceptResults ? 'approved' : 'pending',
-          ),
-        );
-        return {
-          cuts: normalized,
-          sourceFileId: input.sourceFileId ?? '',
-          captionStyleId: settings.addCaptions ? settings.captionStyleId : undefined,
-        };
-      },
-    }),
+    run: createRankSegmentsStep(),
   })
   .addStep('dispatch_renders', {
     label: 'Iniciar renderização',

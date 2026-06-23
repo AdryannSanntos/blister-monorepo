@@ -3,12 +3,15 @@ import { describe, expect, it } from "vitest";
 
 import {
   AWAITING_CUT_REVIEW,
+  AWAITING_RENDERS,
   countApprovedCuts,
   cutsContentFingerprint,
   extractCutsFromRun,
   extractCutsFromRunDto,
+  extractRenderProgressFromRun,
   getRunSourceTitle,
   isRunAwaitingCutReview,
+  isRunAwaitingRenders,
   readSourceFileId,
   stabilizeCutsSnapshot,
 } from "./cuts-run-display";
@@ -27,13 +30,21 @@ const baseCut = {
 const run = (outputPayload: Record<string, unknown>): AgentRunStatusDto => ({
   id: "run-1",
   agentId: "cuts",
+  companyId: "company-1",
+  campaignId: null,
   status: "COMPLETED",
+  currentStepKey: null,
   inputPayload: { sourceFileId: "file-1" },
   outputPayload,
-  reviewStatus: "PENDING",
+  errorMessage: null,
+  pauseReason: null,
+  pauseFormSchema: null,
+  reviewStatus: "PENDING_REVIEW",
   creditCost: 0,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
+  startedAt: null,
+  completedAt: null,
 });
 
 const step = (
@@ -44,7 +55,16 @@ const step = (
   stepKey,
   stepIndex: 0,
   status: "COMPLETED",
+  resultType: "COMPLETE",
+  inputPayload: {},
   outputPayload,
+  errorMessage: null,
+  llmModel: null,
+  tokensInput: null,
+  tokensOutput: null,
+  creditCost: null,
+  startedAt: null,
+  completedAt: null,
 });
 
 describe("extractCutsFromRun", () => {
@@ -223,5 +243,78 @@ describe("isRunAwaitingCutReview", () => {
       pauseReason: AWAITING_CUT_REVIEW,
     };
     expect(isRunAwaitingCutReview(pausedRun)).toBe(true);
+  });
+});
+
+describe("isRunAwaitingRenders", () => {
+  it("is true only for a run paused awaiting renders", () => {
+    expect(
+      isRunAwaitingRenders({
+        status: "PAUSED",
+        pauseReason: AWAITING_RENDERS,
+      }),
+    ).toBe(true);
+  });
+
+  it("is false for other pause reasons and statuses", () => {
+    expect(
+      isRunAwaitingRenders({
+        status: "PAUSED",
+        pauseReason: AWAITING_CUT_REVIEW,
+      }),
+    ).toBe(false);
+    expect(
+      isRunAwaitingRenders({ status: "RUNNING", pauseReason: null }),
+    ).toBe(false);
+    expect(isRunAwaitingRenders(null)).toBe(false);
+  });
+});
+
+describe("extractRenderProgressFromRun", () => {
+  it("reads counts from run outputPayload", () => {
+    const progress = extractRenderProgressFromRun({
+      run: run({ totalCuts: 3, renderedCount: 2 }),
+    });
+
+    expect(progress).toEqual({ totalCuts: 3, renderedCount: 2 });
+  });
+
+  it("falls back to dispatch_renders step output", () => {
+    const progress = extractRenderProgressFromRun({
+      run: run({}),
+      steps: [
+        step("dispatch_renders", { totalCuts: 4, renderedCount: 1 }),
+      ],
+    });
+
+    expect(progress).toEqual({ totalCuts: 4, renderedCount: 1 });
+  });
+
+  it("uses Math.max when SSE output is ahead of poll payload", () => {
+    const progress = extractRenderProgressFromRun({
+      run: run({ totalCuts: 3, renderedCount: 2 }),
+      steps: [
+        step("dispatch_renders", { totalCuts: 3, renderedCount: 1 }),
+      ],
+    });
+
+    expect(progress.renderedCount).toBe(2);
+  });
+
+  it("counts rendered cuts from cutFileId when counts are missing", () => {
+    const progress = extractRenderProgressFromRun({
+      run: run({}),
+      steps: [
+        step("dispatch_renders", {
+          cuts: [
+            { ...baseCut, id: "cut-1", cutFileId: "file-1" },
+            { ...baseCut, id: "cut-2" },
+          ],
+        }),
+      ],
+    });
+
+    expect(progress.totalCuts).toBe(2);
+    expect(progress.renderedCount).toBe(1);
   });
 });

@@ -54,4 +54,17 @@ export class CreditsController {
       parsed.data.pageSize,
     );
   }
+
+  @Get('agent-spend')
+  @RequirePermission('credit.read')
+  async getAgentSpend(@Req() req: Request) {
+    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
+    const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
+
+    return this.creditService.getAgentSpend(
+      workspace.type === 'personal'
+        ? { type: 'personal', personalSpaceId: workspace.personalSpaceId }
+        : { type: 'company', companyId: workspace.companyId },
+    );
+  }
 }

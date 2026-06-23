@@ -61,7 +61,7 @@ services:
       ASSEMBLYAI_LLM_GATEWAY_BASE_URL: ${ASSEMBLYAI_LLM_GATEWAY_BASE_URL:-https://llm-gateway.assemblyai.com/v1}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta}
-      AGENT_EXECUTION_MODE: ${AGENT_EXECUTION_MODE:-inline-stub}
+      AGENT_EXECUTION_MODE: ${AGENT_EXECUTION_MODE:-trigger}
     expose:
       - '3001'
     healthcheck:

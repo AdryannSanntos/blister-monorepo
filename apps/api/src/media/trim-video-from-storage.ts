@@ -1,9 +1,9 @@
-import { mkdir, rm } from 'node:fs/promises';
-import { join } from 'node:path';
-import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
+import { mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import type { StorageService } from '../storage/storage.service';
-import { trimVideoToBuffer } from './trim-video';
+import { type TrimVideoAspect, trimVideoToBuffer } from './trim-video';
 
 export type TrimVideoFromStorageParams = {
   storage: StorageService;
@@ -11,6 +11,7 @@ export type TrimVideoFromStorageParams = {
   startSec: number;
   endSec: number;
   ffmpegPath?: string;
+  aspect?: TrimVideoAspect;
   timeoutMs?: number;
 };
 
@@ -34,6 +35,7 @@ export const trimVideoFromStorageKey = async (
       startSec: params.startSec,
       endSec: params.endSec,
       ffmpegPath: params.ffmpegPath,
+      aspect: params.aspect,
       timeoutMs: params.timeoutMs,
     });
   } finally {

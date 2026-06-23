@@ -14,6 +14,12 @@ import { z } from 'zod';
 import { Public } from '../auth/decorators/public.decorator';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentSseService } from './runtime/agent-sse.service';
+import { devAgentLogger } from './runtime/dev-agent-logger';
+import {
+  logCutsDev,
+  summarizeRenderProgress,
+  warnCutsDev,
+} from './cuts/cuts-dev-logger';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
 
 const eventPayloadSchema = z.object({
@@ -63,8 +69,15 @@ export class InternalEventsController {
     });
 
     if (!run) {
+      devAgentLogger.warn('Internal event for unknown run', { runId, type: payload.type });
       return { received: false, error: 'Run not found' };
     }
+
+    devAgentLogger.log('Internal event received', {
+      runId,
+      type: payload.type,
+      dataKeys: payload.data ? Object.keys(payload.data) : [],
+    });
 
     this.emitEvent(
       runId,
@@ -90,13 +103,29 @@ export class InternalEventsController {
 
     const payload = cutRenderedBodySchema.parse(body);
 
+    logCutsDev('await_renders', 'Cut rendered callback received', {
+      runId,
+      cutId: payload.cutId,
+      cutFileId: payload.cutFileId,
+      runFolderId: payload.runFolderId,
+    });
+
     const run = await this.prisma.agentRun.findUnique({
       where: { id: runId },
       select: { companyId: true, personalSpaceId: true, status: true },
     });
 
-    if (!run) return { ok: false };
-    if (run.status === 'FAILED' || run.status === 'CANCELLED') return { ok: false };
+    if (!run) {
+      warnCutsDev('await_renders', 'Run not found for cut-rendered callback', { runId });
+      return { ok: false };
+    }
+    if (run.status === 'FAILED' || run.status === 'CANCELLED') {
+      warnCutsDev('await_renders', 'Run in terminal state, ignoring callback', {
+        runId,
+        status: run.status,
+      });
+      return { ok: false };
+    }
 
     const scopeId = run.companyId ?? run.personalSpaceId ?? '';
 
@@ -134,9 +163,22 @@ export class InternalEventsController {
       return { totalCuts: output.totalCuts, renderedCount };
     });
 
-    if (!updatedStep) return { ok: false };
+    if (!updatedStep) {
+      warnCutsDev('await_renders', 'dispatch_renders step not found or not completed', { runId });
+      return { ok: false };
+    }
 
     const { totalCuts, renderedCount } = updatedStep;
+
+    logCutsDev('await_renders', 'Render progress updated', {
+      runId,
+      ...summarizeRenderProgress({
+        totalCuts,
+        renderedCount,
+        cutId: payload.cutId,
+        cutFileId: payload.cutFileId,
+      }),
+    });
 
     this.sseService.emitCutRendered(runId, scopeId, {
       cutId: payload.cutId,
@@ -146,7 +188,13 @@ export class InternalEventsController {
     });
 
     if (renderedCount >= totalCuts) {
-      this.sseService.emitAllCutsRendered(runId, scopeId);
+      logCutsDev('await_renders', 'All cuts rendered — resuming run', {
+        runId,
+        totalCuts,
+        renderedCount,
+      });
+
+      this.sseService.emitAllCutsRendered(runId, scopeId, { renderedCount, totalCuts });
       await this.workflowEngine.resumeRun({ runId });
     }
 

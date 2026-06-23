@@ -1,6 +1,6 @@
 import type { AgentCapability } from '@company-os/types';
 import { z } from 'zod';
-import type { BuiltAgentDefinition } from '@company-os/agent-sdk';
+import type { BuiltAgentDefinition } from '@company-os/agent-ia-sdk/agents';
 import { cutsAgentDefinition } from './cuts/agent';
 import { cutsInputZod, cutsOutputZod } from './cuts/schemas/output.schema';
 import type { RegisteredAgent } from './runtime/agent-registry.service';

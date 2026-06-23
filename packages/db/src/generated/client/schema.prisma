@@ -1,0 +1,1025 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../../packages/db/src/generated/client"
+  previewFeatures = ["postgresqlExtensions"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+// ─── Auth (better-auth) ─────────────────────────────────────────────────────
+
+enum UserType {
+  BUSINESS
+  ADMIN
+  USER
+}
+
+model User {
+  id              String               @id
+  name            String
+  email           String               @unique
+  emailVerified   Boolean
+  image           String?
+  userType        UserType             @default(USER)
+  createdAt       DateTime
+  updatedAt       DateTime
+  accounts        Account[]
+  sessions        Session[]
+  roleAssignments UserRoleAssignment[]
+  ownedCompanies  Company[]
+  companyMembers  CompanyMember[]
+  personalSpace   PersonalSpace?
+  agentFeedbacks  AgentFeedback[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime
+  updatedAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime
+  updatedAt  DateTime
+}
+
+// ─── RBAC ───────────────────────────────────────────────────────────────────
+
+model Role {
+  id                String               @id @default(cuid())
+  name              String               @unique
+  isSystem          Boolean              @default(false)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  permissions       RolePermission[]
+  memberAssignments UserRoleAssignment[]
+  companyMembers    CompanyMember[]
+}
+
+model RolePermission {
+  id     String @id @default(cuid())
+  roleId String
+  key    String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, key])
+}
+
+model UserRoleAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([userId])
+}
+
+model PlatformRoleAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  role       String
+  assignedBy String
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, role])
+  @@index([userId])
+}
+
+// ─── Platform / audit ───────────────────────────────────────────────────────
+
+model SupportSession {
+  id          String    @id @default(cuid())
+  actorUserId String
+  reason      String
+  status      String    @default("active")
+  startedAt   DateTime  @default(now())
+  endedAt     DateTime?
+
+  @@index([actorUserId])
+  @@index([status])
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  actorUserId  String
+  targetUserId String?
+  action       String
+  resourceType String
+  resourceId   String
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now())
+
+  @@index([actorUserId])
+  @@index([action])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
+}
+
+// ─── Company / Brand Brain ──────────────────────────────────────────────────
+
+enum MarketingObjective {
+  SELL_MORE
+  GENERATE_LEADS
+  STRENGTHEN_BRAND
+}
+
+model Company {
+  id                    String    @id @default(cuid())
+  ownerUserId           String
+  name                  String
+  slug                  String    @unique
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  owner                  User                    @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  brandProfile           BrandProfile?
+  campaigns              Campaign[]
+  campaignFiles          CampaignFile[]
+  contentPieces          ContentPiece[]
+  pipelineRuns           PipelineRun[]
+  agentRuns              AgentRun[]
+  agentFeedbacks         AgentFeedback[]
+  agentMemories          AgentMemory[]
+  creditBalance          CreditBalance?
+  creditLedger           CreditLedger[]
+  ragDocuments           RagDocument[]
+  ragIndexJobs           RagIndexJob[]
+  members                CompanyMember[]
+  workspaceSettings      WorkspaceSettings?
+  workspaceFolders       WorkspaceFolder[]
+  workspaceFiles         WorkspaceFile[]
+  entitlements           WorkspaceEntitlement[]
+  projects               Project[]
+  agentWorkspaceSettings AgentWorkspaceSetting[]
+
+  @@index([ownerUserId])
+  @@index([slug])
+}
+
+model BrandProfile {
+  id                 String              @id @default(cuid())
+  companyId          String              @unique
+  logoStorageKey     String?
+  logoVariants       Json                @default("{}")
+  brandAssets        Json                @default("[]")
+  brandVoice         String
+  palette            Json                @default("[]")
+  typography         String?
+  visualStyle        String?
+  niche              String?
+  description        String?
+  targetAudience     String?
+  marketingObjective MarketingObjective?
+  socialNetworks     Json                @default("[]")
+  mainProducts       String?
+  differentiators    String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ─── Campaigns ──────────────────────────────────────────────────────────────
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model Campaign {
+  id        String         @id @default(cuid())
+  companyId String
+  name      String
+  objective String
+  context   String?
+  status    CampaignStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  files         CampaignFile[]
+  contentPieces ContentPiece[]
+  pipelineRuns  PipelineRun[]
+  ragDocuments  RagDocument[]
+
+  @@index([companyId])
+  @@index([status])
+}
+
+enum CampaignFileType {
+  IMAGE
+  TEXT
+  PDF
+}
+
+enum CampaignFileStatus {
+  PENDING
+  PROCESSING
+  INDEXED
+  FAILED
+}
+
+model CampaignFile {
+  id            String             @id @default(cuid())
+  companyId     String
+  campaignId    String
+  name          String
+  mimeType      String
+  storageKey    String
+  type          CampaignFileType
+  status        CampaignFileStatus @default(PENDING)
+  extractedText String?
+  caption       String?
+  sizeBytes     Int?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  company  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([campaignId])
+  @@index([status])
+}
+
+// ─── Generated content ──────────────────────────────────────────────────────
+
+enum ContentPieceStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum ContentPieceFormat {
+  INSTAGRAM_SQUARE_1080
+}
+
+model ContentPiece {
+  id              String             @id @default(cuid())
+  companyId       String
+  campaignId      String?
+  pipelineRunId   String?
+  agentRunId      String?
+  format          ContentPieceFormat @default(INSTAGRAM_SQUARE_1080)
+  status          ContentPieceStatus @default(PENDING_REVIEW)
+  caption         String?
+  hashtags        String[]           @default([])
+  imageStorageKey String?
+  htmlSnapshot    String?
+  creditCost      Decimal?           @db.Decimal(12, 4)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  approvedAt      DateTime?
+
+  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign    Campaign?       @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  pipelineRun PipelineRun?    @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)
+  agentRun    AgentRun?       @relation(fields: [agentRunId], references: [id], onDelete: SetNull)
+  feedbacks   AgentFeedback[]
+
+  @@index([companyId])
+  @@index([campaignId])
+  @@index([status])
+  @@index([pipelineRunId])
+}
+
+// ─── Agent orchestration ────────────────────────────────────────────────────
+
+enum PipelineRunStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum AgentRunStatus {
+  QUEUED
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum AgentRunStepStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
+enum StepResultType {
+  CONTINUE
+  PAUSED
+  FAILED
+  COMPLETE
+}
+
+model PipelineRun {
+  id                String            @id @default(cuid())
+  companyId         String
+  campaignId        String?
+  triggeredByUserId String
+  userInput         String
+  status            PipelineRunStatus @default(QUEUED)
+  agentOrder        String[]          @default([])
+  creditCost        Decimal?          @db.Decimal(12, 4)
+  metadata          Json              @default("{}")
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  completedAt       DateTime?
+
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign      Campaign?      @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  agentRuns     AgentRun[]
+  contentPieces ContentPiece[]
+
+  @@index([companyId])
+  @@index([campaignId])
+  @@index([status])
+}
+
+model AgentRun {
+  id              String         @id @default(cuid())
+  companyId       String?
+  personalSpaceId String?
+  pipelineRunId   String?
+  campaignId      String?
+  agentId         String
+  agentVersion    String?
+  parentRunId     String?
+  feedbackId      String?        @unique
+  status          AgentRunStatus @default(QUEUED)
+  currentStepKey  String?
+  inputPayload    Json           @default("{}")
+  outputPayload   Json           @default("{}")
+  errorMessage    String?
+  pauseReason     String?
+  pauseFormSchema Json?
+  creditCost      Decimal?       @db.Decimal(12, 4)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  startedAt       DateTime?
+  completedAt     DateTime?
+
+  company              Company?               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  personalSpace        PersonalSpace?         @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  pipelineRun          PipelineRun?           @relation(fields: [pipelineRunId], references: [id], onDelete: SetNull)
+  parentRun            AgentRun?              @relation("AgentRunRegeneration", fields: [parentRunId], references: [id], onDelete: SetNull)
+  childRuns            AgentRun[]             @relation("AgentRunRegeneration")
+  feedback             AgentFeedback?         @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+  steps                AgentRunStep[]
+  blocks               AgentRunBlock[]
+  contentPieces        ContentPiece[]
+  creditLedger         CreditLedger[]
+  personalCreditLedger PersonalCreditLedger[]
+
+  @@index([companyId])
+  @@index([personalSpaceId])
+  @@index([pipelineRunId])
+  @@index([agentId])
+  @@index([status])
+}
+
+model AgentRunStep {
+  id            String             @id @default(cuid())
+  agentRunId    String
+  stepKey       String
+  stepIndex     Int
+  status        AgentRunStepStatus @default(PENDING)
+  resultType    StepResultType?
+  inputPayload  Json               @default("{}")
+  outputPayload Json               @default("{}")
+  errorMessage  String?
+  llmModel      String?
+  tokensInput   Int?
+  tokensOutput  Int?
+  creditCost    Decimal?           @db.Decimal(12, 4)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  agentRun             AgentRun               @relation(fields: [agentRunId], references: [id], onDelete: Cascade)
+  creditLedger         CreditLedger[]
+  personalCreditLedger PersonalCreditLedger[]
+
+  @@unique([agentRunId, stepIndex])
+  @@index([agentRunId])
+  @@index([status])
+}
+
+model AgentRunBlock {
+  id         String   @id @default(cuid())
+  agentRunId String
+  messageId  String
+  role       String
+  blockType  String
+  index      Int
+  label      String?
+  text       String?  @db.Text
+  payload    Json     @default("{}")
+  stepKey    String?
+  status     String   @default("streaming")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  agentRun   AgentRun @relation(fields: [agentRunId], references: [id], onDelete: Cascade)
+
+  @@unique([agentRunId, messageId, index])
+  @@index([agentRunId])
+}
+
+// ─── Agent learning ─────────────────────────────────────────────────────────
+
+enum FeedbackType {
+  APPROVED
+  REJECTED
+  EDITED
+  IMPROVE_REQUEST
+  REGENERATED
+}
+
+model AgentFeedback {
+  id              String       @id @default(cuid())
+  companyId       String
+  contentPieceId  String
+  agentId         String
+  feedbackType    FeedbackType
+  userId          String
+  reason          String?
+  originalContent Json         @default("{}")
+  editedContent   Json?
+  instruction     String?
+  contentHash     String
+  createdAt       DateTime     @default(now())
+
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contentPiece    ContentPiece     @relation(fields: [contentPieceId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  learningSignals LearningSignal[]
+  regenerationRun AgentRun?
+
+  @@unique([companyId, contentHash])
+  @@index([contentPieceId])
+  @@index([agentId])
+  @@index([feedbackType])
+}
+
+model LearningSignal {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  companyId   String
+  agentId     String
+  signalType  String
+  signalValue String
+  weight      Float    @default(1)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+
+  feedback AgentFeedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, agentId])
+  @@index([feedbackId])
+}
+
+model AgentMemory {
+  id             String   @id @default(cuid())
+  companyId      String
+  agentId        String
+  summary        String
+  signals        Json     @default("[]")
+  lastFeedbackId String?
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, agentId])
+}
+
+// ─── Credits ────────────────────────────────────────────────────────────────
+
+enum CreditLedgerType {
+  CREDIT
+  DEBIT
+  ADJUST
+  REFUND
+}
+
+model CreditBalance {
+  id        String   @id @default(cuid())
+  companyId String   @unique
+  amount    Decimal  @default(0) @db.Decimal(12, 4)
+  currency  String   @default("USD")
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model CreditLedger {
+  id              String           @id @default(cuid())
+  companyId       String
+  type            CreditLedgerType
+  amount          Decimal          @db.Decimal(12, 4)
+  balanceAfter    Decimal          @db.Decimal(12, 4)
+  currency        String           @default("USD")
+  agentRunStepId  String?
+  agentRunId      String?
+  description     String?
+  metadata        Json             @default("{}")
+  createdByUserId String?
+  createdAt       DateTime         @default(now())
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agentRunStep AgentRunStep? @relation(fields: [agentRunStepId], references: [id], onDelete: SetNull)
+  agentRun     AgentRun?     @relation(fields: [agentRunId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model PlatformCreditSettings {
+  id              String   @id @default("default")
+  freeTierAmount  Decimal  @default(20) @db.Decimal(12, 4)
+  currency        String   @default("USD")
+  markupDefault   Decimal  @default(1.2) @db.Decimal(5, 4)
+  minRunCost      Decimal  @default(0.01) @db.Decimal(12, 4)
+  updatedAt       DateTime @updatedAt
+  updatedByUserId String?
+}
+
+// ─── AI catalog (admin) ─────────────────────────────────────────────────────
+
+model AiProvider {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  models AiModel[]
+}
+
+model AiModel {
+  id              String   @id @default(cuid())
+  providerId      String
+  externalId      String
+  name            String
+  isEnabled       Boolean  @default(true)
+  inputCostPer1k  Decimal  @db.Decimal(12, 6)
+  outputCostPer1k Decimal  @db.Decimal(12, 6)
+  maxTokens       Int?
+  capabilities    String[] @default([])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  provider          AiProvider             @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  agentPolicies     AgentModelPolicy[]
+  agentStepPolicies AgentStepModelPolicy[]
+  embeddingSettings RagPlatformSettings?
+
+  @@unique([providerId, externalId])
+  @@index([providerId])
+}
+
+model AgentModelPolicy {
+  id               String   @id @default(cuid())
+  agentId          String   @unique
+  modelId          String
+  markupMultiplier Decimal  @default(1.2) @db.Decimal(5, 4)
+  isEnabled        Boolean  @default(true)
+  minCostPerRun    Decimal? @db.Decimal(12, 4)
+  updatedAt        DateTime @updatedAt
+
+  model AiModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+}
+
+model AgentStepModelPolicy {
+  id        String   @id @default(cuid())
+  agentId   String
+  stepKey   String
+  modelId   String
+  isEnabled Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  model AiModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+
+  @@unique([agentId, stepKey])
+  @@index([agentId])
+}
+
+model PipelineAgentConfig {
+  id        String  @id @default(cuid())
+  agentId   String  @unique
+  sortOrder Int
+  isEnabled Boolean @default(true)
+
+  @@index([sortOrder])
+}
+
+// ─── RAG ────────────────────────────────────────────────────────────────────
+
+enum RagSourceType {
+  BRAND_BRAIN
+  WORKSPACE_SETTINGS
+  WORKSPACE_FILE
+  CAMPAIGN
+  CAMPAIGN_FILE
+  AGENT_LEARNING
+  APPROVED_PIECE
+}
+
+enum RagDocumentStatus {
+  PENDING
+  INDEXING
+  INDEXED
+  FAILED
+}
+
+enum RagIndexJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model RagDocument {
+  id          String            @id @default(cuid())
+  companyId   String
+  campaignId  String?
+  sourceType  RagSourceType
+  sourceId    String
+  title       String?
+  contentHash String
+  status      RagDocumentStatus @default(PENDING)
+  metadata    Json              @default("{}")
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  company   Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign  Campaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  chunks    RagChunk[]
+  indexJobs RagIndexJob[]
+
+  @@unique([companyId, sourceType, sourceId, contentHash])
+  @@index([companyId])
+  @@index([campaignId])
+  @@index([sourceType])
+  @@index([status])
+}
+
+model RagChunk {
+  id         String   @id @default(cuid())
+  documentId String
+  companyId  String
+  campaignId String?
+  agentId    String?
+  chunkIndex Int
+  content    String
+  tokenCount Int?
+  metadata   Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  document  RagDocument   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  embedding RagEmbedding?
+
+  @@unique([documentId, chunkIndex])
+  @@index([companyId])
+  @@index([campaignId])
+  @@index([agentId])
+}
+
+model RagEmbedding {
+  id             String                       @id @default(cuid())
+  chunkId        String                       @unique
+  embeddingModel String
+  dimensions     Int                          @default(1536)
+  embedding      Unsupported("vector(1536)")?
+  createdAt      DateTime                     @default(now())
+
+  chunk RagChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+}
+
+model RagIndexJob {
+  id           String            @id @default(cuid())
+  companyId    String
+  documentId   String?
+  status       RagIndexJobStatus @default(PENDING)
+  errorMessage String?
+  attempts     Int               @default(0)
+  scheduledAt  DateTime          @default(now())
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime          @default(now())
+
+  company  Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  document RagDocument? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+
+  @@index([status, scheduledAt])
+  @@index([companyId])
+}
+
+model RagPlatformSettings {
+  id               String   @id @default("default")
+  embeddingModelId String?  @unique
+  chunkSize        Int      @default(512)
+  chunkOverlap     Int      @default(64)
+  topK             Int      @default(8)
+  rerankEnabled    Boolean  @default(true)
+  captionModelId   String?
+  updatedAt        DateTime @updatedAt
+
+  embeddingModel AiModel? @relation(fields: [embeddingModelId], references: [id], onDelete: SetNull)
+}
+
+// ─── Blister OS — Personal Space + Workspace ─────────────────────────────────
+
+model PersonalSpace {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user                   User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  settings               WorkspaceSettings?
+  folders                WorkspaceFolder[]
+  files                  WorkspaceFile[]
+  entitlements           WorkspaceEntitlement[]
+  projects               Project[]
+  creditBalance          PersonalCreditBalance?
+  creditLedger           PersonalCreditLedger[]
+  agentWorkspaceSettings AgentWorkspaceSetting[]
+  agentRuns              AgentRun[]
+
+  @@index([userId])
+}
+
+model PersonalCreditBalance {
+  id              String   @id @default(cuid())
+  personalSpaceId String   @unique
+  amount          Decimal  @default(0) @db.Decimal(12, 4)
+  currency        String   @default("USD")
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  personalSpace PersonalSpace @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+}
+
+// Personal-space mirror of CreditLedger. CreditLedger is company-scoped
+// (companyId, FK to Company); personal spaces record their own debit/credit
+// history here so the credits page renders a real transaction log.
+model PersonalCreditLedger {
+  id              String           @id @default(cuid())
+  personalSpaceId String
+  type            CreditLedgerType
+  amount          Decimal          @db.Decimal(12, 4)
+  balanceAfter    Decimal          @db.Decimal(12, 4)
+  currency        String           @default("USD")
+  agentRunStepId  String?
+  agentRunId      String?
+  description     String?
+  metadata        Json             @default("{}")
+  createdByUserId String?
+  createdAt       DateTime         @default(now())
+
+  personalSpace PersonalSpace @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  agentRunStep  AgentRunStep? @relation(fields: [agentRunStepId], references: [id], onDelete: SetNull)
+  agentRun      AgentRun?     @relation(fields: [agentRunId], references: [id], onDelete: SetNull)
+
+  @@index([personalSpaceId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model CompanyMember {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String
+  roleId    String
+  joinedAt  DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Role    @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, userId])
+  @@index([companyId])
+  @@index([userId])
+}
+
+model WorkspaceSettings {
+  id                 String   @id @default(cuid())
+  personalSpaceId    String?  @unique
+  companyId          String?  @unique
+  displayName        String?
+  niche              String?
+  audience           String?
+  voice              String?
+  positioning        String?
+  contentPreferences String?
+  logoStorageKey     String?
+  palette            Json     @default("[]")
+  timezone           String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+enum MarketplaceItemType {
+  EDIT_STYLE
+  POST_STYLE
+  CAPTION_STYLE
+  TEXT_STYLE
+  PACK
+  TEMPLATE
+  ASSET
+  AGENT
+}
+
+model MarketplaceItem {
+  id          String              @id @default(cuid())
+  slug        String              @unique
+  type        MarketplaceItemType
+  name        String
+  author      String
+  price       Int                 @default(0)
+  flag        String?
+  description String
+  palette     Json                @default("[]")
+  specs       Json                @default("{}")
+  includes    Json                @default("[]")
+  refId       String?
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  entitlements WorkspaceEntitlement[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model WorkspaceEntitlement {
+  id               String   @id @default(cuid())
+  itemId           String
+  personalSpaceId  String?
+  companyId        String?
+  redeemedByUserId String
+  redeemedAt       DateTime @default(now())
+
+  item          MarketplaceItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  personalSpace PersonalSpace?  @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, personalSpaceId])
+  @@unique([itemId, companyId])
+  @@index([personalSpaceId])
+  @@index([companyId])
+}
+
+model AgentWorkspaceSetting {
+  id              String   @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  agentId         String
+  config          Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([personalSpaceId, agentId])
+  @@unique([companyId, agentId])
+  @@index([agentId])
+}
+
+enum WorkspaceFolderKind {
+  SYSTEM
+  USER
+}
+
+model WorkspaceFolder {
+  id              String              @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  parentId        String?
+  name            String
+  kind            WorkspaceFolderKind @default(USER)
+  systemKey       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  personalSpace PersonalSpace?    @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  parent        WorkspaceFolder?  @relation("FolderTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children      WorkspaceFolder[] @relation("FolderTree")
+  files         WorkspaceFile[]
+
+  @@index([personalSpaceId])
+  @@index([companyId])
+  @@index([parentId])
+}
+
+enum WorkspaceFileStatus {
+  PENDING
+  PROCESSING
+  INDEXED
+  FAILED
+}
+
+enum WorkspaceFileOrigin {
+  UPLOAD
+  AGENT_RUN
+  INTEGRATION
+}
+
+model WorkspaceFile {
+  id              String              @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  folderId        String
+  name            String
+  mimeType        String
+  storageKey      String
+  sizeBytes       Int?
+  status          WorkspaceFileStatus @default(PENDING)
+  extractData     Boolean             @default(false)
+  extractedText   String?
+  origin          WorkspaceFileOrigin @default(UPLOAD)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  personalSpace PersonalSpace?  @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  folder        WorkspaceFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@index([personalSpaceId])
+  @@index([companyId])
+  @@index([folderId])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  personalSpaceId String?
+  companyId       String?
+  name            String
+  objective       String
+  linkedAgentIds  String[] @default([])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  personalSpace PersonalSpace? @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  company       Company?       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([personalSpaceId])
+  @@index([companyId])
+}

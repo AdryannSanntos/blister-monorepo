@@ -1,4 +1,4 @@
-import { Prisma, type PrismaClient } from '../../../generated/prisma';
+import { Prisma, type PrismaClient } from '@company-os/db';
 import type { CreditDebitResult, PlatformSettings } from './types';
 
 export async function getPlatformSettings(prisma: PrismaClient): Promise<PlatformSettings> {
@@ -65,11 +65,12 @@ export async function debitStepCredits(
     });
 
     if (run?.personalSpaceId && !run.companyId) {
-      // Personal space: debit the personal balance. CreditLedger is company-only,
-      // so personal runs do not record a ledger entry (MVP limitation).
-      const newBalance = await prisma.$transaction(async (tx) => {
+      // Personal space: debit the personal balance and record the matching
+      // entry in PersonalCreditLedger (the personal-space mirror of CreditLedger).
+      const personalSpaceId = run.personalSpaceId;
+      const result = await prisma.$transaction(async (tx) => {
         const balance = await tx.personalCreditBalance.findUnique({
-          where: { personalSpaceId: run.personalSpaceId as string },
+          where: { personalSpaceId },
         });
 
         if (!balance) {
@@ -84,17 +85,31 @@ export async function debitStepCredits(
         const updatedBalance = currentBalance - debitAmount;
 
         await tx.personalCreditBalance.update({
-          where: { personalSpaceId: run.personalSpaceId as string },
+          where: { personalSpaceId },
           data: { amount: new Prisma.Decimal(updatedBalance) },
         });
 
-        return updatedBalance;
+        const ledgerEntry = await tx.personalCreditLedger.create({
+          data: {
+            personalSpaceId,
+            type: 'DEBIT',
+            amount: new Prisma.Decimal(debitAmount),
+            balanceAfter: new Prisma.Decimal(updatedBalance),
+            currency: balance.currency,
+            description: `Agent run step: ${params.stepKey}`,
+            agentRunId: params.agentRunId,
+            agentRunStepId: params.agentRunStepId,
+          },
+        });
+
+        return { updatedBalance, ledgerEntryId: ledgerEntry.id };
       });
 
       return {
         success: true,
         debitedAmount: debitAmount,
-        newBalance,
+        newBalance: result.updatedBalance,
+        ledgerEntryId: result.ledgerEntryId,
       };
     }
 

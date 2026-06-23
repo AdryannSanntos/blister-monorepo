@@ -2,7 +2,6 @@
 
 import { ArrowLeft, Library, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { MARKETPLACE_TYPE_LABELS } from "src/core/modules/blister-os/fixtures/marketplace-items.fixture";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
@@ -16,7 +15,8 @@ import { MarketplaceRelatedItems } from "../components/marketplace-related-items
 import {
   useMarketplaceItem,
   useMarketplaceItems,
-} from "../hooks/use-marketplace-mock";
+} from "../hooks/use-marketplace";
+import { getMarketplaceTypeLabelKey } from "../utils/marketplace-catalog.utils";
 
 type MarketplaceItemPageProps = {
   itemId: string;
@@ -56,6 +56,7 @@ export const MarketplaceItemPage = ({ itemId }: MarketplaceItemPageProps) => {
   }
 
   const related = catalog.filter((entry) => entry.id !== item.id).slice(0, 3);
+  const typeLabel = t(getMarketplaceTypeLabelKey(item.type));
 
   return (
     <PageLayout
@@ -64,9 +65,7 @@ export const MarketplaceItemPage = ({ itemId }: MarketplaceItemPageProps) => {
       description={
         <span className="inline-flex flex-wrap items-center gap-2">
           <span>{t("byAuthor", { author: item.author })}</span>
-          <Badge variant="outline">
-            {MARKETPLACE_TYPE_LABELS[item.type] ?? item.type}
-          </Badge>
+          <Badge variant="outline">{typeLabel}</Badge>
         </span>
       }
       actions={

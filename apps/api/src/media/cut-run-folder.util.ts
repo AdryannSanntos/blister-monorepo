@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 import { resolveAgentFolderId } from '../files/workspace-folders.util';
 import {
   buildFolderPlaceholderKey,

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
-import type { MarketplaceItemView } from "../hooks/use-marketplace-mock";
+import type { MarketplaceItemView } from "../hooks/use-marketplace";
 import {
   buildMarketplaceCatalogSections,
   getMarketplaceTypeDescriptionKey,
@@ -11,9 +11,11 @@ import {
 } from "../utils/marketplace-catalog.utils";
 import { MarketplaceEmptyState } from "./marketplace-empty-state";
 import { MarketplaceItemCard } from "./marketplace-item-card";
+import { MarketplaceStyleCard } from "./marketplace-style-card";
 import {
   MarketplaceSectionCarousel,
   marketplaceSectionCarouselItemClass,
+  marketplaceTextStyleCarouselItemClass,
 } from "./marketplace-section-carousel";
 
 type MarketplaceCatalogGridProps = {
@@ -45,8 +47,19 @@ export const MarketplaceCatalogGrid = ({
           itemCount={section.items.length}
         >
           {section.items.map((item) => (
-            <div key={item.id} className={marketplaceSectionCarouselItemClass}>
-              <MarketplaceItemCard item={item} compact hideType />
+            <div
+              key={item.id}
+              className={
+                section.id === "text-style"
+                  ? marketplaceTextStyleCarouselItemClass
+                  : marketplaceSectionCarouselItemClass
+              }
+            >
+              {section.id === "text-style" ? (
+                <MarketplaceStyleCard item={item} />
+              ) : (
+                <MarketplaceItemCard item={item} compact hideType />
+              )}
             </div>
           ))}
         </MarketplaceSectionCarousel>

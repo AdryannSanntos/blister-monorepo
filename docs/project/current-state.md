@@ -1,7 +1,25 @@
 # Estado Atual — Blister OS Migration
 
-> Snapshot em **2026-06-12** (pós Plano 1 docs).  
-> PRD: [`blister-os-prd.md`](../prd/blister-os-prd.md) · ADR: [`2026-06-12-blister-os-pivot.md`](../decisions/2026-06-12-blister-os-pivot.md)
+> Snapshot em **2026-06-22** (pós migração Agent IA SDK — Tasks 1–15).  
+> PRD: [`blister-os-prd.md`](../prd/blister-os-prd.md) · ADR SDK: [`2026-06-22-agent-ia-sdk.md`](../decisions/2026-06-22-agent-ia-sdk.md)
+
+---
+
+## Plano Agent IA SDK ✅
+
+| Task | Entregável | Status |
+|------|------------|--------|
+| 1–8 | `packages/agent-ia-sdk` — `ia/` por capacidade + runtime | ✅ |
+| 9 | `agents/` migrado de `agent-sdk` | ✅ |
+| 10 | Drop `AiProviderCredential` | ✅ |
+| 11–12 | `apps/api` shell + integration module | ✅ |
+| 13 | `GET/PATCH /platform/settings/rag` | ✅ |
+| 14 | Admin UI — aba **IA do sistema** | ✅ |
+| 15 | `check-ai-boundaries.sh`, seed, ADR | ✅ |
+
+**Package canônico:** `@company-os/agent-ia-sdk`  
+**Deprecated:** `@company-os/agent-sdk` → re-export de `agent-ia-sdk/agents`  
+**Agente ativo:** `cuts` only
 
 ---
 
@@ -17,7 +35,7 @@
 
 ---
 
-## Código existente (pré-OS — a migrar)
+## Código existente
 
 | Camada | Status | Nota OS |
 |--------|--------|---------|
@@ -27,10 +45,11 @@
 | **Storage** | ✅ S3 presigned | Estende para Files browser |
 | **Credits** | ✅ | Mantém |
 | **AI Catalog** | ✅ | Mantém |
-| **Platform admin** | ✅ | Mantém |
-| **Frontend** | Parcial MEI | brand, pecas, criar — **remover Plano 2** |
-| **RAG / agents runtime** | Em progresso | SDK monolith Plano 3 |
-| **Marketplace / Library** | ❌ | Plano 2 UI + Plano 3 API |
+| **Platform admin** | ✅ | + aba IA do sistema (RAG settings) |
+| **Agent IA SDK** | ✅ | `agent-ia-sdk` monolith |
+| **RAG runtime** | ✅ | Em SDK `ia/rag/` |
+| **Frontend OS** | Em progresso | Plano 2 — fixtures |
+| **Marketplace / Library** | Parcial | Plano 2 UI + Plano 3 API |
 | **Personal Space** | ❌ | Plano 3 |
 | **Files + extract** | ❌ | Plano 2 proto + Plano 3 API |
 
@@ -40,7 +59,7 @@
 
 | Gap | Plano |
 |-----|-------|
-| UI OS (sidebar, rotas, wizards) | **2** — fixtures, zero API |
+| UI OS (sidebar, rotas, wizards) | **2** — fixtures, zero API produto |
 | `/dashboard/settings` substitui brand | **2** |
 | `/dashboard/files` file browser | **2** |
 | Marketplace → Library fluxo | **2** |
@@ -58,21 +77,12 @@
 - Output em `AgentRun.outputPayload`
 - Revisão **dentro de cada agente**
 - Contexto: Settings + Files + integrações — **sem** Brand Brain module
-
----
-
-## Desalinhamentos código vs docs (esperado até Plano 2/3)
-
-| Item | Legado no código | Alvo OS |
-|------|------------------|---------|
-| `/dashboard/brand` | Existe | `/dashboard/settings` |
-| Sidebar pecas/criar | Links mortos | NAV reference |
-| Agentes strategist/copywriter/designer | Docs/código parcial | research/cuts/video_editor + marketplace |
-| `brand.*` permissões | authz | `workspace.settings.*` |
-| `ContentPiece` / `piece.*` | Schema | AgentRun only (novos fluxos) |
+- IA + agentes: **`@company-os/agent-ia-sdk`** — API só adapters
 
 ---
 
 ## Próximo passo
 
 **Plano 2 Frontend** — [`docs/plans/blister-os/02-frontend.md`](../plans/blister-os/02-frontend.md)
+
+Enforcement local: `pnpm check:ai-boundaries`

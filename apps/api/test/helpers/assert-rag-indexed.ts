@@ -1,4 +1,4 @@
-import type { PrismaClient, RagSourceType } from '../../src/generated/prisma';
+import type { PrismaClient, RagSourceType } from '@company-os/db';
 
 export interface RagDocumentAssertion {
   sourceType: RagSourceType;

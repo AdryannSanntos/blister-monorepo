@@ -1,11 +1,16 @@
 import { defineConfig } from "@trigger.dev/sdk";
-import { ffmpeg } from "@trigger.dev/build/extensions/core";
+import {
+  additionalFiles,
+  ffmpeg,
+} from "@trigger.dev/build/extensions/core";
 import { prismaExtension } from "@trigger.dev/build/extensions/prisma";
 
 export default defineConfig({
   project: process.env.TRIGGER_PROJECT_ID ?? "proj_kqouuhakfzriyzongafh",
   maxDuration: 600,
   dirs: ["./trigger"],
+  // Match production: cwd is the Trigger build dir where additionalFiles land.
+  legacyDevProcessCwdBehaviour: false,
   build: {
     external: [
       "@nestjs/common",
@@ -24,6 +29,14 @@ export default defineConfig({
       "pdf-parse",
       // Bundled ffmpeg-static paths break in Trigger workers; use the ffmpeg extension.
       "ffmpeg-static",
+      // Remotion ships native (Chromium) binaries and bundles compositions at
+      // runtime from source — keep its packages external so they load from
+      // node_modules with their native parts intact.
+      "@remotion/renderer",
+      "@remotion/bundler",
+      "remotion",
+      "react",
+      "react-dom",
     ],
     extensions: [
       ffmpeg({ version: "7" }),
@@ -31,6 +44,9 @@ export default defineConfig({
         mode: "engine-only",
         version: "6.19.3",
       }),
+      // Ship the Remotion composition sources so render-text-overlay can bundle
+      // them at runtime in the worker (they are not part of the esbuild graph).
+      additionalFiles({ files: ["./src/video/**"] }),
     ],
   },
 });

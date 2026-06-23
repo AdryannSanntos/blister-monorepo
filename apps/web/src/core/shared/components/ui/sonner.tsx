@@ -46,7 +46,8 @@ function ToastToneIcon({
 const toastClassNames = {
   toast: cn(
     "ds-sonner-toast",
-    "group/toast relative flex w-[min(360px,calc(100vw-2rem))] items-start gap-3",
+    "group/toast relative flex w-[min(360px,calc(100vw-2rem))] items-center gap-3",
+    "has-[[data-description]]:items-start",
     "rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-raised)]",
     "p-3.5 pr-10 shadow-[var(--shadow-md)]",
     "pointer-events-auto",
@@ -61,7 +62,7 @@ const toastClassNames = {
     "ds-sonner-description",
     "text-[12px] leading-[1.45] text-[var(--fg-tertiary)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden",
   ),
-  icon: "mt-0.5 shrink-0",
+  icon: "ds-sonner-icon shrink-0 group-has-[[data-description]]/toast:mt-0.5",
   closeButton: cn(
     "ds-sonner-close",
     "!absolute !top-2 !right-2 !left-auto",

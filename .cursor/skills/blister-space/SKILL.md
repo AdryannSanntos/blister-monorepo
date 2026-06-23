@@ -44,7 +44,7 @@ Você responde **dúvidas sobre o projeto Blister OS** usando documentação e c
 - Espaço Pessoal + Empresas (5 roles)
 - Sem módulo Brand Brain / `/dashboard/brand`
 - Agentes **isolados** — sem pipeline automático
-- Lógica de agentes só em `packages/agent-sdk`
+- Lógica de agentes em `apps/api/src/agents/`; infraestrutura IA em `@company-os/agent-ia-sdk`
 - Plano 2 = fixtures, **zero API de produto** no frontend OS
 - Default agents: `research`, `cuts`, `video_editor`
 

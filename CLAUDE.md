@@ -29,7 +29,8 @@ apps/
   web/    Next.js 16 + React 19
   api/    NestJS 11 + Prisma + pgvector (HTTP + adapters)
 packages/
-  agent-sdk/  100% lógica de agentes + workflow kernel
+  agent-sdk/     deprecated — re-export de agent-ia-sdk/agents
+  agent-ia-sdk/  IA infrastructure (ia/) + workflow kernel (agents/)
   authz/      Permissões CASL
   types/      Zod compartilhado
   configs/    TypeScript presets
@@ -63,9 +64,10 @@ Nunca editar `apps/api/src/generated/prisma` manualmente.
 
 Workspace, settings, arquivos, créditos = domínio da aplicação.
 
-### 7. Agentes só no SDK
+### 7. Agentes — lógica no backend, IA na SDK
 
-**100%** da lógica em `packages/agent-sdk`. `apps/api/src/agents/` = registry + HTTP adapters.
+**Lógica de negócio** dos agentes em `apps/api/src/agents/<agentId>/`.  
+**Infraestrutura IA** (STT, LLM, RAG) em `@company-os/agent-ia-sdk` — API só adapters + HTTP.
 
 ### 8. Sem Cérebro da Marca
 

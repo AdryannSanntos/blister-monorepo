@@ -12,21 +12,17 @@ import {
 } from "react";
 
 import { CutsRunModal } from "src/core/modules/agents/components/cuts/cuts-run-modal";
+import { CutsRunStatusModal } from "src/core/modules/agents/components/cuts/cuts-run-status-modal";
 import { useCutsRunModal } from "src/core/modules/agents/hooks/use-cuts-run-modal";
 
 type CutsRunModalActions = Pick<
   ReturnType<typeof useCutsRunModal>,
-  "handleOpen" | "handleOpenRunDetails" | "handleClose"
+  "handleOpen" | "handleClose"
 >;
 
 const CutsRunModalActionsContext =
   createContext<CutsRunModalActions | null>(null);
 
-/**
- * Host isolado: mudanças de estado do modal (SSE, fase, cortes, etc.) ficam
- * neste subtree e não re-renderizam `{children}`. As ações são publicadas via
- * ref para um contexto estável que envolve a árvore inteira.
- */
 const CutsRunModalHost = ({
   actionsRef,
   onReady,
@@ -38,7 +34,6 @@ const CutsRunModalHost = ({
 
   actionsRef.current = {
     handleOpen: modal.handleOpen,
-    handleOpenRunDetails: modal.handleOpenRunDetails,
     handleClose: modal.handleClose,
   };
 
@@ -46,7 +41,19 @@ const CutsRunModalHost = ({
     onReady();
   }, [onReady]);
 
-  return <CutsRunModal controller={modal} />;
+  return (
+    <>
+      <CutsRunModal controller={modal} />
+      <CutsRunStatusModal
+        open={modal.statusModalOpen}
+        variant={modal.statusModalVariant}
+        runId={modal.statusRunId}
+        errorMessage={modal.statusErrorMessage}
+        onClose={modal.handleCloseStatusModal}
+        onRetry={modal.handleRetryFromStatusModal}
+      />
+    </>
+  );
 };
 
 export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
@@ -57,9 +64,6 @@ export const CutsRunModalProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       handleOpen: () => {
         actionsRef.current?.handleOpen();
-      },
-      handleOpenRunDetails: (params) => {
-        actionsRef.current?.handleOpenRunDetails(params);
       },
       handleClose: () => {
         actionsRef.current?.handleClose();

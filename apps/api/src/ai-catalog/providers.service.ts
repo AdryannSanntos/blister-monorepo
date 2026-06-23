@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import type { z } from 'zod';
 import { PrismaService } from '../prisma/prisma.service';
 import type {
-  addCredentialSchema,
   createProviderSchema,
   updateProviderSchema,
 } from './dto/ai-catalog.dto';
@@ -12,11 +11,10 @@ export class ProvidersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
+    // Credentials live in the environment (loaded by the SDK integration
+    // module), never in the database — so providers expose only catalog data.
     return this.prisma.aiProvider.findMany({
       include: {
-        credentials: {
-          select: { id: true, label: true, isActive: true, createdAt: true },
-        },
         _count: { select: { models: true } },
       },
       orderBy: { createdAt: 'asc' },
@@ -29,23 +27,5 @@ export class ProvidersService {
 
   async update(id: string, dto: z.infer<typeof updateProviderSchema>) {
     return this.prisma.aiProvider.update({ where: { id }, data: dto });
-  }
-
-  async addCredential(
-    providerId: string,
-    dto: z.infer<typeof addCredentialSchema>,
-  ) {
-    return this.prisma.aiProviderCredential.create({
-      data: {
-        providerId,
-        label: dto.label,
-        // TODO: encrypt in production
-        encryptedValue: dto.value,
-      },
-    });
-  }
-
-  async deleteCredential(credId: string) {
-    return this.prisma.aiProviderCredential.delete({ where: { id: credId } });
   }
 }

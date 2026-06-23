@@ -11,9 +11,12 @@ test.describe("Cuts flow", () => {
     await expect(page.getByTestId("cuts-source-step")).toBeVisible();
   });
 
-  test("results page renders", async ({ authenticatedPage: page }) => {
+  test("legacy /results redirects to overview", async ({
+    authenticatedPage: page,
+  }) => {
     await page.goto("/dashboard/agents/cuts/results");
-    await expect(page.getByTestId("cuts-results-page")).toBeVisible();
+    await expect(page.getByTestId("agent-overview-page")).toBeVisible();
+    await expect(page.getByTestId("cuts-results-grid")).toBeVisible();
   });
 
   test("settings page renders for cuts agent", async ({
@@ -32,39 +35,35 @@ test.describe("Cuts flow", () => {
     await expect(page.getByTestId("cuts-source-step")).toBeVisible();
   });
 
-  // Regression guard: the row action menu used `modal={false}` + onSelect
-  // preventDefault, which pinned the renderer in a focus loop and froze the tab
-  // when opening the results modal. Opening must stay responsive.
-  test(
-    "viewing a completed run from the results table opens the modal without freezing",
-    async ({ authenticatedPage: page }) => {
-      await page.goto("/dashboard/agents/cuts/results");
-      await expect(page.getByTestId("cuts-results-page")).toBeVisible();
-
-      const actionButton = page
-        .getByRole("button", { name: /Ações para|Actions for/i })
-        .first();
-
-      // Nothing to view in this workspace — skip rather than assert falsely.
-      if ((await actionButton.count()) === 0) test.skip();
-
-      await actionButton.click();
-      await page.getByRole("menuitem", { name: /Ver cortes|View cuts/i }).click();
-
-      // The results modal must appear and the page must stay responsive.
-      const modal = page.getByTestId("cuts-run-modal");
-      await expect(modal).toBeVisible({ timeout: 5_000 });
-      await expect(modal).toHaveAttribute("data-phase", "results");
-      // Responsiveness probe: closing must work (a frozen tab can't honor this).
-      await page.getByRole("button", { name: /Fechar|Close/i }).first().click();
-      await expect(modal).toBeHidden({ timeout: 5_000 });
-    },
-  );
-
-  test("full run flow reveals generated cuts inside the modal", async ({
+  test("run card preview navigates to run detail page", async ({
     authenticatedPage: page,
   }) => {
-    test.setTimeout(60_000);
+    await page.goto("/dashboard/agents/cuts/overview");
+    await expect(page.getByTestId("cuts-results-grid")).toBeVisible();
+
+    const previewButton = page.locator('[data-testid^="cuts-run-card-preview-"]').first();
+    if ((await previewButton.count()) === 0) test.skip();
+
+    await previewButton.click();
+    await expect(page.getByTestId("cuts-run-detail-page")).toBeVisible();
+  });
+
+  test("run card preview and title show pointer cursor", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/dashboard/agents/cuts/overview");
+    await expect(page.getByTestId("cuts-results-grid")).toBeVisible();
+
+    const previewButton = page.locator('[data-testid^="cuts-run-card-preview-"]').first();
+    if ((await previewButton.count()) === 0) test.skip();
+
+    await expect(previewButton).toHaveCSS("cursor", "pointer");
+  });
+
+  test("full run flow opens status modal then navigates to run page", async ({
+    authenticatedPage: page,
+  }) => {
+    test.setTimeout(90_000);
 
     await page.goto("/dashboard/agents/cuts/overview");
     await page.getByTestId("cuts-new-run-button").click();
@@ -84,12 +83,20 @@ test.describe("Cuts flow", () => {
     await page.getByRole("button", { name: /Usar arquivo|Use file/i }).click();
     await page.getByTestId("cuts-start-run-button").click();
 
-    await expect(page.getByTestId("cuts-processing-step")).toBeVisible();
-    await expect(page.getByTestId("cuts-results-step")).toBeVisible({
+    await expect(page.getByTestId("cuts-status-modal")).toBeVisible({
       timeout: 30_000,
     });
+    await expect(page.getByTestId("cuts-status-modal")).toHaveAttribute(
+      "data-variant",
+      "success",
+    );
+    await expect(page.getByTestId("cuts-run-modal")).not.toBeVisible();
+
+    await page.getByTestId("cuts-status-view-execution").click();
+    await expect(page.getByTestId("cuts-run-detail-page")).toBeVisible();
+
     await expect(
-      page.locator('[data-testid^="cut-review-item-"]').first(),
-    ).toBeVisible({ timeout: 15_000 });
+      page.getByTestId("cuts-run-progress").or(page.getByTestId("cuts-gallery")),
+    ).toBeVisible({ timeout: 45_000 });
   });
 });

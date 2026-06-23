@@ -4,8 +4,16 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import type { MarketplaceItemDto } from '@company-os/types';
-import type { MarketplaceItemType } from '../generated/prisma';
+import type {
+  AdminMarketplaceItemDto,
+  MarketplaceItemDto,
+  TextStyleSpec,
+  UpdateMarketplaceItemDto,
+  UpsertMarketplaceItemDto,
+} from '@company-os/types';
+import { textStyleSpecSchema } from '@company-os/types';
+import type { Prisma } from '@company-os/db';
+import type { MarketplaceItemType } from '@company-os/db';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreditService } from '../credits/credits.service';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
@@ -14,11 +22,16 @@ const typeToSlug: Record<MarketplaceItemType, MarketplaceItemDto['type']> = {
   EDIT_STYLE: 'edit-style',
   POST_STYLE: 'post-style',
   CAPTION_STYLE: 'caption-style',
+  TEXT_STYLE: 'text-style',
   PACK: 'pack',
   TEMPLATE: 'template',
   ASSET: 'asset',
   AGENT: 'agent',
 };
+
+const slugToType = Object.fromEntries(
+  Object.entries(typeToSlug).map(([prismaType, slug]) => [slug, prismaType]),
+) as Record<MarketplaceItemDto['type'], MarketplaceItemType>;
 
 const serializeItem = (
   item: {
@@ -36,24 +49,40 @@ const serializeItem = (
     refId: string | null;
   },
   owned = false,
-): MarketplaceItemDto => ({
-  id: item.id,
-  slug: item.slug,
-  type: typeToSlug[item.type],
-  name: item.name,
-  author: item.author,
-  price: item.price,
-  flag: item.flag,
-  description: item.description,
-  palette: Array.isArray(item.palette) ? (item.palette as string[]) : [],
-  specs:
+): MarketplaceItemDto => {
+  const rawSpecs =
     item.specs && typeof item.specs === 'object' && !Array.isArray(item.specs)
-      ? (item.specs as Record<string, string>)
-      : {},
-  includes: Array.isArray(item.includes) ? (item.includes as string[]) : [],
-  refId: item.refId,
-  owned,
-});
+      ? (item.specs as Record<string, unknown>)
+      : {};
+
+  // `previewUrl` is surfaced as a dedicated field (animated styles); every other
+  // spec value is coerced to a string so the display contract stays a flat map
+  // even when a TEXT_STYLE spec carries numeric fields (e.g. fontSize).
+  const previewUrl =
+    typeof rawSpecs.previewUrl === 'string' ? rawSpecs.previewUrl : undefined;
+  const specs = Object.fromEntries(
+    Object.entries(rawSpecs)
+      .filter(([key]) => key !== 'previewUrl')
+      .map(([key, value]) => [key, String(value)]),
+  );
+
+  return {
+    id: item.id,
+    slug: item.slug,
+    type: typeToSlug[item.type],
+    name: item.name,
+    author: item.author,
+    price: item.price,
+    flag: item.flag,
+    description: item.description,
+    palette: Array.isArray(item.palette) ? (item.palette as string[]) : [],
+    specs,
+    includes: Array.isArray(item.includes) ? (item.includes as string[]) : [],
+    refId: item.refId,
+    owned,
+    ...(previewUrl ? { previewUrl } : {}),
+  };
+};
 
 @Injectable()
 export class MarketplaceService {
@@ -79,6 +108,21 @@ export class MarketplaceService {
     });
 
     return items.map((item) => serializeItem(item));
+  }
+
+  /**
+   * Resolve the render spec of a TEXT_STYLE item by id or slug. Returns null
+   * when the item is missing or its `specs` json does not match the contract.
+   * Used by the cuts render pipeline to burn title/caption overlays.
+   */
+  async getTextStyleSpec(styleId: string): Promise<TextStyleSpec | null> {
+    const item = await this.prisma.marketplaceItem.findFirst({
+      where: { OR: [{ id: styleId }, { slug: styleId }] },
+      select: { specs: true },
+    });
+    if (!item?.specs) return null;
+    const parsed = textStyleSpecSchema.safeParse(item.specs);
+    return parsed.success ? parsed.data : null;
   }
 
   async getItem(itemId: string) {
@@ -165,7 +209,12 @@ export class MarketplaceService {
           `Marketplace redeem: ${item.name}`,
         );
       } else {
-        await this.debitPersonalCredits(workspace.personalSpaceId, item.price);
+        await this.debitPersonalCredits(
+          workspace.personalSpaceId,
+          item.price,
+          `Marketplace redeem: ${item.name}`,
+          userId,
+        );
       }
     }
 
@@ -187,20 +236,114 @@ export class MarketplaceService {
     return serializeItem(item, true);
   }
 
-  private async debitPersonalCredits(personalSpaceId: string, amount: number) {
-    const balance = await this.prisma.personalCreditBalance.findUnique({
-      where: { personalSpaceId },
+  // ─── Admin (marketplace.manage) ──────────────────────────────────────────
+
+  async listAllItems(): Promise<AdminMarketplaceItemDto[]> {
+    const items = await this.prisma.marketplaceItem.findMany({
+      orderBy: [{ isActive: 'desc' }, { name: 'asc' }],
     });
-    if (!balance) throw new NotFoundException('Credit balance not found');
+    return items.map((item) => ({ ...serializeItem(item), isActive: item.isActive }));
+  }
 
-    const newAmount = Number(balance.amount) - amount;
-    if (newAmount < 0) {
-      throw new UnprocessableEntityException('Insufficient credit balance');
+  async createItem(dto: UpsertMarketplaceItemDto): Promise<AdminMarketplaceItemDto> {
+    const existing = await this.prisma.marketplaceItem.findUnique({
+      where: { slug: dto.slug },
+    });
+    if (existing) {
+      throw new UnprocessableEntityException('Slug already in use');
     }
+    const item = await this.prisma.marketplaceItem.create({
+      data: {
+        slug: dto.slug,
+        type: slugToType[dto.type],
+        name: dto.name,
+        author: dto.author,
+        price: dto.price,
+        flag: dto.flag ?? null,
+        description: dto.description,
+        palette: dto.palette,
+        specs: dto.specs as Prisma.InputJsonValue,
+        includes: dto.includes,
+        refId: dto.refId ?? null,
+        isActive: dto.isActive,
+      },
+    });
+    return { ...serializeItem(item), isActive: item.isActive };
+  }
 
-    await this.prisma.personalCreditBalance.update({
-      where: { personalSpaceId },
-      data: { amount: newAmount },
+  async updateItem(
+    id: string,
+    dto: UpdateMarketplaceItemDto,
+  ): Promise<AdminMarketplaceItemDto> {
+    await this.ensureItemExists(id);
+    const data: Prisma.MarketplaceItemUpdateInput = {};
+    if (dto.slug !== undefined) data.slug = dto.slug;
+    if (dto.type !== undefined) data.type = slugToType[dto.type];
+    if (dto.name !== undefined) data.name = dto.name;
+    if (dto.author !== undefined) data.author = dto.author;
+    if (dto.price !== undefined) data.price = dto.price;
+    if (dto.flag !== undefined) data.flag = dto.flag ?? null;
+    if (dto.description !== undefined) data.description = dto.description;
+    if (dto.palette !== undefined) data.palette = dto.palette;
+    if (dto.specs !== undefined) data.specs = dto.specs as Prisma.InputJsonValue;
+    if (dto.includes !== undefined) data.includes = dto.includes;
+    if (dto.refId !== undefined) data.refId = dto.refId ?? null;
+    if (dto.isActive !== undefined) data.isActive = dto.isActive;
+
+    const item = await this.prisma.marketplaceItem.update({ where: { id }, data });
+    return { ...serializeItem(item), isActive: item.isActive };
+  }
+
+  async setItemActive(
+    id: string,
+    isActive: boolean,
+  ): Promise<AdminMarketplaceItemDto> {
+    await this.ensureItemExists(id);
+    const item = await this.prisma.marketplaceItem.update({
+      where: { id },
+      data: { isActive },
+    });
+    return { ...serializeItem(item), isActive: item.isActive };
+  }
+
+  private async ensureItemExists(id: string) {
+    const item = await this.prisma.marketplaceItem.findUnique({ where: { id } });
+    if (!item) throw new NotFoundException('Marketplace item not found');
+  }
+
+  private async debitPersonalCredits(
+    personalSpaceId: string,
+    amount: number,
+    description: string,
+    userId: string,
+  ) {
+    await this.prisma.$transaction(async (tx) => {
+      const balance = await tx.personalCreditBalance.findUnique({
+        where: { personalSpaceId },
+      });
+      if (!balance) throw new NotFoundException('Credit balance not found');
+
+      const newAmount = Number(balance.amount) - amount;
+      if (newAmount < 0) {
+        throw new UnprocessableEntityException('Insufficient credit balance');
+      }
+
+      await tx.personalCreditBalance.update({
+        where: { personalSpaceId },
+        data: { amount: newAmount },
+      });
+
+      await tx.personalCreditLedger.create({
+        data: {
+          personalSpaceId,
+          type: 'DEBIT',
+          amount,
+          balanceAfter: newAmount,
+          currency: balance.currency,
+          description,
+          createdByUserId: userId,
+        },
+      });
     });
   }
 }

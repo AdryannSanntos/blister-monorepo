@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../../src/generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 
 export interface CreditSnapshot {
   balance: number;

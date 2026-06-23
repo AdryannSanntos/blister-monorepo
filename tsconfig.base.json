@@ -16,9 +16,15 @@
     "baseUrl": ".",
     "paths": {
       "@company-os/authz": ["packages/authz/src/index.ts"],
-      "@company-os/agent-sdk": ["packages/agent-sdk/src/index.ts"],
-      "@company-os/agent-sdk/stream": ["packages/agent-sdk/src/stream/index.ts"],
-      "@company-os/agent-sdk/testing": ["packages/agent-sdk/src/testing/index.ts"],
+      "@company-os/agent-sdk": ["packages/agent-ia-sdk/src/agents/index.ts"],
+      "@company-os/agent-sdk/stream": ["packages/agent-ia-sdk/src/agents/stream/index.ts"],
+      "@company-os/agent-sdk/testing": ["packages/agent-ia-sdk/src/agents/testing/index.ts"],
+      "@company-os/db": ["packages/db/src/index.ts"],
+      "@company-os/agent-ia-sdk": ["packages/agent-ia-sdk/src/index.ts"],
+      "@company-os/agent-ia-sdk/ia": ["packages/agent-ia-sdk/src/ia/index.ts"],
+      "@company-os/agent-ia-sdk/agents": ["packages/agent-ia-sdk/src/agents/index.ts"],
+      "@company-os/agent-ia-sdk/agents/testing": ["packages/agent-ia-sdk/src/agents/testing/index.ts"],
+      "@company-os/agent-ia-sdk/agents/stream": ["packages/agent-ia-sdk/src/agents/stream/index.ts"],
       "@company-os/types": ["packages/types/src/index.ts"],
       "@company-os/configs/*": ["packages/configs/*"]
     }

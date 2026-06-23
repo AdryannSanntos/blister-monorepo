@@ -10,7 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CreditBadge } from "src/core/modules/credits/components/credit-badge";
 import { UserTrigger } from "src/core/modules/dashboard/components/sidebar-triggers";
@@ -51,10 +51,18 @@ import {
   setPersonalWorkspace,
 } from "src/core/shared/utils/active-workspace";
 
+export type AppShellBreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
 export type AppShellBreadcrumb = {
   homeLabel: string;
   homeHref: string;
-  currentPageTitle: string | null;
+  /** Single-segment pages. Ignored when `items` is set. */
+  currentPageTitle?: string | null;
+  /** Segments after home. The last item is the current page. */
+  items?: AppShellBreadcrumbItem[];
 };
 
 type AppShellProps = {
@@ -211,32 +219,60 @@ export function AppShell({
             </Button>
             <Breadcrumb className="min-w-0">
               <BreadcrumbList className="flex-nowrap">
-                <BreadcrumbItem className="min-w-0">
-                  {breadcrumb.currentPageTitle ? (
-                    <BreadcrumbLink asChild>
-                      <Link
-                        href={breadcrumb.homeHref}
-                        className="max-w-[5.5rem] truncate sm:max-w-none"
-                      >
-                        {breadcrumb.homeLabel}
-                      </Link>
-                    </BreadcrumbLink>
-                  ) : (
-                    <BreadcrumbPage className="max-w-[8rem] truncate sm:max-w-none">
-                      {breadcrumb.homeLabel}
-                    </BreadcrumbPage>
-                  )}
-                </BreadcrumbItem>
-                {breadcrumb.currentPageTitle && (
-                  <>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem className="min-w-0">
-                      <BreadcrumbPage className="max-w-[7rem] truncate sm:max-w-none">
-                        {breadcrumb.currentPageTitle}
-                      </BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </>
-                )}
+                {(() => {
+                  const trailItems =
+                    breadcrumb.items ??
+                    (breadcrumb.currentPageTitle
+                      ? [{ label: breadcrumb.currentPageTitle }]
+                      : []);
+                  const hasTrail = trailItems.length > 0;
+
+                  return (
+                    <>
+                      <BreadcrumbItem className="min-w-0">
+                        {hasTrail ? (
+                          <BreadcrumbLink asChild>
+                            <Link
+                              href={breadcrumb.homeHref}
+                              className="max-w-[5.5rem] truncate sm:max-w-none"
+                            >
+                              {breadcrumb.homeLabel}
+                            </Link>
+                          </BreadcrumbLink>
+                        ) : (
+                          <BreadcrumbPage className="max-w-[8rem] truncate sm:max-w-none">
+                            {breadcrumb.homeLabel}
+                          </BreadcrumbPage>
+                        )}
+                      </BreadcrumbItem>
+                      {trailItems.map((item, index) => {
+                        const isLast = index === trailItems.length - 1;
+
+                        return (
+                          <Fragment key={`${item.label}-${index}`}>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem className="min-w-0">
+                              {isLast || !item.href ? (
+                                <BreadcrumbPage className="max-w-[7rem] truncate sm:max-w-none">
+                                  {item.label}
+                                </BreadcrumbPage>
+                              ) : (
+                                <BreadcrumbLink asChild>
+                                  <Link
+                                    href={item.href}
+                                    className="max-w-[7rem] truncate sm:max-w-none"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </BreadcrumbLink>
+                              )}
+                            </BreadcrumbItem>
+                          </Fragment>
+                        );
+                      })}
+                    </>
+                  );
+                })()}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

@@ -1,90 +1,55 @@
-import type {
-  AiProviderAdapter,
-  AiRuntimeTextResult,
-} from '../../../ai-runtime/adapters/ai-provider.adapter';
-import { AssemblyAiAdapter } from '../../../ai-runtime/adapters/assemblyai.adapter';
-import { GeminiAdapter } from '../../../ai-runtime/adapters/gemini.adapter';
-import { OpenRouterAdapter } from '../../../ai-runtime/adapters/openrouter.adapter';
-import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
-import {
-  calculateModelCost,
-  resolveStepModel,
-} from '../../../ai-runtime/resolve-model';
-import type { PrismaClient } from '../../../generated/prisma';
+import { type AgentIaSdk, calculateModelCost } from '@company-os/agent-ia-sdk';
+import { toUserFacingProviderError } from './provider-error-message';
 import type { LlmProvider } from './agent-execution.kernel';
 
-class EnvConfigService {
-  get<T = string>(key: string, defaultValue?: T): T | undefined {
-    return (process.env[key] as T | undefined) ?? defaultValue;
-  }
-}
+const REQUIRED_TEXT_CAPABILITIES = ['text', 'structured_output'];
 
-const getAdapter = (
-  providerSlug: string,
-  adapters: Record<string, AiProviderAdapter>,
-): AiProviderAdapter => {
-  const adapter = adapters[providerSlug];
-  if (!adapter) {
-    throw new Error(`Provider not supported in trigger runtime: ${providerSlug}`);
-  }
-  return adapter;
-};
-
-export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
-  const config = new EnvConfigService();
-  const adapters: Record<string, AiProviderAdapter> = {
-    openrouter: new OpenRouterAdapter(config as never),
-    gemini: new GeminiAdapter(config as never),
-    assemblyai: new AssemblyAiAdapter(config as never),
-  };
-
-  return {
-    async complete(params) {
-      const model = await resolveStepModel(prisma, {
+/**
+ * Bridges the SDK text capability (`sdk.ia`) to the agent kernel's `LlmProvider`
+ * port. The model is resolved per call from the agent/step policy; cost is
+ * computed from the resolved model's pricing. Works in both NestJS and Trigger
+ * runtimes — just pass the wired `AgentIaSdk`.
+ */
+export const createTriggerLlmProvider = (sdk: AgentIaSdk): LlmProvider => ({
+  async complete(params) {
+    try {
+      const provider = await sdk.ia.text({
         agentId: params.agentId,
         stepKey: params.stepKey,
-        requiredCapabilities: ['text', 'structured_output'],
+        requiredCapabilities: REQUIRED_TEXT_CAPABILITIES,
       });
-      const adapter = getAdapter(model.providerSlug, adapters);
 
-      try {
-        const result = await adapter.generateText({
-          messages: params.messages,
-          model: model.externalModelId,
-          maxTokens: params.maxTokens,
-          temperature: params.temperature,
-          structuredOutputSchema: params.structuredOutputSchema,
-        });
+      const result = await provider.complete({
+        model: provider.model,
+        messages: params.messages,
+        maxTokens: params.maxTokens,
+        temperature: params.temperature,
+        structuredOutputSchema: params.structuredOutputSchema,
+      });
 
-        return {
-          content: result.content,
-          model: model.modelLabel,
+      return {
+        content: result.content,
+        model: provider.resolved.modelLabel,
+        tokensInput: result.usage.promptTokens,
+        tokensOutput: result.usage.completionTokens,
+        costUsd: calculateModelCost(provider.resolved, {
           tokensInput: result.usage.promptTokens,
           tokensOutput: result.usage.completionTokens,
-          costUsd: calculateModelCost(
-            model,
-            result.usage.promptTokens,
-            result.usage.completionTokens,
-          ),
-          structuredOutput: result.structuredOutput,
-        };
-      } catch (error) {
-        throw new Error(toUserFacingProviderError(error));
-      }
-    },
+        }),
+        structuredOutput: result.structuredOutput,
+      };
+    } catch (error) {
+      throw new Error(toUserFacingProviderError(error));
+    }
+  },
 
-    async completeStream(params, onChunk) {
-      const model = await resolveStepModel(prisma, {
+  async completeStream(params, onChunk) {
+    try {
+      const provider = await sdk.ia.text({
         agentId: params.agentId,
         stepKey: params.stepKey,
-        requiredCapabilities: ['text', 'structured_output'],
+        requiredCapabilities: REQUIRED_TEXT_CAPABILITIES,
       });
-      const adapter = getAdapter(model.providerSlug, adapters);
-
-      // Providers without streaming support fall back to a single completion.
-      if (!adapter.streamText) {
-        return this.complete(params);
-      }
 
       // Batch deltas so we emit fewer, slightly larger chunks — smoother to
       // render and far cheaper when events cross the network (trigger mode).
@@ -96,48 +61,38 @@ export const createTriggerLlmProvider = (prisma: PrismaClient): LlmProvider => {
         }
       };
 
-      try {
-        const iterator = adapter.streamText({
-          messages: params.messages,
-          model: model.externalModelId,
-          maxTokens: params.maxTokens,
-          temperature: params.temperature,
-          structuredOutputSchema: params.structuredOutputSchema,
-        });
+      const iterator = provider.stream({
+        model: provider.model,
+        messages: params.messages,
+        maxTokens: params.maxTokens,
+        temperature: params.temperature,
+        structuredOutputSchema: params.structuredOutputSchema,
+      });
 
-        let result: AiRuntimeTextResult | undefined;
-        while (true) {
-          const next = await iterator.next();
-          if (next.done) {
-            result = next.value;
-            break;
-          }
-          if (next.value.content) {
-            buffer += next.value.content;
-            if (buffer.length >= 24) flush();
-          }
+      let next = await iterator.next();
+      while (!next.done) {
+        if (next.value.content) {
+          buffer += next.value.content;
+          if (buffer.length >= 24) flush();
         }
-        flush();
+        next = await iterator.next();
+      }
+      flush();
 
-        if (!result) {
-          throw new Error('Stream ended without a final result');
-        }
-
-        return {
-          content: result.content,
-          model: model.modelLabel,
+      const result = next.value;
+      return {
+        content: result.content,
+        model: provider.resolved.modelLabel,
+        tokensInput: result.usage.promptTokens,
+        tokensOutput: result.usage.completionTokens,
+        costUsd: calculateModelCost(provider.resolved, {
           tokensInput: result.usage.promptTokens,
           tokensOutput: result.usage.completionTokens,
-          costUsd: calculateModelCost(
-            model,
-            result.usage.promptTokens,
-            result.usage.completionTokens,
-          ),
-          structuredOutput: result.structuredOutput,
-        };
-      } catch (error) {
-        throw new Error(toUserFacingProviderError(error));
-      }
-    },
-  };
-};
+        }),
+        structuredOutput: result.structuredOutput,
+      };
+    } catch (error) {
+      throw new Error(toUserFacingProviderError(error));
+    }
+  },
+});

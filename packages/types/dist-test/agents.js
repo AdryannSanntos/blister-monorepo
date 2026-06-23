@@ -74,7 +74,6 @@ exports.agentDefinitionSchema = zod_1.z.object({
 // ---------------------------------------------------------------------------
 exports.runAgentRequestSchema = zod_1.z.object({
     userInput: zod_1.z.string().trim().min(1).max(10_000),
-    campaignId: zod_1.z.string().min(1).optional(),
     metadata: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()).optional(),
 });
 // ---------------------------------------------------------------------------
@@ -150,13 +149,10 @@ exports.stepContextSchema = zod_1.z.object({
     runId: zod_1.z.string(),
     agentId: zod_1.z.string(),
     companyId: zod_1.z.string(),
-    campaignId: zod_1.z.string().nullable(),
     stepKey: zod_1.z.string(),
     stepIndex: zod_1.z.number(),
     inputPayload: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()),
     previousStepsOutput: zod_1.z.record(zod_1.z.string(), zod_1.z.record(zod_1.z.string(), zod_1.z.unknown())),
-    contextPack: zod_1.z.any().nullable(),
-    brandProfile: zod_1.z.any().nullable(),
 });
 exports.stepResultSchema = zod_1.z.object({
     type: exports.stepResultTypeSchema,
@@ -206,6 +202,9 @@ exports.agentRunEventTypeSchema = zod_1.z.enum([
     'block_delta',
     'block_end',
     'message_end',
+    // cuts progressive rendering
+    'cut_rendered',
+    'all_cuts_rendered',
 ]);
 exports.blockTypeSchema = zod_1.z.enum([
     'thinking',

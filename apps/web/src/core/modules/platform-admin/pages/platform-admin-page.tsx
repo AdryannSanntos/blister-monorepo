@@ -13,6 +13,7 @@ import { PlatformAdminOverviewPanel } from "../components/platform-admin-overvie
 import { PlatformAdminPageLayout } from "../components/platform-admin-page-layout";
 import { PlatformAdminsPanel } from "../components/platform-admins-panel";
 import { PlatformSupportPanel } from "../components/platform-support-panel";
+import { SystemAiTab } from "../components/system-ai-tab";
 import { usePlatformAdminTab } from "../hooks/use-platform-admin-tab";
 
 export function PlatformAdminPage() {
@@ -38,6 +39,7 @@ export function PlatformAdminPage() {
         {tab === "support" && <PlatformSupportPanel />}
         {tab === "agents" && <AgentsPlatformTab />}
         {tab === "ai-catalog" && <AiCatalogTab />}
+        {tab === "system-ai" && <SystemAiTab />}
         {tab === "credits" && <CreditsPlatformTab />}
       </PlatformAdminPageLayout>
 

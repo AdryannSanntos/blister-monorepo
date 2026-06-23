@@ -44,6 +44,10 @@ export function useAgentRun(
     // still resolves if the stream never connects or drops mid-run.
     refetchInterval:
       options?.refetchInterval ??
-      ((query) => runPollIntervalMs(query.state.data?.run.status)),
+      ((query) =>
+        runPollIntervalMs(
+          query.state.data?.run.status,
+          query.state.data?.run.pauseReason,
+        )),
   });
 }

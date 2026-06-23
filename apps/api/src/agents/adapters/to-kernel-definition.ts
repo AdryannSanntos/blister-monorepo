@@ -1,4 +1,4 @@
-import type { BuiltAgentDefinition } from '@company-os/agent-sdk';
+import type { BuiltAgentDefinition } from '@company-os/agent-ia-sdk/agents';
 import type { AgentDefinition, StepDefinition } from '../runtime/kernel/types';
 
 const mapStepType = (

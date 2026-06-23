@@ -14,6 +14,7 @@ import {
   formatCreditCurrency,
 } from "../utils/credit-metrics";
 import type { CreditSummary } from "@company-os/types";
+import { FREE_TIER_CREDITS } from "@company-os/types";
 
 type CreditsOverviewStatsProps = {
   data: CreditSummary | undefined;
@@ -36,13 +37,21 @@ export function CreditsOverviewStats({
   const balanceFormatted = formatCreditCurrency(metrics.balance, locale);
   const spentFormatted = formatCreditCurrency(metrics.spentLast30Days, locale);
   const isLowBalance = metrics.balance < 2;
+  // Heuristic free-tier indicator: no top-ups recorded means the balance is
+  // still the granted free tier (1 credit = US$1, FREE_TIER_CREDITS of usage).
+  const isFreeTier = metrics.creditedLast30Days === 0;
+  const balanceHint = isLowBalance
+    ? t("balance.lowHint")
+    : isFreeTier
+      ? t("balance.freeTier", { amount: FREE_TIER_CREDITS })
+      : t("balance.hint");
 
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <DashboardStatCard
         label={t("balance.label")}
         value={balanceFormatted}
-        hint={isLowBalance ? t("balance.lowHint") : t("balance.hint")}
+        hint={balanceHint}
         icon={Coins}
         isLoading={isLoading}
         tone={isLowBalance ? "danger" : "default"}

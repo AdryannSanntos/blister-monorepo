@@ -41,7 +41,8 @@ describe('cutsLearningHandler', () => {
   });
 
   it('extracts preferred duration from approved cuts', () => {
-    const insights = cutsLearningHandler.extractInsights({
+    expect(cutsLearningHandler.extractInsights).toBeDefined();
+    const insights = cutsLearningHandler.extractInsights!({
       agentRunId: 'run-1',
       companyId: 'co-1',
       approved: true,

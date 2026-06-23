@@ -3,9 +3,11 @@ import {
   type CustomStepExecutor as SdkCustomStepExecutor,
   type ExecutionKernelDeps,
   type KernelRunResult,
-} from '@company-os/agent-sdk';
-import { toUserFacingProviderError } from '../../../ai-runtime/provider-error.util';
-import type { PrismaClient } from '../../../generated/prisma';
+  type StepExecutionContext,
+  type StepResult,
+} from '@company-os/agent-ia-sdk/agents';
+import { toUserFacingProviderError } from './provider-error-message';
+import type { PrismaClient } from '@company-os/db';
 import { createPrismaRunStore } from '../../adapters/prisma-run-store.adapter';
 import { createUsageReporter } from '../../adapters/usage-reporter.adapter';
 import { loadAgentDefinition } from './agent-loader';
@@ -13,16 +15,17 @@ import {
   type AgentRunBlockServiceLike,
   type MessageHandle,
   type StreamingBlock,
-} from '@company-os/agent-sdk';
+} from '@company-os/agent-ia-sdk/agents';
 import { debitStepCredits, getPlatformSettings } from './credit-debit.helper';
+import {
+  createDevTelemetryProvider,
+  isDevEnvironment,
+  wrapEventPublisherForDev,
+} from '../dev-agent-logger';
 import { agentStepRegistry } from './agent-step-registry';
 import type { EventPublisher } from './run-event.publisher';
 import { createTriggerLlmProvider } from './trigger-providers';
-import type {
-  RunResult,
-  StepExecutionContext,
-  StepResult,
-} from './types';
+import type { RunResult } from './types';
 
 export interface LlmCompletion {
   content: string;
@@ -91,25 +94,32 @@ export interface ExecuteRunParams {
 
 export type { MessageHandle, StreamingBlock };
 
-const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => ({
-  runStore: createPrismaRunStore(deps.prisma),
-  loadAgentDefinition: async (agentId) => {
-    const definition = await loadAgentDefinition(deps.prisma, agentId);
-    return definition;
-  },
-  llmProvider: deps.llmProvider,
-  imageProvider: deps.imageProvider,
-  eventPublisher: deps.eventPublisher,
-  blocks: deps.blocks,
-  usageReporter: {
-    getPlatformSettings: () => getPlatformSettings(deps.prisma),
-    debitStep: (params) => debitStepCredits(deps.prisma, params),
-  },
-  usage: createUsageReporter(),
-  customStepExecutors: agentStepRegistry as Record<string, SdkCustomStepExecutor>,
-  stubMode: deps.stubMode,
-  formatProviderError: toUserFacingProviderError,
-});
+const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => {
+  const eventPublisher = isDevEnvironment()
+    ? wrapEventPublisherForDev(deps.eventPublisher)
+    : deps.eventPublisher;
+
+  return {
+    runStore: createPrismaRunStore(deps.prisma),
+    loadAgentDefinition: async (agentId) => {
+      const definition = await loadAgentDefinition(deps.prisma, agentId);
+      return definition;
+    },
+    llmProvider: deps.llmProvider,
+    imageProvider: deps.imageProvider,
+    eventPublisher,
+    blocks: deps.blocks,
+    usageReporter: {
+      getPlatformSettings: () => getPlatformSettings(deps.prisma),
+      debitStep: (params) => debitStepCredits(deps.prisma, params),
+    },
+    usage: createUsageReporter(),
+    customStepExecutors: agentStepRegistry as Record<string, SdkCustomStepExecutor>,
+    stubMode: deps.stubMode,
+    formatProviderError: toUserFacingProviderError,
+    telemetry: isDevEnvironment() ? createDevTelemetryProvider() : undefined,
+  };
+};
 
 export async function executeRun(
   deps: ExecutionDependencies,

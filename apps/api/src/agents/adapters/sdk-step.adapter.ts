@@ -1,9 +1,9 @@
-import type { StepExecutor as SdkStepExecutor } from '@company-os/agent-sdk';
+import type { StepExecutor as SdkStepExecutor } from '@company-os/agent-ia-sdk/agents';
 import type {
   CustomStepExecutor,
   StepExecutorDeps,
 } from '../runtime/kernel/agent-execution.kernel';
-import type { StepExecutionContext, StepResult } from '@company-os/agent-sdk';
+import type { StepExecutionContext, StepResult } from '@company-os/agent-ia-sdk/agents';
 
 export const wrapSdkStep = (step: SdkStepExecutor): CustomStepExecutor => {
   return async (context: StepExecutionContext, deps: StepExecutorDeps): Promise<StepResult> => {

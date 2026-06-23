@@ -5,6 +5,7 @@ import type {
   AdjustCreditDto,
   PlatformCompany,
   PlatformCreditSettings,
+  RagPlatformSettings,
   UpdateCreditSettingsDto,
 } from "@company-os/types";
 
@@ -12,17 +13,19 @@ import { apiClient } from "src/core/shared/utils/api-client";
 
 import { usePlatformQueryEnabled } from "./use-platform-admin";
 
+export type PlatformSettingsResponse = {
+  credits: PlatformCreditSettings | null;
+  rag: RagPlatformSettings | null;
+};
+
 export function usePlatformSettings() {
   const enabled = usePlatformQueryEnabled();
 
-  return useQuery<{
-    credits: PlatformCreditSettings | null;
-  }>({
+  return useQuery<PlatformSettingsResponse>({
     queryKey: ["platform", "settings"],
     queryFn: async () => {
-      const { data } = await apiClient.get<{
-        credits: PlatformCreditSettings | null;
-      }>("/platform/settings");
+      const { data } =
+        await apiClient.get<PlatformSettingsResponse>("/platform/settings");
       return data;
     },
     enabled,

@@ -10,14 +10,11 @@ export const getAgentHistoryPath = (routeSlug: string) =>
 export const getAgentNewPath = (routeSlug: string) =>
   `${getAgentBasePath(routeSlug)}/new`;
 
-export const getAgentResultsPath = (routeSlug: string) =>
-  `${getAgentBasePath(routeSlug)}/results`;
-
 export const getAgentSettingsPath = (routeSlug: string) =>
   `${getAgentBasePath(routeSlug)}/settings`;
 
-export const matchAgentResultsPath = (pathname: string, routeSlug: string) =>
-  pathname === getAgentResultsPath(routeSlug);
+export const getAgentRunPath = (routeSlug: string, runId: string) =>
+  `${getAgentBasePath(routeSlug)}/runs/${runId}`;
 
 export const matchAgentPath = (pathname: string, routeSlug: string) =>
   pathname.startsWith(getAgentBasePath(routeSlug));
@@ -41,3 +38,12 @@ export const parseAgentRouteSlug = (pathname: string): string | null => {
   const slug = pathname.slice(prefix.length).split("/")[0];
   return slug || null;
 };
+
+export const parseAgentRunId = (pathname: string): string | null => {
+  const match = pathname.match(/^\/dashboard\/agents\/[^/]+\/runs\/([^/]+)\/?$/);
+  return match?.[1] ?? null;
+};
+
+export const matchAgentRunPath = (pathname: string, routeSlug: string): boolean =>
+  parseAgentRunId(pathname) !== null &&
+  pathname.startsWith(`${getAgentBasePath(routeSlug)}/runs/`);

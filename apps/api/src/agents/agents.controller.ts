@@ -1,4 +1,4 @@
-import { runAgentRequestSchema } from '@company-os/types';
+import { normalizeCutsModelTier, runAgentRequestSchema } from '@company-os/types';
 import {
   Body,
   Controller,
@@ -39,11 +39,25 @@ export class AgentsController {
     let metadata = dto.metadata;
     if (agentId === 'cuts') {
       const { config } = await this.workspaceSettings.getAgentSettings(userId, req, agentId);
-      const requestSettings =
-        (metadata as { settings?: Record<string, unknown> } | undefined)?.settings ?? {};
+      const requestMetadata = metadata as
+        | {
+            settings?: Record<string, unknown>;
+            options?: Record<string, unknown>;
+          }
+        | undefined;
+      const requestSettings = requestMetadata?.settings ?? {};
+      const mergedSettings = {
+        ...config,
+        ...requestSettings,
+        modelTier: normalizeCutsModelTier(
+          (requestSettings.modelTier as 'auto' | 'basic' | 'pro' | undefined) ??
+            config.modelTier,
+        ),
+      };
       metadata = {
         ...metadata,
-        settings: { ...config, ...requestSettings },
+        settings: mergedSettings,
+        options: requestMetadata?.options,
       };
     }
 

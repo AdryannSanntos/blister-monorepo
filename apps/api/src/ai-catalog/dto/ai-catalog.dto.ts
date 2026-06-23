@@ -8,11 +8,6 @@ export const createProviderSchema = z.object({
 
 export const updateProviderSchema = createProviderSchema.partial();
 
-export const addCredentialSchema = z.object({
-  label: z.string().min(1).max(120),
-  value: z.string().min(1),
-});
-
 export const createModelSchema = z.object({
   providerId: z.string(),
   externalId: z.string().min(1),
@@ -63,6 +58,16 @@ export const updateCreditSettingsSchema = z.object({
   freeTierAmount: z.number().positive().optional(),
   markupDefault: z.number().positive().optional(),
   minRunCost: z.number().positive().optional(),
+});
+
+// Model ids are cuids (not uuids), so validate as non-empty strings.
+export const updateRagSettingsSchema = z.object({
+  embeddingModelId: z.string().min(1).optional(),
+  captionModelId: z.string().min(1).nullable().optional(),
+  chunkSize: z.number().int().min(100).max(8000).optional(),
+  chunkOverlap: z.number().int().min(0).max(500).optional(),
+  topK: z.number().int().min(1).max(50).optional(),
+  rerankEnabled: z.boolean().optional(),
 });
 
 export const adjustCompanyCreditSchema = z.object({

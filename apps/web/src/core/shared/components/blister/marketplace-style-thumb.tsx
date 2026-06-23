@@ -1,18 +1,23 @@
-import type { MarketplaceItem } from "src/core/modules/blister-os/types/marketplace";
 import { cn } from "src/core/shared/utils";
 
 const TYPE_LABELS: Record<string, string> = {
   "edit-style": "Edit Style",
   "post-style": "Post Style",
   "caption-style": "Caption Style",
+  "text-style": "Text Style",
   pack: "Pack",
   template: "Template",
   asset: "Asset",
-  agent: "Agente",
+  agent: "Agent",
 };
 
 type MarketplaceStyleThumbProps = {
-  item: MarketplaceItem;
+  item: {
+    type: string;
+    palette: string[];
+    specs?: Record<string, string>;
+    previewUrl?: string;
+  };
   ratio?: string;
   caption?: string;
   showType?: boolean;
@@ -32,6 +37,60 @@ export const MarketplaceStyleThumb = ({
 }: MarketplaceStyleThumbProps) => {
   const [a = "#1b1b22", b = "#8b7cff", c = "#f0f0f4"] = item.palette;
   const formatLabel = item.specs?.formats?.split("·")[0]?.trim();
+
+  if (item.previewUrl) {
+    return (
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-[var(--r-lg)] border border-[var(--line-default)]",
+          className,
+        )}
+        style={{ aspectRatio: ratio }}
+      >
+        {/* biome-ignore lint/a11y/useMediaCaption: silent decorative preview */}
+        <video
+          src={item.previewUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="h-full w-full object-cover"
+        />
+        {(showType || flagLabel || formatLabel) && (
+          <div
+            className={cn(
+              "absolute inset-x-0 top-0 flex items-start justify-between gap-1",
+              compact ? "p-1.5" : "p-2",
+            )}
+          >
+            <div className="flex min-w-0 flex-col gap-1">
+              {showType ? (
+                <span className="w-fit rounded-full bg-black/45 px-1.5 py-0.5 text-[9px] font-medium text-white backdrop-blur-sm">
+                  {TYPE_LABELS[item.type] ?? item.type}
+                </span>
+              ) : flagLabel ? (
+                <span className="w-fit rounded-full bg-[var(--accent)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white shadow-sm">
+                  {flagLabel}
+                </span>
+              ) : (
+                <span />
+              )}
+            </div>
+            {formatLabel ? (
+              <span className="shrink-0 rounded-full bg-black/45 px-1.5 py-0.5 text-[9px] font-medium tabular-nums text-white backdrop-blur-sm">
+                {formatLabel}
+              </span>
+            ) : null}
+          </div>
+        )}
+        {caption ? (
+          <span className="absolute bottom-2 left-2 right-2 truncate text-[11px] font-medium text-white drop-shadow">
+            {caption}
+          </span>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div

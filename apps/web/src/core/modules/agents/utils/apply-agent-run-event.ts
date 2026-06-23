@@ -6,6 +6,7 @@ import type {
 
 import type { AgentRunWithSteps } from "../hooks/use-agent-run";
 import { normalizeReviewStatus } from "./agent-run-helpers";
+import { extractCutsFromRun } from "./cuts-run-display";
 
 const isTerminalStatus = (status: AgentRunStatus): boolean =>
   status === "COMPLETED" || status === "FAILED" || status === "CANCELLED";
@@ -125,6 +126,118 @@ export function applyAgentRunEvent(
         },
       };
 
+    case "step_started": {
+      const stepKey = typeof data.stepKey === "string" ? data.stepKey : null;
+      const stepIndex = typeof data.stepIndex === "number" ? data.stepIndex : current.steps.length;
+      if (!stepKey) return current;
+
+      const existing = current.steps.find((step) => step.stepKey === stepKey);
+      if (existing) {
+        return {
+          ...current,
+          run: {
+            ...run,
+            status: run.status === "QUEUED" ? "RUNNING" : run.status,
+            currentStepKey: stepKey,
+          },
+          steps: current.steps.map((step) =>
+            step.stepKey === stepKey
+              ? {
+                  ...step,
+                  status: "RUNNING" as const,
+                  startedAt: step.startedAt ?? event.timestamp,
+                }
+              : step,
+          ),
+        };
+      }
+
+      return {
+        ...current,
+        run: {
+          ...run,
+          status: "RUNNING",
+          currentStepKey: stepKey,
+          startedAt: run.startedAt ?? event.timestamp,
+        },
+        steps: [
+          ...current.steps,
+          {
+            id: `sse-${stepKey}`,
+            stepKey,
+            stepIndex,
+            status: "RUNNING" as const,
+            resultType: null,
+            inputPayload: {},
+            outputPayload: {},
+            errorMessage: null,
+            llmModel: null,
+            tokensInput: null,
+            tokensOutput: null,
+            creditCost: null,
+            startedAt: event.timestamp,
+            completedAt: null,
+          },
+        ],
+      };
+    }
+
+    case "step_completed": {
+      const stepKey = typeof data.stepKey === "string" ? data.stepKey : null;
+      if (!stepKey) return current;
+
+      const output =
+        typeof data.output === "object" && data.output !== null
+          ? (data.output as Record<string, unknown>)
+          : {};
+
+      return {
+        ...current,
+        steps: current.steps.map((step) =>
+          step.stepKey === stepKey
+            ? {
+                ...step,
+                status: "COMPLETED" as const,
+                outputPayload: output,
+                completedAt: event.timestamp,
+                creditCost:
+                  typeof data.creditCost === "number" ? data.creditCost : step.creditCost,
+              }
+            : step,
+        ),
+      };
+    }
+
+    case "step_failed": {
+      const stepKey = typeof data.stepKey === "string" ? data.stepKey : null;
+      const stepError =
+        typeof data.error === "string"
+          ? data.error
+          : "Não foi possível concluir a etapa.";
+
+      return {
+        ...current,
+        run: {
+          ...run,
+          status: "FAILED",
+          errorMessage: stepError,
+          completedAt: event.timestamp,
+        },
+        steps: stepKey
+          ? current.steps.map((step) =>
+              step.stepKey === stepKey
+                ? {
+                    ...step,
+                    status: "FAILED" as const,
+                    errorMessage: stepError,
+                    completedAt: event.timestamp,
+                  }
+                : step,
+            )
+          : current.steps,
+      };
+    }
+
     case "cut_rendered": {
       const cutId = typeof data.cutId === "string" ? data.cutId : null;
       const cutFileId = typeof data.cutFileId === "string" ? data.cutFileId : null;
@@ -135,9 +248,20 @@ export function applyAgentRunEvent(
         ? (currentOutput.cuts as Array<Record<string, unknown>>)
         : [];
 
-      const updatedCuts = existingCuts.map((cut) =>
-        cut.id === cutId ? { ...cut, cutFileId } : cut,
-      );
+      const applyCutFileId = (cuts: Array<Record<string, unknown>>) =>
+        cuts.map((cut) =>
+          cut.id === cutId ? { ...cut, cutFileId } : cut,
+        );
+
+      const updatedCuts =
+        existingCuts.length > 0
+          ? applyCutFileId(existingCuts)
+          : applyCutFileId(
+              extractCutsFromRun({
+                run,
+                steps: current.steps,
+              }).map((cut) => ({ ...cut })),
+            );
 
       return {
         ...current,
@@ -153,8 +277,25 @@ export function applyAgentRunEvent(
       };
     }
 
-    case "all_cuts_rendered":
-      return current;
+    case "all_cuts_rendered": {
+      const renderedCount =
+        typeof data.renderedCount === "number" ? data.renderedCount : undefined;
+      const totalCuts =
+        typeof data.totalCuts === "number" ? data.totalCuts : undefined;
+      const currentOutput = (run.outputPayload ?? {}) as Record<string, unknown>;
+
+      return {
+        ...current,
+        run: {
+          ...run,
+          outputPayload: {
+            ...currentOutput,
+            ...(renderedCount !== undefined ? { renderedCount } : {}),
+            ...(totalCuts !== undefined ? { totalCuts } : {}),
+          },
+        },
+      };
+    }
 
     default:
       return current;

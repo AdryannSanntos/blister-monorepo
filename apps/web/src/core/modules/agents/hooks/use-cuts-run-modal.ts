@@ -1,65 +1,39 @@
 "use client";
 
-import type { CutOutput, CutsAgentSettings } from "@company-os/types";
+import type { CutsProcessingTimeframe, CutsRunOptions, CutsVideoGenre } from "@company-os/types";
 import { cutsAgentSettingsSchema } from "@company-os/types";
-import { useQueryClient, type Query } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   useFilePreviewUrl,
   useUploadWorkspaceFile,
 } from "src/core/modules/files/hooks/use-files-api";
-import { shouldKeepRunStreamOpen } from "../utils/apply-agent-run-event";
-import { useAgentRun, type AgentRunWithSteps } from "./use-agent-run";
-import { useResumeAgentRun, useStartAgentRun } from "./use-agent-run-mutations";
-import { useAgentRunStream } from "./use-agent-run-stream";
+import { useStartAgentRun } from "./use-agent-run-mutations";
 import { cutsRunsQueryKey } from "./use-cuts-runs";
 import { useCutsSettings } from "./use-cuts-settings";
 import { cutsStatsQueryKey } from "./use-cuts-stats";
-import {
-  ACTIVE_RUN_POLL_MS,
-  RESULTS_VISIBLE_POLL_MS,
-  runPollIntervalMs,
-} from "../utils/run-poll-interval";
-import {
-  extractCutsFromRun,
-  getRunSourceTitle,
-  isRunAwaitingCutReview,
-  readSourceFileId,
-  stabilizeCutsSnapshot,
-} from "../utils/cuts-run-display";
-import { useStableMediaUrl } from "./use-stable-media-url";
 
 const CUTS_AGENT_ID = "cuts";
 
-/** Phases of the cuts modal — kept minimal for the user. */
-export type CutsModalPhase = "source" | "processing" | "results" | "error";
-
-export type CutsModalIntent = "generate" | "view";
-
-type CutDecision = "approve" | "reject";
-
-const defaultSettings = (): CutsAgentSettings =>
-  cutsAgentSettingsSchema.parse({});
-
-/** Reads the cut list from a run snapshot. */
-const extractCuts = (
-  runData: ReturnType<typeof useAgentRun>["data"],
-): CutOutput[] => {
-  if (!runData) return [];
-  return extractCutsFromRun({
-    run: runData.run,
-    steps: runData.steps,
-  });
+export type CutsLocalRunOptions = {
+  modelTier: "basic";
+  videoGenre?: CutsVideoGenre;
+  processingTimeframe?: CutsProcessingTimeframe;
 };
+
+const defaultRunOptions = (): CutsLocalRunOptions => ({
+  modelTier: "basic",
+});
+
+const defaultSettings = () => cutsAgentSettingsSchema.parse({});
 
 export const useCutsRunModal = () => {
   const queryClient = useQueryClient();
   const tModal = useTranslations("cuts.modal");
 
   const [open, setOpen] = useState(false);
-  const [phase, setPhase] = useState<CutsModalPhase>("source");
   const [pendingLocalFile, setPendingLocalFile] = useState<File | null>(null);
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
   const [sourceFileId, setSourceFileId] = useState<string | null>(null);
@@ -67,20 +41,24 @@ export const useCutsRunModal = () => {
   const [sourceFileSize, setSourceFileSize] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [runId, setRunId] = useState<string | null>(null);
-  const [decisions, setDecisions] = useState<Record<string, CutDecision>>({});
-  const [selectedCutId, setSelectedCutId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [intent, setIntent] = useState<CutsModalIntent>("generate");
-  const [bootstrapCuts, setBootstrapCuts] = useState<CutOutput[]>([]);
-  const [totalCuts, setTotalCuts] = useState<number>(0);
-  const [progressiveRenderedCount, setProgressiveRenderedCount] = useState<number>(0);
+  const [runOptions, setRunOptions] = useState<CutsLocalRunOptions>(defaultRunOptions);
+
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [statusModalVariant, setStatusModalVariant] =
+    useState<"success" | "error">("success");
+  const [statusRunId, setStatusRunId] = useState<string | null>(null);
+  const [statusSourceFileName, setStatusSourceFileName] = useState<string | null>(
+    null,
+  );
+  const [statusErrorMessage, setStatusErrorMessage] = useState<string | null>(
+    null,
+  );
 
   const localPreviewUrlRef = useRef<string | null>(null);
   const closeResetTimerRef = useRef<number | null>(null);
   const sourceFileIdRef = useRef<string | null>(null);
-  const stableCutsRef = useRef<CutOutput[]>([]);
-  const cutsFingerprintRef = useRef("");
   sourceFileIdRef.current = sourceFileId;
 
   const cancelCloseReset = useCallback(() => {
@@ -93,92 +71,16 @@ export const useCutsRunModal = () => {
   const { data: settings } = useCutsSettings();
   const uploadFile = useUploadWorkspaceFile();
   const startRun = useStartAgentRun(CUTS_AGENT_ID);
-  const resumeRun = useResumeAgentRun(runId, CUTS_AGENT_ID);
 
-  const runPollInterval = useCallback(
-    (query: Query<AgentRunWithSteps>) => {
-      const status = query.state.data?.run.status;
-      const baseInterval = runPollIntervalMs(status);
-      if (baseInterval === false) return false;
-
-      if (phase === "results") {
-        const visibleCuts = extractCuts(query.state.data);
-        if (visibleCuts.length > 0) {
-          const allRendered = visibleCuts.every((cut) => Boolean(cut.cutFileId));
-          return allRendered ? false : RESULTS_VISIBLE_POLL_MS;
-        }
-      }
-
-      return ACTIVE_RUN_POLL_MS;
-    },
-    [phase],
+  const existingFilePreview = useFilePreviewUrl(
+    sourceFileId && !pendingLocalFile ? sourceFileId : null,
+    Boolean(sourceFileId && !pendingLocalFile),
   );
-
-  const { data: runData } = useAgentRun(runId, {
-    refetchInterval: runPollInterval,
-  });
-
-  const runStatus = runData?.run.status ?? null;
-  const isTerminalRun =
-    runStatus === "COMPLETED" ||
-    runStatus === "FAILED" ||
-    runStatus === "CANCELLED";
-
-  const shouldStream =
-    open &&
-    Boolean(runId) &&
-    phase !== "error" &&
-    phase !== "results" &&
-    intent === "generate" &&
-    shouldKeepRunStreamOpen(runData?.run);
-
-  useAgentRunStream(runId, CUTS_AGENT_ID, shouldStream);
-
-  // Hydrate source file from a loaded run (view mode / resumed sessions).
-  useEffect(() => {
-    if (!runData || sourceFileId) return;
-    const fromRun = readSourceFileId(runData.run.inputPayload);
-    if (fromRun) setSourceFileId(fromRun);
-    if (!sourceFileName) {
-      setSourceFileName(getRunSourceTitle(runData.run.inputPayload));
-    }
-  }, [runData, sourceFileId, sourceFileName]);
-
-  const cuts = useMemo(() => {
-    const fromRun = extractCuts(runData);
-    const next = fromRun.length > 0 ? fromRun : bootstrapCuts;
-    return stabilizeCutsSnapshot(next, stableCutsRef, cutsFingerprintRef);
-  }, [runData, bootstrapCuts]);
-
-  const autoAccept =
-    settings?.autoAcceptResults ?? defaultSettings().autoAcceptResults;
-  // Review visibility is driven by the run's own paused state — see
-  // `isRunAwaitingCutReview`. Never gate it on the live workspace setting.
-  const awaitingCutReview = isRunAwaitingCutReview(runData?.run);
-  const reviewable = awaitingCutReview;
-  const isRunActive =
-    runStatus === "RUNNING" ||
-    (runStatus === "PAUSED" && !awaitingCutReview);
 
   const hasSource = Boolean(sourceFileId || pendingLocalFile);
   const hasExistingSource = Boolean(sourceFileId) && !pendingLocalFile;
-  const isSubmittingReview = resumeRun.isPending;
-
-  // Resolve a presigned URL for an existing (non-local) source file so the
-  // player can stream the original video.
-  const needsRemotePreview = phase === "results" && !localPreviewUrl;
-  const filePreview = useFilePreviewUrl(
-    needsRemotePreview ? sourceFileId : null,
-    needsRemotePreview,
-  );
-  const rawPlayerSrc = localPreviewUrl ?? filePreview.data?.url ?? null;
-  const playerSrcResourceKey = localPreviewUrl ?? sourceFileId;
-  const playerSrc = useStableMediaUrl(playerSrcResourceKey, rawPlayerSrc);
-
-  const selectedCut = useMemo(
-    () => cuts.find((cut) => cut.id === selectedCutId) ?? cuts[0] ?? null,
-    [cuts, selectedCutId],
-  );
+  const sourcePreviewUrl =
+    localPreviewUrl ?? existingFilePreview.data?.url ?? null;
 
   const invalidateCutsQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: cutsRunsQueryKey() });
@@ -194,109 +96,46 @@ export const useCutsRunModal = () => {
     setLocalPreviewUrl(null);
   }, []);
 
-  // Advance phase as the run progresses — show results as soon as cuts exist
-  // (e.g. rank_segments done while dispatch_renders is still running).
-  useEffect(() => {
-    if (!runId || (phase !== "processing" && phase !== "results")) return;
-
-    if (runStatus === "FAILED" || runStatus === "CANCELLED") {
-      setErrorMessage(runData?.run.errorMessage ?? tModal("errorGeneric"));
-      setPhase("error");
-      return;
-    }
-
-    const outputPayload = runData?.run.outputPayload as Record<string, unknown> | undefined;
-    const outputTotalCuts = typeof outputPayload?.totalCuts === "number" ? outputPayload.totalCuts : 0;
-    const outputRenderedCount = typeof outputPayload?.renderedCount === "number" ? outputPayload.renderedCount : 0;
-
-    if (outputTotalCuts > 0 && totalCuts !== outputTotalCuts) {
-      setTotalCuts(outputTotalCuts);
-    }
-    if (outputRenderedCount > 0 && progressiveRenderedCount !== outputRenderedCount) {
-      setProgressiveRenderedCount(outputRenderedCount);
-    }
-
-    if (
-      runStatus === "COMPLETED" ||
-      reviewable ||
-      (phase === "processing" && (cuts.length > 0 || outputRenderedCount > 0))
-    ) {
-      setPhase("results");
-    }
-  }, [runId, phase, runStatus, reviewable, cuts.length, runData, tModal, totalCuts, progressiveRenderedCount]);
-
-  // Default-select the first cut once results arrive.
-  useEffect(() => {
-    if (phase === "results" && !selectedCutId && cuts.length > 0) {
-      setSelectedCutId(cuts[0].id);
-    }
-  }, [phase, selectedCutId, cuts.length, cuts[0]?.id]);
-
-  const resetState = useCallback(() => {
+  const resetSourceState = useCallback(() => {
     clearLocalPreview();
-    stableCutsRef.current = [];
-    cutsFingerprintRef.current = "";
-    setPhase("source");
     setPendingLocalFile(null);
     setSourceFileId(null);
     setSourceFileName(null);
     setSourceFileSize(null);
     setUploadProgress(0);
     setIsUploading(false);
-    setRunId(null);
-    setDecisions({});
-    setSelectedCutId(null);
+    setIsSubmitting(false);
     setErrorMessage(null);
-    setIntent("generate");
-    setBootstrapCuts([]);
-    setTotalCuts(0);
-    setProgressiveRenderedCount(0);
+    setRunOptions(defaultRunOptions());
   }, [clearLocalPreview]);
 
   const handleOpen = useCallback(() => {
     cancelCloseReset();
-    resetState();
-    setIntent("generate");
+    resetSourceState();
     setOpen(true);
-  }, [cancelCloseReset, resetState]);
-
-  const handleOpenRunDetails = useCallback(
-    (params: {
-      runId: string;
-      sourceFileId?: string | null;
-      sourceFileName?: string | null;
-      initialCuts?: CutOutput[];
-    }) => {
-      cancelCloseReset();
-      clearLocalPreview();
-      setIntent("view");
-      setPhase("results");
-      setPendingLocalFile(null);
-      setUploadProgress(0);
-      setIsUploading(false);
-      setDecisions({});
-      setErrorMessage(null);
-      setRunId(params.runId);
-      setSourceFileId(params.sourceFileId ?? null);
-      setSourceFileName(params.sourceFileName ?? null);
-      setSourceFileSize(null);
-      const seededCuts = params.initialCuts ?? [];
-      setBootstrapCuts(seededCuts);
-      setSelectedCutId(seededCuts[0]?.id ?? null);
-      window.setTimeout(() => setOpen(true), 0);
-    },
-    [cancelCloseReset, clearLocalPreview],
-  );
+  }, [cancelCloseReset, resetSourceState]);
 
   const handleClose = useCallback(() => {
     setOpen(false);
-    setRunId(null);
     cancelCloseReset();
     closeResetTimerRef.current = window.setTimeout(() => {
-      resetState();
+      resetSourceState();
       closeResetTimerRef.current = null;
     }, 200);
-  }, [cancelCloseReset, resetState]);
+  }, [cancelCloseReset, resetSourceState]);
+
+  const handleCloseStatusModal = useCallback(() => {
+    setStatusModalOpen(false);
+    setStatusModalVariant("success");
+    setStatusRunId(null);
+    setStatusSourceFileName(null);
+    setStatusErrorMessage(null);
+  }, []);
+
+  const handleRetryFromStatusModal = useCallback(() => {
+    handleCloseStatusModal();
+    setOpen(true);
+  }, [handleCloseStatusModal]);
 
   const handleLocalFileChange = useCallback(
     (file: File | null) => {
@@ -330,12 +169,22 @@ export const useCutsRunModal = () => {
     [clearLocalPreview],
   );
 
-  const handleStartRun = useCallback(async () => {
-    if (!hasSource || phase === "processing") return;
+  const handleRunOptionsChange = useCallback(
+    (patch: Partial<CutsLocalRunOptions>) => {
+      setRunOptions((prev) => ({ ...prev, ...patch, modelTier: "basic" }));
+    },
+    [],
+  );
 
-    const runSettings = settings ?? defaultSettings();
+  const handleStartRun = useCallback(async () => {
+    if (!hasSource || isSubmitting) return;
+
+    const runSettings = {
+      ...(settings ?? defaultSettings()),
+      modelTier: "basic" as const,
+    };
     setErrorMessage(null);
-    setPhase("processing");
+    setIsSubmitting(true);
 
     try {
       let resolvedFileId = sourceFileId;
@@ -355,16 +204,31 @@ export const useCutsRunModal = () => {
 
       if (!resolvedFileId) throw new Error("No source file selected");
 
+      const optionsPayload: CutsRunOptions = {};
+      if (runOptions.videoGenre) optionsPayload.videoGenre = runOptions.videoGenre;
+      if (runOptions.processingTimeframe) {
+        optionsPayload.processingTimeframe = runOptions.processingTimeframe;
+      }
+      const options =
+        Object.keys(optionsPayload).length > 0 ? optionsPayload : undefined;
+
       const response = await startRun.mutateAsync({
         userInput: sourceFileName ?? "Generate cuts",
         metadata: {
           sourceFileId: resolvedFileId,
           settings: runSettings,
+          ...(options ? { options } : {}),
         },
       });
 
-      setRunId(response.runId);
       invalidateCutsQueries();
+      setOpen(false);
+      setStatusModalVariant("success");
+      setStatusErrorMessage(null);
+      setStatusRunId(response.runId);
+      setStatusSourceFileName(sourceFileName);
+      setStatusModalOpen(true);
+      resetSourceState();
     } catch (error) {
       const message =
         error instanceof Error && error.message === "FILE_TOO_LARGE"
@@ -376,13 +240,19 @@ export const useCutsRunModal = () => {
               ? error.message
               : tModal("uploadFailed");
 
-      setErrorMessage(message);
+      setOpen(false);
+      setStatusModalVariant("error");
+      setStatusRunId(null);
+      setStatusSourceFileName(sourceFileName);
+      setStatusErrorMessage(message);
+      setStatusModalOpen(true);
       setIsUploading(false);
-      setPhase("error");
+    } finally {
+      setIsSubmitting(false);
     }
   }, [
     hasSource,
-    phase,
+    isSubmitting,
     settings,
     sourceFileId,
     pendingLocalFile,
@@ -391,57 +261,10 @@ export const useCutsRunModal = () => {
     startRun,
     invalidateCutsQueries,
     tModal,
+    resetSourceState,
+    runOptions,
   ]);
 
-  const setDecision = useCallback((cutId: string, decision: CutDecision) => {
-    setDecisions((prev) => ({ ...prev, [cutId]: decision }));
-  }, []);
-
-  const allDecided = cuts.length > 0 && cuts.every((cut) => decisions[cut.id]);
-
-  const handleSubmitReview = useCallback(async () => {
-    if (!reviewable || !allDecided || isSubmittingReview) return;
-
-    const cutDecisions = cuts.map((cut) => ({
-      cutId: cut.id,
-      decision: decisions[cut.id],
-    }));
-
-    try {
-      await resumeRun.mutateAsync({ formData: { cutDecisions } });
-      invalidateCutsQueries();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : tModal("errorGeneric"),
-      );
-    }
-  }, [
-    reviewable,
-    allDecided,
-    isSubmittingReview,
-    cuts,
-    decisions,
-    resumeRun,
-    invalidateCutsQueries,
-    tModal,
-  ]);
-
-  const handleRetry = useCallback(() => {
-    clearLocalPreview();
-    setPhase("source");
-    setRunId(null);
-    setErrorMessage(null);
-    setUploadProgress(0);
-    setIsUploading(false);
-    setPendingLocalFile(null);
-    setSourceFileId(null);
-    setSourceFileName(null);
-    setSourceFileSize(null);
-    setDecisions({});
-    setSelectedCutId(null);
-  }, [clearLocalPreview]);
-
-  // Cleanup object URLs on unmount.
   useEffect(
     () => () => {
       clearLocalPreview();
@@ -450,19 +273,8 @@ export const useCutsRunModal = () => {
     [clearLocalPreview, cancelCloseReset],
   );
 
-  const resolveSourceDone =
-    runData?.steps.some(
-      (s) => s.stepKey === "resolve_source" && s.status === "COMPLETED",
-    ) ?? false;
-  const rankSegmentsDone =
-    runData?.steps.some(
-      (s) => s.stepKey === "rank_segments" && s.status === "COMPLETED",
-    ) ?? false;
-
   return {
     open,
-    phase,
-    intent,
     localFile: pendingLocalFile,
     sourceFileName,
     sourceFileSize,
@@ -470,35 +282,22 @@ export const useCutsRunModal = () => {
     hasExistingSource,
     uploadProgress,
     isUploading,
-    settings,
-    autoAccept,
-    cuts,
-    selectedCut,
-    selectedCutId: selectedCut?.id ?? null,
-    decisions,
-    reviewable,
-    allDecided,
-    playerSrc,
-    playerSrcResourceKey,
-    isResolvingSource: filePreview.isLoading,
-    isSubmittingReview,
-    runStatus,
-    runCompleted: runStatus === "COMPLETED",
-    isRunActive,
+    isSubmitting,
+    runOptions,
+    sourcePreviewUrl,
     errorMessage,
-    totalCuts,
-    progressiveRenderedCount,
-    resolveSourceDone,
-    rankSegmentsDone,
+    statusModalOpen,
+    statusModalVariant,
+    statusRunId,
+    statusSourceFileName,
+    statusErrorMessage,
     handleOpen,
-    handleOpenRunDetails,
     handleClose,
+    handleCloseStatusModal,
+    handleRetryFromStatusModal,
     handleLocalFileChange,
     handleSelectExistingFile,
+    handleRunOptionsChange,
     handleStartRun,
-    setSelectedCut: setSelectedCutId,
-    setDecision,
-    handleSubmitReview,
-    handleRetry,
   };
 };

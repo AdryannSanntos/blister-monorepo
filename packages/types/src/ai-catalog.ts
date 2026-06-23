@@ -20,12 +20,6 @@ export type CreateAiProviderDto = z.infer<typeof createAiProviderSchema>;
 export const updateAiProviderSchema = createAiProviderSchema.partial();
 export type UpdateAiProviderDto = z.infer<typeof updateAiProviderSchema>;
 
-export const addCredentialSchema = z.object({
-  label: z.string().min(1).max(120),
-  value: z.string().min(1),
-});
-export type AddCredentialDto = z.infer<typeof addCredentialSchema>;
-
 export const aiModelSchema = z.object({
   id: z.string(),
   providerId: z.string(),
@@ -174,6 +168,27 @@ export const updateCreditSettingsSchema = z.object({
   minRunCost: z.number().positive().optional(),
 });
 export type UpdateCreditSettingsDto = z.infer<typeof updateCreditSettingsSchema>;
+
+export const ragPlatformSettingsSchema = z.object({
+  embeddingModelId: z.string().nullable(),
+  captionModelId: z.string().nullable(),
+  chunkSize: z.number(),
+  chunkOverlap: z.number(),
+  topK: z.number(),
+  rerankEnabled: z.boolean(),
+});
+export type RagPlatformSettings = z.infer<typeof ragPlatformSettingsSchema>;
+
+// Model ids are cuids (not uuids), so validate as non-empty strings.
+export const updateRagSettingsSchema = z.object({
+  embeddingModelId: z.string().min(1).optional(),
+  captionModelId: z.string().min(1).nullable().optional(),
+  chunkSize: z.number().int().min(100).max(8000).optional(),
+  chunkOverlap: z.number().int().min(0).max(500).optional(),
+  topK: z.number().int().min(1).max(50).optional(),
+  rerankEnabled: z.boolean().optional(),
+});
+export type UpdateRagSettingsDto = z.infer<typeof updateRagSettingsSchema>;
 
 export const platformCompanySchema = z.object({
   id: z.string(),

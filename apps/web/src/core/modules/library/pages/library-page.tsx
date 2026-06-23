@@ -10,7 +10,7 @@ import { MarketplaceToolbar } from "src/core/modules/marketplace/components/mark
 import {
   useLibraryItems,
   useMarketplaceTypes,
-} from "src/core/modules/marketplace/hooks/use-marketplace-mock";
+} from "src/core/modules/marketplace/hooks/use-marketplace";
 import {
   filterMarketplaceItems,
   getMarketplaceTypeLabelKey,
@@ -72,7 +72,7 @@ export const LibraryPage = () => {
     q: parseAsString.withDefault(""),
   });
 
-  const { data: types = [] } = useMarketplaceTypes();
+  const types = useMarketplaceTypes();
   const { data: items = [], isLoading } = useLibraryItems(filters.type);
 
   const typeOptions = types.map((entry) => ({
@@ -84,11 +84,14 @@ export const LibraryPage = () => {
   }));
 
   const visibleItems = useMemo(() => {
-    const filtered = filterMarketplaceItems(items, {
-      type: filters.type,
-      pricing: filters.pricing,
-      search: filters.q,
-    });
+    const filtered = filterMarketplaceItems(
+      items.map((item) => ({ ...item, owned: true })),
+      {
+        type: filters.type,
+        pricing: filters.pricing,
+        search: filters.q,
+      },
+    );
 
     return sortMarketplaceItems(filtered, filters.sort);
   }, [filters.pricing, filters.q, filters.sort, filters.type, items]);

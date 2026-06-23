@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../../../generated/prisma';
+import type { PrismaClient } from '@company-os/db';
 import { mapToKernelAgentDefinition } from '../../adapters/to-kernel-definition';
 import { cutsAgentDefinition } from '../../cuts/agent';
 import type { AgentDefinition } from './types';

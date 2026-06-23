@@ -8,6 +8,7 @@ export const PLATFORM_ADMIN_TAB_VALUES = [
   "support",
   "agents",
   "ai-catalog",
+  "system-ai",
   "credits",
 ] as const;
 

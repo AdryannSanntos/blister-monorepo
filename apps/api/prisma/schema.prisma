@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  output          = "../src/generated/prisma"
+  output          = "../../../packages/db/src/generated/client"
   previewFeatures = ["postgresqlExtensions"]
   binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
@@ -415,6 +415,7 @@ model AgentRun {
   blocks        AgentRunBlock[]
   contentPieces ContentPiece[]
   creditLedger  CreditLedger[]
+  personalCreditLedger PersonalCreditLedger[]
 
   @@index([companyId])
   @@index([personalSpaceId])
@@ -444,6 +445,7 @@ model AgentRunStep {
 
   agentRun     AgentRun       @relation(fields: [agentRunId], references: [id], onDelete: Cascade)
   creditLedger CreditLedger[]
+  personalCreditLedger PersonalCreditLedger[]
 
   @@unique([agentRunId, stepIndex])
   @@index([agentRunId])
@@ -601,22 +603,7 @@ model AiProvider {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  credentials AiProviderCredential[]
-  models      AiModel[]
-}
-
-model AiProviderCredential {
-  id             String   @id @default(cuid())
-  providerId     String
-  label          String
-  encryptedValue String
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  provider AiProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-
-  @@index([providerId])
+  models AiModel[]
 }
 
 model AiModel {
@@ -807,6 +794,7 @@ model PersonalSpace {
   entitlements WorkspaceEntitlement[]
   projects     Project[]
   creditBalance PersonalCreditBalance?
+  creditLedger PersonalCreditLedger[]
   agentWorkspaceSettings AgentWorkspaceSetting[]
   agentRuns    AgentRun[]
 
@@ -822,6 +810,32 @@ model PersonalCreditBalance {
   createdAt       DateTime @default(now())
 
   personalSpace PersonalSpace @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+}
+
+// Personal-space mirror of CreditLedger. CreditLedger is company-scoped
+// (companyId, FK to Company); personal spaces record their own debit/credit
+// history here so the credits page renders a real transaction log.
+model PersonalCreditLedger {
+  id              String           @id @default(cuid())
+  personalSpaceId String
+  type            CreditLedgerType
+  amount          Decimal          @db.Decimal(12, 4)
+  balanceAfter    Decimal          @db.Decimal(12, 4)
+  currency        String           @default("USD")
+  agentRunStepId  String?
+  agentRunId      String?
+  description     String?
+  metadata        Json             @default("{}")
+  createdByUserId String?
+  createdAt       DateTime         @default(now())
+
+  personalSpace PersonalSpace @relation(fields: [personalSpaceId], references: [id], onDelete: Cascade)
+  agentRunStep  AgentRunStep? @relation(fields: [agentRunStepId], references: [id], onDelete: SetNull)
+  agentRun      AgentRun?     @relation(fields: [agentRunId], references: [id], onDelete: SetNull)
+
+  @@index([personalSpaceId])
+  @@index([createdAt])
+  @@index([type])
 }
 
 model CompanyMember {
@@ -864,6 +878,7 @@ enum MarketplaceItemType {
   EDIT_STYLE
   POST_STYLE
   CAPTION_STYLE
+  TEXT_STYLE
   PACK
   TEMPLATE
   ASSET

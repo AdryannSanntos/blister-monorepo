@@ -13,6 +13,7 @@ import {
   AlertTitle,
 } from "src/core/shared/components/ui/alert";
 
+import { CreditsAgentSpend } from "../components/credits-agent-spend";
 import { CreditsCostGuide } from "../components/credits-cost-guide";
 import { CreditsHowItWorks } from "../components/credits-how-it-works";
 import { CreditsLedgerTable } from "../components/credits-ledger-table";
@@ -38,7 +39,7 @@ export function CreditsPage() {
       description={t("description")}
       actions={
         <Button asChild>
-          <Link href="/dashboard/agents/post">
+          <Link href="/dashboard/agents/cuts">
             <Sparkles className="size-4" />
             {t("primaryAction")}
           </Link>
@@ -57,12 +58,14 @@ export function CreditsPage() {
       <CreditsOverviewStats data={data} isLoading={isLoading} />
 
       <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <CreditsCostGuide />
+        <CreditsAgentSpend />
         <div className="flex flex-col gap-4">
           <CreditsHowItWorks />
           <CreditsRechargePanel />
         </div>
       </div>
+
+      <CreditsCostGuide />
 
       <CreditsLedgerTable ledger={data?.ledger ?? []} isLoading={isLoading} />
     </PageLayout>

@@ -11,6 +11,6 @@
     "baseUrl": ".",
     "paths": {}
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/index.ts", "src/stream/index.ts", "src/testing/index.ts"],
   "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"]
 }

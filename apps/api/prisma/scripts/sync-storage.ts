@@ -33,7 +33,7 @@ import {
   buildFolderPrefix,
   workspaceRootPrefix,
 } from '../../src/files/workspace-storage.util';
-import { PrismaClient } from '../../src/generated/prisma';
+import { PrismaClient } from '@company-os/db';
 
 // ─── Env (mirror ConfigModule.envFilePath: ['../../.env', '.env']) ───────────
 function loadEnv(): void {

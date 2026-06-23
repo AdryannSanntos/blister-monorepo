@@ -1,9 +1,17 @@
 import { spawn } from 'node:child_process';
-import { mkdir, readFile, rm } from 'node:fs/promises';
-import { join } from 'node:path';
-import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { resolveFfmpegPath } from './resolve-ffmpeg-path';
+
+/**
+ * Output framing:
+ * - `source`  → keep the original aspect ratio (time trim only).
+ * - `vertical` → 9:16 (1080×1920) with the full frame centered over a blurred
+ *   fill of itself, so nothing is cropped — the short-form clip format.
+ */
+export type TrimVideoAspect = 'source' | 'vertical';
 
 export type TrimVideoParams = {
   /** Remote HTTP(S) URL — prefer `inputPath` for large local/S3 files. */
@@ -13,11 +21,29 @@ export type TrimVideoParams = {
   startSec: number;
   endSec: number;
   ffmpegPath?: string;
+  /** Output framing (default `source`). */
+  aspect?: TrimVideoAspect;
   /** Kill FFmpeg if it exceeds this duration (default 15 minutes). */
   timeoutMs?: number;
 };
 
 const DEFAULT_FFMPEG_TIMEOUT_MS = 15 * 60 * 1000;
+
+const VERTICAL_W = 1080;
+const VERTICAL_H = 1920;
+
+/**
+ * Builds a 9:16 frame: a zoom-cropped, blurred copy of the source fills the
+ * background while the untouched frame is scaled to fit and centered on top.
+ */
+const buildVerticalFilterComplex = (): string =>
+  [
+    '[0:v]split=2[bg][fg]',
+    `[bg]scale=${VERTICAL_W}:${VERTICAL_H}:force_original_aspect_ratio=increase,` +
+      `crop=${VERTICAL_W}:${VERTICAL_H},gblur=sigma=28[bg]`,
+    `[fg]scale=${VERTICAL_W}:${VERTICAL_H}:force_original_aspect_ratio=decrease[fg]`,
+    '[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1[v]',
+  ].join(';');
 
 const buildFfmpegNotFoundError = (ffmpegPath: string): Error =>
   new Error(
@@ -42,9 +68,7 @@ const buildFfmpegFailureError = (
     );
   }
 
-  return new Error(
-    stderr.trim() || `FFmpeg at "${ffmpeg}" exited with code ${code ?? 'unknown'}`,
-  );
+  return new Error(stderr.trim() || `FFmpeg at "${ffmpeg}" exited with code ${code ?? 'unknown'}`);
 };
 
 /** Trims a remote or local video segment via FFmpeg (re-encode for stable playback). */
@@ -64,6 +88,7 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
 
   try {
     await new Promise<void>((resolve, reject) => {
+      const isVertical = params.aspect === 'vertical';
       const args = [
         '-y',
         '-hide_banner',
@@ -75,6 +100,9 @@ export const trimVideoToBuffer = async (params: TrimVideoParams): Promise<Buffer
         input,
         '-t',
         String(durationSec),
+        ...(isVertical
+          ? ['-filter_complex', buildVerticalFilterComplex(), '-map', '[v]', '-map', '0:a?']
+          : []),
         '-c:v',
         'libx264',
         '-preset',

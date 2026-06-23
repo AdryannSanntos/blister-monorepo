@@ -5,7 +5,7 @@ import type {
   AgentRunStepDto,
 } from '@company-os/types';
 import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import type { Prisma, AgentRunStatus as PrismaAgentRunStatus } from '../../generated/prisma';
+import type { Prisma, AgentRunStatus as PrismaAgentRunStatus } from '@company-os/db';
 import { PrismaService } from '../../prisma/prisma.service';
 import type { ResolvedWorkspace } from '../../workspace/workspace-context.service';
 import { AgentRegistryService } from './agent-registry.service';

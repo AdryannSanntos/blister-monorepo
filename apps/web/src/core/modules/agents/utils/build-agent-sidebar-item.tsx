@@ -12,12 +12,10 @@ import type { AgentCatalogEntry } from "src/core/modules/blister-os/fixtures/age
 import {
   getAgentHistoryPath,
   getAgentOverviewPath,
-  getAgentResultsPath,
   getAgentSettingsPath,
   matchAgentHistoryPath,
   matchAgentOverviewPath,
   matchAgentPath,
-  matchAgentResultsPath,
   matchAgentSettingsPath,
 } from "src/core/modules/agents/utils/agent-paths";
 import type { SidebarItemDef } from "src/core/shared/components/ui/app-sidebar";
@@ -58,23 +56,15 @@ export const buildAgentSidebarItem = ({
         match: (pathname) => matchAgentOverviewPath(pathname, agent.routeSlug),
       },
       ...(agent.id === "cuts"
-        ? [
-            {
-              id: `${agent.id}-results`,
-              label: tNav("results"),
-              icon: History,
-              href: getAgentResultsPath(agent.routeSlug),
-              match: (pathname: string) => matchAgentResultsPath(pathname, agent.routeSlug),
-              statusTone: hasPendingCuts ? ("warning" as const) : undefined,
-            },
-          ]
+        ? []
         : [
             {
               id: `${agent.id}-history`,
               label: tNav("history"),
               icon: History,
               href: getAgentHistoryPath(agent.routeSlug),
-              match: (pathname: string) => matchAgentHistoryPath(pathname, agent.routeSlug),
+              match: (pathname: string) =>
+                matchAgentHistoryPath(pathname, agent.routeSlug),
             },
           ]),
       {

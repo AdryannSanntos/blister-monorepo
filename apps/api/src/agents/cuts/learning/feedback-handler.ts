@@ -1,4 +1,4 @@
-import type { LearningHandler } from '@company-os/agent-sdk';
+import type { LearningHandler } from '@company-os/agent-ia-sdk/agents';
 import type { CutOutput, CutsOutput } from '../schemas/output.schema';
 
 export type CutsFeedback = {

@@ -3,8 +3,11 @@ import { describe, it } from 'node:test';
 import {
   cutOutputSchema,
   cutsAgentSettingsSchema,
+  cutsProcessingTimeframeSchema,
   cutsRunInputSchema,
+  cutsRunOptionsSchema,
   cutsRunOutputSchema,
+  normalizeCutsModelTier,
   reviewCutsSchema,
 } from './cuts';
 
@@ -16,6 +19,7 @@ describe('cutsAgentSettingsSchema', () => {
     assert.equal(parsed.deleteSourceAfterRun, false);
     assert.equal(parsed.addCaptions, false);
     assert.equal(parsed.autoAcceptResults, true);
+    assert.equal(parsed.modelTier, 'basic');
   });
 
   it('requires captionStyleId when addCaptions is true', () => {
@@ -48,6 +52,47 @@ describe('cutsRunInputSchema', () => {
     });
     assert.equal(parsed.sourceFileId, 'file-123');
     assert.equal(parsed.settings.maxCuts, 5);
+    assert.equal(parsed.settings.modelTier, 'basic');
+  });
+
+  it('accepts optional run options', () => {
+    const parsed = cutsRunInputSchema.parse({
+      userInput: 'Generate cuts',
+      sourceFileId: 'file-123',
+      settings: {},
+      options: {
+        videoGenre: 'podcast',
+        processingTimeframe: { startSec: 0, endSec: 600 },
+      },
+    });
+    assert.equal(parsed.options?.videoGenre, 'podcast');
+    assert.equal(parsed.options?.processingTimeframe?.endSec, 600);
+  });
+});
+
+describe('normalizeCutsModelTier', () => {
+  it('keeps basic tier', () => {
+    assert.equal(normalizeCutsModelTier('basic'), 'basic');
+  });
+
+  it('normalizes auto and pro to basic', () => {
+    assert.equal(normalizeCutsModelTier('auto'), 'basic');
+    assert.equal(normalizeCutsModelTier('pro'), 'basic');
+  });
+});
+
+describe('cutsRunOptionsSchema', () => {
+  it('accepts empty options', () => {
+    const parsed = cutsRunOptionsSchema.parse({});
+    assert.equal(parsed.videoGenre, undefined);
+  });
+
+  it('rejects invalid timeframe window via processingTimeframe', () => {
+    const result = cutsProcessingTimeframeSchema.safeParse({
+      startSec: 100,
+      endSec: 50,
+    });
+    assert.equal(result.success, false);
   });
 });
 
