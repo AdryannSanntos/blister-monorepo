@@ -148,6 +148,7 @@ const notifyCutRendered = async (
 const burnTextOverlay = async (
   validated: CutsRenderClipPayload,
   clipBuffer: Buffer,
+  onStage?: (stage: string, detail?: Record<string, unknown>) => void,
 ): Promise<Buffer> => {
   if (!validated.addTitle && !validated.addCaptions) return clipBuffer;
 
@@ -177,6 +178,7 @@ const burnTextOverlay = async (
       captionStyleSpec: validated.captionStyleSpec,
       captionPosition: validated.captionPosition,
       captions: validated.captions,
+      onStage: (stage, detail) => onStage?.(stage, detail),
     });
 
     return await fs.readFile(outputPath);
@@ -208,6 +210,18 @@ export const cutsRenderClip = task({
       endSec: validated.endSec,
     });
 
+    logger.info('Render job started', {
+      runId: validated.runId,
+      cutId: validated.cutId,
+      cutIndex: validated.cutIndex,
+      title: validated.title,
+      startSec: validated.startSec,
+      endSec: validated.endSec,
+      durationSec: Math.round((validated.endSec - validated.startSec) * 10) / 10,
+      addTitle: validated.addTitle,
+      addCaptions: validated.addCaptions,
+    });
+
     logCutsDev('render-clip', 'Render job started', {
       runId: validated.runId,
       cutId: validated.cutId,
@@ -229,6 +243,14 @@ export const cutsRenderClip = task({
         ffmpegPath,
       });
 
+      logger.info('Downloading and trimming source video', {
+        runId: validated.runId,
+        cutId: validated.cutId,
+        sourceStorageKey: validated.sourceStorageKey,
+        startSec: validated.startSec,
+        endSec: validated.endSec,
+      });
+
       let clipBuffer = await trimVideoFromStorageKey({
         storage,
         sourceStorageKey: validated.sourceStorageKey,
@@ -246,6 +268,13 @@ export const cutsRenderClip = task({
         elapsedMs: elapsed(),
       });
 
+      logger.info('Video trimmed', {
+        runId: validated.runId,
+        cutId: validated.cutId,
+        sizeBytes: clipBuffer.length,
+        elapsedMs: elapsed(),
+      });
+
       if (validated.addTitle || validated.addCaptions) {
         logCutsDev('render-clip', 'Burning text overlay', {
           runId: validated.runId,
@@ -257,9 +286,30 @@ export const cutsRenderClip = task({
           captionTokens: validated.captions.length,
         });
 
-        clipBuffer = await burnTextOverlay(validated, clipBuffer);
+        logger.info('Burning text overlay (Remotion)', {
+          runId: validated.runId,
+          cutId: validated.cutId,
+          addTitle: validated.addTitle,
+          addCaptions: validated.addCaptions,
+        });
+
+        clipBuffer = await burnTextOverlay(validated, clipBuffer, (stage, detail) => {
+          logger.info('Remotion overlay stage', {
+            runId: validated.runId,
+            cutId: validated.cutId,
+            stage,
+            ...detail,
+          });
+        });
 
         logCutsDev('render-clip', 'Overlay burned', {
+          runId: validated.runId,
+          cutId: validated.cutId,
+          sizeBytes: clipBuffer.length,
+          elapsedMs: elapsed(),
+        });
+
+        logger.info('Text overlay complete', {
           runId: validated.runId,
           cutId: validated.cutId,
           sizeBytes: clipBuffer.length,
@@ -290,6 +340,13 @@ export const cutsRenderClip = task({
         cutId: validated.cutId,
         storageKey,
         fileName,
+      });
+
+      logger.info('Uploading cut to storage', {
+        runId: validated.runId,
+        cutId: validated.cutId,
+        storageKey,
+        sizeBytes: clipBuffer.length,
       });
 
       await storage.uploadObject(storageKey, clipBuffer, 'video/mp4');

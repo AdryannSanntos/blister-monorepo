@@ -18,6 +18,8 @@ describe('renderTextOverlay', () => {
     tmpDir = await mkdtemp(path.join(os.tmpdir(), 'render-text-overlay-'));
     jest.clearAllMocks();
     jest.resetModules();
+    const { resetRemotionBundleCacheForTests } = await import('./render-text-overlay');
+    resetRemotionBundleCacheForTests();
   });
 
   afterEach(async () => {
