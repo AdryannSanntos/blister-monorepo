@@ -34,6 +34,7 @@ export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 
 export * from './agents';
 export * from './agents/cuts';
+export * from './agents/carousel';
 export * from './company';
 export * from './credits';
 export * from './ai-catalog';
