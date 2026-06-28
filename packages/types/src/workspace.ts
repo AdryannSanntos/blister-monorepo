@@ -19,7 +19,7 @@ export type TeamMember = z.infer<typeof teamMemberSchema>;
 
 export const inviteMemberSchema = z.object({
   email: z.string().email(),
-  roleId: z.string().min(1),
+  roleId: z.string().optional(),
 });
 
 export type InviteMemberDto = z.infer<typeof inviteMemberSchema>;
