@@ -795,7 +795,7 @@
       },
       "inviteDialog": {
         "title": "Invite member",
-        "description": "Enter the email of someone who already has a Blister account and choose their initial role.",
+        "description": "Enter the invitee's email and choose their initial role. An access email will be sent.",
         "email": "Email",
         "emailPlaceholder": "name@company.com",
         "role": "Role",
@@ -816,7 +816,7 @@
         "close": "Close"
       },
       "toasts": {
-        "inviteSuccess": "Member added successfully.",
+        "inviteSuccess": "Invitation sent. An access email was sent.",
         "inviteError": "Could not invite member.",
         "roleAssigned": "Role assigned.",
         "roleAssignError": "Could not assign role.",

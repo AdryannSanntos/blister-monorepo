@@ -36,7 +36,7 @@ import { useInviteMember } from "../hooks/use-team";
 
 type Values = {
   email: string;
-  roleId: string;
+  roleId?: string;
 };
 
 type MemberInviteDialogProps = {
@@ -60,7 +60,7 @@ export function MemberInviteDialog({
     () =>
       z.object({
         email: z.string().email(tValidation("invalidEmail")),
-        roleId: z.string().min(1, t("roleRequired")),
+        roleId: z.string().optional(),
       }),
     [tValidation],
   );
@@ -82,8 +82,8 @@ export function MemberInviteDialog({
     onOpenChange(nextOpen);
   };
 
-  const handleSubmit = async (values: Values) => {
-    await inviteMember.mutateAsync(values);
+  const handleSubmit = async ({ email, roleId }: Values) => {
+    await inviteMember.mutateAsync({ email, ...(roleId ? { roleId } : {}) });
     handleOpenChange(false);
   };
 
@@ -122,7 +122,7 @@ export function MemberInviteDialog({
               name="roleId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>{t("role")}</FormLabel>
+                  <FormLabel>{t("role")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>

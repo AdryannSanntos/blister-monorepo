@@ -795,7 +795,7 @@
       },
       "inviteDialog": {
         "title": "Convidar membro",
-        "description": "Informe o email de quem já possui conta na Blister e escolha o cargo inicial.",
+        "description": "Informe o email do convidado e escolha o cargo inicial. Um email de acesso será enviado.",
         "email": "Email",
         "emailPlaceholder": "nome@empresa.com.br",
         "role": "Cargo",
@@ -816,7 +816,7 @@
         "close": "Fechar"
       },
       "toasts": {
-        "inviteSuccess": "Membro adicionado com sucesso.",
+        "inviteSuccess": "Convite enviado. Um email de acesso foi disparado.",
         "inviteError": "Não foi possível convidar o membro.",
         "roleAssigned": "Cargo atribuído.",
         "roleAssignError": "Não foi possível atribuir o cargo.",
