@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AgentEntitlementGate } from "src/core/modules/agents/components/agent-entitlement-gate";
+import { CarouselSettings } from "src/core/modules/agents/components/carousel/carousel-settings-form";
 import { CutsSettings } from "src/core/modules/agents/components/cuts/cuts-settings-form";
 import {
   type AgentCatalogEntry,
@@ -35,6 +36,8 @@ const renderSettings = (agent: AgentCatalogEntry) => {
   switch (agent.id) {
     case "cuts":
       return <CutsSettings />;
+    case "carousel":
+      return <CarouselSettings />;
     default:
       return <GenericAgentSettings agent={agent} />;
   }
