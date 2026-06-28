@@ -44,6 +44,7 @@ export function OnboardingProfileModal() {
 
   const isOpen = !isLoading && profile?.onboardingCompletedAt === null;
 
+  // Component only mounts after profile is loaded (guarded by the `if (isLoading || !isOpen) return null` early return), so profile?.name is safely available here.
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     mode: "onBlur",
@@ -73,6 +74,7 @@ export function OnboardingProfileModal() {
     <Dialog open modal>
       <DialogContent
         className="sm:max-w-md"
+        showCloseButton={false}
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
