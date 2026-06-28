@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Scissors } from "lucide-react";
+import { GalleryHorizontal, Scissors } from "lucide-react";
 
 export type AgentTier = "default" | "marketplace";
 
@@ -25,6 +25,16 @@ export const AGENTS_CATALOG: AgentCatalogEntry[] = [
     tier: "default",
     icon: Scissors,
     routeSlug: "cuts",
+  },
+  {
+    id: "carousel",
+    name: "Carrossel",
+    description:
+      "Transforme um tema em slides prontos para postar no Instagram, com design profissional e conteúdo otimizado.",
+    stat: "0 carrosséis gerados",
+    tier: "marketplace" as AgentTier,
+    icon: GalleryHorizontal,
+    routeSlug: "carousel",
   },
 ];
 
