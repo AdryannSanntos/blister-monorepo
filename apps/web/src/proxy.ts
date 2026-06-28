@@ -5,9 +5,7 @@ import { routing } from "./i18n/routing";
 
 const AUTH_PREFIX = "/auth";
 const DASHBOARD_PREFIX = "/dashboard";
-const WORKSPACES_PREFIX = "/workspaces";
 const ADMIN_PREFIX = "/admin";
-const ONBOARDING_PATH = "/onboarding";
 const AUTH_API_PREFIX = "/api/auth";
 const API_PREFIX = "/api";
 const SYSTEM_PREFIX = "/system";
@@ -50,10 +48,7 @@ async function getSession(request: NextRequest) {
     },
   );
 
-  if (!response.ok) {
-    return null;
-  }
-
+  if (!response.ok) return null;
   return response.json();
 }
 
@@ -97,17 +92,18 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname,
   );
 
+  // Signup is invite-only — redirect to login
+  if (localizedPathname === "/auth/signup") {
+    return redirect(request, `${AUTH_PREFIX}/login`);
+  }
+
   try {
     const session = await getSession(request);
     const isAuthenticated = Boolean(session?.session && session?.user);
     const isAuthRoute = localizedPathname.startsWith(AUTH_PREFIX);
     const isDashboardRoute = localizedPathname.startsWith(DASHBOARD_PREFIX);
-    const isWorkspacesRoute = localizedPathname.startsWith(WORKSPACES_PREFIX);
     const isAdminRoute = localizedPathname.startsWith(ADMIN_PREFIX);
 
-    // O destino padrão de todo usuário autenticado é o Espaço Pessoal
-    // (/dashboard). Criar empresa é opcional e fica em /onboarding — nunca
-    // forçamos o onboarding aqui.
     if (localizedPathname === "/") {
       return redirect(
         request,
@@ -126,22 +122,7 @@ export async function proxy(request: NextRequest) {
       return redirect(request, DASHBOARD_PREFIX);
     }
 
-    // /onboarding é o fluxo opt-in de criação de empresa: sempre acessível
-    // para usuários autenticados.
-    if (localizedPathname === ONBOARDING_PATH) {
-      return intlResponse;
-    }
-
-    if (isWorkspacesRoute) {
-      if (localizedPathname.startsWith(`${WORKSPACES_PREFIX}/admin`)) {
-        return redirect(request, ADMIN_PREFIX);
-      }
-      return redirect(request, DASHBOARD_PREFIX);
-    }
-
     if (isDashboardRoute) {
-      // Limpa o cookie de empresa ativa se apontar para uma empresa que não
-      // pertence mais ao usuário — cai de volta no Espaço Pessoal.
       const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
       if (
         activeCompanyId &&
@@ -155,7 +136,6 @@ export async function proxy(request: NextRequest) {
           return response;
         }
       }
-
       return intlResponse;
     }
 
@@ -177,7 +157,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip static assets (fonts, images, etc.) — paths with a file extension.
     "/((?!_next/static|_next/image|_vercel|.*\\..*).*)",
   ],
 };
