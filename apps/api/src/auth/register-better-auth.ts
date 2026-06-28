@@ -90,7 +90,8 @@ export async function registerBetterAuth(
     }
 
     // Block self-signup: only admin can create users
-    if (req.url === `${authBasePath}/sign-up/email` && req.method === 'POST') {
+    const path = req.url.split('?')[0];
+    if (path === `${authBasePath}/sign-up/email` && req.method === 'POST') {
       res.status(403).json({ error: 'Cadastro direto não permitido. Solicite acesso ao administrador.' });
       return;
     }
