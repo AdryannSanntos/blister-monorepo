@@ -1,35 +1,26 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { WorkspaceContextService } from './workspace-context.service';
 
 const makeMockPrisma = () => {
-  const personalSpace = {
-    findUnique: jest.fn(),
-    create: jest.fn(),
-  };
   const user = { findUnique: jest.fn() };
   const workspaceSettings = { create: jest.fn() };
-  const personalCreditBalance = { create: jest.fn() };
   const workspaceFolder = { create: jest.fn(), findFirst: jest.fn() };
   const company = { findUnique: jest.fn(), findMany: jest.fn() };
   const companyMember = { findMany: jest.fn() };
   const platformCreditSettings = { findUnique: jest.fn() };
 
   return {
-    personalSpace,
     user,
     workspaceSettings,
-    personalCreditBalance,
     workspaceFolder,
     company,
     companyMember,
     platformCreditSettings,
     $transaction: jest.fn((cb: (tx: unknown) => unknown) =>
       cb({
-        personalSpace,
         workspaceSettings,
-        personalCreditBalance,
         workspaceFolder,
         platformCreditSettings,
       }),
@@ -55,23 +46,13 @@ describe('WorkspaceContextService', () => {
   afterEach(() => jest.clearAllMocks());
 
   describe('resolveFromRequest', () => {
-    it('returns personal space when no active workspace cookie', async () => {
-      prisma.personalSpace.findUnique.mockResolvedValue({
-        id: 'ps-1',
-        userId: 'user-1',
-        name: 'Personal',
-      });
-
-      const result = await service.resolveFromRequest('user-1', {
-        cookies: {},
-        headers: {},
-      } as never);
-
-      expect(result).toEqual({
-        type: 'personal',
-        personalSpaceId: 'ps-1',
-        userId: 'user-1',
-      });
+    it('throws BadRequestException when no active company cookie is present', async () => {
+      await expect(
+        service.resolveFromRequest('user-1', {
+          cookies: {},
+          headers: {},
+        } as never),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('returns company workspace when valid company id is active', async () => {

@@ -44,10 +44,10 @@ describe('MarketplaceService', () => {
     service = module.get(MarketplaceService);
   });
 
-  it('redeems free item for personal workspace', async () => {
+  it('redeems free item for company workspace', async () => {
     workspaceContext.resolveFromRequest.mockResolvedValue({
-      type: 'personal',
-      personalSpaceId: 'ps-1',
+      type: 'company',
+      companyId: 'co-1',
       userId: 'user-1',
     });
     prisma.marketplaceItem.findFirst.mockResolvedValue({
@@ -101,8 +101,8 @@ describe('MarketplaceService', () => {
 
   it('throws when item not found', async () => {
     workspaceContext.resolveFromRequest.mockResolvedValue({
-      type: 'personal',
-      personalSpaceId: 'ps-1',
+      type: 'company',
+      companyId: 'co-1',
       userId: 'user-1',
     });
     prisma.marketplaceItem.findFirst.mockResolvedValue(null);
