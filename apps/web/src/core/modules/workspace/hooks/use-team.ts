@@ -4,7 +4,7 @@ import type { InviteMemberDto, TeamMember } from "@company-os/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { getActiveWorkspaceId, isPersonalWorkspace } from "src/core/shared/utils/active-workspace";
+import { getActiveWorkspaceId } from "src/core/shared/utils/active-workspace";
 import { apiClient } from "src/core/shared/utils/api-client";
 
 function invalidateTeam(
@@ -24,7 +24,6 @@ function invalidateTeam(
 
 export function useTeamMembers() {
   const workspaceId = getActiveWorkspaceId();
-  const isCompanyWorkspace = !isPersonalWorkspace(workspaceId);
 
   return useQuery<TeamMember[]>({
     queryKey: ["team-members", workspaceId ?? "default"],
@@ -32,7 +31,7 @@ export function useTeamMembers() {
       const { data } = await apiClient.get<TeamMember[]>("/members");
       return data;
     },
-    enabled: isCompanyWorkspace,
+    enabled: !!workspaceId,
   });
 }
 

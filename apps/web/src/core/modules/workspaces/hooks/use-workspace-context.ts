@@ -1,16 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { WorkspaceOptionDto } from "@company-os/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "src/core/shared/utils/api-client";
+import { getActiveWorkspaceId } from "src/core/shared/utils/active-workspace";
+
+export type CompanyOption = {
+  id: string;
+  name: string;
+  slug: string;
+  onboardingCompletedAt: string | null;
+};
 
 export type WorkspaceContextResponse = {
   active: {
-    type: "personal" | "company";
-    personalSpaceId?: string;
+    type: "company";
     companyId?: string;
     userId: string;
   };
-  personal: WorkspaceOptionDto;
-  companies: WorkspaceOptionDto[];
+  companies: CompanyOption[];
 };
 
 const workspaceKeys = {
@@ -24,10 +29,17 @@ export function useWorkspaceContext() {
   return useQuery({
     queryKey: workspaceKeys.context(),
     queryFn: async () => {
-      const { data } = await apiClient.get<WorkspaceContextResponse>(
-        "/personal-space/context",
-      );
-      return data;
+      const { data } = await apiClient.get<CompanyOption[]>("/companies");
+      const activeId = getActiveWorkspaceId();
+      const response: WorkspaceContextResponse = {
+        active: {
+          type: "company",
+          companyId: activeId ?? undefined,
+          userId: "",
+        },
+        companies: data,
+      };
+      return response;
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
@@ -39,7 +51,7 @@ export function useHomeDestination() {
     queryKey: workspaceKeys.home(),
     queryFn: async () => {
       const { data } = await apiClient.get<{
-        destination: "onboarding" | "dashboard" | "personal-space";
+        destination: "onboarding" | "dashboard";
         companyCount: number;
         onboardedCount: number;
       }>("/companies/home-destination");
@@ -52,14 +64,7 @@ export function useCompanies() {
   return useQuery({
     queryKey: workspaceKeys.companies(),
     queryFn: async () => {
-      const { data } = await apiClient.get<
-        Array<{
-          id: string;
-          name: string;
-          slug: string;
-          onboardingCompletedAt: string | null;
-        }>
-      >("/companies");
+      const { data } = await apiClient.get<CompanyOption[]>("/companies");
       return data;
     },
   });

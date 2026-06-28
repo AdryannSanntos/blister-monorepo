@@ -8,7 +8,7 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { getActiveWorkspaceId, isPersonalWorkspace } from "src/core/shared/utils/active-workspace";
+import { getActiveWorkspaceId } from "src/core/shared/utils/active-workspace";
 import { apiClient } from "src/core/shared/utils/api-client";
 
 function invalidateRoles(
@@ -28,7 +28,6 @@ function invalidateRoles(
 
 export function useWorkspaceRoles() {
   const workspaceId = getActiveWorkspaceId();
-  const isCompanyWorkspace = !isPersonalWorkspace(workspaceId);
 
   return useQuery<WorkspaceRole[]>({
     queryKey: ["workspace-roles", workspaceId ?? "default"],
@@ -36,7 +35,7 @@ export function useWorkspaceRoles() {
       const { data } = await apiClient.get<WorkspaceRole[]>("/roles");
       return data;
     },
-    enabled: isCompanyWorkspace,
+    enabled: !!workspaceId,
   });
 }
 

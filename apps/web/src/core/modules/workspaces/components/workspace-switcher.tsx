@@ -1,7 +1,6 @@
 "use client";
 
-import { PERSONAL_WORKSPACE_ID } from "@company-os/types";
-import { Building2, ChevronsUpDown, Plus, User } from "lucide-react";
+import { Building2, ChevronsUpDown, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { useWorkspaceContext } from "src/core/modules/workspaces/hooks/use-workspace-context";
@@ -17,9 +16,7 @@ import {
 import { SurfaceIcon } from "src/core/shared/components/ui/surface-icon";
 import {
   getActiveWorkspaceId,
-  isPersonalWorkspace,
   setActiveWorkspaceId,
-  setPersonalWorkspace,
 } from "src/core/shared/utils/active-workspace";
 import { queryClient } from "src/core/shared/utils/query-client";
 import { cn } from "src/core/shared/utils";
@@ -34,18 +31,9 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
   const { data, isLoading } = useWorkspaceContext();
 
   const activeId = getActiveWorkspaceId();
-  const isPersonal = isPersonalWorkspace(activeId);
 
-  const activeName = isPersonal
-    ? (data?.personal.name ?? t("personalSpace"))
-    : (data?.companies.find((c) => c.id === activeId)?.name ?? t("selectWorkspace"));
-
-  const handleSelectPersonal = () => {
-    setPersonalWorkspace();
-    queryClient.invalidateQueries();
-    router.push("/dashboard");
-    router.refresh();
-  };
+  const activeName =
+    data?.companies.find((c) => c.id === activeId)?.name ?? t("selectWorkspace");
 
   const handleSelectCompany = (companyId: string) => {
     setActiveWorkspaceId(companyId);
@@ -89,7 +77,7 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
           aria-label={t("switchWorkspace")}
         >
           <SurfaceIcon
-            icon={isPersonal ? User : Building2}
+            icon={Building2}
             className="size-10"
             iconClassName="size-5"
           />
@@ -100,7 +88,7 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
                   {activeName}
                 </span>
                 <span className="truncate text-[11.5px] text-[var(--fg-tertiary)]">
-                  {isPersonal ? t("personalType") : t("companyType")}
+                  {t("companyType")}
                 </span>
               </span>
               <ChevronsUpDown className="size-3.5 shrink-0 text-[var(--fg-quaternary)]" />
@@ -110,20 +98,13 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-64">
         <DropdownMenuLabel>{t("workspaces")}</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={handleSelectPersonal}
-          className={cn(isPersonal && "bg-[var(--bg-muted)]")}
-        >
-          <User className="size-4" />
-          {data?.personal.name ?? t("personalSpace")}
-        </DropdownMenuItem>
         {data?.companies
           .filter((company) => company.onboardingCompletedAt)
           .map((company) => (
             <DropdownMenuItem
               key={company.id}
               onClick={() => handleSelectCompany(company.id)}
-              className={cn(!isPersonal && activeId === company.id && "bg-[var(--bg-muted)]")}
+              className={cn(activeId === company.id && "bg-[var(--bg-muted)]")}
             >
               <Building2 className="size-4" />
               {company.name}
@@ -138,5 +119,3 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
     </DropdownMenu>
   );
 }
-
-export { PERSONAL_WORKSPACE_ID };

@@ -47,9 +47,6 @@ import { authClient } from "src/core/shared/utils/auth-client";
 import { queryClient } from "src/core/shared/utils/query-client";
 
 import { Link, useRouter } from "@/i18n/routing";
-import {
-  setPersonalWorkspace,
-} from "src/core/shared/utils/active-workspace";
 
 export type AppShellBreadcrumbItem = {
   label: string;
@@ -95,14 +92,11 @@ export function AppShell({
   const { data: workspaceContext, isLoading: isWorkspaceLoading } =
     useWorkspaceContext();
 
-  const isPersonalActive = workspaceContext?.active.type === "personal";
   const hasCompanies = (workspaceContext?.companies.length ?? 0) > 0;
-  const showPersonalSpace = !isWorkspaceLoading && !isPersonalActive;
   const showCreateCompany = !isWorkspaceLoading && !hasCompanies;
   const showPlatformAdmin =
     !isPlatformRoleLoading && canAccessPlatformAdmin;
-  const showWorkspaceActions =
-    showPersonalSpace || showCreateCompany || showPlatformAdmin;
+  const showWorkspaceActions = showCreateCompany || showPlatformAdmin;
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
@@ -304,19 +298,6 @@ export function AppShell({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
-                {showPersonalSpace ? (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setPersonalWorkspace();
-                      queryClient.invalidateQueries();
-                      router.push("/dashboard");
-                      router.refresh();
-                    }}
-                  >
-                    <User className="size-4" />
-                    {t("personalSpace")}
-                  </DropdownMenuItem>
-                ) : null}
                 {showCreateCompany ? (
                   <DropdownMenuItem asChild>
                     <Link href="/onboarding?new=1">

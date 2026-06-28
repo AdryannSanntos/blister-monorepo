@@ -4,28 +4,18 @@ import type {
   WorkspaceProfile,
 } from "@company-os/types";
 import { apiClient } from "src/core/shared/utils/api-client";
-import {
-  getActiveWorkspaceId,
-  isPersonalWorkspace,
-} from "src/core/shared/utils/active-workspace";
+import { getActiveWorkspaceId } from "src/core/shared/utils/active-workspace";
 
 const settingsKeys = {
   all: ["workspace-settings"] as const,
   active: () => [...settingsKeys.all, getActiveWorkspaceId() ?? "default"] as const,
 };
 
-function settingsPath() {
-  const workspaceId = getActiveWorkspaceId();
-  return isPersonalWorkspace(workspaceId)
-    ? "/personal-space/settings"
-    : "/company/settings";
-}
-
 export function useWorkspaceSettings() {
   return useQuery({
     queryKey: settingsKeys.active(),
     queryFn: async () => {
-      const { data } = await apiClient.get<WorkspaceProfile>(settingsPath());
+      const { data } = await apiClient.get<WorkspaceProfile>("/company/settings");
       return data;
     },
   });
@@ -37,7 +27,7 @@ export function useUpdateWorkspaceSettings() {
   return useMutation({
     mutationFn: async (payload: UpdateWorkspaceSettingsDto) => {
       const { data } = await apiClient.patch<WorkspaceProfile>(
-        settingsPath(),
+        "/company/settings",
         payload,
       );
       return data;

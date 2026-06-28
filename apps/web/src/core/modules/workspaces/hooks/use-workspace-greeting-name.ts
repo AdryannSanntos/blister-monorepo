@@ -9,13 +9,11 @@ export function useWorkspaceGreetingName() {
   const { displayName: userDisplayName, isLoading: isUserLoading } =
     useDashboardData();
 
-  const isPersonalActive = workspaceContext?.active.type === "personal";
   const activeCompanyId = workspaceContext?.active.companyId;
 
-  const name = isPersonalActive
-    ? userDisplayName
-    : (workspaceContext?.companies.find((company) => company.id === activeCompanyId)
-        ?.name ?? userDisplayName);
+  const name =
+    workspaceContext?.companies.find((company) => company.id === activeCompanyId)
+      ?.name ?? userDisplayName;
 
   return {
     name,

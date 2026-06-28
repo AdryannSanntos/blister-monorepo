@@ -160,9 +160,7 @@ function AppSidebar({
   const groups = groupsProp ?? defaultGroupsFromHook;
   const pathname = usePathname();
   const { can: canDo, isLoading: abilityLoading } = useAbility();
-  const { data: workspaceContext, isLoading: isWorkspaceLoading } =
-    useWorkspaceContext();
-  const isPersonalActive = workspaceContext?.active.type === "personal";
+  const { isLoading: isWorkspaceLoading } = useWorkspaceContext();
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const open = openProp ?? internalOpen;
   const setOpen = React.useCallback(
@@ -192,7 +190,6 @@ function AppSidebar({
     (item: Item): boolean => {
       if (item.companyOnly) {
         if (isWorkspaceLoading) return false;
-        if (isPersonalActive) return false;
       }
       if (!item.permission) return true;
       if (abilityLoading) return false;
@@ -200,7 +197,7 @@ function AppSidebar({
       if (!mapping) return false;
       return canDo(mapping[0], mapping[1]);
     },
-    [isWorkspaceLoading, isPersonalActive, abilityLoading, canDo],
+    [isWorkspaceLoading, abilityLoading, canDo],
   );
 
   const filteredGroups = React.useMemo(
