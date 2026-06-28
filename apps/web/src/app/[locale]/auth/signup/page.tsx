@@ -1,11 +1,5 @@
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
-import { SignupPage } from "@/core/modules/auth/pages/signup-page";
-
-export default function Page() {
-  return (
-    <Suspense>
-      <SignupPage />
-    </Suspense>
-  );
+export default function SignupPage() {
+  redirect("/auth/login");
 }
