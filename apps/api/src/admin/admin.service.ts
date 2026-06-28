@@ -7,7 +7,7 @@ import {
 import { randomUUID } from 'crypto';
 import type { CreateCompanyDto } from './dto/create-company.dto';
 import { createCompanyForUser } from '../company/company-bootstrap.util';
-import { getAuthInstance } from '../auth/register-better-auth';
+import { sendPasswordResetEmail } from '../auth/send-password-reset-email';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -59,31 +59,25 @@ export class AdminService {
 
     const company = await createCompanyForUser(this.prisma.getClient(), user, dto.name);
 
-    await this.sendFirstAccessEmail(dto.ownerEmail);
-
-    return { company, owner: { id: user.id, email: user.email, name: user.name } };
-  }
-
-  private async sendFirstAccessEmail(email: string) {
-    const auth = getAuthInstance();
-    if (!auth) {
-      this.logger.warn('Auth instance not available, skipping first-access email');
-      return;
-    }
-
     const frontendUrl = process.env.FRONTEND_URL ?? process.env.CORS_ORIGIN?.split(',')[0] ?? 'http://localhost:3000';
+    const redirectTo = `${frontendUrl}/auth/reset-password`;
 
+    let firstAccessUrl: string | undefined;
     try {
-      await (auth as any).api.forgetPassword({
-        body: {
-          email,
-          redirectTo: `${frontendUrl}/auth/reset-password`,
-        },
-        headers: new Headers({ 'x-forwarded-for': '127.0.0.1' }),
-      });
+      const result = await sendPasswordResetEmail(dto.ownerEmail, redirectTo, { captureUrl: true });
+      if (!result.sent) {
+        this.logger.warn('Auth instance not available, skipping first-access email');
+      }
+      firstAccessUrl = result.firstAccessUrl;
     } catch (err) {
-      this.logger.error(`Failed to send first-access email to ${email}`, err);
+      this.logger.error(`Failed to send first-access email to ${dto.ownerEmail}`, err);
       throw new BadRequestException('Empresa criada mas falha ao enviar email. Tente reenviar o convite.');
     }
+
+    return {
+      company,
+      owner: { id: user.id, email: user.email, name: user.name },
+      firstAccessUrl,
+    };
   }
 }

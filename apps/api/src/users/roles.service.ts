@@ -1,6 +1,8 @@
 import {
+  allPermissionKeys,
   assignablePermissionKeys,
   isAssignablePermissionKey,
+  type AppPermissionKey,
 } from '@company-os/authz';
 import type { CreateRoleDto, UpdateRoleDto } from '@company-os/types';
 import {
@@ -12,6 +14,7 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuditService } from '../audit/audit.service';
+import { getActiveCompanyIdFromRequest } from '../company/company-context.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
 
@@ -220,12 +223,127 @@ export class RolesService {
     return { success: true };
   }
 
-  async getEffectiveAbilityForUser(userId: string) {
-    const assignments = await this.prisma.userRoleAssignment.findMany({
-      where: { userId },
-      include: { role: { include: { permissions: true } } },
+  async getEffectiveAbilityForUser(userId: string, req?: Request): Promise<AppPermissionKey[]> {
+    const resolved = await this.resolveEffectivePermissions(userId, req);
+    if (resolved.isOwner) {
+      return [...allPermissionKeys];
+    }
+    return resolved.keys;
+  }
+
+  private async resolveEffectivePermissions(
+    userId: string,
+    req?: Request,
+  ): Promise<{ keys: AppPermissionKey[]; isOwner: boolean }> {
+    const companyId = req ? getActiveCompanyIdFromRequest(req) : undefined;
+
+    if (companyId) {
+      return this.resolvePermissionsForCompany(userId, companyId);
+    }
+
+    return this.resolvePermissionsAcrossWorkspaces(userId);
+  }
+
+  private async resolvePermissionsForCompany(
+    userId: string,
+    companyId: string,
+  ): Promise<{ keys: AppPermissionKey[]; isOwner: boolean }> {
+    const company = await this.prisma.company.findUnique({
+      where: { id: companyId },
+      select: {
+        ownerUserId: true,
+        members: {
+          where: { userId },
+          include: {
+            role: {
+              include: { permissions: true },
+            },
+          },
+        },
+      },
     });
-    return assignments.flatMap((a) => a.role.permissions.map((p) => p.key));
+
+    if (!company) {
+      return { keys: [], isOwner: false };
+    }
+
+    if (company.ownerUserId === userId) {
+      return { keys: [], isOwner: true };
+    }
+
+    const membership = company.members[0];
+    if (!membership) {
+      return { keys: [], isOwner: false };
+    }
+
+    return this.permissionsFromRole(membership.role);
+  }
+
+  private async resolvePermissionsAcrossWorkspaces(
+    userId: string,
+  ): Promise<{ keys: AppPermissionKey[]; isOwner: boolean }> {
+    const [memberships, assignments, ownedCompanyCount] = await Promise.all([
+      this.prisma.companyMember.findMany({
+        where: { userId },
+        include: {
+          role: {
+            include: { permissions: true },
+          },
+        },
+      }),
+      this.prisma.userRoleAssignment.findMany({
+        where: { userId },
+        include: {
+          role: {
+            include: { permissions: true },
+          },
+        },
+      }),
+      this.prisma.company.count({
+        where: { ownerUserId: userId },
+      }),
+    ]);
+
+    if (ownedCompanyCount > 0) {
+      return { keys: [], isOwner: true };
+    }
+
+    const keys = new Set<AppPermissionKey>();
+    let isOwner = false;
+
+    for (const membership of memberships) {
+      const resolved = this.permissionsFromRole(membership.role);
+      if (resolved.isOwner) {
+        isOwner = true;
+      }
+      for (const key of resolved.keys) {
+        keys.add(key);
+      }
+    }
+
+    for (const assignment of assignments) {
+      const resolved = this.permissionsFromRole(assignment.role);
+      if (resolved.isOwner) {
+        isOwner = true;
+      }
+      for (const key of resolved.keys) {
+        keys.add(key);
+      }
+    }
+
+    return { keys: [...keys], isOwner };
+  }
+
+  private permissionsFromRole(role: {
+    name: string;
+    permissions: { key: string }[];
+  }): { keys: AppPermissionKey[]; isOwner: boolean } {
+    const isOwner = role.name === 'owner';
+    const keys = role.permissions
+      .map((permission) => permission.key)
+      .filter((key): key is AppPermissionKey => isAssignablePermissionKey(key));
+
+    return { keys, isOwner };
   }
 
   private assertValidPermissions(permissions: string[]) {

@@ -30,7 +30,10 @@ export class UsersController {
   @Get('me/permissions')
   async getMyPermissions(@Req() req: Request) {
     const currentUser = (req as unknown as Record<string, unknown>).currentUser as CurrentUser;
-    const permissions = await this.rolesService.getEffectiveAbilityForUser(currentUser.id);
+    const permissions = await this.rolesService.getEffectiveAbilityForUser(
+      currentUser.id,
+      req,
+    );
     return { permissions };
   }
 

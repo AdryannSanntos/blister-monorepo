@@ -2,7 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Building2 } from "lucide-react";
+import { Building2, Check, Copy } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -23,6 +24,7 @@ import {
   FormMessage,
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
+import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { apiClient } from "src/core/shared/utils/api-client";
 
 const createCompanySchema = z.object({
@@ -33,16 +35,30 @@ const createCompanySchema = z.object({
 
 type CreateCompanyFormValues = z.infer<typeof createCompanySchema>;
 
+type CreateCompanyResult = {
+  company: { id: string; name: string };
+  owner: { id: string; email: string; name: string };
+  firstAccessUrl?: string;
+};
+
 async function createCompany(data: CreateCompanyFormValues) {
-  const { data: result } = await apiClient.post("/admin/companies", {
-    name: data.name,
-    ownerEmail: data.ownerEmail,
-    ...(data.ownerName ? { ownerName: data.ownerName } : {}),
-  });
+  const { data: result } = await apiClient.post<CreateCompanyResult>(
+    "/admin/companies",
+    {
+      name: data.name,
+      ownerEmail: data.ownerEmail,
+      ...(data.ownerName ? { ownerName: data.ownerName } : {}),
+    },
+  );
   return result;
 }
 
 export function CompaniesAdminTab() {
+  const [createdInvite, setCreatedInvite] = useState<CreateCompanyResult | null>(
+    null,
+  );
+  const [copied, setCopied] = useState(false);
+
   const form = useForm<CreateCompanyFormValues>({
     resolver: zodResolver(createCompanySchema),
     mode: "onBlur",
@@ -56,6 +72,8 @@ export function CompaniesAdminTab() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: createCompany,
     onSuccess: (result) => {
+      setCreatedInvite(result);
+      setCopied(false);
       toast.success(
         `Empresa "${result.company.name}" criada. Email enviado para ${result.owner.email}.`,
       );
@@ -66,8 +84,16 @@ export function CompaniesAdminTab() {
     },
   });
 
+  const handleCopyLink = async () => {
+    if (!createdInvite?.firstAccessUrl) return;
+
+    await navigator.clipboard.writeText(createdInvite.firstAccessUrl);
+    setCopied(true);
+    toast.success("Link copiado.");
+  };
+
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto flex max-w-lg flex-col gap-6">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
@@ -138,6 +164,45 @@ export function CompaniesAdminTab() {
           </Form>
         </CardContent>
       </Card>
+
+      {createdInvite?.firstAccessUrl ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Link de primeiro acesso</CardTitle>
+            <CardDescription>
+              Envie este link para {createdInvite.owner.email} caso o email não
+              chegue. Expira em 1 hora.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Input
+              readOnly
+              value={createdInvite.firstAccessUrl}
+              aria-label="Link de primeiro acesso"
+            />
+            <div className="flex flex-wrap items-center gap-3">
+              <Button type="button" variant="outline" onClick={handleCopyLink}>
+                {copied ? (
+                  <Check className="size-4" aria-hidden="true" />
+                ) : (
+                  <Copy className="size-4" aria-hidden="true" />
+                )}
+                {copied ? "Copiado" : "Copiar link"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setCreatedInvite(null)}
+              >
+                Fechar
+              </Button>
+            </div>
+            <Paragraph size="p6" tone="tertiary">
+              Empresa: {createdInvite.company.name}
+            </Paragraph>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   );
 }

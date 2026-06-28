@@ -36,7 +36,10 @@ export class PermissionGuard implements CanActivate {
       throw new ForbiddenException('No authenticated user found');
     }
 
-    const permissionKeys = await this.rolesService.getEffectiveAbilityForUser(currentUser.id);
+    const permissionKeys = await this.rolesService.getEffectiveAbilityForUser(
+      currentUser.id,
+      request,
+    );
     const ability: AppAbility = defineAbilityForPermissions(permissionKeys as AppPermissionKey[]);
 
     const mapping = permissionMap[requiredPermission];

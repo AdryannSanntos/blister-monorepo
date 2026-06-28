@@ -12,7 +12,7 @@ import type { Request } from 'express';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
-import { getAuthInstance } from '../auth/register-better-auth';
+import { sendPasswordResetEmail } from '../auth/send-password-reset-email';
 
 @Injectable()
 export class MembersService {
@@ -161,14 +161,8 @@ export class MembersService {
   }
 
   private async sendMemberInviteEmail(email: string, frontendUrl: string) {
-    const auth = getAuthInstance();
-    if (!auth) return;
-
     try {
-      await (auth as any).api.forgetPassword({
-        body: { email, redirectTo: `${frontendUrl}/auth/reset-password` },
-        headers: new Headers({ 'x-forwarded-for': '127.0.0.1' }),
-      });
+      await sendPasswordResetEmail(email, `${frontendUrl}/auth/reset-password`);
     } catch (err) {
       this.logger.warn(`Failed to send invite email to ${email}`, err);
     }
