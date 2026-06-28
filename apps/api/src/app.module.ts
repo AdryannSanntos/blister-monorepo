@@ -22,6 +22,7 @@ import { MarketplaceModule } from './marketplace/marketplace.module';
 import { FilesModule } from './files/files.module';
 import { ProjectsModule } from './projects/projects.module';
 import { WorkspaceModule } from './workspace/workspace.module';
+import { AdminModule } from './admin/admin.module';
 import { PermissionGuard } from './users/guards/permission.guard';
 
 @Module({
@@ -46,6 +47,7 @@ import { PermissionGuard } from './users/guards/permission.guard';
     MarketplaceModule,
     FilesModule,
     ProjectsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
