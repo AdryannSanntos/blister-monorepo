@@ -8,6 +8,7 @@ import { Button } from "src/core/shared/components/ui/button";
 import { AdminRoleDialog } from "../components/admin-role-dialog";
 import { AgentsPlatformTab } from "../components/agents-platform-tab";
 import { AiCatalogTab } from "../components/ai-catalog-tab";
+import { CompaniesAdminTab } from "../components/companies-admin-tab";
 import { CreditsPlatformTab } from "../components/credits-platform-tab";
 import { PlatformAdminOverviewPanel } from "../components/platform-admin-overview-panel";
 import { PlatformAdminPageLayout } from "../components/platform-admin-page-layout";
@@ -41,6 +42,7 @@ export function PlatformAdminPage() {
         {tab === "ai-catalog" && <AiCatalogTab />}
         {tab === "system-ai" && <SystemAiTab />}
         {tab === "credits" && <CreditsPlatformTab />}
+        {tab === "companies" && <CompaniesAdminTab />}
       </PlatformAdminPageLayout>
 
       <AdminRoleDialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen} />

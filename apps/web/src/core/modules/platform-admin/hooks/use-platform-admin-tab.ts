@@ -10,6 +10,7 @@ export const PLATFORM_ADMIN_TAB_VALUES = [
   "ai-catalog",
   "system-ai",
   "credits",
+  "companies",
 ] as const;
 
 export type PlatformAdminTabValue = (typeof PLATFORM_ADMIN_TAB_VALUES)[number];

@@ -1687,7 +1687,13 @@
       "credits": "Credits",
       "creditsDescription": "Credit settings and company balances.",
       "systemAi": "System AI",
-      "systemAiDescription": "Embedding & caption models, chunking and retrieval"
+      "systemAiDescription": "Embedding & caption models, chunking and retrieval",
+      "companies": "Companies",
+      "companiesDescription": "Create companies and invite owners for first access."
+    },
+    "companiesPage": {
+      "title": "Companies",
+      "description": "Create a new company and send a first-access invite to the owner."
     },
     "agentsPage": {
       "title": "Agents",

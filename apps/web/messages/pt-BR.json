@@ -1687,7 +1687,13 @@
       "credits": "Créditos",
       "creditsDescription": "Configurações de crédito e saldo das empresas.",
       "systemAi": "IA do sistema",
-      "systemAiDescription": "Modelos de embedding e legenda, chunking e recuperação"
+      "systemAiDescription": "Modelos de embedding e legenda, chunking e recuperação",
+      "companies": "Empresas",
+      "companiesDescription": "Crie empresas e convide responsáveis para o primeiro acesso."
+    },
+    "companiesPage": {
+      "title": "Empresas",
+      "description": "Crie uma nova empresa e envie o convite de primeiro acesso ao responsável."
     },
     "agentsPage": {
       "title": "Agentes",
