@@ -3,6 +3,8 @@ import { z } from 'zod';
 import type { BuiltAgentDefinition } from '@company-os/agent-ia-sdk/agents';
 import { cutsAgentDefinition } from './cuts/agent';
 import { cutsInputZod, cutsOutputZod } from './cuts/schemas/output.schema';
+import { carouselAgentDefinition } from './carousel/agent';
+import { carouselInputZod, carouselOutputZod } from './carousel/schemas/carousel-schemas';
 import type { RegisteredAgent } from './runtime/agent-registry.service';
 
 export const mapCapabilities = (capabilities: string[]): AgentCapability[] => {
@@ -73,5 +75,12 @@ export const buildRegisteredAgents = (): RegisteredAgent[] => [
     reviewSchema: cutsOutputZod.pick({ cuts: true }),
     icon: 'scissors',
     estimatedCreditCost: 0.08,
+  }),
+  toRegisteredAgent({
+    definition: carouselAgentDefinition,
+    inputSchema: carouselInputZod,
+    outputSchema: carouselOutputZod,
+    icon: 'gallery-horizontal',
+    estimatedCreditCost: 0.12,
   }),
 ];

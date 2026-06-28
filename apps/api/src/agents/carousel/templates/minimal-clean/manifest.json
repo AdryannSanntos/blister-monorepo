@@ -1,0 +1,12 @@
+{
+  "id": "minimal-clean",
+  "name": "Minimal Clean",
+  "description": "Layout minimalista com tipografia bold",
+  "dimensions": { "instagram": { "width": 1080, "height": 1080 } },
+  "slides": {
+    "start": ["v1"],
+    "text": ["v1", "v2", "v3"],
+    "text-image": ["v1", "v2", "v3"],
+    "image": ["v1", "v2"]
+  }
+}

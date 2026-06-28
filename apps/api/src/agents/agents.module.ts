@@ -9,6 +9,7 @@ import { WorkspaceModule } from '../workspace/workspace.module';
 import { WorkspaceSettingsModule } from '../workspace-settings/workspace-settings.module';
 
 import { CutsRunDepsAdapter } from './adapters/cuts-run-deps.adapter';
+import { CarouselRunDepsAdapter } from './adapters/carousel-run-deps.adapter';
 
 import { AgentRegistryService } from './runtime/agent-registry.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
@@ -42,6 +43,7 @@ import { InternalEventsController } from './internal-events.controller';
   ],
   providers: [
     CutsRunDepsAdapter,
+    CarouselRunDepsAdapter,
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,

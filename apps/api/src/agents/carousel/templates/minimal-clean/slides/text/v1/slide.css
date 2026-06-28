@@ -1,0 +1,3 @@
+.slide{width:1080px;height:1080px;display:flex;flex-direction:column;justify-content:center;background:#f9f9f7;padding:72px;box-sizing:border-box;font-family:system-ui,sans-serif}
+.slide-text h2{font-size:48px;font-weight:800;color:#0a0a0a;line-height:1.15;margin:0 0 24px}
+.slide-text p{font-size:24px;font-weight:400;color:#333;line-height:1.5}
