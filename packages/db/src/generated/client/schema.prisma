@@ -20,21 +20,26 @@ enum UserType {
 }
 
 model User {
-  id              String               @id
-  name            String
-  email           String               @unique
-  emailVerified   Boolean
-  image           String?
-  userType        UserType             @default(USER)
-  createdAt       DateTime
-  updatedAt       DateTime
-  accounts        Account[]
-  sessions        Session[]
-  roleAssignments UserRoleAssignment[]
-  ownedCompanies  Company[]
-  companyMembers  CompanyMember[]
-  personalSpace   PersonalSpace?
-  agentFeedbacks  AgentFeedback[]
+  id                    String               @id
+  name                  String
+  email                 String               @unique
+  emailVerified         Boolean
+  image                 String?
+  userType              UserType             @default(USER)
+  createdAt             DateTime
+  updatedAt             DateTime
+  // New profile fields
+  cpf                   String?
+  phone                 String?
+  onboardingCompletedAt DateTime?
+  // Relations
+  accounts              Account[]
+  sessions              Session[]
+  roleAssignments       UserRoleAssignment[]
+  ownedCompanies        Company[]
+  companyMembers        CompanyMember[]
+  personalSpace         PersonalSpace?
+  agentFeedbacks        AgentFeedback[]
 }
 
 model Session {

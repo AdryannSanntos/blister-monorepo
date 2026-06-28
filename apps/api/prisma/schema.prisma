@@ -28,6 +28,11 @@ model User {
   userType        UserType             @default(USER)
   createdAt       DateTime
   updatedAt       DateTime
+  // New profile fields
+  cpf                   String?
+  phone                 String?
+  onboardingCompletedAt DateTime?
+  // Relations
   accounts        Account[]
   sessions        Session[]
   roleAssignments UserRoleAssignment[]
