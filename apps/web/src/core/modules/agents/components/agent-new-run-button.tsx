@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { useCarouselRunModalActions } from "src/core/modules/agents/components/carousel/carousel-run-modal-provider";
 import { useCutsRunModalActions } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
 import { getAgentNewPath } from "src/core/modules/agents/utils/agent-paths";
 import { Button } from "src/core/shared/components/ui/button";
@@ -43,6 +44,32 @@ const CutsNewRunButton = ({
   );
 };
 
+const CarouselNewRunButton = ({
+  size,
+  variant,
+  className,
+}: Pick<AgentNewRunButtonProps, "size" | "variant" | "className">) => {
+  const { handleOpen } = useCarouselRunModalActions();
+
+  return (
+    <Button
+      type="button"
+      size={size}
+      variant={variant}
+      className={className}
+      data-testid="carousel-new-run-button"
+      onClick={handleOpen}
+    >
+      <Plus className="size-4" aria-hidden />
+      {size === "icon" || size === "icon-sm" ? (
+        <span className="sr-only">Novo carrossel</span>
+      ) : (
+        "Novo carrossel"
+      )}
+    </Button>
+  );
+};
+
 export const AgentNewRunButton = ({
   routeSlug,
   size = "default",
@@ -53,6 +80,10 @@ export const AgentNewRunButton = ({
 
   if (routeSlug === "cuts") {
     return <CutsNewRunButton size={size} variant={variant} className={className} />;
+  }
+
+  if (routeSlug === "carousel") {
+    return <CarouselNewRunButton size={size} variant={variant} className={className} />;
   }
 
   return (
