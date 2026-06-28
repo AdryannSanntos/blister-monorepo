@@ -136,14 +136,6 @@ export class MarketplaceService {
   private async getOwnedItemIds(workspace: Awaited<
     ReturnType<WorkspaceContextService['resolveFromRequest']>
   >) {
-    if (workspace.type === 'personal') {
-      const entitlements = await this.prisma.workspaceEntitlement.findMany({
-        where: { personalSpaceId: workspace.personalSpaceId },
-        select: { itemId: true },
-      });
-      return new Set(entitlements.map((e) => e.itemId));
-    }
-
     const entitlements = await this.prisma.workspaceEntitlement.findMany({
       where: { companyId: workspace.companyId },
       select: { itemId: true },
@@ -160,10 +152,7 @@ export class MarketplaceService {
 
   async getEntitlements(userId: string, req: Request, typeFilter?: string) {
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
-    const where =
-      workspace.type === 'personal'
-        ? { personalSpaceId: workspace.personalSpaceId }
-        : { companyId: workspace.companyId };
+    const where = { companyId: workspace.companyId };
 
     const prismaType = typeFilter
       ? (Object.entries(typeToSlug).find(([, slug]) => slug === typeFilter)?.[0] as
@@ -191,46 +180,27 @@ export class MarketplaceService {
     if (!item) throw new NotFoundException('Marketplace item not found');
 
     const existing = await this.prisma.workspaceEntitlement.findFirst({
-      where:
-        workspace.type === 'personal'
-          ? { personalSpaceId: workspace.personalSpaceId, itemId: item.id }
-          : { companyId: workspace.companyId, itemId: item.id },
+      where: { companyId: workspace.companyId, itemId: item.id },
     });
     if (existing) {
       throw new UnprocessableEntityException('Item already owned');
     }
 
     if (item.price > 0) {
-      if (workspace.type === 'company') {
-        await this.credits.checkBalance(workspace.companyId, item.price);
-        await this.credits.debit(
-          workspace.companyId,
-          item.price,
-          `Marketplace redeem: ${item.name}`,
-        );
-      } else {
-        await this.debitPersonalCredits(
-          workspace.personalSpaceId,
-          item.price,
-          `Marketplace redeem: ${item.name}`,
-          userId,
-        );
-      }
+      await this.credits.checkBalance(workspace.companyId, item.price);
+      await this.credits.debit(
+        workspace.companyId,
+        item.price,
+        `Marketplace redeem: ${item.name}`,
+      );
     }
 
     await this.prisma.workspaceEntitlement.create({
-      data:
-        workspace.type === 'personal'
-          ? {
-              itemId: item.id,
-              personalSpaceId: workspace.personalSpaceId,
-              redeemedByUserId: userId,
-            }
-          : {
-              itemId: item.id,
-              companyId: workspace.companyId,
-              redeemedByUserId: userId,
-            },
+      data: {
+        itemId: item.id,
+        companyId: workspace.companyId,
+        redeemedByUserId: userId,
+      },
     });
 
     return serializeItem(item, true);

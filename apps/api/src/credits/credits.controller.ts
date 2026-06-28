@@ -24,11 +24,6 @@ export class CreditsController {
   async getSummary(@Req() req: Request) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
-
-    if (workspace.type === 'personal') {
-      return this.creditService.getPersonalSummary(workspace.personalSpaceId);
-    }
-
     return this.creditService.getSummary(workspace.companyId);
   }
 
@@ -39,15 +34,6 @@ export class CreditsController {
     const parsed = creditHistoryQuerySchema.safeParse(query);
     if (!parsed.success) throw new BadRequestException(parsed.error.issues);
     const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
-
-    if (workspace.type === 'personal') {
-      return this.creditService.getPersonalHistory(
-        workspace.personalSpaceId,
-        parsed.data.page,
-        parsed.data.pageSize,
-      );
-    }
-
     return this.creditService.getHistory(
       workspace.companyId,
       parsed.data.page,
@@ -60,11 +46,6 @@ export class CreditsController {
   async getAgentSpend(@Req() req: Request) {
     const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
     const workspace = await this.workspaceContext.resolveFromRequest(user.id, req);
-
-    return this.creditService.getAgentSpend(
-      workspace.type === 'personal'
-        ? { type: 'personal', personalSpaceId: workspace.personalSpaceId }
-        : { type: 'company', companyId: workspace.companyId },
-    );
+    return this.creditService.getAgentSpend({ type: 'company', companyId: workspace.companyId });
   }
 }

@@ -58,29 +58,7 @@ describe('WorkspaceSettingsService', () => {
     service = module.get(WorkspaceSettingsService);
   });
 
-  it('returns personal settings profile', async () => {
-    workspaceContext.ensurePersonalSpace.mockResolvedValue({ id: 'ps-1' });
-    prisma.workspaceSettings.findUnique.mockResolvedValue({
-      displayName: 'Test',
-      niche: 'Food',
-      audience: null,
-      voice: null,
-      positioning: null,
-      contentPreferences: null,
-      logoStorageKey: null,
-      palette: ['#fff'],
-      timezone: null,
-    });
-
-    const result = await service.getPersonalSettings('user-1');
-    expect(result.displayName).toBe('Test');
-    expect(result.palette).toEqual(['#fff']);
-  });
-
-  it('throws when personal settings missing', async () => {
-    workspaceContext.ensurePersonalSpace.mockResolvedValue({ id: 'ps-1' });
-    prisma.workspaceSettings.findUnique.mockResolvedValue(null);
-
+  it('throws NotFoundException for personal settings (personal space removed)', async () => {
     await expect(service.getPersonalSettings('user-1')).rejects.toThrow(NotFoundException);
   });
 

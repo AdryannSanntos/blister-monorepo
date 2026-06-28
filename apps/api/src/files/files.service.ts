@@ -86,9 +86,7 @@ export class FilesService {
   ) {}
 
   private workspaceWhere(workspace: ResolvedWorkspace): WorkspaceWhere {
-    return workspace.type === 'personal'
-      ? { personalSpaceId: workspace.personalSpaceId }
-      : { companyId: workspace.companyId };
+    return { companyId: workspace.companyId };
   }
 
   /** Resolves the S3 root prefix owner for a workspace (slug or user id). */
@@ -219,13 +217,7 @@ export class FilesService {
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
     const scope = this.workspaceWhere(workspace);
 
-    if (workspace.type === 'company') {
-      await this.workspaceContext.ensureCompanyAgentFolders(workspace.companyId);
-    } else {
-      await ensureWorkspaceAgentFolders(this.prisma, {
-        personalSpaceId: workspace.personalSpaceId,
-      });
-    }
+    await this.workspaceContext.ensureCompanyAgentFolders(workspace.companyId);
 
     const parentId = folderId ?? null;
     const parentFolder = parentId

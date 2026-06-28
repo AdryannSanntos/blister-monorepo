@@ -63,8 +63,8 @@ export class AgentsController {
 
     const result = await this.workflowEngine.startRun({
       agentId,
-      companyId: workspace.type === 'company' ? workspace.companyId : undefined,
-      personalSpaceId: workspace.type === 'personal' ? workspace.personalSpaceId : undefined,
+      companyId: workspace.companyId,
+      personalSpaceId: undefined,
       userId,
       userInput: dto.userInput,
       metadata,

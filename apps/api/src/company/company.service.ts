@@ -14,7 +14,7 @@ import { createCompanyForUser } from './company-bootstrap.util';
 import { getActiveCompanyIdFromRequest } from './company-context.util';
 import type { onboardingBodySchema, updateCompanyBodySchema } from './dto/company.dto';
 
-export type HomeDestination = 'onboarding' | 'dashboard' | 'personal-space';
+export type HomeDestination = 'onboarding' | 'dashboard';
 
 export type CompanySummary = {
   id: string;
@@ -66,14 +66,10 @@ export class CompanyService {
     });
   }
 
-  async getHomeDestination(ownerUserId: string): Promise<HomeDestination> {
-    // Criar empresa é opcional: o usuário sempre tem um Espaço Pessoal e cai
-    // nele por padrão. Onboarding de empresa nunca é forçado — empresas
-    // incompletas (onboarding abandonado) não prendem o usuário.
+  async getHomeDestination(ownerUserId: string): Promise<'onboarding' | 'dashboard'> {
     const companies = await this.listAccessibleCompanies(ownerUserId);
     const onboarded = companies.filter((company) => company.onboardingCompletedAt);
-
-    return onboarded.length > 0 ? 'dashboard' : 'personal-space';
+    return onboarded.length > 0 ? 'dashboard' : 'onboarding';
   }
 
   async resolveActiveCompany(ownerUserId: string, activeCompanyId?: string) {

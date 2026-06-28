@@ -11,14 +11,13 @@ import type { ResolvedWorkspace } from '../../workspace/workspace-context.servic
 import { AgentRegistryService } from './agent-registry.service';
 import { AgentRunBlockService } from './agent-run-block.service';
 
-/** Workspace scope of an agent run — either a company or a personal space. */
+/** Workspace scope of an agent run — company-only after personal space removal. */
 export type RunWorkspaceScope = { companyId: string } | { personalSpaceId: string };
 
 /** Builds a RunWorkspaceScope from a resolved workspace. */
-export const toRunScope = (workspace: ResolvedWorkspace): RunWorkspaceScope =>
-  workspace.type === 'personal'
-    ? { personalSpaceId: workspace.personalSpaceId }
-    : { companyId: workspace.companyId };
+export const toRunScope = (workspace: ResolvedWorkspace): RunWorkspaceScope => ({
+  companyId: workspace.companyId,
+});
 
 export interface ListRunsOptions {
   scope: RunWorkspaceScope;

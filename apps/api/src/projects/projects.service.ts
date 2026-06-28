@@ -30,9 +30,7 @@ export class ProjectsService {
   private workspaceWhere(workspace: Awaited<
     ReturnType<WorkspaceContextService['resolveFromRequest']>
   >) {
-    return workspace.type === 'personal'
-      ? { personalSpaceId: workspace.personalSpaceId }
-      : { companyId: workspace.companyId };
+    return { companyId: workspace.companyId };
   }
 
   async list(userId: string, req: Request): Promise<ProjectDto[]> {
