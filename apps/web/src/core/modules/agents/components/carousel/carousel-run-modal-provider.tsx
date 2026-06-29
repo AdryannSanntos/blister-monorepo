@@ -15,10 +15,10 @@ import { CarouselRunModal } from "./carousel-run-modal";
 import { CarouselRunStatusModal } from "./carousel-run-status-modal";
 import { useCarouselRunModal } from "src/core/modules/agents/hooks/use-carousel-run-modal";
 
-type CarouselRunModalActions = Pick<
-  ReturnType<typeof useCarouselRunModal>,
-  "handleOpen" | "handleClose"
->;
+type CarouselRunModalActions = {
+  handleOpen: () => Promise<void>;
+  handleClose: () => void;
+};
 
 const CarouselRunModalActionsContext =
   createContext<CarouselRunModalActions | null>(null);
@@ -55,7 +55,9 @@ export const CarouselRunModalProvider = ({ children }: { children: ReactNode }) 
 
   const stableActions = useMemo<CarouselRunModalActions>(
     () => ({
-      handleOpen: () => actionsRef.current?.handleOpen(),
+      handleOpen: async () => {
+        if (actionsRef.current) await actionsRef.current.handleOpen();
+      },
       handleClose: () => actionsRef.current?.handleClose(),
     }),
     [],

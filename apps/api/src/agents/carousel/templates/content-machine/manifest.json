@@ -1,0 +1,30 @@
+{
+  "id": "content-machine",
+  "name": "Content Machine",
+  "description": "Carrossel editorial com header triplo, tipografia serif/sans, card de destaque e fechamento em caixa accent — 1080×1350",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Foto de capa", "required": true }
+        ]
+      }
+    },
+    "text": ["v1", "v2"],
+    "text-image": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem do card de destaque", "required": true }
+        ]
+      },
+      "v2": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem de prova", "required": true }
+        ]
+      }
+    }
+  }
+}

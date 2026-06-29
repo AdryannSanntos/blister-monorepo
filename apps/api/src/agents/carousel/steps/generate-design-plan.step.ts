@@ -105,7 +105,9 @@ export const createGenerateDesignPlanStep = () =>
         };
       });
 
-      const normalizedSlides = normalizeDesignPlanSlides(slidesWithSlots, contentSlides);
+      const normalizedSlides = normalizeDesignPlanSlides(slidesWithSlots, contentSlides, {
+        templateId: data.templateId,
+      });
 
       const slides = normalizedSlides.map((slide) => {
         const manifestSlots = templateService.getImageSlotsForVariation(

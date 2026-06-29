@@ -143,6 +143,27 @@ const MARKETPLACE_SEED = [
     includes: ['Abertura, texto, texto+imagem e imagem', '3 variações de texto'],
     refId: 'minimal-clean',
   },
+  {
+    slug: 'carousel-content-machine',
+    type: 'TEMPLATE' as const,
+    name: 'Content Machine',
+    author: 'Blister Studio',
+    price: 0,
+    flag: 'novo',
+    description:
+      'Carrossel editorial com header triplo, tipografia serif/sans e card de destaque — cor da marca via configurações.',
+    palette: ['#050510', '#ff4a0a', '#f5f5f5'],
+    specs: {
+      templateId: 'content-machine',
+      previewAspectRatio: '4:5',
+    },
+    includes: [
+      'Capa impact + slides narrativos',
+      'Card accent central + fechamento em caixa',
+      'Cor principal do workspace/agente',
+    ],
+    refId: 'content-machine',
+  },
 ] as const;
 
 const MARKETPLACE_SEED_SLUGS = MARKETPLACE_SEED.map((item) => item.slug);

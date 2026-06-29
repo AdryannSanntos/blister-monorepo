@@ -15,11 +15,11 @@ export interface OpenRouterTextAdapterOptions {
 
 interface OpenRouterResponse {
   id: string;
-  choices: Array<{
+  choices?: Array<{
     message?: { content: string };
     delta?: { content?: string };
     finish_reason?: string;
-  }>;
+  }> | null;
   usage?: {
     prompt_tokens?: number;
     completion_tokens?: number;
@@ -27,6 +27,24 @@ interface OpenRouterResponse {
 }
 
 const DEFAULT_BASE_URL = 'https://openrouter.ai/api/v1';
+
+type OpenRouterChatChoice = NonNullable<OpenRouterResponse['choices']>[number];
+
+const readFirstChoice = (
+  provider: string,
+  choices: OpenRouterResponse['choices'],
+): OpenRouterChatChoice => {
+  const choice = choices?.[0];
+  if (!choice) {
+    throw new ProviderExecutionError(
+      provider,
+      'validation',
+      'Chat completion returned no choices',
+      502,
+    );
+  }
+  return choice;
+};
 
 /** OpenRouter chat-completions adapter implementing the text capability. */
 export class OpenRouterTextAdapter implements ITextProvider {
@@ -62,7 +80,8 @@ export class OpenRouterTextAdapter implements ITextProvider {
       }
 
       const data = (await response.json()) as OpenRouterResponse;
-      const content = data.choices[0]?.message?.content ?? '';
+      const choice = readFirstChoice(this.provider, data.choices);
+      const content = choice.message?.content ?? '';
       const promptTokens = data.usage?.prompt_tokens ?? 0;
       const completionTokens = data.usage?.completion_tokens ?? 0;
 
@@ -74,7 +93,7 @@ export class OpenRouterTextAdapter implements ITextProvider {
           completionTokens,
           totalTokens: promptTokens + completionTokens,
         },
-        finishReason: data.choices[0]?.finish_reason ?? 'stop',
+        finishReason: choice.finish_reason ?? 'stop',
       };
     } catch (error) {
       throw this.wrapError(error);
@@ -127,13 +146,16 @@ export class OpenRouterTextAdapter implements ITextProvider {
 
           try {
             const parsed = JSON.parse(data) as OpenRouterResponse;
-            const content = parsed.choices[0]?.delta?.content ?? '';
+            const choice = parsed.choices?.[0];
+            if (!choice) continue;
+
+            const content = choice.delta?.content ?? '';
             if (content) {
               fullContent += content;
               yield { content, isLast: false };
             }
-            if (parsed.choices[0]?.finish_reason) {
-              finishReason = parsed.choices[0].finish_reason;
+            if (choice.finish_reason) {
+              finishReason = choice.finish_reason;
             }
             if (parsed.usage) {
               promptTokens = parsed.usage.prompt_tokens ?? 0;

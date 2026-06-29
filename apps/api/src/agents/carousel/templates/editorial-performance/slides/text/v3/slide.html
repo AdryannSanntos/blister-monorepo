@@ -1,18 +1,20 @@
-<div class="slide theme-light slide-cta">
+<div class="slide theme-dark slide-close">
   <header class="slide-header">
     <span class="slide-header__brand">{{brand}}</span>
     <span class="slide-header__meta">{{meta_right}}</span>
   </header>
-  <main class="slide-main slide-cta__main">
-    <p class="body-text slide-cta__lead">{{body}}</p>
-    <p class="body-text slide-cta__support">{{subtitle}}</p>
-    <div class="slide-cta__box">
-      <span class="slide-cta__hint">{{call_to_action}}</span>
-      <span class="display-title slide-cta__keyword">{{title}}</span>
+  <main class="slide-main slide-close__main">
+    <span class="badge-pill slide-close__badge">{{badge}}</span>
+    <p class="body-text body-text--light slide-close__recap">{{body}}</p>
+    <div class="slide-close__hero">
+      <h1 class="display-title slide-close__keyword">{{title}}</h1>
+      <div class="slide-close__rule" aria-hidden="true"></div>
     </div>
+    <p class="slide-close__hint">{{subtitle}}</p>
+    <p class="slide-close__action">{{call_to_action}}</p>
   </main>
   <footer class="slide-footer">
-    <div class="progress-track progress-track--dark">
+    <div class="progress-track">
       <span class="progress-fill" style="width: {{progress}}%"></span>
     </div>
     <span class="slide-counter">{{slide_current}}/{{slide_total}}</span>

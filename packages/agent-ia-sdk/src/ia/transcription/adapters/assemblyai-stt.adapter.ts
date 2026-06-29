@@ -49,8 +49,10 @@ const SEGMENT_TARGET_MS = 45_000;
 const MIN_SEGMENT_BREAK_MS = 15_000;
 
 /** Groups word-level timestamps into ~45s chunks for cut ranking when utterances are absent. */
-export const buildTimedSegmentsFromWords = (words: AssemblyAiWord[]): TranscriptSegment[] => {
-  if (words.length === 0) return [];
+export const buildTimedSegmentsFromWords = (
+  words: AssemblyAiWord[] | null | undefined,
+): TranscriptSegment[] => {
+  if (!words?.length) return [];
 
   const segments: TranscriptSegment[] = [];
   let chunkStart = words[0].start;

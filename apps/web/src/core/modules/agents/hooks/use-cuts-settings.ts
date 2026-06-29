@@ -17,7 +17,8 @@ export const useCutsSettings = () =>
     queryKey: cutsSettingsQueryKey,
     queryFn: async () => {
       const { data } = await apiClient.get(`/workspace-settings/agents/${CUTS_AGENT_ID}`);
-      return agentWorkspaceSettingsResponseSchema.parse(data).config;
+      const parsed = agentWorkspaceSettingsResponseSchema.parse(data);
+      return cutsAgentSettingsSchema.parse(parsed.config);
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
@@ -33,7 +34,9 @@ export const useUpdateCutsSettings = () => {
         `/workspace-settings/agents/${CUTS_AGENT_ID}`,
         { config: parsed },
       );
-      return agentWorkspaceSettingsResponseSchema.parse(data).config;
+      return cutsAgentSettingsSchema.parse(
+        agentWorkspaceSettingsResponseSchema.parse(data).config,
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cutsSettingsQueryKey });

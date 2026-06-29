@@ -37,4 +37,12 @@ describe('design-plan-normalizer', () => {
       expect(keys[index]).not.toBe(keys[index - 1]);
     }
   });
+
+  it('content-machine forces start/v1 and text/v2 closing', () => {
+    const normalized = normalizeDesignPlanSlides(baseSlides, contentSlides, {
+      templateId: 'content-machine',
+    });
+    expect(normalized[0]).toMatchObject({ type: 'start', variationId: 'v1' });
+    expect(normalized[5]).toMatchObject({ type: 'text', variationId: 'v2' });
+  });
 });

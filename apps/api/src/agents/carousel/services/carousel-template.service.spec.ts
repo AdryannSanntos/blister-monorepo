@@ -9,7 +9,7 @@ describe('CarouselTemplateService', () => {
   it('lists available templates', () => {
     const templates = service.listTemplates();
     expect(templates.map((t) => t.id)).toEqual(
-      expect.arrayContaining(['editorial-performance', 'minimal-clean']),
+      expect.arrayContaining(['editorial-performance', 'minimal-clean', 'content-machine']),
     );
   });
 
@@ -53,5 +53,19 @@ describe('CarouselTemplateService', () => {
     const variation = service.getSlideVariation('editorial-performance', 'text_image', 'v3');
     expect(variation.slideType).toBe('text_image');
     expect(variation.html).toContain('{{image_url_3}}');
+  });
+
+  it('loads content-machine start slide with title only', () => {
+    const variation = service.getSlideVariation('content-machine', 'start', 'v1');
+    expect(variation.html).toContain('{{title}}');
+    expect(variation.html).toContain('{{meta_center}}');
+    expect(variation.html).toContain('{{meta_year}}');
+  });
+
+  it('loads content-machine internal slide without title', () => {
+    const variation = service.getSlideVariation('content-machine', 'text', 'v1');
+    expect(variation.html).not.toContain('{{title}}');
+    expect(variation.html).toContain('{{body}}');
+    expect(variation.html).toContain('{{subtitle}}');
   });
 });

@@ -152,11 +152,38 @@ export const readImageUploads = (
   return uploads as Record<string, string>;
 };
 
+export const dedupeCarouselSlidesById = <T extends CarouselOutputSlide>(
+  slides: T[],
+): T[] => {
+  const byId = new Map<string, T>();
+
+  for (const slide of slides) {
+    const existing = byId.get(slide.id);
+    if (!existing || slide.order < existing.order) {
+      byId.set(slide.id, slide);
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => a.order - b.order);
+};
+
+export const normalizeCarouselOutput = (
+  output: CarouselOutput,
+): CarouselOutput => ({
+  ...output,
+  slides: dedupeCarouselSlidesById(output.slides),
+});
+
+export const getCarouselSlideReactKey = (
+  slide: CarouselOutputSlide,
+  index: number,
+): string => `${slide.id}::${slide.order}::${index}`;
+
 const readOutputFromPayload = (payload: unknown): CarouselOutput | null => {
   if (!payload || typeof payload !== "object") return null;
   const record = payload as Record<string, unknown>;
   if (Array.isArray(record.slides) && typeof record.templateId === "string") {
-    return record as CarouselOutput;
+    return normalizeCarouselOutput(record as CarouselOutput);
   }
   return null;
 };

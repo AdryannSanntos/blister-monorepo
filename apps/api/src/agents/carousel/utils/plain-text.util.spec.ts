@@ -1,12 +1,24 @@
 import { normalizeCarouselSlideCopy, toCarouselPlainText } from './plain-text.util';
 
 describe('toCarouselPlainText', () => {
-  it('strips HTML tags and keeps inner text', () => {
+  it('converts accent spans back to == markers before stripping html', () => {
     expect(
       toCarouselPlainText(
         'A <span class="accent">REVOLUÇÃO DA IA</span> JÁ ACONTECEU',
       ),
-    ).toBe('A REVOLUÇÃO DA IA JÁ ACONTECEU');
+    ).toBe('A ==REVOLUÇÃO DA IA== JÁ ACONTECEU');
+  });
+
+  it('converts strong tags to ** markers', () => {
+    expect(toCarouselPlainText('Texto <strong>importante</strong> aqui')).toBe(
+      'Texto **importante** aqui',
+    );
+  });
+
+  it('preserves existing == markers', () => {
+    expect(toCarouselPlainText('CANNABIS ==LEGAL== NO BRASIL')).toBe(
+      'CANNABIS ==LEGAL== NO BRASIL',
+    );
   });
 
   it('preserves line breaks between headline lines', () => {
@@ -19,13 +31,13 @@ describe('toCarouselPlainText', () => {
 });
 
 describe('normalizeCarouselSlideCopy', () => {
-  it('sanitizes all copy fields on a slide', () => {
+  it('preserves highlight markers when sanitizing copy fields', () => {
     expect(
       normalizeCarouselSlideCopy({
         id: 'slide_1',
         order: 1,
         type: 'start',
-        title: '<strong>Título</strong>',
+        title: '<span class="accent">CANNABIS</span> NO BRASIL',
         body: 'Texto <em>rico</em>',
         callToAction: '<span>Salvar</span>',
       }),
@@ -33,7 +45,7 @@ describe('normalizeCarouselSlideCopy', () => {
       id: 'slide_1',
       order: 1,
       type: 'start',
-      title: 'Título',
+      title: '==CANNABIS== NO BRASIL',
       body: 'Texto rico',
       callToAction: 'Salvar',
     });

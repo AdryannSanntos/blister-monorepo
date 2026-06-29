@@ -286,3 +286,51 @@
 .theme-section .accent {
   color: #ffffff;
 }
+
+.theme-dark .display-title .accent,
+.theme-dark .slide-start__title .accent,
+.theme-dark .slide-close__keyword .accent {
+  color: var(--accent);
+}
+
+.theme-light .display-title .accent {
+  color: var(--accent);
+}
+
+.theme-section .display-title .accent {
+  color: #111111;
+  background: #ffffff;
+  padding: 0 0.1em;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.theme-section .body-text,
+.theme-section .slide-synthesis__subtitle {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.theme-section .body-text strong,
+.theme-section .body-text b,
+.theme-section .slide-synthesis__subtitle strong,
+.theme-section .slide-synthesis__subtitle b {
+  color: #ffffff;
+}
+
+.theme-section .display-title,
+.theme-section .slide-synthesis__title {
+  color: #ffffff;
+}
+
+.theme-section .check-list li {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-section .check-list li strong {
+  color: #ffffff;
+}
+
+.theme-section .check-list li::before {
+  background: rgba(255, 255, 255, 0.95);
+}

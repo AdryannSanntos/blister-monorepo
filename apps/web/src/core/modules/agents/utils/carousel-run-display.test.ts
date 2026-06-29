@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   getFirstCarouselSlideFromRun,
+  getCarouselSlideReactKey,
+  normalizeCarouselOutput,
   toCarouselViewableRun,
 } from "./carousel-run-display";
 
@@ -87,5 +89,46 @@ describe("toCarouselViewableRun", () => {
 
     expect(viewable.firstSlide?.htmlContent).toBe("<div>Cover</div>");
     expect(viewable.theme).toBe("Morning habits");
+  });
+});
+
+describe("normalizeCarouselOutput", () => {
+  it("dedupes slides with duplicate ids", () => {
+    const normalized = normalizeCarouselOutput({
+      templateId: "editorial-performance",
+      socialNetwork: "instagram",
+      slides: [
+        {
+          id: "slide_1",
+          order: 2,
+          type: "text",
+          htmlContent: "<div>Duplicate</div>",
+          cssContent: ".slide {}",
+        },
+        {
+          id: "slide_1",
+          order: 1,
+          type: "start",
+          htmlContent: "<div>Cover</div>",
+          cssContent: ".slide {}",
+        },
+      ],
+    });
+
+    expect(normalized.slides).toHaveLength(1);
+    expect(normalized.slides[0]?.order).toBe(1);
+    expect(normalized.slides[0]?.htmlContent).toBe("<div>Cover</div>");
+  });
+
+  it("builds stable react keys from slide id, order and index", () => {
+    const slide = {
+      id: "slide_1",
+      order: 1,
+      type: "start" as const,
+      htmlContent: "",
+      cssContent: "",
+    };
+
+    expect(getCarouselSlideReactKey(slide, 0)).toBe("slide_1::1::0");
   });
 });

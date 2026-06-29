@@ -20,6 +20,7 @@ import {
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
 import { PasswordInput } from "src/core/shared/components/ui/password-input";
+import { resolvePostLoginNavigation } from "src/core/modules/auth/utils/post-login-bootstrap";
 import { authClient } from "src/core/shared/utils/auth-client";
 import { z } from "zod";
 
@@ -32,21 +33,6 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const rememberedLoginKey = "blister:remembered-login-email";
-
-function getSafeRedirectPath(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) return null;
-  return value;
-}
-
-function getPostLoginRedirectPath(searchParams: {
-  get: (name: string) => string | null;
-}) {
-  return (
-    getSafeRedirectPath(searchParams.get("redirect")) ??
-    getSafeRedirectPath(searchParams.get("next")) ??
-    "/dashboard"
-  );
-}
 
 function getRememberedLoginEmail() {
   if (typeof window === "undefined") return "";
@@ -102,7 +88,10 @@ export function LoginPage() {
 
       persistRememberedLoginEmail(values);
 
-      router.push(getPostLoginRedirectPath(searchParams));
+      const explicitRedirect =
+        searchParams.get("redirect") ?? searchParams.get("next");
+      const destination = await resolvePostLoginNavigation(explicitRedirect);
+      router.push(destination);
       router.refresh();
     } catch {
       toast.error("Erro inesperado. Tente novamente.");
@@ -125,7 +114,7 @@ export function LoginPage() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="email"
@@ -174,7 +163,7 @@ export function LoginPage() {
             control={form.control}
             name="rememberLogin"
             render={({ field }) => (
-              <FormItem className="flex-row items-center gap-2.5 pb-0">
+              <FormItem className="flex-row items-center gap-2.5">
                 <FormControl>
                   <Checkbox
                     checked={field.value}

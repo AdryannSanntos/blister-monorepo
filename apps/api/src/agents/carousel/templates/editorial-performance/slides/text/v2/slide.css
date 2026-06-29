@@ -533,5 +533,5 @@
 .slide-synthesis__title { max-width: 920px; font-size: 68px; margin-bottom: 16px; }
 .slide-synthesis__subtitle { max-width: 900px; margin-bottom: 28px; }
 .slide-synthesis__list { max-width: 900px; margin-bottom: 36px; }
-.slide-synthesis__closing { max-width: 900px; font-size: 30px; line-height: 1.45; color: var(--text-primary-dark); }
-.slide-synthesis__closing strong { font-weight: 700; }
+.slide-synthesis__closing { max-width: 900px; font-size: 30px; line-height: 1.45; color: rgba(255, 255, 255, 0.92); font-weight: 600; }
+.slide-synthesis__closing strong { font-weight: 700; color: #ffffff; }

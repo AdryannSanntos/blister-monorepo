@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reviewCutsSchema = exports.cutDecisionSchema = exports.cutsRunOutputSchema = exports.cutsRunInputSchema = exports.cutsTranscriptSegmentSchema = exports.cutsTranscriptWordSchema = exports.cutOutputSchema = exports.cutReviewStatusSchema = exports.cutsAgentSettingsSchema = exports.normalizeCutsModelTier = exports.CUTS_ENABLED_MODEL_TIERS = exports.cutsRunOptionsSchema = exports.cutsProcessingTimeframeSchema = exports.cutsVideoGenreSchema = exports.cutsModelTierSchema = void 0;
+exports.reviewCutsSchema = exports.cutDecisionSchema = exports.cutsRunOutputSchema = exports.cutsRunInputSchema = exports.cutsTranscriptSegmentSchema = exports.cutsTranscriptWordSchema = exports.cutOutputSchema = exports.cutReviewStatusSchema = exports.cutsAgentSettingsSchema = exports.overlayPositionSchema = exports.normalizeCutsModelTier = exports.CUTS_ENABLED_MODEL_TIERS = exports.cutsRunOptionsSchema = exports.cutsProcessingTimeframeSchema = exports.cutsVideoGenreSchema = exports.cutsModelTierSchema = void 0;
 const zod_1 = require("zod");
 exports.cutsModelTierSchema = zod_1.z.enum(['auto', 'basic', 'pro']);
 exports.cutsVideoGenreSchema = zod_1.z.enum([
@@ -31,6 +31,14 @@ const normalizeCutsModelTier = (tier) => exports.CUTS_ENABLED_MODEL_TIERS.includ
     ? tier
     : 'basic';
 exports.normalizeCutsModelTier = normalizeCutsModelTier;
+/**
+ * Normalized overlay position (0–1 on each axis). x=0 is left edge, y=0 is the
+ * top; the renderer anchors the text box center at this point in the 9:16 frame.
+ */
+exports.overlayPositionSchema = zod_1.z.object({
+    x: zod_1.z.number().min(0).max(1),
+    y: zod_1.z.number().min(0).max(1),
+});
 exports.cutsAgentSettingsSchema = zod_1.z
     .object({
     maxCuts: zod_1.z.number().int().min(1).max(20).default(5),
@@ -38,12 +46,21 @@ exports.cutsAgentSettingsSchema = zod_1.z
     deleteSourceAfterRun: zod_1.z.boolean().default(false),
     addCaptions: zod_1.z.boolean().default(false),
     captionStyleId: zod_1.z.string().min(1).optional(),
+    captionPosition: exports.overlayPositionSchema.default({ x: 0.5, y: 0.85 }),
+    addTitle: zod_1.z.boolean().default(false),
+    titleStyleId: zod_1.z.string().min(1).optional(),
+    titleDurationSec: zod_1.z.number().min(1).max(10).default(5),
+    titlePosition: exports.overlayPositionSchema.default({ x: 0.5, y: 0.08 }),
     autoAcceptResults: zod_1.z.boolean().default(true),
     modelTier: exports.cutsModelTierSchema.default('basic'),
 })
     .refine((data) => !data.addCaptions || Boolean(data.captionStyleId), {
     message: 'captionStyleId is required when addCaptions is true',
     path: ['captionStyleId'],
+})
+    .refine((data) => !data.addTitle || Boolean(data.titleStyleId), {
+    message: 'titleStyleId is required when addTitle is true',
+    path: ['titleStyleId'],
 });
 exports.cutReviewStatusSchema = zod_1.z.enum(['pending', 'approved', 'rejected']);
 exports.cutOutputSchema = zod_1.z.object({

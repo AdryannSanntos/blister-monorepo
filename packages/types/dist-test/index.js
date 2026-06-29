@@ -42,6 +42,8 @@ exports.createCompanySchema = zod_1.z.strictObject({
 });
 __exportStar(require("./agents"), exports);
 __exportStar(require("./agents/cuts"), exports);
+__exportStar(require("./agents/carousel"), exports);
+__exportStar(require("./agents/carousel-image-slots"), exports);
 __exportStar(require("./company"), exports);
 __exportStar(require("./credits"), exports);
 __exportStar(require("./ai-catalog"), exports);
@@ -49,3 +51,4 @@ __exportStar(require("./workspace"), exports);
 __exportStar(require("./agent-message-sequence"), exports);
 __exportStar(require("./blister-os"), exports);
 __exportStar(require("./files/workspace-agent-folders"), exports);
+__exportStar(require("./rag"), exports);

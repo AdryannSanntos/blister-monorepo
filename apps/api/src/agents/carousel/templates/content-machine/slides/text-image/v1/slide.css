@@ -1,0 +1,25 @@
+.slide-concept__main {
+  gap: 36px;
+}
+
+.slide-concept__lead,
+.slide-concept__closing {
+  font-size: 34px;
+  max-width: 920px;
+  color: var(--text-primary-dark);
+}
+
+.slide-concept__card {
+  flex: 1;
+  min-height: 480px;
+  max-height: 560px;
+}
+
+.slide-concept__card .accent-card__inner {
+  height: calc(100% - 32px);
+  min-height: 440px;
+}
+
+.slide-concept__card img {
+  min-height: 440px;
+}

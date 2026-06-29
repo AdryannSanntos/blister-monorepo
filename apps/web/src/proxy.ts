@@ -11,6 +11,7 @@ const API_PREFIX = "/api";
 const SYSTEM_PREFIX = "/system";
 const PUBLIC_ROUTE_PREFIXES = [AUTH_PREFIX, SYSTEM_PREFIX];
 const ACTIVE_COMPANY_COOKIE = "blister-active-company-id";
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_INTERNAL_API_URL ??
   process.env.NEXT_PUBLIC_API_URL ??
@@ -52,10 +53,7 @@ async function getSession(request: NextRequest) {
   return response.json();
 }
 
-async function companyBelongsToUser(
-  request: NextRequest,
-  companyId: string,
-): Promise<boolean> {
+async function fetchUserCompanies(request: NextRequest) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/companies`, {
       method: "GET",
@@ -66,12 +64,81 @@ async function companyBelongsToUser(
       cache: "no-store",
     });
 
-    if (!response.ok) return false;
+    if (!response.ok) return [];
 
-    const companies = (await response.json()) as Array<{ id: string }>;
-    return companies.some((company) => company.id === companyId);
+    return (await response.json()) as Array<{
+      id: string;
+      onboardingCompletedAt: string | null;
+    }>;
   } catch {
-    return false;
+    return [];
+  }
+}
+
+async function fetchPlatformRoles(request: NextRequest) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/platform/me/roles`, {
+      method: "GET",
+      headers: {
+        cookie: request.headers.get("cookie") ?? "",
+        accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) return [];
+
+    const assignments = (await response.json()) as Array<{ role: string }>;
+    return assignments.map((assignment) => assignment.role);
+  } catch {
+    return [];
+  }
+}
+
+function isPlatformAdminRole(roles: string[]) {
+  return roles.includes("platform_owner") || roles.includes("platform_admin");
+}
+
+async function resolveAuthenticatedLandingPath(request: NextRequest) {
+  const roles = await fetchPlatformRoles(request);
+  if (isPlatformAdminRole(roles)) return ADMIN_PREFIX;
+  return DASHBOARD_PREFIX;
+}
+
+function pickDefaultCompanyId(
+  companies: Array<{ id: string; onboardingCompletedAt: string | null }>,
+) {
+  const onboarded = companies.filter((company) => company.onboardingCompletedAt);
+  return onboarded[0]?.id ?? null;
+}
+
+function attachActiveCompanyCookieIfMissing(
+  request: NextRequest,
+  response: NextResponse,
+  companies: Array<{ id: string; onboardingCompletedAt: string | null }>,
+) {
+  const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
+  const onboarded = companies.filter((company) => company.onboardingCompletedAt);
+  const hasValidActiveCompany =
+    Boolean(activeCompanyId) &&
+    activeCompanyId !== "personal" &&
+    activeCompanyId !== "__personal__" &&
+    onboarded.some((company) => company.id === activeCompanyId);
+
+  if (hasValidActiveCompany) return;
+
+  const defaultCompanyId = pickDefaultCompanyId(companies);
+  if (defaultCompanyId) {
+    response.cookies.set(ACTIVE_COMPANY_COOKIE, defaultCompanyId, {
+      path: "/",
+      maxAge: ONE_YEAR_SECONDS,
+      sameSite: "lax",
+    });
+    return;
+  }
+
+  if (activeCompanyId) {
+    response.cookies.delete(ACTIVE_COMPANY_COOKIE);
   }
 }
 
@@ -107,7 +174,9 @@ export async function proxy(request: NextRequest) {
     if (localizedPathname === "/") {
       return redirect(
         request,
-        isAuthenticated ? DASHBOARD_PREFIX : `${AUTH_PREFIX}/login`,
+        isAuthenticated
+          ? await resolveAuthenticatedLandingPath(request)
+          : `${AUTH_PREFIX}/login`,
       );
     }
 
@@ -119,23 +188,12 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isAuthRoute) {
-      return redirect(request, DASHBOARD_PREFIX);
+      return redirect(request, await resolveAuthenticatedLandingPath(request));
     }
 
     if (isDashboardRoute) {
-      const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
-      if (
-        activeCompanyId &&
-        activeCompanyId !== "personal" &&
-        activeCompanyId !== "__personal__"
-      ) {
-        const isValid = await companyBelongsToUser(request, activeCompanyId);
-        if (!isValid) {
-          const response = intlResponse;
-          response.cookies.delete(ACTIVE_COMPANY_COOKIE);
-          return response;
-        }
-      }
+      const companies = await fetchUserCompanies(request);
+      attachActiveCompanyCookieIfMissing(request, intlResponse, companies);
       return intlResponse;
     }
 

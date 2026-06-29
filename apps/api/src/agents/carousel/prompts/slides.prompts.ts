@@ -12,7 +12,7 @@ export const buildSlidesSystemPrompt = (_context: StepExecutionContext): string 
     '- adjust vertical spacing, reorder blocks, or omit optional sections (e.g. drop closing paragraph if no callToAction)',
     '- add/remove wrapper divs using existing template BEM classes',
     '- never invent new placeholder keys',
-    'MUST keep injectable placeholders for server hydration: {{brand}}, {{meta_right}}, {{title}}, {{body}}, {{subtitle}}, {{call_to_action}}, {{ctaKeyword}}, {{ctaHint}}, {{list_html}}, {{image_url}}, {{badge}}, {{slide_current}}, {{slide_total}}, {{progress}}.',
+    'MUST keep injectable placeholders for server hydration: {{brand}}, {{meta_right}}, {{meta_center}}, {{meta_year}}, {{title}}, {{body}}, {{subtitle}}, {{call_to_action}}, {{ctaKeyword}}, {{ctaHint}}, {{list_html}}, {{image_url}}, {{badge}}, {{slide_current}}, {{slide_total}}, {{progress}}.',
     'Copy arrives pre-marked with ==accent== and **bold** — keep those markers inside placeholders, do not strip them.',
     'Return htmlContent + cssContent per slide. CSS may extend reference with spacing/typography tweaks.',
     'Return only valid JSON matching the schema provided.',
@@ -21,6 +21,8 @@ export const buildSlidesSystemPrompt = (_context: StepExecutionContext): string 
 export const buildSlidesUserPrompt = (context: StepExecutionContext): string => {
   const { templateId, slides, plan, imageUploads, brand } = resolveSlidesGenerationContext(context);
   const { templateService } = getCarouselRunDeps();
+
+  const isContentMachine = templateId === 'content-machine';
 
   const slidesContext = slides
     .map((slide) => {
@@ -61,7 +63,10 @@ export const buildSlidesUserPrompt = (context: StepExecutionContext): string => 
     'Generate HTML/CSS per slide from the references below.',
     'Adapt each layout for readability — generous spacing between title and body (32px+), do not cram blocks.',
     'Omit {{call_to_action}} block entirely when the slide has no closing line in the brief.',
-    'Preserve ==accent== and **bold** markers inside {{title}} and {{body}} placeholders.',
+    isContentMachine
+      ? 'Content Machine rules: {{title}} ONLY on start/v1 cover. Internal slides use {{body}}, {{subtitle}}, {{call_to_action}} — never {{title}}. Final slide is text/v2 with accent box, not CTA keyword layout.'
+      : 'For the final CTA slide (text v3 / slide-close): dark theme, badge, recap body, large keyword title, hint subtitle, accent action pill — never use a bordered white box.',
+    'Preserve ==accent== and **bold** markers inside text placeholders.',
     slidesContext,
     'Return JSON with one entry per slide above. Each entry needs id, order, type, htmlContent, and cssContent.',
     'Return JSON: {"slides":[{"id":"...","order":1,"type":"start","htmlContent":"<div>...</div>","cssContent":".slide{...}"}]}',

@@ -48,7 +48,7 @@ import { Slider } from "src/core/shared/components/ui/slider";
 import { Switch } from "src/core/shared/components/ui/switch";
 
 const carouselSettingsFormSchema = z.object({
-  slidesCount: z.number().int().min(3).max(15),
+  slidesCount: z.number().int().min(1).max(15),
   defaultTemplateId: z.string().optional(),
   defaultSocialNetworks: z.array(carouselSocialNetworkSchema),
   aiGeneratedImages: z.boolean(),
@@ -78,23 +78,41 @@ export const CarouselSettings = () => {
     },
   });
 
-  const hydrated = useRef(false);
+  const hasHydratedSettings = useRef(false);
+
   useEffect(() => {
-    if (!settings || hydrated.current) return;
-    form.reset({
-      ...settings,
-      accentColor: settings.accentColor ?? "#FF4A0A",
-      metaRightMode: settings.metaRightMode ?? "handle",
-    });
-    hydrated.current = true;
-  }, [settings, form]);
+    if (!settings) return;
+
+    if (!hasHydratedSettings.current) {
+      form.reset({
+        ...settings,
+        accentColor: settings.accentColor ?? "#FF4A0A",
+        metaRightMode: settings.metaRightMode ?? "handle",
+      });
+      hasHydratedSettings.current = true;
+      return;
+    }
+
+    if (!form.formState.isDirty) {
+      form.reset({
+        ...settings,
+        accentColor: settings.accentColor ?? "#FF4A0A",
+        metaRightMode: settings.metaRightMode ?? "handle",
+      });
+    }
+  }, [form, settings]);
 
   const slidesCount = form.watch("slidesCount");
 
-  const onSubmit = (values: CarouselSettingsFormValues) => {
-    updateSettings.mutate(carouselAgentSettingsSchema.parse(values));
-    toast.success("Configurações salvas");
-  };
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      const parsed = carouselAgentSettingsSchema.parse(values);
+      await updateSettings.mutateAsync(parsed);
+      toast.success("Configurações salvas");
+    } catch {
+      toast.error("Não foi possível salvar as configurações. Verifique os campos e tente novamente.");
+    }
+  });
 
   return (
     <SectionCard
@@ -103,7 +121,7 @@ export const CarouselSettings = () => {
       description="Configurações padrão para a geração de carrosséis"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form onSubmit={onSubmit} className="flex flex-col gap-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
@@ -204,7 +222,7 @@ export const CarouselSettings = () => {
                   <span className="text-sm font-semibold">{slidesCount}</span>
                 </div>
                 <Slider
-                  min={3}
+                  min={1}
                   max={15}
                   step={1}
                   value={[field.value]}
@@ -215,7 +233,7 @@ export const CarouselSettings = () => {
                   aria-label="Quantidade padrão de slides"
                   className="py-2"
                 />
-                <FormDescription>Entre 3 e 15 slides por carrossel</FormDescription>
+                <FormDescription>Entre 1 e 15 slides por carrossel</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

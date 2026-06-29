@@ -7,7 +7,11 @@ import { useCallback, useState } from "react";
 
 import { useStartAgentRun } from "./use-agent-run-mutations";
 import { carouselRunsQueryKey } from "./use-carousel-runs";
-import { useCarouselSettings } from "./use-carousel-settings";
+import {
+  carouselSettingsQueryKey,
+  fetchCarouselSettings,
+  useCarouselSettings,
+} from "./use-carousel-settings";
 import { carouselStatsQueryKey } from "./use-carousel-stats";
 
 const CAROUSEL_AGENT_ID = "carousel";
@@ -41,10 +45,14 @@ export const useCarouselRunModal = () => {
     queryClient.invalidateQueries({ queryKey: ["agent-runs", CAROUSEL_AGENT_ID] });
   }, [queryClient]);
 
-  const handleOpen = useCallback(() => {
+  const handleOpen = useCallback(async () => {
     setErrorMessage(null);
+    await queryClient.ensureQueryData({
+      queryKey: carouselSettingsQueryKey,
+      queryFn: fetchCarouselSettings,
+    });
     setOpen(true);
-  }, []);
+  }, [queryClient]);
 
   const handleClose = useCallback(() => {
     if (status === "submitting") return;
@@ -69,7 +77,10 @@ export const useCarouselRunModal = () => {
             socialNetworks: data.socialNetworks,
             slidesCount: data.slidesCount,
             brandOverrides: data.brandOverrides,
-            settings: runSettings,
+            settings: {
+              ...runSettings,
+              slidesCount: data.slidesCount,
+            },
           },
         });
 
@@ -112,9 +123,6 @@ export const useCarouselRunModal = () => {
     statusModalVariant,
     statusRunId,
     statusErrorMessage,
-    defaultSlidesCount: settings?.slidesCount,
-    defaultTemplateId: settings?.defaultTemplateId,
-    defaultBrandSettings: settings,
     handleOpen,
     handleClose,
     handleSubmit,

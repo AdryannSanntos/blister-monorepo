@@ -1,6 +1,6 @@
 "use client";
 
-import { Shield } from "lucide-react";
+import { LayoutDashboard, Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
@@ -13,6 +13,12 @@ export function useAdminNavGroups(): SidebarGroupDef[] {
     () => [
       {
         items: [
+          {
+            label: t("dashboard"),
+            href: "/dashboard",
+            icon: LayoutDashboard,
+            match: (pathname: string) => pathname.startsWith("/dashboard"),
+          },
           {
             label: t("admin"),
             href: "/admin",

@@ -43,6 +43,7 @@ export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string
   const slides = awaitsOutput?.slides ?? contentOutput?.slides ?? [];
   const templateId = input.templateId ?? 'editorial-performance';
   const totalSlides = slides.length;
+  const isContentMachine = templateId === 'content-machine';
   const { templateService } = getCarouselRunDeps();
   const instructions = templateService.getInstructions(templateId);
 
@@ -69,12 +70,20 @@ export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string
       const forcedVariation = isFirst
         ? 'REQUIRED: variationId v1 (start cover)'
         : isLast
-          ? 'REQUIRED: variationId v3 when type=text (CTA closing)'
-          : slide.listItems?.length
-            ? 'PREFER: text/v1 or text/v2 for lists; text-image/v2 for list + visual card'
-            : slide.narrativeRole === 'proof'
-              ? 'PREFER: text-image/v1 (dark proof) or v5 (orange framework)'
-              : 'PREFER: text-image/v2 or v4 for scenes with visuals';
+          ? isContentMachine
+            ? 'REQUIRED: type=text, variationId v2 (closing accent box)'
+            : 'REQUIRED: variationId v3 when type=text (CTA closing)'
+          : isContentMachine
+            ? slide.narrativeRole === 'proof'
+              ? 'PREFER: text-image/v2 (dark proof + image)'
+              : slide.imageBrief
+                ? 'PREFER: text-image/v1 (concept card) or v2 (proof)'
+                : 'PREFER: text/v1 (accent narrative block)'
+            : slide.listItems?.length
+              ? 'PREFER: text/v1 or text/v2 for lists; text-image/v2 for list + visual card'
+              : slide.narrativeRole === 'proof'
+                ? 'PREFER: text-image/v1 (dark proof) or v5 (orange framework)'
+                : 'PREFER: text-image/v2 or v4 for scenes with visuals';
 
       return [
         `- Slide ${slide.order} (${slide.id}): type=${slide.type}, narrativeRole=${slide.narrativeRole ?? 'scene'}`,

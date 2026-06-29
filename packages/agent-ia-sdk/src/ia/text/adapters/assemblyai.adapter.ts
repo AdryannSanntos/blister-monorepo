@@ -14,11 +14,11 @@ export interface AssemblyAiTextAdapterOptions {
 }
 
 interface AssemblyAiChatResponse {
-  choices: Array<{
+  choices?: Array<{
     message?: { content: string };
     delta?: { content?: string };
     finish_reason?: string;
-  }>;
+  }> | null;
   usage?: {
     prompt_tokens?: number;
     completion_tokens?: number;
@@ -26,6 +26,23 @@ interface AssemblyAiChatResponse {
 }
 
 const DEFAULT_BASE_URL = 'https://llm-gateway.assemblyai.com/v1';
+
+type AssemblyAiChatChoice = NonNullable<AssemblyAiChatResponse['choices']>[number];
+
+const readFirstChoice = (
+  choices: AssemblyAiChatResponse['choices'],
+): AssemblyAiChatChoice => {
+  const choice = choices?.[0];
+  if (!choice) {
+    throw new ProviderExecutionError(
+      'assemblyai',
+      'validation',
+      'LLM Gateway returned no completion choices',
+      502,
+    );
+  }
+  return choice;
+};
 
 /**
  * AssemblyAI maps `response_format.json_schema` to Anthropic's `output_config.format`
@@ -197,7 +214,8 @@ export class AssemblyAiTextAdapter implements ITextProvider {
         }
 
         const data = (await response.json()) as AssemblyAiChatResponse;
-        const content = data.choices[0]?.message?.content ?? '';
+        const choice = readFirstChoice(data.choices);
+        const content = choice.message?.content ?? '';
         const promptTokens = data.usage?.prompt_tokens ?? 0;
         const completionTokens = data.usage?.completion_tokens ?? 0;
 
@@ -211,7 +229,7 @@ export class AssemblyAiTextAdapter implements ITextProvider {
             completionTokens,
             totalTokens: promptTokens + completionTokens,
           },
-          finishReason: data.choices[0]?.finish_reason ?? 'stop',
+          finishReason: choice.finish_reason ?? 'stop',
         };
       });
     } catch (error) {
@@ -265,13 +283,16 @@ export class AssemblyAiTextAdapter implements ITextProvider {
 
           try {
             const parsed = JSON.parse(data) as AssemblyAiChatResponse;
-            const content = parsed.choices[0]?.delta?.content ?? '';
+            const choice = parsed.choices?.[0];
+            if (!choice) continue;
+
+            const content = choice.delta?.content ?? '';
             if (content) {
               fullContent += content;
               yield { content, isLast: false };
             }
-            if (parsed.choices[0]?.finish_reason) {
-              finishReason = parsed.choices[0].finish_reason;
+            if (choice.finish_reason) {
+              finishReason = choice.finish_reason;
             }
             if (parsed.usage) {
               promptTokens = parsed.usage.prompt_tokens ?? 0;

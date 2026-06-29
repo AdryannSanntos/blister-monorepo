@@ -39,7 +39,9 @@ const resolveContentVariables = (
   slide: SlideContentInput,
   variationId: string,
 ): Record<string, string> => {
-  const isCtaSlide = slide.narrativeRole === 'cta' || variationId === 'v3';
+  const isCtaSlide =
+    slide.narrativeRole === 'cta' ||
+    (variationId === 'v3' && slide.type === 'text');
   const isStartSlide = slide.type === 'start';
 
   const ctaKeyword = formatCarouselCopyHtml(slide.ctaKeyword ?? slide.title ?? '');
@@ -140,17 +142,20 @@ export const hydrateSlideHtml = (input: HydrateSlideHtmlInput): string => {
   };
   const progress = totalSlides > 0 ? Math.round((slide.order / totalSlides) * 100) : 0;
 
+  const metaRight =
+    brand.metaRightMode === 'date'
+      ? new Intl.DateTimeFormat('pt-BR', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        }).format(new Date())
+      : brand.instagramHandle;
+
   const variables: Record<string, string> = {
     brand: escapeHtml(brand.brandName),
-    meta_right: escapeHtml(
-      brand.metaRightMode === 'date'
-        ? new Intl.DateTimeFormat('pt-BR', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          }).format(new Date())
-        : brand.instagramHandle,
-    ),
+    meta_right: escapeHtml(metaRight),
+    meta_center: escapeHtml(brand.instagramHandle),
+    meta_year: `${new Date().getFullYear()} //`,
     badge: escapeHtml(brand.instagramHandle),
     slide_current: String(slide.order),
     slide_total: String(totalSlides),

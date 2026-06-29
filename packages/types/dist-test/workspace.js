@@ -17,7 +17,7 @@ exports.teamMemberSchema = zod_1.z.object({
 });
 exports.inviteMemberSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
-    roleId: zod_1.z.string().min(1),
+    roleId: zod_1.z.string().optional(),
 });
 exports.workspaceRoleSchema = zod_1.z.object({
     id: zod_1.z.string(),

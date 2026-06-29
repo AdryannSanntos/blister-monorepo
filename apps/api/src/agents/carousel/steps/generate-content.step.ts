@@ -4,7 +4,10 @@ import { buildContentSystemPrompt, buildContentUserPrompt } from '../prompts/con
 import { carouselNarrativeRoleSchema, carouselSlideTypeSchema } from '@company-os/types';
 import { normalizeCarouselSlideCopy } from '../utils/plain-text.util';
 import { applyCopyLimits } from '../utils/copy-limits.util';
-import { normalizeContentSlides } from '../utils/content-slides-normalizer';
+import {
+  normalizeContentSlides,
+  type NormalizableContentSlide,
+} from '../utils/content-slides-normalizer';
 
 const contentSlideLaxSchema = z.object({
   id: z.string(),
@@ -47,9 +50,14 @@ export const createGenerateContentStep = () =>
     repair: repairContentOutput,
     transformOutput: (data) => ({
       slides: normalizeContentSlides(
-        data.slides.map((slide) =>
-          applyCopyLimits(normalizeCarouselSlideCopy(slide)),
-        ),
+        data.slides.map((slide): NormalizableContentSlide => {
+          const parsed = contentSlideLaxSchema.parse(slide);
+          return applyCopyLimits({
+            ...normalizeCarouselSlideCopy(parsed),
+            type: parsed.type,
+            narrativeRole: parsed.narrativeRole,
+          });
+        }),
       ),
     }),
   });

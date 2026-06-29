@@ -92,7 +92,6 @@ exports.agentRunStatusDtoSchema = zod_1.z.object({
     id: zod_1.z.string(),
     agentId: zod_1.z.string(),
     companyId: zod_1.z.string(),
-    campaignId: zod_1.z.string().nullable(),
     status: exports.agentRunStatusSchema,
     currentStepKey: zod_1.z.string().nullable(),
     inputPayload: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()),

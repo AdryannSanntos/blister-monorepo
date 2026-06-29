@@ -11,6 +11,7 @@ import {
   CarouselStepLoadingState,
 } from "src/core/modules/agents/components/carousel/carousel-step-states";
 import { CarouselSlideRenderer } from "src/core/modules/agents/components/carousel/carousel-slide-renderer";
+import { getCarouselSlideReactKey } from "src/core/modules/agents/utils/carousel-run-display";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import { Heading } from "src/core/shared/components/ui/heading";
@@ -216,7 +217,7 @@ export const CarouselPreviewStep = ({
             <div className="flex gap-4">
               {output.slides.map((slide, index) => (
                 <SlidePreviewCard
-                  key={slide.id}
+                  key={getCarouselSlideReactKey(slide, index)}
                   slide={slide}
                   onOpen={() => openPreview(index)}
                 />

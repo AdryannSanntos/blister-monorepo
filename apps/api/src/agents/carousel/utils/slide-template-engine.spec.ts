@@ -14,15 +14,14 @@ describe('slide-template-engine', () => {
     );
   });
 
-  it('hydrates start slide with brand, badge and counter', () => {
+  it('hydrates start slide with brand, badge, accent title and counter', () => {
     const template = `<div class="slide-start">
-      <span class="slide-header__brand">{{brand}}</span>
-      <span class="slide-header__meta">{{meta_right}}</span>
-      <span class="badge-pill">{{badge}}</span>
-      <h1>{{title}}</h1>
+      <span>{{badge}}</span>
+      <h1 class="display-title slide-start__title">{{title}}</h1>
       <p>{{subtitle}}</p>
+      <span>{{brand}}</span>
+      <span>{{meta_right}}</span>
       <span>{{slide_current}}/{{slide_total}}</span>
-      <span style="width: {{progress}}%"></span>
     </div>`;
 
     const html = hydrateSlideHtml({
@@ -31,19 +30,19 @@ describe('slide-template-engine', () => {
         id: 'slide_1',
         order: 1,
         type: 'start',
-        title: 'O FUTURO CHEGOU',
-        body: 'Um dia mediado por IA',
+        title: 'CANNABIS ==LEGAL== NO BRASIL',
+        subtitle: 'O debate avança',
       },
       variationId: 'v1',
       brand,
-      totalSlides: 6,
-      imageUrls: { image_url: 'https://example.com/cover.jpg' },
+      totalSlides: 5,
+      imageUrls: {},
     });
 
+    expect(html).toContain('<span class="accent">LEGAL</span>');
     expect(html).toContain('Creator Lab');
     expect(html).toContain('@creatorlab');
-    expect(html).toContain('1/6');
-    expect(html).toContain('O FUTURO CHEGOU');
+    expect(html).toContain('1/5');
     expect(html).not.toMatch(/\{\{/);
   });
 
@@ -122,6 +121,22 @@ describe('slide-template-engine', () => {
     expect(replacePlaceholders('{{BRAND}} and {{brand}}', { brand: 'X' })).toBe('X and X');
   });
 
+  it('hydrates meta_center and meta_year for triple header templates', () => {
+    const template = `<span>{{meta_center}}</span><span>{{meta_year}}</span>`;
+    const html = hydrateSlideHtml({
+      html: template,
+      slide: { id: 'slide_2', order: 2, type: 'text' },
+      variationId: 'v1',
+      brand,
+      totalSlides: 5,
+      imageUrls: {},
+    });
+
+    expect(html).toContain('@creatorlab');
+    expect(html).toMatch(/\d{4} \/\//);
+    expect(html).not.toMatch(/\{\{/);
+  });
+
   it('renders accent and bold markers in copy fields', () => {
     const template = `<h1>{{title}}</h1><p>{{body}}</p>`;
     const html = hydrateSlideHtml({
@@ -161,6 +176,27 @@ describe('slide-template-engine', () => {
 
     expect(html.match(/Texto único do slide\./g)?.length).toBe(1);
     expect(html).not.toContain('slide-proof-headline-first__closing');
+  });
+
+  it('does not treat text_image v3 as a CTA slide', () => {
+    const template = `<h1>{{title}}</h1><p>{{body}}</p>`;
+    const html = hydrateSlideHtml({
+      html: template,
+      slide: {
+        id: 'slide_3',
+        order: 3,
+        type: 'text_image',
+        title: 'Título ==DESTAQUE== editorial',
+        body: 'Corpo do slide',
+      },
+      variationId: 'v3',
+      brand,
+      totalSlides: 6,
+      imageUrls: {},
+    });
+
+    expect(html).toContain('<span class="accent">DESTAQUE</span>');
+    expect(html).toContain('Corpo do slide');
   });
 
   it('resolves ctaKeyword placeholder from LLM html on CTA slides', () => {

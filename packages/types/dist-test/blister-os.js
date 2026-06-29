@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PERSONAL_WORKSPACE_ID = exports.workspaceOptionSchema = exports.personalSpaceSchema = exports.filePresignedUploadResponseSchema = exports.filePresignedUploadRequestSchema = exports.updateWorkspaceFileSchema = exports.updateFolderSchema = exports.createFolderSchema = exports.fileBrowseResponseSchema = exports.workspaceFolderSchema = exports.workspaceFileSchema = exports.updateProjectSchema = exports.createProjectSchema = exports.projectSchema = exports.redeemMarketplaceSchema = exports.marketplaceItemSchema = exports.marketplaceItemTypeSchema = exports.updateAgentWorkspaceSettingsSchema = exports.agentWorkspaceSettingsResponseSchema = exports.updateWorkspaceSettingsSchema = exports.workspaceProfileSchema = exports.cutsAgentSettingsSchema = void 0;
+exports.PERSONAL_WORKSPACE_ID = exports.workspaceOptionSchema = exports.personalSpaceSchema = exports.filePresignedUploadResponseSchema = exports.filePresignedUploadRequestSchema = exports.updateWorkspaceFileSchema = exports.updateFolderSchema = exports.createFolderSchema = exports.fileBrowseResponseSchema = exports.workspaceFolderSchema = exports.workspaceFileSchema = exports.updateProjectSchema = exports.createProjectSchema = exports.projectSchema = exports.setMarketplaceItemActiveSchema = exports.updateMarketplaceItemSchema = exports.upsertMarketplaceItemSchema = exports.adminMarketplaceItemSchema = exports.redeemMarketplaceSchema = exports.marketplaceItemSchema = exports.textStyleSpecSchema = exports.textStyleAnimationSchema = exports.marketplaceItemTypeSchema = exports.updateAgentWorkspaceSettingsSchema = exports.agentWorkspaceSettingsResponseSchema = exports.updateWorkspaceSettingsSchema = exports.workspaceProfileSchema = exports.agentWorkspaceSettingsConfigSchema = exports.carouselAgentSettingsSchema = exports.cutsAgentSettingsSchema = void 0;
 const zod_1 = require("zod");
-const cuts_1 = require("./agents/cuts");
-var cuts_2 = require("./agents/cuts");
-Object.defineProperty(exports, "cutsAgentSettingsSchema", { enumerable: true, get: function () { return cuts_2.cutsAgentSettingsSchema; } });
+var cuts_1 = require("./agents/cuts");
+Object.defineProperty(exports, "cutsAgentSettingsSchema", { enumerable: true, get: function () { return cuts_1.cutsAgentSettingsSchema; } });
+var carousel_1 = require("./agents/carousel");
+Object.defineProperty(exports, "carouselAgentSettingsSchema", { enumerable: true, get: function () { return carousel_1.carouselAgentSettingsSchema; } });
+/** Opaque JSON until validated per agentId (cuts vs carousel). */
+exports.agentWorkspaceSettingsConfigSchema = zod_1.z.record(zod_1.z.string(), zod_1.z.unknown());
 exports.workspaceProfileSchema = zod_1.z.object({
     displayName: zod_1.z.string().optional(),
     niche: zod_1.z.string().optional(),
@@ -19,20 +22,43 @@ exports.workspaceProfileSchema = zod_1.z.object({
 exports.updateWorkspaceSettingsSchema = exports.workspaceProfileSchema.partial();
 exports.agentWorkspaceSettingsResponseSchema = zod_1.z.object({
     agentId: zod_1.z.string(),
-    config: cuts_1.cutsAgentSettingsSchema,
+    config: exports.agentWorkspaceSettingsConfigSchema,
 });
 exports.updateAgentWorkspaceSettingsSchema = zod_1.z.object({
-    config: cuts_1.cutsAgentSettingsSchema,
+    config: exports.agentWorkspaceSettingsConfigSchema,
 });
 exports.marketplaceItemTypeSchema = zod_1.z.enum([
     'edit-style',
     'post-style',
     'caption-style',
+    'text-style',
     'pack',
     'template',
     'asset',
     'agent',
 ]);
+/** Animation slugs implemented as Remotion compositions (see apps/api/src/video). */
+exports.textStyleAnimationSchema = zod_1.z.enum([
+    'neon-wave',
+    'clean-split',
+    'kinetic-bold',
+    'glass-blur',
+    'broadcast',
+]);
+/**
+ * Render spec carried by a TEXT_STYLE marketplace item (`specs` json). Drives
+ * both the marketplace video preview and the Remotion overlay render.
+ * `fontSize` is the base size in px at 1080×1920 (9:16).
+ */
+exports.textStyleSpecSchema = zod_1.z.object({
+    previewUrl: zod_1.z.union([zod_1.z.string().url(), zod_1.z.string().regex(/^\//)]),
+    animation: exports.textStyleAnimationSchema,
+    fontFamily: zod_1.z.string(),
+    fontSize: zod_1.z.number().positive(),
+    color: zod_1.z.string(),
+    bgColor: zod_1.z.string().optional(),
+    shadowColor: zod_1.z.string().optional(),
+});
 exports.marketplaceItemSchema = zod_1.z.object({
     id: zod_1.z.string(),
     slug: zod_1.z.string(),
@@ -47,9 +73,37 @@ exports.marketplaceItemSchema = zod_1.z.object({
     includes: zod_1.z.array(zod_1.z.string()),
     refId: zod_1.z.string().nullable(),
     owned: zod_1.z.boolean().optional(),
+    /** Looping mp4 preview for animated styles (TEXT_STYLE). Absolute or site-relative path. */
+    previewUrl: zod_1.z.union([zod_1.z.string().url(), zod_1.z.string().regex(/^\//)]).optional(),
 });
 exports.redeemMarketplaceSchema = zod_1.z.object({
     itemId: zod_1.z.string().min(1),
+});
+/** Admin view of a catalog item — includes the moderation `isActive` flag. */
+exports.adminMarketplaceItemSchema = exports.marketplaceItemSchema.extend({
+    isActive: zod_1.z.boolean(),
+});
+/** Create/update payload for the marketplace admin. `specs` is free-form json. */
+exports.upsertMarketplaceItemSchema = zod_1.z.object({
+    slug: zod_1.z
+        .string()
+        .min(1)
+        .regex(/^[a-z0-9-]+$/, 'slug must be kebab-case'),
+    type: exports.marketplaceItemTypeSchema,
+    name: zod_1.z.string().min(1),
+    author: zod_1.z.string().min(1),
+    price: zod_1.z.number().int().nonnegative().default(0),
+    flag: zod_1.z.string().nullable().optional(),
+    description: zod_1.z.string().default(''),
+    palette: zod_1.z.array(zod_1.z.string()).default([]),
+    specs: zod_1.z.record(zod_1.z.string(), zod_1.z.unknown()).default({}),
+    includes: zod_1.z.array(zod_1.z.string()).default([]),
+    refId: zod_1.z.string().nullable().optional(),
+    isActive: zod_1.z.boolean().default(true),
+});
+exports.updateMarketplaceItemSchema = exports.upsertMarketplaceItemSchema.partial();
+exports.setMarketplaceItemActiveSchema = zod_1.z.object({
+    isActive: zod_1.z.boolean(),
 });
 exports.projectSchema = zod_1.z.object({
     id: zod_1.z.string(),

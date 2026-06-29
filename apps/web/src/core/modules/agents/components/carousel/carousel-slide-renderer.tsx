@@ -1,8 +1,10 @@
 "use client";
 
 import type { CarouselOutputSlide } from "@company-os/types";
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useCarouselSlidePngUrl } from "src/core/modules/agents/hooks/use-carousel-slide-png-url";
 import { cn } from "src/core/shared/utils";
 
 export const CAROUSEL_SLIDE_WIDTH = 1080;
@@ -22,6 +24,33 @@ type CarouselSlideRendererProps = {
   title?: string;
 };
 
+const CarouselSlideHtmlPreview = ({
+  slide,
+  width,
+  height,
+  scale,
+  title,
+}: {
+  slide: CarouselOutputSlide;
+  width: number;
+  height: number;
+  scale: number;
+  title?: string;
+}) => (
+  <iframe
+    srcDoc={buildCarouselSlideSrcDoc(slide)}
+    title={title ?? `Slide ${slide.order}`}
+    scrolling="no"
+    className="pointer-events-none absolute left-0 top-0 border-none"
+    style={{
+      width: CAROUSEL_SLIDE_WIDTH,
+      height: CAROUSEL_SLIDE_HEIGHT,
+      transform: `scale(${scale})`,
+      transformOrigin: "top left",
+    }}
+  />
+);
+
 export const CarouselSlideRenderer = ({
   slide,
   displayWidth = 280,
@@ -31,6 +60,12 @@ export const CarouselSlideRenderer = ({
 }: CarouselSlideRendererProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [measuredWidth, setMeasuredWidth] = useState(displayWidth);
+  const [failedPngKey, setFailedPngKey] = useState<string | null>(null);
+
+  const pngFileId = slide.pngFileId?.trim() || null;
+  const pngPreviewKey = `${slide.id}:${pngFileId ?? ""}`;
+  const pngPreview = useCarouselSlidePngUrl(pngFileId);
+  const preferPng = Boolean(pngFileId) && failedPngKey !== pngPreviewKey;
 
   useEffect(() => {
     if (!fill || !containerRef.current) return;
@@ -48,6 +83,11 @@ export const CarouselSlideRenderer = ({
   const width = fill ? measuredWidth : displayWidth;
   const height = Math.round(width / CAROUSEL_SLIDE_ASPECT);
   const scale = width / CAROUSEL_SLIDE_WIDTH;
+  const slideLabel = title ?? `Slide ${slide.order}`;
+
+  const handlePngError = () => {
+    setFailedPngKey(pngPreviewKey);
+  };
 
   return (
     <div
@@ -59,18 +99,41 @@ export const CarouselSlideRenderer = ({
       )}
       style={fill ? undefined : { width, height }}
     >
-      <iframe
-        srcDoc={buildCarouselSlideSrcDoc(slide)}
-        title={title ?? `Slide ${slide.order}`}
-        scrolling="no"
-        className="pointer-events-none absolute left-0 top-0 border-none"
-        style={{
-          width: CAROUSEL_SLIDE_WIDTH,
-          height: CAROUSEL_SLIDE_HEIGHT,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      />
+      {preferPng ? (
+        pngPreview.isPending ? (
+          <div
+            className="flex size-full items-center justify-center bg-[var(--bg-sunken)]"
+            aria-busy="true"
+            aria-label={`Carregando ${slideLabel}`}
+          >
+            <Loader2 className="size-6 animate-spin text-[var(--fg-quaternary)]" />
+          </div>
+        ) : pngPreview.data?.url ? (
+          // eslint-disable-next-line @next/next/no-img-element -- presigned S3 URL from workspace file preview
+          <img
+            src={pngPreview.data.url}
+            alt={slideLabel}
+            className="size-full object-contain"
+            onError={handlePngError}
+          />
+        ) : (
+          <CarouselSlideHtmlPreview
+            slide={slide}
+            width={width}
+            height={height}
+            scale={scale}
+            title={title}
+          />
+        )
+      ) : (
+        <CarouselSlideHtmlPreview
+          slide={slide}
+          width={width}
+          height={height}
+          scale={scale}
+          title={title}
+        />
+      )}
     </div>
   );
 };

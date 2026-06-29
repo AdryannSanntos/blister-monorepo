@@ -55,18 +55,97 @@ const pickProofVariation = (order: number): string => (order % 2 === 0 ? 'v5' : 
 const pickTextSynthesisVariation = (order: number): string =>
   TEXT_SYNTHESIS_VARIATIONS[(order - 1) % TEXT_SYNTHESIS_VARIATIONS.length] ?? 'v2';
 
+const CONTENT_MACHINE_SCENE_CYCLE = ['text:v1', 'text_image:v1', 'text_image:v2'] as const;
+
+const pickContentMachineScene = (order: number): { type: CarouselSlideType; variationId: string } => {
+  const pick = CONTENT_MACHINE_SCENE_CYCLE[(order - 2) % CONTENT_MACHINE_SCENE_CYCLE.length];
+  if (!pick) return { type: 'text', variationId: 'v1' };
+  const [typeKey, variationId] = pick.split(':');
+  return {
+    type: typeKey === 'text_image' ? 'text_image' : 'text',
+    variationId,
+  };
+};
+
+const normalizeContentMachineSlide = (input: {
+  slide: NormalizerDesignSlide;
+  content?: NormalizerContentSlide;
+  isFirst: boolean;
+  isLast: boolean;
+  order: number;
+  previousVariationKey: string;
+}): NormalizerDesignSlide => {
+  const { slide, content, isFirst, isLast, order } = input;
+  const role = content?.narrativeRole;
+
+  let variationId = slide.variationId;
+  let type = slide.type;
+
+  if (isFirst) {
+    return { ...slide, type: 'start', variationId: 'v1' };
+  }
+
+  if (isLast) {
+    return { ...slide, type: 'text', variationId: 'v2' };
+  }
+
+  if (role === 'proof' || (content?.type === 'text_image' && content.imageBrief?.trim())) {
+    type = 'text_image';
+    variationId = role === 'proof' ? 'v2' : 'v1';
+  } else if (role === 'scene' && content?.type === 'text_image') {
+    type = 'text_image';
+    variationId = 'v1';
+  } else if (role === 'framework' || content?.type === 'text') {
+    type = 'text';
+    variationId = 'v1';
+  } else if (content?.type === 'text_image') {
+    type = 'text_image';
+    variationId = 'v2';
+  } else {
+    const picked = pickContentMachineScene(order);
+    type = picked.type;
+    variationId = picked.variationId;
+  }
+
+  const variationKey = `${type}:${variationId}`;
+  if (variationKey === input.previousVariationKey) {
+    if (type === 'text_image') {
+      variationId = variationId === 'v1' ? 'v2' : 'v1';
+    } else {
+      variationId = 'v1';
+    }
+  }
+
+  return { ...slide, type, variationId };
+};
+
 export const normalizeDesignPlanSlides = (
   slides: NormalizerDesignSlide[],
   contentSlides: NormalizerContentSlide[],
+  options?: { templateId?: string },
 ): NormalizerDesignSlide[] => {
   const totalSlides = slides.length;
   let previousVariationKey = '';
+  const isContentMachine = options?.templateId === 'content-machine';
 
   return slides.map((slide) => {
     const content = contentSlides.find((entry) => entry.id === slide.id);
     const role = content?.narrativeRole;
     const isFirst = slide.order === 1;
     const isLast = slide.order === totalSlides;
+
+    if (isContentMachine) {
+      const normalized = normalizeContentMachineSlide({
+        slide,
+        content,
+        isFirst,
+        isLast,
+        order: slide.order,
+        previousVariationKey,
+      });
+      previousVariationKey = `${normalized.type}:${normalized.variationId}`;
+      return normalized;
+    }
 
     let variationId = slide.variationId;
     let type = slide.type;
@@ -100,8 +179,8 @@ export const normalizeDesignPlanSlides = (
       type = 'text_image';
       variationId = 'v4';
     } else if ((content?.listItems?.length ?? 0) >= 2) {
-      type = content?.type === 'text' ? 'text' : 'text_image';
-      variationId = type === 'text' ? 'v2' : pickSceneVariation(content, slide.order);
+      type = 'text';
+      variationId = 'v2';
     }
 
     const variationKey = `${type}:${variationId}`;

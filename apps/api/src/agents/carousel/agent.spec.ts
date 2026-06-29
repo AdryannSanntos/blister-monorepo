@@ -1,5 +1,6 @@
 import { AgentTestHarness } from '@company-os/agent-ia-sdk/agents/testing';
 import { CarouselTemplateService } from './services/carousel-template.service';
+import { carouselInputZod } from './schemas/carousel-schemas';
 import { carouselAgent } from './agent';
 import {
   resetCarouselRunDeps,
@@ -90,6 +91,24 @@ describe('carousel agent', () => {
 
   it('has 9 steps total', () => {
     expect(carouselAgent.definition.steps).toHaveLength(9);
+  });
+
+  it('accepts slidesCount of 1 in run input', () => {
+    const parsed = carouselInputZod.safeParse({
+      theme: 'Single slide test',
+      templateId: 'editorial-performance',
+      socialNetworks: ['instagram'],
+      slidesCount: 1,
+      settings: {
+        slidesCount: 1,
+        defaultSocialNetworks: ['instagram'],
+        aiGeneratedImages: false,
+        accentColor: '#FF4A0A',
+        metaRightMode: 'handle',
+      },
+    });
+
+    expect(parsed.success).toBe(true);
   });
 
   it('pauses at await_idea_selection after generating ideas', async () => {

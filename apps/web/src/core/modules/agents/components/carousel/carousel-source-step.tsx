@@ -6,9 +6,12 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import type { CarouselAgentSettings, CarouselSocialNetwork, CarouselRunInput } from "@company-os/types";
+import type { CarouselSocialNetwork, CarouselRunInput } from "@company-os/types";
 import { carouselRunInputSchema } from "@company-os/types";
+import type { z } from "zod";
 import { CarouselSocialNetworkIcon } from "src/core/modules/agents/components/carousel/carousel-social-network-icon";
+import { buildCarouselFormDefaults } from "src/core/modules/agents/hooks/carousel-form-defaults";
+import { useCarouselSettings } from "src/core/modules/agents/hooks/use-carousel-settings";
 import { useCarouselTemplates } from "src/core/modules/agents/hooks/use-carousel-templates";
 import { Button } from "src/core/shared/components/ui/button";
 import {
@@ -41,14 +44,13 @@ import {
   InputGroupText,
 } from "src/core/shared/components/ui/input-group";
 import { Slider } from "src/core/shared/components/ui/slider";
+import { Skeleton } from "src/core/shared/components/ui/skeleton";
 import { Textarea } from "src/core/shared/components/ui/textarea";
 import { cn } from "src/core/shared/utils";
 
 type CarouselSourceStepProps = {
+  open: boolean;
   onSubmit: (data: CarouselRunInput) => void;
-  defaultSlidesCount?: number;
-  defaultTemplateId?: string;
-  defaultBrandSettings?: CarouselAgentSettings;
   formId: string;
   isSubmitting?: boolean;
 };
@@ -59,66 +61,55 @@ const SOCIAL_NETWORKS: Array<{ id: CarouselSocialNetwork; enabled: boolean }> = 
   { id: "tiktok", enabled: false },
 ];
 
+type CarouselRunFormInput = z.input<typeof carouselRunInputSchema>;
+
 export const CarouselSourceStep = ({
+  open,
   onSubmit,
-  defaultSlidesCount = 5,
-  defaultTemplateId,
-  defaultBrandSettings,
   formId,
   isSubmitting = false,
 }: CarouselSourceStepProps) => {
   const t = useTranslations("carousel.modal");
   const tOptions = useTranslations("carousel.modal.options");
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const { data: settings, isFetched: isSettingsFetched } = useCarouselSettings();
   const { data: templates = [], isLoading: templatesLoading } = useCarouselTemplates();
 
-  const form = useForm<CarouselRunInput>({
+  const form = useForm<CarouselRunFormInput>({
     resolver: zodResolver(carouselRunInputSchema),
     mode: "onBlur",
-    defaultValues: {
-      theme: "",
-      templateId: defaultTemplateId ?? templates[0]?.id ?? "",
-      socialNetworks: ["instagram"],
-      slidesCount: defaultSlidesCount,
-      brandOverrides: {
-        brandName: defaultBrandSettings?.brandName,
-        instagramHandle: defaultBrandSettings?.instagramHandle,
-        accentColor: defaultBrandSettings?.accentColor ?? "#FF4A0A",
-      },
-    },
+    defaultValues: buildCarouselFormDefaults(settings, templates),
   });
 
   useEffect(() => {
-    if (!defaultBrandSettings) return;
-    form.setValue("brandOverrides", {
-      brandName: defaultBrandSettings.brandName,
-      instagramHandle: defaultBrandSettings.instagramHandle,
-      accentColor: defaultBrandSettings.accentColor ?? "#FF4A0A",
-    });
-  }, [defaultBrandSettings, form]);
+    if (!open || !isSettingsFetched) return;
 
-  useEffect(() => {
-    if (defaultTemplateId) form.setValue("templateId", defaultTemplateId);
-  }, [defaultTemplateId, form]);
-
-  useEffect(() => {
-    const current = form.getValues("templateId");
-    if (!current && templates[0]?.id) {
-      form.setValue("templateId", templates[0].id);
-    }
-  }, [templates, form]);
+    form.reset(buildCarouselFormDefaults(settings, templates));
+  }, [open, isSettingsFetched, settings, templates, form]);
 
   const theme = form.watch("theme");
   const slidesCount = form.watch("slidesCount");
   const accentColor = form.watch("brandOverrides.accentColor") ?? "#FF4A0A";
-  const hasTheme = theme.trim().length > 0;
+  const hasTheme = (theme ?? "").trim().length > 0;
+  const isFormReady = isSettingsFetched && !templatesLoading;
+
+  if (!isFormReady) {
+    return (
+      <div className="flex flex-col gap-4" data-testid="carousel-source-step-loading">
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
+  }
 
   return (
     <>
       <Form {...form}>
         <form
           id={formId}
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit((values) =>
+            onSubmit(carouselRunInputSchema.parse(values)),
+          )}
           className="flex min-w-0 flex-col gap-4"
           data-testid="carousel-source-step"
         >
@@ -264,7 +255,7 @@ export const CarouselSourceStep = ({
                       </span>
                     </div>
                     <Slider
-                      min={3}
+                      min={1}
                       max={15}
                       step={1}
                       value={[field.value]}
@@ -289,7 +280,12 @@ export const CarouselSourceStep = ({
                     <FormItem>
                       <FormLabel>{tOptions("brandNameLabel")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={tOptions("brandNamePlaceholder")} {...field} value={field.value ?? ""} />
+                        <Input
+                          placeholder={tOptions("brandNamePlaceholder")}
+                          data-testid="carousel-brand-name-input"
+                          {...field}
+                          value={field.value ?? ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -310,6 +306,7 @@ export const CarouselSourceStep = ({
                           <InputGroupInput
                             placeholder={tOptions("socialHandlePlaceholder")}
                             aria-label={tOptions("socialHandleLabel")}
+                            data-testid="carousel-social-handle-input"
                             {...field}
                             value={(field.value ?? "").replace(/^@/, "")}
                             onChange={(e) => field.onChange(e.target.value.replace(/^@/, ""))}

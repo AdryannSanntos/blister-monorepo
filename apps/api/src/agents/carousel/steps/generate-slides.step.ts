@@ -10,6 +10,7 @@ import {
   resolveSlideVariationId,
   resolveSlidesGenerationContext,
 } from '../utils/slides-generation-context';
+import { dedupeCarouselSlidesById } from '../utils/carousel-output.util';
 
 const generatedSlideLaxSchema = z.object({
   id: z.string(),
@@ -114,7 +115,8 @@ export const normalizeGeneratedSlides = (
   const { templateService } = getCarouselRunDeps();
   const generationContext = resolveSlidesGenerationContext(context);
 
-  return data.slides.map((slide) => {
+  return dedupeCarouselSlidesById(
+    data.slides.map((slide) => {
     const variationId = resolveSlideVariationId(slide.id, generationContext.plan);
     const variation = templateService.getSlideVariation(
       generationContext.templateId,
@@ -124,6 +126,7 @@ export const normalizeGeneratedSlides = (
 
     const htmlContent = resolveSlideHtmlContent(slide.htmlContent, variation.html);
     const cssContent = assembleSlideCss({
+      baseCss: variation.baseCss,
       slideCss: slide.cssContent?.trim() || variation.css,
       brand: generationContext.brand,
     });
@@ -136,7 +139,8 @@ export const normalizeGeneratedSlides = (
       cssContent,
       ...(slide.pngFileId ? { pngFileId: slide.pngFileId } : {}),
     });
-  });
+  }),
+  );
 };
 
 export const hydrateGeneratedSlides = async (

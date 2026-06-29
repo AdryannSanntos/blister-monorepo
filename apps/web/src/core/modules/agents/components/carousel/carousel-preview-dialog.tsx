@@ -11,6 +11,7 @@ import {
   computeCarouselPreviewFrameSize,
 } from "src/core/modules/agents/components/carousel/carousel-slide-renderer";
 import { CarouselSocialNetworkIcon } from "src/core/modules/agents/components/carousel/carousel-social-network-icon";
+import { getCarouselSlideReactKey } from "src/core/modules/agents/utils/carousel-run-display";
 import {
   Dialog,
   DialogClose,
@@ -239,7 +240,7 @@ export const CarouselPreviewDialog = ({
             <div className="pointer-events-none absolute inset-x-3 top-3 z-20 flex gap-1">
               {slides.map((slide, index) => (
                 <div
-                  key={slide.id}
+                  key={getCarouselSlideReactKey(slide, index)}
                   className="h-0.5 flex-1 overflow-hidden rounded-full bg-white/25"
                 >
                   <div
@@ -257,7 +258,7 @@ export const CarouselPreviewDialog = ({
             <AnimatePresence initial={false} custom={direction} mode="wait">
               {activeSlide ? (
                 <motion.div
-                  key={activeSlide.id}
+                  key={getCarouselSlideReactKey(activeSlide, activeIndex)}
                   custom={direction}
                   variants={slideVariants}
                   initial="enter"
@@ -292,7 +293,7 @@ export const CarouselPreviewDialog = ({
           <div className="mt-4 flex items-center gap-1.5">
             {slides.map((slide, index) => (
               <button
-                key={slide.id}
+                key={getCarouselSlideReactKey(slide, index)}
                 type="button"
                 aria-label={t("goToSlide", { order: slide.order })}
                 aria-current={index === activeIndex ? "step" : undefined}
@@ -315,7 +316,7 @@ export const CarouselPreviewDialog = ({
           >
             {slides.map((slide, index) => (
               <button
-                key={slide.id}
+                key={getCarouselSlideReactKey(slide, index)}
                 type="button"
                 data-thumb-index={index}
                 aria-label={t("openSlide", { order: slide.order })}

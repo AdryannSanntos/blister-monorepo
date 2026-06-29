@@ -1,0 +1,42 @@
+.slide-start__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.slide-start__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-start__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 16, 0.35) 0%,
+    rgba(5, 5, 16, 0.2) 35%,
+    rgba(5, 5, 16, 0.55) 65%,
+    rgba(5, 5, 16, 0.92) 100%
+  );
+}
+
+.slide-start__main {
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+  padding-bottom: 96px;
+}
+
+.slide-start__badge {
+  margin: 0 auto;
+}
+
+.slide-start__title {
+  max-width: 920px;
+  font-size: 76px;
+  color: #ffffff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}

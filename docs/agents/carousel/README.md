@@ -54,6 +54,11 @@ Marketplace items with `type: TEMPLATE` and `refId: <templateId>` grant entitlem
 |------|-------|
 | `carousel-editorial-performance` | `editorial-performance` | Seed (`seed-marketplace.ts`) |
 | `carousel-minimal-clean` | `minimal-clean` | Seed (`seed-marketplace.ts`) |
+| `carousel-content-machine` | `content-machine` | Seed (`seed-marketplace.ts`) |
+
+### Content Machine (`content-machine`)
+
+Editorial template inspired by analysis carousels: triple header, serif/sans dual typography, accent card for visuals, accent box closing. **Title only on cover slide**; internal slides use `body` / `subtitle` / `call_to_action`. Brand accent from carousel agent `accentColor` settings.
 
 ## API
 

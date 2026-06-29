@@ -448,7 +448,10 @@ export class FilesService {
     });
     if (!file) throw new NotFoundException('File not found');
 
-    const url = await this.storage.getPresignedDownloadUrl(file.storageKey);
+    const url = await this.storage.getPresignedDownloadUrl(
+      file.storageKey,
+      24 * 60 * 60,
+    );
     return { url, file: serializeFile(file) };
   }
 

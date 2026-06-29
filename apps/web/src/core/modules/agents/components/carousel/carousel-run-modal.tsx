@@ -19,8 +19,7 @@ const FORM_ID = "carousel-source-form";
 
 export const CarouselRunModal = ({ controller }: { controller: Controller }) => {
   const t = useTranslations("carousel.modal");
-  const { open, isSubmitting, errorMessage, handleClose, handleSubmit, defaultSlidesCount, defaultTemplateId, defaultBrandSettings } =
-    controller;
+  const { open, isSubmitting, errorMessage, handleClose, handleSubmit } = controller;
 
   return (
     <Dialog
@@ -62,12 +61,10 @@ export const CarouselRunModal = ({ controller }: { controller: Controller }) => 
         ) : null}
 
         <CarouselSourceStep
+          open={open}
           formId={FORM_ID}
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
-          defaultSlidesCount={defaultSlidesCount}
-          defaultTemplateId={defaultTemplateId}
-          defaultBrandSettings={defaultBrandSettings}
         />
       </DialogContent>
     </Dialog>

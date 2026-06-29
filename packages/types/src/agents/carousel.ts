@@ -48,22 +48,34 @@ export const carouselBrandContextSchema = z.object({
 });
 export type CarouselBrandContext = z.infer<typeof carouselBrandContextSchema>;
 
+const emptyStringToUndefined = (value: unknown) => {
+  if (typeof value !== "string") return value;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+
 export const carouselAgentSettingsSchema = z.object({
-  slidesCount: z.number().int().min(3).max(15).default(5),
+  slidesCount: z.number().int().min(1).max(15).default(5),
   defaultTemplateId: z.string().optional(),
   defaultSocialNetworks: z
     .array(carouselSocialNetworkSchema)
     .default(["instagram"]),
   aiGeneratedImages: z.boolean().default(false),
-  brandName: z.string().min(1).optional(),
-  instagramHandle: z
-    .string()
-    .regex(/^@?[\w.]+$/)
-    .optional(),
-  accentColor: z
-    .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/)
-    .default("#FF4A0A"),
+  brandName: z.preprocess(
+    emptyStringToUndefined,
+    z.string().min(1).optional(),
+  ),
+  instagramHandle: z.preprocess(
+    emptyStringToUndefined,
+    z.string().regex(/^@?[\w.]+$/).optional(),
+  ),
+  accentColor: z.preprocess(
+    (value) => (typeof value === "string" ? value.toUpperCase() : value),
+    z
+      .string()
+      .regex(/^#[0-9A-Fa-f]{6}$/)
+      .default("#FF4A0A"),
+  ),
   metaRightMode: carouselMetaRightModeSchema.default("handle"),
 });
 export type CarouselAgentSettings = z.infer<typeof carouselAgentSettingsSchema>;
@@ -74,7 +86,7 @@ export const carouselRunInputSchema = z.object({
   socialNetworks: z
     .array(carouselSocialNetworkSchema)
     .min(1, "Selecione ao menos uma rede social"),
-  slidesCount: z.number().int().min(3).max(15),
+  slidesCount: z.number().int().min(1).max(15),
   brandOverrides: carouselBrandOverridesSchema.optional(),
   settings: carouselAgentSettingsSchema.optional(),
 });

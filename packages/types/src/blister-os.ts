@@ -8,10 +8,8 @@ export {
   type CarouselAgentSettings,
 } from './agents/carousel';
 
-const agentSettingsConfigSchema = z.union([
-  cutsAgentSettingsSchema,
-  carouselAgentSettingsSchema,
-]);
+/** Opaque JSON until validated per agentId (cuts vs carousel). */
+export const agentWorkspaceSettingsConfigSchema = z.record(z.string(), z.unknown());
 
 export const workspaceProfileSchema = z.object({
   displayName: z.string().optional(),
@@ -33,7 +31,7 @@ export type UpdateWorkspaceSettingsDto = z.infer<typeof updateWorkspaceSettingsS
 
 export const agentWorkspaceSettingsResponseSchema = z.object({
   agentId: z.string(),
-  config: agentSettingsConfigSchema,
+  config: agentWorkspaceSettingsConfigSchema,
 });
 
 export type AgentWorkspaceSettingsResponse = z.infer<
@@ -41,7 +39,7 @@ export type AgentWorkspaceSettingsResponse = z.infer<
 >;
 
 export const updateAgentWorkspaceSettingsSchema = z.object({
-  config: agentSettingsConfigSchema,
+  config: agentWorkspaceSettingsConfigSchema,
 });
 
 export type UpdateAgentWorkspaceSettingsDto = z.infer<

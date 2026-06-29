@@ -19,4 +19,11 @@ export const CAROUSEL_TEMPLATES_FIXTURE: CarouselTemplateFixture[] = [
     description: "Layout minimalista com tipografia bold",
     thumbnailColor: "#0a0a0a",
   },
+  {
+    id: "content-machine",
+    name: "Content Machine",
+    description:
+      "Editorial com header triplo, serif/sans e card de destaque — cor da marca configurável",
+    thumbnailColor: "#050510",
+  },
 ];

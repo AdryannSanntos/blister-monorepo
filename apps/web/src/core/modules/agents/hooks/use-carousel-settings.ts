@@ -12,16 +12,18 @@ const CAROUSEL_AGENT_ID = "carousel";
 
 export const carouselSettingsQueryKey = ["carousel-settings"] as const;
 
+export const fetchCarouselSettings = async (): Promise<CarouselAgentSettings> => {
+  const { data } = await apiClient.get(
+    `/workspace-settings/agents/${CAROUSEL_AGENT_ID}`,
+  );
+  const parsed = agentWorkspaceSettingsResponseSchema.parse(data);
+  return carouselAgentSettingsSchema.parse(parsed.config);
+};
+
 export const useCarouselSettings = () =>
   useQuery({
     queryKey: carouselSettingsQueryKey,
-    queryFn: async () => {
-      const { data } = await apiClient.get(
-        `/workspace-settings/agents/${CAROUSEL_AGENT_ID}`,
-      );
-      const parsed = agentWorkspaceSettingsResponseSchema.parse(data);
-      return carouselAgentSettingsSchema.parse(parsed.config);
-    },
+    queryFn: fetchCarouselSettings,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -40,7 +42,8 @@ export const useUpdateCarouselSettings = () => {
         agentWorkspaceSettingsResponseSchema.parse(data).config,
       );
     },
-    onSuccess: () => {
+    onSuccess: (config) => {
+      queryClient.setQueryData(carouselSettingsQueryKey, config);
       queryClient.invalidateQueries({ queryKey: carouselSettingsQueryKey });
     },
   });
