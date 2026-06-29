@@ -19,7 +19,7 @@ import {
 } from "src/core/shared/components/ui/form";
 import { Input } from "src/core/shared/components/ui/input";
 import { Textarea } from "src/core/shared/components/ui/textarea";
-import { setActiveCompanyId } from "src/core/shared/utils/active-company";
+import { setActiveWorkspaceId } from "src/core/shared/utils/active-workspace";
 import { z } from "zod";
 import { useRouter } from "@/i18n/routing";
 
@@ -68,7 +68,7 @@ export function OnboardingPage() {
       });
       toast.success(t("successMessage"));
       // Empresa recém-criada vira o workspace ativo e leva direto ao dashboard.
-      setActiveCompanyId(company.id);
+      setActiveWorkspaceId(company.id);
       router.push("/dashboard");
       router.refresh();
     } catch {

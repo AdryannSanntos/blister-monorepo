@@ -13,7 +13,7 @@ const mapRun = (run: RunWithRelations): StoredRun => ({
   // The SDK uses companyId as an opaque workspace-scope id (label/retrieval key).
   // Personal-space runs have no company, so we surface the personal space id.
   companyId: run.companyId ?? run.personalSpaceId ?? '',
-  campaignId: run.campaignId,
+  campaignId: null,
   status: run.status as StoredRun['status'],
   currentStepKey: run.currentStepKey,
   inputPayload: run.inputPayload as Record<string, unknown>,

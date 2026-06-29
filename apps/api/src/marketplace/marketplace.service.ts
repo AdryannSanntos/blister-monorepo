@@ -14,6 +14,7 @@ import type {
 import { textStyleSpecSchema } from '@company-os/types';
 import type { Prisma } from '@company-os/db';
 import type { MarketplaceItemType } from '@company-os/db';
+import { CarouselTemplateService, TemplateNotFoundError } from '../agents/carousel/services/carousel-template.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreditService } from '../credits/credits.service';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
@@ -86,6 +87,8 @@ const serializeItem = (
 
 @Injectable()
 export class MarketplaceService {
+  private readonly carouselTemplateService = new CarouselTemplateService();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly workspaceContext: WorkspaceContextService,
@@ -222,6 +225,7 @@ export class MarketplaceService {
     if (existing) {
       throw new UnprocessableEntityException('Slug already in use');
     }
+    this.validateTemplateRefId(dto.type, dto.refId);
     const item = await this.prisma.marketplaceItem.create({
       data: {
         slug: dto.slug,
@@ -246,6 +250,17 @@ export class MarketplaceService {
     dto: UpdateMarketplaceItemDto,
   ): Promise<AdminMarketplaceItemDto> {
     await this.ensureItemExists(id);
+    const nextType = dto.type;
+    const nextRefId = dto.refId;
+    if (nextType === 'template' || nextRefId !== undefined) {
+      const current = await this.prisma.marketplaceItem.findUnique({
+        where: { id },
+        select: { type: true, refId: true },
+      });
+      const effectiveType = nextType ?? (current ? typeToSlug[current.type] : undefined);
+      const effectiveRefId = nextRefId === undefined ? current?.refId : nextRefId;
+      this.validateTemplateRefId(effectiveType, effectiveRefId);
+    }
     const data: Prisma.MarketplaceItemUpdateInput = {};
     if (dto.slug !== undefined) data.slug = dto.slug;
     if (dto.type !== undefined) data.type = slugToType[dto.type];
@@ -279,6 +294,22 @@ export class MarketplaceService {
   private async ensureItemExists(id: string) {
     const item = await this.prisma.marketplaceItem.findUnique({ where: { id } });
     if (!item) throw new NotFoundException('Marketplace item not found');
+  }
+
+  private validateTemplateRefId(
+    type: MarketplaceItemDto['type'] | undefined,
+    refId: string | null | undefined,
+  ) {
+    if (type !== 'template' || !refId) return;
+
+    try {
+      this.carouselTemplateService.getTemplate(refId);
+    } catch (error) {
+      if (error instanceof TemplateNotFoundError) {
+        throw new UnprocessableEntityException(`Invalid carousel template refId: ${refId}`);
+      }
+      throw error;
+    }
   }
 
   private async debitPersonalCredits(

@@ -1,6 +1,6 @@
 # Estado Atual — Blister OS Migration
 
-> Snapshot em **2026-06-22** (pós migração Agent IA SDK — Tasks 1–15).  
+> Snapshot em **2026-06-28** (pós limpeza MEI/legacy + drop schema).  
 > PRD: [`blister-os-prd.md`](../prd/blister-os-prd.md) · ADR SDK: [`2026-06-22-agent-ia-sdk.md`](../decisions/2026-06-22-agent-ia-sdk.md)
 
 ---
@@ -18,8 +18,21 @@
 | 15 | `check-ai-boundaries.sh`, seed, ADR | ✅ |
 
 **Package canônico:** `@company-os/agent-ia-sdk`  
-**Deprecated:** `@company-os/agent-sdk` → re-export de `agent-ia-sdk/agents`  
-**Agente ativo:** `cuts` only
+**Removido:** `packages/agent-sdk` (shim deprecated)  
+**Agentes ativos:** `cuts` + `carousel` (Plano 3 — API + templates + render PNG)
+
+---
+
+## Plano 3 — Carousel backend ✅ (2026-06-28)
+
+| Entregável | Status |
+|------------|--------|
+| `imageSlots[]` + upload composto | ✅ |
+| `CarouselTemplateService` + manifests | ✅ |
+| `CarouselRenderService` (Puppeteer → PNG) | ✅ |
+| Marketplace `TEMPLATE` + entitlement | ✅ |
+| Export ZIP + hooks API no frontend | ✅ |
+| Doc canônica `docs/agents/carousel/README.md` | ✅ |
 
 ---
 

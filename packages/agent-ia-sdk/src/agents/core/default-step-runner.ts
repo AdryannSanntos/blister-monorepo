@@ -332,32 +332,7 @@ export async function executeStepStub(stepKey: string, agentId: string): Promise
     };
   }
 
-  const stubOutputs: Record<string, Record<string, unknown>> = {
-    copywriter: {
-      caption: 'Descubra o sabor irresistível do nosso novo produto! 🎉',
-      hashtags: ['#novidade', '#qualidade', '#marketing'],
-      tone: 'enthusiastic',
-    },
-    strategist: {
-      topics: [
-        {
-          title: 'Lançamento',
-          description: 'Post de divulgação',
-          suggestedDate: new Date().toISOString(),
-        },
-      ],
-      calendar: { weeklyPosts: 3, bestTimes: ['09:00', '18:00'] },
-      recommendations: 'Focus on visual content.',
-    },
-    designer: {
-      imagePrompt: 'Modern product showcase',
-      style: 'minimalist',
-      imageUrl: 'stub://image.png',
-      storageKey: 'stub/image.png',
-    },
-  };
-
-  const output = stubOutputs[agentId] ?? { result: 'stub', stepKey };
+  const output = { result: 'stub', stepKey };
 
   return {
     type: 'CONTINUE',

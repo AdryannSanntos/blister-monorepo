@@ -4,14 +4,14 @@ import { GalleryHorizontal } from "lucide-react";
 
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { CarouselRunCard } from "./carousel-run-card";
-import type { CarouselRunFixture } from "src/core/modules/blister-os/fixtures/carousel-runs.fixture";
+import type { CarouselViewableRun } from "src/core/modules/agents/utils/carousel-run-display";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
 
-type Props = { runs: CarouselRunFixture[]; isLoading: boolean };
+type Props = { runs: CarouselViewableRun[]; isLoading: boolean };
 
 const LoadingGrid = () => (
   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

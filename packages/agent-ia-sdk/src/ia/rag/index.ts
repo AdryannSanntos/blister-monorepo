@@ -3,7 +3,7 @@ import type {
   IngestDocumentDto,
   RagRetrievalQuery,
   RagRetrievedChunk,
-} from '@company-os/types/dist/rag';
+} from '@company-os/types';
 import type { IEmbeddingProvider } from '../embedding/embedding-provider';
 import type { ITextProvider } from '../text/text-provider';
 import { CaptionService, type CaptionInput } from './caption.service';

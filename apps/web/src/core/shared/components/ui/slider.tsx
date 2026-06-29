@@ -49,10 +49,10 @@ function Slider({
           )}
         />
       </SliderPrimitive.Track>
-      {_values.map((value) => (
+      {_values.map((_, index) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
-          key={value}
+          key={index}
           className="block size-[22px] shrink-0 rounded-full border-[2.5px] border-[var(--primary-600)] bg-white shadow-[var(--shadow-md)] ring-[var(--accent-soft)] transition-[box-shadow,transform] duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:scale-105 hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
         />
       ))}

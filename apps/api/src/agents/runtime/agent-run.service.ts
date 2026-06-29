@@ -22,7 +22,6 @@ export const toRunScope = (workspace: ResolvedWorkspace): RunWorkspaceScope => (
 export interface ListRunsOptions {
   scope: RunWorkspaceScope;
   agentId?: string;
-  campaignId?: string;
   status?: AgentRunStatus;
   reviewStatus?: 'pending';
   limit?: number;
@@ -106,7 +105,6 @@ export class AgentRunService {
     };
 
     if (options.agentId) where.agentId = options.agentId;
-    if (options.campaignId) where.campaignId = options.campaignId;
     if (options.status) where.status = options.status as PrismaAgentRunStatus;
 
     if (options.reviewStatus === 'pending') {
@@ -141,19 +139,6 @@ export class AgentRunService {
       limit: options?.limit,
       offset: options?.offset,
       reviewStatus: options?.reviewStatus,
-    });
-  }
-
-  async listByCampaign(
-    companyId: string,
-    campaignId: string,
-    options?: { limit?: number; offset?: number },
-  ): Promise<{ runs: AgentRunStatusDto[]; total: number }> {
-    return this.list({
-      scope: { companyId },
-      campaignId,
-      limit: options?.limit,
-      offset: options?.offset,
     });
   }
 
@@ -212,7 +197,6 @@ export class AgentRunService {
     agentId: string;
     companyId: string | null;
     personalSpaceId?: string | null;
-    campaignId: string | null;
     status: string;
     currentStepKey: string | null;
     inputPayload: unknown;
@@ -232,7 +216,6 @@ export class AgentRunService {
       id: run.id,
       agentId: run.agentId,
       companyId: run.companyId ?? run.personalSpaceId ?? '',
-      campaignId: run.campaignId,
       status: run.status as AgentRunStatus,
       currentStepKey: run.currentStepKey,
       inputPayload: run.inputPayload as Record<string, unknown>,

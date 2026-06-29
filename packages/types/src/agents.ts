@@ -105,7 +105,6 @@ export const agentRunStatusDtoSchema = z.object({
   id: z.string(),
   agentId: z.string(),
   companyId: z.string(),
-  campaignId: z.string().nullable(),
   status: agentRunStatusSchema,
   currentStepKey: z.string().nullable(),
   inputPayload: z.record(z.string(), z.unknown()),

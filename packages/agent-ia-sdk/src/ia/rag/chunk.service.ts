@@ -24,7 +24,6 @@ export class ChunkService {
     companyId: string,
     content: string,
     options?: ChunkOptions & {
-      campaignId?: string;
       agentId?: string;
       metadata?: Record<string, unknown>;
     },
@@ -43,7 +42,6 @@ export class ChunkService {
           data: {
             documentId,
             companyId,
-            campaignId: options?.campaignId,
             agentId: options?.agentId,
             chunkIndex: index,
             content: chunk.content,

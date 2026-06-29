@@ -1,28 +1,47 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import {
+  agentWorkspaceSettingsResponseSchema,
+  carouselAgentSettingsSchema,
+  type CarouselAgentSettings,
+} from "@company-os/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "src/core/shared/utils/api-client";
 
-import { carouselAgentSettingsSchema, type CarouselAgentSettings } from "@company-os/types";
-import { CAROUSEL_TEMPLATES_FIXTURE } from "src/core/modules/blister-os/fixtures/carousel-templates.fixture";
+const CAROUSEL_AGENT_ID = "carousel";
 
-const defaultSettings = (): CarouselAgentSettings =>
-  carouselAgentSettingsSchema.parse({
-    defaultTemplateId: CAROUSEL_TEMPLATES_FIXTURE[0]?.id,
+export const carouselSettingsQueryKey = ["carousel-settings"] as const;
+
+export const useCarouselSettings = () =>
+  useQuery({
+    queryKey: carouselSettingsQueryKey,
+    queryFn: async () => {
+      const { data } = await apiClient.get(
+        `/workspace-settings/agents/${CAROUSEL_AGENT_ID}`,
+      );
+      const parsed = agentWorkspaceSettingsResponseSchema.parse(data);
+      return carouselAgentSettingsSchema.parse(parsed.config);
+    },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
-export const useCarouselSettings = () => {
-  const [data] = useState<CarouselAgentSettings>(defaultSettings);
-  return { data, isLoading: false };
-};
-
 export const useUpdateCarouselSettings = () => {
-  const [isPending, setIsPending] = useState(false);
+  const queryClient = useQueryClient();
 
-  const mutate = useCallback((_config: CarouselAgentSettings) => {
-    setIsPending(true);
-    // Plano 2: simula save
-    setTimeout(() => setIsPending(false), 600);
-  }, []);
-
-  return { mutate, isPending };
+  return useMutation({
+    mutationFn: async (config: CarouselAgentSettings) => {
+      const parsed = carouselAgentSettingsSchema.parse(config);
+      const { data } = await apiClient.patch(
+        `/workspace-settings/agents/${CAROUSEL_AGENT_ID}`,
+        { config: parsed },
+      );
+      return carouselAgentSettingsSchema.parse(
+        agentWorkspaceSettingsResponseSchema.parse(data).config,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: carouselSettingsQueryKey });
+    },
+  });
 };

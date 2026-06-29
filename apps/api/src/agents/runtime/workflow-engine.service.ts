@@ -34,6 +34,25 @@ import { devAgentLogger } from './dev-agent-logger';
 
 
 
+const resolveCarouselResumeFromStep = (params: {
+  agentId: string;
+  currentStepKey: string | null;
+  formData?: Record<string, unknown>;
+}): string | undefined => {
+  if (params.agentId !== 'carousel') return undefined;
+  if (params.currentStepKey === 'await_content_approval' && params.formData?.contentApproved === false) {
+    return 'generate_content';
+  }
+
+  if (params.currentStepKey === 'await_design_approval' && params.formData?.designApproved === false) {
+    return 'generate_design_plan';
+  }
+
+  return undefined;
+};
+
+
+
 type AgentRunExecuteTask = typeof agentRunExecute;
 
 
@@ -404,6 +423,18 @@ export class WorkflowEngineService implements OnModuleInit {
 
 
 
+    const resumeFromStep = resolveCarouselResumeFromStep({
+
+      agentId: run.agentId,
+
+      currentStepKey: run.currentStepKey,
+
+      formData: options.formData,
+
+    });
+
+
+
     await this.prisma.agentRun.update({
 
       where: { id: run.id },
@@ -430,7 +461,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
         runId: run.id,
 
-        resumeFromStep: run.currentStepKey ?? undefined,
+        resumeFromStep: resumeFromStep ?? run.currentStepKey ?? undefined,
 
         formData: options.formData,
 
@@ -446,7 +477,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
         triggerHandleId: handle.id,
 
-        resumeFromStep: run.currentStepKey,
+        resumeFromStep: resumeFromStep ?? run.currentStepKey,
 
       });
 

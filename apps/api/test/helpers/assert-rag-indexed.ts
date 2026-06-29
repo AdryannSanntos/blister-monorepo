@@ -125,19 +125,6 @@ export async function assertAgentLearningIndexed(
   }
 }
 
-export async function assertBrandBrainIndexed(
-  prisma: PrismaClient,
-  companyId: string,
-  brandProfileId: string,
-): Promise<void> {
-  await assertRagDocumentIndexed(prisma, companyId, {
-    sourceType: 'BRAND_BRAIN',
-    sourceId: brandProfileId,
-    expectedStatus: 'INDEXED',
-    minChunkCount: 1,
-  });
-}
-
 export async function assertNoCrossTenantLeak(
   prisma: PrismaClient,
   companyAId: string,

@@ -1,14 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { Request } from 'express';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
 
 @Injectable()
 export class PersonalSpaceService {
   constructor(private readonly workspaceContext: WorkspaceContextService) {}
-
-  async getPersonalSpace(_userId: string): Promise<never> {
-    throw new NotFoundException('Personal Space no longer supported');
-  }
 
   async resolveActiveWorkspace(userId: string, req: Request) {
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);

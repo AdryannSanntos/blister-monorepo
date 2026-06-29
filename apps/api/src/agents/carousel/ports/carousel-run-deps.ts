@@ -1,31 +1,31 @@
-import type {
-  StepExecutionContext,
-  StepResult,
-  StepRuntimeDeps,
-} from '@company-os/agent-ia-sdk/agents';
+import type { CarouselTemplateService } from '../services/carousel-template.service';
 
 export type CarouselRunDeps = {
-  completeGenerateIdeas?: (
-    context: StepExecutionContext,
-    deps: StepRuntimeDeps,
-  ) => Promise<StepResult>;
-  completeGenerateContent?: (
-    context: StepExecutionContext,
-    deps: StepRuntimeDeps,
-  ) => Promise<StepResult>;
-  completeGenerateDesignPlan?: (
-    context: StepExecutionContext,
-    deps: StepRuntimeDeps,
-  ) => Promise<StepResult>;
-  completeGenerateSlides?: (
-    context: StepExecutionContext,
-    deps: StepRuntimeDeps,
-  ) => Promise<StepResult>;
-  renderSlides?: (params: {
-    slides: unknown[];
-    templateId: string;
-    socialNetwork: string;
-  }) => Promise<void>;
+  templateService: CarouselTemplateService;
+  renderSlideToPng: (params: {
+    html: string;
+    css: string;
+    baseCss: string;
+    width: number;
+    height: number;
+  }) => Promise<Buffer>;
+  resolveFileUrl: (params: {
+    fileId: string;
+    companyId?: string;
+    personalSpaceId?: string;
+  }) => Promise<string>;
+  storeRenderedPng: (params: {
+    runId: string;
+    slideId: string;
+    slideOrder: number;
+    buffer: Buffer;
+    companyId?: string;
+    personalSpaceId?: string;
+  }) => Promise<string>;
+  listOwnedTemplateIds: (params: {
+    companyId?: string;
+    personalSpaceId?: string;
+  }) => Promise<string[]>;
 };
 
 let activeDeps: CarouselRunDeps | null = null;

@@ -34,6 +34,10 @@ export const carouselLearningHandler: LearningHandler<CarouselFeedback, Carousel
       lines.push(`- Slide ${slide.order} (${slide.type}): ${slide.id}`);
     }
 
+    if (feedback.templateId) {
+      lines.push(`Requested template: ${feedback.templateId}`);
+    }
+
     if (feedback.userFeedback) {
       lines.push(`User feedback: ${feedback.userFeedback}`);
     }

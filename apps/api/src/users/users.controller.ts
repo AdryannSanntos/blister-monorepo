@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Req, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req, UsePipes } from '@nestjs/common';
 import type { Request } from 'express';
-import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import type { CurrentUser } from '../auth/session.service';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
 import { updateProfileDtoSchema, type UpdateProfileDto } from './dto/user-profile.dto';
@@ -35,17 +34,5 @@ export class UsersController {
       req,
     );
     return { permissions };
-  }
-
-  @Get()
-  @RequirePermission('member.read')
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  @RequirePermission('member.read')
-  findById(@Param('id') id: string) {
-    return this.usersService.findById(id);
   }
 }

@@ -3,7 +3,7 @@ import type { PrismaClient } from '@company-os/db';
 import type {
   IngestDocumentDto,
   RagSourceType,
-} from '@company-os/types/dist/rag';
+} from '@company-os/types';
 import type { DocumentService } from './document.service';
 import type { ChunkService } from './chunk.service';
 import type { EmbeddingRepository } from './embedding.repository';
@@ -75,7 +75,6 @@ export class IngestionService {
       sourceId: dto.sourceId,
       title: dto.title,
       content: dto.content,
-      campaignId: dto.campaignId,
       metadata: {
         ...dto.metadata,
         contentHash: hashRagContent(dto.content),
@@ -90,7 +89,6 @@ export class IngestionService {
         dto.companyId,
         dto.content,
         {
-          campaignId: dto.campaignId,
           agentId: dto.agentId,
           metadata: dto.metadata,
         },

@@ -1,4 +1,4 @@
-import { normalizeCutsModelTier, runAgentRequestSchema } from '@company-os/types';
+import { cutsAgentSettingsSchema, normalizeCutsModelTier, runAgentRequestSchema } from '@company-os/types';
 import {
   Body,
   Controller,
@@ -38,7 +38,8 @@ export class AgentsController {
 
     let metadata = dto.metadata;
     if (agentId === 'cuts') {
-      const { config } = await this.workspaceSettings.getAgentSettings(userId, req, agentId);
+      const { config: rawConfig } = await this.workspaceSettings.getAgentSettings(userId, req, agentId);
+      const config = cutsAgentSettingsSchema.parse(rawConfig);
       const requestMetadata = metadata as
         | {
             settings?: Record<string, unknown>;

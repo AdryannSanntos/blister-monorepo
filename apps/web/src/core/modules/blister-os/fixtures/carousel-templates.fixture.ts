@@ -7,6 +7,13 @@ export type CarouselTemplateFixture = {
 
 export const CAROUSEL_TEMPLATES_FIXTURE: CarouselTemplateFixture[] = [
   {
+    id: "editorial-performance",
+    name: "Editorial Performance",
+    description:
+      "Capas dramáticas, slides editoriais claros, acento laranja e barra de progresso fixa",
+    thumbnailColor: "#ff4a0a",
+  },
+  {
     id: "minimal-clean",
     name: "Minimal Clean",
     description: "Layout minimalista com tipografia bold",

@@ -72,7 +72,7 @@ export function CompanyDangerZone({ company }: CompanyDangerZoneProps) {
   const handleConfirmDelete = async (values: DeleteFormValues) => {
     await deleteCompany.mutateAsync({ confirmName: values.confirmName });
     handleOpenChange(false);
-    router.replace("/workspaces");
+    router.replace("/dashboard");
   };
 
   return (

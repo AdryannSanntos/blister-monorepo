@@ -11,7 +11,7 @@ export interface TestCompany {
   name: string;
   slug: string;
   userId: string;
-  brandProfileId: string;
+  workspaceSettingsId: string;
   creditBalance: number;
 }
 
@@ -124,16 +124,16 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
     },
   });
 
-  const brandProfile = await prisma.brandProfile.create({
+  const workspaceSettings = await prisma.workspaceSettings.create({
     data: {
-      id: `test_brand_${Date.now()}`,
+      id: `test_settings_${Date.now()}`,
       companyId: company.id,
-      brandVoice:
+      displayName: TEST_COMPANY.name,
+      voice:
         'Friendly and professional tone. We speak directly to small business owners.',
       niche: 'Marketing Digital',
-      description: 'Test business for automated testing',
-      targetAudience: 'Small business owners in Brazil',
-      marketingObjective: 'STRENGTHEN_BRAND',
+      positioning: 'Test business for automated testing',
+      audience: 'Small business owners in Brazil',
     },
   });
 
@@ -180,7 +180,7 @@ export async function seedTestDatabase(): Promise<TestSeedResult> {
       name: company.name,
       slug: company.slug,
       userId: user.id,
-      brandProfileId: brandProfile.id,
+      workspaceSettingsId: workspaceSettings.id,
       creditBalance: freeTierAmount,
     },
     user: {
@@ -244,11 +244,12 @@ export async function seedCompanyWithLowBalance(
     },
   });
 
-  const brandProfile = await prisma.brandProfile.create({
+  const workspaceSettings = await prisma.workspaceSettings.create({
     data: {
-      id: `test_low_credit_brand_${Date.now()}`,
+      id: `test_low_credit_settings_${Date.now()}`,
       companyId: company.id,
-      brandVoice: 'Test brand voice',
+      displayName: company.name,
+      voice: 'Test brand voice',
       niche: 'Testing',
     },
   });
@@ -258,7 +259,7 @@ export async function seedCompanyWithLowBalance(
     name: company.name,
     slug: company.slug,
     userId: user.id,
-    brandProfileId: brandProfile.id,
+    workspaceSettingsId: workspaceSettings.id,
     creditBalance: creditAmount,
   };
 }

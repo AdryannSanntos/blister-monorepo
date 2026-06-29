@@ -6,7 +6,35 @@
   "slides": {
     "start": ["v1"],
     "text": ["v1", "v2", "v3"],
-    "text-image": ["v1", "v2", "v3"],
-    "image": ["v1", "v2"]
+    "text-image": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem do slide", "required": true }
+        ]
+      },
+      "v2": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem do slide", "required": true }
+        ]
+      },
+      "v3": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem principal", "required": true },
+          { "slotKey": "image_url_2", "label": "Imagem secundária", "required": false }
+        ]
+      }
+    },
+    "image": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
+        ]
+      },
+      "v2": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
+        ]
+      }
+    }
   }
 }

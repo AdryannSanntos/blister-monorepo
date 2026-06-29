@@ -2,7 +2,7 @@ import type {
   RagRetrievalQuery,
   RagRetrievedChunk,
   RagSourceType,
-} from '@company-os/types/dist/rag';
+} from '@company-os/types';
 import {
   EmbeddingRepository,
   type VectorSearchResult,
@@ -19,10 +19,8 @@ export class RetrievalService {
       limit: query.limit ?? 8,
       minScore: query.minScore,
       sourceTypes: query.sourceTypes,
-      campaignId: query.campaignId,
       agentId: query.agentId,
       boostAgentId: query.boostAgentId,
-      boostCampaignId: query.boostCampaignId,
     });
 
     return results.map((r) => this.mapToChunk(r));
@@ -54,24 +52,6 @@ export class RetrievalService {
     return results.map((r) => this.mapToChunk(r));
   }
 
-  async searchCampaignContext(
-    companyId: string,
-    campaignId: string,
-    query: string,
-    limit = 4,
-  ): Promise<RagRetrievedChunk[]> {
-    const results = await this.embeddingRepository.searchSimilar({
-      companyId,
-      query,
-      limit,
-      sourceTypes: ['CAMPAIGN', 'CAMPAIGN_FILE'],
-      campaignId,
-      boostCampaignId: campaignId,
-    });
-
-    return results.map((r) => this.mapToChunk(r));
-  }
-
   private mapToChunk(result: VectorSearchResult): RagRetrievedChunk {
     return {
       id: result.chunkId,
@@ -83,7 +63,6 @@ export class RetrievalService {
       score: result.score,
       chunkIndex: result.chunkIndex,
       agentId: result.agentId,
-      campaignId: result.campaignId,
       metadata: result.metadata ?? {},
     };
   }

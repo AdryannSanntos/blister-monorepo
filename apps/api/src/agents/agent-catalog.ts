@@ -61,11 +61,10 @@ export const toRegisteredAgent = (params: {
 });
 
 /**
- * Catálogo de agentes registrados na inicialização.
+ * Registered agents loaded at API startup.
  *
- * Os agentes legados (MEI) foram removidos. Novos agentes devem ser
- * implementados no SDK (`packages/agent-sdk`) e registrados aqui via
- * `toRegisteredAgent`. Ver `docs/agents/agent-sdk.md`.
+ * Legacy MEI agents were removed. New agents live under
+ * `apps/api/src/agents/<agentId>/` and register here via `toRegisteredAgent`.
  */
 export const buildRegisteredAgents = (): RegisteredAgent[] => [
   toRegisteredAgent({

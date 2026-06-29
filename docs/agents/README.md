@@ -14,7 +14,7 @@ Especificação detalhada do pacote MVP (estado atual vs alvo, workflows, schema
 
 | Agente | ID | Doc |
 |--------|-----|-----|
-| Carrossel Automático | `carousel` | [`mvp/carousel/README.md`](mvp/carousel/README.md) |
+| Carrossel | `carousel` | [`carousel/README.md`](carousel/README.md) |
 | Roteiro para Reels | `reels_script` | [`mvp/reels-script/README.md`](mvp/reels-script/README.md) |
 | Corte para seus vídeos | `cuts` | [`mvp/cuts/README.md`](mvp/cuts/README.md) |
 | Edição de vídeo | `video_editor` | [`mvp/video-editor/README.md`](mvp/video-editor/README.md) |

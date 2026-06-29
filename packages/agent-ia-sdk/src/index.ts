@@ -9,6 +9,7 @@
  * `agents/` consumes `ia/` through interfaces only; `ia/` never imports `agents/`.
  */
 export * from './errors';
+export * from './retry-on-transient';
 export * from './types';
 export * from './ia';
 export { TRANSCRIPTION_MAX_WAIT_MS } from './ia';

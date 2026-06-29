@@ -4,12 +4,12 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, useMemo } from "react";
 import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import {
-  getAgentHistoryPath,
   getAgentOverviewPath,
   getAgentSettingsPath,
   matchAgentRunPath,
   parseAgentRouteSlug,
 } from "src/core/modules/agents/utils/agent-paths";
+import { CarouselRunModalProvider } from "src/core/modules/agents/components/carousel/carousel-run-modal-provider";
 import { CutsRunModalProvider } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
 import { useDashboardNavGroups } from "src/core/modules/dashboard/hooks/use-dashboard-nav-groups";
 import {
@@ -45,9 +45,6 @@ export function DashboardShell({ children }: DashboardShellProps) {
         href: getAgentOverviewPath(slug),
       };
 
-      if (pathname.endsWith("/history")) {
-        return [agentItem, { label: tAgentsNav("history") }];
-      }
       if (pathname.endsWith("/new")) {
         return [agentItem, { label: tAgentsNav("newGeneration") }];
       }
@@ -92,9 +89,6 @@ export function DashboardShell({ children }: DashboardShellProps) {
     if (pathname.startsWith("/dashboard/credits")) {
       return [{ label: tSidebar("credits") }];
     }
-    if (pathname.startsWith("/dashboard/history")) {
-      return [{ label: tSidebar("history") }];
-    }
     if (pathname.startsWith("/dashboard/workspace/team")) {
       return [{ label: tSidebar("team") }];
     }
@@ -113,17 +107,19 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   return (
     <CutsRunModalProvider>
-      <AppShell
-        contentId="dashboard-content"
-        navGroups={navGroups}
-        breadcrumb={{
-          homeLabel: t("home"),
-          homeHref: "/dashboard",
-          items: breadcrumbItems ?? undefined,
-        }}
-      >
-        {children}
-      </AppShell>
+      <CarouselRunModalProvider>
+        <AppShell
+          contentId="dashboard-content"
+          navGroups={navGroups}
+          breadcrumb={{
+            homeLabel: t("home"),
+            homeHref: "/dashboard",
+            items: breadcrumbItems ?? undefined,
+          }}
+        >
+          {children}
+        </AppShell>
+      </CarouselRunModalProvider>
     </CutsRunModalProvider>
   );
 }

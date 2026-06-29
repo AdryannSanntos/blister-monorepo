@@ -14,7 +14,7 @@ export const createFinalizeCarouselStep = (): StepExecutor => {
 
     const raw = {
       socialNetwork: (input.socialNetworks?.[0] ?? 'instagram') as 'instagram' | 'facebook' | 'tiktok',
-      templateId: input.templateId ?? 'minimal-clean',
+      templateId: input.templateId ?? 'editorial-performance',
       slides: renderOutput?.slides ?? [],
     };
 

@@ -53,7 +53,7 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
       pauseType: 'form',
       until: (ctx) => {
         const payload = ctx.inputPayload as Record<string, unknown>;
-        return payload.approved === true || payload.approved === false;
+        return payload.contentApproved === true || payload.contentApproved === false;
       },
       getFormSchema: () => carouselContentApprovalSchema,
       pauseReason: 'awaiting_content_approval',
@@ -63,7 +63,7 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
           | Record<string, unknown>
           | undefined;
         return {
-          approved: payload.approved,
+          contentApproved: payload.contentApproved,
           slides: payload.slides ?? contentOutput?.slides,
         };
       },
@@ -81,7 +81,7 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
       pauseType: 'form',
       until: (ctx) => {
         const payload = ctx.inputPayload as Record<string, unknown>;
-        return payload.approved === true || payload.approved === false;
+        return payload.designApproved === true || payload.designApproved === false;
       },
       getFormSchema: () => carouselDesignApprovalSchema,
       pauseReason: 'awaiting_design_approval',
@@ -91,7 +91,7 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
           | Record<string, unknown>
           | undefined;
         return {
-          approved: payload.approved,
+          designApproved: payload.designApproved,
           plan: payload.plan ?? designOutput?.plan,
           imageUploads: (payload.imageUploads as Record<string, string> | undefined) ?? {},
         };
@@ -112,6 +112,34 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
     label: 'Finalizando',
     type: 'output',
     run: createFinalizeCarouselStep(),
+  })
+  .addRouting({
+    after: 'await_content_approval',
+    decide: (ctx) => {
+      const approved = (ctx.inputPayload as { contentApproved?: boolean }).contentApproved;
+      return approved === false ? 'reject' : 'approve';
+    },
+    branches: {
+      approve: [
+        'generate_design_plan',
+        'await_design_approval',
+        'generate_slides',
+        'render_slides',
+        'finalize_carousel',
+      ],
+      reject: ['generate_content'],
+    },
+  })
+  .addRouting({
+    after: 'await_design_approval',
+    decide: (ctx) => {
+      const approved = (ctx.inputPayload as { designApproved?: boolean }).designApproved;
+      return approved === false ? 'reject' : 'approve';
+    },
+    branches: {
+      approve: ['generate_slides', 'render_slides', 'finalize_carousel'],
+      reject: ['generate_design_plan'],
+    },
   })
   .withLearning(carouselLearningHandler)
   .build();

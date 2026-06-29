@@ -34,7 +34,10 @@ type SeedUserInput = {
   roleName: DefaultSystemRole;
 };
 
-const PIPELINE_AGENTS = [{ agentId: 'cuts', sortOrder: 1 }] as const;
+const PIPELINE_AGENTS = [
+  { agentId: 'cuts', sortOrder: 1 },
+  { agentId: 'carousel', sortOrder: 2 },
+] as const;
 
 const ADMIN_USER = {
   userId: 'seed_admin_user',

@@ -1,5 +1,7 @@
 # Agente MVP: Carrossel Automático
 
+> **Superseded by:** [`../../carousel/README.md`](../../carousel/README.md) — canonical spec for Plano 3 implementation (templates, imageSlots, API integration).
+
 **ID:** `carousel`  
 **Tier:** Default (signup) — proposto para MVP  
 **SDK:** `packages/agent-sdk/src/agents/carousel/`  

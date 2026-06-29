@@ -1,7 +1,17 @@
 import { z } from 'zod';
+import { carouselAgentSettingsSchema } from './agents/carousel';
 import { cutsAgentSettingsSchema } from './agents/cuts';
 
 export { cutsAgentSettingsSchema, type CutsAgentSettings } from './agents/cuts';
+export {
+  carouselAgentSettingsSchema,
+  type CarouselAgentSettings,
+} from './agents/carousel';
+
+const agentSettingsConfigSchema = z.union([
+  cutsAgentSettingsSchema,
+  carouselAgentSettingsSchema,
+]);
 
 export const workspaceProfileSchema = z.object({
   displayName: z.string().optional(),
@@ -23,7 +33,7 @@ export type UpdateWorkspaceSettingsDto = z.infer<typeof updateWorkspaceSettingsS
 
 export const agentWorkspaceSettingsResponseSchema = z.object({
   agentId: z.string(),
-  config: cutsAgentSettingsSchema,
+  config: agentSettingsConfigSchema,
 });
 
 export type AgentWorkspaceSettingsResponse = z.infer<
@@ -31,7 +41,7 @@ export type AgentWorkspaceSettingsResponse = z.infer<
 >;
 
 export const updateAgentWorkspaceSettingsSchema = z.object({
-  config: cutsAgentSettingsSchema,
+  config: agentSettingsConfigSchema,
 });
 
 export type UpdateAgentWorkspaceSettingsDto = z.infer<

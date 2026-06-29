@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@vidstack/react/player/styles/base.css";
-@import "../components/agent-elements/agent-ui.css";
 
 /* Cuts players — provider fills player; overlays stay absolute */
 .cuts-media-player {

@@ -5,6 +5,8 @@ import type {
   TranscriptionResult,
 } from '../transcription-provider';
 import { TRANSCRIPTION_MAX_WAIT_MS } from '../transcription-provider';
+import { parseProviderError } from '../../../errors';
+import { retryOnTransient } from '../../../retry-on-transient';
 
 export interface AssemblyAiSttAdapterOptions {
   apiKey: string;
@@ -121,8 +123,8 @@ export class AssemblyAiSttAdapter implements ITranscriptionProvider {
   }
 
   async transcribe(params: TranscribeParams): Promise<TranscriptionResult> {
-    const created = await this.createTranscript(params);
-    const transcript = await this.pollUntilDone(created);
+    const created = await retryOnTransient(() => this.createTranscript(params));
+    const transcript = await retryOnTransient(() => this.pollUntilDone(created));
 
     return {
       text: transcript.text ?? '',
@@ -148,9 +150,7 @@ export class AssemblyAiSttAdapter implements ITranscriptionProvider {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `AssemblyAI transcript create failed: ${response.status} ${await response.text()}`,
-      );
+      throw parseProviderError(this.provider, response.status, await response.text());
     }
 
     return (await response.json()) as AssemblyAiTranscriptResponse;
@@ -175,8 +175,10 @@ export class AssemblyAiSttAdapter implements ITranscriptionProvider {
       });
 
       if (!pollResponse.ok) {
-        throw new Error(
-          `AssemblyAI transcript poll failed: ${pollResponse.status} ${await pollResponse.text()}`,
+        throw parseProviderError(
+          this.provider,
+          pollResponse.status,
+          await pollResponse.text(),
         );
       }
 

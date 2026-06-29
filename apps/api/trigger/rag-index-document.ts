@@ -14,16 +14,13 @@ const sdk = createAgentIaSdk({
 const ingestPayloadSchema = z.object({
   companyId: z.string().min(1),
   sourceType: z.enum([
-    'BRAND_BRAIN',
-    'CAMPAIGN',
-    'CAMPAIGN_FILE',
+    'WORKSPACE_SETTINGS',
+    'WORKSPACE_FILE',
     'AGENT_LEARNING',
-    'APPROVED_PIECE',
   ]),
   sourceId: z.string().min(1),
   title: z.string().optional(),
   content: z.string().min(1),
-  campaignId: z.string().optional(),
   agentId: z.string().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   forceReindex: z.boolean().default(false),

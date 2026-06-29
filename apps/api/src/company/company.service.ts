@@ -169,41 +169,28 @@ export class CompanyService {
         },
       });
 
-      const existing = await tx.brandProfile.findUnique({
-        where: { companyId: company.id },
-      });
-
       const logoData = resolvedLogo.logoStorageKey
-        ? {
-            logoStorageKey: resolvedLogo.logoStorageKey,
-            logoVariants: resolvedLogo.logoVariants,
-          }
+        ? { logoStorageKey: resolvedLogo.logoStorageKey }
         : {};
 
-      if (existing) {
-        await tx.brandProfile.update({
-          where: { companyId: company.id },
-          data: {
-            // Só sobrescreve quando informado — onboarding mínimo não apaga o
-            // que o usuário já preencheu nas Configurações.
-            ...(dto.brandVoice !== undefined ? { brandVoice: dto.brandVoice } : {}),
-            ...(dto.niche !== undefined ? { niche: dto.niche } : {}),
-            ...(dto.description !== undefined ? { description: dto.description } : {}),
-            ...logoData,
-          },
-        });
-      } else {
-        await tx.brandProfile.create({
-          data: {
-            companyId: company.id,
-            brandVoice: dto.brandVoice ?? '',
-            niche: dto.niche ?? null,
-            description: dto.description ?? null,
-            logoStorageKey: resolvedLogo.logoStorageKey,
-            logoVariants: resolvedLogo.logoVariants,
-          },
-        });
-      }
+      await tx.workspaceSettings.upsert({
+        where: { companyId: company.id },
+        create: {
+          companyId: company.id,
+          displayName: dto.companyName,
+          voice: dto.brandVoice ?? '',
+          niche: dto.niche ?? null,
+          positioning: dto.description ?? null,
+          ...logoData,
+        },
+        update: {
+          displayName: dto.companyName,
+          ...(dto.brandVoice !== undefined ? { voice: dto.brandVoice } : {}),
+          ...(dto.niche !== undefined ? { niche: dto.niche } : {}),
+          ...(dto.description !== undefined ? { positioning: dto.description } : {}),
+          ...logoData,
+        },
+      });
     });
 
     await this.audit.write({

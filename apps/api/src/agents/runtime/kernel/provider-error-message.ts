@@ -35,6 +35,17 @@ export const toUserFacingProviderError = (error: unknown): string => {
   return 'Não foi possível concluir a geração. Tente novamente em instantes.';
 };
 
+/** True when a user-facing message likely indicates a transient provider outage. */
+export const isTransientUserFacingProviderError = (message: string): boolean => {
+  const normalized = message.trim();
+  if (!normalized) return false;
+
+  return (
+    /indisponível no momento \(erro 5\d\d\)/i.test(normalized) ||
+    /Limite de uso do .+ atingido/i.test(normalized)
+  );
+};
+
 const formatProviderExecutionError = (error: ProviderExecutionError): string => {
   const provider = getProviderLabel(error.provider);
 

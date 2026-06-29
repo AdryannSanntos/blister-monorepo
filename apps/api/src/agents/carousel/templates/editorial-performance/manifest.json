@@ -1,0 +1,59 @@
+{
+  "id": "editorial-performance",
+  "name": "Editorial Performance",
+  "description": "Carrossel editorial de performance com capas dramáticas, slides claros, acento laranja e barra de progresso fixa",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Foto de capa", "required": true }
+        ]
+      }
+    },
+    "text": ["v1", "v2", "v3"],
+    "text-image": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem principal", "required": true }
+        ]
+      },
+      "v2": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem principal", "required": true }
+        ]
+      },
+      "v3": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Miniatura 1", "required": true },
+          { "slotKey": "image_url_2", "label": "Miniatura 2", "required": true },
+          { "slotKey": "image_url_3", "label": "Miniatura 3", "required": false }
+        ]
+      },
+      "v4": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem principal", "required": true }
+        ]
+      },
+      "v5": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem principal", "required": true }
+        ]
+      }
+    },
+    "image": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
+        ]
+      },
+      "v2": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
+        ]
+      }
+    }
+  }
+}

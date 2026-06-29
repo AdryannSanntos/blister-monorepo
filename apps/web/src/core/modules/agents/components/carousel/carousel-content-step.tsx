@@ -1,22 +1,120 @@
 "use client";
 
-import { CheckCircle2, Loader2, Pencil, X, Check, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { CheckCircle2, Pencil, X, Check, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
-import type { CarouselSlideContent, CarouselSlideType } from "@company-os/types";
-import type { CarouselPhaseStatus } from "src/core/modules/agents/hooks/use-carousel-run-detail";
+import type { CarouselSlideContent } from "@company-os/types";
+import type { CarouselPhaseStatus } from "src/core/modules/agents/components/carousel/carousel-run-steps";
+import {
+  CarouselStepErrorState,
+  CarouselStepLoadingState,
+} from "src/core/modules/agents/components/carousel/carousel-step-states";
+import { CAROUSEL_CONTENT_SECTION_ICON } from "src/core/modules/agents/components/carousel/carousel-step-icons";
+import {
+  formatListItemsForTextarea,
+  formatCarouselCopyPreviewHtml,
+  getContentFieldsForSlide,
+  getSlideFieldValue,
+  getSlideNarrativeRole,
+  hasSlideFieldValue,
+  NARRATIVE_ROLE_LABEL_KEYS,
+  parseListItemsFromText,
+  SLIDE_TYPE_HINT_KEYS,
+  type CarouselContentFieldDefinition,
+  type CarouselContentFieldKey,
+} from "src/core/modules/agents/utils/carousel-content-fields";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import { Heading } from "src/core/shared/components/ui/heading";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
-import { Skeleton } from "src/core/shared/components/ui/skeleton";
+import { SurfaceIcon } from "src/core/shared/components/ui/surface-icon";
 import { Textarea } from "src/core/shared/components/ui/textarea";
 
-const SLIDE_TYPE_LABEL: Record<CarouselSlideType, string> = {
-  start: "Abertura",
-  text: "Texto",
-  text_image: "Texto + Imagem",
-  image: "Imagem",
+type ContentFieldRowProps = {
+  field: CarouselContentFieldDefinition;
+  slide: CarouselSlideContent;
+  draft: CarouselSlideContent;
+  editing: boolean;
+  onDraftChange: (next: CarouselSlideContent) => void;
+};
+
+const ContentFieldRow = ({
+  field,
+  slide,
+  draft,
+  editing,
+  onDraftChange,
+}: ContentFieldRowProps) => {
+  const t = useTranslations("carousel.content");
+  const value = getSlideFieldValue(editing ? draft : slide, field.key);
+  const hasValue = hasSlideFieldValue(slide, field.key);
+
+  if (!editing && !hasValue && field.optional) return null;
+
+  const label = t(field.labelKey);
+  const placement = t(field.placementKey);
+
+  const handleTextChange = (key: CarouselContentFieldKey, text: string) => {
+    if (key === "listItems") {
+      onDraftChange({ ...draft, listItems: parseListItemsFromText(text) });
+      return;
+    }
+    onDraftChange({ ...draft, [key]: text });
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5 rounded-[var(--r-md)] border border-[var(--line-soft)] bg-[var(--bg-subtle)]/60 p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wide text-[var(--fg-secondary)]">
+          {label}
+        </span>
+        {field.optional ? <Badge variant="secondary">{t("optional")}</Badge> : null}
+      </div>
+      <Paragraph size="p6" tone="tertiary" className="leading-snug">
+        {placement}
+      </Paragraph>
+
+      {editing ? (
+        <Textarea
+          rows={field.key === "listItems" ? 4 : field.key === "body" ? 4 : 2}
+          value={
+            field.key === "listItems"
+              ? formatListItemsForTextarea(draft.listItems)
+              : String(getSlideFieldValue(draft, field.key) ?? "")
+          }
+          onChange={(event) => handleTextChange(field.key, event.target.value)}
+          placeholder={field.key === "listItems" ? t("listHint") : undefined}
+          aria-label={label}
+        />
+      ) : field.key === "listItems" ? (
+        <ul className="flex list-disc flex-col gap-1.5 pl-5">
+          {(slide.listItems ?? []).map((item) => (
+            <li
+              key={item}
+              className="text-sm leading-relaxed text-[var(--fg-primary)]"
+              dangerouslySetInnerHTML={{ __html: formatCarouselCopyPreviewHtml(item) }}
+            />
+          ))}
+        </ul>
+      ) : (
+        <Paragraph
+          className="whitespace-pre-line text-sm leading-relaxed text-[var(--fg-primary)]"
+          dangerouslySetInnerHTML={{
+            __html: value
+              ? formatCarouselCopyPreviewHtml(String(value))
+              : `<span class="text-[var(--fg-tertiary)]">${t("emptyField")}</span>`,
+          }}
+        />
+      )}
+
+      {field.key === "imageBrief" && editing ? (
+        <Paragraph size="p6" tone="tertiary">
+          {t("imageBriefHint")}
+        </Paragraph>
+      ) : null}
+    </div>
+  );
 };
 
 type SlideCardProps = {
@@ -25,8 +123,17 @@ type SlideCardProps = {
 };
 
 const SlideCard = ({ slide, onChange }: SlideCardProps) => {
+  const t = useTranslations("carousel.content");
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(slide);
+
+  useEffect(() => {
+    setDraft(slide);
+  }, [slide]);
+
+  const role = getSlideNarrativeRole(slide);
+  const fields = getContentFieldsForSlide(slide);
+  const typeHintKey = SLIDE_TYPE_HINT_KEYS[slide.type];
 
   const handleSave = () => {
     onChange(draft);
@@ -44,80 +151,48 @@ const SlideCard = ({ slide, onChange }: SlideCardProps) => {
       className="rounded-[var(--r-lg)] border border-[var(--line-default)] bg-[var(--bg-base)]"
     >
       <div className="flex items-center justify-between border-b border-[var(--line-soft)] px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-[var(--fg-tertiary)]">
-            Slide {slide.order}
-          </span>
-          <Badge variant="secondary">{SLIDE_TYPE_LABEL[slide.type]}</Badge>
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <SurfaceIcon
+            icon={CAROUSEL_CONTENT_SECTION_ICON}
+            className="size-9 shrink-0 rounded-[var(--r-md)]"
+            iconClassName="size-4"
+          />
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-[var(--fg-tertiary)]">
+              Slide {slide.order}
+            </span>
+            <Badge variant="secondary">{t(NARRATIVE_ROLE_LABEL_KEYS[role])}</Badge>
+            <Badge variant="outline">{t(typeHintKey)}</Badge>
+          </div>
         </div>
         {!editing ? (
           <Button variant="ghost" size="xs" onClick={() => setEditing(true)}>
             <Pencil className="size-3.5" />
-            Editar
+            {t("edit")}
           </Button>
         ) : (
           <div className="flex gap-1.5">
             <Button variant="ghost" size="xs" onClick={handleCancel}>
-              <X className="size-3.5" /> Cancelar
+              <X className="size-3.5" /> {t("cancel")}
             </Button>
             <Button variant="outline" size="xs" onClick={handleSave}>
-              <Check className="size-3.5" /> Salvar
+              <Check className="size-3.5" /> {t("save")}
             </Button>
           </div>
         )}
       </div>
 
       <div className="flex flex-col gap-3 p-4">
-        {editing ? (
-          <>
-            {slide.title !== undefined && (
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-[var(--fg-tertiary)]">Título</label>
-                <Textarea
-                  rows={2}
-                  value={draft.title ?? ""}
-                  onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
-                />
-              </div>
-            )}
-            {slide.body !== undefined && (
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-[var(--fg-tertiary)]">Texto</label>
-                <Textarea
-                  rows={3}
-                  value={draft.body ?? ""}
-                  onChange={(e) => setDraft((d) => ({ ...d, body: e.target.value }))}
-                />
-              </div>
-            )}
-            {slide.callToAction !== undefined && (
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-[var(--fg-tertiary)]">Call to action</label>
-                <Textarea
-                  rows={1}
-                  value={draft.callToAction ?? ""}
-                  onChange={(e) => setDraft((d) => ({ ...d, callToAction: e.target.value }))}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            {slide.title && (
-              <Paragraph className="font-semibold text-[var(--fg-primary)]">{slide.title}</Paragraph>
-            )}
-            {slide.body && (
-              <Paragraph size="p5" tone="secondary" className="leading-relaxed">
-                {slide.body}
-              </Paragraph>
-            )}
-            {slide.callToAction && (
-              <Paragraph size="p5" className="font-medium text-[var(--accent)]">
-                {slide.callToAction}
-              </Paragraph>
-            )}
-          </>
-        )}
+        {fields.map((field) => (
+          <ContentFieldRow
+            key={field.key}
+            field={field}
+            slide={slide}
+            draft={draft}
+            editing={editing}
+            onDraftChange={setDraft}
+          />
+        ))}
       </div>
     </div>
   );
@@ -126,87 +201,146 @@ const SlideCard = ({ slide, onChange }: SlideCardProps) => {
 type Props = {
   status: CarouselPhaseStatus;
   slides: CarouselSlideContent[];
+  reviewMode?: boolean;
+  currentStepKey?: string | null;
+  runStatus?: string | null;
+  errorMessage?: string | null;
   onApprove: (slides: CarouselSlideContent[]) => void;
+  onUpdate?: (slides: CarouselSlideContent[]) => void;
   onReject: () => void;
+  onNewCarousel?: () => void;
 };
 
-export const CarouselContentStep = ({ status, slides, onApprove, onReject }: Props) => {
+export const CarouselContentStep = ({
+  status,
+  slides,
+  reviewMode = false,
+  currentStepKey,
+  runStatus,
+  errorMessage,
+  onApprove,
+  onUpdate,
+  onReject,
+  onNewCarousel,
+}: Props) => {
+  const t = useTranslations("carousel.content");
   const [localSlides, setLocalSlides] = useState<CarouselSlideContent[]>(slides);
   const [confirmReject, setConfirmReject] = useState(false);
 
-  // Sync when new slides arrive (after reject → regenerate)
-  if (status === "awaiting_action" && slides !== localSlides && localSlides.length === 0) {
-    setLocalSlides(slides);
-  }
+  useEffect(() => {
+    if (slides.length > 0) setLocalSlides(slides);
+  }, [slides]);
 
   const handleSlideChange = (updated: CarouselSlideContent) => {
-    setLocalSlides((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+    const nextSlides = localSlides.map((entry) => (entry.id === updated.id ? updated : entry));
+    setLocalSlides(nextSlides);
+    if (reviewMode) onUpdate?.(nextSlides);
   };
 
-  if (status === "idle") return null;
-
-  if (status === "processing") {
+  if (status === "idle" || status === "processing") {
     return (
-      <div className="flex items-center gap-2 text-[var(--fg-tertiary)]">
-        <Loader2 className="size-4 animate-spin" />
-        <Paragraph size="p5" tone="tertiary">Gerando conteúdo dos slides...</Paragraph>
-      </div>
+      <CarouselStepLoadingState
+        stepId="content"
+        currentStepKey={currentStepKey}
+        runStatus={runStatus}
+      />
     );
   }
 
-  if (status === "completed") {
+  if (status === "error") {
+    return (
+      <CarouselStepErrorState
+        stepId="content"
+        message={errorMessage}
+        onNewCarousel={onNewCarousel}
+      />
+    );
+  }
+
+  if (status === "completed" && !reviewMode) {
     return (
       <div className="flex items-center gap-2">
         <CheckCircle2 className="size-4 text-[var(--success)]" />
         <Paragraph size="p5" tone="secondary">
-          Conteúdo aprovado — <span className="font-medium">{slides.length} slides</span>
+          {t("approved", { count: slides.length })}
         </Paragraph>
       </div>
+    );
+  }
+
+  const displaySlides = localSlides.length > 0 ? localSlides : slides;
+  const showActions = status === "awaiting_action" && !reviewMode;
+
+  if (
+    (status === "awaiting_action" || (status === "completed" && reviewMode)) &&
+    displaySlides.length === 0
+  ) {
+    return (
+      <CarouselStepLoadingState
+        stepId="content"
+        currentStepKey={currentStepKey}
+        runStatus={runStatus}
+      />
     );
   }
 
   return (
     <div className="flex flex-col gap-4" data-testid="carousel-content-step">
-      <div className="flex flex-col gap-1">
-        <Heading level="h6" as="h3">Revise o conteúdo dos slides</Heading>
+      <div className="flex flex-col gap-1.5">
+        <Heading level="h4" as="h3">
+          {t("title")}
+        </Heading>
         <Paragraph size="p5" tone="tertiary">
-          Edite qualquer slide antes de aprovar ou peça para regenerar tudo.
+          {t("subtitle")}
+        </Paragraph>
+        <Paragraph size="p6" tone="tertiary">
+          {t("markersHint")}
         </Paragraph>
       </div>
 
       <div className="flex flex-col gap-4">
-        {(localSlides.length > 0 ? localSlides : slides).map((slide) => (
+        {displaySlides.map((slide) => (
           <SlideCard key={slide.id} slide={slide} onChange={handleSlideChange} />
         ))}
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-[var(--line-soft)] pt-4">
-        {confirmReject ? (
-          <div className="flex items-center gap-3">
-            <Paragraph size="p5" tone="secondary">Tem certeza? O conteúdo será regenerado.</Paragraph>
-            <Button variant="outline" size="sm" onClick={() => setConfirmReject(false)}>Cancelar</Button>
-            <Button variant="destructive" size="sm" onClick={() => { setConfirmReject(false); setLocalSlides([]); onReject(); }}>
-              Regenerar
-            </Button>
-          </div>
-        ) : (
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setConfirmReject(true)}
-            >
-              <RefreshCw className="size-3.5" /> Regenerar conteúdo
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => onApprove(localSlides.length > 0 ? localSlides : slides)}
-            >
-              Aprovar conteúdo
-            </Button>
-          </>
-        )}
-      </div>
+      {showActions ? (
+        <div className="flex items-center justify-between gap-3 border-t border-[var(--line-soft)] pt-4">
+          {confirmReject ? (
+            <div className="flex items-center gap-3">
+              <Paragraph size="p5" tone="secondary">
+                {t("confirmRegenerate")}
+              </Paragraph>
+              <Button variant="outline" size="sm" onClick={() => setConfirmReject(false)}>
+                {t("cancel")}
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => {
+                  setConfirmReject(false);
+                  setLocalSlides([]);
+                  onReject();
+                }}
+              >
+                {t("regenerate")}
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={() => setConfirmReject(true)}>
+                <RefreshCw className="size-3.5" /> {t("regenerate")}
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => onApprove(localSlides.length > 0 ? localSlides : slides)}
+              >
+                {t("approve")}
+              </Button>
+            </>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };

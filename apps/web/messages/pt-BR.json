@@ -739,6 +739,165 @@
       "confirm": "Usar arquivo"
     }
   },
+  "carousel": {
+    "modal": {
+      "title": "Gerar carrossel",
+      "themeLabel": "Tema do carrossel",
+      "themePlaceholder": "Ex: 5 hábitos para ser mais produtivo, como fazer um bolo de cenoura...",
+      "themeHint": "Descreva o assunto do carrossel.",
+      "start": "Gerar carrossel",
+      "starting": "Criando...",
+      "close": "Fechar",
+      "options": {
+        "title": "Opções de geração",
+        "templateLabel": "Template",
+        "templatePlaceholder": "Selecione um template",
+        "noTemplates": "Nenhum template disponível.",
+        "browseTemplates": "Ver templates no Marketplace",
+        "socialNetworkLabel": "Rede social",
+        "socialNetwork": {
+          "instagram": "Instagram",
+          "facebook": "Facebook",
+          "tiktok": "TikTok"
+        },
+        "comingSoon": "Em breve",
+        "slidesCountLabel": "Quantidade de slides",
+        "brandNameLabel": "Nome da marca",
+        "brandNamePlaceholder": "Ex: Creator Lab",
+        "socialHandleLabel": "Perfil @ da rede",
+        "socialHandlePlaceholder": "seuperfil",
+        "accentColorLabel": "Cor principal"
+      }
+    },
+    "content": {
+      "title": "Revise o conteúdo dos slides",
+      "subtitle": "Confira o texto exato que entrará em cada slide antes de aprovar.",
+    "markersHint": "Use ==destaque== no título e **negrito** no corpo para realçar termos-chave.",
+      "approved": "Conteúdo aprovado — {count} slides",
+      "regenerate": "Regenerar conteúdo",
+      "approve": "Aprovar conteúdo",
+      "confirmRegenerate": "Tem certeza? O conteúdo será regenerado.",
+      "edit": "Editar",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "emptyField": "—",
+      "optional": "Opcional",
+      "listHint": "Um item por linha",
+      "imageBriefHint": "Direção visual para upload no passo de design",
+      "roles": {
+        "hook": "Capa",
+        "scene": "Cena",
+        "proof": "Prova",
+        "framework": "Framework",
+        "cta": "Fechamento"
+      },
+      "typeHints": {
+        "start": "Slide de abertura com foto de fundo",
+        "text": "Slide só texto — sem upload de imagem",
+        "textImage": "Slide texto + imagem",
+        "image": "Slide dominado por imagem"
+      },
+      "fields": {
+        "title": "Título",
+        "subtitle": "Subtítulo",
+        "body": "Corpo",
+        "listItems": "Lista",
+        "checklist": "Checklist",
+        "frameworkItems": "Pilares",
+        "closing": "Fechamento",
+        "ctaLead": "Texto de abertura",
+        "ctaHint": "Linha de apoio",
+        "ctaKeyword": "Palavra-chave",
+        "ctaAction": "Chamada para ação",
+        "coverImage": "Foto de capa",
+        "image": "Imagem",
+        "proofImage": "Imagem de prova"
+      },
+      "placement": {
+        "hookTitle": "Headline principal na capa",
+        "hookSubtitle": "Linha abaixo do título na capa",
+        "coverImage": "Foto full-bleed ao fundo",
+        "sceneTitle": "Headline no topo do slide",
+        "sceneBody": "Parágrafo principal",
+        "sceneList": "Bullets ou setas no meio do slide",
+        "sceneClosing": "Frase final abaixo do visual",
+        "sceneImage": "Card ou ilustração central",
+        "proofTitle": "Headline após ou antes da prova visual",
+        "proofBody": "Contexto da evidência",
+        "proofChecklist": "Itens com ícone de check",
+        "proofClosing": "Conclusão da prova",
+        "proofImage": "Screenshot ou foto de evidência",
+        "frameworkTitle": "Título no bloco laranja",
+        "frameworkList": "Lista numerada com setas",
+        "frameworkClosing": "Pill de fechamento",
+        "ctaLead": "Parágrafo acima do box de CTA",
+        "ctaHint": "Texto de apoio dentro do box",
+        "ctaKeyword": "Palavra grande em destaque no box",
+        "ctaAction": "Instrução de ação no box"
+      }
+    },
+    "preview": {
+      "viewCarousel": "Visualizar carrossel",
+      "dialogTitle": "Preview do carrossel",
+      "dialogDescription": "Navegue entre os slides deslizando ou usando as setas do teclado",
+      "slideOf": "{current} / {total}",
+      "prevSlide": "Slide anterior",
+      "nextSlide": "Próximo slide",
+      "openSlide": "Abrir slide {order}",
+      "goToSlide": "Ir para slide {order}",
+      "hintNav": "Navegar entre slides",
+      "heroHint": "Clique para abrir a visualização em tela cheia, como no Instagram",
+      "close": "Fechar preview"
+    },
+    "runDetail": {
+      "loading": {
+        "page": "Carregando execução...",
+        "queued": "Aguardando na fila...",
+        "ideas": {
+          "generating": "Gerando ideias de post..."
+        },
+        "content": {
+          "generating": "Escrevendo conteúdo dos slides..."
+        },
+        "design": {
+          "generating": "Montando plano de design..."
+        },
+        "preview": {
+          "generating": "Gerando estrutura dos slides...",
+          "rendering": "Renderizando slides finais...",
+          "finalizing": "Finalizando carrossel..."
+        }
+      },
+      "error": {
+        "newCarousel": "Novo carrossel",
+        "page": {
+          "title": "Não foi possível carregar a execução",
+          "description": "Verifique sua conexão e tente abrir novamente pelo histórico."
+        },
+        "action": {
+          "title": "Algo deu errado",
+          "description": "Não foi possível concluir a ação. Tente novamente.",
+          "close": "Fechar"
+        },
+        "ideas": {
+          "title": "Falha ao gerar ideias",
+          "description": "Não conseguimos sugerir ideias para o seu tema. Inicie um novo carrossel ou tente mais tarde."
+        },
+        "content": {
+          "title": "Falha ao gerar conteúdo",
+          "description": "O conteúdo dos slides não pôde ser criado. Você pode iniciar um novo carrossel."
+        },
+        "design": {
+          "title": "Falha no plano de design",
+          "description": "Não foi possível montar o plano visual. Inicie um novo carrossel para tentar de novo."
+        },
+        "preview": {
+          "title": "Falha ao renderizar slides",
+          "description": "Os slides finais não puderam ser gerados. Inicie um novo carrossel ou entre em contato com o suporte."
+        }
+      }
+    }
+  },
   "research": {
     "title": "Pesquisar",
     "description": "Briefing e referências para o próximo conteúdo.",
@@ -860,12 +1019,11 @@
         "roles": "Cargos",
         "permissions": "Permissões",
         "company": "Empresa",
-        "brand": "Marca",
-        "campaigns": "Campanhas",
         "files": "Arquivos",
-        "pieces": "Peças",
         "credits": "Créditos",
-        "generation": "Geração"
+        "generation": "Geração",
+        "workspace": "Workspace",
+        "projects": "Projetos"
       },
       "keys": {
         "user": {
@@ -892,31 +1050,44 @@
           "update": "Editar empresa",
           "delete": "Excluir empresa"
         },
-        "brand": {
-          "read": "Ver marca",
-          "update": "Editar marca"
-        },
-        "campaign": {
-          "read": "Ver campanhas",
-          "create": "Criar campanhas",
-          "update": "Editar campanhas",
-          "delete": "Excluir campanhas",
-          "generate": "Gerar campanhas"
-        },
         "file": {
           "create": "Enviar arquivos",
-          "delete": "Excluir arquivos"
-        },
-        "piece": {
-          "read": "Ver peças",
-          "approve": "Aprovar peças",
-          "update": "Editar peças"
+          "delete": "Excluir arquivos",
+          "read": "Ver arquivos"
         },
         "credit": {
           "read": "Ver créditos"
         },
         "generation": {
           "create": "Criar geração rápida"
+        },
+        "workspace": {
+          "read": "Ver workspace",
+          "update": "Editar workspace",
+          "settings": {
+            "read": "Ver configurações do workspace",
+            "update": "Editar configurações do workspace"
+          }
+        },
+        "project": {
+          "read": "Ver projetos",
+          "create": "Criar projetos",
+          "update": "Editar projetos",
+          "delete": "Excluir projetos"
+        },
+        "brand": {},
+        "campaign": {},
+        "piece": {},
+        "agentRun": {
+          "review": "Revisar execuções"
+        },
+        "marketplace": {
+          "read": "Ver marketplace",
+          "redeem": "Resgatar itens",
+          "manage": "Gerenciar marketplace"
+        },
+        "library": {
+          "read": "Ver biblioteca"
         }
       },
       "roleDialog": {
@@ -1053,158 +1224,6 @@
     "skipButton": "Agora não",
     "submitButton": "Criar empresa",
     "submitting": "Criando..."
-  },
-  "brand": {
-    "title": "Cérebro da Marca",
-    "description": "Tudo que a Blister precisa saber sobre sua empresa para criar conteúdo no seu jeito",
-    "saveSuccess": "Cérebro da Marca atualizado",
-    "saveError": "Não foi possível salvar. Tente novamente.",
-    "saving": "Salvando...",
-    "saveButton": "Salvar alterações",
-    "progress": {
-      "title": "Completude do Cérebro da Marca",
-      "description": "{filled} de {total} campos preenchidos",
-      "overall": "{percent}% completo"
-    },
-    "validation": {
-      "nicheMin": "Mínimo 2 caracteres",
-      "descriptionMin": "Mínimo 10 caracteres",
-      "brandVoiceMin": "Mínimo 10 caracteres",
-      "colorNameRequired": "Informe o nome da cor"
-    },
-    "tabs": {
-      "logo": "Logo",
-      "business": "Negócio",
-      "audience": "Público",
-      "voice": "Tom de voz",
-      "social": "Redes",
-      "visual": "Visual",
-      "offer": "Oferta"
-    },
-    "logoSection": {
-      "title": "Logo",
-      "description": "Envie até 4 variações do logo da sua marca",
-      "autoSaveHint": "Os logos são salvos automaticamente ao enviar cada arquivo."
-    },
-    "assetsSection": {
-      "title": "Assets",
-      "description": "Imagens de referência e materiais visuais para usar nas peças",
-      "uploadTitle": "Enviar asset visual",
-      "uploadHint": "JPG, PNG, WebP ou SVG · máx. 5MB",
-      "uploadAria": "Enviar asset visual",
-      "uploading": "Enviando...",
-      "uploadSuccess": "Asset adicionado",
-      "uploadError": "Não foi possível enviar o asset",
-      "removeSuccess": "Asset removido",
-      "removeError": "Não foi possível remover o asset",
-      "removeAria": "Remover {name}",
-      "empty": "Nenhum asset enviado ainda."
-    },
-    "businessSection": {
-      "title": "Sobre o negócio",
-      "description": "Descrição curta",
-      "companyName": "Nome da empresa",
-      "companyNamePlaceholder": "Ex: Confeitaria da Ana",
-      "niche": "Segmento / tipo de negócio",
-      "nichePlaceholder": "Ex: Confeitaria artesanal",
-      "descriptionPlaceholder": "O que sua empresa faz em poucas palavras"
-    },
-    "audienceSection": {
-      "title": "Público e objetivo",
-      "description": "Para quem você fala e o que quer alcançar com o marketing",
-      "targetAudience": "Público-alvo principal",
-      "targetAudiencePlaceholder": "Ex: Mulheres de 25 a 45 anos que buscam doces para festas em casa",
-      "marketingObjective": "Objetivo principal com marketing",
-      "marketingObjectivePlaceholder": "Selecione seu foco"
-    },
-    "marketingObjectives": {
-      "SELL_MORE": "Vender mais",
-      "GENERATE_LEADS": "Gerar leads",
-      "STRENGTHEN_BRAND": "Fortalecer a marca"
-    },
-    "voiceSection": {
-      "title": "Tom de voz",
-      "description": "Como você se comunica com seus clientes"
-    },
-    "socialNetworks": {
-      "title": "Redes sociais",
-      "description": "Onde você publica conteúdo hoje",
-      "options": {
-        "instagram": "Instagram",
-        "facebook": "Facebook",
-        "tiktok": "TikTok",
-        "linkedin": "LinkedIn",
-        "youtube": "YouTube",
-        "whatsapp": "WhatsApp"
-      }
-    },
-    "visualSection": {
-      "title": "Identidade visual",
-      "description": "Cores e estilo que representam sua marca",
-      "palette": "Cores da marca",
-      "coreColors": "Cores principais",
-      "coreColorsDescription": "Toda marca precisa de uma cor principal e uma secundária.",
-      "primaryColor": "Cor principal",
-      "secondaryColor": "Cor secundária",
-      "primaryDefaultName": "Cor principal",
-      "secondaryDefaultName": "Cor secundária",
-      "additionalDefaultName": "Cor {index}",
-      "primaryColorNamePlaceholder": "Ex: Roxo principal",
-      "secondaryColorNamePlaceholder": "Ex: Rosa destaque",
-      "primaryColorUsagePlaceholder": "Ex: Fundo de posts, títulos e elementos principais",
-      "secondaryColorUsagePlaceholder": "Ex: Detalhes, botões e destaques",
-      "additionalColors": "Outras cores",
-      "additionalColorsDescription": "Adicione cores complementares com orientação de uso.",
-      "additionalColorsEmpty": "Nenhuma cor complementar adicionada.",
-      "additionalColorTitle": "Cor complementar {index}",
-      "additionalColorNamePlaceholder": "Ex: Verde apoio",
-      "additionalColorUsagePlaceholder": "Ex: Quando usar esta cor nas peças",
-      "colorName": "Nome da cor",
-      "colorUsage": "Como usar",
-      "optional": "opcional",
-      "addColor": "Adicionar cor",
-      "removeColor": "Remover cor",
-      "visualStyle": "Estilo visual",
-      "visualStylePlaceholder": "Selecione um estilo",
-      "typography": "Tipografia preferida",
-      "typographyPlaceholder": "Ex: Sans-serif moderna, elegante"
-    },
-    "visualStyles": {
-      "minimal": "Minimalista",
-      "modern": "Moderno",
-      "traditional": "Tradicional",
-      "bold": "Ousado",
-      "elegant": "Elegante"
-    },
-    "offerSection": {
-      "title": "Produtos e diferenciais",
-      "description": "O que você vende e o que te destaca da concorrência",
-      "mainProducts": "Produtos ou serviços principais",
-      "mainProductsPlaceholder": "Liste seus principais produtos ou serviços",
-      "differentiators": "Diferenciais da empresa",
-      "differentiatorsPlaceholder": "O que torna seu negócio único?"
-    },
-    "logo": {
-      "successMessage": "Logo atualizado",
-      "errorMessage": "Não foi possível atualizar o logo",
-      "uploadText": "+ Logo",
-      "uploadAria": "Enviar logo {variant}",
-      "alt": "Logo da marca",
-      "formatHint": "JPG, PNG ou SVG · máx. 5MB · salvo automaticamente",
-      "variants": {
-        "primary": "Principal",
-        "horizontal": "Horizontal",
-        "icon": "Ícone",
-        "monochrome": "Monocromático"
-      }
-    },
-    "voice": {
-      "placeholder": "Descreva como você fala com seus clientes...",
-      "saveButton": "Salvar tom de voz",
-      "saving": "Salvando...",
-      "successMessage": "Tom de voz atualizado.",
-      "errorMessage": "Não foi possível salvar o tom de voz."
-    }
   },
   "credits": {
     "balanceTitle": "Saldo: US$ {amount}",

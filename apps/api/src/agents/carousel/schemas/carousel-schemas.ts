@@ -17,13 +17,13 @@ export const carouselIdeaSelectionSchema = z.object({
 export type CarouselIdeaSelection = z.infer<typeof carouselIdeaSelectionSchema>;
 
 export const carouselContentApprovalSchema = z.object({
-  approved: z.boolean(),
+  contentApproved: z.boolean(),
   slides: z.array(z.any()).optional(),
 });
 export type CarouselContentApproval = z.infer<typeof carouselContentApprovalSchema>;
 
 export const carouselDesignApprovalSchema = z.object({
-  approved: z.boolean(),
+  designApproved: z.boolean(),
   plan: z.any().optional(),
   imageUploads: z.record(z.string(), z.string()).optional(),
 });

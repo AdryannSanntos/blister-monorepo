@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import type { Request } from 'express';
-import type { UpdateAgentWorkspaceSettingsDto, UpdateWorkspaceSettingsDto, WorkspaceProfile } from '@company-os/types';
-import { cutsAgentSettingsSchema } from '@company-os/types';
+import type { UpdateWorkspaceSettingsDto, WorkspaceProfile } from '@company-os/types';
+import {
+  carouselAgentSettingsSchema,
+  cutsAgentSettingsSchema,
+  type UpdateAgentWorkspaceSettingsDto,
+} from '@company-os/types';
 import { PrismaService } from '../prisma/prisma.service';
 import { WorkspaceContextService } from '../workspace/workspace-context.service';
 import { MarketplaceService } from '../marketplace/marketplace.service';
@@ -27,6 +31,13 @@ const serializeSettings = (settings: {
   palette: Array.isArray(settings.palette) ? (settings.palette as string[]) : [],
   timezone: settings.timezone ?? undefined,
 });
+
+const SUPPORTED_AGENT_SETTINGS = {
+  cuts: cutsAgentSettingsSchema,
+  carousel: carouselAgentSettingsSchema,
+} as const;
+
+type SupportedAgentId = keyof typeof SUPPORTED_AGENT_SETTINGS;
 
 @Injectable()
 export class WorkspaceSettingsService {
@@ -95,11 +106,16 @@ export class WorkspaceSettingsService {
   }
 
   async getAgentSettings(userId: string, req: Request, agentId: string) {
+    const schema = SUPPORTED_AGENT_SETTINGS[agentId as SupportedAgentId];
+    if (!schema) {
+      throw new NotFoundException('Agent settings not supported');
+    }
+
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
     const where = { companyId: workspace.companyId, agentId };
 
     const existing = await this.prisma.agentWorkspaceSetting.findFirst({ where });
-    const config = cutsAgentSettingsSchema.parse(existing?.config ?? {});
+    const config = schema.parse(existing?.config ?? {});
 
     return { agentId, config };
   }
@@ -110,18 +126,22 @@ export class WorkspaceSettingsService {
     agentId: string,
     dto: UpdateAgentWorkspaceSettingsDto,
   ) {
-    if (agentId !== 'cuts') {
+    const schema = SUPPORTED_AGENT_SETTINGS[agentId as SupportedAgentId];
+    if (!schema) {
       throw new NotFoundException('Agent settings not supported');
     }
 
-    const parsedConfig = cutsAgentSettingsSchema.parse(dto.config);
+    const parsedConfig = schema.parse(dto.config);
 
-    if (parsedConfig.addCaptions && parsedConfig.captionStyleId) {
-      await this.assertOwnsTextStyle(userId, req, parsedConfig.captionStyleId);
-    }
+    if (agentId === 'cuts') {
+      const cutsConfig = cutsAgentSettingsSchema.parse(parsedConfig);
+      if (cutsConfig.addCaptions && cutsConfig.captionStyleId) {
+        await this.assertOwnsTextStyle(userId, req, cutsConfig.captionStyleId);
+      }
 
-    if (parsedConfig.addTitle && parsedConfig.titleStyleId) {
-      await this.assertOwnsTextStyle(userId, req, parsedConfig.titleStyleId);
+      if (cutsConfig.addTitle && cutsConfig.titleStyleId) {
+        await this.assertOwnsTextStyle(userId, req, cutsConfig.titleStyleId);
+      }
     }
 
     const workspace = await this.workspaceContext.resolveFromRequest(userId, req);
@@ -141,7 +161,7 @@ export class WorkspaceSettingsService {
       update: { config: parsedConfig },
     });
 
-    return { agentId, config: cutsAgentSettingsSchema.parse(saved.config) };
+    return { agentId, config: schema.parse(saved.config) };
   }
 
   /** Cuts overlay styles are TEXT_STYLE marketplace items (Remotion specs). */

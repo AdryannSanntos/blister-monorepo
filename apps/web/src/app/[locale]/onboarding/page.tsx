@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { OnboardingPage } from "src/core/modules/onboarding/pages/onboarding-page";
 
-export default function OnboardingPage() {
-  redirect("/dashboard");
+export default function OnboardingRoutePage() {
+  return <OnboardingPage />;
 }

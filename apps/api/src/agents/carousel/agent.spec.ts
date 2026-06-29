@@ -1,13 +1,15 @@
 import { AgentTestHarness } from '@company-os/agent-ia-sdk/agents/testing';
+import { CarouselTemplateService } from './services/carousel-template.service';
 import { carouselAgent } from './agent';
 import {
   resetCarouselRunDeps,
   setCarouselRunDeps,
+  type CarouselRunDeps,
 } from './ports/carousel-run-deps';
 
 const baseInput = {
   theme: 'Produtividade para creators',
-  templateId: 'minimal-clean',
+  templateId: 'editorial-performance',
   socialNetworks: ['instagram'],
   slidesCount: 5,
 };
@@ -46,10 +48,21 @@ const mockSlides = {
   ],
 };
 
+const createMockDeps = (): CarouselRunDeps => {
+  const templateService = new CarouselTemplateService();
+  return {
+    templateService,
+    renderSlideToPng: async () => Buffer.from('png'),
+    resolveFileUrl: async () => 'https://example.com/image.png',
+    storeRenderedPng: async () => 'file_mock_png',
+    listOwnedTemplateIds: async () => ['editorial-performance'],
+  };
+};
+
 describe('carousel agent', () => {
   beforeEach(() => {
     resetCarouselRunDeps();
-    setCarouselRunDeps({});
+    setCarouselRunDeps(createMockDeps());
   });
 
   it('has the correct agent id', () => {
@@ -111,16 +124,65 @@ describe('carousel agent', () => {
     expect(resumed.pauseReason).toBe('awaiting_content_approval');
   });
 
+  it('pauses at design approval after content is approved', async () => {
+    const contentSlides = [
+      { id: 'slide_1', order: 1, type: 'start' as const, title: '5 hábitos', body: 'Para criar mais' },
+      { id: 'slide_2', order: 2, type: 'text' as const, title: 'Hábito 1', body: 'Acordar cedo' },
+    ];
+    const designPlan = {
+      templateId: 'editorial-performance',
+      slides: [
+        {
+          id: 'slide_1',
+          order: 1,
+          type: 'start' as const,
+          variationId: 'v1',
+          imageSlots: [{ slotKey: 'image_url', label: 'Foto de capa', required: true }],
+          layoutNotes: 'centered',
+        },
+      ],
+    };
+
+    const harness = AgentTestHarness.forAgent(carouselAgent).withLlmResponses({
+      generate_ideas: mockIdeas,
+      generate_content: { slides: contentSlides },
+      generate_design_plan: designPlan,
+    });
+
+    await harness.run({ ...baseInput });
+    await harness.resume({ selectedIdeaId: 'idea_1' }).run();
+    const result = await harness
+      .resume({ contentApproved: true, slides: contentSlides })
+      .run();
+
+    expect(result.status).toBe('PAUSED');
+    expect(result.pauseReason).toBe('awaiting_design_approval');
+  });
+
   it('completes full run when all approvals are given', async () => {
     const contentSlides = [
       { id: 'slide_1', order: 1, type: 'start' as const, title: '5 hábitos', body: 'Para criar mais' },
       { id: 'slide_2', order: 2, type: 'text' as const, title: 'Hábito 1', body: 'Acordar cedo' },
     ];
     const designPlan = {
-      templateId: 'minimal-clean',
+      templateId: 'editorial-performance',
       slides: [
-        { id: 'slide_1', order: 1, type: 'start' as const, variationId: 'v1', needsImage: false, layoutNotes: 'centered' },
-        { id: 'slide_2', order: 2, type: 'text' as const, variationId: 'v1', needsImage: false, layoutNotes: 'left-aligned' },
+        {
+          id: 'slide_1',
+          order: 1,
+          type: 'start' as const,
+          variationId: 'v1',
+          imageSlots: [{ slotKey: 'image_url', label: 'Foto de capa', required: true }],
+          layoutNotes: 'centered',
+        },
+        {
+          id: 'slide_2',
+          order: 2,
+          type: 'text' as const,
+          variationId: 'v1',
+          imageSlots: [],
+          layoutNotes: 'left-aligned',
+        },
       ],
     };
 
@@ -131,20 +193,22 @@ describe('carousel agent', () => {
       generate_slides: mockSlides,
     });
 
-    // Initial run — pauses at idea selection
     await harness.run({ ...baseInput });
-
-    // Resume with idea selection — pauses at content approval
     await harness.resume({ selectedIdeaId: 'idea_1' }).run();
-
-    // Approve content — pauses at design approval
-    await harness.resume({ approved: true, slides: contentSlides }).run();
-
-    // Approve design — pauses at design approval (should now complete)
-    const result = await harness.resume({ approved: true, plan: designPlan, imageUploads: {} }).run();
+    await harness.resume({ contentApproved: true, slides: contentSlides }).run();
+    const result = await harness
+      .resume({ designApproved: true, plan: designPlan, imageUploads: {} })
+      .run();
 
     expect(result.status).toBe('COMPLETED');
     expect(result.output?.slides).toBeDefined();
     expect(Array.isArray(result.output?.slides)).toBe(true);
+  });
+
+  it('defines routing rules for content and design rejection', () => {
+    const routing = carouselAgent.routing ?? [];
+    expect(routing).toHaveLength(2);
+    expect(routing[0]?.after).toBe('await_content_approval');
+    expect(routing[1]?.after).toBe('await_design_approval');
   });
 });

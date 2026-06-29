@@ -9,7 +9,6 @@ const ROUTES = [
   { path: "/dashboard/projects", testId: "projects-page" },
   { path: "/dashboard/files", testId: "files-page" },
   { path: "/dashboard/settings", testId: "settings-page" },
-  { path: "/dashboard/history", testId: "history-page" },
   {
     path: "/dashboard/agents/cuts/overview",
     testId: "agent-overview-page",

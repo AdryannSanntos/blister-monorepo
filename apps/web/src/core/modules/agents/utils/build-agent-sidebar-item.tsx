@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  History,
-  LayoutDashboard,
-  Settings,
-  type LucideIcon,
-} from "lucide-react";
+import { LayoutDashboard, Settings, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { AgentCatalogEntry } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import {
-  getAgentHistoryPath,
   getAgentOverviewPath,
   getAgentSettingsPath,
-  matchAgentHistoryPath,
   matchAgentOverviewPath,
   matchAgentPath,
   matchAgentSettingsPath,
@@ -55,18 +48,6 @@ export const buildAgentSidebarItem = ({
         href: getAgentOverviewPath(agent.routeSlug),
         match: (pathname) => matchAgentOverviewPath(pathname, agent.routeSlug),
       },
-      ...(agent.id === "cuts"
-        ? []
-        : [
-            {
-              id: `${agent.id}-history`,
-              label: tNav("history"),
-              icon: History,
-              href: getAgentHistoryPath(agent.routeSlug),
-              match: (pathname: string) =>
-                matchAgentHistoryPath(pathname, agent.routeSlug),
-            },
-          ]),
       {
         id: `${agent.id}-settings`,
         label: tNav("settings"),

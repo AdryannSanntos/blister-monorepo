@@ -99,9 +99,21 @@ describe('Agents Credits E2E', () => {
       });
 
       const response = await request(app.getHttpServer())
-        .post('/api/agents/copywriter/run')
+        .post('/api/agents/cuts/run')
         .set('Cookie', session.cookies)
-        .send({ userInput: 'Test post' });
+        .send({
+          userInput: 'Test cuts',
+          metadata: {
+            sourceFileId,
+            settings: {
+              maxCuts: 1,
+              cutDurationSec: 60,
+              deleteSourceAfterRun: false,
+              addCaptions: false,
+              autoAcceptResults: true,
+            },
+          },
+        });
 
       expect(response.status).toBe(422);
 
@@ -111,11 +123,6 @@ describe('Agents Credits E2E', () => {
 
       expect(runsAfterCount).toBe(runsBeforeCount);
     });
-  });
-
-  describe('Run execution with credits', () => {
-    it.skip('legacy copywriter inline credit debit — migrate to trigger harness', () => undefined);
-    it.skip('legacy copywriter inline step persistence — migrate to trigger harness', () => undefined);
   });
 
   describe('Run cancellation', () => {
@@ -149,9 +156,5 @@ describe('Agents Credits E2E', () => {
       const run = await prisma.agentRun.findUnique({ where: { id: runId } });
       expect(run?.status).toBe('CANCELLED');
     });
-  });
-
-  describe('Regenerate run', () => {
-    it.skip('legacy copywriter regenerate inline — migrate to trigger harness', () => undefined);
   });
 });

@@ -739,6 +739,165 @@
       "confirm": "Use file"
     }
   },
+  "carousel": {
+    "modal": {
+      "title": "Generate carousel",
+      "themeLabel": "Carousel theme",
+      "themePlaceholder": "E.g. 5 habits to be more productive, how to make carrot cake...",
+      "themeHint": "Describe the carousel topic.",
+      "start": "Generate carousel",
+      "starting": "Creating...",
+      "close": "Close",
+      "options": {
+        "title": "Generation options",
+        "templateLabel": "Template",
+        "templatePlaceholder": "Select a template",
+        "noTemplates": "No templates available.",
+        "browseTemplates": "Browse templates in Marketplace",
+        "socialNetworkLabel": "Social network",
+        "socialNetwork": {
+          "instagram": "Instagram",
+          "facebook": "Facebook",
+          "tiktok": "TikTok"
+        },
+        "comingSoon": "Coming soon",
+        "slidesCountLabel": "Number of slides",
+        "brandNameLabel": "Brand name",
+        "brandNamePlaceholder": "e.g. Creator Lab",
+        "socialHandleLabel": "Social profile @",
+        "socialHandlePlaceholder": "yourhandle",
+        "accentColorLabel": "Accent color"
+      }
+    },
+    "content": {
+      "title": "Review slide content",
+      "subtitle": "Check the exact copy that will appear on each slide before approving.",
+    "markersHint": "Use ==highlight== in titles and **bold** in body copy for key terms.",
+      "approved": "Content approved — {count} slides",
+      "regenerate": "Regenerate content",
+      "approve": "Approve content",
+      "confirmRegenerate": "Are you sure? Content will be regenerated.",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "emptyField": "—",
+      "optional": "Optional",
+      "listHint": "One item per line",
+      "imageBriefHint": "Visual direction for upload in the design step",
+      "roles": {
+        "hook": "Cover",
+        "scene": "Scene",
+        "proof": "Proof",
+        "framework": "Framework",
+        "cta": "Closing"
+      },
+      "typeHints": {
+        "start": "Opening slide with background photo",
+        "text": "Text-only slide — no image upload",
+        "textImage": "Text + image slide",
+        "image": "Image-dominant slide"
+      },
+      "fields": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "body": "Body",
+        "listItems": "List",
+        "checklist": "Checklist",
+        "frameworkItems": "Pillars",
+        "closing": "Closing line",
+        "ctaLead": "Opening line",
+        "ctaHint": "Support line",
+        "ctaKeyword": "Keyword",
+        "ctaAction": "Call to action",
+        "coverImage": "Cover photo",
+        "image": "Image",
+        "proofImage": "Proof image"
+      },
+      "placement": {
+        "hookTitle": "Main headline on cover",
+        "hookSubtitle": "Line below the cover title",
+        "coverImage": "Full-bleed background photo",
+        "sceneTitle": "Headline at top of slide",
+        "sceneBody": "Main paragraph",
+        "sceneList": "Bullets or arrows in the middle",
+        "sceneClosing": "Closing line below the visual",
+        "sceneImage": "Central card or illustration",
+        "proofTitle": "Headline before or after visual proof",
+        "proofBody": "Evidence context",
+        "proofChecklist": "Check-style list items",
+        "proofClosing": "Proof conclusion",
+        "proofImage": "Screenshot or evidence photo",
+        "frameworkTitle": "Title on orange block",
+        "frameworkList": "Numbered arrow list",
+        "frameworkClosing": "Closing pill",
+        "ctaLead": "Paragraph above CTA box",
+        "ctaHint": "Support text inside the box",
+        "ctaKeyword": "Large keyword inside the box",
+        "ctaAction": "Action instruction in the box"
+      }
+    },
+    "preview": {
+      "viewCarousel": "View carousel",
+      "dialogTitle": "Carousel preview",
+      "dialogDescription": "Swipe or use arrow keys to move between slides",
+      "slideOf": "{current} / {total}",
+      "prevSlide": "Previous slide",
+      "nextSlide": "Next slide",
+      "openSlide": "Open slide {order}",
+      "goToSlide": "Go to slide {order}",
+      "hintNav": "Navigate between slides",
+      "heroHint": "Click to open full-screen preview, like on Instagram",
+      "close": "Close preview"
+    },
+    "runDetail": {
+      "loading": {
+        "page": "Loading run...",
+        "queued": "Waiting in queue...",
+        "ideas": {
+          "generating": "Generating post ideas..."
+        },
+        "content": {
+          "generating": "Writing slide content..."
+        },
+        "design": {
+          "generating": "Building design plan..."
+        },
+        "preview": {
+          "generating": "Generating slide structure...",
+          "rendering": "Rendering final slides...",
+          "finalizing": "Finalizing carousel..."
+        }
+      },
+      "error": {
+        "newCarousel": "New carousel",
+        "page": {
+          "title": "Could not load this run",
+          "description": "Check your connection and try opening it again from history."
+        },
+        "action": {
+          "title": "Something went wrong",
+          "description": "The action could not be completed. Please try again.",
+          "close": "Close"
+        },
+        "ideas": {
+          "title": "Failed to generate ideas",
+          "description": "We could not suggest ideas for your theme. Start a new carousel or try again later."
+        },
+        "content": {
+          "title": "Failed to generate content",
+          "description": "Slide content could not be created. You can start a new carousel."
+        },
+        "design": {
+          "title": "Design plan failed",
+          "description": "The visual plan could not be built. Start a new carousel to try again."
+        },
+        "preview": {
+          "title": "Failed to render slides",
+          "description": "Final slides could not be generated. Start a new carousel or contact support."
+        }
+      }
+    }
+  },
   "research": {
     "title": "Research",
     "description": "Briefs and references for your next content.",
@@ -860,12 +1019,11 @@
         "roles": "Roles",
         "permissions": "Permissions",
         "company": "Company",
-        "brand": "Brand",
-        "campaigns": "Campaigns",
         "files": "Files",
-        "pieces": "Pieces",
         "credits": "Credits",
-        "generation": "Generation"
+        "generation": "Generation",
+        "workspace": "Workspace",
+        "projects": "Projects"
       },
       "keys": {
         "user": {
@@ -892,31 +1050,44 @@
           "update": "Edit company",
           "delete": "Delete company"
         },
-        "brand": {
-          "read": "View brand",
-          "update": "Edit brand"
-        },
-        "campaign": {
-          "read": "View campaigns",
-          "create": "Create campaigns",
-          "update": "Edit campaigns",
-          "delete": "Delete campaigns",
-          "generate": "Generate campaigns"
-        },
         "file": {
           "create": "Upload files",
-          "delete": "Delete files"
-        },
-        "piece": {
-          "read": "View pieces",
-          "approve": "Approve pieces",
-          "update": "Edit pieces"
+          "delete": "Delete files",
+          "read": "View files"
         },
         "credit": {
           "read": "View credits"
         },
         "generation": {
           "create": "Create quick generation"
+        },
+        "workspace": {
+          "read": "View workspace",
+          "update": "Edit workspace",
+          "settings": {
+            "read": "View workspace settings",
+            "update": "Edit workspace settings"
+          }
+        },
+        "project": {
+          "read": "View projects",
+          "create": "Create projects",
+          "update": "Edit projects",
+          "delete": "Delete projects"
+        },
+        "brand": {},
+        "campaign": {},
+        "piece": {},
+        "agentRun": {
+          "review": "Review runs"
+        },
+        "marketplace": {
+          "read": "View marketplace",
+          "redeem": "Redeem items",
+          "manage": "Manage marketplace"
+        },
+        "library": {
+          "read": "View library"
         }
       },
       "roleDialog": {
@@ -1053,158 +1224,6 @@
     "skipButton": "Not now",
     "submitButton": "Create company",
     "submitting": "Creating..."
-  },
-  "brand": {
-    "title": "Brand Brain",
-    "description": "Everything Blister needs to know about your business to create content your way",
-    "saveSuccess": "Brand Brain updated",
-    "saveError": "We couldn't save. Please try again.",
-    "saving": "Saving...",
-    "saveButton": "Save changes",
-    "progress": {
-      "title": "Brand Brain completeness",
-      "description": "{filled} of {total} fields filled",
-      "overall": "{percent}% complete"
-    },
-    "validation": {
-      "nicheMin": "At least 2 characters",
-      "descriptionMin": "At least 10 characters",
-      "brandVoiceMin": "At least 10 characters",
-      "colorNameRequired": "Enter a color name"
-    },
-    "tabs": {
-      "logo": "Logo",
-      "business": "Business",
-      "audience": "Audience",
-      "voice": "Tone of voice",
-      "social": "Social",
-      "visual": "Visual",
-      "offer": "Offer"
-    },
-    "logoSection": {
-      "title": "Logo",
-      "description": "Upload up to 4 logo variations for your brand",
-      "autoSaveHint": "Logos are saved automatically when you upload each file."
-    },
-    "assetsSection": {
-      "title": "Assets",
-      "description": "Reference images and visual materials to use in generated pieces",
-      "uploadTitle": "Upload visual asset",
-      "uploadHint": "JPG, PNG, WebP or SVG · max 5MB",
-      "uploadAria": "Upload visual asset",
-      "uploading": "Uploading...",
-      "uploadSuccess": "Asset added",
-      "uploadError": "Could not upload asset",
-      "removeSuccess": "Asset removed",
-      "removeError": "Could not remove asset",
-      "removeAria": "Remove {name}",
-      "empty": "No assets uploaded yet."
-    },
-    "businessSection": {
-      "title": "About the business",
-      "description": "Short description",
-      "companyName": "Company name",
-      "companyNamePlaceholder": "e.g. Ana's Bakery",
-      "niche": "Industry / business type",
-      "nichePlaceholder": "e.g. Artisan bakery",
-      "descriptionPlaceholder": "What your company does in a few words"
-    },
-    "audienceSection": {
-      "title": "Audience and goal",
-      "description": "Who you speak to and what you want to achieve with marketing",
-      "targetAudience": "Main target audience",
-      "targetAudiencePlaceholder": "e.g. Women aged 25–45 looking for sweets for home parties",
-      "marketingObjective": "Main marketing goal",
-      "marketingObjectivePlaceholder": "Select your focus"
-    },
-    "marketingObjectives": {
-      "SELL_MORE": "Sell more",
-      "GENERATE_LEADS": "Generate leads",
-      "STRENGTHEN_BRAND": "Strengthen brand"
-    },
-    "voiceSection": {
-      "title": "Tone of voice",
-      "description": "How you communicate with your customers"
-    },
-    "socialNetworks": {
-      "title": "Social networks",
-      "description": "Where you publish content today",
-      "options": {
-        "instagram": "Instagram",
-        "facebook": "Facebook",
-        "tiktok": "TikTok",
-        "linkedin": "LinkedIn",
-        "youtube": "YouTube",
-        "whatsapp": "WhatsApp"
-      }
-    },
-    "visualSection": {
-      "title": "Visual identity",
-      "description": "Colors and style that represent your brand",
-      "palette": "Brand colors",
-      "coreColors": "Core colors",
-      "coreColorsDescription": "Every brand needs a primary and a secondary color.",
-      "primaryColor": "Primary color",
-      "secondaryColor": "Secondary color",
-      "primaryDefaultName": "Primary color",
-      "secondaryDefaultName": "Secondary color",
-      "additionalDefaultName": "Color {index}",
-      "primaryColorNamePlaceholder": "e.g. Main purple",
-      "secondaryColorNamePlaceholder": "e.g. Accent pink",
-      "primaryColorUsagePlaceholder": "e.g. Post backgrounds, headlines, and main elements",
-      "secondaryColorUsagePlaceholder": "e.g. Details, buttons, and highlights",
-      "additionalColors": "Other colors",
-      "additionalColorsDescription": "Add complementary colors with usage guidance.",
-      "additionalColorsEmpty": "No complementary colors added yet.",
-      "additionalColorTitle": "Complementary color {index}",
-      "additionalColorNamePlaceholder": "e.g. Support green",
-      "additionalColorUsagePlaceholder": "e.g. When to use this color in assets",
-      "colorName": "Color name",
-      "colorUsage": "How to use",
-      "optional": "optional",
-      "addColor": "Add color",
-      "removeColor": "Remove color",
-      "visualStyle": "Visual style",
-      "visualStylePlaceholder": "Select a style",
-      "typography": "Preferred typography",
-      "typographyPlaceholder": "e.g. Modern sans-serif, elegant"
-    },
-    "visualStyles": {
-      "minimal": "Minimal",
-      "modern": "Modern",
-      "traditional": "Traditional",
-      "bold": "Bold",
-      "elegant": "Elegant"
-    },
-    "offerSection": {
-      "title": "Products and differentiators",
-      "description": "What you sell and what sets you apart",
-      "mainProducts": "Main products or services",
-      "mainProductsPlaceholder": "List your main products or services",
-      "differentiators": "Company differentiators",
-      "differentiatorsPlaceholder": "What makes your business unique?"
-    },
-    "logo": {
-      "successMessage": "Logo updated",
-      "errorMessage": "We couldn't update the logo",
-      "uploadText": "+ Logo",
-      "uploadAria": "Upload {variant} logo",
-      "alt": "Brand logo",
-      "formatHint": "JPG, PNG or SVG · max 5MB · saved automatically",
-      "variants": {
-        "primary": "Primary",
-        "horizontal": "Horizontal",
-        "icon": "Icon",
-        "monochrome": "Monochrome"
-      }
-    },
-    "voice": {
-      "placeholder": "Describe how you talk to your customers...",
-      "saveButton": "Save tone of voice",
-      "saving": "Saving...",
-      "successMessage": "Tone of voice updated.",
-      "errorMessage": "Could not save tone of voice."
-    }
   },
   "credits": {
     "balanceTitle": "Balance: US$ {amount}",

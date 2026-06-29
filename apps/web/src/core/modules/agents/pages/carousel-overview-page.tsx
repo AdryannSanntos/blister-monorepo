@@ -2,16 +2,17 @@
 
 import { GalleryHorizontal } from "lucide-react";
 
-import { CarouselRunModalProvider } from "src/core/modules/agents/components/carousel/carousel-run-modal-provider";
 import { CarouselRunsGrid } from "src/core/modules/agents/components/carousel/carousel-runs-grid";
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { AgentOverviewStats } from "src/core/modules/agents/components/agent-overview-stats";
 import { useCarouselRuns, useCarouselOverviewStats } from "src/core/modules/agents/hooks/use-carousel-runs";
-import { CAROUSEL_TEMPLATES_FIXTURE } from "src/core/modules/blister-os/fixtures/carousel-templates.fixture";
+import { useCarouselTemplates } from "src/core/modules/agents/hooks/use-carousel-templates";
+import { toCarouselViewableRun } from "src/core/modules/agents/utils/carousel-run-display";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
 import { Link } from "@/i18n/routing";
+import { useMemo } from "react";
 
 const NoTemplatesState = () => (
   <EmptyState
@@ -29,9 +30,20 @@ const NoTemplatesState = () => (
 type Props = { agentSlug: string };
 
 const CarouselOverviewContent = () => {
-  const { data, isLoading } = useCarouselRuns();
+  const { data, isLoading } = useCarouselRuns({
+    limit: 50,
+    pollWhileProcessing: true,
+  });
   const stats = useCarouselOverviewStats();
-  const hasTemplates = CAROUSEL_TEMPLATES_FIXTURE.length > 0;
+  const { data: templates = [], isLoading: templatesLoading } =
+    useCarouselTemplates();
+
+  const viewableRuns = useMemo(
+    () => (data?.runs ?? []).map(toCarouselViewableRun),
+    [data?.runs],
+  );
+
+  const hasTemplates = templates.length > 0;
 
   return (
     <div className="flex flex-col gap-8">
@@ -41,26 +53,24 @@ const CarouselOverviewContent = () => {
         approvedRuns={stats.approvedRuns}
         creditsUsed={stats.creditsUsed}
       />
-      {!hasTemplates ? (
+      {templatesLoading ? null : !hasTemplates ? (
         <NoTemplatesState />
       ) : (
-        <CarouselRunsGrid runs={data?.runs ?? []} isLoading={isLoading} />
+        <CarouselRunsGrid runs={viewableRuns} isLoading={isLoading} />
       )}
     </div>
   );
 };
 
 export const CarouselOverviewPage = ({ agentSlug }: Props) => (
-  <CarouselRunModalProvider>
-    <div data-testid="carousel-overview-page" data-agent={agentSlug}>
-      <PageLayout
-        icon={GalleryHorizontal}
-        title="Carrossel"
-        description="Transforme um tema em slides prontos para postar no Instagram."
-        actions={<AgentNewRunButton routeSlug={agentSlug} size="sm" />}
-      >
-        <CarouselOverviewContent />
-      </PageLayout>
-    </div>
-  </CarouselRunModalProvider>
+  <div data-testid="carousel-overview-page" data-agent={agentSlug}>
+    <PageLayout
+      icon={GalleryHorizontal}
+      title="Carrossel"
+      description="Transforme um tema em slides prontos para postar no Instagram."
+      actions={<AgentNewRunButton routeSlug={agentSlug} size="sm" />}
+    >
+      <CarouselOverviewContent />
+    </PageLayout>
+  </div>
 );

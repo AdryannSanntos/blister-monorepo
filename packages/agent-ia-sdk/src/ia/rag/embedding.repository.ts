@@ -7,7 +7,6 @@ export interface VectorSearchResult {
   content: string;
   score: number;
   companyId: string;
-  campaignId: string | null;
   agentId: string | null;
   sourceType: string;
   sourceId: string;
@@ -22,10 +21,8 @@ export interface VectorSearchOptions {
   limit?: number;
   minScore?: number;
   sourceTypes?: string[];
-  campaignId?: string;
   agentId?: string;
   boostAgentId?: string;
-  boostCampaignId?: string;
 }
 
 export interface EmbeddingRepositoryDeps {
@@ -113,9 +110,6 @@ export class EmbeddingRepository {
     const limit = options.limit ?? 10;
     const minScore = options.minScore ?? DEFAULT_MIN_SCORE;
 
-    // All dynamic filters use parameterized Prisma.sql fragments — never string
-    // interpolation — so user-supplied values (campaignId, agentId, sourceTypes)
-    // cannot break out of the query (SQL injection) or bypass tenant scoping.
     const conditions: Prisma.Sql[] = [
       Prisma.sql`c."companyId" = ${options.companyId}`,
       Prisma.sql`d.status = 'INDEXED'`,
@@ -124,12 +118,6 @@ export class EmbeddingRepository {
     if (options.sourceTypes && options.sourceTypes.length > 0) {
       conditions.push(
         Prisma.sql`d."sourceType"::text IN (${Prisma.join(options.sourceTypes)})`,
-      );
-    }
-
-    if (options.campaignId) {
-      conditions.push(
-        Prisma.sql`(c."campaignId" = ${options.campaignId} OR c."campaignId" IS NULL)`,
       );
     }
 
@@ -143,24 +131,19 @@ export class EmbeddingRepository {
       ? Prisma.sql`CASE WHEN c."agentId" = ${options.boostAgentId} THEN 0.1 ELSE 0 END`
       : Prisma.sql`0`;
 
-    const boostCampaignClause = options.boostCampaignId
-      ? Prisma.sql`CASE WHEN c."campaignId" = ${options.boostCampaignId} THEN 0.05 ELSE 0 END`
-      : Prisma.sql`0`;
-
     const results = await this.prisma.$queryRaw<VectorSearchResult[]>(Prisma.sql`
       SELECT
         c.id as "chunkId",
         c."documentId",
         c.content,
         c."companyId",
-        c."campaignId",
         c."agentId",
         c."chunkIndex",
         c.metadata,
         d."sourceType",
         d."sourceId",
         d.title,
-        (1 - (e.embedding <=> ${queryEmbedding}::vector)) + ${boostAgentClause}::float + ${boostCampaignClause}::float as score
+        (1 - (e.embedding <=> ${queryEmbedding}::vector)) + ${boostAgentClause}::float as score
       FROM "RagChunk" c
       JOIN "RagEmbedding" e ON e."chunkId" = c.id
       JOIN "RagDocument" d ON d.id = c."documentId"

@@ -36,6 +36,14 @@ import { buildCutsRunDeps } from '../src/agents/cuts/build-cuts-run-deps';
 
 import { setCutsRunDeps } from '../src/agents/cuts/ports/cuts-run-deps';
 
+import { buildCarouselRunDeps } from '../src/agents/carousel/build-carousel-run-deps';
+
+import { setCarouselRunDeps } from '../src/agents/carousel/ports/carousel-run-deps';
+
+import { CarouselRenderService } from '../src/agents/carousel/services/carousel-render.service';
+
+import { CarouselTemplateService } from '../src/agents/carousel/services/carousel-template.service';
+
 import { ConfigService } from '@nestjs/config';
 
 import { StorageService } from '../src/storage/storage.service';
@@ -45,6 +53,8 @@ import { createAgentIaSdk } from '@company-os/agent-ia-sdk';
 import { loadProviderSecrets } from '../src/integrations/agent-ia-sdk/load-provider-secrets';
 
 import { devAgentLogger } from '../src/agents/runtime/dev-agent-logger';
+import { isTransientUserFacingProviderError } from '../src/agents/runtime/kernel/provider-error-message';
+import { requeueFailedAgentRun } from '../src/agents/runtime/requeue-failed-agent-run';
 
 
 
@@ -129,15 +139,10 @@ export const agentRunExecute = task({
   maxDuration: 2700,
 
   retry: {
-
-    maxAttempts: 2,
-
+    maxAttempts: 3,
     factor: 2,
-
     minTimeoutInMs: 1000,
-
     maxTimeoutInMs: 30000,
-
   },
 
   run: async (payload: ExecutePayload): Promise<ExecuteResult> => {
@@ -167,11 +172,14 @@ export const agentRunExecute = task({
     try {
 
       const runRecord = await prisma.agentRun.findUnique({
-
         where: { id: validated.runId },
-
-        select: { status: true, agentId: true, companyId: true, personalSpaceId: true },
-
+        select: {
+          status: true,
+          agentId: true,
+          companyId: true,
+          personalSpaceId: true,
+          errorMessage: true,
+        },
       });
 
 
@@ -203,11 +211,19 @@ export const agentRunExecute = task({
 
 
       if (runRecord.status === 'RUNNING') {
-
         logger.info('Run already running, skipping retry', { runId: validated.runId });
-
         return { runId: validated.runId, status: 'RUNNING' as const };
+      }
 
+      if (
+        runRecord.status === 'FAILED' &&
+        isTransientUserFacingProviderError(runRecord.errorMessage ?? '')
+      ) {
+        await requeueFailedAgentRun(prisma, validated.runId);
+        devAgentLogger.log('Re-queued failed run for Trigger retry', {
+          runId: validated.runId,
+          errorMessage: runRecord.errorMessage,
+        });
       }
 
 
@@ -235,6 +251,14 @@ export const agentRunExecute = task({
       const storage = new StorageService(config);
 
       setCutsRunDeps(buildCutsRunDeps(prisma, storage, sdk));
+
+      const carouselTemplateService = new CarouselTemplateService();
+
+      const carouselRenderService = new CarouselRenderService();
+
+      setCarouselRunDeps(
+        buildCarouselRunDeps(prisma, storage, carouselTemplateService, carouselRenderService),
+      );
 
 
 
@@ -309,20 +333,17 @@ export const agentRunExecute = task({
 
 
       if (result.status === 'FAILED') {
+        const failureMessage =
+          result.errorMessage ?? `Agent run ${validated.runId} failed`;
 
         devAgentLogger.error('Agent run failed', undefined, {
-
           runId: result.runId,
-
-          errorMessage: result.errorMessage,
-
+          errorMessage: failureMessage,
           creditCost: result.creditCost,
-
         });
 
+        throw new Error(failureMessage);
       }
-
-
 
       return {
 

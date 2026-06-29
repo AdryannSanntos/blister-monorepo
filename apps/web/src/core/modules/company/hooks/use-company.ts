@@ -47,7 +47,6 @@ export function useCompleteOnboarding() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company"] });
       queryClient.invalidateQueries({ queryKey: ["companies"] });
-      queryClient.invalidateQueries({ queryKey: ["brand"] });
       queryClient.invalidateQueries({
         queryKey: ["company", "onboarding-status"],
       });

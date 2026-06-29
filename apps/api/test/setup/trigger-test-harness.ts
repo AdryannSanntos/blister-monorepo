@@ -8,7 +8,9 @@ import {
 import { AgentRunBlockService } from '../../src/agents/runtime/agent-run-block.service';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { setCutsRunDeps } from '../../src/agents/cuts/ports/cuts-run-deps';
+import { setCarouselRunDeps } from '../../src/agents/carousel/ports/carousel-run-deps';
 import { createStubCutsRunDeps } from '../helpers/stub-cuts-run-deps';
+import { createStubCarouselRunDeps } from '../helpers/stub-carousel-run-deps';
 import { tasks } from '@trigger.dev/sdk';
 
 type TriggerPayload = {
@@ -46,8 +48,90 @@ const CUTS_STUB_LLM_RESPONSE = JSON.stringify({
   ],
 });
 
-const createHarnessLlmProvider = (): LlmProvider => ({
-  async complete() {
+const CAROUSEL_STUB_RESPONSES: Record<string, unknown> = {
+  generate_ideas: {
+    ideas: [
+      { id: 'idea_1', title: '5 hábitos matinais', description: 'Rotina simples para creators' },
+      { id: 'idea_2', title: 'Evite burnout', description: 'Consistência sem exaustão' },
+    ],
+  },
+  generate_content: {
+    slides: [
+      { id: 'slide_1', order: 1, type: 'start', title: '5 hábitos', body: 'Comece o dia com foco' },
+      { id: 'slide_2', order: 2, type: 'text', title: 'Hábito 1', body: 'Acorde mais cedo' },
+    ],
+  },
+  generate_design_plan: {
+    templateId: 'editorial-performance',
+    slides: [
+      {
+        id: 'slide_1',
+        order: 1,
+        type: 'start',
+        variationId: 'v1',
+        imageSlots: [{ slotKey: 'image_url', label: 'Capa', required: true }],
+        layoutNotes: 'Hero cover',
+      },
+      {
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        variationId: 'v1',
+        imageSlots: [],
+        layoutNotes: 'Text block',
+      },
+    ],
+  },
+  generate_slides: {
+    slides: [
+      {
+        id: 'slide_1',
+        order: 1,
+        type: 'start',
+        htmlContent: '<div class="slide"><h1>5 hábitos</h1></div>',
+        cssContent: '.slide{width:1080px;height:1350px}',
+      },
+      {
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        htmlContent: '<div class="slide"><h2>Hábito 1</h2></div>',
+        cssContent: '.slide{width:1080px;height:1350px}',
+      },
+    ],
+  },
+};
+
+const resolveCarouselStubStep = (
+  messages: Array<{ role: string; content: string }>,
+): string => {
+  const user = messages.find((message) => message.role === 'user')?.content ?? '';
+  if (user.includes('Slides to design') || user.includes('variationId')) {
+    return 'generate_design_plan';
+  }
+  if (user.includes('HTML') || user.includes('htmlContent')) {
+    return 'generate_slides';
+  }
+  if (user.includes('slide content') || user.includes('Slides to write')) {
+    return 'generate_content';
+  }
+  return 'generate_ideas';
+};
+
+const createHarnessLlmProvider = (_prisma: PrismaClient): LlmProvider => ({
+  async complete(params) {
+    if (params.agentId === 'carousel') {
+      const stepKey = params.stepKey ?? resolveCarouselStubStep(params.messages);
+      const payload = CAROUSEL_STUB_RESPONSES[stepKey] ?? CAROUSEL_STUB_RESPONSES.generate_ideas;
+      return {
+        content: JSON.stringify(payload),
+        model: 'stub/carousel',
+        tokensInput: 300,
+        tokensOutput: 150,
+        costUsd: 0.0003,
+      };
+    }
+
     return {
       content: CUTS_STUB_LLM_RESPONSE,
       model: 'stub/cuts',
@@ -64,6 +148,7 @@ export const executeAgentRunViaHarness = async (
   payload: TriggerPayload,
 ): Promise<void> => {
   setCutsRunDeps(createStubCutsRunDeps());
+  setCarouselRunDeps(createStubCarouselRunDeps());
 
   const agentRunBlockService = new AgentRunBlockService(
     prisma as unknown as PrismaService,
@@ -71,7 +156,7 @@ export const executeAgentRunViaHarness = async (
 
   const deps: ExecutionDependencies = {
     prisma,
-    llmProvider: createHarnessLlmProvider(),
+    llmProvider: createHarnessLlmProvider(prisma),
     imageProvider: null,
     eventPublisher: new NoOpEventPublisher(),
     blocks: agentRunBlockService,

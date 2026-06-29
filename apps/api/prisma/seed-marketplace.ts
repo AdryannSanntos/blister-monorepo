@@ -4,82 +4,13 @@ import type { PrismaClient } from '@company-os/db';
 export const textStylePreviewPath = (slug: string) =>
   `/marketplace/styles/${slug}-preview.mp4`;
 
+/**
+ * Marketplace catalog — only items backed by real product assets.
+ *
+ * - TEXT_STYLE: Remotion compositions in `video/text-style.registry.ts`
+ * - TEMPLATE: carousel templates in `agents/carousel/templates/`
+ */
 const MARKETPLACE_SEED = [
-  {
-    slug: 'es-corte-seco',
-    type: 'EDIT_STYLE' as const,
-    name: 'Corte Seco',
-    author: 'Blister Studio',
-    price: 0,
-    flag: 'destaque',
-    description:
-      'Ritmo acelerado, zooms pontuais e legendas grandes palavra a palavra.',
-    palette: ['#1b1b22', '#8b7cff', '#f0f0f4'],
-    specs: {
-      pace: 'Rápido · cortes a cada 1,8s',
-      captions: 'Palavra a palavra, caixa alta',
-      transitions: 'Zoom punch + J-cut',
-      formats: '9:16 · 1:1',
-    },
-    includes: [
-      'Preset de legendas animadas',
-      'Curva de zoom (3 intensidades)',
-      'SFX de transição (12 sons)',
-    ],
-    refId: null,
-  },
-  {
-    slug: 'es-documental',
-    type: 'EDIT_STYLE' as const,
-    name: 'Documental',
-    author: 'Blister Studio',
-    price: 0,
-    description: 'Respiro entre falas, lower-thirds discretos e correção quente.',
-    palette: ['#241d18', '#c98f4e', '#f2e9dd'],
-    specs: {
-      pace: 'Calmo · cortes a cada 6s',
-      captions: 'Frase inteira, serifada',
-      transitions: 'Crossfade suave',
-      formats: '16:9 · 9:16',
-    },
-    includes: ['Lower-thirds editoriais', 'LUT quente (2 variações)'],
-    refId: null,
-  },
-  {
-    slug: 'cs-bold-word',
-    type: 'CAPTION_STYLE' as const,
-    name: 'Bold Word',
-    author: 'Blister Studio',
-    price: 0,
-    flag: 'destaque',
-    description: 'Legendas palavra a palavra em caixa alta com destaque animado.',
-    palette: ['#0f0f12', '#ffffff', '#8b7cff'],
-    specs: {
-      style: 'Palavra a palavra',
-      animation: 'Pop + highlight',
-      fonts: 'Sans bold',
-      formats: '9:16 · 1:1',
-    },
-    includes: ['Preset animado', '3 cores de highlight', 'Safe area 9:16'],
-    refId: null,
-  },
-  {
-    slug: 'cs-minimal-line',
-    type: 'CAPTION_STYLE' as const,
-    name: 'Minimal Line',
-    author: 'Blister Studio',
-    price: 0,
-    description: 'Frases curtas centralizadas, fundo semi-transparente.',
-    palette: ['#111827', '#f9fafb', '#6b7280'],
-    specs: {
-      style: 'Frase inteira',
-      animation: 'Fade suave',
-      fonts: 'Inter medium',
-      formats: '9:16 · 16:9',
-    },
-    includes: ['Caixa de legenda', '2 pesos tipográficos'],
-    refId: null,
-  },
   {
     slug: 'neon-wave',
     type: 'TEXT_STYLE' as const,
@@ -177,43 +108,44 @@ const MARKETPLACE_SEED = [
     refId: null,
   },
   {
-    slug: 'agent-planning',
-    type: 'AGENT' as const,
-    name: 'Planejamento de Conteúdo',
-    author: 'Blister',
-    price: 150,
-    flag: 'novo',
-    description: 'Calendário editorial e pautas alinhadas ao seu nicho.',
-    palette: ['#0f172a', '#6366f1', '#e2e8f0'],
-    specs: { output: 'Calendário 30 dias', format: 'Brief + pautas' },
-    includes: ['Calendário mensal', 'Sugestões de formato', 'CTAs por pauta'],
-    refId: 'planning',
+    slug: 'carousel-editorial-performance',
+    type: 'TEMPLATE' as const,
+    name: 'Editorial Performance',
+    author: 'Blister Studio',
+    price: 0,
+    flag: 'destaque',
+    description:
+      'Carrossel editorial com capas dramáticas, acento laranja e barra de progresso — 1080×1350.',
+    palette: ['#0a0a0a', '#ff4a0a', '#f5f5f0'],
+    specs: {
+      templateId: 'editorial-performance',
+      previewAspectRatio: '4:5',
+    },
+    includes: [
+      'Capa full-bleed + slides texto/imagem',
+      'Variações por tipo de slide',
+      'Suporte a múltiplas imagens por slide',
+    ],
+    refId: 'editorial-performance',
   },
   {
-    slug: 'agent-script',
-    type: 'AGENT' as const,
-    name: 'Roteiro para Vídeo',
-    author: 'Blister',
-    price: 120,
-    description: 'Roteiros curtos com hook, desenvolvimento e CTA.',
-    palette: ['#111827', '#f59e0b', '#fef3c7'],
-    specs: { output: 'Roteiro completo', duration: '30–90s' },
-    includes: ['Hook (3 variações)', 'Storyboard textual', 'CTA final'],
-    refId: 'script',
-  },
-  {
-    slug: 'agent-thumbnail',
-    type: 'AGENT' as const,
-    name: 'Capas e Thumbnails',
-    author: 'Blister',
-    price: 100,
-    description: 'Conceitos visuais de capa com texto e composição.',
-    palette: ['#1e1b4b', '#a855f7', '#faf5ff'],
-    specs: { output: '3 variantes', formats: '16:9 · 9:16' },
-    includes: ['3 conceitos', 'Tipografia sugerida', 'Paleta por conceito'],
-    refId: 'thumbnail',
+    slug: 'carousel-minimal-clean',
+    type: 'TEMPLATE' as const,
+    name: 'Minimal Clean',
+    author: 'Blister Studio',
+    price: 0,
+    description: 'Layout minimalista com tipografia bold — quadrado 1080×1080.',
+    palette: ['#0a0a0a', '#f9f9f7', '#ffffff'],
+    specs: {
+      templateId: 'minimal-clean',
+      previewAspectRatio: '1:1',
+    },
+    includes: ['Abertura, texto, texto+imagem e imagem', '3 variações de texto'],
+    refId: 'minimal-clean',
   },
 ] as const;
+
+const MARKETPLACE_SEED_SLUGS = MARKETPLACE_SEED.map((item) => item.slug);
 
 export async function seedMarketplaceItems(prisma: PrismaClient) {
   console.log('→ Marketplace items...');
@@ -251,7 +183,15 @@ export async function seedMarketplaceItems(prisma: PrismaClient) {
     });
   }
 
+  const deactivated = await prisma.marketplaceItem.updateMany({
+    where: { slug: { notIn: [...MARKETPLACE_SEED_SLUGS] } },
+    data: { isActive: false },
+  });
+
   console.log(`  • ${MARKETPLACE_SEED.length} itens ativos`);
+  if (deactivated.count > 0) {
+    console.log(`  • ${deactivated.count} itens legados desativados`);
+  }
 }
 
 /** Grant every free TEXT_STYLE to the seed admin personal space for local testing. */

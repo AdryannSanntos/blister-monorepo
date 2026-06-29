@@ -1,18 +1,27 @@
+import type { AgentDefinitionRuntime } from '@company-os/agent-ia-sdk/agents';
 import type { PrismaClient } from '@company-os/db';
 import { mapToKernelAgentDefinition } from '../../adapters/to-kernel-definition';
-import { cutsAgentDefinition } from '../../cuts/agent';
+import { carouselAgent } from '../../carousel/agent';
+import { cutsAgent } from '../../cuts/agent';
 import type { AgentDefinition } from './types';
 
-/**
- * Definições de agentes carregadas pelo kernel.
- *
- * `cuts` é o único agente concreto criado. Novos agentes devem ser registrados
- * aqui (ou via `registerAgentDefinition`). Ver `docs/agents/agent-sdk.md`.
- */
-const defaultAgentDefinitions: Record<string, AgentDefinition> = {
-  cuts: mapToKernelAgentDefinition(cutsAgentDefinition),
-};
+const builtInAgents = [cutsAgent, carouselAgent] as const;
 
+const defaultAgentDefinitions: Record<string, AgentDefinitionRuntime> = Object.fromEntries(
+  builtInAgents.map((agent) => [
+    agent.definition.agentId,
+    {
+      ...mapToKernelAgentDefinition(agent.definition),
+      routing: agent.routing,
+    },
+  ]),
+);
+
+/**
+ * Agent definitions loaded by the execution kernel (API + Trigger workers).
+ *
+ * Keep in sync with `buildRegisteredAgents()` in `agent-catalog.ts`.
+ */
 export async function loadAgentDefinition(
   prisma: PrismaClient,
   agentId: string,

@@ -230,97 +230,13 @@ exports.Prisma.CompanyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.BrandProfileScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  logoStorageKey: 'logoStorageKey',
-  logoVariants: 'logoVariants',
-  brandAssets: 'brandAssets',
-  brandVoice: 'brandVoice',
-  palette: 'palette',
-  typography: 'typography',
-  visualStyle: 'visualStyle',
-  niche: 'niche',
-  description: 'description',
-  targetAudience: 'targetAudience',
-  marketingObjective: 'marketingObjective',
-  socialNetworks: 'socialNetworks',
-  mainProducts: 'mainProducts',
-  differentiators: 'differentiators',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CampaignScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  name: 'name',
-  objective: 'objective',
-  context: 'context',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CampaignFileScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  campaignId: 'campaignId',
-  name: 'name',
-  mimeType: 'mimeType',
-  storageKey: 'storageKey',
-  type: 'type',
-  status: 'status',
-  extractedText: 'extractedText',
-  caption: 'caption',
-  sizeBytes: 'sizeBytes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContentPieceScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  campaignId: 'campaignId',
-  pipelineRunId: 'pipelineRunId',
-  agentRunId: 'agentRunId',
-  format: 'format',
-  status: 'status',
-  caption: 'caption',
-  hashtags: 'hashtags',
-  imageStorageKey: 'imageStorageKey',
-  htmlSnapshot: 'htmlSnapshot',
-  creditCost: 'creditCost',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  approvedAt: 'approvedAt'
-};
-
-exports.Prisma.PipelineRunScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  campaignId: 'campaignId',
-  triggeredByUserId: 'triggeredByUserId',
-  userInput: 'userInput',
-  status: 'status',
-  agentOrder: 'agentOrder',
-  creditCost: 'creditCost',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  completedAt: 'completedAt'
-};
-
 exports.Prisma.AgentRunScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   personalSpaceId: 'personalSpaceId',
-  pipelineRunId: 'pipelineRunId',
-  campaignId: 'campaignId',
   agentId: 'agentId',
   agentVersion: 'agentVersion',
   parentRunId: 'parentRunId',
-  feedbackId: 'feedbackId',
   status: 'status',
   currentStepKey: 'currentStepKey',
   inputPayload: 'inputPayload',
@@ -369,44 +285,6 @@ exports.Prisma.AgentRunBlockScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AgentFeedbackScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  contentPieceId: 'contentPieceId',
-  agentId: 'agentId',
-  feedbackType: 'feedbackType',
-  userId: 'userId',
-  reason: 'reason',
-  originalContent: 'originalContent',
-  editedContent: 'editedContent',
-  instruction: 'instruction',
-  contentHash: 'contentHash',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.LearningSignalScalarFieldEnum = {
-  id: 'id',
-  feedbackId: 'feedbackId',
-  companyId: 'companyId',
-  agentId: 'agentId',
-  signalType: 'signalType',
-  signalValue: 'signalValue',
-  weight: 'weight',
-  metadata: 'metadata',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.AgentMemoryScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
-  agentId: 'agentId',
-  summary: 'summary',
-  signals: 'signals',
-  lastFeedbackId: 'lastFeedbackId',
-  updatedAt: 'updatedAt',
-  createdAt: 'createdAt'
 };
 
 exports.Prisma.CreditBalanceScalarFieldEnum = {
@@ -495,7 +373,6 @@ exports.Prisma.PipelineAgentConfigScalarFieldEnum = {
 exports.Prisma.RagDocumentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
-  campaignId: 'campaignId',
   sourceType: 'sourceType',
   sourceId: 'sourceId',
   title: 'title',
@@ -510,7 +387,6 @@ exports.Prisma.RagChunkScalarFieldEnum = {
   id: 'id',
   documentId: 'documentId',
   companyId: 'companyId',
-  campaignId: 'campaignId',
   agentId: 'agentId',
   chunkIndex: 'chunkIndex',
   content: 'content',
@@ -720,50 +596,6 @@ exports.UserType = exports.$Enums.UserType = {
   USER: 'USER'
 };
 
-exports.MarketingObjective = exports.$Enums.MarketingObjective = {
-  SELL_MORE: 'SELL_MORE',
-  GENERATE_LEADS: 'GENERATE_LEADS',
-  STRENGTHEN_BRAND: 'STRENGTHEN_BRAND'
-};
-
-exports.CampaignStatus = exports.$Enums.CampaignStatus = {
-  DRAFT: 'DRAFT',
-  ACTIVE: 'ACTIVE',
-  ARCHIVED: 'ARCHIVED'
-};
-
-exports.CampaignFileType = exports.$Enums.CampaignFileType = {
-  IMAGE: 'IMAGE',
-  TEXT: 'TEXT',
-  PDF: 'PDF'
-};
-
-exports.CampaignFileStatus = exports.$Enums.CampaignFileStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  INDEXED: 'INDEXED',
-  FAILED: 'FAILED'
-};
-
-exports.ContentPieceFormat = exports.$Enums.ContentPieceFormat = {
-  INSTAGRAM_SQUARE_1080: 'INSTAGRAM_SQUARE_1080'
-};
-
-exports.ContentPieceStatus = exports.$Enums.ContentPieceStatus = {
-  DRAFT: 'DRAFT',
-  PENDING_REVIEW: 'PENDING_REVIEW',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
-};
-
-exports.PipelineRunStatus = exports.$Enums.PipelineRunStatus = {
-  QUEUED: 'QUEUED',
-  RUNNING: 'RUNNING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED'
-};
-
 exports.AgentRunStatus = exports.$Enums.AgentRunStatus = {
   QUEUED: 'QUEUED',
   RUNNING: 'RUNNING',
@@ -788,14 +620,6 @@ exports.StepResultType = exports.$Enums.StepResultType = {
   COMPLETE: 'COMPLETE'
 };
 
-exports.FeedbackType = exports.$Enums.FeedbackType = {
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  EDITED: 'EDITED',
-  IMPROVE_REQUEST: 'IMPROVE_REQUEST',
-  REGENERATED: 'REGENERATED'
-};
-
 exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
   CREDIT: 'CREDIT',
   DEBIT: 'DEBIT',
@@ -804,13 +628,9 @@ exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
 };
 
 exports.RagSourceType = exports.$Enums.RagSourceType = {
-  BRAND_BRAIN: 'BRAND_BRAIN',
   WORKSPACE_SETTINGS: 'WORKSPACE_SETTINGS',
   WORKSPACE_FILE: 'WORKSPACE_FILE',
-  CAMPAIGN: 'CAMPAIGN',
-  CAMPAIGN_FILE: 'CAMPAIGN_FILE',
-  AGENT_LEARNING: 'AGENT_LEARNING',
-  APPROVED_PIECE: 'APPROVED_PIECE'
+  AGENT_LEARNING: 'AGENT_LEARNING'
 };
 
 exports.RagDocumentStatus = exports.$Enums.RagDocumentStatus = {
@@ -868,17 +688,9 @@ exports.Prisma.ModelName = {
   SupportSession: 'SupportSession',
   AuditLog: 'AuditLog',
   Company: 'Company',
-  BrandProfile: 'BrandProfile',
-  Campaign: 'Campaign',
-  CampaignFile: 'CampaignFile',
-  ContentPiece: 'ContentPiece',
-  PipelineRun: 'PipelineRun',
   AgentRun: 'AgentRun',
   AgentRunStep: 'AgentRunStep',
   AgentRunBlock: 'AgentRunBlock',
-  AgentFeedback: 'AgentFeedback',
-  LearningSignal: 'LearningSignal',
-  AgentMemory: 'AgentMemory',
   CreditBalance: 'CreditBalance',
   CreditLedger: 'CreditLedger',
   PlatformCreditSettings: 'PlatformCreditSettings',

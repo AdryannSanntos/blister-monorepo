@@ -11,6 +11,11 @@ import { WorkspaceSettingsModule } from '../workspace-settings/workspace-setting
 import { CutsRunDepsAdapter } from './adapters/cuts-run-deps.adapter';
 import { CarouselRunDepsAdapter } from './adapters/carousel-run-deps.adapter';
 
+import { CarouselExportController } from './carousel/carousel-export.controller';
+import { CarouselTemplatesController } from './carousel/carousel-templates.controller';
+import { CarouselRenderService } from './carousel/services/carousel-render.service';
+import { CarouselTemplateService } from './carousel/services/carousel-template.service';
+
 import { AgentRegistryService } from './runtime/agent-registry.service';
 import { WorkflowEngineService } from './runtime/workflow-engine.service';
 import { AgentRunService } from './runtime/agent-run.service';
@@ -39,11 +44,15 @@ import { InternalEventsController } from './internal-events.controller';
     AgentCatalogController,
     AgentRunsController,
     AgentsController,
+    CarouselExportController,
+    CarouselTemplatesController,
     InternalEventsController,
   ],
   providers: [
     CutsRunDepsAdapter,
     CarouselRunDepsAdapter,
+    CarouselRenderService,
+    CarouselTemplateService,
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,

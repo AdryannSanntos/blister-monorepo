@@ -9,10 +9,7 @@ export const subjects = [
   'Role',
   'Permission',
   'Company',
-  'Brand',
-  'Campaign',
   'File',
-  'ContentPiece',
   'Credit',
   'Generation',
   'Workspace',
@@ -29,7 +26,6 @@ export type AppSubject = (typeof subjects)[number];
 export type AppAbility = MongoAbility<[AppAction, AppSubject]>;
 
 export type AppPermissionKey =
-  // User / RBAC (admin workspace)
   | 'user.read'
   | 'user.update'
   | 'member.read'
@@ -41,45 +37,25 @@ export type AppPermissionKey =
   | 'role.update'
   | 'role.delete'
   | 'permission.read'
-  // Company / legacy Brand Brain
   | 'company.read'
   | 'company.update'
   | 'company.delete'
-  | 'brand.read'
-  | 'brand.update'
-  // Workspace OS
   | 'workspace.read'
   | 'workspace.settings.read'
   | 'workspace.settings.update'
-  // Campaigns (legacy)
-  | 'campaign.read'
-  | 'campaign.create'
-  | 'campaign.update'
-  | 'campaign.delete'
-  | 'campaign.generate'
-  // Files
   | 'file.create'
   | 'file.read'
   | 'file.delete'
-  // Projects
   | 'project.read'
   | 'project.create'
   | 'project.update'
   | 'project.delete'
-  // Content pieces / review (legacy)
-  | 'piece.read'
-  | 'piece.approve'
-  | 'piece.update'
-  // Agent runs
   | 'agentRun.review'
-  // Marketplace
   | 'marketplace.read'
   | 'marketplace.redeem'
   | 'marketplace.manage'
   | 'library.read'
-  // Credits
   | 'credit.read'
-  // Quick generation
   | 'generation.create';
 
 export const allPermissionKeys: AppPermissionKey[] = [
@@ -97,16 +73,9 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'company.read',
   'company.update',
   'company.delete',
-  'brand.read',
-  'brand.update',
   'workspace.read',
   'workspace.settings.read',
   'workspace.settings.update',
-  'campaign.read',
-  'campaign.create',
-  'campaign.update',
-  'campaign.delete',
-  'campaign.generate',
   'file.create',
   'file.read',
   'file.delete',
@@ -114,9 +83,6 @@ export const allPermissionKeys: AppPermissionKey[] = [
   'project.create',
   'project.update',
   'project.delete',
-  'piece.read',
-  'piece.approve',
-  'piece.update',
   'agentRun.review',
   'marketplace.read',
   'marketplace.redeem',
@@ -166,16 +132,9 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'company.read': ['read', 'Company'],
   'company.update': ['update', 'Company'],
   'company.delete': ['delete', 'Company'],
-  'brand.read': ['read', 'Brand'],
-  'brand.update': ['update', 'Brand'],
   'workspace.read': ['read', 'Workspace'],
   'workspace.settings.read': ['read', 'WorkspaceSettings'],
   'workspace.settings.update': ['update', 'WorkspaceSettings'],
-  'campaign.read': ['read', 'Campaign'],
-  'campaign.create': ['create', 'Campaign'],
-  'campaign.update': ['update', 'Campaign'],
-  'campaign.delete': ['delete', 'Campaign'],
-  'campaign.generate': ['create', 'Generation'],
   'file.create': ['create', 'File'],
   'file.read': ['read', 'File'],
   'file.delete': ['delete', 'File'],
@@ -183,9 +142,6 @@ export const permissionMap: Record<AppPermissionKey, [AppAction, AppSubject]> = 
   'project.create': ['create', 'Project'],
   'project.update': ['update', 'Project'],
   'project.delete': ['delete', 'Project'],
-  'piece.read': ['read', 'ContentPiece'],
-  'piece.approve': ['update', 'ContentPiece'],
-  'piece.update': ['update', 'ContentPiece'],
   'agentRun.review': ['update', 'AgentRun'],
   'marketplace.read': ['read', 'MarketplaceItem'],
   'marketplace.redeem': ['create', 'MarketplaceItem'],
@@ -226,19 +182,7 @@ export const creatorPermissionKeys: AppPermissionKey[] = [
 ];
 
 /** @deprecated Use creatorPermissionKeys */
-export const businessPermissionKeys: AppPermissionKey[] = [
-  ...creatorPermissionKeys,
-  'brand.read',
-  'brand.update',
-  'campaign.read',
-  'campaign.create',
-  'campaign.update',
-  'campaign.delete',
-  'campaign.generate',
-  'piece.read',
-  'piece.approve',
-  'piece.update',
-];
+export const businessPermissionKeys: AppPermissionKey[] = [...creatorPermissionKeys];
 
 export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): AppPermissionKey[] {
   switch (role) {
@@ -251,16 +195,6 @@ export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): A
         'member.update',
         'member.remove',
         'permission.read',
-        'brand.read',
-        'brand.update',
-        'campaign.read',
-        'campaign.create',
-        'campaign.update',
-        'campaign.delete',
-        'campaign.generate',
-        'piece.read',
-        'piece.approve',
-        'piece.update',
         'agentRun.review',
         'marketplace.manage',
       ];
@@ -280,9 +214,6 @@ export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): A
         'user.read',
         'company.read',
         'agentRun.review',
-        'piece.read',
-        'piece.approve',
-        'piece.update',
       ];
     case 'viewer':
       return [
@@ -296,7 +227,6 @@ export function getDefaultRolePermissions(role: DefaultSystemRole | 'member'): A
         'role.read',
         'user.read',
         'company.read',
-        'piece.read',
       ];
   }
 }

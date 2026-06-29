@@ -152,7 +152,8 @@ export class AgentRegistryService implements OnModuleInit {
     const order: Record<string, number> = {
       research: 0,
       cuts: 1,
-      video_editor: 2,
+      carousel: 2,
+      video_editor: 3,
     };
     return order[agentId] ?? 999;
   }

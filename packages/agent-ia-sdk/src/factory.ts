@@ -24,6 +24,6 @@ export interface CreateAgentIaSdkDeps {
  */
 export function createAgentIaSdk(deps: CreateAgentIaSdkDeps): AgentIaSdk {
   const ia = new AiRuntime({ prisma: deps.prisma, secrets: deps.secrets });
-  // `agents` namespace is wired in Task 9 (migrate packages/agent-sdk).
+  // `agents` namespace lives in `src/agents/` (workflow kernel).
   return { ia, agents: {} };
 }

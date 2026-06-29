@@ -3,6 +3,7 @@ import {
   additionalFiles,
   ffmpeg,
 } from "@trigger.dev/build/extensions/core";
+import { puppeteer as puppeteerExtension } from "@trigger.dev/build/extensions/puppeteer";
 import { prismaExtension } from "@trigger.dev/build/extensions/prisma";
 
 export default defineConfig({
@@ -37,9 +38,11 @@ export default defineConfig({
       "remotion",
       "react",
       "react-dom",
+      "puppeteer",
     ],
     extensions: [
       ffmpeg({ version: "7" }),
+      puppeteerExtension(),
       prismaExtension({
         mode: "engine-only",
         version: "6.19.3",
@@ -47,6 +50,8 @@ export default defineConfig({
       // Ship the Remotion composition sources so render-text-overlay can bundle
       // them at runtime in the worker (they are not part of the esbuild graph).
       additionalFiles({ files: ["./src/video/**"] }),
+      // Carousel HTML/CSS templates are read from disk at runtime (not bundled).
+      additionalFiles({ files: ["./src/agents/carousel/templates/**"] }),
     ],
   },
 });

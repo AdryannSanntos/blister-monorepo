@@ -3,7 +3,7 @@ import type { PrismaClient, RagDocument, Prisma } from '@company-os/db';
 import type {
   RagSourceType,
   RagDocumentStatus,
-} from '@company-os/types/dist/rag';
+} from '@company-os/types';
 
 export interface CreateDocumentDto {
   companyId: string;
@@ -11,7 +11,6 @@ export interface CreateDocumentDto {
   sourceId: string;
   title?: string;
   content: string;
-  campaignId?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -84,7 +83,6 @@ export class DocumentService {
         sourceId: dto.sourceId,
         title: dto.title,
         contentHash,
-        campaignId: dto.campaignId,
         status: 'PENDING',
         metadata: (dto.metadata ?? {}) as Prisma.InputJsonValue,
       },

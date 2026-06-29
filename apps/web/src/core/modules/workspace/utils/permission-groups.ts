@@ -7,10 +7,9 @@ export type PermissionGroupId =
   | "roles"
   | "permissions"
   | "company"
-  | "brand"
-  | "campaigns"
+  | "workspace"
   | "files"
-  | "pieces"
+  | "projects"
   | "credits"
   | "generation";
 
@@ -29,10 +28,9 @@ const groupDefinitions: Array<{
   { id: "roles", prefix: "role." },
   { id: "permissions", prefix: "permission." },
   { id: "company", prefix: "company." },
-  { id: "brand", prefix: "brand." },
-  { id: "campaigns", prefix: "campaign." },
+  { id: "workspace", prefix: "workspace." },
   { id: "files", prefix: "file." },
-  { id: "pieces", prefix: "piece." },
+  { id: "projects", prefix: "project." },
   { id: "credits", prefix: "credit." },
   { id: "generation", prefix: "generation." },
 ];

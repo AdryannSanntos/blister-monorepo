@@ -32,13 +32,13 @@ export const AGENTS_CATALOG: AgentCatalogEntry[] = [
     description:
       "Transforme um tema em slides prontos para postar no Instagram, com design profissional e conteúdo otimizado.",
     stat: "0 carrosséis gerados",
-    tier: "marketplace" as AgentTier,
+    tier: "default",
     icon: GalleryHorizontal,
     routeSlug: "carousel",
   },
 ];
 
-export const DEFAULT_AGENT_IDS = ["cuts"] as const;
+export const DEFAULT_AGENT_IDS = ["cuts", "carousel"] as const;
 
 export const getAgentById = (id: string) =>
   AGENTS_CATALOG.find((agent) => agent.id === id);

@@ -1,4 +1,5 @@
 import { ProviderExecutionError, parseProviderError } from '../../../errors';
+import { retryOnTransient } from '../../../retry-on-transient';
 import type {
   ITextProvider,
   TextChunk,
@@ -180,37 +181,39 @@ export class AssemblyAiTextAdapter implements ITextProvider {
     const body = buildAssemblyAiChatBody(params);
 
     try {
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: 'POST',
-        headers: this.getHeaders(),
-        body: JSON.stringify(body),
+      return await retryOnTransient(async () => {
+        const response = await fetch(`${this.baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: this.getHeaders(),
+          body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+          throw parseProviderError(
+            this.provider,
+            response.status,
+            await response.text(),
+          );
+        }
+
+        const data = (await response.json()) as AssemblyAiChatResponse;
+        const content = data.choices[0]?.message?.content ?? '';
+        const promptTokens = data.usage?.prompt_tokens ?? 0;
+        const completionTokens = data.usage?.completion_tokens ?? 0;
+
+        return {
+          content,
+          structuredOutput: params.structuredOutputSchema
+            ? parseStructuredContent(content)
+            : undefined,
+          usage: {
+            promptTokens,
+            completionTokens,
+            totalTokens: promptTokens + completionTokens,
+          },
+          finishReason: data.choices[0]?.finish_reason ?? 'stop',
+        };
       });
-
-      if (!response.ok) {
-        throw parseProviderError(
-          this.provider,
-          response.status,
-          await response.text(),
-        );
-      }
-
-      const data = (await response.json()) as AssemblyAiChatResponse;
-      const content = data.choices[0]?.message?.content ?? '';
-      const promptTokens = data.usage?.prompt_tokens ?? 0;
-      const completionTokens = data.usage?.completion_tokens ?? 0;
-
-      return {
-        content,
-        structuredOutput: params.structuredOutputSchema
-          ? parseStructuredContent(content)
-          : undefined,
-        usage: {
-          promptTokens,
-          completionTokens,
-          totalTokens: promptTokens + completionTokens,
-        },
-        finishReason: data.choices[0]?.finish_reason ?? 'stop',
-      };
     } catch (error) {
       throw this.wrapError(error);
     }

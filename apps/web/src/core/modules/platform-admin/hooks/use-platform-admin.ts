@@ -83,22 +83,6 @@ export function usePlatformRoleAccess() {
   };
 }
 
-export type PlatformOrganization = {
-  id: string;
-  name: string;
-  slug: string;
-};
-
-export function usePlatformOrganizations() {
-  return useQuery<PlatformOrganization[]>({
-    queryKey: ["platform-organizations"],
-    queryFn: async () => {
-      const { data } =
-        await apiClient.get<PlatformOrganization[]>("/platform/organizations");
-      return data;
-    },
-  });
-}
 
 export function usePlatformQueryEnabled(): boolean {
   const { canAccessPlatformAdmin, isLoading } = usePlatformRoleAccess();

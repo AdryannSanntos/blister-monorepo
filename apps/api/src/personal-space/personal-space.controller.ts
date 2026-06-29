@@ -8,13 +8,6 @@ import { PersonalSpaceService } from './personal-space.service';
 export class PersonalSpaceController {
   constructor(private readonly personalSpaceService: PersonalSpaceService) {}
 
-  @Get()
-  @RequirePermission('workspace.read')
-  async getPersonalSpace(@Req() req: Request) {
-    const user = (req as unknown as { currentUser: CurrentUser }).currentUser;
-    return this.personalSpaceService.getPersonalSpace(user.id);
-  }
-
   @Get('context')
   @RequirePermission('workspace.read')
   async getWorkspaceContext(@Req() req: Request) {

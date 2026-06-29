@@ -2,6 +2,7 @@
 
 import {
   Coins,
+  GalleryHorizontal,
   KeyRound,
   LayoutDashboard,
   Library,
@@ -25,6 +26,7 @@ import type { SidebarGroupDef } from "src/core/shared/components/ui/app-sidebar"
 
 const STUDIO_ICONS = {
   cuts: Scissors,
+  carousel: GalleryHorizontal,
 } as const;
 
 export function useDashboardNavGroups(): SidebarGroupDef[] {
@@ -41,7 +43,9 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
     () =>
       AGENTS_CATALOG.filter(
         (agent) =>
-          agent.tier === "marketplace" && ownedAgentIds.includes(agent.id),
+          agent.tier === "marketplace" &&
+          ownedAgentIds.includes(agent.id) &&
+          !DEFAULT_AGENT_IDS.includes(agent.id as (typeof DEFAULT_AGENT_IDS)[number]),
       ),
     [ownedAgentIds],
   );
@@ -128,8 +132,7 @@ export function useDashboardNavGroups(): SidebarGroupDef[] {
             icon: Settings,
             match: (pathname: string) =>
               pathname === "/dashboard/settings" ||
-              pathname.startsWith("/dashboard/settings/") ||
-              pathname.startsWith("/dashboard/workspace/settings"),
+              pathname.startsWith("/dashboard/settings/"),
           },
           {
             label: t("team"),

@@ -28,7 +28,7 @@
     "generate:style-previews": "ts-node -r tsconfig-paths/register prisma/scripts/generate-style-previews.ts",
     "db:reset-folders": "ts-node -r tsconfig-paths/register prisma/scripts/reset-workspace-folders.ts",
     "storage:sync": "ts-node -r tsconfig-paths/register prisma/scripts/sync-storage.ts",
-    "postinstall": "node scripts/ensure-ffmpeg-static.cjs"
+    "postinstall": "node scripts/ensure-ffmpeg-static.cjs && node scripts/ensure-puppeteer-chrome.cjs"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
@@ -61,6 +61,7 @@
     "jszip": "^3.10.1",
     "multer": "^2.0.2",
     "pdf-parse": "^2.4.5",
+    "puppeteer": "^24.43.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "reflect-metadata": "^0.2.2",
