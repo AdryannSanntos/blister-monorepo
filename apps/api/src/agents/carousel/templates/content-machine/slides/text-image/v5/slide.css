@@ -1,0 +1,19 @@
+.slide-stack__main {
+  gap: 20px;
+}
+
+.slide-stack__stack {
+  gap: 16px;
+}
+
+.slide-stack__stack .copy-block,
+.slide-stack__closing {
+  font-size: 30px;
+}
+
+.slide-stack__image {
+  height: 360px;
+  width: 100%;
+  max-width: 920px;
+  flex-shrink: 0;
+}

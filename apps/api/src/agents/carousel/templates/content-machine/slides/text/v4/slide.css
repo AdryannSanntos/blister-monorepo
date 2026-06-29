@@ -1,0 +1,12 @@
+.slide-editorial-light__main {
+  gap: 24px;
+}
+
+.slide-editorial-light__stack {
+  gap: 18px;
+}
+
+.slide-editorial-light__stack .copy-block {
+  font-size: 30px;
+  color: var(--text-primary-dark);
+}

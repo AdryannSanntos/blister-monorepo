@@ -107,6 +107,7 @@ export const carouselSlideContentSchema = z.object({
   title: z.string().optional(),
   subtitle: z.string().optional(),
   body: z.string().optional(),
+  body2: z.string().optional(),
   callToAction: z.string().optional(),
   ctaKeyword: z.string().optional(),
   ctaHint: z.string().optional(),

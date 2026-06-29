@@ -23,8 +23,8 @@ const convertAllowedHtmlToMarkers = (value: string): string => {
 };
 
 /** Removes HTML tags and normalizes whitespace while preserving ==accent== and **bold** markers. */
-export const toCarouselPlainText = (value: string | undefined): string | undefined => {
-  if (value === undefined) return undefined;
+export const toCarouselPlainText = (value: string | null | undefined): string | undefined => {
+  if (value == null) return undefined;
 
   const withMarkers = convertAllowedHtmlToMarkers(value);
   const withoutTags = decodeHtmlEntities(withMarkers.replace(/<[^>]*>/g, ''));
@@ -44,28 +44,50 @@ export const normalizeCarouselSlideCopy = (slide: {
   title?: string;
   subtitle?: string;
   body?: string;
+  body2?: string;
   callToAction?: string;
   ctaKeyword?: string;
   ctaHint?: string;
   listItems?: string[];
   imageBrief?: string;
-}) => ({
-  ...slide,
-  ...(slide.title !== undefined ? { title: toCarouselPlainText(slide.title) } : {}),
-  ...(slide.subtitle !== undefined ? { subtitle: toCarouselPlainText(slide.subtitle) } : {}),
-  ...(slide.body !== undefined ? { body: toCarouselPlainText(slide.body) } : {}),
-  ...(slide.callToAction !== undefined
-    ? { callToAction: toCarouselPlainText(slide.callToAction) }
-    : {}),
-  ...(slide.ctaKeyword !== undefined
-    ? { ctaKeyword: toCarouselPlainText(slide.ctaKeyword) }
-    : {}),
-  ...(slide.ctaHint !== undefined ? { ctaHint: toCarouselPlainText(slide.ctaHint) } : {}),
-  ...(slide.listItems !== undefined
-    ? {
-        listItems: slide.listItems
-          .map((item) => toCarouselPlainText(item))
-          .filter((item): item is string => Boolean(item)),
-      }
-    : {}),
-});
+}) => {
+  const normalized = {
+    ...slide,
+    ...(slide.title != null ? { title: toCarouselPlainText(slide.title) } : {}),
+    ...(slide.subtitle != null ? { subtitle: toCarouselPlainText(slide.subtitle) } : {}),
+    ...(slide.body != null ? { body: toCarouselPlainText(slide.body) } : {}),
+    ...(slide.body2 != null ? { body2: toCarouselPlainText(slide.body2) } : {}),
+    ...(slide.callToAction != null
+      ? { callToAction: toCarouselPlainText(slide.callToAction) }
+      : {}),
+    ...(slide.ctaKeyword != null
+      ? { ctaKeyword: toCarouselPlainText(slide.ctaKeyword) }
+      : {}),
+    ...(slide.ctaHint != null ? { ctaHint: toCarouselPlainText(slide.ctaHint) } : {}),
+    ...(Array.isArray(slide.listItems)
+      ? {
+          listItems: slide.listItems
+            .map((item) => toCarouselPlainText(item))
+            .filter((item): item is string => Boolean(item)),
+        }
+      : {}),
+  };
+
+  for (const key of [
+    'title',
+    'subtitle',
+    'body',
+    'body2',
+    'callToAction',
+    'ctaKeyword',
+    'ctaHint',
+    'imageBrief',
+    'listItems',
+  ] as const) {
+    if (normalized[key] === null) {
+      delete normalized[key];
+    }
+  }
+
+  return normalized;
+};

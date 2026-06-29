@@ -21,12 +21,32 @@ describe('copy-limits.util', () => {
     expect(result.listItems).toHaveLength(4);
   });
 
-  it('derives cta keyword fallback', () => {
-    const result: TruncatableSlideCopy = applyCopyLimits({
-      narrativeRole: 'cta',
-      callToAction: 'Salve para revisar amanhã',
-    });
+  it('limits each content-machine text block to 160 chars', () => {
+    const result = applyCopyLimits(
+      {
+        narrativeRole: 'scene',
+        body: 'a'.repeat(200),
+        body2: 'b'.repeat(200),
+        subtitle: 'c'.repeat(200),
+      },
+      { templateId: 'content-machine' },
+    );
 
-    expect(result.ctaKeyword).toBeTruthy();
+    expect(result.body).toBe(`${'a'.repeat(159)}…`);
+    expect(result.body2).toBe(`${'b'.repeat(159)}…`);
+    expect(result.subtitle).toBe(`${'c'.repeat(159)}…`);
+  });
+
+  it('keeps editorial body limit at 280 chars', () => {
+    const longBody = 'a'.repeat(300);
+    const result = applyCopyLimits(
+      {
+        narrativeRole: 'scene',
+        body: longBody,
+      },
+      { templateId: 'editorial-performance' },
+    );
+
+    expect(result.body).toBe(`${'a'.repeat(279)}…`);
   });
 });

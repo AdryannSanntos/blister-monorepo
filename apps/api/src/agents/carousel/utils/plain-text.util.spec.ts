@@ -50,4 +50,19 @@ describe('normalizeCarouselSlideCopy', () => {
       callToAction: 'Salvar',
     });
   });
+
+  it('ignores null optional copy fields', () => {
+    expect(
+      normalizeCarouselSlideCopy({
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        body2: null as unknown as string,
+      }),
+    ).toEqual({
+      id: 'slide_2',
+      order: 2,
+      type: 'text',
+    });
+  });
 });

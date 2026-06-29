@@ -14,6 +14,7 @@ type ContentSlide = {
   title?: string;
   subtitle?: string;
   body?: string;
+  body2?: string;
   callToAction?: string;
   ctaKeyword?: string;
   ctaHint?: string;

@@ -1,21 +1,18 @@
 .slide-close__main {
-  gap: 28px;
+  gap: 24px;
 }
 
-.slide-close__body {
-  font-size: 42px;
-  max-width: 920px;
+.slide-close__stack {
+  gap: 18px;
 }
 
-.slide-close__subtitle {
+.slide-close__stack .copy-block {
   font-size: 30px;
-  max-width: 920px;
-  opacity: 0.92;
 }
 
 .slide-close__box {
   margin-top: auto;
-  min-height: 200px;
+  min-height: 180px;
   display: flex;
   align-items: center;
 }

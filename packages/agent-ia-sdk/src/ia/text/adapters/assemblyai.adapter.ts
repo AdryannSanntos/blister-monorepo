@@ -113,6 +113,56 @@ const appendJsonSchemaInstruction = (
   return copy;
 };
 
+const ASSEMBLYAI_UNSUPPORTED_SCHEMA_KEYS = new Set(['additionalProperties']);
+
+const isNullJsonSchema = (value: unknown): boolean =>
+  Boolean(
+    value &&
+      typeof value === 'object' &&
+      (value as Record<string, unknown>).type === 'null',
+  );
+
+/**
+ * AssemblyAI's structured-output gateway rejects several JSON Schema keywords
+ * that Zod emits (`additionalProperties`, nullable `anyOf` branches, etc.).
+ * Optional fields should simply be omitted from `required`, not typed as null.
+ */
+export const sanitizeAssemblyAiStructuredSchema = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(sanitizeAssemblyAiStructuredSchema);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  const record = value as Record<string, unknown>;
+  const unionKey =
+    'anyOf' in record ? 'anyOf' : 'oneOf' in record ? 'oneOf' : undefined;
+
+  if (unionKey) {
+    const branches = record[unionKey];
+    if (Array.isArray(branches)) {
+      const nonNullBranches = branches.filter((branch) => !isNullJsonSchema(branch));
+      if (nonNullBranches.length === 1) {
+        return sanitizeAssemblyAiStructuredSchema(nonNullBranches[0]);
+      }
+      if (nonNullBranches.length > 1) {
+        return {
+          [unionKey]: nonNullBranches.map(sanitizeAssemblyAiStructuredSchema),
+        };
+      }
+    }
+  }
+
+  const result: Record<string, unknown> = {};
+  for (const [key, child] of Object.entries(record)) {
+    if (ASSEMBLYAI_UNSUPPORTED_SCHEMA_KEYS.has(key)) continue;
+    result[key] = sanitizeAssemblyAiStructuredSchema(child);
+  }
+  return result;
+};
+
 const buildAssemblyAiChatBody = (
   params: TextCompleteParams,
   options?: { stream?: boolean },
@@ -149,7 +199,7 @@ const buildAssemblyAiChatBody = (
         json_schema: {
           name: 'structured_response',
           strict: true,
-          schema: params.structuredOutputSchema,
+          schema: sanitizeAssemblyAiStructuredSchema(params.structuredOutputSchema),
         },
       };
     }

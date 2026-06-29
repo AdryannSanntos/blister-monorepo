@@ -36,6 +36,8 @@ const resolveContentSlides = (context: StepExecutionContext) => {
       narrativeRole?: string;
       listItems?: string[];
       body?: string;
+      subtitle?: string;
+      callToAction?: string;
       imageBrief?: string;
     }>;
   };
@@ -47,6 +49,8 @@ const resolveContentSlides = (context: StepExecutionContext) => {
       narrativeRole?: string;
       listItems?: string[];
       body?: string;
+      subtitle?: string;
+      callToAction?: string;
       imageBrief?: string;
     }>;
   };
@@ -61,6 +65,8 @@ const toNormalizerContentSlides = (
     narrativeRole?: string;
     listItems?: string[];
     body?: string;
+    subtitle?: string;
+    callToAction?: string;
     imageBrief?: string;
   }>,
 ): NormalizerContentSlide[] =>
@@ -73,6 +79,8 @@ const toNormalizerContentSlides = (
       : undefined,
     listItems: slide.listItems,
     body: slide.body,
+    subtitle: slide.subtitle,
+    callToAction: slide.callToAction,
     imageBrief: slide.imageBrief,
   }));
 

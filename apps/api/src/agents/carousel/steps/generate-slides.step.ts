@@ -176,6 +176,7 @@ export const hydrateGeneratedSlides = async (
           type: slide.type,
         },
         variationId,
+        templateId: generationContext.templateId,
         brand: generationContext.brand,
         totalSlides: generationContext.totalSlides,
         imageUrls,

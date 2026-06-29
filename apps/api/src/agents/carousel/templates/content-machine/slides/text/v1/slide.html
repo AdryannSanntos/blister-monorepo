@@ -5,8 +5,11 @@
     <span class="slide-header__meta">{{meta_year}}</span>
   </header>
   <main class="slide-main slide-narrative__main">
-    <p class="editorial-serif slide-narrative__body">{{body}}</p>
-    <p class="bold-sans slide-narrative__subtitle">{{subtitle}}</p>
+    <div class="copy-stack slide-narrative__stack">
+      <p class="copy-block copy-block--serif">{{body}}</p>
+      <p class="copy-block copy-block--sans">{{body2}}</p>
+      <p class="copy-block copy-block--serif">{{subtitle}}</p>
+    </div>
   </main>
   <footer class="slide-footer slide-footer--hidden">
     <span hidden>{{meta_right}}</span>

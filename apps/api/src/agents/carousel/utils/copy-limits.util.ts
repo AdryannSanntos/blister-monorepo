@@ -5,10 +5,15 @@ export type TruncatableSlideCopy = {
   title?: string;
   subtitle?: string;
   body?: string;
+  body2?: string;
   callToAction?: string;
   ctaKeyword?: string;
   ctaHint?: string;
   listItems?: string[];
+};
+
+export type CopyLimitsOptions = {
+  templateId?: string;
 };
 
 const truncate = (value: string | undefined, max: number): string | undefined => {
@@ -17,7 +22,26 @@ const truncate = (value: string | undefined, max: number): string | undefined =>
   return `${value.slice(0, max - 1).trimEnd()}…`;
 };
 
-export const applyCopyLimits = <T extends TruncatableSlideCopy>(slide: T): T => {
+const resolveLimits = (templateId?: string) => {
+  const isContentMachine = templateId === 'content-machine';
+  return {
+    body: isContentMachine ? 160 : 280,
+    body2: isContentMachine ? 160 : 0,
+    subtitle: isContentMachine ? 160 : 160,
+    callToAction: isContentMachine ? 220 : 100,
+    ctaBody: isContentMachine ? 160 : 160,
+    ctaBody2: isContentMachine ? 160 : 0,
+    ctaHint: isContentMachine ? 160 : 100,
+    ctaKeyword: isContentMachine ? 32 : 24,
+    frameworkCta: isContentMachine ? 220 : 80,
+  };
+};
+
+export const applyCopyLimits = <T extends TruncatableSlideCopy>(
+  slide: T,
+  options?: CopyLimitsOptions,
+): T => {
+  const limits = resolveLimits(options?.templateId);
   const role = slide.narrativeRole;
 
   if (role === 'hook') {
@@ -25,6 +49,7 @@ export const applyCopyLimits = <T extends TruncatableSlideCopy>(slide: T): T => 
       ...slide,
       subtitle: truncate(slide.subtitle ?? slide.body, 120),
       body: undefined,
+      body2: undefined,
     };
   }
 
@@ -32,7 +57,7 @@ export const applyCopyLimits = <T extends TruncatableSlideCopy>(slide: T): T => 
     return {
       ...slide,
       listItems: slide.listItems?.slice(0, 4),
-      callToAction: truncate(slide.callToAction, 80),
+      callToAction: truncate(slide.callToAction, limits.frameworkCta),
     };
   }
 
@@ -44,22 +69,30 @@ export const applyCopyLimits = <T extends TruncatableSlideCopy>(slide: T): T => 
 
     return {
       ...slide,
-      ctaKeyword: truncate(keyword, 24),
-      body: truncate(slide.body, 160),
-      ctaHint: truncate(slide.ctaHint ?? slide.subtitle, 100),
-      callToAction: truncate(slide.callToAction, 100),
+      ctaKeyword: truncate(keyword, limits.ctaKeyword),
+      body: truncate(slide.body, limits.ctaBody),
+      body2: limits.body2 ? truncate(slide.body2, limits.ctaBody2) : slide.body2,
+      subtitle: truncate(slide.subtitle, limits.subtitle),
+      ctaHint: truncate(slide.ctaHint ?? slide.subtitle, limits.ctaHint),
+      callToAction: truncate(slide.callToAction, limits.callToAction),
     };
   }
 
   if (role === 'scene' || role === 'proof') {
     return {
       ...slide,
-      body: truncate(slide.body, 280),
+      body: truncate(slide.body, limits.body),
+      body2: limits.body2 ? truncate(slide.body2, limits.body2) : slide.body2,
+      subtitle: truncate(slide.subtitle, limits.subtitle),
+      callToAction: truncate(slide.callToAction, limits.callToAction),
     };
   }
 
   return {
     ...slide,
-    body: truncate(slide.body, 280),
+    body: truncate(slide.body, limits.body),
+    body2: limits.body2 ? truncate(slide.body2, limits.body2) : slide.body2,
+    subtitle: truncate(slide.subtitle, limits.subtitle),
+    callToAction: truncate(slide.callToAction, limits.callToAction),
   };
 };

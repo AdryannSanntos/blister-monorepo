@@ -5,8 +5,11 @@
     <span class="slide-header__meta">{{meta_year}}</span>
   </header>
   <main class="slide-main slide-proof__main">
-    <p class="editorial-serif slide-proof__body">{{body}}</p>
-    <p class="bold-sans slide-proof__subtitle">{{subtitle}}</p>
+    <div class="copy-stack slide-proof__stack">
+      <p class="copy-block copy-block--serif">{{body}}</p>
+      <p class="copy-block copy-block--sans">{{body2}}</p>
+      <p class="copy-block copy-block--serif">{{subtitle}}</p>
+    </div>
     <div class="proof-image slide-proof__image">
       <img src="{{image_url}}" alt="" />
     </div>

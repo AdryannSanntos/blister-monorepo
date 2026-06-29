@@ -10,6 +10,7 @@ export type SlideContentInput = {
   title?: string;
   subtitle?: string;
   body?: string;
+  body2?: string;
   callToAction?: string;
   ctaKeyword?: string;
   ctaHint?: string;
@@ -20,6 +21,7 @@ export type HydrateSlideHtmlInput = {
   html: string;
   slide: SlideContentInput;
   variationId: string;
+  templateId?: string;
   brand: CarouselBrandContext;
   totalSlides: number;
   imageUrls: Record<string, string>;
@@ -53,6 +55,7 @@ const resolveContentVariables = (
       title: ctaKeyword,
       subtitle: ctaHint,
       body: formatCarouselCopyHtml(slide.body ?? ''),
+      body2: formatCarouselCopyHtml(slide.body2 ?? ''),
       call_to_action: callToAction,
       ctaKeyword,
       cta_keyword: ctaKeyword,
@@ -78,6 +81,7 @@ const resolveContentVariables = (
     title: formatCarouselCopyHtml(slide.title ?? ''),
     subtitle: formatCarouselCopyHtml(slide.subtitle ?? ''),
     body: formatCarouselCopyHtml(slide.body ?? ''),
+    body2: formatCarouselCopyHtml(slide.body2 ?? ''),
     call_to_action: callToAction,
     list_html: buildListHtml(slide.listItems),
     ctaKeyword: ctaKeyword || callToAction,
@@ -129,16 +133,17 @@ const stripEmptyCopyBlocks = (html: string): string => {
   result = result.replace(/<p[^>]*__closing[^>]*>\s*<\/p>/gi, '');
   result = result.replace(/<p[^>]*__intro[^>]*>\s*<\/p>/gi, '');
   result = result.replace(/<p[^>]*__support[^>]*>\s*<\/p>/gi, '');
-  result = result.replace(/<p[^>]*__lead[^>]*>\s*<\/p>/gi, '');
+  result = result.replace(/<p[^>]*__body2[^>]*>\s*<\/p>/gi, '');
+  result = result.replace(/<p[^>]*copy-block[^>]*>\s*<\/p>/gi, '');
 
   return result;
 };
 
 export const hydrateSlideHtml = (input: HydrateSlideHtmlInput): string => {
-  const { slide, brand, totalSlides, imageUrls } = input;
+  const { slide, brand, totalSlides, imageUrls, templateId } = input;
   const limitedSlide: SlideContentInput = {
     ...slide,
-    ...applyCopyLimits(slide),
+    ...applyCopyLimits(slide, { templateId }),
   };
   const progress = totalSlides > 0 ? Math.round((slide.order / totalSlides) * 100) : 0;
 

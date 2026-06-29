@@ -58,7 +58,19 @@ Marketplace items with `type: TEMPLATE` and `refId: <templateId>` grant entitlem
 
 ### Content Machine (`content-machine`)
 
-Editorial template inspired by analysis carousels: triple header, serif/sans dual typography, accent card for visuals, accent box closing. **Title only on cover slide**; internal slides use `body` / `subtitle` / `call_to_action`. Brand accent from carousel agent `accentColor` settings.
+Editorial template: triple header, serif/sans typography, **9 internal layout variants** (text-only + image top/middle/bottom/stack/card). Title only on cover. Brand accent from `accentColor`.
+
+| Variation | Layout |
+|---|---|
+| `text/v1` | Accent bg · texto serif + sans |
+| `text/v3` | Navy · texto denso |
+| `text/v4` | Claro · texto denso |
+| `text/v2` | Fechamento · caixa accent |
+| `text-image/v1` | Card accent central |
+| `text-image/v2` | Imagem no rodapé |
+| `text-image/v3` | Texto · imagem · texto (sanduíche) |
+| `text-image/v4` | Imagem no topo |
+| `text-image/v5` | Texto · imagem colada · texto |
 
 ## API
 

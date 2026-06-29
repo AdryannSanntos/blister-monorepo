@@ -75,10 +75,14 @@ export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string
             : 'REQUIRED: variationId v3 when type=text (CTA closing)'
           : isContentMachine
             ? slide.narrativeRole === 'proof'
-              ? 'PREFER: text-image/v2 (dark proof + image)'
-              : slide.imageBrief
-                ? 'PREFER: text-image/v1 (concept card) or v2 (proof)'
-                : 'PREFER: text/v1 (accent narrative block)'
+              ? 'PREFER: text-image/v2 (image bottom) or v4 (image top) or v5 (image after text)'
+              : slide.imageBrief && slide.callToAction && !slide.subtitle
+                ? 'PREFER: text-image/v1 (accent card)'
+                : slide.imageBrief && slide.subtitle
+                  ? 'PREFER: text-image/v3 (sandwich), v5 (stack), or v4 (image first) — vary from previous slide'
+                  : slide.imageBrief
+                    ? 'PREFER: rotate text-image/v2, v3, v4, v5 — never repeat same layout twice in a row'
+                    : 'PREFER: text/v1, v3, or v4 (text-only, denser copy)'
             : slide.listItems?.length
               ? 'PREFER: text/v1 or text/v2 for lists; text-image/v2 for list + visual card'
               : slide.narrativeRole === 'proof'

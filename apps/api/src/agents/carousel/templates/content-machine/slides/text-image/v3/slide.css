@@ -1,0 +1,21 @@
+.slide-sandwich__main {
+  gap: 20px;
+}
+
+.slide-sandwich__stack {
+  gap: 16px;
+}
+
+.slide-sandwich__stack .copy-block,
+.slide-sandwich__closing {
+  font-size: 30px;
+  color: var(--text-primary-dark);
+}
+
+.slide-sandwich__image {
+  flex: 1;
+  min-height: 320px;
+  max-height: 420px;
+  width: 100%;
+  max-width: 920px;
+}

@@ -4,6 +4,8 @@ import { buildContentSystemPrompt, buildContentUserPrompt } from '../prompts/con
 import { carouselNarrativeRoleSchema, carouselSlideTypeSchema } from '@company-os/types';
 import { normalizeCarouselSlideCopy } from '../utils/plain-text.util';
 import { applyCopyLimits } from '../utils/copy-limits.util';
+import { splitOversizedContentMachineCopy } from '../utils/content-paragraph-splitter.util';
+import { sanitizeContentLlmOutput } from '../utils/content-llm-output-sanitizer.util';
 import {
   normalizeContentSlides,
   type NormalizableContentSlide,
@@ -17,6 +19,7 @@ const contentSlideLaxSchema = z.object({
   title: z.string().optional(),
   subtitle: z.string().optional(),
   body: z.string().optional(),
+  body2: z.string().optional(),
   callToAction: z.string().optional(),
   ctaKeyword: z.string().optional(),
   ctaHint: z.string().optional(),
@@ -29,9 +32,10 @@ const contentLlmOutputZod = z.object({
 });
 
 const repairContentOutput = (raw: unknown): unknown => {
-  if (!raw || typeof raw !== 'object') return raw;
-  const record = raw as { slides?: unknown };
-  if (!Array.isArray(record.slides)) return raw;
+  const sanitized = sanitizeContentLlmOutput(raw);
+  if (!sanitized || typeof sanitized !== 'object') return sanitized;
+  const record = sanitized as { slides?: unknown };
+  if (!Array.isArray(record.slides)) return sanitized;
 
   return {
     ...record,
@@ -48,15 +52,25 @@ export const createGenerateContentStep = () =>
     buildSystem: buildContentSystemPrompt,
     buildUser: buildContentUserPrompt,
     repair: repairContentOutput,
-    transformOutput: (data) => ({
+    retry: { maxAttempts: 2, retryOn: ['parse_error', 'rate_limit', 'provider_error'] },
+    transformOutput: (data, context) => ({
       slides: normalizeContentSlides(
         data.slides.map((slide): NormalizableContentSlide => {
           const parsed = contentSlideLaxSchema.parse(slide);
-          return applyCopyLimits({
-            ...normalizeCarouselSlideCopy(parsed),
-            type: parsed.type,
-            narrativeRole: parsed.narrativeRole,
-          });
+          const templateId = (context.inputPayload as { templateId?: string }).templateId;
+          const normalized = normalizeCarouselSlideCopy(parsed);
+          const split = splitOversizedContentMachineCopy(
+            {
+              ...normalized,
+              type: parsed.type,
+              narrativeRole: parsed.narrativeRole,
+            },
+            { templateId },
+          );
+          return applyCopyLimits(
+            split,
+            { templateId },
+          );
         }),
       ),
     }),

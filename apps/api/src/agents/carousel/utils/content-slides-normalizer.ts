@@ -8,6 +8,7 @@ export type NormalizableContentSlide = {
   title?: string;
   subtitle?: string;
   body?: string;
+  body2?: string;
   callToAction?: string;
   ctaKeyword?: string;
   ctaHint?: string;
@@ -19,7 +20,10 @@ const hasImageIntent = (slide: NormalizableContentSlide): boolean =>
   Boolean(slide.imageBrief?.trim());
 
 const isTextHeavy = (slide: NormalizableContentSlide): boolean =>
-  (slide.body?.length ?? 0) >= 180;
+  (slide.body?.length ?? 0) +
+    (slide.body2?.length ?? 0) +
+    (slide.subtitle?.length ?? 0) >=
+  180;
 
 const isListHeavy = (slide: NormalizableContentSlide): boolean =>
   (slide.listItems?.length ?? 0) >= 2;

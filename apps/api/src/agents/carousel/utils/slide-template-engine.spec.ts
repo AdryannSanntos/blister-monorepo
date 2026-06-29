@@ -199,6 +199,58 @@ describe('slide-template-engine', () => {
     expect(html).toContain('Corpo do slide');
   });
 
+  it('hydrates body2 and respects content-machine copy limits on hydrate', () => {
+    const template = `<div class="copy-stack">
+      <p class="copy-block copy-block--serif">{{body}}</p>
+      <p class="copy-block copy-block--sans">{{body2}}</p>
+      <p class="copy-block copy-block--serif">{{subtitle}}</p>
+    </div>`;
+
+    const longBody = 'a'.repeat(200);
+    const html = hydrateSlideHtml({
+      html: template,
+      slide: {
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        narrativeRole: 'scene',
+        body: longBody,
+        body2: 'Segundo bloco com ==destaque==.',
+        subtitle: 'Terceiro bloco.',
+      },
+      variationId: 'v3',
+      templateId: 'content-machine',
+      brand,
+      totalSlides: 5,
+      imageUrls: {},
+    });
+
+    expect(html).toContain(`${'a'.repeat(159)}…`);
+    expect(html).toContain('<span class="accent">destaque</span>');
+    expect(html).toContain('Terceiro bloco.');
+    expect(html).not.toMatch(/\{\{/);
+  });
+
+  it('strips empty body2 copy blocks', () => {
+    const template = `<p class="copy-block">{{body}}</p><p class="copy-block">{{body2}}</p>`;
+    const html = hydrateSlideHtml({
+      html: template,
+      slide: {
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        body: 'Primeiro bloco.',
+      },
+      variationId: 'v3',
+      brand,
+      totalSlides: 5,
+      imageUrls: {},
+    });
+
+    expect(html).toContain('Primeiro bloco.');
+    expect(html.match(/<p class="copy-block">/g)?.length).toBe(1);
+  });
+
   it('resolves ctaKeyword placeholder from LLM html on CTA slides', () => {
     const template = `<span class="keyword">{{ctaKeyword}}</span><span>{{ctaHint}}</span>`;
     const html = hydrateSlideHtml({

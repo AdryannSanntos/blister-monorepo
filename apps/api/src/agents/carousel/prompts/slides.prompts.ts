@@ -12,7 +12,7 @@ export const buildSlidesSystemPrompt = (_context: StepExecutionContext): string 
     '- adjust vertical spacing, reorder blocks, or omit optional sections (e.g. drop closing paragraph if no callToAction)',
     '- add/remove wrapper divs using existing template BEM classes',
     '- never invent new placeholder keys',
-    'MUST keep injectable placeholders for server hydration: {{brand}}, {{meta_right}}, {{meta_center}}, {{meta_year}}, {{title}}, {{body}}, {{subtitle}}, {{call_to_action}}, {{ctaKeyword}}, {{ctaHint}}, {{list_html}}, {{image_url}}, {{badge}}, {{slide_current}}, {{slide_total}}, {{progress}}.',
+    'MUST keep injectable placeholders for server hydration: {{brand}}, {{meta_right}}, {{meta_center}}, {{meta_year}}, {{title}}, {{body}}, {{body2}}, {{subtitle}}, {{call_to_action}}, {{ctaKeyword}}, {{ctaHint}}, {{list_html}}, {{image_url}}, {{badge}}, {{slide_current}}, {{slide_total}}, {{progress}}.',
     'Copy arrives pre-marked with ==accent== and **bold** — keep those markers inside placeholders, do not strip them.',
     'Return htmlContent + cssContent per slide. CSS may extend reference with spacing/typography tweaks.',
     'Return only valid JSON matching the schema provided.',
@@ -45,6 +45,7 @@ export const buildSlidesUserPrompt = (context: StepExecutionContext): string => 
         `  title: "${slide.title ?? ''}"`,
         `  subtitle: "${slide.subtitle ?? ''}"`,
         `  body: "${slide.body ?? ''}"`,
+        `  body2: "${slide.body2 ?? ''}"`,
         `  callToAction: "${slide.callToAction ?? ''}"`,
         `  ctaKeyword: "${slide.ctaKeyword ?? ''}"`,
         `  listItems: ${slide.listItems?.length ? slide.listItems.join(' | ') : 'none'}`,
@@ -64,7 +65,7 @@ export const buildSlidesUserPrompt = (context: StepExecutionContext): string => 
     'Adapt each layout for readability — generous spacing between title and body (32px+), do not cram blocks.',
     'Omit {{call_to_action}} block entirely when the slide has no closing line in the brief.',
     isContentMachine
-      ? 'Content Machine rules: {{title}} ONLY on start/v1 cover. Internal slides use {{body}}, {{subtitle}}, {{call_to_action}} — never {{title}}. Final slide is text/v2 with accent box, not CTA keyword layout.'
+      ? 'Content Machine rules: {{title}} ONLY on start/v1 cover. Internal slides use {{body}}, {{body2}}, {{subtitle}}, {{call_to_action}} — never {{title}}. Keep copy-stack blocks; do not merge paragraphs. Rotate layouts: image top (v4), sandwich (v3), stack (v5), card (v1), bottom proof (v2), text-only (text v1/v3/v4). Final slide is text/v2 with accent box.'
       : 'For the final CTA slide (text v3 / slide-close): dark theme, badge, recap body, large keyword title, hint subtitle, accent action pill — never use a bordered white box.',
     'Preserve ==accent== and **bold** markers inside text placeholders.',
     slidesContext,

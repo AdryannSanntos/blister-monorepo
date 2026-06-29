@@ -61,6 +61,12 @@ const formatProviderExecutionError = (error: ProviderExecutionError): string => 
     return `Limite de uso do ${provider} atingido. Aguarde alguns minutos e tente novamente.`;
   }
 
+  if (
+    /returned no completion choices|returned no choices/i.test(error.message)
+  ) {
+    return `O ${provider} não retornou uma resposta válida. Tente novamente em instantes ou altere o modelo configurado para este agente.`;
+  }
+
   if (error.statusCode === 400 || error.category === 'validation') {
     const detail = extractProviderDetail(error.message);
     return detail

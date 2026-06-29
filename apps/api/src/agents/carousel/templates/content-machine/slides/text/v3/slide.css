@@ -1,0 +1,11 @@
+.slide-editorial-dense__main {
+  gap: 24px;
+}
+
+.slide-editorial-dense__stack {
+  gap: 18px;
+}
+
+.slide-editorial-dense__stack .copy-block {
+  font-size: 30px;
+}

@@ -4,6 +4,7 @@ import {
   AssemblyAiTextAdapter,
   assemblyAiModelSupportsTemperature,
   assemblyAiModelUsesPromptJson,
+  sanitizeAssemblyAiStructuredSchema,
 } from './assemblyai.adapter';
 
 describe('assemblyAiModelUsesPromptJson', () => {
@@ -41,6 +42,29 @@ describe('assemblyAiModelSupportsTemperature', () => {
     );
     expect(assemblyAiModelSupportsTemperature('gpt-5-mini')).toBe(true);
     expect(assemblyAiModelSupportsTemperature('gemini-2.5-flash')).toBe(true);
+  });
+});
+
+describe('sanitizeAssemblyAiStructuredSchema', () => {
+  it('strips additionalProperties and nullable anyOf branches', () => {
+    const sanitized = sanitizeAssemblyAiStructuredSchema({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        title: {
+          anyOf: [{ type: 'string' }, { type: 'null' }],
+        },
+      },
+      required: ['title'],
+    });
+
+    expect(sanitized).toEqual({
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+      },
+      required: ['title'],
+    });
   });
 });
 
@@ -87,6 +111,36 @@ describe('AssemblyAiTextAdapter.complete', () => {
 
     expect(result.content).toBe('{"ok":true}');
     expect(result.usage.totalTokens).toBe(15);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('strips additionalProperties from structured output schema', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: '{"ok":true}' }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 10, completion_tokens: 5 },
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const adapter = new AssemblyAiTextAdapter({ apiKey: 'test-key' });
+    await adapter.complete({
+      model: 'gpt-5-mini',
+      messages: [{ role: 'user', content: 'Hello' }],
+      structuredOutputSchema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { ok: { type: 'boolean' } },
+      },
+    });
+
+    const body = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body));
+    expect(body.response_format.json_schema.schema).toEqual({
+      type: 'object',
+      properties: { ok: { type: 'boolean' } },
+    });
 
     vi.unstubAllGlobals();
   });

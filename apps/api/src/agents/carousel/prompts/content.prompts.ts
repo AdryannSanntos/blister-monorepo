@@ -57,12 +57,16 @@ export const buildContentUserPrompt = (context: StepExecutionContext): string =>
   const contentMachineStructurePrompt = [
     'Slide structure for Content Machine template:',
     '- hook (slide 1, type "start"): title ONLY — cover headline (4–6 short lines) with ==accent== on 1–2 words. imageBrief required. Do NOT populate body/subtitle on slide 1.',
-    '- scene (middle slides): NO title field. Use body and/or subtitle and/or callToAction only.',
-    '  A) type "text": body (serif narrative) + subtitle (bold sans takeaway). No imageBrief.',
-    '  B) type "text_image": body (bold sans lead with ==accent==) + callToAction (closing line) + imageBrief. No title.',
-    '  C) type "text_image": body (serif) + subtitle (sans) + imageBrief for proof photo. No title.',
-    '- proof: type "text_image". body + subtitle + imageBrief. No title.',
-    '- cta (last slide, type "text"): body (serif) + subtitle (sans reflection) + callToAction (provocation inside accent box). No title, no ctaKeyword.',
+    '- scene (middle slides): NO title field. Split copy across 2–3 SHORT blocks — never pack 3+ sentences into a single field.',
+    '  Each block: 1–2 sentences (~80–160 chars). Use body + body2 + subtitle when the slide has room for three beats.',
+    '  REQUIRED highlights: at least one ==word or short phrase== per text block. At least 60% of internal slides must use highlights.',
+    '  Mix typography in copy: use **phrase** for sans emphasis inside serif blocks (and vice versa where natural).',
+    '  A) type "text": body + body2 + subtitle (three balanced blocks). No imageBrief.',
+    '  B) type "text_image" + body + body2 + subtitle + imageBrief: proof or scene with image.',
+    '  C) type "text_image" + body + body2 + callToAction + imageBrief: concept slide with accent card.',
+    '- proof: type "text_image". body + body2 + subtitle + imageBrief. No title.',
+    '- cta (last slide, type "text"): body + body2 + subtitle (short blocks) + callToAction (provocation for accent box). No title, no ctaKeyword.',
+    'Layout variety: the design step will assign v1–v5 image layouts — always provide the text fields each layout needs.',
     'NEVER use listItems. NEVER set title on slides 2+.',
   ].join('\n');
 
@@ -104,7 +108,11 @@ export const buildContentUserPrompt = (context: StepExecutionContext): string =>
         ? [
             'Diversity rules (Content Machine):',
             '- Middle slides must NOT include title.',
-            '- Alternate text-only narrative slides with text_image slides.',
+            '- Alternate text-only slides (type "text") with text_image slides.',
+            '- Prefer 3 short text blocks (body, body2, subtitle) over one long body paragraph.',
+            '- Every text block should include at least one ==highlight== when possible.',
+            '- On text_image slides always provide body + body2 + subtitle OR body + body2 + callToAction.',
+            '- Vary narrative density: some slides are text-heavy (no image), others sandwich image between text blocks.',
             '- callToAction on last slide must be a provocative question or insight for the accent box.',
           ].join('\n')
         : ''

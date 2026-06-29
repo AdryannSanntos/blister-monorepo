@@ -45,4 +45,83 @@ describe('design-plan-normalizer', () => {
     expect(normalized[0]).toMatchObject({ type: 'start', variationId: 'v1' });
     expect(normalized[5]).toMatchObject({ type: 'text', variationId: 'v2' });
   });
+
+  it('content-machine rotates image layouts without consecutive duplicates', () => {
+    const imageSlides = [
+      { id: 's1', order: 1, type: 'start' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's2', order: 2, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's3', order: 3, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's4', order: 4, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's5', order: 5, type: 'text' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+    ];
+    const imageContent = [
+      { id: 's1', order: 1, type: 'start' as const, narrativeRole: 'hook' as const },
+      {
+        id: 's2',
+        order: 2,
+        type: 'text_image' as const,
+        narrativeRole: 'scene' as const,
+        body: 'a'.repeat(300),
+        subtitle: 'Takeaway one',
+        imageBrief: 'photo',
+      },
+      {
+        id: 's3',
+        order: 3,
+        type: 'text_image' as const,
+        narrativeRole: 'scene' as const,
+        body: 'b'.repeat(300),
+        subtitle: 'Takeaway two',
+        imageBrief: 'photo',
+      },
+      {
+        id: 's4',
+        order: 4,
+        type: 'text_image' as const,
+        narrativeRole: 'proof' as const,
+        body: 'c'.repeat(200),
+        subtitle: 'Takeaway three',
+        imageBrief: 'photo',
+      },
+      { id: 's5', order: 5, type: 'text' as const, narrativeRole: 'cta' as const },
+    ];
+
+    const normalized = normalizeDesignPlanSlides(imageSlides, imageContent, {
+      templateId: 'content-machine',
+    });
+
+    const keys = normalized.slice(1, 4).map((slide) => `${slide.type}:${slide.variationId}`);
+    expect(new Set(keys).size).toBeGreaterThan(1);
+    for (let index = 1; index < keys.length; index += 1) {
+      expect(keys[index]).not.toBe(keys[index - 1]);
+    }
+  });
+
+  it('content-machine prefers stack layout when body2 is present', () => {
+    const slides = [
+      { id: 's1', order: 1, type: 'start' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's2', order: 2, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's3', order: 3, type: 'text' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+    ];
+    const content = [
+      { id: 's1', order: 1, type: 'start' as const, narrativeRole: 'hook' as const },
+      {
+        id: 's2',
+        order: 2,
+        type: 'text_image' as const,
+        narrativeRole: 'scene' as const,
+        body: 'Primeiro bloco.',
+        body2: 'Segundo bloco.',
+        subtitle: 'Terceiro bloco.',
+        imageBrief: 'photo',
+      },
+      { id: 's3', order: 3, type: 'text' as const, narrativeRole: 'cta' as const },
+    ];
+
+    const normalized = normalizeDesignPlanSlides(slides, content, {
+      templateId: 'content-machine',
+    });
+
+    expect(normalized[1]).toMatchObject({ type: 'text_image', variationId: 'v5' });
+  });
 });

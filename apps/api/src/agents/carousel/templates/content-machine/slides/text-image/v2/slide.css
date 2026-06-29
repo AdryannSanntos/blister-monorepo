@@ -1,21 +1,18 @@
 .slide-proof__main {
-  gap: 24px;
+  gap: 20px;
 }
 
-.slide-proof__body {
-  font-size: 42px;
-  max-width: 920px;
+.slide-proof__stack {
+  gap: 16px;
 }
 
-.slide-proof__subtitle {
+.slide-proof__stack .copy-block {
   font-size: 30px;
-  max-width: 920px;
-  opacity: 0.9;
 }
 
 .slide-proof__image {
   margin-top: auto;
-  height: 480px;
+  height: 420px;
   max-width: 920px;
   width: 100%;
 }

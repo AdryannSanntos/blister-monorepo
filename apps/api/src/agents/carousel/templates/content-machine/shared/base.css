@@ -155,6 +155,72 @@
   font-weight: inherit;
 }
 
+.copy-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 920px;
+}
+
+.copy-block {
+  font-size: 32px;
+  line-height: 1.18;
+  max-width: 920px;
+}
+
+.copy-block--serif {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.copy-block--sans {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+
+.copy-block--serif .accent {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 800;
+  color: var(--accent);
+  font-style: normal;
+}
+
+.copy-block--sans .accent {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.copy-block--serif strong,
+.copy-block--serif b {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 800;
+}
+
+.copy-block--sans strong,
+.copy-block--sans b {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.theme-accent .copy-block--serif .accent,
+.theme-accent .copy-block--sans .accent {
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.55);
+  text-underline-offset: 4px;
+}
+
+.theme-accent .copy-block--serif strong,
+.theme-accent .copy-block--sans strong {
+  color: #ffffff;
+}
+
 .badge-pill {
   display: inline-flex;
   align-items: center;

@@ -7,6 +7,9 @@ export type NormalizerContentSlide = {
   narrativeRole?: CarouselNarrativeRole;
   listItems?: string[];
   body?: string;
+  body2?: string;
+  subtitle?: string;
+  callToAction?: string;
   imageBrief?: string;
 };
 
@@ -55,16 +58,99 @@ const pickProofVariation = (order: number): string => (order % 2 === 0 ? 'v5' : 
 const pickTextSynthesisVariation = (order: number): string =>
   TEXT_SYNTHESIS_VARIATIONS[(order - 1) % TEXT_SYNTHESIS_VARIATIONS.length] ?? 'v2';
 
-const CONTENT_MACHINE_SCENE_CYCLE = ['text:v1', 'text_image:v1', 'text_image:v2'] as const;
+const CONTENT_MACHINE_TEXT_CYCLE = [
+  { type: 'text' as const, variationId: 'v1' },
+  { type: 'text' as const, variationId: 'v3' },
+  { type: 'text' as const, variationId: 'v4' },
+];
 
-const pickContentMachineScene = (order: number): { type: CarouselSlideType; variationId: string } => {
-  const pick = CONTENT_MACHINE_SCENE_CYCLE[(order - 2) % CONTENT_MACHINE_SCENE_CYCLE.length];
-  if (!pick) return { type: 'text', variationId: 'v1' };
-  const [typeKey, variationId] = pick.split(':');
-  return {
-    type: typeKey === 'text_image' ? 'text_image' : 'text',
-    variationId,
-  };
+const CONTENT_MACHINE_IMAGE_CYCLE = [
+  { type: 'text_image' as const, variationId: 'v5' },
+  { type: 'text_image' as const, variationId: 'v3' },
+  { type: 'text_image' as const, variationId: 'v4' },
+  { type: 'text_image' as const, variationId: 'v1' },
+  { type: 'text_image' as const, variationId: 'v2' },
+];
+
+type ContentMachineLayoutPick = {
+  type: CarouselSlideType;
+  variationId: string;
+};
+
+const toVariationKey = (pick: ContentMachineLayoutPick): string =>
+  `${pick.type}:${pick.variationId}`;
+
+const bumpContentMachinePick = (
+  pick: ContentMachineLayoutPick,
+  previousVariationKey: string,
+  order: number,
+): ContentMachineLayoutPick => {
+  if (toVariationKey(pick) !== previousVariationKey) return pick;
+
+  const pool =
+    pick.type === 'text_image' ? CONTENT_MACHINE_IMAGE_CYCLE : CONTENT_MACHINE_TEXT_CYCLE;
+  const alternatives = pool.filter((entry) => toVariationKey(entry) !== previousVariationKey);
+  return alternatives[order % alternatives.length] ?? pick;
+};
+
+const pickContentMachineLayout = (
+  content: NormalizerContentSlide | undefined,
+  order: number,
+  previousVariationKey: string,
+): ContentMachineLayoutPick => {
+  const hasImage =
+    content?.type === 'text_image' || Boolean(content?.imageBrief?.trim());
+  const hasSubtitle = Boolean(content?.subtitle?.trim());
+  const hasBody2 = Boolean(content?.body2?.trim());
+  const hasCta = Boolean(content?.callToAction?.trim());
+  const role = content?.narrativeRole;
+  const bodyLength = content?.body?.length ?? 0;
+  const totalTextLength =
+    bodyLength + (content?.body2?.length ?? 0) + (content?.subtitle?.length ?? 0);
+
+  if (!hasImage) {
+    const pick =
+      CONTENT_MACHINE_TEXT_CYCLE[(order - 2) % CONTENT_MACHINE_TEXT_CYCLE.length] ??
+      CONTENT_MACHINE_TEXT_CYCLE[0]!;
+    return bumpContentMachinePick(pick, previousVariationKey, order);
+  }
+
+  if (role === 'proof') {
+    const pick: ContentMachineLayoutPick =
+      order % 2 === 0
+        ? { type: 'text_image', variationId: 'v2' }
+        : { type: 'text_image', variationId: 'v4' };
+    return bumpContentMachinePick(pick, previousVariationKey, order);
+  }
+
+  if (hasCta && !hasSubtitle) {
+    return bumpContentMachinePick(
+      { type: 'text_image', variationId: 'v1' },
+      previousVariationKey,
+      order,
+    );
+  }
+
+  if (hasBody2 || totalTextLength >= 280) {
+    return bumpContentMachinePick(
+      { type: 'text_image', variationId: 'v5' },
+      previousVariationKey,
+      order,
+    );
+  }
+
+  if (hasSubtitle && totalTextLength >= 160) {
+    return bumpContentMachinePick(
+      { type: 'text_image', variationId: 'v3' },
+      previousVariationKey,
+      order,
+    );
+  }
+
+  const pick =
+    CONTENT_MACHINE_IMAGE_CYCLE[(order - 2) % CONTENT_MACHINE_IMAGE_CYCLE.length] ??
+    CONTENT_MACHINE_IMAGE_CYCLE[0]!;
+  return bumpContentMachinePick(pick, previousVariationKey, order);
 };
 
 const normalizeContentMachineSlide = (input: {
@@ -76,10 +162,6 @@ const normalizeContentMachineSlide = (input: {
   previousVariationKey: string;
 }): NormalizerDesignSlide => {
   const { slide, content, isFirst, isLast, order } = input;
-  const role = content?.narrativeRole;
-
-  let variationId = slide.variationId;
-  let type = slide.type;
 
   if (isFirst) {
     return { ...slide, type: 'start', variationId: 'v1' };
@@ -89,34 +171,8 @@ const normalizeContentMachineSlide = (input: {
     return { ...slide, type: 'text', variationId: 'v2' };
   }
 
-  if (role === 'proof' || (content?.type === 'text_image' && content.imageBrief?.trim())) {
-    type = 'text_image';
-    variationId = role === 'proof' ? 'v2' : 'v1';
-  } else if (role === 'scene' && content?.type === 'text_image') {
-    type = 'text_image';
-    variationId = 'v1';
-  } else if (role === 'framework' || content?.type === 'text') {
-    type = 'text';
-    variationId = 'v1';
-  } else if (content?.type === 'text_image') {
-    type = 'text_image';
-    variationId = 'v2';
-  } else {
-    const picked = pickContentMachineScene(order);
-    type = picked.type;
-    variationId = picked.variationId;
-  }
-
-  const variationKey = `${type}:${variationId}`;
-  if (variationKey === input.previousVariationKey) {
-    if (type === 'text_image') {
-      variationId = variationId === 'v1' ? 'v2' : 'v1';
-    } else {
-      variationId = 'v1';
-    }
-  }
-
-  return { ...slide, type, variationId };
+  const picked = pickContentMachineLayout(content, order, input.previousVariationKey);
+  return { ...slide, type: picked.type, variationId: picked.variationId };
 };
 
 export const normalizeDesignPlanSlides = (
