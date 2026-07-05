@@ -1,0 +1,12 @@
+.slide-reel--cinematic .slide-reel__main--cinematic {
+  justify-content: flex-end;
+  padding-bottom: 120px;
+}
+.reel-caption {
+  font-size: var(--body-sm);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  max-width: 720px;
+}

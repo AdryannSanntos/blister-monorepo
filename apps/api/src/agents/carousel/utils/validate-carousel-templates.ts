@@ -46,6 +46,23 @@ const CONTENT_MACHINE_THEME_CLASSES = [
   'theme-navy',
 ] as const;
 
+const EDITOR_LAYER_TEMPLATE_IDS = [
+  'content-machine',
+  'minimal-clean',
+  'spotlight',
+  'reel',
+  'daylight',
+  'voltage',
+] as const;
+
+const isEditorLayerTemplate = (templateId: string): boolean =>
+  (EDITOR_LAYER_TEMPLATE_IDS as readonly string[]).includes(templateId);
+
+const extractCarouselLayerValues = (html: string): string[] => {
+  const matches = html.matchAll(/data-carousel-layer="([^"]*)"/g);
+  return [...matches].map((match) => match[1]).filter((value): value is string => Boolean(value));
+};
+
 const isStructuredTemplate = (templateId: string): boolean =>
   templateId === 'editorial-performance' || templateId === 'content-machine';
 
@@ -129,6 +146,34 @@ export const validateCarouselTemplateVariation = (input: {
           message: `Missing structural block ".${selector}".`,
         });
       }
+    }
+  }
+
+  if (isEditorLayerTemplate(templateId) && !html.includes('data-carousel-layer=')) {
+    issues.push({
+      ...context,
+      code: 'missing_carousel_layer',
+      message: 'Slide HTML must include at least one data-carousel-layer attribute for the visual editor.',
+    });
+  }
+
+  if (isEditorLayerTemplate(templateId)) {
+    const layerValues = extractCarouselLayerValues(html);
+    const seen = new Set<string>();
+    const duplicates = new Set<string>();
+    for (const value of layerValues) {
+      if (seen.has(value)) {
+        duplicates.add(value);
+      }
+      seen.add(value);
+    }
+
+    for (const value of duplicates) {
+      issues.push({
+        ...context,
+        code: 'duplicate_carousel_layer_value',
+        message: `data-carousel-layer="${value}" is used more than once in the same slide. Each value must be unique within a slide (e.g. body-1, body-2).`,
+      });
     }
   }
 

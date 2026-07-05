@@ -8,6 +8,7 @@ export type CarouselContentFieldKey =
   | "title"
   | "subtitle"
   | "body"
+  | "body2"
   | "listItems"
   | "callToAction"
   | "ctaKeyword"
@@ -44,6 +45,7 @@ const ROLE_FIELDS: Record<CarouselNarrativeRole, CarouselContentFieldDefinition[
   scene: [
     { key: "title", labelKey: "fields.title", placementKey: "placement.sceneTitle" },
     { key: "body", labelKey: "fields.body", placementKey: "placement.sceneBody", optional: true },
+    { key: "body2", labelKey: "fields.body2", placementKey: "placement.sceneBody2", optional: true },
     {
       key: "listItems",
       labelKey: "fields.listItems",
@@ -66,6 +68,7 @@ const ROLE_FIELDS: Record<CarouselNarrativeRole, CarouselContentFieldDefinition[
   proof: [
     { key: "title", labelKey: "fields.title", placementKey: "placement.proofTitle" },
     { key: "body", labelKey: "fields.body", placementKey: "placement.proofBody", optional: true },
+    { key: "body2", labelKey: "fields.body2", placementKey: "placement.proofBody2", optional: true },
     {
       key: "listItems",
       labelKey: "fields.checklist",
@@ -144,7 +147,8 @@ export const getSlideFieldValue = (
   key: CarouselContentFieldKey,
 ): string | string[] | undefined => {
   if (key === "listItems") return slide.listItems;
-  return slide[key];
+  if (key === "body2") return slide.body2;
+  return slide[key as keyof CarouselSlideContent] as string | undefined;
 };
 
 export const hasSlideFieldValue = (
@@ -177,5 +181,6 @@ export const formatCarouselCopyPreviewHtml = (value: string): string => {
   let result = escapeHtml(value);
   result = result.replace(/==([^=\n]+?)==/g, '<span class="text-[var(--accent)] font-semibold">$1</span>');
   result = result.replace(/\*\*([^*\n]+?)\*\*/g, "<strong>$1</strong>");
+  result = result.replace(/\n/g, "<br>");
   return result;
 };

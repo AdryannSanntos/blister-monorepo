@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
 import type { CarouselIdeaOption } from "@company-os/types";
 import type { CarouselPhaseStatus } from "src/core/modules/agents/components/carousel/carousel-run-steps";
@@ -12,6 +13,8 @@ import { CAROUSEL_IDEAS_SECTION_ICON } from "src/core/modules/agents/components/
 import { Heading } from "src/core/shared/components/ui/heading";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import { SurfaceIcon } from "src/core/shared/components/ui/surface-icon";
+import { Textarea } from "src/core/shared/components/ui/textarea";
+import { Button } from "src/core/shared/components/ui/button";
 
 type Props = {
   status: CarouselPhaseStatus;
@@ -23,6 +26,7 @@ type Props = {
   errorMessage?: string | null;
   onSelect: (id: string) => void;
   onUpdateSelection?: (id: string) => void;
+  onSubmitCustomIdea?: (idea: { title: string; description?: string }) => void;
   onNewCarousel?: () => void;
 };
 
@@ -49,8 +53,12 @@ export const CarouselIdeasStep = ({
   errorMessage,
   onSelect,
   onUpdateSelection,
+  onSubmitCustomIdea,
   onNewCarousel,
 }: Props) => {
+  const [isWritingCustom, setIsWritingCustom] = useState(false);
+  const [customTitle, setCustomTitle] = useState("");
+  const [customDescription, setCustomDescription] = useState("");
   if (status === "idle" || status === "processing") {
     return (
       <CarouselStepLoadingState
@@ -144,6 +152,56 @@ export const CarouselIdeasStep = ({
             </button>
           );
         })}
+        {!reviewMode && !isWritingCustom ? (
+          <button
+            type="button"
+            data-testid="carousel-idea-card-custom"
+            onClick={() => setIsWritingCustom(true)}
+            className="flex min-h-[104px] items-center justify-center rounded-[var(--r-lg)] border border-dashed border-[var(--line-default)] p-4 text-[13px] text-[var(--fg-tertiary)] transition-colors duration-150 hover:border-[var(--line-strong)] hover:text-[var(--fg-secondary)]"
+          >
+            + Escrever minha ideia
+          </button>
+        ) : null}
+        {!reviewMode && isWritingCustom ? (
+          <div className="col-span-full flex flex-col gap-3 rounded-[var(--r-lg)] border border-[var(--line-default)] p-4">
+            <Textarea
+              placeholder="Título da ideia"
+              value={customTitle}
+              onChange={(event) => setCustomTitle(event.target.value)}
+              rows={2}
+            />
+            <Textarea
+              placeholder="Descrição (opcional)"
+              value={customDescription}
+              onChange={(event) => setCustomDescription(event.target.value)}
+              rows={3}
+            />
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                size="sm"
+                disabled={!customTitle.trim()}
+                onClick={() => {
+                  onSubmitCustomIdea?.({
+                    title: customTitle.trim(),
+                    description: customDescription.trim() || undefined,
+                  });
+                  setIsWritingCustom(false);
+                }}
+              >
+                Usar esta ideia
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsWritingCustom(false)}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

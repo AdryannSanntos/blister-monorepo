@@ -25,12 +25,12 @@ const truncate = (value: string | undefined, max: number): string | undefined =>
 const resolveLimits = (templateId?: string) => {
   const isContentMachine = templateId === 'content-machine';
   return {
-    body: isContentMachine ? 160 : 280,
-    body2: isContentMachine ? 160 : 0,
-    subtitle: isContentMachine ? 160 : 160,
+    body: isContentMachine ? 220 : 280,
+    body2: isContentMachine ? 220 : 0,
+    subtitle: isContentMachine ? 220 : 160,
     callToAction: isContentMachine ? 220 : 100,
-    ctaBody: isContentMachine ? 160 : 160,
-    ctaBody2: isContentMachine ? 160 : 0,
+    ctaBody: isContentMachine ? 220 : 160,
+    ctaBody2: isContentMachine ? 220 : 0,
     ctaHint: isContentMachine ? 160 : 100,
     ctaKeyword: isContentMachine ? 32 : 24,
     frameworkCta: isContentMachine ? 220 : 80,

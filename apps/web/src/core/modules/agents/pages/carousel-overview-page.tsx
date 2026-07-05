@@ -6,7 +6,7 @@ import { CarouselRunsGrid } from "src/core/modules/agents/components/carousel/ca
 import { AgentNewRunButton } from "src/core/modules/agents/components/agent-new-run-button";
 import { AgentOverviewStats } from "src/core/modules/agents/components/agent-overview-stats";
 import { useCarouselRuns, useCarouselOverviewStats } from "src/core/modules/agents/hooks/use-carousel-runs";
-import { useCarouselTemplates } from "src/core/modules/agents/hooks/use-carousel-templates";
+import { useCarouselTemplates } from "src/core/shared/hooks/use-carousel-templates";
 import { toCarouselViewableRun } from "src/core/modules/agents/utils/carousel-run-display";
 import { EmptyState } from "src/core/shared/components/ui/empty-state";
 import { Button } from "src/core/shared/components/ui/button";

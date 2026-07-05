@@ -1,0 +1,10 @@
+.slide-volt__main {
+  justify-content: flex-start;
+}
+.slide-volt__duo {
+  height: 420px;
+  margin-bottom: 6px;
+}
+.slide-volt__duo .volt-card {
+  height: 100%;
+}

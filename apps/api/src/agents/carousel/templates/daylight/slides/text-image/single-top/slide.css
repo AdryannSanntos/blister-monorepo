@@ -1,0 +1,5 @@
+/* text-image/single-top — Image card at top, text below */
+.slide-daylight__single-top {
+  height: 500px;
+  flex-shrink: 0;
+}

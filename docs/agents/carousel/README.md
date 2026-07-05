@@ -1,115 +1,29 @@
-# Carousel Agent
+# Carousel agent
 
-Agent ID: `carousel`  
-Transforms a theme into Instagram-ready carousel slides with human-in-the-loop approvals.
+Two-phase UX: **Ideas** → **Editor** (fullscreen overlay).
 
-## Pipeline (9 steps)
+## Flow
 
-| Step | Type | Description |
-|------|------|-------------|
-| `generate_ideas` | LLM | Produces 5 idea options |
-| `await_idea_selection` | Pause | User picks `selectedIdeaId` |
-| `generate_content` | LLM | Slide copy per slide |
-| `await_content_approval` | Pause | Approve or reject (`approved`) |
-| `generate_design_plan` | LLM | Variation + layout per slide |
-| `await_design_approval` | Pause | Approve plan + upload images |
-| `generate_slides` | LLM | Final HTML/CSS per slide |
-| `render_slides` | Preparation | Headless PNG render → S3 |
-| `finalize_carousel` | Output | Validates `CarouselOutput` |
+1. User starts a run from the carousel overview modal.
+2. Pipeline pauses at `await_idea_selection` — overlay shows idea cards (+ custom idea).
+3. After selection, pipeline runs automatically: content → design plan → slides → render → finalize.
+4. When `COMPLETED`, overlay shows the visual editor (filmstrip, canvas, layers panel, adjust bar).
 
-## Image slots model
+## API (carousel-specific)
 
-Each slide design carries `imageSlots[]` instead of legacy `needsImage`:
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET | `/agents/carousel/runs/:runId/export` | ZIP of rendered PNGs |
+| POST | `/agents/carousel/runs/:runId/render` | Re-render PNGs after manual edits |
+| POST | `/agents/carousel/runs/:runId/ai-edit` | Assisted text/HTML adjustment |
 
-```typescript
-imageSlots: [
-  { slotKey: "image_url", label: "Miniatura 1", required: true },
-  { slotKey: "image_url_2", label: "Miniatura 2", required: true },
-]
-```
+Shared run APIs: `POST /agents/runs`, resume, `PATCH /agents/runs/:runId/output`.
 
-- **Source of truth:** `manifest.json` per template variation; fallback scans `{{image_url_N}}` in `slide.html`
-- **Upload key:** `"${slideId}:${slotKey}"` → workspace `fileId`
-- **Approval gate:** all `required` slots must have uploads before `approved: true`
+## Legacy runs
 
-## Templates
+Runs paused with `awaiting_content_approval` or `awaiting_design_approval` (pre-migration) show a banner in the overlay. **Continuar** resumes with `{ contentApproved: true, designApproved: true, imageUploads: {} }`.
 
-Built-in templates live under:
+## Frontend entry
 
-```
-apps/api/src/agents/carousel/templates/<template-id>/
-  manifest.json
-  instructions.md
-  shared/base.css
-  slides/<type>/<variation>/slide.html|slide.css
-```
-
-Folder `text-image` maps to schema type `text_image`.
-
-## Marketplace
-
-Marketplace items with `type: TEMPLATE` and `refId: <templateId>` grant entitlement to additional templates beyond built-ins.
-
-| slug | refId |
-|------|-------|
-| `carousel-editorial-performance` | `editorial-performance` | Seed (`seed-marketplace.ts`) |
-| `carousel-minimal-clean` | `minimal-clean` | Seed (`seed-marketplace.ts`) |
-| `carousel-content-machine` | `content-machine` | Seed (`seed-marketplace.ts`) |
-
-### Content Machine (`content-machine`)
-
-Editorial template: triple header, serif/sans typography, **9 internal layout variants** (text-only + image top/middle/bottom/stack/card). Title only on cover. Brand accent from `accentColor`.
-
-| Variation | Layout |
-|---|---|
-| `text/v1` | Accent bg · texto serif + sans |
-| `text/v3` | Navy · texto denso |
-| `text/v4` | Claro · texto denso |
-| `text/v2` | Fechamento · caixa accent |
-| `text-image/v1` | Card accent central |
-| `text-image/v2` | Imagem no rodapé |
-| `text-image/v3` | Texto · imagem · texto (sanduíche) |
-| `text-image/v4` | Imagem no topo |
-| `text-image/v5` | Texto · imagem colada · texto |
-
-## API
-
-| Method | Path | Permission |
-|--------|------|------------|
-| `POST` | `/api/agents/carousel/run` | `generation.create` |
-| `GET` | `/api/agents/carousel/runs` | `generation.create` |
-| `GET` | `/api/agents/carousel/templates` | `generation.create` |
-| `GET` | `/api/agents/carousel/runs/:runId/export` | `generation.create` |
-| `POST` | `/api/agents/runs/:runId/resume` | `generation.create` |
-| `GET` | `/api/agents/runs/:runId` | `generation.create` |
-| SSE | `/api/agents/runs/:runId/events` | `generation.create` |
-
-### Pause payloads (resume `formData`)
-
-| Pause | Payload |
-|-------|---------|
-| Ideas | `{ selectedIdeaId }` |
-| Content | `{ approved, slides? }` |
-| Design | `{ approved, plan?, imageUploads? }` |
-
-Rejection (`approved: false`) rewinds to `generate_content` or `generate_design_plan`.
-
-## Code layout
-
-```
-apps/api/src/agents/carousel/
-  agent.ts
-  build-carousel-run-deps.ts
-  services/carousel-template.service.ts
-  services/carousel-render.service.ts
-  steps/
-  templates/
-  learning/feedback-handler.ts
-```
-
-Business logic stays in `apps/api`; IA infrastructure uses `@company-os/agent-ia-sdk` (`sdk.ia.*`).
-
-## Related docs
-
-- Design spec: `docs/superpowers/specs/2026-06-28-carousel-agent-design.md`
-- Plano 3: `docs/superpowers/plans/2026-06-28-carousel-agent-plano3-backend-integration.md`
+- Route: `/dashboard/agents/carousel/runs/:runId` (deep link; page returns `null`).
+- UI: `CarouselRunOverlay` mounted in `dashboard-shell.tsx`.

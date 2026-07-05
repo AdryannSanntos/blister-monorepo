@@ -1,0 +1,12 @@
+.slide-volt--statement {
+  background:
+    radial-gradient(120% 70% at 85% 8%, rgba(86, 59, 231, 0.22) 0%, transparent 55%),
+    var(--bg-deep);
+}
+.slide-volt__main--center {
+  justify-content: center;
+}
+.volt-title--statement {
+  font-size: 108px;
+  line-height: 1.1;
+}

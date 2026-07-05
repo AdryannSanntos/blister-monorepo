@@ -97,7 +97,7 @@ describe('design-plan-normalizer', () => {
     }
   });
 
-  it('content-machine prefers stack layout when body2 is present', () => {
+  it('content-machine frames image between texts (center) when body2 + subtitle present', () => {
     const slides = [
       { id: 's1', order: 1, type: 'start' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
       { id: 's2', order: 2, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
@@ -122,6 +122,33 @@ describe('design-plan-normalizer', () => {
       templateId: 'content-machine',
     });
 
-    expect(normalized[1]).toMatchObject({ type: 'text_image', variationId: 'v5' });
+    expect(normalized[1]).toMatchObject({ type: 'text_image', variationId: 'center-dark' });
+  });
+
+  it('content-machine puts proof image below the claim (bottom position)', () => {
+    const slides = [
+      { id: 's1', order: 1, type: 'start' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's2', order: 2, type: 'text_image' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+      { id: 's3', order: 3, type: 'text' as const, variationId: 'v1', layoutNotes: '', imageSlots: [] },
+    ];
+    const content = [
+      { id: 's1', order: 1, type: 'start' as const, narrativeRole: 'hook' as const },
+      {
+        id: 's2',
+        order: 2,
+        type: 'text_image' as const,
+        narrativeRole: 'proof' as const,
+        body: 'A prova.',
+        imageBrief: 'screenshot',
+      },
+      { id: 's3', order: 3, type: 'text' as const, narrativeRole: 'cta' as const },
+    ];
+
+    const normalized = normalizeDesignPlanSlides(slides, content, {
+      templateId: 'content-machine',
+    });
+
+    expect(normalized[1].type).toBe('text_image');
+    expect(normalized[1].variationId).toMatch(/^bottom-/);
   });
 });

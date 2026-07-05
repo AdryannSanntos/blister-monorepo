@@ -1,0 +1,17 @@
+/* text/list — Numbered list with CSS counter */
+.day-list {
+  counter-reset: day-counter;
+  margin-top: 8px;
+}
+.day-list li {
+  counter-increment: day-counter;
+}
+.day-list li::before {
+  content: counter(day-counter, decimal-leading-zero);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  min-width: 48px;
+  padding-top: 4px;
+}

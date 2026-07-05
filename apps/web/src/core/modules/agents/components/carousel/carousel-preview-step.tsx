@@ -89,7 +89,7 @@ export const CarouselPreviewStep = ({
   if (status === "idle" || status === "processing") {
     return (
       <CarouselStepLoadingState
-        stepId="preview"
+        stepId="editor"
         currentStepKey={currentStepKey}
         runStatus={runStatus}
       />
@@ -99,7 +99,7 @@ export const CarouselPreviewStep = ({
   if (status === "error") {
     return (
       <CarouselStepErrorState
-        stepId="preview"
+        stepId="editor"
         message={errorMessage}
         onNewCarousel={onNewCarousel}
       />
@@ -109,7 +109,7 @@ export const CarouselPreviewStep = ({
   if (!output) {
     return (
       <CarouselStepLoadingState
-        stepId="preview"
+        stepId="editor"
         currentStepKey={currentStepKey}
         runStatus={runStatus}
       />

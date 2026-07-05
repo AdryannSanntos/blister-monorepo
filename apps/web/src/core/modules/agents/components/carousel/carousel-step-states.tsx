@@ -6,8 +6,6 @@ import type { ReactNode } from "react";
 
 import type { CarouselRunStepId } from "src/core/modules/agents/components/carousel/carousel-run-steps";
 import {
-  CAROUSEL_CONTENT_SECTION_ICON,
-  CAROUSEL_DESIGN_SECTION_ICON,
   CAROUSEL_IDEAS_SECTION_ICON,
 } from "src/core/modules/agents/components/carousel/carousel-step-icons";
 import { Button } from "src/core/shared/components/ui/button";
@@ -35,17 +33,11 @@ const resolveSubSteps = (
       keys: ["generate_ideas"],
       labels: [t("loading.ideas.generating")],
     },
-    content: {
-      keys: ["generate_content"],
-      labels: [t("loading.content.generating")],
-    },
-    design: {
-      keys: ["generate_design_plan"],
-      labels: [t("loading.design.generating")],
-    },
-    preview: {
-      keys: ["generate_slides", "render_slides", "finalize_carousel"],
+    editor: {
+      keys: ["generate_content", "generate_design_plan", "generate_slides", "render_slides", "finalize_carousel"],
       labels: [
+        t("loading.content.generating"),
+        t("loading.design.generating"),
         t("loading.preview.generating"),
         t("loading.preview.rendering"),
         t("loading.preview.finalizing"),
@@ -183,9 +175,7 @@ const PreviewLoadingSkeleton = () => (
 
 const LOADING_SKELETON: Record<CarouselRunStepId, () => ReactNode> = {
   ideas: IdeasLoadingSkeleton,
-  content: ContentLoadingSkeleton,
-  design: DesignLoadingSkeleton,
-  preview: PreviewLoadingSkeleton,
+  editor: PreviewLoadingSkeleton,
 };
 
 const ERROR_ICON: Record<
@@ -193,9 +183,7 @@ const ERROR_ICON: Record<
   typeof CAROUSEL_IDEAS_SECTION_ICON
 > = {
   ideas: CAROUSEL_IDEAS_SECTION_ICON,
-  content: CAROUSEL_CONTENT_SECTION_ICON,
-  design: CAROUSEL_DESIGN_SECTION_ICON,
-  preview: GalleryHorizontal,
+  editor: GalleryHorizontal,
 };
 
 type CarouselStepLoadingStateProps = {

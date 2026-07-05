@@ -1,4 +1,5 @@
-import { isTransientUserFacingProviderError } from './provider-error-message';
+import { ProviderExecutionError } from '@company-os/agent-ia-sdk';
+import { isTransientUserFacingProviderError, toUserFacingProviderError } from './provider-error-message';
 
 describe('isTransientUserFacingProviderError', () => {
   it('detects provider 5xx outage messages', () => {
@@ -23,5 +24,24 @@ describe('isTransientUserFacingProviderError', () => {
         'Falha de autenticação no AssemblyAI. Verifique se a chave de API está correta e ativa.',
       ),
     ).toBe(false);
+  });
+});
+
+describe('toUserFacingProviderError', () => {
+  it('includes AssemblyAI metadata validation errors', () => {
+    const message = toUserFacingProviderError(
+      new ProviderExecutionError(
+        'assemblyai',
+        'validation',
+        JSON.stringify({
+          code: 400,
+          message: 'invalid request body',
+          metadata: { errors: ['messages[1].content too long'] },
+        }),
+        400,
+      ),
+    );
+
+    expect(message).toContain('messages[1].content too long');
   });
 });

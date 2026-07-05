@@ -17,7 +17,7 @@ import {
   useCarouselSettings,
   useUpdateCarouselSettings,
 } from "src/core/modules/agents/hooks/use-carousel-settings";
-import { useCarouselTemplates } from "src/core/modules/agents/hooks/use-carousel-templates";
+import { useCarouselTemplates } from "src/core/shared/hooks/use-carousel-templates";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import {

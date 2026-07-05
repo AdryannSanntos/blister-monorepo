@@ -1,0 +1,9 @@
+.slide-card__main {
+  justify-content: center;
+}
+.card--top .card__media--top {
+  height: 460px;
+}
+.card--top .card__pad {
+  padding-top: 44px;
+}

@@ -1,0 +1,12 @@
+.slide-card__main {
+  justify-content: center;
+}
+.card--bottom .card__pad {
+  padding-bottom: 36px;
+}
+.card--bottom .card__media--bottom {
+  height: 440px;
+  margin: 0 40px 40px;
+  border-radius: 22px;
+  width: auto;
+}

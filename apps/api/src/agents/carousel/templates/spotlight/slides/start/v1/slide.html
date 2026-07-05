@@ -1,0 +1,24 @@
+<div data-carousel-layer="bg" class="slide slide-cover slide--cover">
+  <div class="slide-cover__bg">
+    <img src="{{image_url}}" alt="" />
+    <div class="slide-cover__scrim"></div>
+  </div>
+  <main class="slide-main slide-cover__main">
+    <h1 class="impact-title slide-cover__title">{{title}}</h1>
+  </main>
+  <div class="swipe-bar">
+    <div class="swipe-bar__id">
+      <span class="swipe-bar__avatar"></span>
+      <span class="swipe-bar__names">
+        <span class="swipe-bar__brand">{{brand}}</span>
+        <span class="swipe-bar__handle">{{meta_center}}</span>
+      </span>
+    </div>
+    <span class="swipe-bar__cta">Arrasta →</span>
+  </div>
+  <footer class="slide-footer slide-footer--hidden">
+    <span hidden>{{meta_right}}</span>
+    <div class="progress-track"><span class="progress-fill" style="width: {{progress}}%"></span></div>
+    <span class="slide-counter">{{slide_current}}/{{slide_total}}</span>
+  </footer>
+</div>

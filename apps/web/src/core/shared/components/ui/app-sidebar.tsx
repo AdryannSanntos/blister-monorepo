@@ -269,34 +269,32 @@ function AppSidebar({
   }, [filteredGroups, isItemActive, pathname]);
 
   React.useEffect(() => {
-    const activeItemKeys = filteredGroups.flatMap((group) =>
-      group.items
-        .filter((item) =>
-          item.subItems?.some((subItem) =>
-            isItemDirectActive(subItem, pathname),
-          ),
-        )
-        .map((item) => getItemKey(item)),
+    const itemsWithSubs = filteredGroups.flatMap((group) =>
+      group.items.filter((item) => Boolean(item.subItems?.length)),
     );
 
-    if (activeItemKeys.length === 0) {
-      return;
-    }
+    if (itemsWithSubs.length === 0) return;
 
     setOpenItems((prev) => {
       let changed = false;
       const next = { ...prev };
 
-      for (const key of activeItemKeys) {
-        if (!next[key]) {
+      for (const item of itemsWithSubs) {
+        const key = getItemKey(item);
+        const hasActiveSubItem = item.subItems?.some((subItem) =>
+          isItemDirectActive(subItem, pathname),
+        ) ?? false;
+
+        if (hasActiveSubItem && !next[key]) {
           next[key] = true;
+          changed = true;
+        } else if (!hasActiveSubItem && next[key]) {
+          next[key] = false;
           changed = true;
         }
       }
 
-      if (!changed) {
-        return prev;
-      }
+      if (!changed) return prev;
 
       writeStorage(SIDEBAR_ITEMS_KEY, next);
       return next;

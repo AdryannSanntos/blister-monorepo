@@ -12,6 +12,9 @@ import { CutsRunDepsAdapter } from './adapters/cuts-run-deps.adapter';
 import { CarouselRunDepsAdapter } from './adapters/carousel-run-deps.adapter';
 
 import { CarouselExportController } from './carousel/carousel-export.controller';
+import { CarouselRenderController } from './carousel/carousel-render.controller';
+import { CarouselAiEditController } from './carousel/carousel-ai-edit.controller';
+import { CarouselAiEditService } from './carousel/carousel-ai-edit.service';
 import { CarouselTemplatesController } from './carousel/carousel-templates.controller';
 import { CarouselRenderService } from './carousel/services/carousel-render.service';
 import { CarouselTemplateService } from './carousel/services/carousel-template.service';
@@ -45,6 +48,8 @@ import { InternalEventsController } from './internal-events.controller';
     AgentRunsController,
     AgentsController,
     CarouselExportController,
+    CarouselRenderController,
+    CarouselAiEditController,
     CarouselTemplatesController,
     InternalEventsController,
   ],
@@ -53,6 +58,7 @@ import { InternalEventsController } from './internal-events.controller';
     CarouselRunDepsAdapter,
     CarouselRenderService,
     CarouselTemplateService,
+    CarouselAiEditService,
     AgentRegistryService,
     WorkflowEngineService,
     AgentRunService,

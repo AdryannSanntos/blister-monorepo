@@ -9,7 +9,7 @@ export { buildAccentCssOverride } from './brand-theme.util';
 
 const DEFAULT_BRAND_NAME = 'Blister';
 const DEFAULT_HANDLE = '@blister';
-const DEFAULT_ACCENT = '#FF4A0A';
+const DEFAULT_ACCENT = '#563BE7';
 
 export const normalizeInstagramHandle = (handle?: string): string | undefined => {
   if (!handle) return undefined;

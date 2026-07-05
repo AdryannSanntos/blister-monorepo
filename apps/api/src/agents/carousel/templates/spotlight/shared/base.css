@@ -1,0 +1,389 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap");
+
+/* ═══════════════════════════════════════════════════════════
+   SPOTLIGHT — Warm floating-card editorial.
+   Soul: premium, acolhedor, rounded. Cream cards float over a
+   warm charcoal canvas washed with amber + accent radial glows.
+   Type: Sora (geometric, warm). Highlight = filled accent box.
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --accent: #563be7;
+  --accent-soft: color-mix(in srgb, var(--accent) 72%, #ffffff);
+  --amber: #e8915a;            /* fixed warm identity (not brand-accent) */
+
+  --bg-base: #16110d;          /* warm near-black */
+  --card: #fbf8f4;             /* warm cream */
+  --card-2: #f2ede6;           /* cream tint for nested blocks */
+  --card-text: #241f1a;
+  --card-muted: #73665b;
+  --card-line: rgba(36, 31, 26, 0.1);
+  --text-on-dark: #f4efe9;
+  --text-on-dark-muted: rgba(244, 239, 233, 0.66);
+
+  --safe-x: 64px;
+  --safe-top: 40px;
+  --safe-bottom: 48px;
+  --footer-reserve: 72px;
+  --card-radius: 36px;
+
+  --title-xl: 74px;
+  --title-lg: 60px;
+  --title-md: 50px;
+  --body-lg: 33px;
+  --body: 30px;
+  --body-sm: 27px;
+  --gap: 26px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "Sora", system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-on-dark);
+}
+
+/* ── Warm ambient background — solid editorial wash ── */
+.slide__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    165deg,
+    #1a1410 0%,
+    var(--bg-base) 42%,
+    #120e0b 100%
+  );
+}
+
+/* ── Full-bleed photo background (covers + feature slides) ── */
+.photo-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.photo-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Dark overlay so overlaid text is always legible. Bottom-heavy by default. */
+.photo-bg__scrim {
+  position: absolute;
+  inset: 0;
+}
+.photo-bg__scrim--bottom {
+  background: linear-gradient(
+    180deg,
+    rgba(16, 12, 8, 0.55) 0%,
+    rgba(16, 12, 8, 0.12) 26%,
+    rgba(16, 12, 8, 0.72) 66%,
+    rgba(16, 12, 8, 0.95) 100%
+  );
+}
+.photo-bg__scrim--full {
+  background: linear-gradient(180deg, rgba(16, 12, 8, 0.6) 0%, rgba(16, 12, 8, 0.6) 100%);
+}
+
+/* ── Header ── */
+.slide-header {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: var(--safe-top) var(--safe-x) 0;
+  min-height: 56px;
+  flex-shrink: 0;
+}
+.slide-header__brand,
+.slide-header__center,
+.slide-header__meta {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-on-dark-muted);
+}
+.slide-header__brand { justify-self: start; }
+.slide-header__center { justify-self: center; }
+.slide-header__meta { justify-self: end; }
+
+/* ── Main content region ── */
+.slide-main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px var(--safe-x) calc(var(--safe-bottom) + var(--footer-reserve));
+  min-height: 0;
+}
+
+/* ── Handle pill (glass) ── */
+.handle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  padding: 10px 22px 10px 12px;
+  border-radius: 8px;
+  background: rgba(22, 17, 13, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.handle-pill__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--amber));
+  flex-shrink: 0;
+}
+
+/* ── Badge pill (accent gradient w/ glow) — inside cream cards ── */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-left: 4px solid var(--amber);
+}
+.badge-pill__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* ── Highlight (filled accent box on titles) ── */
+/* Highlight box — titles only */
+.hl,
+.impact-title .accent,
+.card-title .accent {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.02em 0.12em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.accent { color: var(--accent); }
+.card-body .accent { color: var(--accent); font-weight: 600; }
+
+.slide--cover .slide-main {
+  padding-bottom: var(--safe-bottom);
+}
+
+/* ── Titles ── */
+.impact-title {
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  font-size: var(--title-xl);
+}
+.card-title {
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-size: var(--title-md);
+  color: var(--card-text);
+}
+
+/* ── Cream floating card ── */
+.card {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--card-radius);
+  box-shadow: 0 50px 100px -35px rgba(0, 0, 0, 0.62);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--card-text);
+}
+.card__media {
+  width: 100%;
+  overflow: hidden;
+  background: var(--card-2);
+  flex-shrink: 0;
+}
+.card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card__pad {
+  padding: 52px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* ── Card body copy ── */
+.card-body {
+  font-size: var(--body);
+  line-height: 1.46;
+  color: var(--card-muted);
+  font-weight: 400;
+}
+.card-body strong { color: var(--card-text); font-weight: 600; }
+
+/* ── Checklist list (inside cards / on warm bg) ── */
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+}
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  font-size: var(--body);
+  line-height: 1.36;
+  color: var(--card-text);
+  font-weight: 500;
+}
+.check-list li::before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 6px;
+  background-image: linear-gradient(135deg, transparent 46%, #fff 46%, #fff 54%, transparent 54%),
+    linear-gradient(45deg, transparent 46%, #fff 46%, #fff 56%, transparent 56%);
+  background-size: 14px 14px, 18px 18px;
+  background-position: 4px 9px, 7px 6px;
+  background-repeat: no-repeat;
+}
+
+/* ── Big stat / number block ── */
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.stat__num {
+  font-size: 200px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+}
+.stat__num .accent { color: var(--accent-soft); }
+.stat__label {
+  font-size: var(--body);
+  color: var(--text-on-dark-muted);
+  font-weight: 500;
+  max-width: 620px;
+  line-height: 1.4;
+}
+
+/* ── Pull quote ── */
+.quote {
+  font-size: var(--title-lg);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  max-width: 860px;
+}
+.quote__mark {
+  font-size: 140px;
+  line-height: 0.4;
+  color: var(--accent-soft);
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+.quote__cite {
+  margin-top: 28px;
+  font-size: var(--body-sm);
+  color: var(--text-on-dark-muted);
+  font-weight: 500;
+}
+
+/* ── CTA chip ── */
+.cta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 22px 40px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* ── Footer / progress ── */
+.slide-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 0 var(--safe-x) 26px;
+}
+.slide-footer--hidden { opacity: 0; height: 0; overflow: hidden; padding: 0; }
+.progress-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.slide-counter {
+  display: block;
+  margin-top: 8px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-on-dark-muted);
+}
+
+/* ── Swipe bar (cover) ── */
+.swipe-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--safe-x) 46px;
+}
+.swipe-bar__id { display: inline-flex; align-items: center; gap: 14px; }
+.swipe-bar__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--amber));
+}
+.swipe-bar__names { display: flex; flex-direction: column; line-height: 1.15; }
+.swipe-bar__brand { font-size: 21px; font-weight: 700; color: #ffffff; }
+.swipe-bar__handle { font-size: 16px; color: rgba(255, 255, 255, 0.62); }
+.swipe-bar__cta { font-size: 19px; font-weight: 600; color: rgba(255, 255, 255, 0.8); }

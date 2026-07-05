@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap");
 
 :root {
   --accent: #ff4a0a;
@@ -32,8 +32,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Barlow", system-ui, sans-serif;
   color: var(--text-primary-dark);
+}
+
+.slide-thumb-checklist {
+  gap: 12px;
 }
 
 .slide-header {
@@ -531,7 +535,7 @@
 
 
 .slide-thumb-checklist__main { padding-top: 8px; }
-.slide-thumb-checklist__strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; height: 360px; margin-bottom: 34px; }
+.slide-thumb-checklist__strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; height: 360px; margin-bottom: 34px; }
 .thumb-strip__item { border-radius: 24px; overflow: hidden; background: #ddd; }
 .slide-thumb-checklist__title { max-width: 920px; font-size: 68px; margin-bottom: 24px; }
 .slide-thumb-checklist__list { max-width: 920px; }

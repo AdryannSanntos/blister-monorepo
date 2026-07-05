@@ -1,0 +1,22 @@
+<div data-carousel-layer="bg" class="slide slide-daylight slide-daylight--grid-bottom">
+  <header class="day-top">
+    <span class="day-top__brand">{{brand}}</span>
+    <span class="day-top__index">{{slide_current}}</span>
+    <span class="day-top__handle">{{meta_right}}</span>
+  </header>
+  <div class="day-rule"></div>
+  <main class="slide-main slide-daylight__main">
+    <span class="kicker">{{subtitle}}</span>
+    <h2 class="day-title">{{title}}</h2>
+    <p class="day-sub">{{body}}</p>
+    <div class="media-grid slide-daylight__grid">
+      <div class="media-card"><img src="{{image_url}}" alt="" /></div>
+      <div class="media-card"><img src="{{image_url_2}}" alt="" /></div>
+    </div>
+  </main>
+  <footer class="slide-footer">
+    <span hidden>{{meta_right}}</span>
+    <div class="progress-track"><span class="progress-fill" style="width: {{progress}}%"></span></div>
+    <span class="slide-counter">{{slide_current}}/{{slide_total}}</span>
+  </footer>
+</div>

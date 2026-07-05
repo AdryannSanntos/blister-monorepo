@@ -3,8 +3,11 @@ import { z } from 'zod';
 import { buildContentSystemPrompt, buildContentUserPrompt } from '../prompts/content.prompts';
 import { carouselNarrativeRoleSchema, carouselSlideTypeSchema } from '@company-os/types';
 import { normalizeCarouselSlideCopy } from '../utils/plain-text.util';
-import { applyCopyLimits } from '../utils/copy-limits.util';
-import { splitOversizedContentMachineCopy } from '../utils/content-paragraph-splitter.util';
+import { normalizeSlideCopy } from '../utils/normalize-slide-copy.util';
+import {
+  enforceContentSlidesCount,
+  resolveExpectedSlidesCount,
+} from '../utils/slide-count-alignment.util';
 import { sanitizeContentLlmOutput } from '../utils/content-llm-output-sanitizer.util';
 import {
   normalizeContentSlides,
@@ -53,25 +56,28 @@ export const createGenerateContentStep = () =>
     buildUser: buildContentUserPrompt,
     repair: repairContentOutput,
     retry: { maxAttempts: 2, retryOn: ['parse_error', 'rate_limit', 'provider_error'] },
-    transformOutput: (data, context) => ({
-      slides: normalizeContentSlides(
-        data.slides.map((slide): NormalizableContentSlide => {
-          const parsed = contentSlideLaxSchema.parse(slide);
-          const templateId = (context.inputPayload as { templateId?: string }).templateId;
-          const normalized = normalizeCarouselSlideCopy(parsed);
-          const split = splitOversizedContentMachineCopy(
-            {
-              ...normalized,
-              type: parsed.type,
-              narrativeRole: parsed.narrativeRole,
-            },
-            { templateId },
-          );
-          return applyCopyLimits(
-            split,
-            { templateId },
-          );
-        }),
-      ),
-    }),
+    transformOutput: (data, context) => {
+      const templateId = (context.inputPayload as { templateId?: string }).templateId;
+      const expectedCount = resolveExpectedSlidesCount(context);
+
+      const slides = normalizeContentSlides(
+        enforceContentSlidesCount(
+          data.slides.map((slide): NormalizableContentSlide => {
+            const parsed = contentSlideLaxSchema.parse(slide);
+            const normalized = normalizeCarouselSlideCopy(parsed);
+            return normalizeSlideCopy(
+              {
+                ...normalized,
+                type: parsed.type,
+                narrativeRole: parsed.narrativeRole,
+              },
+              { templateId },
+            );
+          }),
+          expectedCount,
+        ),
+      );
+
+      return { slides };
+    },
   });

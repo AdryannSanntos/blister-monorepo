@@ -1,134 +1,37 @@
-import type { AgentRunStatusDto } from "@company-os/types";
-import { describe, expect, it } from "vitest";
+import { deriveCarouselPhases } from "./carousel-run-display";
 
-import {
-  getFirstCarouselSlideFromRun,
-  getCarouselSlideReactKey,
-  normalizeCarouselOutput,
-  toCarouselViewableRun,
-} from "./carousel-run-display";
-
-const baseRun = (
-  overrides: Partial<AgentRunStatusDto> = {},
-): AgentRunStatusDto => ({
+const baseRun = {
   id: "run_1",
-  agentId: "carousel",
-  companyId: "ws_1",
-  status: "COMPLETED",
-  currentStepKey: null,
-  inputPayload: {
-    theme: "Morning habits",
-    templateId: "editorial-performance",
-    slidesCount: 2,
-  },
-  outputPayload: {},
-  errorMessage: null,
+  status: "RUNNING" as const,
   pauseReason: null,
-  pauseFormSchema: null,
-  reviewStatus: null,
-  creditCost: 1,
-  createdAt: "2026-06-01T10:00:00.000Z",
-  startedAt: "2026-06-01T10:00:01.000Z",
-  completedAt: "2026-06-01T10:05:00.000Z",
-  ...overrides,
-});
+  currentStepKey: "generate_content",
+  inputPayload: {},
+  outputPayload: null,
+  errorMessage: null,
+};
 
-describe("getFirstCarouselSlideFromRun", () => {
-  it("returns null when run is not completed", () => {
-    const run = baseRun({ status: "RUNNING" });
-    expect(getFirstCarouselSlideFromRun({ run })).toBeNull();
+describe("deriveCarouselPhases (2-phase model)", () => {
+  it("marks editor as processing while pipeline runs after idea selection", () => {
+    const steps = [
+      { stepKey: "generate_ideas", status: "COMPLETED" as const },
+      { stepKey: "await_idea_selection", status: "COMPLETED" as const },
+      { stepKey: "generate_content", status: "RUNNING" as const },
+    ];
+    const phases = deriveCarouselPhases({ run: baseRun as never, steps: steps as never });
+    expect(phases.ideas.status).toBe("completed");
+    expect(phases.editor.status).toBe("processing");
   });
 
-  it("returns the lowest-order slide from completed output", () => {
-    const run = baseRun({
-      outputPayload: {
-        templateId: "editorial-performance",
-        socialNetwork: "instagram",
-        slides: [
-          {
-            id: "slide_2",
-            order: 2,
-            type: "text",
-            htmlContent: "<div>Second</div>",
-            cssContent: ".slide {}",
-          },
-          {
-            id: "slide_1",
-            order: 1,
-            type: "start",
-            htmlContent: "<div>First</div>",
-            cssContent: ".slide {}",
-          },
-        ],
-      },
-    });
-
-    expect(getFirstCarouselSlideFromRun({ run })?.id).toBe("slide_1");
-  });
-});
-
-describe("toCarouselViewableRun", () => {
-  it("includes firstSlide for completed runs", () => {
-    const viewable = toCarouselViewableRun(
-      baseRun({
-        outputPayload: {
-          templateId: "editorial-performance",
-          socialNetwork: "instagram",
-          slides: [
-            {
-              id: "slide_1",
-              order: 1,
-              type: "start",
-              htmlContent: "<div>Cover</div>",
-              cssContent: ".slide {}",
-            },
-          ],
-        },
-      }),
-    );
-
-    expect(viewable.firstSlide?.htmlContent).toBe("<div>Cover</div>");
-    expect(viewable.theme).toBe("Morning habits");
-  });
-});
-
-describe("normalizeCarouselOutput", () => {
-  it("dedupes slides with duplicate ids", () => {
-    const normalized = normalizeCarouselOutput({
-      templateId: "editorial-performance",
-      socialNetwork: "instagram",
-      slides: [
-        {
-          id: "slide_1",
-          order: 2,
-          type: "text",
-          htmlContent: "<div>Duplicate</div>",
-          cssContent: ".slide {}",
-        },
-        {
-          id: "slide_1",
-          order: 1,
-          type: "start",
-          htmlContent: "<div>Cover</div>",
-          cssContent: ".slide {}",
-        },
-      ],
-    });
-
-    expect(normalized.slides).toHaveLength(1);
-    expect(normalized.slides[0]?.order).toBe(1);
-    expect(normalized.slides[0]?.htmlContent).toBe("<div>Cover</div>");
+  it("marks editor as completed when run is COMPLETED", () => {
+    const run = { ...baseRun, status: "COMPLETED" as const, currentStepKey: null };
+    const phases = deriveCarouselPhases({ run: run as never, steps: [] });
+    expect(phases.editor.status).toBe("completed");
   });
 
-  it("builds stable react keys from slide id, order and index", () => {
-    const slide = {
-      id: "slide_1",
-      order: 1,
-      type: "start" as const,
-      htmlContent: "",
-      cssContent: "",
-    };
-
-    expect(getCarouselSlideReactKey(slide, 0)).toBe("slide_1::1::0");
+  it("marks ideas as awaiting_action while paused for idea selection", () => {
+    const run = { ...baseRun, status: "PAUSED" as const, pauseReason: "awaiting_idea_selection" };
+    const phases = deriveCarouselPhases({ run: run as never, steps: [] });
+    expect(phases.ideas.status).toBe("awaiting_action");
+    expect(phases.editor.status).toBe("idle");
   });
 });

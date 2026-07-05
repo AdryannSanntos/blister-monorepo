@@ -1,18 +1,19 @@
 "use client";
 
+import type {
+  CarouselRunInput,
+  CarouselSocialNetwork,
+} from "@company-os/types";
+import { carouselRunInputSchema } from "@company-os/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Images, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-import type { CarouselSocialNetwork, CarouselRunInput } from "@company-os/types";
-import { carouselRunInputSchema } from "@company-os/types";
-import type { z } from "zod";
 import { CarouselSocialNetworkIcon } from "src/core/modules/agents/components/carousel/carousel-social-network-icon";
 import { buildCarouselFormDefaults } from "src/core/modules/agents/hooks/carousel-form-defaults";
 import { useCarouselSettings } from "src/core/modules/agents/hooks/use-carousel-settings";
-import { useCarouselTemplates } from "src/core/modules/agents/hooks/use-carousel-templates";
+import { TemplateDetailDialog } from "src/core/shared/components/templates/template-detail-dialog";
 import { Button } from "src/core/shared/components/ui/button";
 import {
   Collapsible,
@@ -28,6 +29,13 @@ import {
   FormLabel,
   FormMessage,
 } from "src/core/shared/components/ui/form";
+import { Input } from "src/core/shared/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "src/core/shared/components/ui/input-group";
 import { Paragraph } from "src/core/shared/components/ui/paragraph";
 import {
   Select,
@@ -36,17 +44,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "src/core/shared/components/ui/select";
-import { Input } from "src/core/shared/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from "src/core/shared/components/ui/input-group";
-import { Slider } from "src/core/shared/components/ui/slider";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
+import { Slider } from "src/core/shared/components/ui/slider";
 import { Textarea } from "src/core/shared/components/ui/textarea";
+import { useCarouselTemplates } from "src/core/shared/hooks/use-carousel-templates";
 import { cn } from "src/core/shared/utils";
+import type { z } from "zod";
 
 type CarouselSourceStepProps = {
   open: boolean;
@@ -55,11 +58,12 @@ type CarouselSourceStepProps = {
   isSubmitting?: boolean;
 };
 
-const SOCIAL_NETWORKS: Array<{ id: CarouselSocialNetwork; enabled: boolean }> = [
-  { id: "instagram", enabled: true },
-  { id: "facebook", enabled: false },
-  { id: "tiktok", enabled: false },
-];
+const SOCIAL_NETWORKS: Array<{ id: CarouselSocialNetwork; enabled: boolean }> =
+  [
+    { id: "instagram", enabled: true },
+    { id: "facebook", enabled: false },
+    { id: "tiktok", enabled: false },
+  ];
 
 type CarouselRunFormInput = z.input<typeof carouselRunInputSchema>;
 
@@ -72,8 +76,11 @@ export const CarouselSourceStep = ({
   const t = useTranslations("carousel.modal");
   const tOptions = useTranslations("carousel.modal.options");
   const [optionsOpen, setOptionsOpen] = useState(false);
-  const { data: settings, isFetched: isSettingsFetched } = useCarouselSettings();
-  const { data: templates = [], isLoading: templatesLoading } = useCarouselTemplates();
+  const [variationsOpen, setVariationsOpen] = useState(false);
+  const { data: settings, isFetched: isSettingsFetched } =
+    useCarouselSettings();
+  const { data: templates = [], isLoading: templatesLoading } =
+    useCarouselTemplates();
 
   const form = useForm<CarouselRunFormInput>({
     resolver: zodResolver(carouselRunInputSchema),
@@ -89,13 +96,19 @@ export const CarouselSourceStep = ({
 
   const theme = form.watch("theme");
   const slidesCount = form.watch("slidesCount");
-  const accentColor = form.watch("brandOverrides.accentColor") ?? "#FF4A0A";
+  const accentColor = form.watch("brandOverrides.accentColor") ?? "#563BE7";
+  const selectedTemplateId = form.watch("templateId");
+  const selectedTemplate =
+    templates.find((tpl) => tpl.id === selectedTemplateId) ?? null;
   const hasTheme = (theme ?? "").trim().length > 0;
   const isFormReady = isSettingsFetched && !templatesLoading;
 
   if (!isFormReady) {
     return (
-      <div className="flex flex-col gap-4" data-testid="carousel-source-step-loading">
+      <div
+        className="flex flex-col gap-4"
+        data-testid="carousel-source-step-loading"
+      >
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-10 w-full" />
       </div>
@@ -178,10 +191,15 @@ export const CarouselSourceStep = ({
                         </Paragraph>
                       </div>
                     ) : (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger data-testid="carousel-template-select">
-                            <SelectValue placeholder={tOptions("templatePlaceholder")} />
+                            <SelectValue
+                              placeholder={tOptions("templatePlaceholder")}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -199,9 +217,28 @@ export const CarouselSourceStep = ({
                         </SelectContent>
                       </Select>
                     )}
+                    {selectedTemplate ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-fit gap-2 px-2 text-[var(--fg-secondary)]"
+                        onClick={() => setVariationsOpen(true)}
+                        data-testid="carousel-template-variations-trigger"
+                      >
+                        <Images className="size-4" />
+                        Ver variações ({selectedTemplate.variations.length})
+                      </Button>
+                    ) : null}
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+
+              <TemplateDetailDialog
+                template={selectedTemplate}
+                open={variationsOpen}
+                onOpenChange={setVariationsOpen}
               />
 
               <FormItem>
@@ -301,7 +338,9 @@ export const CarouselSourceStep = ({
                       <FormControl>
                         <InputGroup>
                           <InputGroupAddon align="inline-start">
-                            <InputGroupText aria-hidden="true">@</InputGroupText>
+                            <InputGroupText aria-hidden="true">
+                              @
+                            </InputGroupText>
                           </InputGroupAddon>
                           <InputGroupInput
                             placeholder={tOptions("socialHandlePlaceholder")}
@@ -309,7 +348,9 @@ export const CarouselSourceStep = ({
                             data-testid="carousel-social-handle-input"
                             {...field}
                             value={(field.value ?? "").replace(/^@/, "")}
-                            onChange={(e) => field.onChange(e.target.value.replace(/^@/, ""))}
+                            onChange={(e) =>
+                              field.onChange(e.target.value.replace(/^@/, ""))
+                            }
                           />
                         </InputGroup>
                       </FormControl>

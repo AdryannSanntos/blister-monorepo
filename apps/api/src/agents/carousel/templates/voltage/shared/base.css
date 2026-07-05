@@ -1,0 +1,320 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap");
+
+/* ═══════════════════════════════════════════════════════════
+   VOLTAGE — Bold viral impact.
+   Soul: gritante, hard-sell, viral. Pure black canvas, condensed
+   black display, electric energy. Highlight = filled accent BOX.
+   Type: Anton (condensed display) + Archivo (body) + Space Mono
+   (labels/numbers). Signature: highlight box, giant mono number,
+   diagonal slash labels, square image grids, hard rules.
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --accent: #563be7;
+  --bg-base: #000000;
+  --ink: #ffffff;
+  --ink-soft: rgba(255, 255, 255, 0.74);
+  --ink-mute: rgba(255, 255, 255, 0.5);
+  --line: rgba(255, 255, 255, 0.2);
+
+  --safe-x: 60px;
+  --safe-top: 44px;
+  --safe-bottom: 60px;
+  --footer-reserve: 72px;
+
+  --title-xl: 120px;
+  --title-lg: 96px;
+  --title-md: 72px;
+  --body: 30px;
+  --body-sm: 26px;
+  --gap: 28px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 12px;
+  font-family: "Archivo", system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--ink);
+}
+
+/* ── Full-bleed photo (covers / feature slides) ── */
+.volt-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.volt-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.volt-bg__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 30%,
+    rgba(0, 0, 0, 0.78) 68%,
+    rgba(0, 0, 0, 0.97) 100%
+  );
+}
+
+/* ── Top bar: mono handle + tag ── */
+.volt-top {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--safe-top) var(--safe-x) 0;
+  flex-shrink: 0;
+}
+.handle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  padding: 9px 20px 9px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line);
+  font-family: "Space Mono", monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.handle-pill__logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #ffd23f);
+  flex-shrink: 0;
+}
+.volt-tag {
+  font-family: "Space Mono", monospace;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+/* ── Main content region ── */
+.slide-main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 36px var(--safe-x) calc(var(--safe-bottom) + var(--footer-reserve));
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* ── Display title (condensed) ── */
+.volt-title {
+  font-family: "Anton", "Archivo", sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: var(--title-lg);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  color: #ffffff;
+  max-width: 960px;
+}
+/* Highlight = filled accent box (the Voltage signature) */
+.volt-title .accent {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.02em 0.14em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.volt-body {
+  font-family: "Archivo", sans-serif;
+  font-size: var(--body);
+  line-height: 1.42;
+  color: var(--ink-soft);
+  font-weight: 500;
+  max-width: 860px;
+}
+.volt-body strong { color: #ffffff; font-weight: 700; }
+
+.slide--cover .slide-main {
+  padding-bottom: var(--safe-bottom);
+}
+
+/* ── Slash label (diagonal accent ribbon) ── */
+.slash {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 12px 24px 12px 20px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: "Space Mono", monospace;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
+}
+
+/* ── Giant mono number (stats) ── */
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.stat__num {
+  font-family: "Anton", sans-serif;
+  font-size: 320px;
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.stat__num .accent {
+  color: var(--accent);
+}
+.stat__label {
+  font-family: "Space Mono", monospace;
+  font-size: var(--body);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  max-width: 680px;
+  line-height: 1.3;
+}
+
+/* ── Big stat with highlight box number ── */
+.stat__num--boxed .accent {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0 0.1em;
+}
+
+/* ── Checklist (square bullets, hard) ── */
+.volt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+.volt-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  font-family: "Archivo", sans-serif;
+  font-size: var(--body);
+  line-height: 1.34;
+  color: #ffffff;
+  font-weight: 600;
+}
+.volt-list li::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 8px;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+}
+
+/* ── Pull quote (condensed, loud) ── */
+.quote {
+  font-family: "Anton", sans-serif;
+  font-size: var(--title-md);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: #ffffff;
+  max-width: 940px;
+}
+.quote .accent { color: var(--accent); }
+.quote__cite {
+  margin-top: 26px;
+  font-family: "Space Mono", monospace;
+  font-size: var(--body-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ── Image cards (square corners, hard) ── */
+.volt-card {
+  border-radius: 4px;
+  overflow: hidden;
+  background: #161618;
+  flex-shrink: 0;
+}
+.volt-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.volt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── CTA chip (hard accent block) ── */
+.volt-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 26px 44px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: "Anton", sans-serif;
+  font-size: 38px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── Footer / progress ── */
+.slide-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 0 var(--safe-x) 26px;
+}
+.slide-footer--hidden { opacity: 0; height: 0; overflow: hidden; padding: 0; }
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 0;
+  overflow: hidden;
+}
+.progress-fill { display: block; height: 100%; background: var(--accent); }
+.slide-counter {
+  display: block;
+  margin-top: 8px;
+  text-align: right;
+  font-family: "Space Mono", monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-mute);
+}

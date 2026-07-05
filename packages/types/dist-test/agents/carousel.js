@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.carouselOutputSchema = exports.carouselOutputSlideSchema = exports.carouselDesignPlanSchema = exports.carouselSlideDesignSchema = exports.carouselImageSlotSchema = exports.carouselSlideContentSchema = exports.carouselIdeaOptionSchema = exports.carouselRunInputSchema = exports.carouselAgentSettingsSchema = exports.carouselBrandContextSchema = exports.carouselBrandOverridesSchema = exports.carouselMetaRightModeSchema = exports.carouselNarrativeRoleSchema = exports.carouselSlideTypeSchema = exports.carouselSocialNetworkSchema = void 0;
+exports.carouselTemplatesResponseSchema = exports.carouselTemplatePreviewSchema = exports.carouselTemplateVariationSchema = exports.carouselTemplateThemeSchema = exports.carouselTemplateImagePositionSchema = exports.carouselOutputSchema = exports.carouselOutputSlideSchema = exports.carouselDesignPlanSchema = exports.carouselSlideDesignSchema = exports.carouselImageSlotSchema = exports.carouselSlideContentSchema = exports.carouselIdeaSelectionSchema = exports.carouselCustomIdeaSchema = exports.carouselIdeaOptionSchema = exports.carouselRunInputSchema = exports.carouselAgentSettingsSchema = exports.carouselBrandContextSchema = exports.carouselBrandOverridesSchema = exports.carouselMetaRightModeSchema = exports.carouselNarrativeRoleSchema = exports.carouselSlideTypeSchema = exports.carouselSocialNetworkSchema = void 0;
 const zod_1 = require("zod");
 exports.carouselSocialNetworkSchema = zod_1.z.enum([
     "instagram",
@@ -56,7 +56,7 @@ exports.carouselAgentSettingsSchema = zod_1.z.object({
     accentColor: zod_1.z.preprocess((value) => (typeof value === "string" ? value.toUpperCase() : value), zod_1.z
         .string()
         .regex(/^#[0-9A-Fa-f]{6}$/)
-        .default("#FF4A0A")),
+        .default("#563BE7")),
     metaRightMode: exports.carouselMetaRightModeSchema.default("handle"),
 });
 exports.carouselRunInputSchema = zod_1.z.object({
@@ -74,6 +74,18 @@ exports.carouselIdeaOptionSchema = zod_1.z.object({
     title: zod_1.z.string(),
     description: zod_1.z.string(),
 });
+exports.carouselCustomIdeaSchema = zod_1.z.object({
+    title: zod_1.z.string().min(1),
+    description: zod_1.z.string().optional(),
+});
+exports.carouselIdeaSelectionSchema = zod_1.z
+    .object({
+    selectedIdeaId: zod_1.z.string().optional(),
+    customIdea: exports.carouselCustomIdeaSchema.optional(),
+})
+    .refine((data) => Boolean(data.selectedIdeaId || data.customIdea), {
+    message: 'Select an idea or provide a custom idea',
+});
 exports.carouselSlideContentSchema = zod_1.z.object({
     id: zod_1.z.string(),
     order: zod_1.z.number(),
@@ -82,6 +94,7 @@ exports.carouselSlideContentSchema = zod_1.z.object({
     title: zod_1.z.string().optional(),
     subtitle: zod_1.z.string().optional(),
     body: zod_1.z.string().optional(),
+    body2: zod_1.z.string().optional(),
     callToAction: zod_1.z.string().optional(),
     ctaKeyword: zod_1.z.string().optional(),
     ctaHint: zod_1.z.string().optional(),
@@ -121,4 +134,35 @@ exports.carouselOutputSchema = zod_1.z.object({
     socialNetwork: exports.carouselSocialNetworkSchema,
     templateId: zod_1.z.string(),
     slides: zod_1.z.array(exports.carouselOutputSlideSchema),
+});
+// ---- Template preview catalog (card cover + variation gallery) ----
+exports.carouselTemplateImagePositionSchema = zod_1.z.enum([
+    "start",
+    "center",
+    "bottom",
+]);
+exports.carouselTemplateThemeSchema = zod_1.z.enum(["dark", "white", "accent"]);
+exports.carouselTemplateVariationSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    /** Slide family: start | text | text-image */
+    slideType: zod_1.z.string(),
+    /** Image position for text-image variations */
+    position: exports.carouselTemplateImagePositionSchema.optional(),
+    /** Theme for text-image variations */
+    theme: exports.carouselTemplateThemeSchema.optional(),
+    /** Site-relative PNG preview path */
+    previewUrl: zod_1.z.string(),
+});
+exports.carouselTemplatePreviewSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    name: zod_1.z.string(),
+    description: zod_1.z.string(),
+    accentColor: zod_1.z.string().optional(),
+    /** Cover PNG used on the card. Defaults empty so a pre-upgrade API still parses. */
+    coverPreviewUrl: zod_1.z.string().default(""),
+    owned: zod_1.z.boolean().optional(),
+    variations: zod_1.z.array(exports.carouselTemplateVariationSchema).default([]),
+});
+exports.carouselTemplatesResponseSchema = zod_1.z.object({
+    templates: zod_1.z.array(exports.carouselTemplatePreviewSchema),
 });

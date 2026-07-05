@@ -43,31 +43,33 @@ test.describe("Carousel Agent — smoke tests", () => {
     });
   });
 
-  test("run detail page shows ideas phase on load", async ({
+  test("run detail opens fullscreen overlay above sidebar", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto(
-      "/dashboard/agents/carousel/runs/run_carousel_preview",
-    );
-    await expect(page.getByTestId("carousel-run-detail-page")).toBeVisible();
-    await expect(page.getByTestId("carousel-ideas-step")).toBeVisible();
-    await expect(
-      page.locator('[data-testid^="carousel-idea-card-"]'),
-    ).toHaveCount(5);
+    await page.goto("/dashboard/agents/carousel/runs/run_carousel_preview");
+    const overlay = page.getByTestId("carousel-run-overlay");
+    await expect(overlay).toBeVisible();
+    const box = await overlay.boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual((page.viewportSize()?.width ?? 0) - 2);
   });
 
-  test("can navigate back to ideas after selecting one", async ({
+  test("run detail shows ideas phase on load", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/dashboard/agents/carousel/runs/run_carousel_preview");
+    await expect(page.getByTestId("carousel-run-overlay")).toBeVisible();
+    await expect(page.getByTestId("carousel-ideas-step")).toBeVisible();
+    await expect(page.locator('[data-testid^="carousel-idea-card-"]')).toHaveCount(5);
+  });
+
+  test("selecting idea shows pipeline progress", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard/agents/carousel/runs/run_carousel_preview");
     await page.getByTestId("carousel-idea-card-idea_1").click();
-    await expect(page.getByTestId("carousel-content-step")).toBeVisible({
+    await expect(page.getByTestId("carousel-pipeline-progress")).toBeVisible({
       timeout: 10_000,
     });
-
-    await page.getByTestId("carousel-run-step-ideas").click();
-    await expect(page.getByTestId("carousel-ideas-step")).toBeVisible();
-    await expect(page.getByTestId("carousel-idea-card-idea_1")).toBeVisible();
   });
 
   test("settings page renders for carousel agent", async ({

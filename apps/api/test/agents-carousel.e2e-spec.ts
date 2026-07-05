@@ -78,7 +78,7 @@ describe('Carousel Agent E2E', () => {
     ).toBe(true);
   });
 
-  it('pauses at idea selection then completes after approvals', async () => {
+  it('pauses at idea selection then completes after resume', async () => {
     const startResponse = await request(app.getHttpServer())
       .post('/api/agents/carousel/run')
       .set('Cookie', session.cookies)
@@ -103,34 +103,7 @@ describe('Carousel Agent E2E', () => {
       .send({ formData: { selectedIdeaId: 'idea_1' } })
       .expect(202);
 
-    await waitForRunStatus(prisma, runId, ['PAUSED']);
-    const contentPause = await prisma.agentRun.findUnique({ where: { id: runId } });
-    expect(contentPause?.pauseReason).toBe('awaiting_content_approval');
-
-    await request(app.getHttpServer())
-      .post(`/api/agents/runs/${runId}/resume`)
-      .set('Cookie', session.cookies)
-      .send({ formData: { contentApproved: true } })
-      .expect(202);
-
-    await waitForRunStatus(prisma, runId, ['PAUSED']);
-    const designPause = await prisma.agentRun.findUnique({ where: { id: runId } });
-    expect(designPause?.pauseReason).toBe('awaiting_design_approval');
-
-    await request(app.getHttpServer())
-      .post(`/api/agents/runs/${runId}/resume`)
-      .set('Cookie', session.cookies)
-      .send({
-        formData: {
-          designApproved: true,
-          imageUploads: {
-            'slide_1:image_url': 'stub-file-id',
-          },
-        },
-      })
-      .expect(202);
-
-    const completed = await waitForRunStatus(prisma, runId, ['COMPLETED']);
+    const completed = await waitForRunStatus(prisma, runId, ['COMPLETED'], 60_000);
     const output = completed.outputPayload as { slides?: Array<{ pngFileId?: string }> };
     expect(Array.isArray(output.slides)).toBe(true);
     expect(output.slides?.length).toBeGreaterThan(0);

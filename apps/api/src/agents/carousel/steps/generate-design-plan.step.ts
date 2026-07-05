@@ -4,6 +4,7 @@ import {
   carouselImageSlotSchema,
   carouselNarrativeRoleSchema,
   carouselSlideTypeSchema,
+  type CarouselSlideType,
 } from '@company-os/types';
 import { z } from 'zod';
 import { getCarouselRunDeps } from '../ports/carousel-run-deps';
@@ -12,6 +13,10 @@ import {
   normalizeDesignPlanSlides,
   type NormalizerContentSlide,
 } from '../utils/design-plan-normalizer';
+import {
+  alignSlidesToContent,
+  resolveContentSlidesFromContext,
+} from '../utils/slide-count-alignment.util';
 
 const designPlanLlmOutputZod = z.object({
   templateId: z.string(),
@@ -27,35 +32,19 @@ const designPlanLlmOutputZod = z.object({
   ),
 });
 
-const resolveContentSlides = (context: StepExecutionContext) => {
-  const contentOutput = context.previousStepsOutput.generate_content as {
-    slides?: Array<{
-      id: string;
-      order: number;
-      type: string;
-      narrativeRole?: string;
-      listItems?: string[];
-      body?: string;
-      subtitle?: string;
-      callToAction?: string;
-      imageBrief?: string;
-    }>;
-  };
-  const awaitsOutput = context.previousStepsOutput.await_content_approval as {
-    slides?: Array<{
-      id: string;
-      order: number;
-      type: string;
-      narrativeRole?: string;
-      listItems?: string[];
-      body?: string;
-      subtitle?: string;
-      callToAction?: string;
-      imageBrief?: string;
-    }>;
-  };
-  return awaitsOutput?.slides ?? contentOutput?.slides ?? [];
-};
+const resolveContentSlides = (context: StepExecutionContext) =>
+  resolveContentSlidesFromContext<{
+    id: string;
+    order: number;
+    type: CarouselSlideType;
+    narrativeRole?: string;
+    listItems?: string[];
+    body?: string;
+    body2?: string;
+    subtitle?: string;
+    callToAction?: string;
+    imageBrief?: string;
+  }>(context);
 
 const toNormalizerContentSlides = (
   slides: Array<{
@@ -65,6 +54,7 @@ const toNormalizerContentSlides = (
     narrativeRole?: string;
     listItems?: string[];
     body?: string;
+    body2?: string;
     subtitle?: string;
     callToAction?: string;
     imageBrief?: string;
@@ -79,6 +69,7 @@ const toNormalizerContentSlides = (
       : undefined,
     listItems: slide.listItems,
     body: slide.body,
+    body2: slide.body2,
     subtitle: slide.subtitle,
     callToAction: slide.callToAction,
     imageBrief: slide.imageBrief,
@@ -94,7 +85,21 @@ export const createGenerateDesignPlanStep = () =>
       const rawContentSlides = resolveContentSlides(context);
       const contentSlides = toNormalizerContentSlides(rawContentSlides);
 
-      const slidesWithSlots = data.slides.map((slide) => {
+      const alignedSlides = alignSlidesToContent(
+        rawContentSlides.map((slide) => ({
+          id: slide.id,
+          order: slide.order,
+          type: carouselSlideTypeSchema.parse(slide.type),
+        })),
+        data.slides,
+        (contentSlide) => ({
+          variationId: contentSlide.type === 'start' ? 'v1' : 'v2',
+          imageSlots: [] as z.infer<typeof designPlanLlmOutputZod>['slides'][number]['imageSlots'],
+          layoutNotes: rawContentSlides.find((entry) => entry.id === contentSlide.id)?.imageBrief ?? '',
+        }),
+      );
+
+      const slidesWithSlots = alignedSlides.map((slide) => {
         const contentSlide = rawContentSlides.find((entry) => entry.id === slide.id);
         const manifestSlots = templateService.getImageSlotsForVariation(
           data.templateId,

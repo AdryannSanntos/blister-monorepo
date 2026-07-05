@@ -1,13 +1,16 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { type ReactNode, useMemo } from "react";
+import { CarouselRunOverlay } from "src/core/modules/agents/components/carousel/editor/carousel-run-overlay";
 import { getAgentByRouteSlug } from "src/core/modules/blister-os/fixtures/agents-catalog.fixture";
 import {
   getAgentOverviewPath,
   getAgentSettingsPath,
   matchAgentRunPath,
   parseAgentRouteSlug,
+  parseAgentRunId,
 } from "src/core/modules/agents/utils/agent-paths";
 import { CarouselRunModalProvider } from "src/core/modules/agents/components/carousel/carousel-run-modal-provider";
 import { CutsRunModalProvider } from "src/core/modules/agents/components/cuts/cuts-run-modal-provider";
@@ -27,10 +30,14 @@ const AGENT_ROUTE_PREFIX = "/dashboard/agents/";
 
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("dashboard");
   const tSidebar = useTranslations("sidebar");
   const tAgentsNav = useTranslations("agents.nav");
   const navGroups = useDashboardNavGroups();
+
+  const carouselRunMatch = matchAgentRunPath(pathname, "carousel");
+  const carouselRunId = carouselRunMatch ? parseAgentRunId(pathname) : null;
 
   const breadcrumbItems = useMemo((): AppShellBreadcrumbItem[] | null => {
     if (pathname === "/dashboard") return null;
@@ -120,6 +127,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
           {children}
         </AppShell>
       </CarouselRunModalProvider>
+      {carouselRunId ? (
+        <CarouselRunOverlay
+          runId={carouselRunId}
+          onClose={() => router.push(getAgentOverviewPath("carousel"))}
+        />
+      ) : null}
     </CutsRunModalProvider>
   );
 }

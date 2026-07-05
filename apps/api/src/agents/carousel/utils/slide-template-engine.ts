@@ -1,5 +1,5 @@
 import type { CarouselBrandContext, CarouselNarrativeRole, CarouselSlideType } from '@company-os/types';
-import { applyCopyLimits } from './copy-limits.util';
+import { normalizeSlideCopy } from './normalize-slide-copy.util';
 import { formatCarouselCopyHtml } from './copy-format.util';
 
 export type SlideContentInput = {
@@ -139,12 +139,44 @@ const stripEmptyCopyBlocks = (html: string): string => {
   return result;
 };
 
+export type CopyDensity = 'airy' | 'normal' | 'compact';
+
+export const resolveCopyDensity = (slide: SlideContentInput): CopyDensity => {
+  const totalChars =
+    (slide.body?.length ?? 0) +
+    (slide.body2?.length ?? 0) +
+    (slide.subtitle?.length ?? 0) +
+    (slide.callToAction?.length ?? 0) +
+    (slide.type === 'start' ? slide.title?.length ?? 0 : 0);
+
+  if (totalChars > 480) return 'compact';
+  if (totalChars < 280) return 'airy';
+  return 'normal';
+};
+
+const injectSlideAttributes = (
+  html: string,
+  slide: SlideContentInput,
+  density: CopyDensity,
+): string => {
+  const attributes = [`data-density="${density}"`];
+  if (slide.type === 'start' && (slide.title?.length ?? 0) <= 80) {
+    attributes.push('data-title-short');
+  }
+
+  return html.replace(
+    /<div class="slide\b([^"]*)"/i,
+    `<div class="slide$1" ${attributes.join(' ')}`,
+  );
+};
+
 export const hydrateSlideHtml = (input: HydrateSlideHtmlInput): string => {
   const { slide, brand, totalSlides, imageUrls, templateId } = input;
   const limitedSlide: SlideContentInput = {
     ...slide,
-    ...applyCopyLimits(slide, { templateId }),
+    ...normalizeSlideCopy(slide, { templateId }),
   };
+  const density = resolveCopyDensity(limitedSlide);
   const progress = totalSlides > 0 ? Math.round((slide.order / totalSlides) * 100) : 0;
 
   const metaRight =
@@ -189,6 +221,7 @@ export const hydrateSlideHtml = (input: HydrateSlideHtmlInput): string => {
   }
 
   let html = replacePlaceholders(input.html, variables);
+  html = injectSlideAttributes(html, limitedSlide, density);
   html = stripEmptyImageBlocks(html);
   html = stripEmptyCopyBlocks(html);
 

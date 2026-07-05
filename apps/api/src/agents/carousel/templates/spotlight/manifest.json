@@ -1,0 +1,40 @@
+{
+  "id": "spotlight",
+  "name": "Spotlight",
+  "description": "Cards creme flutuando sobre gradiente quente (carvão + âmbar + accent), badge-pill com brilho e Sora geométrica — 1080×1350",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Foto de capa (full-bleed)", "required": true }
+        ]
+      }
+    },
+    "text": [
+      "pull-quote",
+      "stat",
+      "question",
+      "statement",
+      "cta"
+    ],
+    "text-image": {
+      "card-top": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto no topo do card", "required": true }]
+      },
+      "card-bottom": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto na base do card", "required": true }]
+      },
+      "card-list": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto no topo do card", "required": true }]
+      }
+    },
+    "image": {
+      "full": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto em tela cheia", "required": true }]
+      }
+    }
+  }
+}

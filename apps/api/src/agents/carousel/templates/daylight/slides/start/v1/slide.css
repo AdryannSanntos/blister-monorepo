@@ -1,0 +1,13 @@
+/* start/v1 — Cover with day-top + rule, kicker, big title, media grid */
+.slide-daylight--start .slide-daylight__title {
+  font-size: var(--title-xl);
+  font-weight: 800;
+}
+.slide-daylight__media {
+  margin-top: auto;
+  height: 380px;
+  max-height: 36vh;
+}
+.slide-daylight__media .media-card {
+  height: 100%;
+}

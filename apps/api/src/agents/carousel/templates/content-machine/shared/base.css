@@ -1,10 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap");
 
 :root {
-  --accent: #ff4a0a;
-  --accent-soft: #ff5a1a;
-  --section-orange-from: #f54a0a;
-  --section-orange-to: #ff5a1a;
+  --accent: #563be7;
+  --accent-soft: #6d54ec;
+  --section-orange-from: #563be7;
+  --section-orange-to: #6d54ec;
   --bg-navy: #050510;
   --bg-light: #f5f5f5;
   --text-primary-dark: #111111;
@@ -12,6 +12,11 @@
   --text-on-accent: #ffffff;
   --safe-x: 80px;
   --safe-bottom: 48px;
+  --copy-size-lg: 42px;
+  --copy-size-md: 38px;
+  --copy-size-sm: 34px;
+  --copy-gap: 28px;
+  --media-gap: 40px;
 }
 
 * {
@@ -27,7 +32,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   color: var(--text-primary-dark);
 }
 
@@ -142,7 +147,7 @@
 }
 
 .bold-sans {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -158,12 +163,14 @@
 .copy-stack {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--copy-gap);
   max-width: 920px;
+  flex: 1;
+  justify-content: center;
 }
 
 .copy-block {
-  font-size: 32px;
+  font-size: var(--copy-size-md);
   line-height: 1.18;
   max-width: 920px;
 }
@@ -172,53 +179,94 @@
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.01em;
+  font-size: var(--copy-size-lg);
 }
 
 .copy-block--sans {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 800;
-  line-height: 1.22;
-  letter-spacing: -0.02em;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-size: calc(var(--copy-size-md) - 2px);
+}
+
+/* Support voice — secondary lines, lighter weight for real hierarchy */
+.copy-block--support {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: 0;
+  font-size: var(--copy-size-sm);
+  opacity: 0.86;
+}
+
+.copy-block--support .accent {
+  color: var(--accent);
+  font-weight: 600;
+  opacity: 1;
+}
+
+.copy-block--support strong,
+.copy-block--support b {
+  font-weight: 600;
+}
+
+/* Lead — promotes the primary block of a slide to the largest size */
+.copy-block--lead {
+  font-size: var(--copy-size-lg);
 }
 
 .copy-block--serif .accent {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 800;
   color: var(--accent);
-  font-style: normal;
+  font-weight: 700;
 }
 
 .copy-block--sans .accent {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 600;
-  font-style: italic;
   color: var(--accent);
+  font-weight: 700;
 }
 
 .copy-block--serif strong,
 .copy-block--serif b {
-  font-family: "Inter", system-ui, sans-serif;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .copy-block--sans strong,
 .copy-block--sans b {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 600;
-  font-style: italic;
+  font-weight: 700;
 }
 
 .theme-accent .copy-block--serif .accent,
 .theme-accent .copy-block--sans .accent {
   color: #ffffff;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.55);
-  text-underline-offset: 4px;
+  font-weight: 700;
 }
 
 .theme-accent .copy-block--serif strong,
 .theme-accent .copy-block--sans strong {
   color: #ffffff;
+  font-weight: 700;
+}
+
+.theme-accent .copy-block--support .accent {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.slide[data-density="airy"] {
+  --copy-size-lg: 44px;
+  --copy-size-md: 40px;
+  --copy-size-sm: 36px;
+  --copy-gap: 32px;
+  --media-gap: 44px;
+}
+
+.slide[data-density="compact"] {
+  --copy-size-lg: 38px;
+  --copy-size-md: 34px;
+  --copy-size-sm: 30px;
+  --copy-gap: 22px;
+  --media-gap: 30px;
 }
 
 .badge-pill {
@@ -227,13 +275,12 @@
   gap: 8px;
   width: fit-content;
   padding: 10px 20px;
-  border-radius: 999px;
-  background: rgba(5, 5, 16, 0.55);
+  border-radius: 6px;
+  background: rgba(5, 5, 16, 0.88);
   border: 1px solid var(--accent);
   color: #ffffff;
   font-size: 20px;
   font-weight: 600;
-  backdrop-filter: blur(8px);
 }
 
 .accent-card {
@@ -298,9 +345,9 @@
 }
 
 .accent-box__text {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
   font-weight: 700;
-  font-size: 26px;
+  font-size: 34px;
   line-height: 1.35;
   color: var(--text-on-accent);
   max-width: 82%;

@@ -11,6 +11,7 @@ import {
   resolveSlidesGenerationContext,
 } from '../utils/slides-generation-context';
 import { dedupeCarouselSlidesById } from '../utils/carousel-output.util';
+import { alignSlidesToContent, resolveContentSlidesFromContext } from '../utils/slide-count-alignment.util';
 
 const generatedSlideLaxSchema = z.object({
   id: z.string(),
@@ -56,23 +57,43 @@ const resolveUploadedFileId = (
   return undefined;
 };
 
+export const buildCarouselImagePlaceholderDataUri = (accentColor: string): string => {
+  const svg = [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">',
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">',
+    `<stop offset="0%" stop-color="${accentColor}" stop-opacity="0.25"/>`,
+    `<stop offset="100%" stop-color="${accentColor}" stop-opacity="0.85"/>`,
+    '</linearGradient></defs>',
+    '<rect width="1080" height="1350" fill="url(#g)"/>',
+    '</svg>',
+  ].join('');
+
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
+
 const resolveImageUrls = async (
   slideId: string,
   imageUploads: Record<string, string>,
   slotKeys: string[],
+  accentColor: string,
   deps: ReturnType<typeof getCarouselRunDeps>,
   context: StepExecutionContext,
 ): Promise<Record<string, string>> => {
   const urls: Record<string, string> = {};
 
   for (const slotKey of slotKeys) {
+    const normalizedKey = slotKey.toLowerCase();
     const fileId = resolveUploadedFileId(slideId, slotKey, imageUploads);
-    if (!fileId) continue;
 
-    urls[slotKey.toLowerCase()] = await deps.resolveFileUrl({
-      fileId,
-      companyId: context.companyId,
-    });
+    if (fileId) {
+      urls[normalizedKey] = await deps.resolveFileUrl({
+        fileId,
+        companyId: context.companyId,
+      });
+      continue;
+    }
+
+    urls[normalizedKey] = buildCarouselImagePlaceholderDataUri(accentColor);
   }
 
   return urls;
@@ -101,11 +122,28 @@ const HYDRATION_PLACEHOLDER_PATTERN =
 export const resolveSlideHtmlContent = (
   llmHtml: string | undefined,
   templateHtml: string,
+  options?: { lockTemplate?: boolean },
 ): string => {
+  if (options?.lockTemplate) return templateHtml;
   const trimmed = llmHtml?.trim();
   if (!trimmed) return templateHtml;
   if (!HYDRATION_PLACEHOLDER_PATTERN.test(trimmed)) return templateHtml;
   return trimmed;
+};
+
+export const alignSlidesLlmOutputToContent = (
+  data: z.infer<typeof slidesLlmOutputLaxZod>,
+  context: StepExecutionContext,
+): z.infer<typeof slidesLlmOutputLaxZod> => {
+  const contentSlides = resolveContentSlidesFromContext(context);
+
+  if (contentSlides.length === 0) {
+    return data;
+  }
+
+  return {
+    slides: alignSlidesToContent(contentSlides, data.slides, () => ({})),
+  };
 };
 
 export const normalizeGeneratedSlides = (
@@ -124,10 +162,14 @@ export const normalizeGeneratedSlides = (
       variationId,
     );
 
-    const htmlContent = resolveSlideHtmlContent(slide.htmlContent, variation.html);
+    const isContentMachine = generationContext.templateId === 'content-machine';
+
+    const htmlContent = resolveSlideHtmlContent(slide.htmlContent, variation.html, {
+      lockTemplate: isContentMachine,
+    });
     const cssContent = assembleSlideCss({
       baseCss: variation.baseCss,
-      slideCss: slide.cssContent?.trim() || variation.css,
+      slideCss: isContentMachine ? variation.css : slide.cssContent?.trim() || variation.css,
       brand: generationContext.brand,
     });
 
@@ -164,6 +206,7 @@ export const hydrateGeneratedSlides = async (
         slide.id,
         generationContext.imageUploads,
         slotKeys,
+        generationContext.brand.accentColor,
         deps,
         context,
       );
@@ -195,16 +238,46 @@ const llmGenerateSlidesStep = createLlmCallStep({
   buildUser: buildSlidesUserPrompt,
 });
 
+const buildTemplateSlidesLlmOutput = (context: StepExecutionContext) => {
+  const generationContext = resolveSlidesGenerationContext(context);
+  return {
+    slides: generationContext.slides.map((slide) => ({
+      id: slide.id,
+      order: slide.order,
+      type: slide.type,
+    })),
+  };
+};
+
 export const createGenerateSlidesStep = (): StepExecutor => {
   return async (context, deps) => {
+    const generationContext = resolveSlidesGenerationContext(context);
+
+    if (generationContext.templateId === 'content-machine') {
+      try {
+        const alignedData = alignSlidesLlmOutputToContent(
+          buildTemplateSlidesLlmOutput(context),
+          context,
+        );
+        const slides = await hydrateGeneratedSlides(alignedData, context);
+        return { type: 'CONTINUE', output: { slides } };
+      } catch (error) {
+        return {
+          type: 'FAILED',
+          error: error instanceof Error ? error.message : 'Slide hydration failed',
+        };
+      }
+    }
+
     const llmResult = await llmGenerateSlidesStep(context, deps);
     if (llmResult.type !== 'CONTINUE') return llmResult;
 
     const rawData = llmResult.output as z.infer<typeof slidesLlmOutputLaxZod> | undefined;
-    if (!rawData?.slides?.length) return llmResult;
+    const alignedData = alignSlidesLlmOutputToContent(rawData ?? { slides: [] }, context);
+    if (!alignedData.slides.length) return llmResult;
 
     try {
-      const slides = await hydrateGeneratedSlides(rawData, context);
+      const slides = await hydrateGeneratedSlides(alignedData, context);
 
       return {
         ...llmResult,

@@ -1,0 +1,14 @@
+/* image/full — Single large rounded card filling most of slide */
+.slide-daylight--full .slide-daylight__main--full {
+  gap: 18px;
+}
+.slide-daylight__full-card {
+  flex: 1;
+  min-height: 0;
+}
+.slide-daylight__caption {
+  font-size: var(--body-sm);
+  color: var(--ink-mute);
+  font-weight: 500;
+  line-height: 1.4;
+}

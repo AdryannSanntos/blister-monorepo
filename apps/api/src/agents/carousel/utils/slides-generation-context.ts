@@ -5,6 +5,7 @@ import type {
   CarouselSlideType,
 } from '@company-os/types';
 import { resolveCarouselBrandContext } from './carousel-brand.util';
+import { resolveContentSlidesFromContext } from './slide-count-alignment.util';
 
 type ContentSlide = {
   id: string;
@@ -57,22 +58,11 @@ export const resolveSlidesGenerationContext = (
     imageUploads?: Record<string, string>;
   };
 
-  const contentOutput = context.previousStepsOutput.generate_content as {
-    slides?: ContentSlide[];
-  };
-  const awaitsContentOutput = context.previousStepsOutput.await_content_approval as {
-    slides?: ContentSlide[];
-  };
+  const slides = resolveContentSlidesFromContext<ContentSlide>(context);
   const designOutput = context.previousStepsOutput.generate_design_plan as {
     plan?: { templateId: string; slides: DesignPlanSlide[] };
   };
-  const awaitsDesignOutput = context.previousStepsOutput.await_design_approval as {
-    plan?: { templateId: string; slides: DesignPlanSlide[] };
-    imageUploads?: Record<string, string>;
-  };
-
-  const slides = awaitsContentOutput?.slides ?? contentOutput?.slides ?? [];
-  const plan = awaitsDesignOutput?.plan ?? designOutput?.plan;
+  const plan = designOutput?.plan;
 
   const brand = resolveCarouselBrandContext({
     brandOverrides: inputPayload.brandOverrides,
@@ -85,10 +75,7 @@ export const resolveSlidesGenerationContext = (
     templateId: plan?.templateId ?? inputPayload.templateId ?? 'editorial-performance',
     slides,
     plan,
-    imageUploads: {
-      ...(inputPayload.imageUploads ?? {}),
-      ...(awaitsDesignOutput?.imageUploads ?? {}),
-    },
+    imageUploads: inputPayload.imageUploads ?? {},
     brand,
     totalSlides: slides.length,
   };

@@ -1,0 +1,44 @@
+{
+  "id": "daylight",
+  "name": "Daylight",
+  "description": "Editorial claro e arejado: fundo off-white, Space Grotesk black, hairlines, índice numérico e imagens em cards arredondados — 1080×1350",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem 1 (grade)", "required": true },
+          { "slotKey": "image_url_2", "label": "Imagem 2 (grade)", "required": false }
+        ]
+      }
+    },
+    "text": [
+      "statement",
+      "list",
+      "quote",
+      "stat",
+      "cta"
+    ],
+    "text-image": {
+      "single-bottom": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem em card abaixo do texto", "required": true }]
+      },
+      "grid-bottom": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem 1 (grade)", "required": true },
+          { "slotKey": "image_url_2", "label": "Imagem 2 (grade)", "required": true }
+        ]
+      },
+      "single-top": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem em card acima do texto", "required": true }]
+      }
+    },
+    "image": {
+      "full": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem em tela cheia", "required": true }]
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<div data-carousel-layer="bg" class="slide slide-reel">
+  <div class="reel-bg">
+    <img src="{{image_url}}" alt="" />
+    <div class="reel-bg__scrim reel-bg__scrim--full"></div>
+  </div>
+  <div class="reel-top">
+    <span class="handle-pill"><span class="handle-pill__logo"></span>{{meta_center}}</span>
+    <span class="reel-no">FRAME {{slide_current}}</span>
+  </div>
+  <main class="slide-main slide-reel__main slide-reel__main--center">
+    <div class="reel-panel">
+      <span class="kicker">{{subtitle}}</span>
+      <h2 class="reel-title">{{title}}</h2>
+      <blockquote class="quote">{{body}}</blockquote>
+    </div>
+  </main>
+  <footer class="slide-footer">
+    <span hidden>{{meta_right}}</span>
+    <div class="progress-track"><span class="progress-fill" style="width: {{progress}}%"></span></div>
+    <span class="slide-counter">{{slide_current}}/{{slide_total}}</span>
+  </footer>
+</div>

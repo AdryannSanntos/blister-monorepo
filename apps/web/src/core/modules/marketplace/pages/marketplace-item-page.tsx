@@ -1,21 +1,18 @@
 "use client";
 
-import { ArrowLeft, Library, Store } from "lucide-react";
+import { ArrowLeft, Images, Library, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { TemplateVariationGallery } from "src/core/shared/components/templates/template-variation-gallery";
 import { Badge } from "src/core/shared/components/ui/badge";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
+import { SectionCard } from "src/core/shared/components/ui/section-card";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
+import { useCarouselTemplates } from "src/core/shared/hooks/use-carousel-templates";
 import { Link } from "@/i18n/routing";
 
-import { MarketplaceIncludesList } from "../components/marketplace-includes-list";
-import { MarketplaceItemSpecsCard } from "../components/marketplace-item-specs-card";
 import { MarketplacePurchasePanel } from "../components/marketplace-purchase-panel";
-import { MarketplaceRelatedItems } from "../components/marketplace-related-items";
-import {
-  useMarketplaceItem,
-  useMarketplaceItems,
-} from "../hooks/use-marketplace";
+import { useMarketplaceItem } from "../hooks/use-marketplace";
 import { getMarketplaceTypeLabelKey } from "../utils/marketplace-catalog.utils";
 
 type MarketplaceItemPageProps = {
@@ -25,7 +22,15 @@ type MarketplaceItemPageProps = {
 export const MarketplaceItemPage = ({ itemId }: MarketplaceItemPageProps) => {
   const t = useTranslations("marketplace");
   const { data: item, isLoading } = useMarketplaceItem(itemId);
-  const { data: catalog = [] } = useMarketplaceItems(item?.type);
+  const { data: carouselTemplates = [] } = useCarouselTemplates();
+
+  const templateId =
+    item?.type === "template"
+      ? (item.refId ?? item.specs?.templateId ?? null)
+      : null;
+  const templatePreview = templateId
+    ? (carouselTemplates.find((entry) => entry.id === templateId) ?? null)
+    : null;
 
   if (isLoading) {
     return (
@@ -55,7 +60,6 @@ export const MarketplaceItemPage = ({ itemId }: MarketplaceItemPageProps) => {
     );
   }
 
-  const related = catalog.filter((entry) => entry.id !== item.id).slice(0, 3);
   const typeLabel = t(getMarketplaceTypeLabelKey(item.type));
 
   return (
@@ -87,21 +91,22 @@ export const MarketplaceItemPage = ({ itemId }: MarketplaceItemPageProps) => {
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
         <div className="flex flex-col gap-5">
-          {item.specs && Object.keys(item.specs).length > 0 ? (
-            <MarketplaceItemSpecsCard specs={item.specs} title={t("specs")} />
-          ) : null}
-          {item.includes && item.includes.length > 0 ? (
-            <MarketplaceIncludesList
-              title={t("includes")}
-              items={item.includes}
-            />
+          {templatePreview ? (
+            <SectionCard
+              icon={Images}
+              title="Variações do template"
+              description={`${templatePreview.variations.length} layouts organizados por posição da imagem e tema.`}
+            >
+              <TemplateVariationGallery
+                variations={templatePreview.variations}
+                accentColor={templatePreview.accentColor}
+              />
+            </SectionCard>
           ) : null}
         </div>
 
         <MarketplacePurchasePanel item={item} />
       </div>
-
-      <MarketplaceRelatedItems items={related} />
     </PageLayout>
   );
 };

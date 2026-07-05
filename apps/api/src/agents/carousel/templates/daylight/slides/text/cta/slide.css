@@ -1,0 +1,4 @@
+/* text/cta — Centered CTA with kicker + title + sub + accent button */
+.slide-daylight--cta .slide-daylight__main--center {
+  justify-content: center;
+}

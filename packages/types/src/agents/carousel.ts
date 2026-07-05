@@ -74,7 +74,7 @@ export const carouselAgentSettingsSchema = z.object({
     z
       .string()
       .regex(/^#[0-9A-Fa-f]{6}$/)
-      .default("#FF4A0A"),
+      .default("#563BE7"),
   ),
   metaRightMode: carouselMetaRightModeSchema.default("handle"),
 });
@@ -98,6 +98,22 @@ export const carouselIdeaOptionSchema = z.object({
   description: z.string(),
 });
 export type CarouselIdeaOption = z.infer<typeof carouselIdeaOptionSchema>;
+
+export const carouselCustomIdeaSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+});
+export type CarouselCustomIdea = z.infer<typeof carouselCustomIdeaSchema>;
+
+export const carouselIdeaSelectionSchema = z
+  .object({
+    selectedIdeaId: z.string().optional(),
+    customIdea: carouselCustomIdeaSchema.optional(),
+  })
+  .refine((data) => Boolean(data.selectedIdeaId || data.customIdea), {
+    message: 'Select an idea or provide a custom idea',
+  });
+export type CarouselIdeaSelection = z.infer<typeof carouselIdeaSelectionSchema>;
 
 export const carouselSlideContentSchema = z.object({
   id: z.string(),
@@ -159,3 +175,53 @@ export const carouselOutputSchema = z.object({
   slides: z.array(carouselOutputSlideSchema),
 });
 export type CarouselOutput = z.infer<typeof carouselOutputSchema>;
+
+// ---- Template preview catalog (card cover + variation gallery) ----
+
+export const carouselTemplateImagePositionSchema = z.enum([
+  "start",
+  "center",
+  "bottom",
+]);
+export type CarouselTemplateImagePosition = z.infer<
+  typeof carouselTemplateImagePositionSchema
+>;
+
+export const carouselTemplateThemeSchema = z.enum(["dark", "white", "accent"]);
+export type CarouselTemplateTheme = z.infer<typeof carouselTemplateThemeSchema>;
+
+export const carouselTemplateVariationSchema = z.object({
+  id: z.string(),
+  /** Slide family: start | text | text-image */
+  slideType: z.string(),
+  /** Image position for text-image variations */
+  position: carouselTemplateImagePositionSchema.optional(),
+  /** Theme for text-image variations */
+  theme: carouselTemplateThemeSchema.optional(),
+  /** Site-relative PNG preview path */
+  previewUrl: z.string(),
+});
+export type CarouselTemplateVariation = z.infer<
+  typeof carouselTemplateVariationSchema
+>;
+
+export const carouselTemplatePreviewSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  accentColor: z.string().optional(),
+  /** Cover PNG used on the card. Defaults empty so a pre-upgrade API still parses. */
+  coverPreviewUrl: z.string().default(""),
+  owned: z.boolean().optional(),
+  variations: z.array(carouselTemplateVariationSchema).default([]),
+});
+export type CarouselTemplatePreview = z.infer<
+  typeof carouselTemplatePreviewSchema
+>;
+
+export const carouselTemplatesResponseSchema = z.object({
+  templates: z.array(carouselTemplatePreviewSchema),
+});
+export type CarouselTemplatesResponse = z.infer<
+  typeof carouselTemplatesResponseSchema
+>;

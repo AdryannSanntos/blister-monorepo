@@ -36,7 +36,11 @@
 
 .slide-start__title {
   max-width: 920px;
-  font-size: 76px;
+  font-size: 80px;
   color: #ffffff;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.slide[data-title-short] .slide-start__title {
+  font-size: 88px;
 }

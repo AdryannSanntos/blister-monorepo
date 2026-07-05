@@ -1,4 +1,4 @@
-import { hydrateSlideHtml, buildListHtml, replacePlaceholders } from './slide-template-engine';
+import { hydrateSlideHtml, buildListHtml, replacePlaceholders, resolveCopyDensity } from './slide-template-engine';
 
 const brand = {
   brandName: 'Creator Lab',
@@ -206,7 +206,7 @@ describe('slide-template-engine', () => {
       <p class="copy-block copy-block--serif">{{subtitle}}</p>
     </div>`;
 
-    const longBody = 'a'.repeat(200);
+    const longBody = 'a'.repeat(250);
     const html = hydrateSlideHtml({
       html: template,
       slide: {
@@ -225,7 +225,7 @@ describe('slide-template-engine', () => {
       imageUrls: {},
     });
 
-    expect(html).toContain(`${'a'.repeat(159)}…`);
+    expect(html).toContain(`${'a'.repeat(219)}…`);
     expect(html).toContain('<span class="accent">destaque</span>');
     expect(html).toContain('Terceiro bloco.');
     expect(html).not.toMatch(/\{\{/);
@@ -249,6 +249,49 @@ describe('slide-template-engine', () => {
 
     expect(html).toContain('Primeiro bloco.');
     expect(html.match(/<p class="copy-block">/g)?.length).toBe(1);
+  });
+
+  it('resolves copy density from total text length', () => {
+    expect(
+      resolveCopyDensity({
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        body: 'a'.repeat(120),
+        body2: 'b'.repeat(120),
+        subtitle: 'c'.repeat(50),
+      }),
+    ).toBe('normal');
+
+    expect(
+      resolveCopyDensity({
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        body: 'a'.repeat(200),
+        body2: 'b'.repeat(200),
+        subtitle: 'c'.repeat(100),
+      }),
+    ).toBe('compact');
+  });
+
+  it('injects data-density on slide root element', () => {
+    const template = `<div class="slide theme-navy slide-proof"><p>{{body}}</p></div>`;
+    const html = hydrateSlideHtml({
+      html: template,
+      slide: {
+        id: 'slide_2',
+        order: 2,
+        type: 'text',
+        body: 'Texto curto.',
+      },
+      variationId: 'v3',
+      brand,
+      totalSlides: 5,
+      imageUrls: {},
+    });
+
+    expect(html).toContain('data-density="airy"');
   });
 
   it('resolves ctaKeyword placeholder from LLM html on CTA slides', () => {

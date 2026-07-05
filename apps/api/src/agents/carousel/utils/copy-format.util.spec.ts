@@ -14,4 +14,13 @@ describe('copy-format.util', () => {
     expect(result).toContain('<span class="accent">OK</span>');
     expect(result).not.toContain('<script>');
   });
+
+  it('converts real and literal newlines into <br> instead of leaking raw text', () => {
+    const fromReal = formatCarouselCopyHtml('5 MOTIVOS\nPELOS QUAIS\nO SAAS MUDA');
+    expect(fromReal).toBe('5 MOTIVOS<br>PELOS QUAIS<br>O SAAS MUDA');
+
+    const fromLiteral = formatCarouselCopyHtml('5 MOTIVOS\\nPELOS QUAIS');
+    expect(fromLiteral).toBe('5 MOTIVOS<br>PELOS QUAIS');
+    expect(fromLiteral).not.toContain('\\n');
+  });
 });

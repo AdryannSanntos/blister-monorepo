@@ -15,13 +15,11 @@ import type {
 } from "../components/carousel/carousel-run-steps";
 
 export const AWAITING_IDEA_SELECTION = "awaiting_idea_selection";
-export const AWAITING_CONTENT_APPROVAL = "awaiting_content_approval";
-export const AWAITING_DESIGN_APPROVAL = "awaiting_design_approval";
 
 const IDEAS_STEPS = ["generate_ideas", "await_idea_selection"] as const;
-const CONTENT_STEPS = ["generate_content", "await_content_approval"] as const;
-const DESIGN_STEPS = ["generate_design_plan", "await_design_approval"] as const;
-const PREVIEW_STEPS = [
+const EDITOR_STEPS = [
+  "generate_content",
+  "generate_design_plan",
   "generate_slides",
   "render_slides",
   "finalize_carousel",
@@ -29,9 +27,7 @@ const PREVIEW_STEPS = [
 
 const PHASE_STEPS: Record<CarouselRunStepId, readonly string[]> = {
   ideas: IDEAS_STEPS,
-  content: CONTENT_STEPS,
-  design: DESIGN_STEPS,
-  preview: PREVIEW_STEPS,
+  editor: EDITOR_STEPS,
 };
 
 export const getRunTheme = (
@@ -204,16 +200,6 @@ export const isRunAwaitingIdeaSelection = (
 ): boolean =>
   run?.status === "PAUSED" && run.pauseReason === AWAITING_IDEA_SELECTION;
 
-export const isRunAwaitingContentApproval = (
-  run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
-): boolean =>
-  run?.status === "PAUSED" && run.pauseReason === AWAITING_CONTENT_APPROVAL;
-
-export const isRunAwaitingDesignApproval = (
-  run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
-): boolean =>
-  run?.status === "PAUSED" && run.pauseReason === AWAITING_DESIGN_APPROVAL;
-
 const isPhaseGateCompleted = (
   phase: CarouselRunStepId,
   steps: AgentRunStepDto[] | undefined,
@@ -254,23 +240,17 @@ const derivePhaseStatus = (
         isStepRunning(readStep(steps, key)) ||
         run.currentStepKey === key,
     );
-    return touched ? "error" : priorPhasesCompleted ? "idle" : "idle";
+    return touched ? "error" : "idle";
+  }
+
+  if (phase === "editor" && run.status === "COMPLETED") {
+    return "completed";
   }
 
   if (!priorPhasesCompleted) return "idle";
 
   if (phase === "ideas" && isRunAwaitingIdeaSelection(run)) {
     return "awaiting_action";
-  }
-  if (phase === "content" && isRunAwaitingContentApproval(run)) {
-    return "awaiting_action";
-  }
-  if (phase === "design" && isRunAwaitingDesignApproval(run)) {
-    return "awaiting_action";
-  }
-
-  if (phase === "preview" && run.status === "COMPLETED") {
-    return "completed";
   }
 
   if (isPhaseGateCompleted(phase, steps)) {
@@ -281,11 +261,6 @@ const derivePhaseStatus = (
     return "processing";
   }
 
-  if (run.status === "PAUSED") {
-    const pausePhase = resolvePausePhase(run.pauseReason);
-    if (pausePhase === phase) return "awaiting_action";
-  }
-
   return "idle";
 };
 
@@ -294,24 +269,11 @@ export const deriveCarouselPhases = (params: {
   steps?: AgentRunStepDto[];
 }): CarouselRunPhaseSnapshot => {
   const { run, steps } = params;
-
   const ideasCompleted = isPhaseGateCompleted("ideas", steps);
-  const contentCompleted = isPhaseGateCompleted("content", steps);
-  const designCompleted = isPhaseGateCompleted("design", steps);
 
   return {
-    ideas: {
-      status: derivePhaseStatus("ideas", run, steps, true),
-    },
-    content: {
-      status: derivePhaseStatus("content", run, steps, ideasCompleted),
-    },
-    design: {
-      status: derivePhaseStatus("design", run, steps, contentCompleted),
-    },
-    preview: {
-      status: derivePhaseStatus("preview", run, steps, designCompleted),
-    },
+    ideas: { status: derivePhaseStatus("ideas", run, steps, true) },
+    editor: { status: derivePhaseStatus("editor", run, steps, ideasCompleted) },
   };
 };
 
@@ -321,10 +283,6 @@ export const resolvePausePhase = (
   switch (pauseReason) {
     case AWAITING_IDEA_SELECTION:
       return "ideas";
-    case AWAITING_CONTENT_APPROVAL:
-      return "content";
-    case AWAITING_DESIGN_APPROVAL:
-      return "design";
     default:
       return null;
   }
@@ -338,7 +296,7 @@ export const resolveActiveCarouselStep = (params: {
   if (params.run.status === "PAUSED" && pausePhase) return pausePhase;
 
   const phases = deriveCarouselPhases(params);
-  const order: CarouselRunStepId[] = ["ideas", "content", "design", "preview"];
+  const order: CarouselRunStepId[] = ["ideas", "editor"];
 
   if (params.run.status === "FAILED") {
     for (const stepId of order) {
@@ -352,7 +310,7 @@ export const resolveActiveCarouselStep = (params: {
       status === "awaiting_action" ||
       status === "processing" ||
       status === "error" ||
-      (status === "completed" && stepId === "preview")
+      (status === "completed" && stepId === "editor")
     ) {
       return stepId;
     }
@@ -371,11 +329,7 @@ export const isCarouselRunActive = (
   if (!run) return false;
   if (run.status === "QUEUED" || run.status === "RUNNING") return true;
   if (run.status === "PAUSED") {
-    return (
-      isRunAwaitingIdeaSelection(run) ||
-      isRunAwaitingContentApproval(run) ||
-      isRunAwaitingDesignApproval(run)
-    );
+    return isRunAwaitingIdeaSelection(run);
   }
   return false;
 };

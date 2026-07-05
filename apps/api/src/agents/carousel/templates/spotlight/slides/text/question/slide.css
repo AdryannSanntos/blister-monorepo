@@ -1,0 +1,26 @@
+.slide-question__main {
+  justify-content: center;
+  gap: 36px;
+}
+.slide-question__title {
+  font-size: 76px;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  max-width: 900px;
+}
+.slide-question__title .accent {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.02em 0.16em;
+  border-radius: 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.slide-question__hint {
+  font-size: 30px;
+  color: var(--text-on-dark-muted);
+  max-width: 780px;
+  line-height: 1.48;
+}

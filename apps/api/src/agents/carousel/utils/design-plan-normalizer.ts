@@ -46,7 +46,7 @@ const pickSceneVariation = (
 
   if (wantsMultipleImages(content)) return 'v3';
   if (listCount >= 2 && bodyLength <= 160) return listCount >= 3 ? 'v5' : 'v2';
-  if (bodyLength >= 200) return 'v4';
+  if (bodyLength >= 260) return 'v4';
   if (listCount >= 3) return 'v5';
 
   const cycle = ['v2', 'v4', 'v1', 'v5'] as const;
@@ -64,13 +64,18 @@ const CONTENT_MACHINE_TEXT_CYCLE = [
   { type: 'text' as const, variationId: 'v4' },
 ];
 
-const CONTENT_MACHINE_IMAGE_CYCLE = [
-  { type: 'text_image' as const, variationId: 'v5' },
-  { type: 'text_image' as const, variationId: 'v3' },
-  { type: 'text_image' as const, variationId: 'v4' },
-  { type: 'text_image' as const, variationId: 'v1' },
-  { type: 'text_image' as const, variationId: 'v2' },
-];
+// Image position × theme system. Image sits before (start), between (center)
+// or below (bottom) the copy; each in a dark, white or accent theme.
+const CM_IMAGE_POSITIONS = ['start', 'center', 'bottom'] as const;
+// Bias toward dark/white; accent is used sparingly so the carousel keeps breathing room.
+const CM_IMAGE_THEME_CYCLE = ['dark', 'white', 'dark', 'accent', 'white'] as const;
+
+const CONTENT_MACHINE_IMAGE_CYCLE = CM_IMAGE_POSITIONS.flatMap((position) =>
+  ['dark', 'white', 'accent'].map((theme) => ({
+    type: 'text_image' as const,
+    variationId: `${position}-${theme}`,
+  })),
+);
 
 type ContentMachineLayoutPick = {
   type: CarouselSlideType;
@@ -93,6 +98,24 @@ const bumpContentMachinePick = (
   return alternatives[order % alternatives.length] ?? pick;
 };
 
+const pickImagePosition = (
+  content: NormalizerContentSlide | undefined,
+  order: number,
+): (typeof CM_IMAGE_POSITIONS)[number] => {
+  const hasSubtitle = Boolean(content?.subtitle?.trim());
+  const hasBody2 = Boolean(content?.body2?.trim());
+
+  // Proof: claim first, image as evidence below.
+  if (content?.narrativeRole === 'proof') return 'bottom';
+  // Rich copy on both ends reads best with the image framed between texts.
+  if (hasBody2 && hasSubtitle) return 'center';
+  // Otherwise rotate positions deterministically for rhythm.
+  return CM_IMAGE_POSITIONS[(order - 2) % CM_IMAGE_POSITIONS.length] ?? 'start';
+};
+
+const pickImageTheme = (order: number): string =>
+  CM_IMAGE_THEME_CYCLE[(order - 2) % CM_IMAGE_THEME_CYCLE.length] ?? 'dark';
+
 const pickContentMachineLayout = (
   content: NormalizerContentSlide | undefined,
   order: number,
@@ -100,13 +123,6 @@ const pickContentMachineLayout = (
 ): ContentMachineLayoutPick => {
   const hasImage =
     content?.type === 'text_image' || Boolean(content?.imageBrief?.trim());
-  const hasSubtitle = Boolean(content?.subtitle?.trim());
-  const hasBody2 = Boolean(content?.body2?.trim());
-  const hasCta = Boolean(content?.callToAction?.trim());
-  const role = content?.narrativeRole;
-  const bodyLength = content?.body?.length ?? 0;
-  const totalTextLength =
-    bodyLength + (content?.body2?.length ?? 0) + (content?.subtitle?.length ?? 0);
 
   if (!hasImage) {
     const pick =
@@ -115,41 +131,12 @@ const pickContentMachineLayout = (
     return bumpContentMachinePick(pick, previousVariationKey, order);
   }
 
-  if (role === 'proof') {
-    const pick: ContentMachineLayoutPick =
-      order % 2 === 0
-        ? { type: 'text_image', variationId: 'v2' }
-        : { type: 'text_image', variationId: 'v4' };
-    return bumpContentMachinePick(pick, previousVariationKey, order);
-  }
-
-  if (hasCta && !hasSubtitle) {
-    return bumpContentMachinePick(
-      { type: 'text_image', variationId: 'v1' },
-      previousVariationKey,
-      order,
-    );
-  }
-
-  if (hasBody2 || totalTextLength >= 280) {
-    return bumpContentMachinePick(
-      { type: 'text_image', variationId: 'v5' },
-      previousVariationKey,
-      order,
-    );
-  }
-
-  if (hasSubtitle && totalTextLength >= 160) {
-    return bumpContentMachinePick(
-      { type: 'text_image', variationId: 'v3' },
-      previousVariationKey,
-      order,
-    );
-  }
-
-  const pick =
-    CONTENT_MACHINE_IMAGE_CYCLE[(order - 2) % CONTENT_MACHINE_IMAGE_CYCLE.length] ??
-    CONTENT_MACHINE_IMAGE_CYCLE[0]!;
+  const position = pickImagePosition(content, order);
+  const theme = pickImageTheme(order);
+  const pick: ContentMachineLayoutPick = {
+    type: 'text_image',
+    variationId: `${position}-${theme}`,
+  };
   return bumpContentMachinePick(pick, previousVariationKey, order);
 };
 

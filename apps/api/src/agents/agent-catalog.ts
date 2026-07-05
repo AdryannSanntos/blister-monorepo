@@ -4,7 +4,11 @@ import type { BuiltAgentDefinition } from '@company-os/agent-ia-sdk/agents';
 import { cutsAgentDefinition } from './cuts/agent';
 import { cutsInputZod, cutsOutputZod } from './cuts/schemas/output.schema';
 import { carouselAgentDefinition } from './carousel/agent';
-import { carouselInputZod, carouselOutputZod } from './carousel/schemas/carousel-schemas';
+import {
+  carouselInputZod,
+  carouselOutputZod,
+  carouselReviewSchema,
+} from './carousel/schemas/carousel-schemas';
 import type { RegisteredAgent } from './runtime/agent-registry.service';
 
 export const mapCapabilities = (capabilities: string[]): AgentCapability[] => {
@@ -79,6 +83,7 @@ export const buildRegisteredAgents = (): RegisteredAgent[] => [
     definition: carouselAgentDefinition,
     inputSchema: carouselInputZod,
     outputSchema: carouselOutputZod,
+    reviewSchema: carouselReviewSchema,
     icon: 'gallery-horizontal',
     estimatedCreditCost: 0.12,
   }),

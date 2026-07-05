@@ -1,0 +1,23 @@
+.slide-ti__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--media-gap);
+  min-height: 0;
+}
+
+.slide-ti__stack {
+  gap: var(--copy-gap);
+  flex: 0 0 auto;
+}
+
+.slide-ti__closing {
+  flex: 0 0 auto;
+}
+
+.slide-ti__image {
+  height: min(46vh, 540px);
+  width: 100%;
+  max-width: 920px;
+  flex: 0 0 auto;
+}

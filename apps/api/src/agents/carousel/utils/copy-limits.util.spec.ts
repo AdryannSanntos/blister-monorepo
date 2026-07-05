@@ -21,20 +21,20 @@ describe('copy-limits.util', () => {
     expect(result.listItems).toHaveLength(4);
   });
 
-  it('limits each content-machine text block to 160 chars', () => {
+  it('limits each content-machine text block to 220 chars', () => {
     const result = applyCopyLimits(
       {
         narrativeRole: 'scene',
-        body: 'a'.repeat(200),
-        body2: 'b'.repeat(200),
-        subtitle: 'c'.repeat(200),
+        body: 'a'.repeat(260),
+        body2: 'b'.repeat(260),
+        subtitle: 'c'.repeat(260),
       },
       { templateId: 'content-machine' },
     );
 
-    expect(result.body).toBe(`${'a'.repeat(159)}…`);
-    expect(result.body2).toBe(`${'b'.repeat(159)}…`);
-    expect(result.subtitle).toBe(`${'c'.repeat(159)}…`);
+    expect(result.body).toBe(`${'a'.repeat(219)}…`);
+    expect(result.body2).toBe(`${'b'.repeat(219)}…`);
+    expect(result.subtitle).toBe(`${'c'.repeat(219)}…`);
   });
 
   it('keeps editorial body limit at 280 chars', () => {

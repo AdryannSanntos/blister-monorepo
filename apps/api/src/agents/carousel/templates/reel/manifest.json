@@ -1,0 +1,43 @@
+{
+  "id": "reel",
+  "name": "Reel",
+  "description": "Carrossel cinematográfico full-bleed: foto cobre o slide com scrims duplos, tipografia serif Fraunces e número de frame — 1080×1350",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Foto de capa (cinematográfica)", "required": true }
+        ]
+      }
+    },
+    "text": [
+      "panel-quote",
+      "panel-list",
+      "stat",
+      "cta",
+      "dark-close"
+    ],
+    "text-image": {
+      "anchor-bottom": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto de fundo", "required": true }]
+      },
+      "anchor-mid": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto de fundo", "required": true }]
+      },
+      "feature-bottom": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto de fundo", "required": true }]
+      },
+      "quote-image": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto de fundo", "required": true }]
+      }
+    },
+    "image": {
+      "cinematic": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Foto em tela cheia", "required": true }]
+      }
+    }
+  }
+}

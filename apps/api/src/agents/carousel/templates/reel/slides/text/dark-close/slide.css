@@ -1,0 +1,22 @@
+.slide-reel--close {
+  background: linear-gradient(180deg, #0c0c14 0%, var(--bg-deep) 100%);
+}
+.slide-reel__main--mid {
+  justify-content: center;
+}
+.reel-title--close {
+  font-size: 74px;
+  font-weight: 800;
+}
+.reel-chip {
+  margin-top: 38px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 18px 36px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+}

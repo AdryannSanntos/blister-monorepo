@@ -2,12 +2,14 @@ import type { StepExecutionContext } from '@company-os/agent-ia-sdk/agents';
 import { getCarouselRunDeps } from '../ports/carousel-run-deps';
 
 export const buildDesignPlanSystemPrompt = (_context: StepExecutionContext): string =>
-  'You are a visual designer creating layout plans for carousel slides. ' +
-  'For each slide, decide the variationId (e.g. v1, v2, v3) and brief layoutNotes. ' +
-  'Image slots are defined by the template manifest — do not invent slot keys. ' +
-  'Use the template instructions to pick appropriate variations. ' +
-  'MUST vary layouts across consecutive slides — never pick the same variationId three times in a row. ' +
-  'Return only valid JSON matching the schema provided.';
+  'Você é um designer visual criando planos de layout para slides de carrossel. ' +
+  'Responda inteiramente em português brasileiro (pt-BR). ' +
+  'Para cada slide, decida o variationId (ex: v1, v2, v3) e escreva layoutNotes detalhados. ' +
+  'Os image slots são definidos pelo manifest do template — não invente chaves de slot. ' +
+  'Use as instruções do template para escolher as variações apropriadas. ' +
+  'OBRIGATÓRIO variar layouts entre slides consecutivos — nunca repita o mesmo variationId três vezes seguidas. ' +
+  'layoutNotes deve ter 2 a 3 frases em português descrevendo: (1) a hierarquia visual dos blocos de texto, (2) a posição da imagem em relação ao texto, (3) a cor ou contraste dominante, e (4) qualquer ênfase tipográfica relevante. ' +
+  'Retorne apenas JSON válido de acordo com o schema fornecido.';
 
 export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string => {
   const input = context.inputPayload as { templateId?: string; socialNetworks?: string[] };
@@ -25,22 +27,7 @@ export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string
       imageBrief?: string;
     }>;
   };
-  const awaitsOutput = context.previousStepsOutput.await_content_approval as {
-    slides?: Array<{
-      id: string;
-      order: number;
-      type: string;
-      narrativeRole?: string;
-      title?: string;
-      subtitle?: string;
-      body?: string;
-      callToAction?: string;
-      listItems?: string[];
-      imageBrief?: string;
-    }>;
-  };
-
-  const slides = awaitsOutput?.slides ?? contentOutput?.slides ?? [];
+  const slides = contentOutput?.slides ?? [];
   const templateId = input.templateId ?? 'editorial-performance';
   const totalSlides = slides.length;
   const isContentMachine = templateId === 'content-machine';
@@ -74,15 +61,11 @@ export const buildDesignPlanUserPrompt = (context: StepExecutionContext): string
             ? 'REQUIRED: type=text, variationId v2 (closing accent box)'
             : 'REQUIRED: variationId v3 when type=text (CTA closing)'
           : isContentMachine
-            ? slide.narrativeRole === 'proof'
-              ? 'PREFER: text-image/v2 (image bottom) or v4 (image top) or v5 (image after text)'
-              : slide.imageBrief && slide.callToAction && !slide.subtitle
-                ? 'PREFER: text-image/v1 (accent card)'
-                : slide.imageBrief && slide.subtitle
-                  ? 'PREFER: text-image/v3 (sandwich), v5 (stack), or v4 (image first) — vary from previous slide'
-                  : slide.imageBrief
-                    ? 'PREFER: rotate text-image/v2, v3, v4, v5 — never repeat same layout twice in a row'
-                    : 'PREFER: text/v1, v3, or v4 (text-only, denser copy)'
+            ? slide.imageBrief
+              ? slide.narrativeRole === 'proof'
+                ? 'PREFER: text-image/bottom-{dark|white|accent} (claim first, image as proof below)'
+                : 'PREFER: text-image/{start|center|bottom}-{dark|white|accent}. Position: start=image leads, center=image between two texts, bottom=image below the texts. Theme: dark|white|accent. Alternate BOTH position and theme from the previous slide.'
+              : 'PREFER: text/v1 (accent), v3 (dark) or v4 (light) — text-only, denser copy'
             : slide.listItems?.length
               ? 'PREFER: text/v1 or text/v2 for lists; text-image/v2 for list + visual card'
               : slide.narrativeRole === 'proof'

@@ -1,0 +1,9 @@
+/* text-image/grid-bottom — Two-card grid at bottom */
+.slide-daylight__grid {
+  margin-top: auto;
+  height: 400px;
+  max-height: 36vh;
+}
+.slide-daylight__grid .media-card {
+  height: 100%;
+}

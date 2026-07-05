@@ -3,8 +3,6 @@ export {
   carouselInputZod,
   carouselOutputZod,
   carouselIdeaSelectionSchema,
-  carouselContentApprovalSchema,
-  carouselDesignApprovalSchema,
   type CarouselRunInput,
   type CarouselOutput,
   type CarouselIdeaOption,

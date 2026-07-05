@@ -19,9 +19,6 @@ export const createRenderSlidesStep = (): StepExecutor => {
     const designOutput = context.previousStepsOutput.generate_design_plan as {
       plan?: { templateId: string };
     };
-    const awaitsDesignOutput = context.previousStepsOutput.await_design_approval as {
-      plan?: { templateId: string };
-    };
 
     const input = context.inputPayload as {
       templateId?: string;
@@ -37,7 +34,6 @@ export const createRenderSlidesStep = (): StepExecutor => {
     }
 
     const templateId =
-      awaitsDesignOutput?.plan?.templateId ??
       designOutput?.plan?.templateId ??
       input.templateId ??
       'editorial-performance';

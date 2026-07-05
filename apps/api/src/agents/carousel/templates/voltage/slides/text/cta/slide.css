@@ -1,0 +1,15 @@
+.slide-volt--cta {
+  background:
+    radial-gradient(120% 70% at 15% 95%, rgba(86, 59, 231, 0.24) 0%, transparent 55%),
+    var(--bg-deep);
+}
+.slide-volt__main--center {
+  justify-content: center;
+}
+.volt-title--cta {
+  font-size: 92px;
+  line-height: 1.26;
+}
+.slide-volt__main--center .volt-chip {
+  margin-top: 14px;
+}

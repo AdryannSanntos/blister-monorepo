@@ -1,0 +1,4 @@
+/* text/quote — Pull quote centered */
+.slide-daylight--quote .slide-daylight__main--center {
+  justify-content: center;
+}

@@ -1,6 +1,7 @@
 import type { StepExecutionContext } from '@company-os/agent-ia-sdk/agents';
 import { getCarouselRunDeps } from '../ports/carousel-run-deps';
 import { resolveCarouselBrandContext } from '../utils/carousel-brand.util';
+import { resolveExpectedSlidesCount } from '../utils/slide-count-alignment.util';
 import { resolveSlidesGenerationContext } from '../utils/slides-generation-context';
 
 export const buildContentSystemPrompt = (_context: StepExecutionContext): string =>
@@ -10,6 +11,8 @@ export const buildContentSystemPrompt = (_context: StepExecutionContext): string
     'This step produces COPY for human review — plain text with lightweight emphasis markers only.',
     'Allowed markup: ==termo== for accent highlight (1–2 per title), **phrase** for bold emphasis in body/list.',
     'No HTML tags, no Markdown beyond == and **.',
+    'IMPORTANT: Never embed literal \\n sequences or backslash-n inside JSON string values. Each field value must be a single continuous string — multi-line text is allowed via real line breaks, but not the two-character sequence backslash-n.',
+    'Do not use em-dashes (—) as separators or fillers inside a single field value.',
     'Write with voice and specificity: tension, contrast, concrete examples, and a clear narrative arc across slides.',
     'Avoid generic filler ("no mundo de hoje", "é importante", "descubra como", "decisões otimizadas", "sugestões personalizadas").',
     'Each slide must describe a concrete scene: name the object, action, and result — not abstract promises.',
@@ -42,7 +45,7 @@ export const buildContentUserPrompt = (context: StepExecutionContext): string =>
     ? `Selected idea: "${selectedIdea.title}" — ${selectedIdea.description}`
     : `Theme: ${input.theme ?? 'general'}`;
 
-  const slidesCount = input.slidesCount ?? 5;
+  const slidesCount = resolveExpectedSlidesCount(context);
   const brand = resolveCarouselBrandContext({
     brandOverrides: input.brandOverrides,
     agentSettings: input.settings,
@@ -58,9 +61,11 @@ export const buildContentUserPrompt = (context: StepExecutionContext): string =>
     'Slide structure for Content Machine template:',
     '- hook (slide 1, type "start"): title ONLY — cover headline (4–6 short lines) with ==accent== on 1–2 words. imageBrief required. Do NOT populate body/subtitle on slide 1.',
     '- scene (middle slides): NO title field. Split copy across 2–3 SHORT blocks — never pack 3+ sentences into a single field.',
-    '  Each block: 1–2 sentences (~80–160 chars). Use body + body2 + subtitle when the slide has room for three beats.',
-    '  REQUIRED highlights: at least one ==word or short phrase== per text block. At least 60% of internal slides must use highlights.',
-    '  Mix typography in copy: use **phrase** for sans emphasis inside serif blocks (and vice versa where natural).',
+    '  Each block: 1–2 sentences (~120–220 chars). Use body + body2 + subtitle when the slide has room for three beats.',
+    '  Highlights: at most ONE ==word or short phrase== per text block (max 3 words). Never wrap full sentences or clauses.',
+    '  Good: "O modelo de ==desagregação== inverte a lógica do all-in-one."',
+    '  Bad: "==O modelo de desagregação inverte a lógica do all-in-one==".',
+    '  Prefer ==accent== only. Avoid **bold** unless a single keyword needs extra weight.',
     '  A) type "text": body + body2 + subtitle (three balanced blocks). No imageBrief.',
     '  B) type "text_image" + body + body2 + subtitle + imageBrief: proof or scene with image.',
     '  C) type "text_image" + body + body2 + callToAction + imageBrief: concept slide with accent card.',
@@ -110,7 +115,7 @@ export const buildContentUserPrompt = (context: StepExecutionContext): string =>
             '- Middle slides must NOT include title.',
             '- Alternate text-only slides (type "text") with text_image slides.',
             '- Prefer 3 short text blocks (body, body2, subtitle) over one long body paragraph.',
-            '- Every text block should include at least one ==highlight== when possible.',
+            '- Use ==highlight== sparingly: max 1 per block, 1–3 words only — never whole sentences.',
             '- On text_image slides always provide body + body2 + subtitle OR body + body2 + callToAction.',
             '- Vary narrative density: some slides are text-heavy (no image), others sandwich image between text blocks.',
             '- callToAction on last slide must be a provocative question or insight for the accent box.',

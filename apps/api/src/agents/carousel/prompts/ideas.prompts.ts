@@ -1,4 +1,5 @@
 import type { StepExecutionContext } from '@company-os/agent-ia-sdk/agents';
+import { resolveExpectedSlidesCount } from '../utils/slide-count-alignment.util';
 
 export const buildIdeasSystemPrompt = (_context: StepExecutionContext): string =>
   'You are a social media content strategist specializing in carousel posts. ' +
@@ -13,7 +14,7 @@ export const buildIdeasUserPrompt = (context: StepExecutionContext): string => {
     socialNetworks?: string[];
   };
   const theme = input.theme ?? 'general';
-  const slidesCount = input.slidesCount ?? 5;
+  const slidesCount = resolveExpectedSlidesCount(context);
   const networks = (input.socialNetworks ?? ['instagram']).join(', ');
 
   return [

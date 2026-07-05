@@ -1,0 +1,6 @@
+.slide-reel__main--mid {
+  justify-content: center;
+}
+.slide-reel__main--mid .reel-title {
+  max-width: 760px;
+}

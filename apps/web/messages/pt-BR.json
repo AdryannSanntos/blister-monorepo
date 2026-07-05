@@ -801,6 +801,7 @@
         "title": "Título",
         "subtitle": "Subtítulo",
         "body": "Corpo",
+        "body2": "Corpo 2",
         "listItems": "Lista",
         "checklist": "Checklist",
         "frameworkItems": "Pilares",
@@ -819,11 +820,13 @@
         "coverImage": "Foto full-bleed ao fundo",
         "sceneTitle": "Headline no topo do slide",
         "sceneBody": "Parágrafo principal",
+        "sceneBody2": "Segundo bloco de texto",
         "sceneList": "Bullets ou setas no meio do slide",
         "sceneClosing": "Frase final abaixo do visual",
         "sceneImage": "Card ou ilustração central",
         "proofTitle": "Headline após ou antes da prova visual",
         "proofBody": "Contexto da evidência",
+        "proofBody2": "Complemento da evidência",
         "proofChecklist": "Itens com ícone de check",
         "proofClosing": "Conclusão da prova",
         "proofImage": "Screenshot ou foto de evidência",
@@ -848,6 +851,13 @@
       "hintNav": "Navegar entre slides",
       "heroHint": "Clique para abrir a visualização em tela cheia, como no Instagram",
       "close": "Fechar preview"
+    },
+    "editor": {
+      "chipDirect": "Deixar mais direto",
+      "chipShorten": "Encurtar texto",
+      "chipContrast": "Mais contraste",
+      "promptPlaceholder": "Descreva o ajuste…",
+      "applyAdjust": "Aplicar ajuste"
     },
     "runDetail": {
       "loading": {
@@ -892,6 +902,10 @@
           "description": "Não foi possível montar o plano visual. Inicie um novo carrossel para tentar de novo."
         },
         "preview": {
+          "title": "Falha ao renderizar slides",
+          "description": "Os slides finais não puderam ser gerados. Inicie um novo carrossel ou entre em contato com o suporte."
+        },
+        "editor": {
           "title": "Falha ao renderizar slides",
           "description": "Os slides finais não puderam ser gerados. Inicie um novo carrossel ou entre em contato com o suporte."
         }

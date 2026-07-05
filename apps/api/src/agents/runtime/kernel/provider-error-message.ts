@@ -90,9 +90,14 @@ const extractProviderDetail = (message: string): string | null => {
 
   try {
     const parsed = JSON.parse(trimmed) as {
-      error?: { message?: string };
+      error?: { message?: string; metadata?: { errors?: string[] } };
       message?: string;
+      metadata?: { errors?: string[] };
     };
+    const metadataErrors = parsed.metadata?.errors ?? parsed.error?.metadata?.errors;
+    if (Array.isArray(metadataErrors) && metadataErrors.length > 0) {
+      return metadataErrors.join('; ');
+    }
     const nested = parsed.error?.message ?? parsed.message;
     if (typeof nested === 'string' && nested.trim()) {
       return nested.trim();

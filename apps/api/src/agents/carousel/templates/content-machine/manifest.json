@@ -15,30 +15,32 @@
     },
     "text": ["v1", "v2", "v3", "v4"],
     "text-image": {
-      "v1": {
-        "imageSlots": [
-          { "slotKey": "image_url", "label": "Imagem do card de destaque", "required": true }
-        ]
+      "start-dark": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem no topo (tema escuro)", "required": true }]
       },
-      "v2": {
-        "imageSlots": [
-          { "slotKey": "image_url", "label": "Imagem de prova", "required": true }
-        ]
+      "start-white": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem no topo (tema claro)", "required": true }]
       },
-      "v3": {
-        "imageSlots": [
-          { "slotKey": "image_url", "label": "Imagem central", "required": true }
-        ]
+      "start-accent": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem no topo (tema accent)", "required": true }]
       },
-      "v4": {
-        "imageSlots": [
-          { "slotKey": "image_url", "label": "Imagem no topo", "required": true }
-        ]
+      "center-dark": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem entre textos (tema escuro)", "required": true }]
       },
-      "v5": {
-        "imageSlots": [
-          { "slotKey": "image_url", "label": "Imagem após o texto", "required": true }
-        ]
+      "center-white": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem entre textos (tema claro)", "required": true }]
+      },
+      "center-accent": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem entre textos (tema accent)", "required": true }]
+      },
+      "bottom-dark": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem abaixo do texto (tema escuro)", "required": true }]
+      },
+      "bottom-white": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem abaixo do texto (tema claro)", "required": true }]
+      },
+      "bottom-accent": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem abaixo do texto (tema accent)", "required": true }]
       }
     }
   }

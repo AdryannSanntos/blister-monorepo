@@ -1,0 +1,43 @@
+{
+  "id": "voltage",
+  "name": "Voltage",
+  "description": "Impacto viral em fundo preto: título condensed black (Anton), highlight em caixa accent, números mono gigantes e grids quadrados — 1080×1350",
+  "dimensions": {
+    "instagram": { "width": 1080, "height": 1350 }
+  },
+  "slides": {
+    "start": {
+      "v1": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Foto de capa (full-bleed)", "required": true }
+        ]
+      }
+    },
+    "text": [
+      "statement",
+      "stat",
+      "quote",
+      "list",
+      "cta"
+    ],
+    "text-image": {
+      "duo-top": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem 1 (grade no topo)", "required": true },
+          { "slotKey": "image_url_2", "label": "Imagem 2 (grade no topo)", "required": true }
+        ]
+      },
+      "single": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem destaque", "required": true }]
+      },
+      "single-bottom": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem na base", "required": true }]
+      }
+    },
+    "image": {
+      "full": {
+        "imageSlots": [{ "slotKey": "image_url", "label": "Imagem em tela cheia", "required": true }]
+      }
+    }
+  }
+}

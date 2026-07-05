@@ -9,6 +9,12 @@ const COPY_STRING_FIELDS = [
   'imageBrief',
 ] as const;
 
+const normalizeLiteralNewlines = (value: unknown): unknown => {
+  if (typeof value !== 'string') return value;
+  // Replace literal \n (2-char sequence: backslash + n) with a real newline
+  return value.replace(/\\n/g, '\n');
+};
+
 export const sanitizeContentLlmOutput = (raw: unknown): unknown => {
   if (!raw || typeof raw !== 'object') return raw;
 
@@ -22,9 +28,17 @@ export const sanitizeContentLlmOutput = (raw: unknown): unknown => {
       .map((slide) => {
         const copy = { ...(slide as Record<string, unknown>) };
         for (const key of COPY_STRING_FIELDS) {
-          if (copy[key] === null) delete copy[key];
+          if (copy[key] === null) {
+            delete copy[key];
+          } else {
+            copy[key] = normalizeLiteralNewlines(copy[key]);
+          }
         }
-        if (copy.listItems === null) delete copy.listItems;
+        if (copy.listItems === null) {
+          delete copy.listItems;
+        } else if (Array.isArray(copy.listItems)) {
+          copy.listItems = copy.listItems.map(normalizeLiteralNewlines);
+        }
         return copy;
       }),
   };

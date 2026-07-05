@@ -5,23 +5,19 @@ export type CarouselPhaseStatus =
   | "completed"
   | "error";
 
-export type CarouselRunStepId = "ideas" | "content" | "design" | "preview";
+export type CarouselRunStepId = "ideas" | "editor";
 
 export const CAROUSEL_RUN_STEPS: {
   id: CarouselRunStepId;
   label: string;
 }[] = [
   { id: "ideas", label: "Ideia" },
-  { id: "content", label: "Conteúdo" },
-  { id: "design", label: "Design" },
-  { id: "preview", label: "Preview" },
+  { id: "editor", label: "Editor" },
 ];
 
 export type CarouselRunPhaseSnapshot = {
   ideas: { status: CarouselPhaseStatus };
-  content: { status: CarouselPhaseStatus };
-  design: { status: CarouselPhaseStatus };
-  preview: { status: CarouselPhaseStatus };
+  editor: { status: CarouselPhaseStatus };
 };
 
 export const getCarouselStepPhaseStatus = (

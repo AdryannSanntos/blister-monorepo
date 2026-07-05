@@ -15,3 +15,5 @@ packages/*/dist/
 
 coverage/
 .mcp.json
+
+apps/api/scripts/_reports/

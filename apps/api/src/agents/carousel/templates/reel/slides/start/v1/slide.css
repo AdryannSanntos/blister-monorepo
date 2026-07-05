@@ -1,0 +1,12 @@
+.slide-reel--cover {
+  background: var(--bg-deep);
+}
+.slide-reel__main--bottom {
+  justify-content: flex-end;
+}
+.reel-title--cover {
+  font-size: 78px;
+  font-weight: 800;
+  line-height: 1.0;
+  text-shadow: 0 6px 60px rgba(0, 0, 0, 0.6);
+}

@@ -103,9 +103,7 @@ export const LibraryPage = () => {
     filters.q.length > 0;
 
   const emptyState =
-    items.length === 0 && !hasActiveFilters ? (
-      <LibraryEmptyState />
-    ) : undefined;
+    items.length === 0 && !hasActiveFilters ? <LibraryEmptyState /> : undefined;
 
   return (
     <div data-testid="library-page">

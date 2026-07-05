@@ -1,6 +1,6 @@
 import type { TruncatableSlideCopy } from './copy-limits.util';
 
-const OVERSIZED_THRESHOLD = 180;
+const OVERSIZED_THRESHOLD = 220;
 
 const splitSentences = (text: string): string[] => {
   const matches = text.match(/[^.!?…]+[.!?…]+(?:\s+|$)|[^.!?…]+$/g);

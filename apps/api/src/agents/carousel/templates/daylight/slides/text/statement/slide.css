@@ -1,0 +1,11 @@
+/* text/statement — Centered big bold statement */
+.slide-daylight--statement .slide-daylight__main--center {
+  justify-content: center;
+}
+.slide-daylight__title--statement {
+  font-size: var(--title-xl);
+  font-weight: 800;
+  text-align: center;
+  max-width: 920px;
+  align-self: center;
+}

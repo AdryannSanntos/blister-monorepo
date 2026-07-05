@@ -1,0 +1,28 @@
+.slide-statement__main {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+}
+.slide-statement__title {
+  font-size: 74px;
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  max-width: 860px;
+}
+.slide-statement__title .accent {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.02em 0.16em;
+  border-radius: 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.slide-statement__sub {
+  font-size: 30px;
+  color: var(--text-on-dark-muted);
+  max-width: 680px;
+  line-height: 1.5;
+}

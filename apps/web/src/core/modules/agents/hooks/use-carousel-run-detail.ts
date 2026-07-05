@@ -1,9 +1,5 @@
 "use client";
 
-import type {
-  CarouselDesignPlan,
-  CarouselSlideContent,
-} from "@company-os/types";
 import { type Query, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { apiClient } from "src/core/shared/utils/api-client";
@@ -21,15 +17,10 @@ import { shouldKeepRunStreamOpen } from "../utils/apply-agent-run-event";
 import {
   deriveCarouselPhases,
   extractCarouselOutputFromRun,
-  extractDesignPlanFromRun,
   extractIdeasFromRun,
   extractPhaseErrorMessage,
-  extractSlideContentsFromRun,
   isCarouselRunActive,
-  isRunAwaitingContentApproval,
-  isRunAwaitingDesignApproval,
   isRunAwaitingIdeaSelection,
-  readImageUploads,
   readSelectedIdeaId,
   resolveActiveCarouselStep,
 } from "../utils/carousel-run-display";
@@ -52,9 +43,6 @@ export const useCarouselRunDetail = (runId: string) => {
   const [localSelectedIdeaId, setLocalSelectedIdeaId] = useState<string | null>(
     null,
   );
-  const [localImageUploads, setLocalImageUploads] = useState<
-    Record<string, string>
-  >({});
   const [isExporting, setIsExporting] = useState(false);
   const [exportDownloadUrl, setExportDownloadUrl] = useState<string | null>(
     null,
@@ -87,9 +75,7 @@ export const useCarouselRunDetail = (runId: string) => {
         ? deriveCarouselPhases({ run, steps })
         : ({
             ideas: { status: "idle" as const },
-            content: { status: "idle" as const },
-            design: { status: "idle" as const },
-            preview: { status: "idle" as const },
+            editor: { status: "idle" as const },
           } satisfies CarouselRunPhaseSnapshot),
     [run, steps],
   );
@@ -98,17 +84,13 @@ export const useCarouselRunDetail = (runId: string) => {
     if (!run) {
       return {
         ideas: null,
-        content: null,
-        design: null,
-        preview: null,
+        editor: null,
       };
     }
 
     return {
       ideas: extractPhaseErrorMessage({ phase: "ideas", run, steps }),
-      content: extractPhaseErrorMessage({ phase: "content", run, steps }),
-      design: extractPhaseErrorMessage({ phase: "design", run, steps }),
-      preview: extractPhaseErrorMessage({ phase: "preview", run, steps }),
+      editor: extractPhaseErrorMessage({ phase: "editor", run, steps }),
     };
   }, [run, steps]);
 
@@ -121,19 +103,6 @@ export const useCarouselRunDetail = (runId: string) => {
     [steps],
   );
 
-  const contentData = useMemo(
-    () =>
-      run
-        ? extractSlideContentsFromRun({ run, steps })
-        : ([] as CarouselSlideContent[]),
-    [run, steps],
-  );
-
-  const designPlan = useMemo(
-    () => (run ? extractDesignPlanFromRun({ run, steps }) : null),
-    [run, steps],
-  );
-
   const output = useMemo(
     () => (run ? extractCarouselOutputFromRun({ run, steps }) : null),
     [run, steps],
@@ -141,11 +110,6 @@ export const useCarouselRunDetail = (runId: string) => {
 
   const selectedIdeaId =
     localSelectedIdeaId ?? (run ? readSelectedIdeaId(run.inputPayload) : null);
-
-  const imageUploads = useMemo(() => {
-    const fromRun = run ? readImageUploads(run.inputPayload) : {};
-    return { ...fromRun, ...localImageUploads };
-  }, [run, localImageUploads]);
 
   useEffect(() => {
     if (!run) return;
@@ -190,7 +154,7 @@ export const useCarouselRunDetail = (runId: string) => {
     async (id: string) => {
       if (!isRunAwaitingIdeaSelection(run)) return;
       setLocalSelectedIdeaId(id);
-      setActiveStep("content");
+      setActiveStep("editor");
       try {
         await resumeRun.mutateAsync({ formData: { selectedIdeaId: id } });
         invalidateCarouselQueries();
@@ -207,89 +171,21 @@ export const useCarouselRunDetail = (runId: string) => {
     setLocalSelectedIdeaId(id);
   }, []);
 
-  const approveContent = useCallback(
-    async (data: CarouselSlideContent[]) => {
-      if (!isRunAwaitingContentApproval(run)) return;
-      setActiveStep("design");
+  const submitCustomIdea = useCallback(
+    async (idea: { title: string; description?: string }) => {
+      if (!isRunAwaitingIdeaSelection(run)) return;
+      setActiveStep("editor");
       try {
-        await resumeRun.mutateAsync({
-          formData: { contentApproved: true, slides: data },
-        });
+        await resumeRun.mutateAsync({ formData: { customIdea: idea } });
         invalidateCarouselQueries();
       } catch (error) {
         setErrorMessage(
-          error instanceof Error ? error.message : "Erro ao aprovar conteúdo",
+          error instanceof Error ? error.message : "Erro ao enviar ideia",
         );
       }
     },
     [run, resumeRun, invalidateCarouselQueries],
   );
-
-  const updateContent = useCallback((_data: CarouselSlideContent[]) => {
-    // Review-only local edits; persisted on approve.
-  }, []);
-
-  const rejectContent = useCallback(async () => {
-    if (!isRunAwaitingContentApproval(run)) return;
-    setActiveStep("content");
-    try {
-      await resumeRun.mutateAsync({ formData: { contentApproved: false } });
-      invalidateCarouselQueries();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Erro ao regenerar conteúdo",
-      );
-    }
-  }, [run, resumeRun, invalidateCarouselQueries]);
-
-  const setImageUpload = useCallback((uploadKey: string, fileId: string) => {
-    setLocalImageUploads((prev) => {
-      if (!fileId.trim()) {
-        const next = { ...prev };
-        delete next[uploadKey];
-        return next;
-      }
-      return { ...prev, [uploadKey]: fileId };
-    });
-  }, []);
-
-  const approveDesign = useCallback(
-    async (plan: CarouselDesignPlan, uploads: Record<string, string>) => {
-      if (!isRunAwaitingDesignApproval(run)) return;
-      setActiveStep("preview");
-      try {
-        await resumeRun.mutateAsync({
-          formData: { designApproved: true, plan, imageUploads: uploads },
-        });
-        invalidateCarouselQueries();
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : "Erro ao aprovar design",
-        );
-      }
-    },
-    [run, resumeRun, invalidateCarouselQueries],
-  );
-
-  const updateDesign = useCallback(
-    (_plan: CarouselDesignPlan, _uploads: Record<string, string>) => {
-      // Review-only; persisted on approve.
-    },
-    [],
-  );
-
-  const rejectDesign = useCallback(async () => {
-    if (!isRunAwaitingDesignApproval(run)) return;
-    setActiveStep("design");
-    try {
-      await resumeRun.mutateAsync({ formData: { designApproved: false } });
-      invalidateCarouselQueries();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Erro ao regenerar design",
-      );
-    }
-  }, [run, resumeRun, invalidateCarouselQueries]);
 
   const requestExport = useCallback(async () => {
     if (!runId || isExporting) return;
@@ -359,17 +255,8 @@ export const useCarouselRunDetail = (runId: string) => {
       data: ideasData,
       selectedId: selectedIdeaId,
     },
-    content: {
-      status: phases.content.status,
-      data: contentData,
-    },
-    design: {
-      status: phases.design.status,
-      data: designPlan,
-      imageUploads,
-    },
-    preview: {
-      status: phases.preview.status,
+    editor: {
+      status: phases.editor.status,
       data: output,
       isExporting,
       exportDownloadUrl,
@@ -385,13 +272,7 @@ export const useCarouselRunDetail = (runId: string) => {
     actions: {
       selectIdea,
       updateIdeaSelection,
-      approveContent,
-      updateContent,
-      rejectContent,
-      setImageUpload,
-      approveDesign,
-      updateDesign,
-      rejectDesign,
+      submitCustomIdea,
       requestExport,
     },
   };

@@ -1,0 +1,9 @@
+.slide-reel__main--mid {
+  justify-content: center;
+}
+.reel-title--stat {
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1.0;
+  text-shadow: 0 6px 60px rgba(0, 0, 0, 0.5);
+}

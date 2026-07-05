@@ -4,9 +4,9 @@ import { Library, Settings2, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { parseAsString, parseAsStringEnum, useQueryStates } from "nuqs";
 import { useMemo } from "react";
+import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { Button } from "src/core/shared/components/ui/button";
 import { PageLayout } from "src/core/shared/components/ui/page-layout";
-import { PermissionGate } from "src/core/shared/components/permission-gate";
 import { Skeleton } from "src/core/shared/components/ui/skeleton";
 import { Link } from "@/i18n/routing";
 

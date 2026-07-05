@@ -1,0 +1,12 @@
+.slide-cta__main {
+  justify-content: center;
+  gap: 36px;
+  align-items: center;
+}
+.card--cta .card__pad {
+  padding: 60px 56px;
+  gap: 28px;
+}
+.card-title--cta {
+  font-size: 58px;
+}

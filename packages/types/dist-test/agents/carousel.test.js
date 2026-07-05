@@ -30,3 +30,47 @@ const carousel_1 = require("./carousel");
         strict_1.default.equal(parsed.success, true);
     });
 });
+(0, node_test_1.describe)('carouselIdeaSelectionSchema', () => {
+    (0, node_test_1.it)('accepts selectedIdeaId when customIdea is absent', () => {
+        const parsed = carousel_1.carouselIdeaSelectionSchema.safeParse({
+            selectedIdeaId: 'idea_1',
+        });
+        strict_1.default.equal(parsed.success, true);
+        if (parsed.success) {
+            strict_1.default.equal(parsed.data.selectedIdeaId, 'idea_1');
+            strict_1.default.equal(parsed.data.customIdea, undefined);
+        }
+    });
+    (0, node_test_1.it)('accepts customIdea when selectedIdeaId is absent', () => {
+        const parsed = carousel_1.carouselIdeaSelectionSchema.safeParse({
+            customIdea: { title: 'Minha ideia' },
+        });
+        strict_1.default.equal(parsed.success, true);
+        if (parsed.success) {
+            strict_1.default.equal(parsed.data.customIdea?.title, 'Minha ideia');
+            strict_1.default.equal(parsed.data.selectedIdeaId, undefined);
+        }
+    });
+    (0, node_test_1.it)('accepts customIdea with optional description', () => {
+        const parsed = carousel_1.carouselIdeaSelectionSchema.safeParse({
+            customIdea: {
+                title: 'Hook sobre produtividade',
+                description: 'Foco em rotina matinal de 15 minutos',
+            },
+        });
+        strict_1.default.equal(parsed.success, true);
+        if (parsed.success) {
+            strict_1.default.equal(parsed.data.customIdea?.description, 'Foco em rotina matinal de 15 minutos');
+        }
+    });
+    (0, node_test_1.it)('rejects when both selectedIdeaId and customIdea are absent', () => {
+        const parsed = carousel_1.carouselIdeaSelectionSchema.safeParse({});
+        strict_1.default.equal(parsed.success, false);
+    });
+    (0, node_test_1.it)('rejects customIdea with empty title', () => {
+        const parsed = carousel_1.carouselIdeaSelectionSchema.safeParse({
+            customIdea: { title: '' },
+        });
+        strict_1.default.equal(parsed.success, false);
+    });
+});

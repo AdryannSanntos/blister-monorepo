@@ -1,0 +1,317 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+/* ═══════════════════════════════════════════════════════════
+   REEL — Cinematic full-bleed.
+   Soul: cinema / revista, dramático. Photography owns the frame;
+   copy lives in a glass panel or is anchored over a heavy scrim.
+   Type: Fraunces (optical serif) for titles, DM Sans for body.
+   Signature: big reel/frame number, glass handle, dual scrims,
+   thin letter-spaced kicker. Highlight = accent COLOR (no box).
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --accent: #563be7;
+  --bg-deep: #06060a;
+  --ink: #ffffff;
+  --ink-soft: rgba(255, 255, 255, 0.82);
+  --ink-mute: rgba(255, 255, 255, 0.6);
+  --line: rgba(255, 255, 255, 0.22);
+  --glass: rgba(14, 14, 20, 0.82);
+
+  --safe-x: 72px;
+  --safe-top: 48px;
+  --safe-bottom: 56px;
+  --footer-reserve: 72px;
+
+  --title-xl: 80px;
+  --title-lg: 66px;
+  --title-md: 52px;
+  --body: 29px;
+  --body-sm: 26px;
+  --gap: 26px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: var(--bg-deep);
+  color: var(--ink);
+}
+
+/* ── Full-bleed photo ── */
+.reel-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.reel-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Dual scrims guarantee legibility over ANY photo. */
+.reel-bg__scrim {
+  position: absolute;
+  inset: 0;
+}
+.reel-bg__scrim--bottom {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 4, 8, 0.5) 0%,
+    rgba(4, 4, 8, 0.1) 28%,
+    rgba(4, 4, 8, 0.7) 64%,
+    rgba(4, 4, 8, 0.96) 100%
+  );
+}
+.reel-bg__scrim--mid {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 4, 8, 0.3) 0%,
+    rgba(4, 4, 8, 0.6) 36%,
+    rgba(4, 4, 8, 0.8) 60%,
+    rgba(4, 4, 8, 0.45) 100%
+  );
+}
+.reel-bg__scrim--full {
+  background: rgba(4, 4, 8, 0.66);
+}
+
+/* Film grain vignette for cinematic depth */
+.reel-bg__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 42%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* ── Main content region ── */
+.slide-main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--safe-top) var(--safe-x) calc(var(--safe-bottom) + var(--footer-reserve));
+  min-height: 0;
+  gap: var(--gap);
+}
+
+/* ── Top bar: glass handle + reel number ── */
+.reel-top {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--safe-top) var(--safe-x) 0;
+  flex-shrink: 0;
+}
+.handle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  padding: 10px 22px 10px 12px;
+  border-radius: 8px;
+  background: rgba(10, 10, 16, 0.88);
+  border: 1px solid var(--line);
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.handle-pill__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), #c45cff);
+  flex-shrink: 0;
+}
+.reel-no {
+  font-family: "DM Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+
+/* ── Kicker (letter-spaced eyebrow) ── */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kicker::before {
+  content: "";
+  width: 44px;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* ── Titles (serif display) ── */
+.reel-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+  max-width: 900px;
+  font-size: var(--title-lg);
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.45);
+}
+.reel-title .accent { color: var(--accent); }
+.reel-title em { font-style: italic; font-weight: 500; }
+
+.reel-body {
+  font-size: var(--body);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-weight: 400;
+  max-width: 760px;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.55);
+}
+.reel-body + .reel-body { margin-top: 18px; }
+.reel-body strong { color: #ffffff; font-weight: 600; }
+
+.slide--cover .slide-main {
+  padding-bottom: var(--safe-bottom);
+}
+
+/* ── Glass content panel (text-only / quote slides) ── */
+.reel-panel {
+  background: rgba(8, 8, 14, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 56px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+.reel-panel .reel-title { font-size: var(--title-md); }
+
+/* ── Pull quote ── */
+.quote {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: var(--title-lg);
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  max-width: 860px;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+.quote__mark {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 130px;
+  line-height: 0.5;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+.quote__cite {
+  margin-top: 28px;
+  font-style: normal;
+  font-family: "DM Sans", sans-serif;
+  font-size: var(--body-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+}
+
+/* ── Checklist ── */
+.reel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  list-style: none;
+  padding: 0;
+}
+.reel-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+  font-size: var(--body);
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.reel-list li::before {
+  content: counter(item, decimal-leading-zero);
+  counter-increment: item;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 56px;
+}
+.reel-list { counter-reset: item; }
+
+/* ── CTA chip ── */
+.reel-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 22px 40px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0a0a10;
+  font-size: 27px;
+  font-weight: 700;
+}
+.reel-cta--accent {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* ── Footer / progress ── */
+.slide-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 0 var(--safe-x) 28px;
+}
+.slide-footer--hidden { opacity: 0; height: 0; overflow: hidden; padding: 0; }
+.progress-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.slide-counter {
+  display: block;
+  margin-top: 8px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-mute);
+}
+
+/* ── Swipe hint ── */
+.swipe-hint {
+  position: absolute;
+  right: var(--safe-x);
+  bottom: 40px;
+  z-index: 4;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
