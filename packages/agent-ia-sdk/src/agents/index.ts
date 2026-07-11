@@ -36,6 +36,7 @@ export {
   type CacheConfig,
   type CacheProvider,
   type CreatePauseStepOptions,
+  type LlmRetryContext,
   type PauseType,
   type PreviewBlock,
   type RetryPolicy,

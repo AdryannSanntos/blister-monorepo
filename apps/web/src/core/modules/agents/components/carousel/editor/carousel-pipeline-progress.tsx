@@ -5,9 +5,7 @@ import { Heading } from "src/core/shared/components/ui/heading";
 import { cn } from "src/core/shared/utils";
 
 export const CAROUSEL_PIPELINE_STEPS: { key: string; label: string }[] = [
-  { key: "generate_content", label: "Gerando conteúdo" },
-  { key: "generate_design_plan", label: "Montando layout" },
-  { key: "generate_slides", label: "Finalizando slides" },
+  { key: "generate_slides", label: "Gerando slides" },
   { key: "render_slides", label: "Preparando imagens" },
 ];
 

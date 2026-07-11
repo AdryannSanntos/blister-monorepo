@@ -202,6 +202,10 @@
   --bg-sunken: var(--neutral-100);
   --bg-hover: var(--neutral-200);
   --bg-active: var(--neutral-300);
+  /* Dedicated darker backdrop for editor canvases (e.g. carousel editor) so
+     white/light slide artwork keeps clear contrast against its surroundings —
+     intentionally distinct from --bg-canvas, which is the app's page background. */
+  --editor-canvas-bg: var(--neutral-700);
 
   --fg-primary: var(--neutral-900);
   --fg-secondary: var(--neutral-600);
@@ -366,6 +370,7 @@
   --bg-sunken: #20212c;
   --bg-hover: #2a2c39;
   --bg-active: #34374a;
+  --editor-canvas-bg: #05060a;
 
   --fg-primary: #ecedf2;
   --fg-secondary: #9ca0af;

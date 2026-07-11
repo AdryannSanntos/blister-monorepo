@@ -11,6 +11,7 @@ import { getCarouselRunDeps } from '../ports/carousel-run-deps';
 import { buildDesignPlanSystemPrompt, buildDesignPlanUserPrompt } from '../prompts/design-plan.prompts';
 import {
   normalizeDesignPlanSlides,
+  resolveSafeVariationId,
   type NormalizerContentSlide,
 } from '../utils/design-plan-normalizer';
 import {
@@ -101,10 +102,12 @@ export const createGenerateDesignPlanStep = () =>
 
       const slidesWithSlots = alignedSlides.map((slide) => {
         const contentSlide = rawContentSlides.find((entry) => entry.id === slide.id);
+        const available = templateService.getAvailableVariations(data.templateId, slide.type);
+        const variationId = resolveSafeVariationId(available, slide.variationId, slide.order);
         const manifestSlots = templateService.getImageSlotsForVariation(
           data.templateId,
           slide.type,
-          slide.variationId,
+          variationId,
         );
 
         const imageSlots = templateService.toCarouselImageSlots(manifestSlots).map((slot) => ({
@@ -114,23 +117,29 @@ export const createGenerateDesignPlanStep = () =>
 
         return {
           ...slide,
+          variationId,
           imageSlots,
         };
       });
 
       const normalizedSlides = normalizeDesignPlanSlides(slidesWithSlots, contentSlides, {
         templateId: data.templateId,
+        getAvailableVariations: (slideType) =>
+          templateService.getAvailableVariations(data.templateId, slideType),
       });
 
       const slides = normalizedSlides.map((slide) => {
+        const available = templateService.getAvailableVariations(data.templateId, slide.type);
+        const variationId = resolveSafeVariationId(available, slide.variationId, slide.order);
         const manifestSlots = templateService.getImageSlotsForVariation(
           data.templateId,
           slide.type,
-          slide.variationId,
+          variationId,
         );
 
         return {
           ...slide,
+          variationId,
           imageSlots: templateService.toCarouselImageSlots(manifestSlots).map((slot) => {
             const contentSlide = rawContentSlides.find((entry) => entry.id === slide.id);
             return {

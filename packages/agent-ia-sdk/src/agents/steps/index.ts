@@ -69,10 +69,21 @@ const isRateLimitError = (error: unknown): boolean => {
   return message.includes('rate limit') || message.includes('429') || message.includes('too many requests');
 };
 
+/**
+ * Context handed to `buildUser` on each attempt. On the first attempt
+ * `previousError` is undefined; on retries it carries the reason the prior
+ * attempt was rejected (parse failure, provider error, or a `transformOutput`
+ * throw) so the prompt can steer the model to correct its previous output.
+ */
+export interface LlmRetryContext {
+  attempt: number;
+  previousError?: string;
+}
+
 export const createLlmCallStep = <TSchema extends z.ZodType>(options: {
   outputSchema: TSchema;
   buildSystem: (context: StepExecutionContext) => string;
-  buildUser: (context: StepExecutionContext) => string;
+  buildUser: (context: StepExecutionContext, retry?: LlmRetryContext) => string;
   maxTokens?: number;
   temperature?: number;
   retry?: RetryPolicy;
@@ -82,9 +93,21 @@ export const createLlmCallStep = <TSchema extends z.ZodType>(options: {
     data: z.infer<TSchema>,
     context: StepExecutionContext,
   ) => Record<string, unknown>;
+  /**
+   * Last-resort recovery invoked once every attempt is exhausted, instead of
+   * returning FAILED. Receives the final error and the most recent successfully
+   * parsed data (before `transformOutput`), letting the step salvage a usable
+   * output (e.g. pad an under-delivered slide list) so the run completes rather
+   * than crashing. Return `undefined` to keep the FAILED result.
+   */
+  fallbackOnExhausted?: (
+    context: StepExecutionContext,
+    info: { error: string; lastData?: z.infer<TSchema> },
+  ) => Record<string, unknown> | undefined;
 }): StepExecutor => {
   const retry: RetryPolicy = options.retry ?? { maxAttempts: 1 };
   const retryOn = retry.retryOn ?? ['parse_error', 'rate_limit', 'provider_error'];
+  const maxAttempts = Math.max(1, retry.maxAttempts);
 
   return async (context, deps): Promise<StepResult> => {
     if (!deps.llmProvider) {
@@ -102,28 +125,52 @@ export const createLlmCallStep = <TSchema extends z.ZodType>(options: {
       }
     }
 
-    const llmParams = {
-      system: options.buildSystem(context),
-      user: options.buildUser(context),
-      structuredOutputSchema: zodToJsonSchema(options.outputSchema),
-      maxTokens: options.maxTokens,
-      temperature: options.temperature,
-    };
+    const system = options.buildSystem(context);
+    const structuredOutputSchema = zodToJsonSchema(options.outputSchema);
 
     let lastError = 'LLM response failed schema validation';
+    let lastData: z.infer<TSchema> | undefined;
+    let previousError: string | undefined;
 
-    for (let attempt = 1; attempt <= Math.max(1, retry.maxAttempts); attempt += 1) {
+    const backoff = (attempt: number): Promise<void> =>
+      sleep(retry.backoff === 'exponential' ? (retry.baseDelayMs ?? 0) * 2 ** (attempt - 1) : 0);
+
+    // Called once every attempt has been used up: hand the caller a chance to
+    // salvage a usable output before we surface a hard failure that would kill
+    // the whole run.
+    const giveUp = (): StepResult => {
+      if (options.fallbackOnExhausted) {
+        const salvaged = options.fallbackOnExhausted(context, { error: lastError, lastData });
+        if (salvaged) {
+          return { type: 'CONTINUE', output: salvaged };
+        }
+      }
+      return { type: 'FAILED', error: lastError };
+    };
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      // Rebuild the user prompt per attempt so retries can carry corrective
+      // feedback about why the previous attempt was rejected.
+      const llmParams = {
+        system,
+        user: options.buildUser(context, { attempt, previousError }),
+        structuredOutputSchema,
+        maxTokens: options.maxTokens,
+        temperature: options.temperature,
+      };
+
       let response: Awaited<ReturnType<typeof deps.llmProvider.complete>>;
       try {
         response = await deps.llmProvider.complete(llmParams);
       } catch (error) {
         lastError = error instanceof Error ? error.message : 'Provider error';
+        previousError = lastError;
         const reason = isRateLimitError(error) ? 'rate_limit' : 'provider_error';
-        if (attempt < retry.maxAttempts && retryOn.includes(reason)) {
-          await sleep(retry.backoff === 'exponential' ? (retry.baseDelayMs ?? 0) * 2 ** (attempt - 1) : 0);
+        if (attempt < maxAttempts && retryOn.includes(reason)) {
+          await backoff(attempt);
           continue;
         }
-        return { type: 'FAILED', error: lastError };
+        return giveUp();
       }
 
       const parsed = parseLlmJson(response.content, options.outputSchema, {
@@ -131,9 +178,26 @@ export const createLlmCallStep = <TSchema extends z.ZodType>(options: {
       });
 
       if (parsed.success) {
-        const output = options.transformOutput
-          ? options.transformOutput(parsed.data, context)
-          : (parsed.data as Record<string, unknown>);
+        lastData = parsed.data;
+        let output: Record<string, unknown>;
+        try {
+          output = options.transformOutput
+            ? options.transformOutput(parsed.data, context)
+            : (parsed.data as Record<string, unknown>);
+        } catch (error) {
+          // transformOutput validates/reshapes the LLM's own output (e.g. slide
+          // count, schema-adjacent invariants) — a throw here means the response
+          // was structurally valid JSON but semantically wrong, same class of
+          // problem as a parse_error, so it should be retried the same way
+          // instead of failing the whole run on the first bad generation.
+          lastError = error instanceof Error ? error.message : 'transformOutput failed';
+          previousError = lastError;
+          if (attempt < maxAttempts && retryOn.includes('parse_error')) {
+            await backoff(attempt);
+            continue;
+          }
+          return giveUp();
+        }
 
         if (options.cache && cacheKey) {
           await options.cache.provider.set(cacheKey, output);
@@ -150,14 +214,15 @@ export const createLlmCallStep = <TSchema extends z.ZodType>(options: {
       }
 
       lastError = parsed.error ?? lastError;
-      if (attempt < retry.maxAttempts && retryOn.includes('parse_error')) {
-        await sleep(retry.backoff === 'exponential' ? (retry.baseDelayMs ?? 0) * 2 ** (attempt - 1) : 0);
+      previousError = lastError;
+      if (attempt < maxAttempts && retryOn.includes('parse_error')) {
+        await backoff(attempt);
         continue;
       }
-      return { type: 'FAILED', error: lastError };
+      return giveUp();
     }
 
-    return { type: 'FAILED', error: lastError };
+    return giveUp();
   };
 };
 

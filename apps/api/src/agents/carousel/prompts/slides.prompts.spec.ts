@@ -35,18 +35,6 @@ const makeContext = (templateId: string, slideCount: number): StepExecutionConte
     },
     previousStepsOutput: {
       generate_content: { slides },
-      generate_design_plan: {
-        plan: {
-          templateId,
-          slides: slides.map((slide, i) => ({
-            id: slide.id,
-            variationId: templateId === 'content-machine'
-              ? (i === 0 ? 'v1' : i === slideCount - 1 ? 'v2' : ['bottom-accent', 'center-white', 'start-dark'][i % 3]!)
-              : 'v1',
-            layoutNotes: 'Layout notes here',
-          })),
-        },
-      },
     },
   } as unknown as StepExecutionContext;
 };

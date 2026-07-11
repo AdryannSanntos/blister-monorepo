@@ -70,6 +70,70 @@ describe('step primitives', () => {
     assert.equal(result.creditCost, 0.001);
   });
 
+  it('retries when transformOutput throws (e.g. semantic validation failure), then succeeds', async () => {
+    const schema = z.object({ caption: z.string() });
+    let calls = 0;
+    const step = createLlmCallStep({
+      outputSchema: schema,
+      buildSystem: () => 'system',
+      buildUser: () => 'user',
+      retry: { maxAttempts: 2, retryOn: ['parse_error'] },
+      transformOutput: (data) => {
+        calls += 1;
+        if (calls === 1) {
+          throw new Error('Content generation returned 1 slide(s) but 5 were requested');
+        }
+        return { caption: data.caption };
+      },
+    });
+
+    const result = await step(createContext(), {
+      imageProvider: null,
+      llmProvider: {
+        complete: async () => ({
+          content: JSON.stringify({ caption: 'Texto' }),
+          model: 'stub/model',
+          tokensInput: 10,
+          tokensOutput: 5,
+          costUsd: 0.001,
+        }),
+      },
+    });
+
+    assert.equal(calls, 2);
+    assert.equal(result.type, 'CONTINUE');
+    assert.deepEqual(result.output, { caption: 'Texto' });
+  });
+
+  it('fails after exhausting retries when transformOutput keeps throwing', async () => {
+    const schema = z.object({ caption: z.string() });
+    const step = createLlmCallStep({
+      outputSchema: schema,
+      buildSystem: () => 'system',
+      buildUser: () => 'user',
+      retry: { maxAttempts: 2, retryOn: ['parse_error'] },
+      transformOutput: () => {
+        throw new Error('Content generation returned 1 slide(s) but 5 were requested');
+      },
+    });
+
+    const result = await step(createContext(), {
+      imageProvider: null,
+      llmProvider: {
+        complete: async () => ({
+          content: JSON.stringify({ caption: 'Texto' }),
+          model: 'stub/model',
+          tokensInput: 10,
+          tokensOutput: 5,
+          costUsd: 0.001,
+        }),
+      },
+    });
+
+    assert.equal(result.type, 'FAILED');
+    assert.match(result.error ?? '', /5 were requested/);
+  });
+
   it('returns context retrieval metadata without requiring an LLM', async () => {
     const step = createRetrieveContextStep();
     const result = await step(createContext(), {

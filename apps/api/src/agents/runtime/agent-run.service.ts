@@ -192,6 +192,16 @@ export class AgentRunService {
     };
   }
 
+  private sanitizeOutputPayload(payload: unknown): Record<string, unknown> {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      return {};
+    }
+
+    const copy = { ...(payload as Record<string, unknown>) };
+    delete copy._originalOutput;
+    return copy;
+  }
+
   private mapRunToDto(run: {
     id: string;
     agentId: string;
@@ -209,7 +219,8 @@ export class AgentRunService {
     startedAt: Date | null;
     completedAt: Date | null;
   }): AgentRunStatusDto {
-    const rawReviewStatus = (run.outputPayload as { reviewStatus?: string })?.reviewStatus ?? null;
+    const outputPayload = this.sanitizeOutputPayload(run.outputPayload);
+    const rawReviewStatus = (outputPayload.reviewStatus as string | undefined) ?? null;
     const reviewStatus = this.normalizeReviewStatus(rawReviewStatus);
 
     return {
@@ -219,7 +230,7 @@ export class AgentRunService {
       status: run.status as AgentRunStatus,
       currentStepKey: run.currentStepKey,
       inputPayload: run.inputPayload as Record<string, unknown>,
-      outputPayload: run.outputPayload as Record<string, unknown>,
+      outputPayload,
       errorMessage: run.errorMessage,
       pauseReason: run.pauseReason,
       pauseFormSchema: run.pauseFormSchema,

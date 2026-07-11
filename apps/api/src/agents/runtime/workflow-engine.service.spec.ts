@@ -52,7 +52,7 @@ describe('WorkflowEngineService.resumeRun', () => {
     inputPayload: {},
   };
 
-  it('remaps a legacy await_content_approval step to generate_design_plan for carousel runs', async () => {
+  it('does not remap await_content_approval (now an active step) for carousel runs', async () => {
     findUnique.mockResolvedValue({
       ...baseRun,
       agentId: 'carousel',
@@ -63,7 +63,22 @@ describe('WorkflowEngineService.resumeRun', () => {
 
     expect(triggerMock).toHaveBeenCalledWith(
       'agent-run-execute',
-      expect.objectContaining({ resumeFromStep: 'generate_design_plan' }),
+      expect.objectContaining({ resumeFromStep: 'await_content_approval' }),
+    );
+  });
+
+  it('remaps a legacy generate_design_plan step to generate_slides for carousel runs', async () => {
+    findUnique.mockResolvedValue({
+      ...baseRun,
+      agentId: 'carousel',
+      currentStepKey: 'generate_design_plan',
+    });
+
+    await service.resumeRun({ runId: 'run-1' });
+
+    expect(triggerMock).toHaveBeenCalledWith(
+      'agent-run-execute',
+      expect.objectContaining({ resumeFromStep: 'generate_slides' }),
     );
   });
 

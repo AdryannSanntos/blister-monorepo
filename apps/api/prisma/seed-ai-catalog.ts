@@ -543,6 +543,29 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
     },
   });
 
+  const carouselDefaultModelId = await requireModelId(
+    prisma,
+    assemblyaiId,
+    'gemini-2.5-flash-lite',
+  );
+
+  await prisma.agentModelPolicy.upsert({
+    where: { agentId: 'carousel' },
+    update: {
+      modelId: carouselDefaultModelId,
+      markupMultiplier: new Prisma.Decimal(1.2),
+      minCostPerRun: null,
+      isEnabled: true,
+    },
+    create: {
+      agentId: 'carousel',
+      modelId: carouselDefaultModelId,
+      markupMultiplier: new Prisma.Decimal(1.2),
+      minCostPerRun: null,
+      isEnabled: true,
+    },
+  });
+
   await prisma.ragPlatformSettings.update({
     where: { id: 'default' },
     data: { embeddingModelId: embeddingModel.id },
@@ -553,4 +576,5 @@ export async function seedAiCatalog(prisma: PrismaClient): Promise<void> {
   console.log(`  • Anthropic: ${ANTHROPIC_MODELS.length} modelos (catálogo)`);
   console.log('  • Cuts default: gemini-2.5-flash-lite (AssemblyAI LLM Gateway)');
   console.log('  • Cuts transcriber: universal-2 (resolve_source)');
+  console.log('  • Carousel default: gemini-2.5-flash-lite (AssemblyAI LLM Gateway)');
 }

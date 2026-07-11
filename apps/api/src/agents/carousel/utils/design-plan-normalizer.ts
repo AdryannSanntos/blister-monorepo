@@ -165,11 +165,15 @@ const normalizeContentMachineSlide = (input: {
 export const normalizeDesignPlanSlides = (
   slides: NormalizerDesignSlide[],
   contentSlides: NormalizerContentSlide[],
-  options?: { templateId?: string },
+  options?: {
+    templateId?: string;
+    getAvailableVariations?: (slideType: string) => string[];
+  },
 ): NormalizerDesignSlide[] => {
   const totalSlides = slides.length;
   let previousVariationKey = '';
   const isContentMachine = options?.templateId === 'content-machine';
+  const availableTextVariations = options?.getAvailableVariations?.('text') ?? [];
 
   return slides.map((slide) => {
     const content = contentSlides.find((entry) => entry.id === slide.id);
@@ -198,10 +202,10 @@ export const normalizeDesignPlanSlides = (
       variationId = 'v1';
     } else if (isLast) {
       type = 'text';
-      variationId = 'v3';
+      variationId = availableTextVariations.includes('cta') ? 'cta' : 'v3';
     } else if (role === 'framework' && (content?.listItems?.length ?? 0) >= 3) {
       type = 'text';
-      variationId = 'v1';
+      variationId = availableTextVariations.includes('list') ? 'list' : 'v1';
     } else if (role === 'proof') {
       type = 'text_image';
       variationId = pickProofVariation(slide.order);
@@ -248,3 +252,21 @@ export const normalizeDesignPlanSlides = (
 
 const hasImageIntent = (content?: NormalizerContentSlide): boolean =>
   Boolean(content?.imageBrief?.trim());
+
+/**
+ * Clamps a variationId to one that actually exists for the template+type
+ * (per manifest). Templates each define their own variation set (numeric
+ * v1..vN or named ids like "cta"/"single-bottom") — heuristics above assume
+ * an editorial-performance-style v1..v5 range, so a pick can be out of range
+ * or use the wrong naming scheme for other templates. This is the safety net
+ * that prevents "Variation vX not found in template Y" at render time.
+ */
+export const resolveSafeVariationId = (
+  available: string[],
+  variationId: string,
+  order: number,
+): string => {
+  if (available.length === 0) return variationId;
+  if (available.includes(variationId)) return variationId;
+  return available[order % available.length] ?? available[0]!;
+};

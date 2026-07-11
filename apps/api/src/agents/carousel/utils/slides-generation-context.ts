@@ -6,6 +6,7 @@ import type {
 } from '@company-os/types';
 import { resolveCarouselBrandContext } from './carousel-brand.util';
 import { resolveContentSlidesFromContext } from './slide-count-alignment.util';
+import { resolveContentMachineVariations } from './content-machine-variation-resolver';
 
 type ContentSlide = {
   id: string;
@@ -42,6 +43,20 @@ export type SlidesGenerationContext = {
   totalSlides: number;
 };
 
+const buildContentMachinePlan = (
+  templateId: string,
+  slides: ContentSlide[],
+): SlidesGenerationContext['plan'] => {
+  const variationMap = resolveContentMachineVariations(slides);
+  return {
+    templateId,
+    slides: slides.map((slide) => ({
+      id: slide.id,
+      variationId: variationMap.get(slide.id) ?? 'v1',
+    })),
+  };
+};
+
 export const resolveSlidesGenerationContext = (
   context: StepExecutionContext,
 ): SlidesGenerationContext => {
@@ -58,11 +73,8 @@ export const resolveSlidesGenerationContext = (
     imageUploads?: Record<string, string>;
   };
 
+  const templateId = inputPayload.templateId ?? 'editorial-performance';
   const slides = resolveContentSlidesFromContext<ContentSlide>(context);
-  const designOutput = context.previousStepsOutput.generate_design_plan as {
-    plan?: { templateId: string; slides: DesignPlanSlide[] };
-  };
-  const plan = designOutput?.plan;
 
   const brand = resolveCarouselBrandContext({
     brandOverrides: inputPayload.brandOverrides,
@@ -71,8 +83,15 @@ export const resolveSlidesGenerationContext = (
     workspacePalette: inputPayload.workspacePalette,
   });
 
+  // Build a synthetic plan from the content slides instead of relying on the
+  // (now removed) generate_design_plan LLM step.
+  const plan =
+    templateId === 'content-machine'
+      ? buildContentMachinePlan(templateId, slides)
+      : undefined;
+
   return {
-    templateId: plan?.templateId ?? inputPayload.templateId ?? 'editorial-performance',
+    templateId,
     slides,
     plan,
     imageUploads: inputPayload.imageUploads ?? {},

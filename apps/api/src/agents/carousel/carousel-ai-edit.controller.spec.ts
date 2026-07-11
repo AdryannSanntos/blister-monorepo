@@ -70,6 +70,8 @@ describe('CarouselAiEditController', () => {
       expect.objectContaining({
         htmlContent: persistedSlide.htmlContent,
         cssContent: persistedSlide.cssContent,
+        templateId: 'content-machine',
+        slideType: 'text',
       }),
     );
   });

@@ -11,8 +11,21 @@ export const CAROUSEL_SLIDE_WIDTH = 1080;
 export const CAROUSEL_SLIDE_HEIGHT = 1350;
 export const CAROUSEL_SLIDE_ASPECT = CAROUSEL_SLIDE_WIDTH / CAROUSEL_SLIDE_HEIGHT;
 
-export const buildCarouselSlideSrcDoc = (slide: CarouselOutputSlide) =>
-  `<!doctype html><html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{overflow:hidden;width:${CAROUSEL_SLIDE_WIDTH}px;height:${CAROUSEL_SLIDE_HEIGHT}px}${slide.cssContent}</style></head><body>${slide.htmlContent}</body></html>`;
+const CSS_IMPORT_PATTERN = /@import[^;]+;/gi;
+
+const splitSlideCss = (cssContent: string) => {
+  const imports = cssContent.match(CSS_IMPORT_PATTERN) ?? [];
+  const rules = cssContent.replace(CSS_IMPORT_PATTERN, "").trim();
+  return { imports, rules };
+};
+
+export const buildCarouselSlideSrcDoc = (slide: CarouselOutputSlide) => {
+  const { imports, rules } = splitSlideCss(slide.cssContent);
+  const reset = `*{margin:0;padding:0;box-sizing:border-box}body{overflow:hidden;width:${CAROUSEL_SLIDE_WIDTH}px;height:${CAROUSEL_SLIDE_HEIGHT}px}`;
+  const style = `${imports.join("")}${reset}${rules}`;
+
+  return `<!doctype html><html><head><meta charset="utf-8"><style>${style}</style></head><body>${slide.htmlContent}</body></html>`;
+};
 
 type CarouselSlideRendererProps = {
   slide: CarouselOutputSlide;

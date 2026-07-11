@@ -1,7 +1,6 @@
 import type {
   AgentRunStatusDto,
   AgentRunStepDto,
-  CarouselDesignPlan,
   CarouselIdeaOption,
   CarouselOutput,
   CarouselOutputSlide,
@@ -15,11 +14,12 @@ import type {
 } from "../components/carousel/carousel-run-steps";
 
 export const AWAITING_IDEA_SELECTION = "awaiting_idea_selection";
+export const AWAITING_CONTENT_APPROVAL = "awaiting_content_approval";
 
 const IDEAS_STEPS = ["generate_ideas", "await_idea_selection"] as const;
 const EDITOR_STEPS = [
   "generate_content",
-  "generate_design_plan",
+  "await_content_approval",
   "generate_slides",
   "render_slides",
   "finalize_carousel",
@@ -122,24 +122,6 @@ export const extractSlideContentsFromRun = (params: {
   return readSlidesFromPayload(contentStep?.outputPayload);
 };
 
-const readPlanFromPayload = (payload: unknown): CarouselDesignPlan | null => {
-  if (!payload || typeof payload !== "object") return null;
-  const plan = (payload as { plan?: unknown }).plan;
-  if (plan && typeof plan === "object") return plan as CarouselDesignPlan;
-  return null;
-};
-
-export const extractDesignPlanFromRun = (params: {
-  run: AgentRunStatusDto;
-  steps?: AgentRunStepDto[];
-}): CarouselDesignPlan | null => {
-  const fromInput = readPlanFromPayload(params.run.inputPayload);
-  if (fromInput) return fromInput;
-
-  const designStep = readStep(params.steps, "generate_design_plan");
-  return readPlanFromPayload(designStep?.outputPayload);
-};
-
 export const readImageUploads = (
   inputPayload: Record<string, unknown>,
 ): Record<string, string> => {
@@ -200,6 +182,11 @@ export const isRunAwaitingIdeaSelection = (
 ): boolean =>
   run?.status === "PAUSED" && run.pauseReason === AWAITING_IDEA_SELECTION;
 
+export const isRunAwaitingContentApproval = (
+  run: Pick<AgentRunStatusDto, "status" | "pauseReason"> | null | undefined,
+): boolean =>
+  run?.status === "PAUSED" && run.pauseReason === AWAITING_CONTENT_APPROVAL;
+
 const isPhaseGateCompleted = (
   phase: CarouselRunStepId,
   steps: AgentRunStepDto[] | undefined,
@@ -253,6 +240,10 @@ const derivePhaseStatus = (
     return "awaiting_action";
   }
 
+  if (phase === "editor" && isRunAwaitingContentApproval(run)) {
+    return "awaiting_action";
+  }
+
   if (isPhaseGateCompleted(phase, steps)) {
     return "completed";
   }
@@ -283,6 +274,8 @@ export const resolvePausePhase = (
   switch (pauseReason) {
     case AWAITING_IDEA_SELECTION:
       return "ideas";
+    case AWAITING_CONTENT_APPROVAL:
+      return "editor";
     default:
       return null;
   }

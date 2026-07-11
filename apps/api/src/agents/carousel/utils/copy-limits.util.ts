@@ -45,11 +45,14 @@ export const applyCopyLimits = <T extends TruncatableSlideCopy>(
   const role = slide.narrativeRole;
 
   if (role === 'hook') {
+    const titleLimit = options?.templateId === 'content-machine' ? 120 : 80;
     return {
       ...slide,
+      title: truncate(slide.title, titleLimit),
       subtitle: truncate(slide.subtitle ?? slide.body, 120),
       body: undefined,
       body2: undefined,
+      listItems: undefined,
     };
   }
 

@@ -11,11 +11,13 @@ vi.mock("src/core/modules/agents/hooks/use-carousel-run-detail", () => ({
       data: [{ id: "idea_1", title: "Test", description: "Desc" }],
       selectedId: null,
     },
+    content: { slides: [], isApproving: false },
     editor: { status: "idle", data: null, isExporting: false, exportDownloadUrl: null },
     actions: {
       selectIdea: vi.fn(),
       updateIdeaSelection: vi.fn(),
       submitCustomIdea: vi.fn(),
+      approveContent: vi.fn(),
       requestExport: vi.fn(),
     },
     errorMessage: null,

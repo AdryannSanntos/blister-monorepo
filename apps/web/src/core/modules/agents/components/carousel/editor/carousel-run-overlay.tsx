@@ -3,6 +3,7 @@
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 
+import { CarouselContentApprovalStep } from "src/core/modules/agents/components/carousel/carousel-content-approval-step";
 import { CarouselIdeasStep } from "src/core/modules/agents/components/carousel/carousel-ideas-step";
 import { useCarouselRunDetail } from "src/core/modules/agents/hooks/use-carousel-run-detail";
 import { useResumeAgentRun } from "src/core/modules/agents/hooks/use-agent-run-mutations";
@@ -13,7 +14,6 @@ import { CarouselEditorShell } from "./carousel-editor-shell";
 import { CarouselPipelineProgress } from "./carousel-pipeline-progress";
 
 const LEGACY_PAUSE_REASONS = new Set([
-  "awaiting_content_approval",
   "awaiting_design_approval",
 ]);
 
@@ -137,6 +137,16 @@ export const CarouselRunOverlay = ({ runId, onClose }: Props) => {
             />
           </div>
         </div>
+      );
+    }
+
+    if (detail.phases.editor.status === "awaiting_action" && detail.content.slides.length > 0) {
+      return (
+        <CarouselContentApprovalStep
+          slides={detail.content.slides}
+          isApproving={detail.content.isApproving}
+          onApprove={detail.actions.approveContent}
+        />
       );
     }
 

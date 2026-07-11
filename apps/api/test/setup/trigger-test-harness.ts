@@ -61,27 +61,6 @@ const CAROUSEL_STUB_RESPONSES: Record<string, unknown> = {
       { id: 'slide_2', order: 2, type: 'text', title: 'Hábito 1', body: 'Acorde mais cedo' },
     ],
   },
-  generate_design_plan: {
-    templateId: 'editorial-performance',
-    slides: [
-      {
-        id: 'slide_1',
-        order: 1,
-        type: 'start',
-        variationId: 'v1',
-        imageSlots: [{ slotKey: 'image_url', label: 'Capa', required: true }],
-        layoutNotes: 'Hero cover',
-      },
-      {
-        id: 'slide_2',
-        order: 2,
-        type: 'text',
-        variationId: 'v1',
-        imageSlots: [],
-        layoutNotes: 'Text block',
-      },
-    ],
-  },
   generate_slides: {
     slides: [
       {
@@ -106,9 +85,6 @@ const resolveCarouselStubStep = (
   messages: Array<{ role: string; content: string }>,
 ): string => {
   const user = messages.find((message) => message.role === 'user')?.content ?? '';
-  if (user.includes('Slides to design') || user.includes('variationId')) {
-    return 'generate_design_plan';
-  }
   if (user.includes('HTML') || user.includes('htmlContent')) {
     return 'generate_slides';
   }

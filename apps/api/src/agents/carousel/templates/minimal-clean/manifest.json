@@ -34,6 +34,11 @@
         "imageSlots": [
           { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
         ]
+      },
+      "v3": {
+        "imageSlots": [
+          { "slotKey": "image_url", "label": "Imagem full bleed", "required": true }
+        ]
       }
     }
   }

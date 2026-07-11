@@ -3,6 +3,13 @@ import type { CarouselOutput } from "@company-os/types";
 import { CarouselEditorShell } from "./carousel-editor-shell";
 import { useCarouselEditorStore } from "src/core/modules/agents/stores/carousel-editor-store";
 
+// jsdom does not implement ResizeObserver; stub it so the dynamic-scale effect runs without error.
+global.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 vi.mock("src/core/modules/agents/components/carousel/editor/carousel-editor-adjust-bar", () => ({
   CarouselEditorAdjustBar: () => <div data-testid="adjust-bar" />,
 }));
@@ -16,6 +23,8 @@ vi.mock("src/core/modules/agents/components/carousel/editor/carousel-editor-laye
 }));
 
 vi.mock("src/core/modules/agents/components/carousel/carousel-slide-renderer", () => ({
+  CAROUSEL_SLIDE_WIDTH: 1080,
+  CAROUSEL_SLIDE_HEIGHT: 1350,
   CarouselSlideRenderer: ({ slide }: { slide: { id: string; htmlContent: string } }) => (
     <div data-testid={`thumb-${slide.id}`}>{slide.htmlContent}</div>
   ),

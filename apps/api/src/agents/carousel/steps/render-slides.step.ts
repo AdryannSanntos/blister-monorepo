@@ -16,9 +16,6 @@ export const createRenderSlidesStep = (): StepExecutor => {
     const slidesOutput = context.previousStepsOutput.generate_slides as {
       slides?: RenderableSlide[];
     };
-    const designOutput = context.previousStepsOutput.generate_design_plan as {
-      plan?: { templateId: string };
-    };
 
     const input = context.inputPayload as {
       templateId?: string;
@@ -33,10 +30,7 @@ export const createRenderSlidesStep = (): StepExecutor => {
       };
     }
 
-    const templateId =
-      designOutput?.plan?.templateId ??
-      input.templateId ??
-      'editorial-performance';
+    const templateId = input.templateId ?? 'editorial-performance';
     const socialNetwork = input.socialNetworks?.[0] ?? 'instagram';
     const dimensions = deps.templateService.getDimensions(templateId, socialNetwork);
 

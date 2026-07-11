@@ -1,4 +1,4 @@
-import { normalizeContentSlides } from './content-slides-normalizer';
+import { normalizeContentSlides, padContentSlidesToCount } from './content-slides-normalizer';
 
 describe('content-slides-normalizer', () => {
   it('forces start and cta types on first and last slides', () => {
@@ -23,5 +23,20 @@ describe('content-slides-normalizer', () => {
     const middleTypes = normalized.slice(1, 3).map((slide) => slide.type);
     expect(middleTypes).toContain('text');
     expect(middleTypes).toContain('text_image');
+  });
+
+  it('pads under-delivered slides to the expected count with placeholder copy', () => {
+    const padded = padContentSlidesToCount(
+      [{ id: 'slide_1', order: 1, type: 'start', title: 'Hook' }],
+      5,
+      { title: 'Produtividade', description: 'Hábitos diários' },
+    );
+
+    expect(padded).toHaveLength(5);
+    expect(padded[0]?.title).toBe('Hook');
+    expect(padded[4]?.narrativeRole).toBe('cta');
+    expect(padded[1]?.body).toContain('Hábitos diários');
+    expect(padded[1]?.body2).toBeTruthy();
+    expect(padded[4]?.callToAction).toContain('insight');
   });
 });

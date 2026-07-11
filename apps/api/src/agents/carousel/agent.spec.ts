@@ -80,7 +80,7 @@ describe('carousel agent', () => {
       'generate_ideas',
       'await_idea_selection',
       'generate_content',
-      'generate_design_plan',
+      'await_content_approval',
       'generate_slides',
       'render_slides',
       'finalize_carousel',
@@ -91,9 +91,9 @@ describe('carousel agent', () => {
     expect(carouselAgent.definition.steps).toHaveLength(7);
   });
 
-  it('does not include content or design approval pause steps', () => {
+  it('does not include the legacy design approval or design plan steps', () => {
     const stepKeys = carouselAgent.definition.steps.map((step) => step.key);
-    expect(stepKeys).not.toContain('await_content_approval');
+    expect(stepKeys).not.toContain('generate_design_plan');
     expect(stepKeys).not.toContain('await_design_approval');
   });
 
@@ -126,42 +126,39 @@ describe('carousel agent', () => {
     expect(result.pauseReason).toBe('awaiting_idea_selection');
   });
 
-  it('runs content and design automatically after idea selection', async () => {
+  it('pauses at await_content_approval after generating content', async () => {
     const contentSlides = [
       { id: 'slide_1', order: 1, type: 'start' as const, title: '5 hábitos', body: 'Para criar mais' },
       { id: 'slide_2', order: 2, type: 'text' as const, title: 'Hábito 1', body: 'Acordar cedo' },
     ];
-    const designPlan = {
-      templateId: 'editorial-performance',
-      slides: [
-        {
-          id: 'slide_1',
-          order: 1,
-          type: 'start' as const,
-          variationId: 'v1',
-          imageSlots: [{ slotKey: 'image_url', label: 'Foto de capa', required: true }],
-          layoutNotes: 'centered',
-        },
-        {
-          id: 'slide_2',
-          order: 2,
-          type: 'text' as const,
-          variationId: 'v1',
-          imageSlots: [],
-          layoutNotes: 'left-aligned',
-        },
-      ],
-    };
 
     const harness = AgentTestHarness.forAgent(carouselAgent).withLlmResponses({
       generate_ideas: mockIdeas,
       generate_content: { slides: contentSlides },
-      generate_design_plan: designPlan,
-      generate_slides: mockSlides,
     });
 
     await harness.run({ ...baseInput });
     const result = await harness.resume({ selectedIdeaId: 'idea_1' }).run();
+
+    expect(result.status).toBe('PAUSED');
+    expect(result.pauseReason).toBe('awaiting_content_approval');
+  });
+
+  it('generates slides after content approval', async () => {
+    const contentSlides = [
+      { id: 'slide_1', order: 1, type: 'start' as const, title: '5 hábitos', body: 'Para criar mais' },
+      { id: 'slide_2', order: 2, type: 'text' as const, title: 'Hábito 1', body: 'Acordar cedo' },
+    ];
+
+    const harness = AgentTestHarness.forAgent(carouselAgent).withLlmResponses({
+      generate_ideas: mockIdeas,
+      generate_content: { slides: contentSlides },
+      generate_slides: mockSlides,
+    });
+
+    await harness.run({ ...baseInput });
+    await harness.resume({ selectedIdeaId: 'idea_1' }).run();
+    const result = await harness.resume({ contentApproved: true }).run();
 
     expect(result.status).toBe('COMPLETED');
     expect(result.output?.slides).toBeDefined();
@@ -179,7 +176,6 @@ describe('carousel agent', () => {
   it('has no routing rules for removed approval steps', () => {
     const routing = carouselAgent.routing ?? [];
     const afterKeys = routing.map((rule) => rule.after);
-    expect(afterKeys).not.toContain('await_content_approval');
     expect(afterKeys).not.toContain('await_design_approval');
   });
 });

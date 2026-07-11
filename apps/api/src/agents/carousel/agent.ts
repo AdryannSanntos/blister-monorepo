@@ -4,11 +4,11 @@ import {
   carouselOutputZod,
   carouselIdeaSelectionSchema,
   carouselReviewSchema,
+  contentApprovalSchema,
 } from './schemas/carousel-schemas';
 import { carouselLearningHandler } from './learning/feedback-handler';
 import { createGenerateIdeasStep } from './steps/generate-ideas.step';
 import { createGenerateContentStep } from './steps/generate-content.step';
-import { createGenerateDesignPlanStep } from './steps/generate-design-plan.step';
 import { createGenerateSlidesStep } from './steps/generate-slides.step';
 import { createRenderSlidesStep } from './steps/render-slides.step';
 import { createFinalizeCarouselStep } from './steps/finalize-carousel.step';
@@ -55,10 +55,16 @@ export const carouselAgent = AgentBuilder.create({ id: 'carousel', version: '1.0
     type: 'llm_call',
     run: createGenerateContentStep(),
   })
-  .addStep('generate_design_plan', {
-    label: 'Montando plano de design',
-    type: 'llm_call',
-    run: createGenerateDesignPlanStep(),
+  .addStep('await_content_approval', {
+    label: 'Aguardando aprovação',
+    type: 'form',
+    run: createPauseStep({
+      pauseType: 'form',
+      until: (ctx) => Boolean((ctx.inputPayload as Record<string, unknown>).contentApproved),
+      getFormSchema: () => contentApprovalSchema,
+      pauseReason: 'awaiting_content_approval',
+      onContinue: () => ({ contentApproved: true }),
+    }),
   })
   .addStep('generate_slides', {
     label: 'Gerando slides',

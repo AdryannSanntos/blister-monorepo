@@ -12,6 +12,18 @@ describe('copy-limits.util', () => {
     expect(result.body).toBeUndefined();
   });
 
+  it('truncates hook title to template limit', () => {
+    const result = applyCopyLimits(
+      {
+        narrativeRole: 'hook',
+        title: 'a'.repeat(150),
+      },
+      { templateId: 'content-machine' },
+    );
+
+    expect(result.title?.length).toBeLessThanOrEqual(120);
+  });
+
   it('limits framework list items to four', () => {
     const result = applyCopyLimits({
       narrativeRole: 'framework',

@@ -41,15 +41,6 @@ const baseContext = {
         { id: 'slide_2', order: 2, type: 'text', title: 'Ponto 1', body: 'Detalhe' },
       ],
     },
-    generate_design_plan: {
-      plan: {
-        templateId: 'editorial-performance',
-        slides: [
-          { id: 'slide_1', variationId: 'v1', layoutNotes: 'centered' },
-          { id: 'slide_2', variationId: 'v1', layoutNotes: 'left' },
-        ],
-      },
-    },
   },
 } as unknown as StepExecutionContext;
 
@@ -108,15 +99,6 @@ describe('normalizeGeneratedSlides', () => {
             },
           ],
         },
-        generate_design_plan: {
-          plan: {
-            templateId: 'content-machine',
-            slides: [
-              { id: 'slide_1', variationId: 'v1' },
-              { id: 'slide_2', variationId: 'v3' },
-            ],
-          },
-        },
       },
     } as unknown as StepExecutionContext;
 
@@ -155,16 +137,6 @@ describe('normalizeGeneratedSlides', () => {
             { id: 'slide_2', order: 2, type: 'text', body: 'Primeiro bloco' },
             { id: 'slide_3', order: 3, type: 'text', body: 'Segundo bloco' },
           ],
-        },
-        generate_design_plan: {
-          plan: {
-            templateId: 'content-machine',
-            slides: [
-              { id: 'slide_1', variationId: 'v1' },
-              { id: 'slide_2', variationId: 'v3' },
-              { id: 'slide_3', variationId: 'v2' },
-            ],
-          },
         },
       },
     } as unknown as StepExecutionContext;
@@ -226,18 +198,6 @@ describe('hydrateGeneratedSlides', () => {
         generate_content: {
           slides: [{ id: 'slide_1', order: 1, type: 'start', title: 'Capa', subtitle: 'Intro' }],
         },
-        generate_design_plan: {
-          plan: {
-            templateId: 'editorial-performance',
-            slides: [
-              {
-                id: 'slide_1',
-                variationId: 'v1',
-                imageSlots: [{ slotKey: 'image_url', label: 'Capa', required: true }],
-              },
-            ],
-          },
-        },
       },
     } as unknown as StepExecutionContext;
 
@@ -274,19 +234,6 @@ describe('hydrateGeneratedSlides', () => {
               body: 'Detalhe',
             },
           ],
-        },
-        generate_design_plan: {
-          plan: {
-            templateId: 'editorial-performance',
-            slides: [
-              { id: 'slide_1', variationId: 'v1' },
-              {
-                id: 'slide_2',
-                variationId: 'v2',
-                imageSlots: [{ slotKey: 'image_url', label: 'Imagem', required: true }],
-              },
-            ],
-          },
         },
       },
     } as unknown as StepExecutionContext;

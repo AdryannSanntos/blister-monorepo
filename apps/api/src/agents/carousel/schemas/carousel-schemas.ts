@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { carouselOutputSchema } from '@company-os/types';
 
 export {
@@ -19,3 +20,8 @@ export {
  * endpoint (`AgentRunReviewService.editOutput`). Only `slides` is editable.
  */
 export const carouselReviewSchema = carouselOutputSchema.pick({ slides: true });
+
+/** Schema used by the await_content_approval pause step. */
+export const contentApprovalSchema = z.object({
+  contentApproved: z.literal(true),
+});

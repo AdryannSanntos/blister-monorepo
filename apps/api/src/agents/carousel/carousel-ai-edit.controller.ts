@@ -71,6 +71,8 @@ export class CarouselAiEditController {
 
     return this.aiEdit.applyEdit({
       request,
+      templateId: output.templateId,
+      slideType: slide.type,
       htmlContent,
       cssContent,
     });

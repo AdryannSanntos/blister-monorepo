@@ -18,6 +18,7 @@ import {
   deriveCarouselPhases,
   extractCarouselOutputFromRun,
   extractIdeasFromRun,
+  extractSlideContentsFromRun,
   extractPhaseErrorMessage,
   isCarouselRunActive,
   isRunAwaitingIdeaSelection,
@@ -43,6 +44,7 @@ export const useCarouselRunDetail = (runId: string) => {
   const [localSelectedIdeaId, setLocalSelectedIdeaId] = useState<string | null>(
     null,
   );
+  const [isApprovingContent, setIsApprovingContent] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [exportDownloadUrl, setExportDownloadUrl] = useState<string | null>(
     null,
@@ -101,6 +103,11 @@ export const useCarouselRunDetail = (runId: string) => {
   const ideasData = useMemo(
     () => extractIdeasFromRun({ steps }),
     [steps],
+  );
+
+  const contentSlides = useMemo(
+    () => (run ? extractSlideContentsFromRun({ run, steps }) : []),
+    [run, steps],
   );
 
   const output = useMemo(
@@ -170,6 +177,22 @@ export const useCarouselRunDetail = (runId: string) => {
   const updateIdeaSelection = useCallback((id: string) => {
     setLocalSelectedIdeaId(id);
   }, []);
+
+  const approveContent = useCallback(async () => {
+    if (isApprovingContent) return;
+    setIsApprovingContent(true);
+    setErrorMessage(null);
+    try {
+      await resumeRun.mutateAsync({ formData: { contentApproved: true } });
+      invalidateCarouselQueries();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Erro ao aprovar conteúdo",
+      );
+    } finally {
+      setIsApprovingContent(false);
+    }
+  }, [isApprovingContent, resumeRun, invalidateCarouselQueries]);
 
   const submitCustomIdea = useCallback(
     async (idea: { title: string; description?: string }) => {
@@ -255,6 +278,10 @@ export const useCarouselRunDetail = (runId: string) => {
       data: ideasData,
       selectedId: selectedIdeaId,
     },
+    content: {
+      slides: contentSlides,
+      isApproving: isApprovingContent,
+    },
     editor: {
       status: phases.editor.status,
       data: output,
@@ -273,6 +300,7 @@ export const useCarouselRunDetail = (runId: string) => {
       selectIdea,
       updateIdeaSelection,
       submitCustomIdea,
+      approveContent,
       requestExport,
     },
   };

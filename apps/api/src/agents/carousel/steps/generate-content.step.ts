@@ -1,6 +1,10 @@
 import { createLlmCallStep } from '@company-os/agent-ia-sdk/agents';
 import { z } from 'zod';
-import { buildContentSystemPrompt, buildContentUserPrompt } from '../prompts/content.prompts';
+import {
+  buildContentSystemPrompt,
+  buildContentUserPrompt,
+  resolveSelectedIdea,
+} from '../prompts/content.prompts';
 import { carouselNarrativeRoleSchema, carouselSlideTypeSchema } from '@company-os/types';
 import { normalizeCarouselSlideCopy } from '../utils/plain-text.util';
 import { normalizeSlideCopy } from '../utils/normalize-slide-copy.util';
@@ -11,6 +15,7 @@ import {
 import { sanitizeContentLlmOutput } from '../utils/content-llm-output-sanitizer.util';
 import {
   normalizeContentSlides,
+  padContentSlidesToCount,
   type NormalizableContentSlide,
 } from '../utils/content-slides-normalizer';
 
@@ -49,35 +54,57 @@ const repairContentOutput = (raw: unknown): unknown => {
   };
 };
 
+const mapLlmSlidesToContent = (
+  slides: z.infer<typeof contentSlideLaxSchema>[],
+): NormalizableContentSlide[] =>
+  slides.map((slide) => {
+    const parsed = contentSlideLaxSchema.parse(slide);
+    return normalizeCarouselSlideCopy(parsed);
+  });
+
+const finalizeContentSlides = (
+  slides: NormalizableContentSlide[],
+  templateId?: string,
+): NormalizableContentSlide[] =>
+  normalizeContentSlides(slides).map((slide) => normalizeSlideCopy(slide, { templateId }));
+
 export const createGenerateContentStep = () =>
   createLlmCallStep({
     outputSchema: contentLlmOutputZod,
     buildSystem: buildContentSystemPrompt,
     buildUser: buildContentUserPrompt,
     repair: repairContentOutput,
-    retry: { maxAttempts: 2, retryOn: ['parse_error', 'rate_limit', 'provider_error'] },
+    // Full pt-BR copy for every slide can be long; keep generous headroom so
+    // larger carousels don't get truncated mid-array (which surfaces as
+    // "Invalid JSON" or a short slide count) instead of returning the full set.
+    maxTokens: 16000,
+    retry: { maxAttempts: 3, retryOn: ['parse_error', 'rate_limit', 'provider_error'] },
+    // On the happy path the LLM returns the full set; an under-delivery throws
+    // here, which triggers a corrective retry (buildContentUserPrompt appends a
+    // correction telling the model exactly what to fix).
     transformOutput: (data, context) => {
       const templateId = (context.inputPayload as { templateId?: string }).templateId;
       const expectedCount = resolveExpectedSlidesCount(context);
+      const mapped = mapLlmSlidesToContent(data.slides);
 
-      const slides = normalizeContentSlides(
-        enforceContentSlidesCount(
-          data.slides.map((slide): NormalizableContentSlide => {
-            const parsed = contentSlideLaxSchema.parse(slide);
-            const normalized = normalizeCarouselSlideCopy(parsed);
-            return normalizeSlideCopy(
-              {
-                ...normalized,
-                type: parsed.type,
-                narrativeRole: parsed.narrativeRole,
-              },
-              { templateId },
-            );
-          }),
-          expectedCount,
+      return {
+        slides: finalizeContentSlides(enforceContentSlidesCount(mapped, expectedCount), templateId),
+      };
+    },
+    // Last resort: if the model still under-delivers after every retry, pad the
+    // best attempt up to the requested count instead of failing the whole run.
+    // The synthesized slides are placeholders the user edits at the
+    // content-approval step, so the pipeline always reaches a reviewable state.
+    fallbackOnExhausted: (context, { lastData }) => {
+      const templateId = (context.inputPayload as { templateId?: string }).templateId;
+      const expectedCount = resolveExpectedSlidesCount(context);
+      const mapped = mapLlmSlidesToContent(lastData?.slides ?? []);
+
+      return {
+        slides: finalizeContentSlides(
+          padContentSlidesToCount(mapped, expectedCount, resolveSelectedIdea(context)),
+          templateId,
         ),
-      );
-
-      return { slides };
+      };
     },
   });

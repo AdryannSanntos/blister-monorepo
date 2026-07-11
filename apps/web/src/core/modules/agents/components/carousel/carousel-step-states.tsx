@@ -34,10 +34,8 @@ const resolveSubSteps = (
       labels: [t("loading.ideas.generating")],
     },
     editor: {
-      keys: ["generate_content", "generate_design_plan", "generate_slides", "render_slides", "finalize_carousel"],
+      keys: ["generate_slides", "render_slides", "finalize_carousel"],
       labels: [
-        t("loading.content.generating"),
-        t("loading.design.generating"),
         t("loading.preview.generating"),
         t("loading.preview.rendering"),
         t("loading.preview.finalizing"),

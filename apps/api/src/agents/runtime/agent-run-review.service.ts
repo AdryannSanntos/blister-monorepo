@@ -112,14 +112,14 @@ export class AgentRunReviewService {
     }
 
     const originalOutput = run.outputPayload as Record<string, unknown>;
+    const { _originalOutput: _discarded, ...restOriginal } = originalOutput;
     const mergedOutput = {
-      ...originalOutput,
+      ...restOriginal,
       ...dto.editedOutput,
       reviewStatus: 'EDITED',
       reviewedAt: new Date().toISOString(),
       reviewedBy: userId,
       reviewReason: dto.reason,
-      _originalOutput: JSON.stringify(originalOutput),
     };
 
     await this.prisma.agentRun.update({

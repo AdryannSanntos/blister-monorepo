@@ -1,5 +1,6 @@
 import type { TruncatableSlideCopy } from './copy-limits.util';
 import { applyCopyLimits } from './copy-limits.util';
+import { sanitizeSlideCopyFields } from './copy-sanitizer.util';
 import { guardSlideHighlights } from './highlight-guard.util';
 import { splitOversizedContentMachineCopy } from './content-paragraph-splitter.util';
 
@@ -42,7 +43,11 @@ export const normalizeSlideCopy = <T extends TruncatableSlideCopy>(
   slide: T,
   options?: { templateId?: string },
 ): T => {
-  const split = splitOversizedContentMachineCopy(slide, options);
+  const sanitized = sanitizeSlideCopyFields(slide, {
+    templateId: options?.templateId,
+    narrativeRole: slide.narrativeRole,
+  });
+  const split = splitOversizedContentMachineCopy(sanitized, options);
   const guarded = guardSlideHighlights(split);
   const limited = applyCopyLimits(guarded, options);
   return sanitizeCopyFields(limited);
