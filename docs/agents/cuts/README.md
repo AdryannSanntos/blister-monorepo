@@ -33,10 +33,10 @@ Todo o pipeline roda **100% em background via Trigger.dev**:
 
 **Env:** `AGENT_EXECUTION_MODE=trigger` (único modo suportado)
 
-**Dev local:** API + worker Trigger (na pasta `apps/api`):
+**Dev local:** na raiz do monorepo, `pnpm dev` sobe web + API + Trigger.dev worker. Só API: `pnpm dev:api`.
 
 ```bash
-npx trigger.dev@latest dev
+pnpm dev
 ```
 
 Variáveis:

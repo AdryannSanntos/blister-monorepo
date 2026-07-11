@@ -1,3 +1,5 @@
+import type { CarouselSlideType } from '@company-os/types';
+
 const HTML_ENTITY_MAP: Record<string, string> = {
   '&amp;': '&',
   '&lt;': '<',
@@ -40,7 +42,7 @@ export const toCarouselPlainText = (value: string | null | undefined): string | 
 export const normalizeCarouselSlideCopy = (slide: {
   id: string;
   order: number;
-  type: string;
+  type: CarouselSlideType;
   title?: string;
   subtitle?: string;
   body?: string;

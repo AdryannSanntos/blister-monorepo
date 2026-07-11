@@ -1,4 +1,4 @@
-import { deriveCarouselPhases } from "./carousel-run-display";
+import { deriveCarouselPhases, isCarouselRunActive } from "./carousel-run-display";
 
 const baseRun = {
   id: "run_1",
@@ -33,5 +33,36 @@ describe("deriveCarouselPhases (2-phase model)", () => {
     const phases = deriveCarouselPhases({ run: run as never, steps: [] });
     expect(phases.ideas.status).toBe("awaiting_action");
     expect(phases.editor.status).toBe("idle");
+  });
+
+  it("marks editor as awaiting_action while paused for content approval", () => {
+    const run = {
+      ...baseRun,
+      status: "PAUSED" as const,
+      pauseReason: "awaiting_content_approval",
+    };
+    const steps = [
+      { stepKey: "generate_ideas", status: "COMPLETED" as const },
+      { stepKey: "await_idea_selection", status: "COMPLETED" as const },
+    ];
+    const phases = deriveCarouselPhases({ run: run as never, steps: steps as never });
+    expect(phases.editor.status).toBe("awaiting_action");
+  });
+});
+
+describe("isCarouselRunActive", () => {
+  it("treats content approval pause as active so SSE stays connected", () => {
+    expect(
+      isCarouselRunActive({
+        status: "PAUSED",
+        pauseReason: "awaiting_content_approval",
+      }),
+    ).toBe(true);
+  });
+
+  it("returns false for terminal runs", () => {
+    expect(isCarouselRunActive({ status: "COMPLETED", pauseReason: null })).toBe(
+      false,
+    );
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Building2, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "src/core/shared/components/ui/button";
@@ -9,6 +9,7 @@ import { AdminRoleDialog } from "../components/admin-role-dialog";
 import { AgentsPlatformTab } from "../components/agents-platform-tab";
 import { AiCatalogTab } from "../components/ai-catalog-tab";
 import { CompaniesAdminTab } from "../components/companies-admin-tab";
+import { CreateCompanyDialog } from "../components/create-company-dialog";
 import { CreditsPlatformTab } from "../components/credits-platform-tab";
 import { PlatformAdminOverviewPanel } from "../components/platform-admin-overview-panel";
 import { PlatformAdminPageLayout } from "../components/platform-admin-page-layout";
@@ -20,13 +21,20 @@ import { usePlatformAdminTab } from "../hooks/use-platform-admin-tab";
 export function PlatformAdminPage() {
   const [tab] = usePlatformAdminTab();
   const [adminDialogOpen, setAdminDialogOpen] = useState(false);
+  const [createCompanyOpen, setCreateCompanyOpen] = useState(false);
   const tAdmins = useTranslations("platformAdmin.adminsPage");
+  const tCompanies = useTranslations("platformAdmin.companiesPage");
 
   const actions =
     tab === "admins" ? (
       <Button onClick={() => setAdminDialogOpen(true)}>
         <Plus className="size-4" />
         {tAdmins("grantAccess")}
+      </Button>
+    ) : tab === "companies" ? (
+      <Button onClick={() => setCreateCompanyOpen(true)}>
+        <Building2 className="size-4" />
+        {tCompanies("createCompany")}
       </Button>
     ) : undefined;
 
@@ -42,10 +50,16 @@ export function PlatformAdminPage() {
         {tab === "ai-catalog" && <AiCatalogTab />}
         {tab === "system-ai" && <SystemAiTab />}
         {tab === "credits" && <CreditsPlatformTab />}
-        {tab === "companies" && <CompaniesAdminTab />}
+        {tab === "companies" && (
+          <CompaniesAdminTab onCreateCompany={() => setCreateCompanyOpen(true)} />
+        )}
       </PlatformAdminPageLayout>
 
       <AdminRoleDialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen} />
+      <CreateCompanyDialog
+        open={createCompanyOpen}
+        onOpenChange={setCreateCompanyOpen}
+      />
     </>
   );
 }

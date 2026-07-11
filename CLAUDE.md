@@ -182,3 +182,9 @@ Backend: NestJS 11, Prisma, PostgreSQL+pgvector, better-auth, CASL, Zod, Resend,
 7. Integrações externas + distribution (Fase 3)
 
 **Estado atual:** [`docs/project/current-state.md`](docs/project/current-state.md)
+
+---
+
+## Maestri (canvas)
+
+No Maestri, siga `.cursor/rules/maestri.mdc` e os skills em `.claude/skills/maestri*/` antes de inspecionar terminais conectados, portais, notas ou delegar a outros agentes. Comando rápido: `/maestri`.

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "@/i18n/routing";
 import { useWorkspaceContext } from "src/core/modules/workspaces/hooks/use-workspace-context";
-import { pickDefaultOnboardedCompany } from "src/core/modules/workspaces/utils/pick-default-company";
+import { pickDefaultCompany } from "src/core/modules/workspaces/utils/pick-default-company";
 import {
   getActiveWorkspaceId,
   setActiveWorkspaceId,
@@ -18,7 +18,7 @@ export const EnsureActiveWorkspace = () => {
     if (!isSuccess || !data) return;
 
     const activeId = getActiveWorkspaceId();
-    const defaultCompany = pickDefaultOnboardedCompany(data.companies, activeId);
+    const defaultCompany = pickDefaultCompany(data.companies, activeId);
 
     if (!defaultCompany || defaultCompany.id === activeId) return;
 

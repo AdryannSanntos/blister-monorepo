@@ -51,7 +51,7 @@ export class AgentRegistryService implements OnModuleInit {
       this.logger.warn(`Agent ${agent.agentId} already registered, replacing`);
     }
     this.agents.set(agent.agentId, agent);
-    this.logger.log(`Registered agent: ${agent.agentId}`);
+    this.logger.debug(`Registered agent: ${agent.agentId}`);
   }
 
   get(agentId: string): RegisteredAgent | undefined {
@@ -145,7 +145,7 @@ export class AgentRegistryService implements OnModuleInit {
       }
     }
 
-    this.logger.log(`Synced ${this.agents.size} agents with database`);
+    this.logger.debug(`Synced ${this.agents.size} agents with database`);
   }
 
   private getDefaultSortOrder(agentId: string): number {

@@ -47,6 +47,14 @@ const ADMIN_USER = {
   name: 'Admin Blister',
 } as const;
 
+const TEST_USER = {
+  userId: 'seed_test_user',
+  accountId: 'seed_test_account',
+  email: 'cttadryansantoss@gmail.com',
+  password: 'adryan1234',
+  name: 'Adryan Santos',
+} as const;
+
 async function seedPersonalSpaceForUser(
   userId: string,
   displayName: string,
@@ -236,6 +244,76 @@ async function seedAdminUser(freeTierAmount: Prisma.Decimal) {
   console.log(`  • ${ADMIN_USER.email} / ${ADMIN_USER.password} (platform_owner)`);
 }
 
+async function seedTestUser(freeTierAmount: Prisma.Decimal) {
+  console.log('→ Usuário de teste...');
+
+  const user = await upsertCredentialUser({
+    id: TEST_USER.userId,
+    accountId: TEST_USER.accountId,
+    name: TEST_USER.name,
+    email: TEST_USER.email,
+    password: TEST_USER.password,
+    userType: UserType.USER,
+    roleName: 'viewer',
+  });
+
+  await seedPersonalSpaceForUser(user.id, TEST_USER.name, freeTierAmount);
+
+  const company = await prisma.company.upsert({
+    where: { slug: 'blister' },
+    update: {
+      name: 'Blister',
+      onboardingCompletedAt: now(),
+    },
+    create: {
+      id: 'seed_test_company',
+      ownerUserId: user.id,
+      name: 'Blister',
+      slug: 'blister',
+      onboardingCompletedAt: now(),
+    },
+  });
+
+  await prisma.workspaceSettings.upsert({
+    where: { companyId: company.id },
+    update: { displayName: company.name },
+    create: {
+      companyId: company.id,
+      displayName: company.name,
+      niche: 'Conteúdo digital',
+      audience: 'Criadores de conteúdo',
+      voice: 'Tom direto e profissional',
+      positioning: 'Plataforma de conteúdo video-first',
+    },
+  });
+
+  const memberRole = await prisma.role.findUnique({ where: { name: 'member' } });
+  if (memberRole) {
+    await prisma.companyMember.upsert({
+      where: { companyId_userId: { companyId: company.id, userId: user.id } },
+      update: {},
+      create: {
+        companyId: company.id,
+        userId: user.id,
+        roleId: memberRole.id,
+      },
+    });
+  }
+
+  await prisma.creditBalance.upsert({
+    where: { companyId: company.id },
+    update: {},
+    create: {
+      companyId: company.id,
+      amount: freeTierAmount,
+      currency: 'USD',
+    },
+  });
+
+  console.log(`  • ${TEST_USER.email} / ${TEST_USER.password} (member)`);
+  console.log(`  • Empresa: ${company.name} (slug: ${company.slug})`);
+}
+
 async function main() {
   console.log('\n🌱 Blister seed\n');
 
@@ -250,6 +328,7 @@ async function main() {
     platformCredits?.freeTierAmount ?? new Prisma.Decimal(20);
 
   await seedAdminUser(freeTierAmount);
+  await seedTestUser(freeTierAmount);
   await seedMarketplaceItems(prisma);
   await seedFreeTextStyleEntitlements(prisma, ADMIN_USER.userId);
 

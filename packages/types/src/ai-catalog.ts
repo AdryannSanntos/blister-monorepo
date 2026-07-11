@@ -200,3 +200,22 @@ export const platformCompanySchema = z.object({
   createdAt: z.string(),
 });
 export type PlatformCompany = z.infer<typeof platformCompanySchema>;
+
+export const platformCompanyMemberSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  userName: z.string(),
+  userEmail: z.string(),
+  roleKey: z.string(),
+  roleName: z.string(),
+  joinedAt: z.string(),
+});
+export type PlatformCompanyMember = z.infer<typeof platformCompanyMemberSchema>;
+
+export const platformCompanyDetailSchema = platformCompanySchema.extend({
+  ownerId: z.string(),
+  ownerName: z.string(),
+  updatedAt: z.string(),
+  members: z.array(platformCompanyMemberSchema),
+});
+export type PlatformCompanyDetail = z.infer<typeof platformCompanyDetailSchema>;

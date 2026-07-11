@@ -322,7 +322,7 @@ export const isCarouselRunActive = (
   if (!run) return false;
   if (run.status === "QUEUED" || run.status === "RUNNING") return true;
   if (run.status === "PAUSED") {
-    return isRunAwaitingIdeaSelection(run);
+    return isRunAwaitingIdeaSelection(run) || isRunAwaitingContentApproval(run);
   }
   return false;
 };

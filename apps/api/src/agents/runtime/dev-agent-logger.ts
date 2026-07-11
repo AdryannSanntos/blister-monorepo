@@ -8,11 +8,16 @@ import type {
 
 export const isDevEnvironment = (): boolean => process.env.NODE_ENV === 'development';
 
+/** Verbose agent pipeline logs (steps, events, LLM usage). Off by default in dev. */
+export const isVerboseAgentDevLogging = (): boolean =>
+  isDevEnvironment() &&
+  (process.env.AGENT_DEV_LOGGING === 'true' || process.env.AGENT_DEV_LOGGING === '1');
+
 class DevAgentLogger {
   private readonly logger = new Logger('AgentDev');
 
   log(message: string, context?: Record<string, unknown>): void {
-    if (!isDevEnvironment()) return;
+    if (!isVerboseAgentDevLogging()) return;
     if (context) {
       this.logger.log(`${message} ${JSON.stringify(context)}`);
       return;
@@ -135,7 +140,7 @@ export const createDevTelemetryProvider = (): TelemetryProvider => ({
 
 export const wrapEventPublisherForDev = (publisher: EventPublisher): EventPublisher => ({
   publish: async (event: RunEventPayload) => {
-    if (isDevEnvironment()) {
+    if (isVerboseAgentDevLogging()) {
       const summary = summarizeEventData(event);
       const logContext: Record<string, unknown> = {
         runId: event.runId,

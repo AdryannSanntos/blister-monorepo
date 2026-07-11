@@ -56,13 +56,42 @@ export class PlatformCompaniesService {
   }
 
   async findById(id: string) {
-    return this.prisma.company.findUniqueOrThrow({
+    const company = await this.prisma.company.findUniqueOrThrow({
       where: { id },
       include: {
         creditBalance: true,
-        owner: { select: { email: true } },
+        owner: { select: { id: true, email: true, name: true } },
+        members: {
+          include: {
+            user: { select: { id: true, email: true, name: true } },
+            role: { select: { name: true } },
+          },
+          orderBy: { joinedAt: 'asc' },
+        },
       },
     });
+
+    return {
+      id: company.id,
+      name: company.name,
+      slug: company.slug,
+      ownerId: company.owner.id,
+      ownerEmail: company.owner.email,
+      ownerName: company.owner.name,
+      creditBalance: company.creditBalance?.amount?.toString() ?? null,
+      onboardingCompletedAt: company.onboardingCompletedAt?.toISOString() ?? null,
+      createdAt: company.createdAt.toISOString(),
+      updatedAt: company.updatedAt.toISOString(),
+      members: company.members.map((member) => ({
+        id: member.id,
+        userId: member.user.id,
+        userName: member.user.name,
+        userEmail: member.user.email,
+        roleKey: member.role.name,
+        roleName: member.role.name,
+        joinedAt: member.joinedAt.toISOString(),
+      })),
+    };
   }
 
   async adjustCredits(

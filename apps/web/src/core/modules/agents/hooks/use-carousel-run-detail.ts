@@ -21,10 +21,12 @@ import {
   extractSlideContentsFromRun,
   extractPhaseErrorMessage,
   isCarouselRunActive,
+  isRunAwaitingContentApproval,
   isRunAwaitingIdeaSelection,
   readSelectedIdeaId,
   resolveActiveCarouselStep,
 } from "../utils/carousel-run-display";
+import type { AgentRunWithSteps } from "./use-agent-run";
 import { runPollIntervalMs } from "../utils/run-poll-interval";
 import { type AgentRunWithSteps, useAgentRun } from "./use-agent-run";
 import { useResumeAgentRun } from "./use-agent-run-mutations";
@@ -180,19 +182,57 @@ export const useCarouselRunDetail = (runId: string) => {
 
   const approveContent = useCallback(async () => {
     if (isApprovingContent) return;
+
+    if (!isRunAwaitingContentApproval(run)) {
+      if (
+        run?.status === "QUEUED" ||
+        run?.status === "RUNNING" ||
+        run?.status === "COMPLETED"
+      ) {
+        void queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
+      }
+      return;
+    }
+
     setIsApprovingContent(true);
     setErrorMessage(null);
+
+    queryClient.setQueryData<AgentRunWithSteps>(["agent-run", runId], (current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        run: {
+          ...current.run,
+          status: "QUEUED",
+          pauseReason: null,
+          pauseFormSchema: null,
+          inputPayload: {
+            ...current.run.inputPayload,
+            contentApproved: true,
+          },
+        },
+      };
+    });
+
     try {
       await resumeRun.mutateAsync({ formData: { contentApproved: true } });
       invalidateCarouselQueries();
     } catch (error) {
+      void queryClient.invalidateQueries({ queryKey: ["agent-run", runId] });
       setErrorMessage(
         error instanceof Error ? error.message : "Erro ao aprovar conteúdo",
       );
     } finally {
       setIsApprovingContent(false);
     }
-  }, [isApprovingContent, resumeRun, invalidateCarouselQueries]);
+  }, [
+    isApprovingContent,
+    run,
+    runId,
+    resumeRun,
+    invalidateCarouselQueries,
+    queryClient,
+  ]);
 
   const submitCustomIdea = useCallback(
     async (idea: { title: string; description?: string }) => {

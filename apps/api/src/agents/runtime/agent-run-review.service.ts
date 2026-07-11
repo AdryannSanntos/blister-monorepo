@@ -54,7 +54,7 @@ export class AgentRunReviewService {
 
     await this.triggerLearningIndex(run, 'APPROVED', dto.reason);
 
-    this.logger.log(`Approved run: ${runId}`);
+    this.logger.debug(`Approved run: ${runId}`);
 
     return {
       runId,
@@ -88,7 +88,7 @@ export class AgentRunReviewService {
 
     await this.triggerLearningIndex(run, 'REJECTED', dto.reason);
 
-    this.logger.log(`Rejected run: ${runId}`);
+    this.logger.debug(`Rejected run: ${runId}`);
 
     return {
       runId,
@@ -140,7 +140,7 @@ export class AgentRunReviewService {
 
     await this.triggerLearningIndex({ ...run, outputPayload: mergedOutput }, 'EDITED', dto.reason);
 
-    this.logger.log(`Edited run output: ${runId}`);
+    this.logger.debug(`Edited run output: ${runId}`);
 
     return {
       runId,
@@ -194,7 +194,7 @@ export class AgentRunReviewService {
       },
     });
 
-    this.logger.log(`Regenerated run ${runId} -> ${result.runId}`);
+    this.logger.debug(`Regenerated run ${runId} -> ${result.runId}`);
 
     return {
       runId,

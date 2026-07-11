@@ -1,6 +1,13 @@
 import type { AgentRunStatus } from '@company-os/types';
 
-import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 
@@ -139,18 +146,7 @@ export class WorkflowEngineService implements OnModuleInit {
       (message) => this.logger.warn(message),
 
     );
-
-
-
-    this.logger.log(
-
-      'Agent execution mode: trigger — run `npx trigger.dev@latest dev` in apps/api alongside the API.',
-
-    );
-
   }
-
-
 
   private resolveExecutionMode() {
 
@@ -272,7 +268,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
 
 
-    this.logger.log(`Created agent run: ${run.id}`);
+    this.logger.debug(`Created agent run: ${run.id}`);
 
     devAgentLogger.log('Agent run queued', { runId: run.id, agentId: options.agentId });
 
@@ -288,7 +284,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
 
 
-      this.logger.log(`Triggered execution: ${handle.id}`);
+      this.logger.debug(`Triggered execution: ${handle.id}`);
 
       devAgentLogger.log('Trigger task dispatched', {
 
@@ -350,7 +346,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
     if (!run) {
 
-      throw new Error(`Run not found: ${options.runId}`);
+      throw new NotFoundException(`Run not found: ${options.runId}`);
 
     }
 
@@ -358,7 +354,31 @@ export class WorkflowEngineService implements OnModuleInit {
 
     if (run.status !== 'PAUSED') {
 
-      throw new Error(`Run is not paused: ${run.status}`);
+      if (run.status === 'QUEUED' || run.status === 'RUNNING' || run.status === 'COMPLETED') {
+
+        devAgentLogger.log('Resume skipped — run already in progress or finished', {
+
+          runId: options.runId,
+
+          status: run.status,
+
+        });
+
+
+
+        return {
+
+          runId: run.id,
+
+          status: run.status,
+
+        };
+
+      }
+
+
+
+      throw new ConflictException(`Run cannot be resumed while ${run.status}`);
 
     }
 
@@ -449,7 +469,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
 
 
-      this.logger.log(`Resumed execution: ${handle.id}`);
+      this.logger.debug(`Resumed execution: ${handle.id}`);
 
       devAgentLogger.log('Resume trigger dispatched', {
 
@@ -555,7 +575,7 @@ export class WorkflowEngineService implements OnModuleInit {
 
 
 
-    this.logger.log(`Cancelled run: ${runId}`);
+    this.logger.debug(`Cancelled run: ${runId}`);
 
 
 

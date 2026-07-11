@@ -19,7 +19,7 @@ import {
 import { debitStepCredits, getPlatformSettings } from './credit-debit.helper';
 import {
   createDevTelemetryProvider,
-  isDevEnvironment,
+  isVerboseAgentDevLogging,
   wrapEventPublisherForDev,
 } from '../dev-agent-logger';
 import { agentStepRegistry } from './agent-step-registry';
@@ -95,7 +95,7 @@ export interface ExecuteRunParams {
 export type { MessageHandle, StreamingBlock };
 
 const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => {
-  const eventPublisher = isDevEnvironment()
+  const eventPublisher = isVerboseAgentDevLogging()
     ? wrapEventPublisherForDev(deps.eventPublisher)
     : deps.eventPublisher;
 
@@ -117,7 +117,7 @@ const buildKernelDeps = (deps: ExecutionDependencies): ExecutionKernelDeps => {
     customStepExecutors: agentStepRegistry as Record<string, SdkCustomStepExecutor>,
     stubMode: deps.stubMode,
     formatProviderError: toUserFacingProviderError,
-    telemetry: isDevEnvironment() ? createDevTelemetryProvider() : undefined,
+    telemetry: isVerboseAgentDevLogging() ? createDevTelemetryProvider() : undefined,
   };
 };
 

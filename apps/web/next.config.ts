@@ -12,6 +12,9 @@ const internalApiBaseUrl = (
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@company-os/authz", "@company-os/types", "@vidstack/react"],
+  logging: {
+    incomingRequests: false,
+  },
   turbopack: {
     root: path.join(__dirname, "../.."),
   },

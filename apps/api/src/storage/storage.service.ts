@@ -67,7 +67,7 @@ export class StorageService implements OnModuleInit {
           },
         }),
       );
-      this.logger.log(`Configured S3 bucket CORS for origins: ${configuredOrigins.join(', ')}`);
+      this.logger.debug(`Configured S3 bucket CORS for origins: ${configuredOrigins.join(', ')}`);
     } catch (error) {
       this.logger.warn(
         `Could not configure S3 bucket CORS automatically: ${

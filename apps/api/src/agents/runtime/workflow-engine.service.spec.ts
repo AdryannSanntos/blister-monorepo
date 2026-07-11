@@ -131,4 +131,46 @@ describe('WorkflowEngineService.resumeRun', () => {
       expect.objectContaining({ resumeFromStep: 'await_content_approval' }),
     );
   });
+
+  it('returns current status without re-triggering when run is already COMPLETED', async () => {
+    findUnique.mockResolvedValue({
+      ...baseRun,
+      status: 'COMPLETED',
+      agentId: 'carousel',
+      currentStepKey: 'await_content_approval',
+    });
+
+    const result = await service.resumeRun({ runId: 'run-1' });
+
+    expect(result).toEqual({ runId: 'run-1', status: 'COMPLETED' });
+    expect(triggerMock).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('returns current status without re-triggering when run is already QUEUED', async () => {
+    findUnique.mockResolvedValue({
+      ...baseRun,
+      status: 'QUEUED',
+      agentId: 'carousel',
+      currentStepKey: 'await_content_approval',
+    });
+
+    const result = await service.resumeRun({ runId: 'run-1' });
+
+    expect(result).toEqual({ runId: 'run-1', status: 'QUEUED' });
+    expect(triggerMock).not.toHaveBeenCalled();
+  });
+
+  it('throws ConflictException when run is FAILED', async () => {
+    findUnique.mockResolvedValue({
+      ...baseRun,
+      status: 'FAILED',
+      agentId: 'carousel',
+    });
+
+    await expect(service.resumeRun({ runId: 'run-1' })).rejects.toThrow(
+      'Run cannot be resumed while FAILED',
+    );
+    expect(triggerMock).not.toHaveBeenCalled();
+  });
 });

@@ -2,7 +2,7 @@ import type { PlatformAdminAssignment } from "src/core/modules/platform-admin/ho
 import type { CompanyOption } from "src/core/modules/workspaces/hooks/use-workspace-context";
 import {
   isPlatformAdminRole,
-  pickDefaultOnboardedCompany,
+  pickDefaultCompany,
 } from "src/core/modules/workspaces/utils/pick-default-company";
 import {
   getActiveWorkspaceId,
@@ -31,10 +31,7 @@ export const resolvePostLoginNavigation = async (
       ]);
 
     const platformRoles = roles.map((assignment) => assignment.role);
-    const defaultCompany = pickDefaultOnboardedCompany(
-      companies,
-      getActiveWorkspaceId(),
-    );
+    const defaultCompany = pickDefaultCompany(companies, getActiveWorkspaceId());
 
     if (defaultCompany) {
       setActiveWorkspaceId(defaultCompany.id);

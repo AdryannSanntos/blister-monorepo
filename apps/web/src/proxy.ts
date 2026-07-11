@@ -109,7 +109,7 @@ function pickDefaultCompanyId(
   companies: Array<{ id: string; onboardingCompletedAt: string | null }>,
 ) {
   const onboarded = companies.filter((company) => company.onboardingCompletedAt);
-  return onboarded[0]?.id ?? null;
+  return onboarded[0]?.id ?? companies[0]?.id ?? null;
 }
 
 function attachActiveCompanyCookieIfMissing(
@@ -118,12 +118,11 @@ function attachActiveCompanyCookieIfMissing(
   companies: Array<{ id: string; onboardingCompletedAt: string | null }>,
 ) {
   const activeCompanyId = request.cookies.get(ACTIVE_COMPANY_COOKIE)?.value;
-  const onboarded = companies.filter((company) => company.onboardingCompletedAt);
   const hasValidActiveCompany =
     Boolean(activeCompanyId) &&
     activeCompanyId !== "personal" &&
     activeCompanyId !== "__personal__" &&
-    onboarded.some((company) => company.id === activeCompanyId);
+    companies.some((company) => company.id === activeCompanyId);
 
   if (hasValidActiveCompany) return;
 

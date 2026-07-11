@@ -1,0 +1,44 @@
+---
+description: Maestri canvas — mandatory skill gate before terminal, browser, team, or note workflows
+alwaysApply: true
+---
+
+# Maestri — skill gate (mandatory)
+
+When `maestri` is on PATH (or `$MAESTRI_CLI` is set), you are likely inside the Maestri canvas. **Before** using Shell to debug another terminal, delegating work, driving a browser, or editing sticky notes, run this gate.
+
+## Step 1 — Detect environment
+
+```bash
+command -v maestri >/dev/null 2>&1 || test -n "$MAESTRI_CLI"
+```
+
+If false, skip Maestri skills and work normally.
+
+If true, run `maestri list` once per task (or when connections may have changed).
+
+## Step 2 — Pick the skill (read SKILL.md before acting)
+
+| User intent / signal | Skill to read |
+|---|---|
+| Check terminal output, dev server error, `pnpm dev` failed | `maestri-terminal` |
+| Ask another agent, delegate, `check on`, collaborate | `maestri` |
+| Shared notes: read, write, edit, create todos | `maestri-notes` |
+| Browse URL, test UI, login flow, screenshot page | `maestri-portal` |
+| Assemble team, recruit, connect agents, roles | `maestri-manager` |
+| New workspace/floor, isolate branch experiment | `maestri-workspace` |
+| Schedule recurring command or reminder | `maestri-routines` |
+| Multiple Maestri concerns at once | Read `maestri` first, then the specific skill |
+
+Project skills live in `.cursor/skills/maestri*/SKILL.md` (also `.claude/skills/`, `.opencode/skills/`).
+
+## Step 3 — Execute with Maestri CLI
+
+- Prefer `maestri check` over re-running `pnpm dev` when diagnosing a **connected** terminal.
+- Prefer `maestri portal snapshot` over Playwright MCP when a **connected portal** exists.
+- Use `maestri ask` only when another agent should do the work; use `maestri check` for read-only inspection.
+- If `maestri` is missing from PATH: `"$MAESTRI_CLI" <subcommand> ...`
+
+## Subagents
+
+Include this gate in every subagent prompt that involves terminals, browsers, notes, or multi-agent work on the Maestri canvas.

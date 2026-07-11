@@ -36,9 +36,10 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
     data?.companies.find((c) => c.id === activeId)?.name ?? t("selectWorkspace");
 
   const handleSelectCompany = (companyId: string) => {
+    const company = data?.companies.find((item) => item.id === companyId);
     setActiveWorkspaceId(companyId);
     queryClient.invalidateQueries();
-    router.push("/dashboard");
+    router.push(company?.onboardingCompletedAt ? "/dashboard" : "/onboarding");
     router.refresh();
   };
 
@@ -98,18 +99,16 @@ export function WorkspaceSwitcher({ collapsed = false }: WorkspaceSwitcherProps)
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-64">
         <DropdownMenuLabel>{t("workspaces")}</DropdownMenuLabel>
-        {data?.companies
-          .filter((company) => company.onboardingCompletedAt)
-          .map((company) => (
-            <DropdownMenuItem
-              key={company.id}
-              onClick={() => handleSelectCompany(company.id)}
-              className={cn(activeId === company.id && "bg-[var(--bg-muted)]")}
-            >
-              <Building2 className="size-4" />
-              {company.name}
-            </DropdownMenuItem>
-          ))}
+        {data?.companies.map((company) => (
+          <DropdownMenuItem
+            key={company.id}
+            onClick={() => handleSelectCompany(company.id)}
+            className={cn(activeId === company.id && "bg-[var(--bg-muted)]")}
+          >
+            <Building2 className="size-4" />
+            {company.name}
+          </DropdownMenuItem>
+        ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleCreateCompany}>
           <Plus className="size-4" />
